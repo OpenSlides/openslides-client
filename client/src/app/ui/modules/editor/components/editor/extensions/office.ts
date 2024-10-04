@@ -5,6 +5,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 
 export const MSOfficePaste = Extension.create({
     priority: 99999,
+    name: `ms-office-paste`,
 
     addProseMirrorPlugins() {
         return [OfficePastePlugin];

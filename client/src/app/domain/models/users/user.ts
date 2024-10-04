@@ -29,7 +29,6 @@ export class User extends BaseDecimalModel<User> {
     public readonly is_physical_person!: boolean;
     public readonly default_password!: string;
     public readonly can_change_own_password!: boolean;
-    public readonly gender!: string;
     public readonly email!: string;
     public readonly last_email_sent!: number; // comes in seconds
     public readonly last_login!: number; // comes in seconds
@@ -52,6 +51,7 @@ export class User extends BaseDecimalModel<User> {
 
     public organization_management_level!: keyof OMLMapping;
     public committee_management_ids!: Id[];
+    public gender_id: Id; // (gender/user_ids)[]
 
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
@@ -64,8 +64,8 @@ export class User extends BaseDecimalModel<User> {
     public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
         `id`,
         `username`,
-        `saml_id`,
         `member_number`,
+        `saml_id`,
         `pronoun`,
         `title`,
         `first_name`,
@@ -74,12 +74,12 @@ export class User extends BaseDecimalModel<User> {
         `is_physical_person`,
         `default_password`,
         `can_change_own_password`,
-        `gender`,
         `email`,
         `default_vote_weight`,
         `last_email_sent`,
         `is_demo_user`,
         `last_login`,
+        `gender_id`,
         `organization_management_level`,
         `is_present_in_meeting_ids`,
         `committee_ids`,

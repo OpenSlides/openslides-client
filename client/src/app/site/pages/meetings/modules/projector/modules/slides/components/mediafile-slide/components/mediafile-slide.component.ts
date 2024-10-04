@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { IMAGE_MIMETYPES, PDF_MIMETYPES } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
-import { SlideMediafileService } from '../../../services/slide-mediafile.service';
 import { MediafileSlideData } from '../mediafile-slide-data';
 
 @Component({
@@ -11,14 +12,11 @@ import { MediafileSlideData } from '../mediafile-slide-data';
     styleUrls: [`./mediafile-slide.component.scss`]
 })
 export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideData> {
+    @ViewChild(PdfViewerComponent)
+    public pdfViewer: PdfViewerComponent;
+
     public get url(): string {
-        if (this.projector && this.projector.id) {
-            const url = this.slideMediafileService.getMediafileSync(this.projector.id, this.data.data.id);
-
-            return url?.data || ``;
-        }
-
-        return ``;
+        return `/system/media/get/${this.data.data.id}`;
     }
 
     public get scroll(): number {
@@ -45,8 +43,25 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
         return this.data.options[`fullscreen`] ?? true;
     }
 
-    public constructor(private slideMediafileService: SlideMediafileService) {
+    public pdfLoaded(): void {
+        this.updatePdfScroll();
+    }
+
+    public constructor() {
         super();
-        (window as any).pdfWorkerSrc = `/assets/pdfworker/pdf.worker.min.js`;
+        (window as any).pdfWorkerSrc = new URL(`pdfjs/pdf.worker.min.mjs`, import.meta.url).toString();
+    }
+
+    protected override setProjector(value: ViewProjector): void {
+        super.setProjector(value);
+        if (this.pdfViewer) {
+            this.updatePdfScroll();
+        }
+    }
+
+    private updatePdfScroll(): void {
+        this.pdfViewer.pdfViewerContainer.nativeElement.scroll({
+            top: this.scroll
+        });
     }
 }

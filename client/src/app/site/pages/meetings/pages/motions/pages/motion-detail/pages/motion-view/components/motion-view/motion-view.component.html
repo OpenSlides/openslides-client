@@ -1,0 +1,222 @@
+<os-detail-view [collection]="collection" (idFound)="onMotionIdFound($event)">
+    @let hasLoaded = hasLoaded$ | async;
+    @let isMobile = vp.isMobileSubject | async;
+    <os-head-bar
+        mainActionTooltip="New amendment"
+        [goBack]="motion?.hasLeadMotion"
+        [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
+        [nav]="false"
+        (mainEvent)="createAmendment()"
+    >
+        <!-- Title -->
+        @if (motion && hasLoaded) {
+            <div class="title-slot">
+                <h2>
+                    @if (!isMobile) {
+                        <span>{{ 'Motion' | translate }}</span>
+                        <!-- Whitespace between "Motion" and number -->
+                        <span>&nbsp;</span>
+                    }
+                    <span>{{ motion.number }}</span>
+                </h2>
+            </div>
+        }
+        <!-- Back and forth buttons -->
+        @if (showNavigateButtons) {
+            <div class="extra-controls-slot prev-next-motion-controls">
+                <button
+                    class="nav-button-overflow"
+                    mat-button
+                    [disabled]="!previousMotion"
+                    [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
+                    (click)="navigateToMotion(previousMotion)"
+                >
+                    <os-icon-container icon="chevron_left" [hide]="isMobile">
+                        {{ previousMotion ? previousMotion.number : '' }}
+                    </os-icon-container>
+                </button>
+                <button
+                    class="nav-button-overflow"
+                    mat-button
+                    [disabled]="!nextMotion"
+                    [ngClass]="{ 'motion-detail-nav-button': isMobile === false }"
+                    (click)="navigateToMotion(nextMotion)"
+                >
+                    <os-icon-container icon="chevron_right" [hide]="isMobile" [swap]="true">
+                        {{ nextMotion ? nextMotion.number : '' }}
+                    </os-icon-container>
+                </button>
+            </div>
+        }
+        <!-- Menu -->
+        @if (motion) {
+            <ng-container class="menu-slot">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="motionExtraMenu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </ng-container>
+        }
+        <mat-menu #motionExtraMenu="matMenu">
+            @if (hasLoaded) {
+                <!-- List of speakers -->
+                <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
+                <!-- PDF -->
+                <button mat-menu-item (click)="downloadPdf()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    <span>{{ 'PDF' | translate }}</span>
+                </button>
+                <mat-divider
+                    *osPerms="[
+                        permission.projectorCanManage,
+                        permission.agendaItemCanManage,
+                        permission.meetingCanSeeHistory
+                    ]"
+                ></mat-divider>
+                <!-- Project -->
+                <os-projector-button
+                    *osPerms="permission.projectorCanManage"
+                    [menuItem]="true"
+                    [object]="motion"
+                ></os-projector-button>
+                <!-- Add/remove to/from agenda -->
+                <div *osPerms="permission.agendaItemCanManage">
+                    @if (motion) {
+                        @if (!motion.agenda_item_id) {
+                            <button mat-menu-item (click)="addToAgenda()">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'Add to agenda' | translate }}</span>
+                            </button>
+                        } @else {
+                            <button mat-menu-item (click)="removeFromAgenda()">
+                                <mat-icon>remove</mat-icon>
+                                <span>{{ 'Remove from agenda' | translate }}</span>
+                            </button>
+                        }
+                    }
+                </div>
+                <!-- Go to the history -->
+                <div *osPerms="permission.meetingCanSeeHistory">
+                    <button mat-menu-item (click)="goToHistory()">
+                        <mat-icon>history</mat-icon>
+                        <span>{{ 'History' | translate }}</span>
+                    </button>
+                </div>
+                <!-- Forward motion -->
+                <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
+                    <button mat-menu-item (click)="forwardMotionToMeetings()">
+                        <mat-icon>forward</mat-icon>
+                        <span>{{ 'Forward' | translate }}</span>
+                    </button>
+                </div>
+                @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
+                    <mat-divider></mat-divider>
+                    <!-- Edit-->
+                    @if (perms.isAllowed('update', motion)) {
+                        <button mat-menu-item [routerLink]="['edit']">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Edit' | translate }}</span>
+                        </button>
+                    }
+                    <!-- Delete -->
+                    @if (perms.isAllowed('manage')) {
+                        <button class="red-warning-text" mat-menu-item (click)="deleteMotionButton()">
+                            <mat-icon>delete</mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    }
+                }
+            }
+        </mat-menu>
+    </os-head-bar>
+    @if (hasLoaded && motion) {
+        <div
+            class="content-container spacer-bottom-60"
+            osSwipe
+            (swipeLeft)="navigateToMotion(previousMotion)"
+            (swipeRight)="navigateToMotion(nextMotion)"
+        >
+            <!-- Title -->
+            <div class="title">
+                <os-motion-manage-title
+                    [changeRecoMode]="changeRecoMode"
+                    [motion]="motion"
+                    (updateCrMode)="changeRecoMode = $event"
+                ></os-motion-manage-title>
+            </div>
+            @if (isMobile) {
+                <div class="mobile-view">
+                    <!-- Meta info -->
+                    <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                    <!-- Content -->
+                    <mat-card class="os-card">
+                        <mat-card-content>
+                            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                        </mat-card-content>
+                    </mat-card>
+                    <!-- Comments -->
+                    <os-motion-comments [motion]="motion"></os-motion-comments>
+                    <!-- Personal note -->
+                    @if (!operator.isAnonymous) {
+                        <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
+                    }
+                </div>
+            } @else {
+                <div class="desktop-view">
+                    <div class="desktop-left">
+                        <!-- Meta Info -->
+                        <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+                        <os-motion-comments [motion]="motion"></os-motion-comments>
+                        @if (!operator.isAnonymous) {
+                            <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
+                        }
+                    </div>
+                    <div class="desktop-right">
+                        <!-- Content -->
+                        <mat-card class="os-card">
+                            <mat-card-content>
+                                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="spinner-container flex-center">
+            <div class="spinner-inner-container">
+                <mat-progress-spinner
+                    class="example-margin"
+                    color="primary"
+                    mode="indeterminate"
+                ></mat-progress-spinner>
+            </div>
+        </div>
+    }
+</os-detail-view>
+
+<ng-template #metaInfoTemplate>
+    <div>
+        <os-motion-meta-data [changeRecoMode]="changeRecoMode" [motion]="motion"></os-motion-meta-data>
+    </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+    <os-motion-highlight-form
+        #highlightForm
+        [changeRecoMode]="changeRecoMode"
+        [hasChangingObjects]="!!(unifiedChanges$ | async)?.length"
+        [lineNumberingMode]="lineNumberingMode"
+        [motion]="motion"
+        (updateCrMode)="changeRecoMode = $event"
+        (updateLnMode)="lineNumberingMode = $event"
+    ></os-motion-highlight-form>
+
+    <os-motion-content
+        #content
+        [changeRecoMode]="changeRecoMode"
+        [lineNumberingMode]="lineNumberingMode"
+        [motion]="motion"
+        [unifiedChanges]="unifiedChanges$"
+        (updateCrMode)="changeRecoMode = $event"
+    ></os-motion-content>
+</ng-template>

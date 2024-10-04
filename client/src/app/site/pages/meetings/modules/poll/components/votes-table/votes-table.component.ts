@@ -5,6 +5,7 @@ import { PollContentObject } from 'src/app/domain/models/poll';
 
 import { BasePollDetailComponent, BaseVoteData } from '../../base/base-poll-detail.component';
 import { PollService } from '../../services/poll.service';
+import { VotesFilterService } from '../../services/votes-filter.service';
 
 @Component({
     selector: `os-votes-table`,
@@ -50,6 +51,8 @@ export class VotesTableComponent {
     public filterProps = [`user.full_name`, `valueVerbose`];
 
     private _votesDataObservable!: Observable<BaseVoteData[]>;
+
+    public constructor(public filter: VotesFilterService) {}
 
     public getVoteIcon(voteValue: string): string {
         return this.parent.voteOptionStyle[voteValue]?.icon;

@@ -1,13 +1,21 @@
 @import 'src/app/site/pages/meetings/pages/motions/styles/motion-common-styles';
+@import 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .paragraph-context {
     opacity: 0.5;
 }
 
+.motion-text,
+.motion-text-diff,
+.reason-text {
+    .detail-view-text {
+        @include detail-view-appearance;
+    }
+}
+
 #sidebox {
     width: 260px;
     right: 0;
-    background: #d3d3d3;
     border-radius: 7px 0 0 7px;
     padding: 3px 7px 10px 10px;
     position: fixed;
@@ -34,6 +42,10 @@
         padding: 0 10px 0 7px;
         vertical-align: top;
     }
+}
+
+.metatable-background {
+    background-color: #ddd;
 }
 
 .spacer {

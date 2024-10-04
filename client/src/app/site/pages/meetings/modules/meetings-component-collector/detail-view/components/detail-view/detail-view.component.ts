@@ -7,10 +7,11 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
@@ -44,29 +45,38 @@ export class DetailViewComponent implements OnInit {
     private _shouldShowContent = false;
     private _loading = true;
     private _id!: Id;
+    private _sequential_number!: number;
 
     private _subscriptionMap: { [name: string]: Subscription } = {};
 
     public constructor(
         private sequentialNumberMappingService: SequentialNumberMappingService,
+        private activeMeetingService: ActiveMeetingService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
+        private router: Router,
         private cd: ChangeDetectorRef
     ) {}
 
     public ngOnInit(): void {
-        this.activeMeetingIdService.meetingIdObservable.subscribe(() => this.onMeetingChanged());
+        this.activeMeetingService.meetingIdObservable.subscribe(id => this.onMeetingChanged(id));
     }
 
-    private onMeetingChanged(): void {
-        const subscription = this.route.params.subscribe(params => {
-            this.parseSequentialNumber(params);
+    private onMeetingChanged(meetingId: Id): void {
+        this.deleteSubscription(ROUTE_SUBSCRIPTION_NAME);
+        this.activeMeetingService.ensureActiveMeetingIsAvailable().then(() => {
+            const subscription = this.route.params.subscribe(params => {
+                if (this.activeMeetingIdService.parseUrlMeetingId(this.router.url) === meetingId) {
+                    this.parseSequentialNumber(params);
+                }
+            });
+            this.updateSubscription(ROUTE_SUBSCRIPTION_NAME, subscription);
         });
-        this.updateSubscription(ROUTE_SUBSCRIPTION_NAME, subscription);
     }
 
     private parseSequentialNumber(params: { id?: string }): void {
         const sequentialNumber = +(params.id ?? 0);
+        this._sequential_number = sequentialNumber;
         if (!sequentialNumber && params.id === undefined) {
             // it must be another subroute, like creating a new one
             this._shouldShowContent = true;
@@ -76,12 +86,12 @@ export class DetailViewComponent implements OnInit {
         const config = {
             collection: this.collection,
             sequentialNumber,
-            meetingId: this.activeMeetingIdService.meetingId!
+            meetingId: this.activeMeetingService.meetingId!
         };
 
         this.sequentialNumberMappingService.getIdBySequentialNumber(config).then(id => {
             this._loading = false;
-            if (id !== undefined) {
+            if (id !== undefined && this._sequential_number === sequentialNumber) {
                 if (id) {
                     if (this._id !== id) {
                         this._id = id;
@@ -108,5 +118,12 @@ export class DetailViewComponent implements OnInit {
             this._subscriptionMap[subscriptionName].unsubscribe();
         }
         this._subscriptionMap[subscriptionName] = subscription;
+    }
+
+    private deleteSubscription(subscriptionName: string): void {
+        if (this._subscriptionMap[subscriptionName]) {
+            this._subscriptionMap[subscriptionName].unsubscribe();
+            this._subscriptionMap[subscriptionName] = null;
+        }
     }
 }

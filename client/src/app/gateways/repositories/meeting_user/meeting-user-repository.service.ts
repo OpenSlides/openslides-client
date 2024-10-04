@@ -33,7 +33,8 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
             `vote_weight`,
             `comment`,
             `user_id`,
-            `number`
+            `number`,
+            `locked_out`
         ]);
 
         const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
@@ -57,7 +58,8 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
                 vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
                 structure_level_ids: partialUser.structure_level_ids,
-                group_ids: partialUser.group_ids
+                group_ids: partialUser.group_ids,
+                locked_out: partialUser.locked_out
             };
 
             if (Object.values(partialPayload).filter(val => val !== undefined).length > 1 && partialPayload.meeting_id)

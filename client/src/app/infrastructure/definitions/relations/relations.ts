@@ -11,6 +11,7 @@ import {
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
+import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
 import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
 import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers';
 import {
@@ -20,6 +21,7 @@ import {
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
@@ -33,7 +35,7 @@ import {
 } from '../../../site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/meetings/pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
-import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
+import { HasAttachmentMeetingMediafiles, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
     HasReferencedMotionsInExtension,
     HasTags,
@@ -78,7 +80,7 @@ import {
 
 const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>[] = [
     ViewMotion,
-    ViewMediafile,
+    ViewMeetingMediafile,
     ViewListOfSpeakers,
     ViewMotionBlock,
     ViewAssignment,
@@ -149,8 +151,7 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `template_meetings`,
-        MField: `template_for_organization`,
-        isExclusiveList: true
+        MField: `template_for_organization`
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -164,6 +165,13 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewTheme,
         AField: `theme`,
         BField: `theme_for_organization`
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewGender,
+        OField: `genders`,
+        MField: `organization`,
+        isFullList: true
     }),
     // ########## Organization tags
     ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({
@@ -271,6 +279,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMeetingUser,
         AField: `meeting_users`,
         BField: `structure_levels`
+    }),
+    ...makeM2O({
+        MViewModel: ViewUser,
+        OViewModel: ViewGender,
+        MField: `gender`,
+        OField: `users`
     }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
@@ -451,6 +465,25 @@ export const RELATIONS: Relation[] = [
         OField: `mediafiles`,
         MField: `meeting`,
         isExclusiveList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMeetingMediafile,
+        OField: `meeting_mediafiles`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewMediafile,
+        OField: `published_mediafiles`,
+        MField: `published_to_meetings_in_organization`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMediafile,
+        MViewModel: ViewMeetingMediafile,
+        OField: `meeting_mediafiles`,
+        MField: `mediafile`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -636,12 +669,18 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
+        AField: `anonymous_group`,
+        BField: `anonymous_group_for_meeting`
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewGroup,
         AField: `admin_group`,
         BField: `admin_group_for_meeting`
     }),
     ...makeManyDynamicallyNamedO2O({
         AViewModel: ViewMeeting,
-        BViewModel: ViewMediafile,
+        BViewModel: ViewMeetingMediafile,
         config: [
             ...LOGO_PLACES.map(place => ({
                 AField: `logo_${place}` as ViewMeetingMediafileUsageKey,
@@ -970,30 +1009,31 @@ export const RELATIONS: Relation[] = [
         order: `weight`
     }),
     // ########## Mediafile
-    ...makeM2M({
-        AViewModel: ViewMediafile,
-        BViewModel: ViewGroup,
-        AField: `access_groups`,
-        BField: `mediafile_access_groups`
-    }),
-    ...makeM2M({
-        AViewModel: ViewMediafile,
-        BViewModel: ViewGroup,
-        AField: `inherited_access_groups`,
-        BField: `mediafile_inherited_access_groups`
-    }),
-    ...makeGenericM2M<ViewMediafile, HasAttachment>({
-        viewModel: ViewMediafile,
-        possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
-        viewModelField: `attachment_ids`,
-        possibleViewModelsField: `attachments`
-    }),
     ...makeM2O({
         MViewModel: ViewMediafile,
         OViewModel: ViewMediafile,
         MField: `parent`,
         OField: `children`,
         OIdField: `child_ids`
+    }),
+    // ########## Meeting Mediafile
+    ...makeM2M({
+        AViewModel: ViewMeetingMediafile,
+        BViewModel: ViewGroup,
+        AField: `access_groups`,
+        BField: `meeting_mediafile_access_groups`
+    }),
+    ...makeM2M({
+        AViewModel: ViewMeetingMediafile,
+        BViewModel: ViewGroup,
+        AField: `inherited_access_groups`,
+        BField: `meeting_mediafile_inherited_access_groups`
+    }),
+    ...makeGenericM2M<ViewMeetingMediafile, HasAttachmentMeetingMediafiles>({
+        viewModel: ViewMeetingMediafile,
+        possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
+        viewModelField: `attachment_ids`,
+        possibleViewModelsField: `attachment_meeting_mediafiles`
     }),
     // ########## Chat
     ...makeM2O({

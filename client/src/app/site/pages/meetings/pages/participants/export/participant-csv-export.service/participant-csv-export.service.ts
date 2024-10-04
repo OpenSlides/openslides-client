@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { UserExport } from 'src/app/domain/models/users/user.export';
-import { CsvColumnDefinitionProperty, CsvColumnsDefinition } from 'src/app/gateways/export/csv-export.service';
+import {
+    CsvColumnDefinitionMap,
+    CsvColumnDefinitionProperty,
+    CsvColumnsDefinition
+} from 'src/app/gateways/export/csv-export.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -15,6 +19,7 @@ export interface ParticipantExport extends UserExport {
     comment?: string;
     is_present_in_meeting_ids?: string | boolean;
     group_ids?: string;
+    locked_out?: boolean;
 }
 
 @Injectable({
@@ -52,6 +57,12 @@ export class ParticipantCsvExportService {
         this.csvExport.export(
             participants,
             participantColumns.map(key => {
+                if (key === `locked_out`) {
+                    return {
+                        label: `locked_out`,
+                        map: user => (user.is_locked_out ? `1` : ``)
+                    } as CsvColumnDefinitionMap<ViewUser>;
+                }
                 return {
                     property: key
                 } as CsvColumnDefinitionProperty<ViewUser>;

@@ -14,6 +14,7 @@ import {
     AutoupdateCloseStream,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
+    AutoupdateReceiveDataContent,
     AutoupdateReceiveError,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
@@ -34,7 +35,7 @@ import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
     providedIn: `root`
 })
 export class AutoupdateCommunicationService {
-    private autoupdateDataObservable: Observable<any>;
+    private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
@@ -187,7 +188,7 @@ export class AutoupdateCommunicationService {
     /**
      * @returns Observable containing messages from autoupdate
      */
-    public listen(): Observable<any> {
+    public listen(): Observable<AutoupdateReceiveDataContent> {
         return this.autoupdateDataObservable;
     }
 
@@ -220,8 +221,10 @@ export class AutoupdateCommunicationService {
 
     private handleReceiveData(data: AutoupdateReceiveData, dataSubscription: Subscriber<any>): void {
         dataSubscription.next(data.content);
-        if (data.content?.description) {
-            this.subscriptionsWithData.add(data.content.description.replace(SUBSCRIPTION_SUFFIX, ``));
+        if (data.content?.streamIdDescriptions) {
+            for (const id of Object.keys(data.content.streamIdDescriptions)) {
+                this.subscriptionsWithData.add(data.content.streamIdDescriptions[id].replace(SUBSCRIPTION_SUFFIX, ``));
+            }
         }
         if (this.tryReconnectOpen) {
             this.matSnackBar.dismiss();

@@ -46,6 +46,14 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                 ]
             },
             {
+                property: `enable_anonymous`,
+                label: _(`Public`),
+                options: [
+                    { label: _(`Is public`), condition: true },
+                    { label: _(`Is not public`), condition: [false, null] }
+                ]
+            },
+            {
                 property: `relatedTime`,
                 label: _(`Time`),
                 options: [

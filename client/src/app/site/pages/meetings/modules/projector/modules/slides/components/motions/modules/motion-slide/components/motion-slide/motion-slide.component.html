@@ -1,7 +1,11 @@
 @if (data && projector) {
     <div>
         @if (data.data.show_sidebox) {
-            <div id="sidebox" [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }">
+            <div
+                id="sidebox"
+                [ngClass]="{ 'metatable-background': !hideMetadataBackground }"
+                [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }"
+            >
                 <!-- Submitters -->
                 @if (getSubmittersObservable() | async; as submitters) {
                     @if (submitters.length > 0) {
@@ -40,7 +44,12 @@
                 }
                 <!-- Metainfo as table -->
                 @if (showMetaTable) {
-                    <table cellpadding="0" cellspacing="0" class="metatable spacer-top-20">
+                    <table
+                        cellpadding="0"
+                        cellspacing="0"
+                        class="metatable spacer-top-20"
+                        [ngClass]="{ 'metatable-background': !hideMetadataBackground }"
+                    >
                         <!-- Submitters -->
                         @if (getSubmittersObservable() | async; as submitters) {
                             @if (submitters.length > 0) {
@@ -83,7 +92,7 @@
             </div>
         </div>
         @if (showText) {
-            <div id="text-wrapper">
+            <section id="text-wrapper">
                 <div id="text" [ngStyle]="textDivStyles">
                     <!-- Text -->
                     @if (isParagraphBasedAmendment() || formattedMotionTextPlain) {
@@ -106,7 +115,10 @@
                                 </div>
                             }
                             @if (formattedMotionTextPlain) {
-                                <div [innerHTML]="formattedMotionTextPlain | trust: 'html'"></div>
+                                <div
+                                    class="detail-view-text"
+                                    [innerHTML]="formattedMotionTextPlain | trust: 'html'"
+                                ></div>
                             }
                         </div>
                     }
@@ -146,20 +158,28 @@
                                             {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
                                         </h3>
                                     }
-                                    <div [innerHtml]="paragraph.text | trust: 'html'"></div>
+                                    <div class="detail-view-text" [innerHtml]="paragraph.text | trust: 'html'"></div>
                                 </div>
                             }
                         </section>
                     }
                     <!-- Reason -->
                     @if (data.data.reason) {
-                        <div>
+                        <div class="reason-text">
                             <h3>{{ 'Reason' | translate }}</h3>
-                            <div [innerHTML]="data.data.reason | trust: 'html'"></div>
+                            <div class="detail-view-text" [innerHTML]="data.data.reason | trust: 'html'"></div>
                         </div>
                     }
                 </div>
-            </div>
+            </section>
+
+            <!-- Reason -->
+            @if (data.data.reason) {
+                <div>
+                    <h3>{{ 'Reason' | translate }}</h3>
+                    <div [innerHTML]="data.data.reason | trust: 'html'"></div>
+                </div>
+            }
         }
     </div>
 }

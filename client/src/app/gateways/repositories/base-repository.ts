@@ -721,6 +721,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     result = this.relationManager.handleRelation(_model, relation);
                 }
                 return result;
+            },
+            set: (obj, ...args): any => {
+                obj.viewModelUpdateTimestamp = Date.now();
+                return Reflect.set(obj, ...args);
             }
         });
         this._createViewModelPipes.forEach(fn => fn(viewModel));

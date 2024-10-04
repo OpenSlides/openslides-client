@@ -25,9 +25,6 @@ export class MotionBlockCreateDialogComponent {
     }
 
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.saveBlock();
-        }
         if (event.key === `Escape`) {
             this.dialogRef.close();
         }

@@ -1,4 +1,4 @@
-<os-sidenav #sideNav>
+<os-sidenav #sideNav [logoLink]="showMeetingNav ? ['/'] : ['/' + meeting.id]">
     <ng-template osSidenavDrawerContent>
         <!-- navigation -->
         <div class="main-nav">

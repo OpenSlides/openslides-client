@@ -28,10 +28,14 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
-                ...MEETING_MEDIAFILE_USAGE_ID_KEYS,
+                `committee_id`,
                 ...settingsKeys
             ],
             follow: [
+                ...MEETING_MEDIAFILE_USAGE_ID_KEYS.map(idField => ({
+                    idField,
+                    fieldset: [`mediafile_id`]
+                })),
                 { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
                 {
                     idField: `chat_message_ids`,
@@ -67,6 +71,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField: `group_ids`,
                     fieldset: [
                         `admin_group_for_meeting_id`,
+                        `anonymous_group_for_meeting_id`,
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
@@ -119,6 +124,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `jitsi_room_name`,
                 `jitsi_room_password`,
                 `admin_group_id`,
+                `anonymous_group_id`,
                 `default_group_id`
             ]
         },

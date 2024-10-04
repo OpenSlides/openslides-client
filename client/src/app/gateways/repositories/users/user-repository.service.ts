@@ -26,9 +26,10 @@ export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid:
 export type GeneralUser = ViewUser & ViewMeetingUser;
 
 /**
- * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
+ * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
+ * and 'locked_out'.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person' | 'locked_out';
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];
@@ -104,7 +105,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `gender`,
+            `gender_id`,
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
@@ -122,14 +123,15 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
-            `committee_management_ids`
+            `committee_management_ids`,
+            `default_password`
         ]);
 
         const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`, `default_password`]);
+            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`]);
 
         const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
@@ -146,7 +148,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const data = usersToCreate.map(user => {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
-                user: this.sanitizePayload(this.getBaseUserPayload(user)),
+                user: this.sanitizePayload(this.getBaseUserPayload(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
                           first_meeting_user: this.sanitizePayload(
@@ -224,7 +226,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: update.email,
             username: update.username,
             pronoun: update.pronoun,
-            gender: update.gender
+            gender_id: update.gender_id
         };
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
@@ -257,7 +259,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
-            gender: partialUser.gender,
+            gender_id: partialUser.gender_id,
             email: partialUser.email,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
@@ -516,9 +518,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.MERGE_TOGETHER, payload);
     }
 
-    private sanitizePayload(payload: any): any {
+    private sanitizePayload(payload: any, create: boolean = false): any {
         const temp = { ...payload };
-        for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
+        for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field, create))) {
             if (typeof temp[key] === `string` && !temp[key].trim().length) {
                 payload[key] = undefined;
             } else if (Array.isArray(temp[key])) {
@@ -533,7 +535,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return { ...payload };
     }
 
-    private isFieldAllowedToBeEmpty(field: string): boolean {
+    private isFieldAllowedToBeEmpty(field: string, create?: boolean): boolean {
         const fields: string[] = [
             `title`,
             `email`,
@@ -543,8 +545,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `member_number`
+            `locked_out`
         ];
+        if (!create) {
+            fields.push(`member_number`);
+        }
+
         return fields.includes(field);
     }
 

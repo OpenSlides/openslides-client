@@ -13,6 +13,7 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
+import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
@@ -185,7 +186,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`System`),
+                settings: [
                     {
                         key: `locked_from_inside`,
                         label: _(`Activate closed meeting`),
@@ -194,6 +200,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         ),
                         type: `boolean`,
                         forbidden: meetingView => meetingView.isTemplate
+                    },
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Activate public access`),
+                        type: `boolean`,
+                        helpText: _(
+                            `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
+                        )
                     }
                 ]
             },
@@ -634,6 +648,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(`If deactivated it is displayed below the title`)
                     },
                     {
+                        key: `motions_hide_metadata_background`,
+                        label: _(`Make background color from meta information box on the projector transparent`),
+                        type: `boolean`
+                    },
+                    {
                         key: `motions_block_slide_columns`,
                         label: _(`Maximum number of columns on motion block slide`),
                         type: `integer`,
@@ -765,6 +784,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motion_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
+                    },
+                    {
+                        key: `motion_poll_default_method`,
+                        label: _(`Default vote method`),
+                        type: `choice`,
+                        choices: MotionPollMethodVerbose
                     },
                     {
                         key: `motion_poll_default_onehundred_percent_base`,

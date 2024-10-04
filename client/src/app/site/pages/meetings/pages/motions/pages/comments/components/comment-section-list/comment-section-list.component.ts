@@ -67,7 +67,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
     public ngOnInit(): void {
         super.setTitle(`Comment fields`);
 
-        this.groups = this.groupRepo.getViewModelListObservable();
+        this.groups = this.groupRepo.getViewModelListWithoutAnonymousGroupObservable();
         this.subscriptions.push(
             this.repo
                 .getViewModelListObservable()
@@ -81,10 +81,6 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
      * @param event the keyboard event
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Enter` && event.shiftKey) {
-            this.save();
-            this.dialogRef.close();
-        }
         if (event.key === `Escape`) {
             this.dialogRef.close();
         }

@@ -52,7 +52,10 @@ export class VotingBannerService {
                 })
             ),
             this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
-            this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
+            this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged()),
+            this.operator.userObservable.pipe(
+                distinctUntilChanged((p, c) => p?.isPresentInMeeting() === c?.isPresentInMeeting())
+            )
         ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
     }
 
@@ -65,7 +68,7 @@ export class VotingBannerService {
     }
 
     private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }): void {
-        if (this.activeMeeting.meetingId) {
+        if (this.activeMeeting.meetingId && !this.operator.isAnonymous) {
             const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(
                 poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined

@@ -82,14 +82,12 @@
             <!-- Gender -->
             <mat-form-field class="form58 force-min-width">
                 <mat-label>{{ 'Gender' | translate }}</mat-label>
-                <mat-select formControlName="gender">
-                    <mat-option [value]="null">-</mat-option>
-                    @for (gender of genders; track gender) {
-                        <mat-option [value]="gender">
-                            {{ gender | translate }}
-                        </mat-option>
-                    }
-                </mat-select>
+                <os-repo-search-selector
+                    formControlName="gender_id"
+                    [includeNone]="true"
+                    [repo]="genderRepo"
+                    [subscriptionConfig]="genderListSubscriptionConfig"
+                ></os-repo-search-selector>
             </mat-form-field>
             <!-- Pronoun -->
             <mat-form-field class="form38 force-min-width">
@@ -215,7 +213,9 @@
                         <span>({{ user.pronoun }})</span>
                     }
                     @if (!user.is_active && isAllowed('seeSensitiveData')) {
-                        <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
+                        <mat-icon class="red-warning-text" matTooltip="{{ 'Inactive' | translate }}">
+                            do_not_disturb_on
+                        </mat-icon>
                     }
                     @if (!user.is_physical_person) {
                         <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
@@ -230,7 +230,7 @@
         @if (user.gender) {
             <div>
                 <h4>{{ 'Gender' | translate }}</h4>
-                <span>{{ user.gender | translate }}</span>
+                <span>{{ user.gender?.name | translate }}</span>
             </div>
         }
         <!-- Mail -->

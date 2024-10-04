@@ -3,7 +3,7 @@
     <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
     <!-- Delegations -->
     @if (isUserPresent && (voteDelegationEnabled | async)) {
-        @for (delegation of delegations; track delegation) {
+        @for (delegation of delegations; track delegation.id) {
             <div class="poll-vote-delegation">
                 <mat-divider></mat-divider>
                 <ng-container
@@ -65,9 +65,12 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid':
-                                        poll.isMethodYNA || (settings.isSplitSingleOption && displayed_in_autopilot),
+                                        poll.isMethodYNA ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
-                                    'yn-grid': poll.isMethodYN,
+                                    'yn-grid':
+                                        poll.isMethodYN ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYN),
                                     'single-vote-grid':
                                         (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
                                     'single-multi-vote-grid':
@@ -88,7 +91,7 @@
                                 }
                                 @for (
                                     action of voteActions.length ? voteActions : voteOptions;
-                                    track action;
+                                    track action.vote;
                                     let i = $index
                                 ) {
                                     @if (!poll.isTopicPoll) {
@@ -101,7 +104,7 @@
                         }
                         @if (poll.isMethodN && poll.hasGlobalOptionEnabled && poll.global_yes) {
                             @if (!settings.hideGlobalOptions) {
-                                @for (option of globalVoteActions; track option) {
+                                @for (option of globalVoteActions; track option.vote) {
                                     @if (option.vote === 'Y') {
                                         <div class="single-vote-grid">
                                             <div class="vote-option-title">
@@ -148,15 +151,20 @@
                             }
                         }
 
-                        @for (option of poll.options; track option; let i = $index) {
+                        @for (option of poll.options; track option.id; let i = $index) {
                             <div
                                 [ngClass]="{
-                                    'split-grid': settings.isSplitSingleOption && !displayed_in_autopilot,
+                                    'yna-split-grid':
+                                        settings.isSplitSingleOption && !displayed_in_autopilot && poll.isMethodYNA,
+                                    'yn-split-grid':
+                                        settings.isSplitSingleOption && !displayed_in_autopilot && poll.isMethodYN,
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yna-grid':
                                         (!settings.isSplitSingleOption && poll.isMethodYNA) ||
-                                        (settings.isSplitSingleOption && displayed_in_autopilot),
-                                    'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
+                                    'yn-grid':
+                                        (!settings.isSplitSingleOption && poll.isMethodYN) ||
+                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYN),
                                     'single-vote-grid':
                                         !settings.isSplitSingleOption &&
                                         (poll.isMethodY || poll.isMethodN) &&
@@ -205,7 +213,7 @@
                                 @if (!poll.max_votes_per_option || poll.max_votes_per_option <= 1) {
                                     @for (
                                         action of voteActions.length ? voteActions : voteOptions;
-                                        track action;
+                                        track action.vote;
                                         let i = $index
                                     ) {
                                         <div class="vote-button-area" [ngClass]="'option' + i">
@@ -241,7 +249,7 @@
                                     <ng-container>
                                         @for (
                                             action of voteActions.length ? voteActions : voteOptions;
-                                            track action;
+                                            track action.vote;
                                             let i = $index
                                         ) {
                                             <div class="vote-button-area" [ngClass]="'option' + i">
@@ -309,7 +317,7 @@
 
                             <!-- global yes/no/abstain -->
                             @if (!settings.hideGlobalOptions) {
-                                @for (option of globalVoteActions; track option) {
+                                @for (option of globalVoteActions; track option.vote) {
                                     @if (!poll.isMethodN || option.vote !== 'Y') {
                                         <div class="single-vote-grid">
                                             <div class="vote-option-title">
