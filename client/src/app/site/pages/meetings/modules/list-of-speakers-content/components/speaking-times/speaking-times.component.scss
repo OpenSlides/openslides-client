@@ -1,3 +1,5 @@
+@import 'src/assets/styles/variables.scss';
+
 .structure-level-list {
     $auto-sizing: auto-fill;
     $column-min-width: 186px;
@@ -8,12 +10,23 @@
     column-gap: 16px;
     grid-template-columns: repeat($auto-sizing, minmax($column-min-width, max-content));
 
+    @include phone {
+        $column-min-width: 159px;
+        padding: 0;
+        margin-right: -20px;
+        column-gap: 5px;
+    }
+
     .structure-level {
         margin-bottom: 16px;
         display: flex;
         flex-direction: row;
         justify-content: end;
         width: min(222px, 100%);
+
+        @include phone {
+            width: min(186px, 100%);
+        }
 
         .structure-level-content {
             .structure-level-color {
