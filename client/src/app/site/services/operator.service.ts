@@ -96,7 +96,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return !!(this.user.committee_management_ids || []).length;
+        return !!(this.user?.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
