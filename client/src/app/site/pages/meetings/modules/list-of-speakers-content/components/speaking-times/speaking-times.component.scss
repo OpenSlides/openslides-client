@@ -10,6 +10,10 @@
     column-gap: 16px;
     grid-template-columns: repeat($auto-sizing, minmax($column-min-width, max-content));
 
+    @media (max-width: 1383px) {
+        $auto-sizing: auto-fit;
+    }
+
     @include phone {
         $column-min-width: 159px;
         padding: 0;
