@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -82,5 +83,12 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
             return this.translate.instant(`Navigate to committee detail view from `) + meeting.committeeName;
         }
         return this.translate.instant(`Navigate to meeting `) + meeting.name;
+    }
+
+    public showParticipantAmount(meeting: ViewMeeting): boolean {
+        return (
+            this.operator.hasCommitteePermissions(meeting.committee_id, CML.can_manage) ||
+            this.operator.hasPermsInMeeting(meeting.id, Permission.userCanSee)
+        );
     }
 }
