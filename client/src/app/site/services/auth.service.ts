@@ -37,6 +37,7 @@ export class AuthService {
 
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
+    private _invalidateSessionAfterPromise: Promise<void> | null = null;
 
     public constructor(
         private lifecycleService: LifecycleService,
@@ -108,12 +109,14 @@ export class AuthService {
         }
     }
 
-    public async invalidateSessionAfter(callback?: () => Promise<any>): Promise<void> {
+    private async _invalidateSessionAfter(callback?: () => Promise<any>): Promise<void> {
         try {
-            const response = callback ? await callback() : {success: true};
+            const response = callback ? await callback() : { success: true };
+            console.debug(`auth: Invalidate session after`, response);
             if (response?.success) {
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
+                // sessionStorage.clear();
                 await this.sharedWorker.sendMessage(<AuthUpdateMessage>{
                     receiver: `auth`,
                     msg: { action: `update`, params: null }
@@ -121,6 +124,7 @@ export class AuthService {
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
+                this.oauthService.logOut();
             }
         } catch (e) {
             this.sharedWorker.sendMessage(<AuthUpdateMessage>{
@@ -129,6 +133,14 @@ export class AuthService {
             });
             throw e;
         }
+    }
+
+    public async invalidateSessionAfter(callback?: () => Promise<any>): Promise<void> {
+        if (this._invalidateSessionAfterPromise) {
+            return this._invalidateSessionAfterPromise;
+        }
+        this._invalidateSessionAfterPromise = this._invalidateSessionAfter(callback);
+        return this._invalidateSessionAfterPromise;
     }
 
     public async logout(): Promise<void> {
@@ -176,7 +188,7 @@ export class AuthService {
         await this.oauthService.loadDiscoveryDocumentAndLogin();
         this.oauthService.setupAutomaticSilentRefresh();
         this.allowRefreshTokenAndSilentRefreshOnMultipleTabs();
-        if(this.oauthService.getAccessToken()) {
+        if (this.oauthService.getAccessToken()) {
             this.propergateToken();
         }
     }
@@ -246,7 +258,7 @@ export class AuthService {
         }
     }
 
-    private propergateToken() {
+    private propergateToken(): void {
         this.authTokenService.setRawAccessToken(this.oauthService.getAccessToken());
         this.sharedWorker.sendMessage(<AuthUpdateMessage>{
             receiver: `auth`,
