@@ -1,18 +1,21 @@
 .structure-level-list {
-    display: flex;
-    flex-wrap: wrap;
+    $auto-sizing: auto-fill;
+    $column-min-width: 186px;
+
     justify-content: start;
     padding: 8px 25px 0 25px;
+    display: grid;
+    column-gap: 16px;
+    grid-template-columns: repeat($auto-sizing, minmax($column-min-width, max-content));
+
     .structure-level {
-        min-width: 33%;
         margin-bottom: 16px;
         display: flex;
         flex-direction: row;
         justify-content: end;
+        width: min(222px, 100%);
 
         .structure-level-content {
-            width: 100%;
-
             .structure-level-color {
                 height: 3px;
                 background-color: transparent;
@@ -36,8 +39,6 @@
         }
 
         .icon-less-space-to-left {
-            width: 48px;
-            margin-right: -23px;
             margin-top: 12px;
         }
     }
