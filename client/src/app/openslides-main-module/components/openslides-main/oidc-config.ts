@@ -7,5 +7,9 @@ export const authCodeFlowConfig: AuthConfig = {
     responseType: `code`,
     scope: `openid profile email offline_access`,
     showDebugInformation: true,
-    timeoutFactor: 0.75
+    timeoutFactor: 0.75,
+    openUri: (uri: string) => {
+        console.debug(`OpenUri: ${uri}`);
+        window.location.href = uri;
+    }
 };
