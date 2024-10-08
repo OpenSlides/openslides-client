@@ -38,12 +38,17 @@
                             }
                         </mat-select>
                     </mat-form-field>
-                    <!-- require_duplicate_from -->
-                    <section>
+                    <div>
                         <mat-checkbox formControlName="require_duplicate_from">
                             {{ 'Public template required for creating new meeting' | translate }}
                         </mat-checkbox>
-                    </section>
+                    </div>
+
+                    <div>
+                        <mat-checkbox formControlName="enable_anonymous">
+                            {{ 'Meetings can be public' | translate }}
+                        </mat-checkbox>
+                    </div>
                 </div>
             </mat-card-content>
         </mat-card>
