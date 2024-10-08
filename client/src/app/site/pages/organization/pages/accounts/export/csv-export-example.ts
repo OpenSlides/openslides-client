@@ -7,7 +7,6 @@ export const AccountCsvExportExample: UserExport[] = [
         email: `max@example.com`,
         is_active: true,
         is_physical_person: true,
-        gender: `male`,
         default_vote_weight: 1.0,
         member_number: `123456`
     }
