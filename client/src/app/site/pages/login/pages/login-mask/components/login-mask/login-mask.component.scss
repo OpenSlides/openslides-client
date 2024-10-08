@@ -1,0 +1,54 @@
+mat-form-field {
+    width: 100%;
+}
+
+.forgot-password-button {
+    float: right;
+    padding: 0;
+    text-align: right;
+}
+
+.login-button {
+    margin-top: 30px;
+    height: 37px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-wrapper {
+    padding-left: 30px;
+    padding-right: 30px;
+    mat-spinner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        z-index: 2;
+    }
+}
+
+.login-container {
+    padding-top: 50px;
+    margin: 0 auto;
+    max-width: 400px;
+
+    mat-icon {
+        cursor: pointer;
+    }
+}
+
+.header-name {
+    padding-top: 50px;
+    text-align: center;
+}
+
+.expansion-button {
+    padding-left: 0;
+}
+
+.expandable-area {
+    padding-bottom: 30px;
+    padding-top: 10px;
+}
