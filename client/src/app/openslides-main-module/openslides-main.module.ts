@@ -4,6 +4,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
@@ -33,6 +34,12 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         BrowserModule,
         OpenSlidesMainRoutingModule,
         BrowserAnimationsModule,
+        OAuthModule.forRoot({
+            resourceServer: {
+                allowedUrls: [window.location.origin],
+                sendAccessToken: true
+            }
+        }),
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {

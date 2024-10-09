@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -28,7 +28,8 @@ import { LoginMaskRoutingModule } from './login-mask-routing.module';
         SpinnerModule,
         MatExpansionModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule.forChild(),
+        FormsModule
     ]
 })
 export class LoginMaskModule {}

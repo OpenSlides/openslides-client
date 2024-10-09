@@ -50,7 +50,8 @@ export const MEETING_RELATED_FORM_CONTROLS = [
     `group_ids`,
     `vote_delegations_from_ids`,
     `vote_delegated_to_id`,
-    `is_present`
+    `is_present`,
+    `locked_out`
 ];
 
 @Injectable({
@@ -244,6 +245,16 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.actions.create({ action: UserAction.SET_PRESENT, data: payload });
     }
 
+    public setLockout(locked_out: boolean, ...users: ViewUser[]): Action<void> {
+        this.repo.preventAlterationOnDemoUsers(users);
+        const payload: any[] = users.map(user => ({
+            id: user.id,
+            meeting_id: this.activeMeetingId,
+            locked_out: locked_out
+        }));
+        return this.actions.create({ action: UserAction.UPDATE, data: payload });
+    }
+
     public async removeUsersFromMeeting(
         users: ViewUser[],
         meeting: ViewMeeting = this.activeMeeting
@@ -347,7 +358,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                     vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
                     vote_delegations_from_ids: this.validateField(participant, `vote_delegations_from_ids`),
                     about_me: this.validateField(participant, `about_me`),
-                    comment: this.validateField(participant, `comment`)
+                    comment: this.validateField(participant, `comment`),
+                    locked_out: this.validateField(participant, `locked_out`)
                 }
             ]
         };

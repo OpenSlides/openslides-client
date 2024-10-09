@@ -1,19 +1,20 @@
 import { environment } from 'src/environments/environment';
 
+import { HttpMethod } from '../infrastructure/definitions/http';
 import { AutoupdateStreamPool } from './autoupdate/autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {
     AutoupdateCleanupCacheParams,
     AutoupdateCloseStreamParams,
-    AutoupdateOpenStreamParams,
-    AutoupdateSetEndpointParams
-} from './autoupdate/interfaces-autoupdate';
+    AutoupdateMessage,
+    AutoupdateOpenStreamParams
+} from './sw-autoupdate.interfaces';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
     healthUrl: `/system/autoupdate/health`,
-    method: `post`
-} as AutoupdateSetEndpointParams);
+    method: HttpMethod.POST
+});
 
 const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
@@ -182,22 +183,20 @@ export function initAutoupdateSw(broadcast: (s: string, a: string, c?: any) => v
     autoupdatePool.registerBroadcast(broadcast);
 }
 
-export function autoupdateMessageHandler(ctx: any, e: any): void {
-    const msg = e.data?.msg;
-    const params = msg?.params;
-    const action = msg?.action;
-    switch (action) {
+export function autoupdateMessageHandler(ctx: any, e: MessageEvent<AutoupdateMessage>): void {
+    const msg = e.data.msg;
+    switch (msg.action) {
         case `open`:
-            openConnection(ctx, params);
+            openConnection(ctx, msg.params);
             break;
         case `close`:
-            closeConnection(ctx, params);
+            closeConnection(ctx, msg.params);
             break;
         case `cleanup-cache`:
-            cleanupStream(params);
+            cleanupStream(msg.params);
             break;
         case `set-endpoint`:
-            autoupdatePool.setEndpoint(params);
+            autoupdatePool.setEndpoint(msg.params);
             break;
         case `set-connection-status`:
             updateOnlineStatus();

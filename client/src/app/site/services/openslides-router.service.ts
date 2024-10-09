@@ -63,9 +63,6 @@ export class OpenSlidesRouterService {
         private updateService: UpdateService,
         private operator: OperatorService
     ) {
-        _auth.logoutObservable.subscribe(() => {
-            this.navigateToLogin();
-        });
         router.events
             .pipe(
                 filter(event => event instanceof RoutesRecognized),
@@ -76,6 +73,11 @@ export class OpenSlidesRouterService {
             .subscribe(event => this._currentParamMap.next(event));
         activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
 
+        this.operator.operatorUpdated.subscribe(() => {
+            if (!this.operator.knowsMultipleMeetings && !this.activeMeetingIdService.meetingId) {
+                this.checkCurrentRouteGuards();
+            }
+        });
         this.operator.permissionsObservable
             .pipe(
                 filter(v => !!v),
@@ -88,6 +90,7 @@ export class OpenSlidesRouterService {
     }
 
     public navigateToLogin(): void {
+        debugger;
         const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there

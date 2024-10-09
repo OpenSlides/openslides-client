@@ -10,11 +10,12 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { AuthService } from 'src/app/site/services/auth.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
+import { getKeycloakLoginConfig } from '../../../../../../../openslides-main-module/components/openslides-main/keycloak-login';
+import { SpinnerService } from '../../../../../../modules/global-spinner';
 import { BrowserSupportService } from '../../../../services/browser-support.service';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
@@ -92,18 +93,26 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public constructor(
         protected override translate: TranslateService,
-        private authService: AuthService,
         private operator: OperatorService,
         private route: ActivatedRoute,
         private osRouter: OpenSlidesRouterService,
         private formBuilder: UntypedFormBuilder,
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
-        private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
+        private browserSupport: BrowserSupportService,
+        private spinnerService: SpinnerService
     ) {
         super();
         // Hide the spinner if the user is at `login-mask`
         this.loginForm = this.createForm();
+        this.loginForm.valueChanges.subscribe(() => {
+            this.clearFieldError();
+        });
+    }
+
+    private clearFieldError(): void {
+        const usernameControl = this.loginForm.get(`username`);
+        usernameControl?.setErrors(null);
     }
 
     /**
@@ -131,10 +140,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
                 this.checkIfGuestsEnabled(params[`meetingId`]);
             }
         });
-
-        if (this.checkBrowser) {
-            this.checkDevice();
-        }
 
         // check if global saml auth is enabled
         this.subscriptions.push(
@@ -167,23 +172,68 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.isWaitingOnLogin = true;
         this.loginErrorMsg = ``;
         try {
-            // this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
-            const { username, password } = this.formatLoginInputValues(this.loginForm.value);
-            await this.authService.login(username, password);
+            this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
+            const url = getKeycloakLoginConfig()?.loginAction;
+            if (url) {
+                const { username, password } = this.formatLoginInputValues(this.loginForm.value);
+                const formData = new FormData();
+                formData.append(`username`, username);
+                formData.append(`password`, password);
+
+                const response = await fetch(url, {
+                    method: `POST`,
+                    body: formData
+                });
+
+                if (!response.url.startsWith(`https://localhost:8000/idp`)) {
+                    window.location.href = response.url;
+                }
+                const htmlContent = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, `text/html`);
+                const scriptElement = doc.getElementById(`keycloak-config`);
+
+                if (scriptElement) {
+                    const scriptContent = scriptElement.textContent || ``;
+
+                    try {
+                        eval(scriptContent);
+                        const updatedConfig = getKeycloakLoginConfig();
+                        console.log(`Keycloak Config:`, updatedConfig);
+                        if (updatedConfig?.fieldErrors.username) {
+                            const usernameControl = this.loginForm.get(`username`);
+                            usernameControl?.setErrors({ customError: updatedConfig?.fieldErrors.username });
+                            usernameControl?.markAsTouched();
+                        }
+                    } catch (error) {
+                        console.error(`Failed to parse/evaluate script content:`, error);
+                    }
+                } else {
+                    console.error(`Script element with id "keycloak-config" not found`);
+                }
+            }
         } catch (e: any) {
-            this.isWaitingOnLogin = false;
-            // this.spinnerService.hide();
             this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${this.translate.instant(e.message)}`;
+        } finally {
+            this.isWaitingOnLogin = false;
+            this.spinnerService.hide();
         }
+    }
+
+    public formAction(): string {
+        return getKeycloakLoginConfig()?.loginAction;
+    }
+
+    public hasUsernameError(): boolean {
+        return this.loginForm.get(`username`)?.hasError(`customError`);
+    }
+
+    public hasPasswordError(): boolean {
+        return this.loginForm.get(`password`)?.hasError(`customError`);
     }
 
     public async guestLogin(): Promise<void> {
         this.router.navigate([`${this.currentMeetingId}/`]);
-    }
-
-    public async samlLogin(): Promise<void> {
-        const redirectUrl = await this.authService.startSamlLogin();
-        location.replace(redirectUrl);
     }
 
     /**
@@ -245,4 +295,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             password: [``, [Validators.required, Validators.maxLength(128)]]
         });
     }
+
+    protected readonly console = console;
 }

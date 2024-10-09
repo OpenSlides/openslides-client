@@ -104,6 +104,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.isPresentInMeeting();
     }
 
+    public get is_locked_out(): boolean {
+        return this.isLockedOutOfMeeting();
+    }
+
     public get hasMemberNumber(): boolean {
         return !!this.member_number;
     }
@@ -134,14 +138,32 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.is_present_in_meeting_ids?.includes(meetingId) || false;
     }
 
+    /**
+     * @param meetingId The meeting id. If not provided, tha active meeting id is used.
+     * If there is no active meeting, an error will be thrown.
+     * @returns if the user is locked out of the given meeting
+     */
+    public isLockedOutOfMeeting(meetingId?: Id): boolean {
+        return this.getMeetingUser(meetingId || this.getEnsuredActiveMeetingId())?.locked_out || false;
+    }
+
     public get hasMultipleMeetings(): boolean {
+        if (this.meeting_users?.length) {
+            return this.meeting_users.filter(mu => !mu.locked_out).length !== 1;
+        }
+
         return this.meeting_ids?.length !== 1; // In case of `0` it should not return `true`
     }
 
     public get onlyMeeting(): Id {
-        const meetingAmount = this.meeting_ids?.length || 0;
+        let meetingIds = this.meeting_ids || [];
+        if (this.meeting_users?.length) {
+            meetingIds = this.ensuredMeetingIds;
+        }
+
+        const meetingAmount = meetingIds.length;
         if (meetingAmount === 1) {
-            return this.meeting_ids[0];
+            return meetingIds[0];
         } else if (meetingAmount > 1) {
             throw new Error(`User has multiple meetings`);
         } else if (meetingAmount === 0) {
@@ -155,7 +177,11 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
      * Returns all meetings that the user actually has group memberships for.
      */
     public get ensuredMeetingIds(): number[] {
-        return this.meeting_users.filter(mUser => mUser.group_ids?.length).map(mUser => mUser.meeting_id) || [];
+        return (
+            this.meeting_users
+                .filter(mUser => mUser.group_ids?.length && !mUser.locked_out)
+                .map(mUser => mUser.meeting_id) || []
+        );
     }
 
     public hasVoteRightFromOthers(meetingId?: Id): boolean {

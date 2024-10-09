@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable } from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {Injectable, Injector} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TranslateService} from '@ngx-translate/core';
+import {firstValueFrom, Observable} from 'rxjs';
 
 import {
     formatQueryParams,
@@ -11,10 +11,11 @@ import {
     QueryParams,
     ResponseType
 } from '../infrastructure/definitions/http';
-import { ProcessError } from '../infrastructure/errors';
-import { toBase64 } from '../infrastructure/utils/functions';
-import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
-import { ErrorMapService } from './error-mapping/error-map.service';
+import {ProcessError} from '../infrastructure/errors';
+import {toBase64} from '../infrastructure/utils/functions';
+import {ActionWorkerWatchService} from './action-worker-watch/action-worker-watch.service';
+import {ErrorMapService} from './error-mapping/error-map.service';
+import { AuthTokenService } from '../site/services/auth-token.service';
 
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
 
@@ -32,6 +33,8 @@ export interface RequestSettings {
 })
 export class HttpService {
     private _actionWorkerWatch: ActionWorkerWatchService;
+    private blobCache = new Map<string, string>(); // Cache for blob URLs
+
     private get actionWorkerWatch(): ActionWorkerWatchService {
         if (!this._actionWorkerWatch) {
             this._actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
@@ -44,7 +47,8 @@ export class HttpService {
         private errorMapper: ErrorMapService,
         private injector: Injector,
         private snackBar: MatSnackBar,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private authTokenService: AuthTokenService
     ) {}
 
     /**
@@ -217,6 +221,31 @@ export class HttpService {
             return headers.set(`ngsw-bypass`, `true`);
         } else {
             return { 'ngsw-bypass': `true`, ...headers };
+        }
+    }
+
+    public async getBlobUrl(url: string): Promise<string | null> {
+        await this.authTokenService.waitForValidToken();
+        try {
+            if (this.blobCache.has(url)) {
+                return this.blobCache.get(url);
+            }
+
+            // Fetch the resource as a blob
+            const response = await fetch(url, { headers: { Authentication: `Bearer ${this.authTokenService.rawAccessToken}` } });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const blob = await response.blob();
+
+            // Create a blob URL and cache it
+            const blobUrl = URL.createObjectURL(blob);
+            this.blobCache.set(url, blobUrl);
+
+            return blobUrl;
+        } catch (error) {
+            console.error('Error loading image:', error);
+            return null;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
@@ -7,6 +7,7 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import {
@@ -35,6 +36,9 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
+    @ViewChild(UserDetailViewComponent)
+    private userDetailView;
+
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = {
@@ -46,7 +50,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         group_ids: [``],
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
-        is_present: [``]
+        is_present: [``],
+        locked_out: [``]
     };
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
@@ -63,6 +68,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return (controlName, user) => {
             if (controlName === `is_present` && user) {
                 return user.isPresentInMeeting();
+            }
+            if (controlName === `locked_out` && user) {
+                return user.isLockedOutOfMeeting();
             }
             const value = user?.[controlName as keyof ViewUser] || null;
             return typeof value === `function` ? value.bind(user)(this.activeMeetingId!) : value;
@@ -155,6 +163,22 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public get showVoteDelegations(): boolean {
         return this._isVoteDelegationEnabled;
+    }
+
+    public get saveButtonEnabled(): boolean {
+        return this.isFormValid && !this.isLockedOutAndCanManage;
+    }
+
+    public get isLockedOutAndCanManage(): boolean {
+        const lockedOutHelper = this.personalInfoFormValue?.locked_out ?? this.user?.is_locked_out;
+        return lockedOutHelper && this.checkSelectedGroupsCanManage();
+    }
+
+    public get lockoutCheckboxDisabled(): boolean {
+        const other = this.user?.id !== this.operator.operatorId;
+        const notChanged = (this.personalInfoFormValue?.locked_out ?? null) === null;
+        const isLockedOut = this.user?.is_locked_out;
+        return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage() || !other);
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
@@ -338,6 +362,17 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
     }
 
+    public updateByValueChange(event: any): void {
+        this.personalInfoFormValue = event;
+        if (this.userDetailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
+            if (this.lockoutCheckboxDisabled) {
+                this.userDetailView.personalInfoForm.get(`locked_out`).disable();
+            } else {
+                this.userDetailView.personalInfoForm.get(`locked_out`).enable();
+            }
+        }
+    }
+
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
@@ -423,5 +458,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     private goToAllUsers(): void {
         this.router.navigate([this.activeMeetingId, `participants`]);
+    }
+
+    private checkSelectedGroupsCanManage(): boolean {
+        return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 }

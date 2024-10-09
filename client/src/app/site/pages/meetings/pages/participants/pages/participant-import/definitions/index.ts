@@ -8,6 +8,7 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: a
     number: `Participant number`,
     vote_weight: `Vote weight`,
     is_present: `Is present`,
+    locked_out: `Locked out`,
     comment: `Comment`
 };
 
@@ -28,6 +29,7 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `is_active`,
     `is_physical_person`,
     `is_present`,
+    `locked_out`,
     `saml_id`,
     `comment`
 ];

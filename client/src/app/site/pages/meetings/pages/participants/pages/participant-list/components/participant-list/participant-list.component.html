@@ -89,9 +89,6 @@
                 @if (!user.is_physical_person) {
                     <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
                 }
-                @if (!user.is_active && canSeeSensitiveData) {
-                    <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
-                }
                 @if (user.hasSamlId && canSeeSensitiveData) {
                     <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
                 }
@@ -179,17 +176,34 @@
     </div>
 
     <!-- Presence column -->
-    <div *osScrollingTableCell="'presence'; row as user; config: { width: 130 }" class="cell-slot fill">
-        <mat-checkbox
-            class="checkbox-ripple-padding"
-            [checked]="isUserPresent(user)"
-            [disabled]="isPresentToggleDisabled(user)"
-            (change)="setPresent(user)"
-        >
-            <span>{{ 'Present' | translate }}</span>
-        </mat-checkbox>
+    <div *osScrollingTableCell="'presence'; row as user; config: { width: 140 }" class="cell-slot fill">
+        <div class="icon-group">
+            <mat-checkbox
+                class="checkbox-ripple-padding"
+                [checked]="isUserPresent(user)"
+                [disabled]="isPresentToggleDisabled(user)"
+                (change)="setPresent(user)"
+            >
+                <span>{{ 'Present' | translate }}</span>
+            </mat-checkbox>
+            @if (user.is_locked_out) {
+                <div style="padding-left: 20px">
+                    <div class="icon-part">
+                        <mat-icon class="red-warning-text">visibility_off</mat-icon>
+                        <span>{{ 'Locked out' | translate }}</span>
+                    </div>
+                </div>
+            }
+            @if (!user.is_active && canSeeSensitiveData) {
+                <div style="padding-left: 20px; margin-top: 6px">
+                    <div class="icon-part">
+                        <mat-icon>block</mat-icon>
+                        <span>{{ 'Inactive' | translate }}</span>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-
     <!-- Menu -->
     <div
         *osScrollingTableCell="
@@ -247,6 +261,17 @@
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="sendInvitationEmail(user)">
             <mat-icon>mail</mat-icon>
             <span>{{ 'Send invitation email' | translate }}</span>
+        </button>
+
+        <button
+            *osPerms="permission.userCanUpdate"
+            mat-menu-item
+            [class.red-warning-text]="user.is_locked_out"
+            [disabled]="isLockedOutToggleDisabled(user)"
+            (click)="toggleLockout(user)"
+        >
+            <mat-icon>visibility_off</mat-icon>
+            <span>{{ 'Locked out' | translate }}</span>
         </button>
 
         <button
@@ -349,6 +374,10 @@
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
                     <mat-icon>sync</mat-icon>
                     <span>{{ 'Set natural person ...' | translate }}</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeLockedOutStateOfSelectedUsers()">
+                    <mat-icon>visibility_off</mat-icon>
+                    <span>{{ 'Set lockout ...' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
             </os-user-multiselect-actions>

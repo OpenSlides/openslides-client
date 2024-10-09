@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -18,6 +18,7 @@ import { ConnectionStatusService } from 'src/app/site/services/connection-status
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { Dimension, SlideData } from '../../../../pages/projectors/definitions';
+import { HttpService } from "../../../../../../../gateways/http.service";
 
 @Component({
     selector: `os-projector`,
@@ -40,19 +41,21 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
      * The current projector size. This is for checking,
      * if the size actually has changed.
      */
-    private currentProjectorSize: Dimension = { width: 0, height: 0 };
+    private currentProjectorSize: Dimension = {width: 0, height: 0};
 
     /**
      * The container element. THis is neede to get the size of the element,
      * in which the projector must fit and be scaled to.
      */
-    @ViewChild(`container`, { static: true })
+    @ViewChild(`container`, {static: true})
     private containerElement: ElementRef | null = null;
 
     /**
      * The css class assigned to this projector.
      */
     private projectorClass: string;
+
+    public projectorLogo: string | null = null;
 
     /**
      * The styleelement for setting projector-specific styles.
@@ -116,10 +119,6 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
         return this.meetingSettingsService.get(`description`);
     }
 
-    public get projectorLogoObservable(): Observable<string> {
-        return this.mediaManageService.getLogoUrlObservable(`projector_main`);
-    }
-
     // Some settings for the view from the config.
     public enableHeaderAndFooter = true;
     public enableTitle = true;
@@ -128,7 +127,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
         private offlineService: ConnectionStatusService,
         private elementRef: ElementRef,
         private mediaManageService: MediaManageService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private httpService: HttpService
     ) {
         super();
 
@@ -140,8 +140,22 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
 
         // projector logo / background-image
         this.mediaManageService.getLogoUrlObservable(`projector_header`).subscribe(url => {
-            this.css.headerFooter.backgroundImage = url ? `url('${url}')` : `none`;
+            if (url) {
+                this.httpService.getBlobUrl(url).then(blobUrl => {
+                    this.css.headerFooter.backgroundImage = blobUrl ? `url(${blobUrl})` : `none`;
+                })
+            } else {
+                this.css.headerFooter.backgroundImage = null;
+            }
             this.updateCSS();
+        });
+
+        this.mediaManageService.getLogoUrlObservable(`projector_main`).subscribe(logoUrl => {
+            if (logoUrl) {
+                this.httpService.getBlobUrl(logoUrl).then(blobUrl => {
+                    this.projectorLogo = blobUrl;
+                });
+            }
         });
 
         this.subscriptions.push(
@@ -165,7 +179,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
                                 stable: !!projection.stable,
                                 type: projection.type || ``,
                                 options: projection.options || {},
-                                ...(!!projection.content?.[`error`] && { error: projection.content[`error`] })
+                                ...(!!projection.content?.[`error`] && {error: projection.content[`error`]})
                             }) as SlideData
                     )
                 )
@@ -179,7 +193,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
                     return;
                 }
 
-                const oldSize: Dimension = { ...this.currentProjectorSize };
+                const oldSize: Dimension = {...this.currentProjectorSize};
                 this.currentProjectorSize.height = projector.height;
                 this.currentProjectorSize.width = projector.width;
                 if (
