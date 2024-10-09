@@ -132,13 +132,15 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
             this.checkBrowser = params[`checkBrowser`] === `true`;
         });
-        this.route.params.subscribe(params => {
-            if (params[`meetingId`]) {
-                this.loadMeeting(params[`meetingId`]);
-            } else {
-                this.loadActiveMeetings();
-            }
-        });
+        if (this.orgaSettings.instant(`enable_anonymous`)) {
+            this.route.params.subscribe(params => {
+                if (params[`meetingId`]) {
+                    this.loadMeeting(params[`meetingId`]);
+                } else {
+                    this.loadActiveMeetings();
+                }
+            });
+        }
 
         if (this.checkBrowser) {
             this.checkDevice();
