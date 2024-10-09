@@ -78,9 +78,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get addSelf(): boolean {
         return (
+            !this.operator.isAnonymous &&
             this.permission.listOfSpeakersCanBeSpeaker &&
-            !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated) &&
-            !this.operator.isAnonymous
+            !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated)
         );
     }
 
