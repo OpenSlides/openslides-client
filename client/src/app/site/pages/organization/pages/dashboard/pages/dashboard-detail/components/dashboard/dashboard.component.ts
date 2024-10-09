@@ -86,7 +86,7 @@ export class DashboardComponent extends BaseComponent {
                     meeting =>
                         this.operator.isInMeeting(meeting.id) ||
                         this.operator.isSuperAdmin ||
-                        (meeting.enable_anonymous && this.operator.isAnonymous)
+                        (meeting.publicAccessPossible() && this.operator.isAnonymous)
                 );
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
