@@ -29,18 +29,6 @@
     }
     @if (samlEnabled && !loading) {
         <div class="login-container">
-            @if (samlEnabled) {
-                <button
-                    class="login-button"
-                    color="primary"
-                    mat-raised-button
-                    osAutofocus
-                    type="button"
-                    (click)="samlLogin()"
-                >
-                    {{ samlLoginButtonText || 'SAML Login' | translate }}
-                </button>
-            }
             <br />
             @if (guestsEnabled) {
                 <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
@@ -74,6 +62,11 @@
         <mat-form-field>
             <mat-label>{{ 'Username' | translate }}</mat-label>
             <input data-cy="loginUsernameInput" formControlName="username" matInput osAutofocus required />
+            @if (hasUsernameError()) {
+                <mat-error>
+                    {{ loginForm.get('username')?.errors?.['customError'] }}
+                </mat-error>
+            }
         </mat-form-field>
         <br />
         <mat-form-field>
@@ -88,6 +81,11 @@
             <mat-icon color="primary" matSuffix (click)="hide = !hide">
                 {{ hide ? 'visibility_off' : 'visibility_on' }}
             </mat-icon>
+            @if (hasPasswordError()) {
+                <mat-error>
+                    {{ loginForm.get('password')?.errors?.['customError'] }}
+                </mat-error>
+            }
         </mat-form-field>
         <mat-error>{{ loginErrorMsg | translate }}</mat-error>
 

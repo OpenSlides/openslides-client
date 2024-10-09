@@ -124,6 +124,7 @@ export class AuthService {
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
+                debugger;
                 this.oauthService.logOut();
             }
         } catch (e) {

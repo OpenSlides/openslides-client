@@ -90,6 +90,7 @@ export class OpenSlidesRouterService {
     }
 
     public navigateToLogin(): void {
+        debugger;
         const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there

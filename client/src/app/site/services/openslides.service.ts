@@ -34,10 +34,6 @@ export class OpenSlidesService {
             return;
         }
 
-        if (!this.authService.isAuthenticated()) {
-            this.osRouter.navigateToLogin();
-        }
-
         this.lifecycleService.reboot();
     }
 }

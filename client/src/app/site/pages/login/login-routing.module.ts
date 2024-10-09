@@ -9,6 +9,14 @@ const routes: Routes = [
         component: LoginWrapperComponent,
         children: [
             {
+                path: `realms/:realm/protocol/openid-connect/auth`,
+                loadChildren: () => import(`./pages/login-mask/login-mask.module`).then(m => m.LoginMaskModule)
+            },
+            {
+                path: `realms/:realm/login-actions/authenticate`,
+                loadChildren: () => import(`./pages/login-mask/login-mask.module`).then(m => m.LoginMaskModule)
+            },
+            {
                 path: `legalnotice`,
                 loadChildren: () => import(`./pages/legal-notice/legal-notice.module`).then(m => m.LegalNoticeModule)
             },

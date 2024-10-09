@@ -19,7 +19,13 @@ import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
+import { getKeycloakLoginConfig } from './keycloak-login';
+
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
+
+function bootAsKeycloakPage(): boolean {
+    return getKeycloakLoginConfig()?.bootAsKeycloakPage || false;
+}
 
 @Component({
     selector: `os-root`,
@@ -47,7 +53,9 @@ export class OpenSlidesMainComponent implements OnInit {
         private modelStore: ViewModelStoreService,
         private authService: AuthService
     ) {
-        authService.startOidcWorkflow();
+        if (!bootAsKeycloakPage()) {
+            authService.startOidcWorkflow();
+        }
 
         overloadJsFunctions();
         this.addDebugFunctions();
