@@ -13,12 +13,12 @@
                 <pdf-viewer
                     [autoresize]="true"
                     [fit-to-page]="true"
-                    [ngStyle]="{ top: -scroll + 'px' }"
                     [original-size]="false"
                     [page]="page"
-                    [show-all]="false"
+                    [show-all]="true"
                     [src]="url"
                     [zoom]="zoom"
+                    (page-rendered)="pdfLoaded()"
                 ></pdf-viewer>
             </div>
         }

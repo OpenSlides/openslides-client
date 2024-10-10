@@ -63,7 +63,9 @@ export class ActiveMeetingIdService {
      */
     public parseUrlMeetingId(url: string): Id | null {
         const parts = url.split(`/`);
-        if (parts.length >= 2) {
+        if (parts.length >= 3 && parts[1] === `login`) {
+            return +parts[2];
+        } else if (parts.length >= 2) {
             return +parts[1];
         }
 

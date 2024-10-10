@@ -36,7 +36,7 @@
                         <os-repo-search-selector
                             formControlName="entitled_group_ids"
                             [multiple]="true"
-                            [pipeFn]="groupRepo.getFilterDefaultGroupFn()"
+                            [pipeFn]="groupRepo.getFilterSystemGroupFn()"
                             [repo]="groupRepo"
                             [showChips]="false"
                             [sortFn]="sortFn"
