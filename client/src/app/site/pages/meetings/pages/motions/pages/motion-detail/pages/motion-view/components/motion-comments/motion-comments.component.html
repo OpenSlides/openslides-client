@@ -1,0 +1,11 @@
+@for (section of sections$ | async; track section.id; let index = $index) {
+    @if (canReadSection(section)) {
+        <os-motion-comment
+            [canBeEdited]="canEditSection(section)"
+            [comment]="getCommentForSection(section)"
+            [index]="index"
+            [motion]="motion"
+            [section]="section"
+        ></os-motion-comment>
+    }
+}

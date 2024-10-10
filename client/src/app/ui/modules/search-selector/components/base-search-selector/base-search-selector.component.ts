@@ -5,6 +5,7 @@ import {
     ElementRef,
     EventEmitter,
     Input,
+    OnDestroy,
     Output,
     TemplateRef,
     ViewChild
@@ -14,7 +15,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
@@ -24,12 +25,30 @@ import { SearchSelectorNotFoundTemplateDirective } from '../../directives/search
 import { ParentErrorStateMatcher } from '../../validators';
 
 @Directive()
-export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlComponent<Selectable> implements OnInit {
+export abstract class BaseSearchSelectorComponent
+    extends BaseFormFieldControlComponent<Selectable>
+    implements OnInit, OnDestroy
+{
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
 
+    private _matSelect!: MatSelect;
+    private _matSelectStateSubscription!: Subscription;
     @ViewChild(`matSelect`)
-    public matSelect!: MatSelect;
+    public set matSelect(value: MatSelect) {
+        this._matSelect = value;
+        if (this._matSelectStateSubscription) {
+            this._matSelectStateSubscription.unsubscribe();
+        }
+
+        value.stateChanges.subscribe(() => {
+            this.stateChanges.next();
+        });
+    }
+
+    public get matSelect(): MatSelect {
+        return this._matSelect;
+    }
 
     @ViewChild(`searchSelectorInput`)
     public inputDiv!: ElementRef;
@@ -188,6 +207,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             : this._snapshotValue === null || this._snapshotValue === undefined;
     }
 
+    public override get errorState(): boolean {
+        return !!this.matSelect && this.matSelect.errorState;
+    }
+
     public get selectedItems(): Selectable[] {
         if (this.multiple && this.selectableItems?.length && this.contentForm.value) {
             return this.selectableItems.filter(item => this.contentForm.value.includes(item.id));
@@ -255,6 +278,14 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         const sheet = document.createElement(`style`);
         sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
         document.body.appendChild(sheet);
+    }
+
+    public override ngOnDestroy(): void {
+        if (this._matSelectStateSubscription) {
+            this._matSelectStateSubscription.unsubscribe();
+        }
+
+        super.ngOnDestroy();
     }
 
     public onChipRemove(itemId: Id): void {

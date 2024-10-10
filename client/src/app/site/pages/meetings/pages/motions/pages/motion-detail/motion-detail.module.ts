@@ -13,9 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -43,38 +42,35 @@ import { MotionForwardDialogModule } from '../../components/motion-forward-dialo
 import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
-import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
-import { MotionAddPollButtonComponent } from './components/motion-add-poll-button/motion-add-poll-button.component';
-import { MotionCommentComponent } from './components/motion-comment/motion-comment.component';
-import { MotionCommentsComponent } from './components/motion-comments/motion-comments.component';
-import { MotionContentComponent } from './components/motion-content/motion-content.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
-import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
-import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
-import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
-import { MotionDetailViewComponent } from './components/motion-detail-view/motion-detail-view.component';
-import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
-import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
-import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
-import { MotionManageMotionMeetingUsersComponent } from './components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
-import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
-import { MotionManageTimestampComponent } from './components/motion-manage-timestamp/motion-manage-timestamp.component';
-import { MotionManageTitleComponent } from './components/motion-manage-title/motion-manage-title.component';
-import { MotionMetaDataComponent } from './components/motion-meta-data/motion-meta-data.component';
-import { MotionParagraphbasedAmendmentComponent } from './components/motion-paragraphbased-amendment/motion-paragraphbased-amendment.component';
-import { MotionPersonalNoteComponent } from './components/motion-personal-note/motion-personal-note.component';
-import { ParagraphBasedAmendmentComponent } from './components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailDirectivesModule } from './modules/directives/motion-detail-directives.module';
 import { MotionChangeRecommendationDialogModule } from './modules/motion-change-recommendation-dialog/motion-change-recommendation-dialog.module';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
+import { MotionAddPollButtonComponent } from './pages/motion-view/components/motion-add-poll-button/motion-add-poll-button.component';
+import { MotionCommentComponent } from './pages/motion-view/components/motion-comment/motion-comment.component';
+import { MotionCommentsComponent } from './pages/motion-view/components/motion-comments/motion-comments.component';
+import { MotionContentComponent } from './pages/motion-view/components/motion-content/motion-content.component';
+import { MotionDetailDiffComponent } from './pages/motion-view/components/motion-detail-diff/motion-detail-diff.component';
+import { MotionDetailDiffSummaryComponent } from './pages/motion-view/components/motion-detail-diff-summary/motion-detail-diff-summary.component';
+import { MotionDetailOriginalChangeRecommendationsComponent } from './pages/motion-view/components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
+import { MotionExtensionFieldComponent } from './pages/motion-view/components/motion-extension-field/motion-extension-field.component';
+import { MotionFinalVersionComponent } from './pages/motion-view/components/motion-final-version/motion-final-version.component';
+import { MotionHighlightFormComponent } from './pages/motion-view/components/motion-highlight-form/motion-highlight-form.component';
+import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
+import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';
+import { MotionManageTimestampComponent } from './pages/motion-view/components/motion-manage-timestamp/motion-manage-timestamp.component';
+import { MotionManageTitleComponent } from './pages/motion-view/components/motion-manage-title/motion-manage-title.component';
+import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
+import { MotionPersonalNoteComponent } from './pages/motion-view/components/motion-personal-note/motion-personal-note.component';
+import { MotionViewComponent } from './pages/motion-view/components/motion-view/motion-view.component';
+import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
 
 @NgModule({
     declarations: [
         MotionAddPollButtonComponent,
         MotionDetailComponent,
-        MotionDetailViewComponent,
-        AmendmentCreateWizardComponent,
+        MotionViewComponent,
         MotionContentComponent,
         MotionMetaDataComponent,
         MotionManageTitleComponent,
@@ -82,7 +78,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionHighlightFormComponent,
         MotionExtensionFieldComponent,
         MotionManageMotionMeetingUsersComponent,
-        MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
         MotionDetailDiffSummaryComponent,
         MotionDetailOriginalChangeRecommendationsComponent,
@@ -142,10 +137,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         ScrollingModule,
         ChipSelectModule,
         MatBadgeModule,
-
-        // Amendment create wizard
-        MatStepperModule,
-        MatRadioModule
+        MatProgressSpinnerModule
     ]
 })
 export class MotionDetailModule {}

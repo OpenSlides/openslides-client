@@ -25,6 +25,10 @@ const accountListSubsciptionContent = {
                     follow: [{ idField: `committee_id`, fieldset: [`manager_ids`] }]
                 }
             ]
+        },
+        {
+            idField: `gender_id`,
+            fieldset: [`name`]
         }
     ]
 };
@@ -80,6 +84,10 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                         fieldset: [`name`]
                                     }
                                 ]
+                            },
+                            {
+                                idField: `gender_ids`,
+                                fieldset: [`name`]
                             }
                         ]
                     },

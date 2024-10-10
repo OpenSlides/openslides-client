@@ -2,7 +2,7 @@ import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-
 
 export class UserFieldsets {
     public static readonly FullNameSubscription: BaseSimplifiedModelRequest = {
-        fieldset: [`title`, `first_name`, `last_name`, `pronoun`, `username`, `gender`, `default_vote_weight`]
+        fieldset: [`title`, `first_name`, `last_name`, `pronoun`, `username`, `default_vote_weight`, `gender_id`]
     };
 }
 

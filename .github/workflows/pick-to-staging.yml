@@ -53,7 +53,7 @@ jobs:
           private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
 
       - name: Create or update PR
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: apply/commit-${{ github.sha }}

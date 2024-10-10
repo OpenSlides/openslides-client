@@ -57,12 +57,26 @@
                                     <input formControlName="last_name" matInput type="text" />
                                 </mat-form-field>
                             </div>
-                            <!-- E-Mail -->
-                            <mat-form-field class="full-width">
-                                <mat-label>{{ 'Email' | translate }}</mat-label>
-                                <input autocomplete="off" formControlName="email" matInput name="email" type="email" />
-                                <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
-                            </mat-form-field>
+                            <div class="full-width first-line">
+                                <!-- E-Mail -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Email' | translate }}</mat-label>
+                                    <input
+                                        autocomplete="off"
+                                        formControlName="email"
+                                        matInput
+                                        name="email"
+                                        type="email"
+                                    />
+                                    <mat-error>{{ 'Please enter a valid email address!' | translate }}</mat-error>
+                                </mat-form-field>
+
+                                <!-- Membership number -->
+                                <mat-form-field>
+                                    <mat-label>{{ 'Membership number' | translate }}</mat-label>
+                                    <input formControlName="member_number" matInput type="text" />
+                                </mat-form-field>
+                            </div>
                             <!-- username -->
                             <mat-form-field class="full-width">
                                 <mat-label>{{ 'Username' | translate }}</mat-label>
@@ -122,7 +136,7 @@
                     [patchFormValueFn]="patchFormValueFn"
                     [shouldEnableFormControlFn]="shouldEnableFormControlFn"
                     [user]="user"
-                    (changeEvent)="personalInfoFormValue = $event"
+                    (changeEvent)="updateByValueChange($event)"
                     (errorEvent)="formErrors = $event"
                     (validEvent)="isFormValid = $event"
                 >
@@ -139,7 +153,21 @@
                                     >
                                         <span>{{ 'present' | translate }}</span>
                                     </mat-checkbox>
+                                    <!-- Locked out? -->
+                                    <mat-checkbox
+                                        formControlName="locked_out"
+                                        matTooltipPosition="right"
+                                        matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
+                                    >
+                                        <span>{{ 'locked out' | translate }}</span>
+                                    </mat-checkbox>
                                 </div>
+                                @if (isLockedOutAndCanManage) {
+                                    <p class="red-warning-text padding-left-12" translate>
+                                        It is not allowed to set the permisson 'Can manage participants' to a locked out
+                                        user. Please unset the lockout state before adding a group with this permission.
+                                    </p>
+                                }
                                 <div>
                                     <!-- Strucuture Level -->
                                     <mat-form-field class="form100 force-min-width">

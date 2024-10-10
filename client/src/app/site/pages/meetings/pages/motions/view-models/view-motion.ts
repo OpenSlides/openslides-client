@@ -35,10 +35,11 @@ import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
 import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
-export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
-    referenced_in_motion_state_extensions: ViewMotion[];
-    referenced_in_motion_recommendation_extensions: ViewMotion[];
-}
+export type HasReferencedMotionsInExtension = HasReferencedMotionInExtensionIds &
+    ViewModelRelations<{
+        referenced_in_motion_state_extensions: ViewMotion[];
+        referenced_in_motion_recommendation_extensions: ViewMotion[];
+    }>;
 
 export enum ForwardingStatus {
     none = `none`,

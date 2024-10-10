@@ -19,14 +19,16 @@ export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions?.some(
-            permission => permission === perm || permissionChildren[permission]?.includes(perm)
+        return (
+            this.isAdminGroup ||
+            this.permissions?.some(permission => permission === perm || permissionChildren[permission]?.includes(perm))
         );
     }
 }
 interface IGroupRelations {
     default_group_for_meeting: ViewMeeting;
     admin_group_for_meeting: ViewMeeting;
+    anonymous_group_for_meeting: ViewMeeting;
     meeting_mediafile_access_groups: ViewMediafile[];
     meeting_mediafile_inherited_access_groups: ViewMediafile[];
     read_comment_sections: ViewMotionCommentSection[];

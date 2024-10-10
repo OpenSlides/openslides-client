@@ -10,6 +10,8 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
+import { GenderControllerService } from '../../pages/gender/services/gender-controller.service';
+
 type Email = string;
 type Name = string;
 
@@ -23,6 +25,12 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     private userEmailMap = new Map<Email, Id[]>();
     private userNameMap = new Map<Name, Id[]>();
     private userInMeetingMap = new Map<Id, void>();
+
+    private genderFilterOption: OsFilter<ViewUser> = {
+        property: `gender_id`,
+        label: _(`Gender`),
+        options: []
+    };
 
     /**
      * @return Observable data for the filtered output subject
@@ -55,12 +63,18 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         store: ActiveFiltersService,
         private operator: OperatorService,
         private controller: UserControllerService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private genderRepo: GenderControllerService
     ) {
         super(store);
 
         this.controller.getViewModelListObservable().subscribe(users => {
             this.updateUserMaps(users);
+        });
+        this.updateFilterForRepo({
+            repo: genderRepo,
+            filter: this.genderFilterOption,
+            noneOptionLabel: _(`not specified`)
         });
     }
 
@@ -131,17 +145,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: [false, null], label: _(`Is no natural person`) }
                 ]
             },
-            {
-                property: `gender`,
-                label: _(`Gender`),
-                options: [
-                    { condition: `female`, label: _(`female`) },
-                    { condition: `male`, label: _(`male`) },
-                    { condition: `diverse`, label: _(`diverse`) },
-                    { condition: `non-binary`, label: _(`non-binary`) },
-                    { condition: null, label: _(`not specified`) }
-                ]
-            },
+            this.genderFilterOption,
             {
                 property: `hasEmail`,
                 label: _(`Email address`),

@@ -4,6 +4,11 @@
         [ngClass]="{ 'background-accent': meeting.isActive, 'background-dark-brighter': meeting.isArchived }"
     >
         <mat-card-title class="break-word">
+            @if (meeting.publicAccessPossible()) {
+                <div class="template-indicator">
+                    <mat-icon [matTooltip]="'Public' | translate">public</mat-icon>
+                </div>
+            }
             @if (meeting.locked_from_inside) {
                 <div class="template-indicator">
                     <mat-icon [matTooltip]="'Closed' | translate">lock</mat-icon>
