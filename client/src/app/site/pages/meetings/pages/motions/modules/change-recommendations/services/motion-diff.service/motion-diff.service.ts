@@ -2005,6 +2005,7 @@ export class MotionDiffService {
             firstLine: change.getLineFrom()
         });
         let diff = this.diff(oldText, change.getChangeNewText());
+        //console.log(diff);
 
         // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
         // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
@@ -2022,6 +2023,7 @@ export class MotionDiffService {
                 DomHelpers.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
         }
 
+        //console.log(diff);
         return diff;
     }
 
