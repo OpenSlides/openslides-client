@@ -62,20 +62,28 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
 
-export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        follow: [
-            {
-                idField: `meeting_user_ids`,
-                fieldset: `participantListMinimal`,
-                follow: [{ idField: `user_id`, fieldset: `participantList` }]
-            }
-        ]
-    },
-    subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
-});
+export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => {
+    return {
+        modelRequest: {
+            viewModelCtor: ViewMeeting,
+            ids: [id],
+            follow: [
+                {
+                    idField: `meeting_user_ids`,
+                    fieldset: `participantListMinimal`,
+                    follow: [
+                        {
+                            idField: `user_id`,
+                            fieldset: `participantList`,
+                            follow: [{ idField: `gender_id`, fieldset: [`name`] }]
+                        }
+                    ]
+                }
+            ]
+        },
+        subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
+    };
+};
 
 export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -89,7 +97,13 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
                     {
                         idField: `user_id`,
                         fieldset: `participantListMinimal`,
-                        additionalFields: [`is_present_in_meeting_ids`]
+                        additionalFields: [`is_present_in_meeting_ids`],
+                        follow: [
+                            {
+                                idField: `gender_id`,
+                                fieldset: [`name`]
+                            }
+                        ]
                     },
                     { idField: `structure_level_ids`, fieldset: [`name`] }
                 ]
@@ -108,6 +122,10 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
             {
                 idField: `meeting_user_ids`,
                 fieldset: DEFAULT_FIELDSET
+            },
+            {
+                idField: `gender_id`,
+                fieldset: [`name`]
             }
         ]
     },

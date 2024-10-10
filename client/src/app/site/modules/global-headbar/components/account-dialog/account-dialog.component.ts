@@ -193,10 +193,14 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async saveUserChanges(): Promise<void> {
         if (this.self) {
+            const payload = this.userPersonalForm;
+            if (payload.gender_id === 0) {
+                payload.gender_id = null;
+            }
             if (this.operator.hasPerms(Permission.userCanUpdate) && this._isUserInScope) {
-                await this.repo.update(this.userPersonalForm, this.self).resolve();
+                await this.repo.update(payload, this.self).resolve();
             } else {
-                await this.repo.updateSelf(this.userPersonalForm, this.self);
+                await this.repo.updateSelf(payload, this.self);
             }
         }
         this.isUserFormValid = false;

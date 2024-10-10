@@ -11,6 +11,7 @@ import {
 import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { User } from 'src/app/domain/models/users/user';
 import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -29,6 +30,7 @@ import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
+import { OrganizationService } from '../pages/organization/services/organization.service';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
@@ -55,6 +57,10 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 export class OperatorService {
     public get operatorId(): number | null {
         return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+    }
+
+    public get isAnonymousLoggedIn(): boolean {
+        return this.authService.isAuthenticated() && this.isAnonymous;
     }
 
     public get isAnonymous(): boolean {
@@ -90,7 +96,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return !!(this.user.committee_management_ids || []).length;
+        return !!(this.user?.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -98,7 +104,10 @@ export class OperatorService {
     }
 
     public get knowsMultipleMeetings(): boolean {
-        return this.isAnyManager || this.user.hasMultipleMeetings;
+        return (
+            this.isAnyManager ||
+            (this.isAnonymous ? this.defaultAnonUser.hasMultipleMeetings : this.user.hasMultipleMeetings)
+        );
     }
 
     public get onlyMeeting(): Id {
@@ -134,9 +143,18 @@ export class OperatorService {
         return this._operatorShortNameSubject;
     }
 
+    private defaultAnonUser = new ViewUser(
+        new User({
+            id: 0,
+            first_name: `Guest`
+        })
+    );
+
     public get user(): ViewUser {
-        if (!this._userSubject.value) {
+        if (!this._userSubject.value && !this.isAnonymous && this.isAuthenticated) {
             throw new Error(`Operator has not fully loaded yet.`);
+        } else if (this.isAnonymousLoggedIn) {
+            return this.defaultAnonUser;
         }
         return this._userSubject.value;
     }
@@ -180,6 +198,11 @@ export class OperatorService {
     private get defaultGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.default_group_id : null;
+    }
+
+    private get anonymousGroupId(): number | null {
+        const activeMeeting = this.activeMeetingService.meeting;
+        return activeMeeting ? activeMeeting.anonymous_group_id : null;
     }
 
     private get adminGroupId(): number | null {
@@ -245,7 +268,8 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private meetingRepo: MeetingControllerService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private organizationService: OrganizationService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -319,7 +343,7 @@ export class OperatorService {
             if (!this.activeMeetingId || !group) {
                 return;
             }
-            if (this.isAnonymous && group.id === this.defaultGroupId) {
+            if (this.isAnonymous && group.id === this.anonymousGroupId) {
                 this._groupIds = this._groupIds || [];
                 this._permissions = this.calcPermissions();
                 this._operatorUpdatedSubject.next();
@@ -331,6 +355,19 @@ export class OperatorService {
                     this._permissions = this.calcPermissions();
                     this._operatorUpdatedSubject.next();
                 }
+            }
+        });
+        this.organizationService.organizationObservable.pipe().subscribe(organization => {
+            if (this.isAnonymous) {
+                this.defaultAnonUser = new ViewUser(
+                    new User({
+                        id: 0,
+                        first_name: `Guest`,
+                        meeting_ids:
+                            organization?.active_meetings.filter(m => m.enable_anonymous).map(m => m.id) || null
+                    })
+                );
+                this._operatorUpdatedSubject.next();
             }
         });
         this.operatorUpdated.subscribe(() => {
@@ -364,7 +401,10 @@ export class OperatorService {
     }
 
     public isInMeeting(meetingId: Id): boolean {
-        return this.user.meeting_ids?.includes(meetingId) || false;
+        const meeting = this.meetingRepo.getViewModel(meetingId);
+        return (
+            (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds?.includes(meetingId) || false
+        );
     }
 
     private updateUser(user: ViewUser): void {
@@ -506,8 +546,7 @@ export class OperatorService {
     private calcPermissions(): Permission[] {
         const permissionSet = new Set<Permission>();
         if (this.isAnonymous) {
-            // Anonymous is always in the default group.
-            this.activeMeeting?.default_group?.permissions.forEach(perm => permissionSet.add(perm));
+            this.activeMeeting?.anonymous_group?.permissions?.forEach(perm => permissionSet.add(perm));
         } else {
             if (this._groupIds?.length) {
                 this.DS.getMany(Group, this._groupIds).forEach(group => {
@@ -727,7 +766,7 @@ export class OperatorService {
             return false;
         }
         if (this.isAnonymous) {
-            return !!groupIds.find(id => id === this.defaultGroupId); // any anonymous is in the default group.
+            return !!groupIds.find(id => id === this.anonymousGroupId);
         }
         return groupIds.some(id => this._groupIds?.includes(id));
     }
