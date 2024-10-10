@@ -123,8 +123,6 @@ export class UserService {
             fields: [`first_name`]
         });
         if (!result[userId.toString()]?.editable) {
-            // useful for debugging
-            // console.log(result[userId.toString()]?.message);
             return false;
         }
         return true;
