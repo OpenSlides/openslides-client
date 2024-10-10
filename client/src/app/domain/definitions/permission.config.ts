@@ -95,12 +95,12 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 display_name: _(`Can see moderation notes`),
                 help_text: _(`Can see all moderation notes in each list of speakers.`),
                 anon_allowed: true,
-                value: Permission.agendaItemCanSeeModeratorNotes
+                value: Permission.listOfSpeakersCanSeeModeratorNotes
             },
             {
                 display_name: _(`Can manage moderation notes`),
                 help_text: _(`Can edit all moderation notes.`),
-                value: Permission.agendaItemCanManageModeratorNotes
+                value: Permission.listOfSpeakersCanManageModeratorNotes
             }
         ]
     },
