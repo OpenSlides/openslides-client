@@ -51,6 +51,10 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
     public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.mediafile;
     }
+
+    public override getDetailStateUrl(): string {
+        return this.url;
+    }
 }
 interface IMeetingMediafileRelations {
     access_groups: ViewGroup[];
