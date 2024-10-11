@@ -114,13 +114,14 @@ export class UserService {
      * Check editablity of standard personal info fields of a user
      *
      * @param userId The id of the user to check
+     * @param fields string[] of the fields which to check
      *
      * @returns boolean Is it allowed to change these fields of the user by the operator
      */
-    public async isEditable(userId: Id): Promise<boolean> {
+    public async isEditable(userId: Id, fields: string[]): Promise<boolean> {
         const result = await this.getUserEditablePresenter.call({
             user_ids: [userId],
-            fields: [`first_name`]
+            fields: fields
         });
         if (!result[userId.toString()]?.editable) {
             return false;

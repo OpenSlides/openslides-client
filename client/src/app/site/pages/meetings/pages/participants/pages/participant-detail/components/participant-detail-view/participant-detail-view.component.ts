@@ -80,9 +80,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
             const canUpdateUsers = this.isAllowed(`update`);
-            if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
+            if (this.newUser && canUpdateUsers) {
                 return true;
             } else if (this._isUserEditable && controlName !== `default_password`) {
+                return true;
+            } else if (this._isUserIniPWEditable && controlName === `default_password`) {
                 return true;
             } else if (canUpdateUsers) {
                 return controlName === `is_present`
@@ -187,7 +189,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
-    private _isUserInScope = false;
+    private _isUserIniPWEditable = false;
     private _isUserEditable = false;
 
     public constructor(
@@ -266,12 +268,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                     this.user = user;
                     this.cd.markForCheck();
                 }
-            }),
-            this.operator.operatorUpdated.subscribe(
-                async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
-            )
+            })
         );
-        this._isUserEditable = await this.userService.isEditable(this._userId);
+        this._isUserEditable = await this.userService.isEditable(this._userId, [`first_name`]);
+        this._isUserIniPWEditable = await this.userService.isEditable(this._userId, [`default_password`]);
     }
 
     public getRandomPassword(): string {
@@ -318,10 +318,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * @param edit
      */
     public async setEditMode(edit: boolean): Promise<void> {
-        if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
-        }
-
         this.isEditingSubject.next(edit);
 
         // case: abort creation of a new user
