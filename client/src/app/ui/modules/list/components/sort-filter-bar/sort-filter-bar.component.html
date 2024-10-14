@@ -31,7 +31,11 @@
                     >
                         <os-icon-container class="active-filter" icon="close">
                             <span class="active-filter">
-                                {{ filter.option.label | translate }}
+                                @if (filter.option.skipTranslate) {
+                                    {{ filter.option.label }}
+                                } @else {
+                                    {{ filter.option.label | translate }}
+                                }
                             </span>
                         </os-icon-container>
                     </button>

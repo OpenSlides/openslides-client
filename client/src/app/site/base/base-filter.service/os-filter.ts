@@ -31,6 +31,7 @@ export interface OsFilterOption {
     condition: OsFilterOptionCondition | null;
     isActive?: boolean;
     isChild?: boolean;
+    skipTranslate?: boolean;
     children?: OsFilterOption[];
 }
 
