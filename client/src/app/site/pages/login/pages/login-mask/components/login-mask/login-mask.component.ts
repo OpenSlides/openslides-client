@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -49,8 +49,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     public hide = false;
 
     public loginAreaExpanded = false;
-
-    private checkBrowser = true;
 
     /**
      * Reference to the SnackBarEntry for the installation notice send by the server.
@@ -132,9 +130,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.osRouter.navigateAfterLogin(this.currentMeetingId);
         });
 
-        this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
-            this.checkBrowser = params[`checkBrowser`] === `true`;
-        });
         this.route.params.subscribe(params => {
             if (params[`meetingId`]) {
                 this.checkIfGuestsEnabled(params[`meetingId`]);
@@ -173,8 +168,10 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.loginErrorMsg = ``;
         try {
             this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
-            const url = getKeycloakLoginConfig()?.loginAction;
-            if (url) {
+            const keycloakLoginConfig = getKeycloakLoginConfig();
+
+            if (keycloakLoginConfig && keycloakLoginConfig?.loginAction) {
+                const url = keycloakLoginConfig.loginAction;
                 const { username, password } = this.formatLoginInputValues(this.loginForm.value);
                 const formData = new FormData();
                 formData.append(`username`, username);
@@ -185,7 +182,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
                     body: formData
                 });
 
-                if (!response.url.startsWith(`https://localhost:8000/idp`)) {
+                const idpUrlPrefix = url.substring(0, url.indexOf(`/idp`) + 4);
+                if (!response.url.startsWith(idpUrlPrefix)) {
                     window.location.href = response.url;
                 }
                 const htmlContent = await response.text();
@@ -198,8 +196,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
                     try {
                         eval(scriptContent);
-                        const updatedConfig = getKeycloakLoginConfig();
-                        console.log(`Keycloak Config:`, updatedConfig);
+                        const updatedConfig = keycloakLoginConfig;
                         if (updatedConfig?.fieldErrors.username) {
                             const usernameControl = this.loginForm.get(`username`);
                             usernameControl?.setErrors({ customError: updatedConfig?.fieldErrors.username });
@@ -270,12 +267,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.meetingSettingsService.get(`enable_anonymous`).subscribe(isEnabled => (this.guestsEnabled = isEnabled));
     }
 
-    private checkDevice(): void {
-        if (!this.browserSupport.isBrowserSupported()) {
-            this.router.navigate([`./unsupported-browser`], { relativeTo: this.route });
-        }
-    }
-
     /**
      * Clears the subscription to the operator.
      */
@@ -295,6 +286,4 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             password: [``, [Validators.required, Validators.maxLength(128)]]
         });
     }
-
-    protected readonly console = console;
 }

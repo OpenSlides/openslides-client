@@ -89,16 +89,6 @@ export class OpenSlidesRouterService {
             });
     }
 
-    public navigateToLogin(): void {
-        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
-
-        // Navigate to login if the user is not already there
-        if (!url.startsWith(`/${UrlTarget.LOGIN}`)) {
-            this.setNextAfterLoginUrl(url);
-            this.router.navigate([`/${UrlTarget.LOGIN}`]);
-        }
-    }
-
     public navigateAfterLogin(meetingId: number): void {
         let baseRoute: string | UrlTree = meetingId ? `${meetingId}/` : `/`;
         if (this.preLoginRedirectUrl) {

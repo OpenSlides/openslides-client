@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
+import { HttpService } from '../../gateways/http.service';
 import { authCodeFlowConfig } from '../../openslides-main-module/components/openslides-main/oidc-config';
 import {
     AuthErrorMessage,
@@ -46,7 +47,8 @@ export class AuthService {
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private DS: DataStoreService,
-        private oauthService: OAuthService
+        private oauthService: OAuthService,
+        private httpService: HttpService
     ) {
         this.sharedWorker.listenTo<AuthWorkerResponse>(`auth`).subscribe(msg => {
             switch (msg?.action) {
@@ -58,7 +60,6 @@ export class AuthService {
                     this.authTokenService.setRawAccessToken(msg.content?.token);
                     break;
                 case `check-auth`:
-                    console.log(`auth: Check auth`);
                     this.oauthService.silentRefresh();
                     break;
             }
@@ -66,15 +67,20 @@ export class AuthService {
     }
 
     public async checkOnline(): Promise<boolean> {
-        console.log(`auth: Do health check`);
+        console.debug(`auth: Do health check`);
         let online: boolean;
         try {
-            await fetch(`system/autoupdate/health`);
+            await this.httpService.get(`system/autoupdate/health`);
             online = true;
         } catch (e) {
             online = false;
         }
-        console.log(`auth: health check done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
+        console.debug(
+            `auth: health check done, online:`,
+            online,
+            `authenticated:`,
+            !!this.authTokenService.accessToken
+        );
         return online;
     }
 
@@ -124,7 +130,6 @@ export class AuthService {
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
-                debugger;
                 this.oauthService.logOut();
             }
         } catch (e) {
@@ -154,9 +159,9 @@ export class AuthService {
         });
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
-        this.lifecycleService.bootup();
         // might do a redirect to the logout URL if configured
         this.oauthService.logOut();
+        this.lifecycleService.bootup();
     }
 
     public isAuthenticated(): boolean {
@@ -165,7 +170,6 @@ export class AuthService {
 
     public async startOidcWorkflow(): Promise<void> {
         this.oauthService.events.subscribe(async event => {
-            console.log(event.type);
             if (event.type === `token_received`) {
                 this.propergateToken();
             } else if (event.type.indexOf(`error`) !== -1) {
