@@ -135,6 +135,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async login(): Promise<void> {
+        debugger;
         this.router.navigate([`/`, this.activeMeetingId, `login`]);
     }
 

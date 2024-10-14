@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 
@@ -29,6 +29,10 @@ export class AuthTokenService {
         this._accessTokenSubject.next(token);
     }
 
+    public async waitForValidToken(): Promise<void> {
+        await firstValueFrom(this._accessTokenSubject);
+    }
+
     private parseToken(rawToken: string | null): AuthToken | null {
         if (!rawToken) {
             return null;
@@ -36,7 +40,10 @@ export class AuthTokenService {
 
         try {
             const payload = atob(rawToken.split(`.`)[1]);
-            return JSON.parse(payload) as AuthToken;
+            const parsedToken = JSON.parse(payload) as AuthToken;
+            parsedToken.rawAccessToken = rawToken;
+            parsedToken.userId = parseInt(`${parsedToken.userId}`);
+            return parsedToken;
         } catch (e) {
             return null;
         }

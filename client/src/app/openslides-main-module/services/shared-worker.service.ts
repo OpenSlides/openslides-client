@@ -37,7 +37,7 @@ const SHARED_WORKER_HEALTH_RETRIES = 2;
     providedIn: `root`
 })
 export class SharedWorkerService {
-    public messages: Subject<WorkerResponse> = new Subject();
+    public messages: Subject<WorkerResponse<any>> = new Subject();
 
     public get restartObservable(): Observable<void> {
         return this.restartSubject;
@@ -60,8 +60,8 @@ export class SharedWorkerService {
      *
      * @param sender Name of the sender
      */
-    public listenTo(sender: string): Observable<WorkerResponse> {
-        return this.messages.pipe(filter(data => data?.sender === sender));
+    public listenTo<T extends WorkerResponse<any>>(sender: string): Observable<T> {
+        return this.messages.pipe(filter(data => data?.sender === sender)) as Observable<T>;
     }
 
     /**
@@ -71,10 +71,10 @@ export class SharedWorkerService {
      * @param receiver Name of the receiver
      * @param msg Content of the message
      */
-    public async sendMessage<T extends WorkerMessageContent>(receiver: string, msg: T): Promise<void> {
+    public async sendMessage<C extends WorkerMessageContent, T extends WorkerMessage<C>>(msg: T): Promise<void> {
         const nonce = Math.random() * 100000000;
         let ack: Promise<any>;
-        await this.sendRawMessage({ receiver, msg, nonce } as WorkerMessage, true, () => {
+        await this.sendRawMessage({ ...msg, nonce: nonce }, true, () => {
             ack = firstValueFrom(
                 this.listenTo(`control`).pipe(
                     filter(data => data?.action === `ack` && data?.content === nonce),
@@ -93,7 +93,7 @@ export class SharedWorkerService {
             if (!restarted) {
                 await this.handleFault();
             }
-            await this.sendMessage(receiver, msg);
+            await this.sendMessage(msg);
         }
         restartSubscription.unsubscribe();
     }
@@ -221,10 +221,14 @@ export class SharedWorkerService {
      * @param msg Content of the message
      */
     private async sendMessageForce<T extends WorkerMessageContent>(receiver: string, msg: T): Promise<void> {
-        return await this.sendRawMessage({ receiver, msg } as WorkerMessage, false);
+        return await this.sendRawMessage({ receiver, msg }, false);
     }
 
-    private async sendRawMessage(message: any, checkReady = true, beforeSend?: () => void): Promise<void> {
+    private async sendRawMessage(
+        message: WorkerMessage<any>,
+        checkReady = true,
+        beforeSend?: () => void
+    ): Promise<void> {
         if (this.ready || !checkReady) {
             if (beforeSend) {
                 beforeSend();
@@ -279,11 +283,11 @@ export class SharedWorkerService {
         }
     }
 
-    private async waitForMessage(
+    private async waitForMessage<C>(
         timeoutDuration: number,
         isMessage: (data?: any) => boolean,
         doBefore?: () => void
-    ): Promise<MessageEvent<WorkerResponse>> {
+    ): Promise<MessageEvent<WorkerResponse<C>>> {
         const eventListener = this.windowMode
             ? fromEvent(this.conn, `message`)
             : merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
