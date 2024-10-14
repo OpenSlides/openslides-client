@@ -1,8 +1,8 @@
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {Injectable, Injector} from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TranslateService} from '@ngx-translate/core';
-import {firstValueFrom, Observable} from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import {
     formatQueryParams,
@@ -11,11 +11,11 @@ import {
     QueryParams,
     ResponseType
 } from '../infrastructure/definitions/http';
-import {ProcessError} from '../infrastructure/errors';
-import {toBase64} from '../infrastructure/utils/functions';
-import {ActionWorkerWatchService} from './action-worker-watch/action-worker-watch.service';
-import {ErrorMapService} from './error-mapping/error-map.service';
+import { ProcessError } from '../infrastructure/errors';
+import { toBase64 } from '../infrastructure/utils/functions';
 import { AuthTokenService } from '../site/services/auth-token.service';
+import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
+import { ErrorMapService } from './error-mapping/error-map.service';
 
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
 
@@ -232,9 +232,11 @@ export class HttpService {
             }
 
             // Fetch the resource as a blob
-            const response = await fetch(url, { headers: { Authentication: `Bearer ${this.authTokenService.rawAccessToken}` } });
+            const response = await fetch(url, {
+                headers: { Authentication: `Bearer ${this.authTokenService.rawAccessToken}` }
+            });
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`Network response was not ok`);
             }
             const blob = await response.blob();
 
@@ -244,7 +246,7 @@ export class HttpService {
 
             return blobUrl;
         } catch (error) {
-            console.error('Error loading image:', error);
+            console.error(`Error loading image:`, error);
             return null;
         }
     }
