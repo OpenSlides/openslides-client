@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
@@ -66,6 +66,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     private _userId: Id | null | undefined = undefined; // to distinguish from null!
+    private _userSubscription: Subscription | null = null;
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
     private clickCounter = 0;
@@ -81,7 +82,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService,
         chessChallengeService: ChessChallengeService
     ) {
         super();
@@ -117,7 +117,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public toggleOperatorPresence(): void {
-        this.controller
+        this.userRepo
             .setPresent({
                 isPresent: !this.isPresent,
                 meetingId: this.activeMeetingId,
@@ -189,7 +189,22 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;
-            this.user = this.operator.user;
+            this.doUserUpdate();
         }
+    }
+
+    private doUserUpdate(): void {
+        if (!this._userId) {
+            this.user = null;
+            return;
+        }
+        if (this._userSubscription) {
+            this._userSubscription.unsubscribe();
+        }
+        this._userSubscription = this.userRepo.getViewModelObservable(this._userId).subscribe(user => {
+            if (user !== undefined) {
+                this.user = user;
+            }
+        });
     }
 }
