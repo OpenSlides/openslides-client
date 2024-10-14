@@ -107,7 +107,7 @@
                 <os-spinner [height]="20" [showText]="false" [width]="20"></os-spinner>
             }
         </button>
-        @if (guestsEnabled && showExtra) {
+        @if (guestsEnabled && showExtra && orgaPublicAccessEnabled) {
             <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
                 {{ 'Public access' | translate }}
             </button>

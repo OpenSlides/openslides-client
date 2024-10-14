@@ -346,9 +346,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async doUpdateMeeting(): Promise<void> {
+        const options =
+            this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+                ? {}
+                : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {
             meeting: this.editMeeting!,
-            options: this.getUsersToUpdateForMeetingObject()
+            options: options
         });
         this.goBack();
     }
