@@ -21,10 +21,26 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
 
     @Input()
+    public noEditMode = false;
+
+    @Input()
     public changeRecoMode: ChangeRecoMode;
 
     @Input()
     public lineNumberingMode: LineNumberingMode;
+
+    @Input()
+    public set showAllAmendments(value: boolean) {
+        if (value != this.showAllAmendments) {
+            this.showAllAmendments$.next(value);
+        }
+    }
+
+    public get showAllAmendments(): boolean {
+        return this.showAllAmendments$.value;
+    }
+
+    public showAllAmendments$ = new BehaviorSubject(false);
 
     private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] };
 

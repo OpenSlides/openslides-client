@@ -40,6 +40,7 @@ export const permissionChildren: PermissionsMap = {
     'motion.can_manage_polls': [Permission.motionCanSee],
     'motion.can_see': [],
     'motion.can_see_internal': [Permission.motionCanSee],
+    'motion.can_see_origin': [Permission.motionCanSee],
     'motion.can_support': [Permission.motionCanSee],
     'poll.can_manage': [],
     'projector.can_manage': [Permission.projectorCanSee],
@@ -102,8 +103,10 @@ export const permissionParents: PermissionsMap = {
         Permission.motionCanCreate,
         Permission.motionCanCreateAmendments,
         Permission.motionCanForward,
-        Permission.motionCanSupport
+        Permission.motionCanSupport,
+        Permission.motionCanSeeOrigin
     ],
+    'motion.can_see_origin': [],
     'motion.can_see_internal': [Permission.motionCanManage],
     'motion.can_support': [],
     'poll.can_manage': [],

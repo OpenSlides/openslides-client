@@ -143,6 +143,10 @@ Further requirements:
                 value: Permission.motionCanForward
             },
             {
+                display_name: _(`Can see origin motion`),
+                value: Permission.motionCanSeeOrigin
+            },
+            {
                 display_name: _(`Can support motions`),
                 help_text: _(
                     `Can support motions. The support function must be enabled in > [Settings] > [Motions] as well as for the corresponding state in > [Workflow].`
