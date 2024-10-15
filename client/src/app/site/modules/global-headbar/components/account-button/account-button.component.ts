@@ -122,7 +122,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             .setPresent({
                 isPresent: !this.isPresent,
                 meetingId: this.activeMeetingId,
-                users: [this.operator.user!]
+                users: [this.user]
             })
             .resolve();
     }
