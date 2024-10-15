@@ -34,6 +34,7 @@ export enum Permission {
     motionCanSee = `motion.can_see`,
     motionCanSeeInternal = `motion.can_see_internal`,
     motionCanSupport = `motion.can_support`,
+    motionCanSeeOrigin = `motion.can_see_origin`,
     pollCanManage = `poll.can_manage`,
     projectorCanManage = `projector.can_manage`,
     projectorCanSee = `projector.can_see`,

@@ -22,6 +22,7 @@ import {
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
+import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import {
     ViewMotion,
@@ -144,6 +145,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         public perms: MotionPermissionService,
         private route: ActivatedRoute,
         public repo: MotionControllerService,
+        private meetingRepo: MeetingRepositoryService,
         private promptService: PromptService,
         private itemRepo: AgendaItemControllerService,
         private motionSortService: MotionListSortService,
@@ -357,6 +359,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
         const originMotion = this.repo.getViewModelUnsafe(id);
         if (!this.originMotionsLoaded.find(m => m.id === id)) {
+            const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
+            originMotion.meeting = meeting;
+
             this.originMotionsLoaded.push(originMotion);
             this.originMotionsLoaded.sort((a, b) => b.id - a.id);
             const changeRecos = await firstValueFrom(

@@ -341,12 +341,11 @@
                 @for (origin of originMotions; track origin.id; let last = $last) {
                     <div>
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        @if (canAccess(origin)) {
-                            <mat-slide-toggle
-                                [aria-label]="'Load origin motion' | translate"
-                                (change)="toggleOriginMotion($event, origin.id)"
-                            ></mat-slide-toggle>
-                        }
+                        <mat-slide-toggle
+                            *osPerms="permission.motionCanSeeOrigin"
+                            [aria-label]="'Load origin motion' | translate"
+                            (change)="toggleOriginMotion($event, origin.id)"
+                        ></mat-slide-toggle>
                     </div>
                     <div class="flex-center">
                         @if (!last) {
