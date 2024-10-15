@@ -170,6 +170,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     public get saveButtonEnabled(): boolean {
+        // for prevent saveButton flickering
+        if (!this._userFormLoaded) {
+            return false;
+        }
         return this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
@@ -186,6 +190,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
+    private _userFormLoaded = false;
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
@@ -322,6 +327,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         // case: abort creation of a new user
         if (this.newUser && !edit) {
             this.goToAllUsers();
+        }
+
+        if (edit) {
+            setTimeout(() => {
+                this._userFormLoaded = true;
+            }, 1000);
+        } else {
+            this._userFormLoaded = false;
         }
     }
 
