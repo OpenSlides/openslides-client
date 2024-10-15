@@ -57,6 +57,7 @@ export class MotionPermissionService {
 
     public canDoActionWhileDelegationEnabled(isAdditionalDelegationSettingEnabled: boolean): boolean {
         return !(
+            !this.operator.isAnonymous &&
             this.operator.user.isVoteRightDelegated &&
             this._delegationEnabled &&
             isAdditionalDelegationSettingEnabled

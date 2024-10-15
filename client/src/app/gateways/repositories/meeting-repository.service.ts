@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getUnixTime } from 'date-fns';
 import { Action } from 'src/app/gateways/actions';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { Identifiable } from '../../domain/interfaces/identifiable';
@@ -42,7 +43,8 @@ export interface MeetingUserModifiedFields {
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
-        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService
+        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,
+        private orgaSettingsService: OrganizationSettingsService
     ) {
         super(repositoryServiceCollector, Meeting);
     }
@@ -73,7 +75,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `committee_id`,
             `group_ids`,
             `language`,
-            `locked_from_inside`
+            `locked_from_inside`,
+            `enable_anonymous`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `default_meeting_for_committee_id`,
@@ -256,6 +259,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         ): {
             title: string;
         } => this.getProjectorTitle(viewModel, projection);
+        viewModel.publicAccessPossible = (): boolean =>
+            model.enable_anonymous && this.orgaSettingsService.instant(`enable_anonymous`);
         return viewModel;
     }
 

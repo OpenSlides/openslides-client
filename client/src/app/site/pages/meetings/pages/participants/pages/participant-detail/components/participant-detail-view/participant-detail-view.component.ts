@@ -232,7 +232,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
 
         // TODO: Open groups subscription
-        this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+        this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
         this.updateEditable();
     }
 

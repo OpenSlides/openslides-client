@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
@@ -36,7 +36,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId)
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
             ? this.user.isPresentInMeeting()
             : false;
     }
@@ -66,7 +66,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     private _userId: Id | null | undefined = undefined; // to distinguish from null!
-    private _userSubscription: Subscription | null = null;
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
     private clickCounter = 0;
@@ -135,7 +134,12 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async login(): Promise<void> {
-        this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        await this.authService.logoutAnonymous();
+        if (this.activeMeetingId) {
+            this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        } else {
+            this.router.navigate([`/`, `login`]);
+        }
     }
 
     public async logout(): Promise<void> {
@@ -181,27 +185,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
+        this.username = this.operator.shortName;
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;
-            this.doUserUpdate();
+            this.user = this.operator.user;
         }
-    }
-
-    private doUserUpdate(): void {
-        if (!this._userId) {
-            this.user = null;
-            return;
-        }
-
-        if (this._userSubscription) {
-            this._userSubscription.unsubscribe();
-        }
-        this._userSubscription = this.userRepo.getViewModelObservable(this._userId).subscribe(user => {
-            if (user !== undefined) {
-                this.user = user;
-            }
-        });
     }
 }

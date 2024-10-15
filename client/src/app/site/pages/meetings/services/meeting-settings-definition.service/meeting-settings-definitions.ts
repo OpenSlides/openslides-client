@@ -186,7 +186,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`System`),
+                settings: [
                     {
                         key: `locked_from_inside`,
                         label: _(`Activate closed meeting`),
@@ -195,6 +200,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         ),
                         type: `boolean`,
                         forbidden: meetingView => meetingView.isTemplate
+                    },
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Activate public access`),
+                        type: `boolean`,
+                        helpText: _(
+                            `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
+                        )
                     }
                 ]
             },
@@ -633,6 +646,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Show meta information box beside the title on projector`),
                         type: `boolean`,
                         helpText: _(`If deactivated it is displayed below the title`)
+                    },
+                    {
+                        key: `motions_hide_metadata_background`,
+                        label: _(`Make background color from meta information box on the projector transparent`),
+                        type: `boolean`
                     },
                     {
                         key: `motions_block_slide_columns`,

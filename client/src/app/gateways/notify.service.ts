@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseICCGatewayService } from './base-icc-gateway.service';
 
@@ -109,7 +108,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
     /**
      * Constructor to create the NotifyService.
      */
-    public constructor(private operator: OperatorService) {
+    public constructor() {
         super();
         this.setupConnections();
     }
