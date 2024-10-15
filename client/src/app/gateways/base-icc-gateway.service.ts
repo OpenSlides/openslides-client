@@ -5,7 +5,7 @@ import { SharedWorkerService } from '../openslides-main-module/services/shared-w
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { WorkerResponse } from '../worker/interfaces';
 import { AutoupdateReceiveData } from '../worker/sw-autoupdate.interfaces';
-import { ICC_ENDPOINT, ICCConnectMessage, ICCDisconnectMessage } from '../worker/sw-icc.interfaces';
+import { ICC_ENDPOINT } from '../worker/sw-icc.interfaces';
 import { HttpService } from './http.service';
 
 export const ICC_PATH = `/system/icc`;
@@ -76,16 +76,13 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
             onReastartSub.unsubscribe();
             msgSub.unsubscribe();
             onClosedSub.unsubscribe();
-            this.sharedWorker.sendMessage({
-                receiver: `icc`,
-                msg: {
-                    action: `disconnect`,
-                    params: {
-                        type: this.receivePath,
-                        meetingId
-                    }
+            this.sharedWorker.sendMessage(`icc`, {
+                action: `disconnect`,
+                params: {
+                    type: this.receivePath,
+                    meetingId
                 }
-            } as ICCDisconnectMessage);
+            } as any);
         };
     }
 
@@ -119,16 +116,13 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     }
 
     private sendConnectToWorker(meetingId: number): void {
-        this.sharedWorker.sendMessage(<ICCConnectMessage>{
-            receiver: ICC_ENDPOINT,
-            msg: {
-                action: `connect`,
-                params: {
-                    type: this.receivePath,
-                    meetingId
-                }
+        this.sharedWorker.sendMessage(ICC_ENDPOINT, {
+            action: `connect`,
+            params: {
+                type: this.receivePath,
+                meetingId
             }
-        });
+        } as any);
     }
 
     private messageObservable(meetingId: number): Observable<AutoupdateReceiveData> {

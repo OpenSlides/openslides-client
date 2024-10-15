@@ -9,9 +9,9 @@ import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { HttpService } from '../../gateways/http.service';
 import { authCodeFlowConfig } from '../../openslides-main-module/components/openslides-main/oidc-config';
 import {
-    AuthErrorMessage,
+    AuthErrorMessageContent,
     AuthErrorReason,
-    AuthUpdateMessage,
+    AuthUpdateMessageContent,
     AuthWorkerResponse
 } from '../../worker/sw-auth.interfaces';
 import { AuthTokenService } from './auth-token.service';
@@ -122,21 +122,14 @@ export class AuthService {
             if (response?.success) {
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
-                // sessionStorage.clear();
-                await this.sharedWorker.sendMessage(<AuthUpdateMessage>{
-                    receiver: `auth`,
-                    msg: { action: `update`, params: null }
-                });
+                this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.DS.deleteCollections(...this.DS.getCollections());
                 await this.DS.clear();
                 this.lifecycleService.bootup();
                 this.oauthService.logOut();
             }
         } catch (e) {
-            this.sharedWorker.sendMessage(<AuthUpdateMessage>{
-                receiver: `auth`,
-                msg: { action: `update`, params: null }
-            });
+            this.sharedWorker.sendMessage(`auth`, { action: `update` });
             throw e;
         }
     }
@@ -153,10 +146,7 @@ export class AuthService {
         this.lifecycleService.shutdown();
         this.authTokenService.setRawAccessToken(null);
         this._logoutEvent.emit();
-        this.sharedWorker.sendMessage(<AuthUpdateMessage>{
-            receiver: `auth`,
-            msg: { action: `update`, params: null }
-        });
+        this.sharedWorker.sendMessage(`auth`, { action: `update` });
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         // might do a redirect to the logout URL if configured
@@ -174,13 +164,10 @@ export class AuthService {
                 this.propergateToken();
             } else if (event.type.indexOf(`error`) !== -1) {
                 this.authTokenService.setRawAccessToken(null);
-                this.sharedWorker.sendMessage(<AuthErrorMessage>{
-                    receiver: `auth`,
-                    msg: {
-                        action: `auth-error`,
-                        params: {
-                            reason: AuthService.mapOidcErrorToAuthError(event.type)
-                        }
+                this.sharedWorker.sendMessage(`auth`, <AuthErrorMessageContent>{
+                    action: `auth-error`,
+                    params: {
+                        reason: AuthService.mapOidcErrorToAuthError(event.type)
                     }
                 });
             }
@@ -265,9 +252,9 @@ export class AuthService {
 
     private propergateToken(): void {
         this.authTokenService.setRawAccessToken(this.oauthService.getAccessToken());
-        this.sharedWorker.sendMessage(<AuthUpdateMessage>{
-            receiver: `auth`,
-            msg: { action: `update`, params: this.authTokenService.accessToken }
+        this.sharedWorker.sendMessage(`auth`, <AuthUpdateMessageContent>{
+            action: `update`,
+            params: this.authTokenService.accessToken
         });
     }
 }

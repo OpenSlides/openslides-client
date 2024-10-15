@@ -71,10 +71,10 @@ export class SharedWorkerService {
      * @param receiver Name of the receiver
      * @param msg Content of the message
      */
-    public async sendMessage<C extends WorkerMessageContent, T extends WorkerMessage<C>>(msg: T): Promise<void> {
+    public async sendMessage<T extends WorkerMessageContent>(receiver: string, msg: T): Promise<void> {
         const nonce = Math.random() * 100000000;
         let ack: Promise<any>;
-        await this.sendRawMessage({ ...msg, nonce: nonce }, true, () => {
+        await this.sendRawMessage({ receiver, msg, nonce }, true, () => {
             ack = firstValueFrom(
                 this.listenTo(`control`).pipe(
                     filter(data => data?.action === `ack` && data?.content === nonce),
@@ -93,7 +93,7 @@ export class SharedWorkerService {
             if (!restarted) {
                 await this.handleFault();
             }
-            await this.sendMessage(msg);
+            await this.sendMessage(receiver, msg);
         }
         restartSubscription.unsubscribe();
     }
