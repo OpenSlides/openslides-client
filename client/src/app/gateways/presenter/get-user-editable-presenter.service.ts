@@ -10,8 +10,7 @@ interface GetUserEditablePresenterPayload {
 }
 
 interface GetUserEditableIdentifiedScope {
-    editable: boolean;
-    message?: string;
+    [field: string]: [boolean, string?];
 }
 
 export interface GetUserEditablePresenterResult {

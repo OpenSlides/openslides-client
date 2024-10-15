@@ -228,6 +228,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+        this.updateEditable();
     }
 
     public isAllowed(action: string): boolean {
@@ -270,8 +271,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 }
             })
         );
-        this._isUserEditable = await this.userService.isEditable(this._userId, [`first_name`]);
-        this._isUserIniPWEditable = await this.userService.isEditable(this._userId, [`default_password`]);
     }
 
     public getRandomPassword(): string {
@@ -465,5 +464,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     private checkSelectedGroupsCanManage(): boolean {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
+    }
+
+    private async updateEditable(): Promise<void> {
+        const allowedFields = await this.userService.isEditable(+this.route.snapshot.params[`id`], [
+            `first_name`,
+            `default_password`
+        ]);
+        this._isUserEditable = allowedFields.includes(`first_name`);
+        this._isUserIniPWEditable = allowedFields.includes(`default_password`);
     }
 }

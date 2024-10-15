@@ -116,16 +116,20 @@ export class UserService {
      * @param userId The id of the user to check
      * @param fields string[] of the fields which to check
      *
-     * @returns boolean Is it allowed to change these fields of the user by the operator
+     * @returns string[] of the editable fields.
+     *          The editable fields are a sublist of fields.
      */
-    public async isEditable(userId: Id, fields: string[]): Promise<boolean> {
+    public async isEditable(userId: Id, fields: string[]): Promise<string[]> {
         const result = await this.getUserEditablePresenter.call({
             user_ids: [userId],
             fields: fields
         });
-        if (!result[userId.toString()]?.editable) {
-            return false;
+        const editableFields = [];
+        for (const field of fields) {
+            if (result[`${userId}`][field][0]) {
+                editableFields.push(field);
+            }
         }
-        return true;
+        return editableFields;
     }
 }
