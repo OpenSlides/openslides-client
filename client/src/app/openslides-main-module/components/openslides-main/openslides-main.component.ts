@@ -1,4 +1,5 @@
-import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ApplicationRef, Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -31,6 +32,7 @@ export class OpenSlidesMainComponent implements OnInit {
     public title = `OpenSlides`;
 
     public constructor(
+        @Inject(DOCUMENT) private document: Document,
         _viewContainer: ViewContainerRef,
         _openslidesService: OpenSlidesService,
         private appRef: ApplicationRef,
@@ -85,6 +87,7 @@ export class OpenSlidesMainComponent implements OnInit {
     }
 
     private async updateLocaleByName(name: string): Promise<void> {
+        this.document.documentElement.lang = name;
         this.config.setLocale(await langToTimeLocale(name));
     }
 
