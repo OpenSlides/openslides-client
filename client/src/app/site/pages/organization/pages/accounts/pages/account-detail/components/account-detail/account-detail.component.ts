@@ -205,12 +205,12 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public getCellClass(isCommitteeRow: boolean, isLastColumnOfCommitte: boolean, isLastLine: boolean): string {
         if (isLastLine) {
-            return `word-break`;
+            return ``;
         }
         if (isCommitteeRow) {
-            return `word-break committee-underline`;
+            return `committee-underline`;
         }
-        return !isLastColumnOfCommitte ? `word-break divider-bottom` : `word-break`;
+        return !isLastColumnOfCommitte ? `divider-bottom` : ``;
     }
 
     public getNumberOfKeys(item: { [key: string]: any }): number {
