@@ -240,6 +240,9 @@ export class MotionFormatService {
                 );
             }
             text.push(...this.addAmendmentNr(changesToShow, changesToShow[i]));
+            if (text[text.length - 3]?.search(`:</span></span>`)) {
+                text[text.length - 1] = text[text.length - 1].replace(`os-line-number `, ``);
+            }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
@@ -247,6 +250,9 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
+        if (text[0].match(`<os-linebreak data-line-number="1" class="os-line-number line-number-1"></os-linebreak>`)) {
+            text[0] = text[0].replace(`os-line-number `, ``);
+        }
         return text.join(``);
     };
 
