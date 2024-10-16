@@ -239,21 +239,7 @@ export class MotionFormatService {
                     )
                 );
             }
-            text[text.length - 1] = text[text.length - 1].replace(`os-line-number `, ``);
-            text.push(`<span class="amendment-nr-n-icon">`);
-            if (this.hasCollissions(changesToShow[i], changesToShow)) {
-                text.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
-            }
-            const current_text = changesToShow[i];
-            if (`amend_nr` in current_text) {
-                if (typeof current_text.amend_nr === `string`) {
-                    text.push(`<span class="amendment-nr">`, current_text.amend_nr);
-                }
-                if (current_text.amend_nr === ``) {
-                    text.push(`Amendment`);
-                }
-                text.push(`:</span></span>`);
-            }
+            text.push(...this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
@@ -261,11 +247,28 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        //console.log(text, text.join(``));
         return text.join(``);
     };
 
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
         return this.diffService.changeHasCollissions(change, changes);
+    }
+
+    private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string[] {
+        const amendmentNr: string[] = [];
+        amendmentNr.push(`<span class="amendment-nr-n-icon">`);
+        if (this.hasCollissions(current_text, changesToShow)) {
+            amendmentNr.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
+        }
+        if (`amend_nr` in current_text) {
+            if (typeof current_text.amend_nr === `string`) {
+                amendmentNr.push(`<span class="amendment-nr">`, current_text.amend_nr);
+            }
+            if (current_text.amend_nr === ``) {
+                amendmentNr.push(`Amendment`);
+            }
+            amendmentNr.push(`:</span></span>`);
+        }
+        return amendmentNr;
     }
 }
