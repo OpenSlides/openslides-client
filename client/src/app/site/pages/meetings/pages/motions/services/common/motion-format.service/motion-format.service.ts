@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
@@ -261,10 +261,17 @@ export class MotionFormatService {
     }
 
     private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string[] {
+        const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
         const amendmentNr: string[] = [];
         amendmentNr.push(`<span class="amendment-nr-n-icon">`);
         if (this.hasCollissions(current_text, changesToShow)) {
-            amendmentNr.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(`<mat-icon class="margin-left-45">warning</mat-icon>`);
+            } else {
+                amendmentNr.push(`<mat-icon class="margin-left-40">warning</mat-icon>`);
+            }
         }
         if (`amend_nr` in current_text) {
             if (typeof current_text.amend_nr === `string`) {
