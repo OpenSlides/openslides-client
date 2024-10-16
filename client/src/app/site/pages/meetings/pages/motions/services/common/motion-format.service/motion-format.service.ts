@@ -240,9 +240,6 @@ export class MotionFormatService {
                 );
             }
             text.push(...this.addAmendmentNr(changesToShow, changesToShow[i]));
-            if (text[text.length - 3]?.search(`:</span></span>`)) {
-                text[text.length - 1] = text[text.length - 1].replace(`os-line-number `, ``);
-            }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
@@ -250,10 +247,7 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        if (text[0].match(`<os-linebreak data-line-number="1" class="os-line-number line-number-1"></os-linebreak>`)) {
-            text[0] = text[0].replace(`os-line-number `, ``);
-        }
-        return text.join(``);
+        return this.adjustDiffClasses(text).join(``);
     };
 
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
@@ -263,14 +257,28 @@ export class MotionFormatService {
     private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string[] {
         const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
         const amendmentNr: string[] = [];
-        amendmentNr.push(`<span class="amendment-nr-n-icon">`);
+
         if (this.hasCollissions(current_text, changesToShow)) {
             if (lineNumbering === LineNumberingMode.Outside) {
-                amendmentNr.push(`<mat-icon class="margin-right-10">warning</mat-icon>`);
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-right-10">warning</mat-icon>`
+                );
             } else if (lineNumbering === LineNumberingMode.Inside) {
-                amendmentNr.push(`<mat-icon class="margin-left-45">warning</mat-icon>`);
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-45">warning</mat-icon>`
+                );
             } else {
-                amendmentNr.push(`<mat-icon class="margin-left-40">warning</mat-icon>`);
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-40">warning</mat-icon>`
+                );
+            }
+        } else {
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(`<span class="amendment-nr-n-icon">`);
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(`<span class="margin-left-46 amendment-nr-n-icon">`);
+            } else {
+                amendmentNr.push(`<span class="margin-left-40 amendment-nr-n-icon">`);
             }
         }
         if (`amend_nr` in current_text) {
@@ -283,5 +291,23 @@ export class MotionFormatService {
             amendmentNr.push(`:</span></span>`);
         }
         return amendmentNr;
+    }
+
+    private adjustDiffClasses(text: string[]): string[] {
+        for (let i = 0; i < text.length; i++) {
+            // Removes the unwanted gap between the paragraph and the amendment number
+            if (text[i]?.search(`amendment-nr-n-icon`) > -1) {
+                text[i + 4] = text[i + 4]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+                if (i < 4) {
+                    text[i + 3] = text[i + 3]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+                }
+            }
+
+            // Removes the doubled numbers
+            if (text[i]?.search(`<os-linebreak`) > -1) {
+                text[i] = text[i].replace(`os-line-number `, ``);
+            }
+        }
+        return text;
     }
 }

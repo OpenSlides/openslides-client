@@ -73,25 +73,21 @@
 }
 
 .amendment-nr-n-icon {
-    display: block;
-    //display: flex;
-    //align-items: center;
-    //justify-content: flex-start;
-    //border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     position: relative;
     left: -40px;
-    bottom: 12px;
-    height: 0;
-    margin-top: 45px;
-
-    .amendment-nr {
-        position: relative;
-        bottom: 3px;
-        font-style: italic;
-        background-color: rgb(224, 224, 224);
-    }
+    height: 1.5em;
+    margin-top: 25px;
 }
 
-.os-linebreak { 
+.amendment-nr {
+    position: relative;
+    font-style: italic;
+    background-color: rgb(224, 224, 224);
+}
+
+.os-linebreak {
     display: none !important;
 }
