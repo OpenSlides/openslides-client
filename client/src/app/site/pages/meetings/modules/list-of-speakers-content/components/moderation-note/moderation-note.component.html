@@ -1,5 +1,5 @@
 <!-- Moderator Note-->
-@if (agendaItem && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))) {
+@if (listOfSpeakers && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))) {
     <mat-card class="spacer-bottom-60 os-card">
         <mat-card-content>
             <!-- Title edit/save/cancle-->
@@ -37,7 +37,7 @@
                 }
             </div>
             @if (!isEditing) {
-                <div class="app-content underlined-links">
+                <div class="app-content underlined-links detail-view-appearance-container">
                     @if (moderatorNotes | async; as moderatorNoteText) {
                         <div [innerHTML]="moderatorNoteText | trust: 'html'"></div>
                     }

@@ -63,7 +63,6 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         `closed`,
         `type`,
         `duration`,
-        `moderator_notes`,
         `is_internal`,
         `is_hidden`,
         `level`,

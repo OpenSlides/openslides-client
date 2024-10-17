@@ -106,9 +106,9 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
             },
             {
                 idField: `list_of_speakers_id`,
-                ...listOfSpeakersSpeakerCountSubscription
+                fieldset: FULL_FIELDSET
             },
-            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`, `moderator_notes`] }
+            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`] }
         ]
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
@@ -166,11 +166,6 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                         fieldset: FULL_FIELDSET
                     }
                 ]
-            },
-            {
-                idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
-                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`, `content_object_id`] }]
             },
             {
                 idField: `structure_level_list_of_speakers_ids`,

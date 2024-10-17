@@ -13,6 +13,8 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
 
     public closed!: boolean;
 
+    public moderator_notes: string;
+
     public content_object_id!: Fqid; // */list_of_speakers_id;
     public speaker_ids!: Id[]; // (speaker/list_of_speakers_id)[];
 
@@ -30,7 +32,8 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         `speaker_ids`,
         `structure_level_list_of_speakers_ids`,
         `projection_ids`,
-        `meeting_id`
+        `meeting_id`,
+        `moderator_notes`
     ];
 }
 export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}
