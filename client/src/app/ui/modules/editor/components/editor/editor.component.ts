@@ -100,7 +100,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @ViewChild(`editorEl`) private editorEl: ElementRef;
 
     @ViewChildren(`btn`)
-    private buttonElements!: QueryList<ElementRef>;
+    public buttonElements!: QueryList<ElementRef>;
 
     @Input()
     public customSettings: object = {};
