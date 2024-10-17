@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
@@ -215,7 +215,7 @@ export class MotionFormatService {
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
-        const text = [];
+        const text: string[] = [];
         const changesToShow = changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
@@ -239,7 +239,7 @@ export class MotionFormatService {
                     )
                 );
             }
-
+            text.push(...this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
@@ -247,6 +247,67 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        return text.join(``);
+        return this.adjustDiffClasses(text).join(``);
     };
+
+    public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
+        return this.diffService.changeHasCollissions(change, changes);
+    }
+
+    private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string[] {
+        const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
+        const amendmentNr: string[] = [];
+
+        if (this.hasCollissions(current_text, changesToShow)) {
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-right-10">warning</mat-icon>`
+                );
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-45">warning</mat-icon>`
+                );
+            } else {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-40">warning</mat-icon>`
+                );
+            }
+        } else {
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(`<span class="amendment-nr-n-icon">`);
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(`<span class="margin-left-46 amendment-nr-n-icon">`);
+            } else {
+                amendmentNr.push(`<span class="margin-left-40 amendment-nr-n-icon">`);
+            }
+        }
+        if (`amend_nr` in current_text) {
+            if (typeof current_text.amend_nr === `string`) {
+                amendmentNr.push(`<span class="amendment-nr">`, current_text.amend_nr);
+            }
+            if (current_text.amend_nr === ``) {
+                amendmentNr.push(`Amendment`);
+            }
+            amendmentNr.push(`:</span></span>`);
+        }
+        return amendmentNr;
+    }
+
+    private adjustDiffClasses(text: string[]): string[] {
+        for (let i = 0; i < text.length; i++) {
+            // Removes the unwanted gap between the paragraph and the amendment number
+            if (text[i]?.search(`amendment-nr-n-icon`) > -1) {
+                text[i + 4] = text[i + 4]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+                if (i < 4) {
+                    text[i + 3] = text[i + 3]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+                }
+            }
+
+            // Removes the doubled numbers
+            if (text[i]?.search(`<os-linebreak`) > -1) {
+                text[i] = text[i].replace(`os-line-number `, ``);
+            }
+        }
+        return text;
+    }
 }
