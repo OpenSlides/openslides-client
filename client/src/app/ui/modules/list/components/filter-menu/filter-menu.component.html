@@ -30,7 +30,11 @@
                                                     [ngClass]="option.isChild ? 'filter-child' : ''"
                                                     (change)="service.toggleFilterOption(filter.property, option)"
                                                 >
-                                                    {{ option.label | translate }}
+                                                    @if (option.skipTranslate) {
+                                                        {{ option.label }}
+                                                    } @else {
+                                                        {{ option.label | translate }}
+                                                    }
                                                 </mat-checkbox>
                                             }
                                             @if (!isFilter(option)) {

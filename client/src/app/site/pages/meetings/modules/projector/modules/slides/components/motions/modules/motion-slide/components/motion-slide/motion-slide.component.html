@@ -172,14 +172,6 @@
                     }
                 </div>
             </section>
-
-            <!-- Reason -->
-            @if (data.data.reason) {
-                <div>
-                    <h3>{{ 'Reason' | translate }}</h3>
-                    <div [innerHTML]="data.data.reason | trust: 'html'"></div>
-                </div>
-            }
         }
     </div>
 }
