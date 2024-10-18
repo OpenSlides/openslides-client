@@ -3,30 +3,43 @@
         <div class="editor-menu">
             <div class="button-group">
                 <button
+                    #btn
                     class="text"
                     mat-ripple
+                    osTabNavigation
                     type="button"
+                    [buttonList]="buttonElements"
                     [ngClass]="{ active: isGodButtonActive }"
                     (click)="godButtonAction()"
                 >
                     {{ godButtonText }}
                 </button>
 
-                <button class="more" mat-ripple type="button" [matMenuTriggerFor]="formatMenu">
+                <button
+                    #btn
+                    class="more"
+                    mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
+                    type="button"
+                    [buttonList]="buttonElements"
+                    [matMenuTriggerFor]="formatMenu"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
             </div>
 
             <mat-menu #formatMenu="matMenu">
-                <button mat-menu-item translate [matMenuTriggerFor]="headingMenu">Headings</button>
-                <button mat-menu-item translate [matMenuTriggerFor]="textAlignMenu">Align</button>
-                <button mat-menu-item translate [matMenuTriggerFor]="inlineMenu">Inline</button>
+                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="headingMenu">Headings</button>
+                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="textAlignMenu">Align</button>
+                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="inlineMenu">Inline</button>
             </mat-menu>
 
             <mat-menu #headingMenu="matMenu">
                 @for (level of headingLevels; track level) {
                     <button
                         mat-menu-item
+                        tabindex="-1"
                         type="button"
                         [ngClass]="{ active: editor.isActive('heading', { level }) }"
                         (click)="editor.chain().focus().toggleHeading({ level }).run()"
@@ -44,6 +57,7 @@
             <mat-menu #textAlignMenu="matMenu">
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'left' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'left' }) }"
@@ -54,6 +68,7 @@
                 </button>
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'center' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'center' }) }"
@@ -64,6 +79,7 @@
                 </button>
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'right' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'right' }) }"
@@ -74,6 +90,7 @@
                 </button>
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'justify' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'justify' }) }"
@@ -87,6 +104,7 @@
             <mat-menu #inlineMenu="matMenu">
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [ngClass]="{ active: editor.isActive('subscript') }"
                     (click)="editor.chain().focus().toggleSubscript().run()"
@@ -97,6 +115,7 @@
 
                 <button
                     mat-menu-item
+                    tabindex="-1"
                     type="button"
                     [ngClass]="{ active: editor.isActive('superscript') }"
                     (click)="editor.chain().focus().toggleSuperscript().run()"
@@ -108,8 +127,12 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Bold' | translate"
                     [ngClass]="{ active: editor.isActive('bold') }"
                     (click)="editor.chain().focus().toggleBold().run()"
@@ -117,8 +140,12 @@
                     <mat-icon>format_bold</mat-icon>
                 </button>
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Italic' | translate"
                     [ngClass]="{ active: editor.isActive('italic') }"
                     (click)="editor.chain().focus().toggleItalic().run()"
@@ -126,8 +153,12 @@
                     <mat-icon>format_italic</mat-icon>
                 </button>
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Underline' | translate"
                     [ngClass]="{ active: editor.isActive('underline') }"
                     (click)="editor.chain().focus().toggleUnderline().run()"
@@ -135,8 +166,12 @@
                     <mat-icon>format_underline</mat-icon>
                 </button>
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Strikethrough' | translate"
                     [ngClass]="{ active: editor.isActive('strike') }"
                     (click)="editor.chain().focus().toggleStrike().run()"
@@ -147,8 +182,12 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Text color' | translate"
                     [ngClass]="{ active: editor.isActive('textStyle') }"
                     [ngStyle]="{
@@ -158,10 +197,20 @@
                 >
                     <mat-icon>format_color_text</mat-icon>
                 </button>
-                <button class="more color-selection" mat-ripple type="button" (click)="updateColorSets()">
+                <button
+                    #btn
+                    class="more color-selection"
+                    mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
+                    type="button"
+                    [buttonList]="buttonElements"
+                    (click)="updateColorSets()"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
                         list="text-colors"
+                        tabindex="-1"
                         type="color"
                         [value]="editor.getAttributes('textStyle')['color']"
                         (change)="updateFontColor($event)"
@@ -170,8 +219,12 @@
             </div>
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Background color' | translate"
                     [ngClass]="{ active: editor.isActive('highlight') }"
                     [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
@@ -179,10 +232,20 @@
                 >
                     <mat-icon>format_color_fill</mat-icon>
                 </button>
-                <button class="more color-selection" mat-ripple type="button" (click)="updateColorSets()">
+                <button
+                    #btn
+                    class="more color-selection"
+                    mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
+                    type="button"
+                    [buttonList]="buttonElements"
+                    (click)="updateColorSets()"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
                         list="background-colors"
+                        tabindex="-1"
                         type="color"
                         [value]="editor.getAttributes('highlight')['color']"
                         (change)="updateHighlightColor($event)"
@@ -190,8 +253,12 @@
                 </button>
             </div>
             <button
+                #btn
                 mat-ripple
+                osTabNavigation
+                tabindex="-1"
                 type="button"
+                [buttonList]="buttonElements"
                 [matTooltip]="'Clear formatting' | translate"
                 (click)="clearSelectedFormat()"
             >
@@ -200,9 +267,13 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
                     matTooltipPosition="above"
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Bullet list' | translate"
                     [ngClass]="{ active: editor.isActive('bulletList') }"
                     (click)="editor.chain().focus().toggleBulletList().run()"
@@ -210,9 +281,13 @@
                     <mat-icon>format_list_bulleted</mat-icon>
                 </button>
                 <button
+                    #btn
                     mat-ripple
                     matTooltipPosition="above"
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Numbered list' | translate"
                     [ngClass]="{ active: editor.isActive('orderedList') }"
                     (click)="editor.chain().focus().toggleOrderedList().run()"
@@ -223,8 +298,12 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Insert/edit link' | translate"
                     [ngClass]="{ active: editor.isActive('link') }"
                     (click)="setLinkDialog()"
@@ -233,8 +312,12 @@
                 </button>
 
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [matTooltip]="'Insert/edit image' | translate"
                     [ngClass]="{ active: editor.isActive('image') }"
                     (click)="setImageDialog()"
@@ -245,8 +328,12 @@
 
             <div class="button-group">
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
                     (click)="editor.chain().focus().undo().run()"
@@ -255,8 +342,12 @@
                 </button>
 
                 <button
+                    #btn
                     mat-ripple
+                    osTabNavigation
+                    tabindex="-1"
                     type="button"
+                    [buttonList]="buttonElements"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
                     (click)="editor.chain().focus().redo().run()"
@@ -265,7 +356,16 @@
                 </button>
             </div>
 
-            <button mat-ripple type="button" [matTooltip]="'Source code' | translate" (click)="editCode()">
+            <button
+                #btn
+                mat-ripple
+                osTabNavigation
+                tabindex="-1"
+                type="button"
+                [buttonList]="buttonElements"
+                [matTooltip]="'Source code' | translate"
+                (click)="editCode()"
+            >
                 <mat-icon>code</mat-icon>
             </button>
         </div>
