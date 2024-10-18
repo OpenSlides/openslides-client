@@ -36,9 +36,9 @@ export class TabNavigationDirective {
         }
 
         const buttonToFocus = buttons[newIndex];
-        (buttonToFocus.nativeElement as HTMLElement).focus();
-        (this.button.nativeElement as HTMLElement).setAttribute(`tabindex`, `-1`);
-        (buttonToFocus.nativeElement as HTMLElement).setAttribute(`tabindex`, `0`);
+        buttonToFocus.nativeElement.focus();
+        this.button.nativeElement.tabIndex = -1;
+        buttonToFocus.nativeElement.tabIndex = 0;
     }
 
     public constructor(private button: ElementRef) {}
