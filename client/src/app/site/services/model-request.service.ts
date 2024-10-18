@@ -51,7 +51,7 @@ export class ModelRequestService {
                     `The subscription ${subscriptionName} in the modelSubscriptionMap hasn't got an unusedSubscription.`
                 );
                 subscription.unusedSubscription = this.getUnusedSubscription(config.unusedWhen);
-            } else if (subscription.unusedSubscription?.closed) {
+            } else if (subscription.unusedSubscription.closed) {
                 subscription.unusedSubscription = this.getUnusedSubscription(config.unusedWhen);
             }
 
