@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
@@ -215,7 +215,7 @@ export class MotionFormatService {
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
-        const text = [];
+        const text: string[] = [];
         const changesToShow = changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
@@ -239,7 +239,7 @@ export class MotionFormatService {
                     )
                 );
             }
-
+            text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
@@ -247,6 +247,63 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        return text.join(``);
+        return this.adjustDiffClasses(text).join(``);
     };
+
+    private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string {
+        const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
+        const amendmentNr: string[] = [];
+
+        if (this.diffService.changeHasCollissions(current_text, changesToShow)) {
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-right-10">warning</mat-icon>`
+                );
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-45">warning</mat-icon>`
+                );
+            } else {
+                amendmentNr.push(
+                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-40">warning</mat-icon>`
+                );
+            }
+        } else {
+            if (lineNumbering === LineNumberingMode.Outside) {
+                amendmentNr.push(`<span class="amendment-nr-n-icon">`);
+            } else if (lineNumbering === LineNumberingMode.Inside) {
+                amendmentNr.push(`<span class="margin-left-46 amendment-nr-n-icon">`);
+            } else {
+                amendmentNr.push(`<span class="margin-left-40 amendment-nr-n-icon">`);
+            }
+        }
+        if (`amend_nr` in current_text) {
+            amendmentNr.push(`<span class="amendment-nr">`);
+            if (typeof current_text.amend_nr === `string`) {
+                amendmentNr.push(current_text.amend_nr);
+            }
+            if (current_text.amend_nr === ``) {
+                amendmentNr.push(`Amendment`);
+            }
+            amendmentNr.push(`:</span>`);
+        }
+        amendmentNr.push(`</span>`);
+        return amendmentNr.join(``);
+    }
+
+    private adjustDiffClasses(text: string[]): string[] {
+        for (let i = 0; i < text.length; i++) {
+            // Removes the unwanted gap between the paragraph and the amendment number
+            if (text[i]?.indexOf(`amendment-nr-n-icon`) !== -1) {
+                text[i + 1] = text[i + 1]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+            }
+        }
+        // Removes the doubled number from the first line
+        if (
+            text[0].match(`<os-linebreak data-line-number=\"1\" class=\"os-line-number line-number-1\"></os-linebreak>`)
+        ) {
+            text[0] = text[0].replace(` class=\"os-line-number line-number-1\"`, ``);
+        }
+        return text;
+    }
 }
