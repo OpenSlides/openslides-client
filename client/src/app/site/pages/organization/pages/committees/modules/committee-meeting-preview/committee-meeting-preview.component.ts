@@ -20,6 +20,7 @@ export class CommitteeMeetingPreviewComponent {
     @Input() public meeting!: ViewMeeting;
     @Input() public committee!: ViewCommittee;
     @Input() public isCMAndRequireDuplicateFrom!: boolean;
+    @Input() public showParticipants!: boolean;
 
     public readonly OML = OML;
     public readonly CML = CML;

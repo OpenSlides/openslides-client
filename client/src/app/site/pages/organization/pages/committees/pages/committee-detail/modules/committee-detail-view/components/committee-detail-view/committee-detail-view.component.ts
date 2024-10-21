@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -36,6 +37,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public get canManageCommittee(): boolean {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
+    }
+
+    public canSeeParticipantAmount(meeting: ViewMeeting): boolean {
+        return (
+            this.operator.isOrgaManager ||
+            this.canManageCommittee ||
+            this.operator.hasPermsInMeeting(meeting.id, Permission.userCanSee)
+        );
     }
 
     public constructor(

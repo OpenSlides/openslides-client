@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Action } from 'src/app/gateways/actions';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
@@ -28,6 +29,10 @@ const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
     styleUrls: [`./committee-list.component.scss`]
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
+    public canSeeMemberAmounts(committee: ViewCommittee): boolean {
+        return this.operator.isAccountAdmin || this.operator.hasCommitteePermissions(committee.id, CML.can_manage);
+    }
+
     private get messageForSpinner(): string {
         return this.translate.instant(`Agenda items are in process. Please wait ...`);
     }
