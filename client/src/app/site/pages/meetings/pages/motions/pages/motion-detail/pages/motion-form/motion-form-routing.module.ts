@@ -13,8 +13,7 @@ const routes: Routes = [
     },
     {
         path: `:id/edit`,
-        component: MotionFormComponent,
-        data: { meetingPermissions: [Permission.motionCanManageMetadata] }
+        component: MotionFormComponent
     },
     { path: `new`, component: MotionFormComponent, data: { meetingPermissions: [Permission.motionCanCreate] } }
 ];
