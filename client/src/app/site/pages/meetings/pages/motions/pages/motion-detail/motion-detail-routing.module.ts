@@ -12,7 +12,13 @@ const routes: Routes = [
             {
                 path: ``,
                 loadChildren: () => import(`./pages/motion-form/motion-form.module`).then(m => m.MotionFormModule),
-                data: { meetingPermissions: [Permission.motionCanCreate] }
+                data: {
+                    meetingPermissions: [
+                        Permission.motionCanCreate,
+                        Permission.motionCanCreateAmendments,
+                        Permission.motionCanManageMetadata
+                    ]
+                }
             },
             {
                 path: `:id`,
