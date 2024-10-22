@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Permission } from 'src/app/domain/definitions/permission';
 
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 
@@ -11,14 +10,7 @@ const routes: Routes = [
         children: [
             {
                 path: ``,
-                loadChildren: () => import(`./pages/motion-form/motion-form.module`).then(m => m.MotionFormModule),
-                data: {
-                    meetingPermissions: [
-                        Permission.motionCanCreate,
-                        Permission.motionCanCreateAmendments,
-                        Permission.motionCanManageMetadata
-                    ]
-                }
+                loadChildren: () => import(`./pages/motion-form/motion-form.module`).then(m => m.MotionFormModule)
             },
             {
                 path: `:id`,
