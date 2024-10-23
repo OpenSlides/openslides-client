@@ -80,7 +80,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
             const canUpdateUsers = this.isAllowed(`update`);
-            if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
+            if (this.newUser && canUpdateUsers) {
+                return true;
+            } else if (this._isUserEditable && controlName !== `default_password`) {
+                return true;
+            } else if (this._isUserIniPWEditable && controlName === `default_password`) {
                 return true;
             } else if (canUpdateUsers) {
                 return controlName === `is_present`
@@ -166,6 +170,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     public get saveButtonEnabled(): boolean {
+        // for prevent saveButton flickering
+        if (!this._userFormLoaded) {
+            return false;
+        }
         return this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
@@ -182,10 +190,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
+    private _userFormLoaded = false;
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
-    private _isUserInScope = false;
+    private _isUserIniPWEditable = false;
+    private _isUserEditable = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -223,6 +233,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
+        this.updateEditable();
     }
 
     public isAllowed(action: string): boolean {
@@ -263,10 +274,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                     this.user = user;
                     this.cd.markForCheck();
                 }
-            }),
-            this.operator.operatorUpdated.subscribe(
-                async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
-            )
+            })
         );
     }
 
@@ -314,15 +322,19 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * @param edit
      */
     public async setEditMode(edit: boolean): Promise<void> {
-        if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
-        }
-
         this.isEditingSubject.next(edit);
 
         // case: abort creation of a new user
         if (this.newUser && !edit) {
             this.goToAllUsers();
+        }
+
+        if (edit) {
+            setTimeout(() => {
+                this._userFormLoaded = true;
+            }, 1000);
+        } else {
+            this._userFormLoaded = false;
         }
     }
 
@@ -465,5 +477,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     private checkSelectedGroupsCanManage(): boolean {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
+    }
+
+    private async updateEditable(): Promise<void> {
+        const allowedFields = await this.userService.isEditable(+this.route.snapshot.params[`id`], [
+            `first_name`,
+            `default_password`
+        ]);
+        this._isUserEditable = allowedFields.includes(`first_name`);
+        this._isUserIniPWEditable = allowedFields.includes(`default_password`);
     }
 }
