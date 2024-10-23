@@ -442,7 +442,8 @@ export class OperatorService {
                 this._permissions !== undefined;
         }
         if (this.isAuthenticated) {
-            isReady = isReady && this._OML !== undefined && this._CML !== undefined && this._userSubject !== undefined;
+            isReady =
+                isReady && this._OML !== undefined && this._CML !== undefined && this._userSubject.value !== undefined;
         }
         // TODO: for developing some checks
         // console.log(
