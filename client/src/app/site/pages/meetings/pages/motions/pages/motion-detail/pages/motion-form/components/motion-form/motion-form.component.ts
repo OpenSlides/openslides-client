@@ -211,12 +211,12 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     public saveMotion(event?: any): () => Promise<void> {
         return async () => {
             const update = event || this.temporaryMotion;
-            for (const key in update) {
-                if (update[key] === null || update[key].length === 0) {
-                    delete update[key];
-                }
-            }
             if (this.newMotion) {
+                for (const key in update) {
+                    if (update[key] === null || update[key].length === 0) {
+                        delete update[key];
+                    }
+                }
                 await this.createMotion(update);
             } else {
                 await this.updateMotion(update, this.motion);
