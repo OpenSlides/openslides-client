@@ -60,11 +60,11 @@
                 <div class="search-results-entry divider-bottom">
                     <div class="breadcrumb">
                         @if (result.committee) {
-                            <span>{{ result.committee.name }}</span>
+                            <span [innerHTML]="result.committee.name"></span>
                             <span class="sep">&gt;</span>
                         }
                         @if (currentFilters.value.meetingFilter === 'all' && result.meeting) {
-                            <span>{{ result.meeting.name }}</span>
+                            <span [innerHTML]="result.meeting.name"></span>
                             <span class="sep">&gt;</span>
                         }
                         @if (currentFilters.value.meetingFilter === 'all' && result.collection === 'user') {
