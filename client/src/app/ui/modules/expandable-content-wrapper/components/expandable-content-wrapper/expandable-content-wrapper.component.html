@@ -3,7 +3,10 @@
         #contentBox
         class="content"
         osResized
-        [ngClass]="showCollapsed ? 'collapsed collapsed-card-content' : ''"
+        [ngClass]="[
+            showCollapsed ? 'collapsed collapsed-card-content' : '',
+            isDelegation ? 'collapsed-delegations' : ''
+        ]"
         (osResizedHeight)="onResizedHeight($event)"
     >
         <ng-content></ng-content>

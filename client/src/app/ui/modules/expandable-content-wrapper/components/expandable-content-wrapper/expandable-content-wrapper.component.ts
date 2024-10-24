@@ -30,6 +30,23 @@ export class ExpandableContentWrapperComponent {
         return this._disableExpandControl;
     }
 
+    @Input()
+    public set isDelegation(isDelegation: boolean) {
+        this._isDelegation = isDelegation;
+    }
+
+    public get isDelegation(): boolean {
+        return this._isDelegation;
+    }
+
+    public set showCollapsed(showCollapsed: boolean) {
+        this._showCollapsed = showCollapsed;
+    }
+
+    public get showCollapsed(): boolean {
+        return this._showCollapsed;
+    }
+
     /**
      * Boolean, whether the control to expand the element should be disabled or not.
      */
@@ -43,11 +60,14 @@ export class ExpandableContentWrapperComponent {
     /**
      * Boolean to see, if the content is currently expanded.
      */
-    public isExpanded = false;
+    public isExpanded: boolean = false;
 
-    public showCollapsed: boolean;
+    public _showCollapsed: boolean = false;
+
+    public _isDelegation: boolean = false;
 
     public constructor(private cd: ChangeDetectorRef) {
+        this.showCollapsed = false;
         this.update();
     }
 
