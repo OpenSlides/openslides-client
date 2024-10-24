@@ -17,11 +17,21 @@
         }
     }
 
+    .content {
+        &.collapsed-delegations {
+            max-height: 250px !important;
+        }
+    }
+
     .show-entire-text {
         margin-top: 4px;
         a {
             cursor: pointer;
         }
+    }
+
+    .margin-top-8 {
+        margin-top: 10px !important;
     }
 
     .show-entire-text {

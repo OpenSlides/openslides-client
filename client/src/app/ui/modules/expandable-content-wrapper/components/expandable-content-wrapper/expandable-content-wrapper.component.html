@@ -3,14 +3,18 @@
         #contentBox
         class="content"
         osResized
-        [ngClass]="showCollapsed ? 'collapsed collapsed-card-content' : ''"
+        [ngClass]="[
+            showCollapsed ? 'collapsed' : '',
+            isDelegation ? 'collapsed-delegations' : '',
+            showCollapsed && !isDelegation ? 'collapsed-card-content' : ''
+        ]"
         (osResizedHeight)="onResizedHeight($event)"
     >
         <ng-content></ng-content>
     </div>
     <!-- Expanding control -->
     @if (canExpand && !disableExpandControl) {
-        <div class="small show-entire-text">
+        <div class="small show-entire-text" [ngClass]="[isDelegation ? 'margin-top-8' : '']">
             <a tabindex="0" (click)="toggleExpansion()" (keydown.enter)="toggleExpansion()">
                 {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
             </a>
