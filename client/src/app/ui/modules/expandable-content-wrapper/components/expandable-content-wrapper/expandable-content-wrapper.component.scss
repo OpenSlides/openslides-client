@@ -17,6 +17,12 @@
         }
     }
 
+    .content {
+        &.collapsed-delegations {
+            max-height: 265px !important;
+        }
+    }
+
     .show-entire-text {
         margin-top: 4px;
         a {
