@@ -141,6 +141,7 @@
                     matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                 >
                     <os-icon-container icon="work" [noWrap]="true">
+                        <span>{{ user.vote_delegations_from().length }}:</span>
                         {{ user.vote_delegations_from() }}
                     </os-icon-container>
                 </div>
