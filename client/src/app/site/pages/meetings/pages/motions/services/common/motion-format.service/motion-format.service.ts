@@ -297,12 +297,10 @@ export class MotionFormatService {
             if (text[i]?.indexOf(`amendment-nr-n-icon`) !== -1) {
                 text[i + 1] = text[i + 1]?.replace(`os-split-after`, `os-split-after margin-top-0`);
             }
-        }
-        // Removes the doubled number from the first line
-        if (
-            text[0].match(`<os-linebreak data-line-number=\"1\" class=\"os-line-number line-number-1\"></os-linebreak>`)
-        ) {
-            text[0] = text[0].replace(` class=\"os-line-number line-number-1\"`, ``);
+
+            if (text[i]?.search(`<os-linebreak`) > -1) {
+                text[i] = text[i].replace(/ class="os-line-number line-number-[1-9]+"/, ``);
+            }
         }
         return text;
     }
