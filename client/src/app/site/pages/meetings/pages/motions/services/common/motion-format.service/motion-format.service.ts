@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -68,7 +69,8 @@ export class MotionFormatService {
         private diffService: MotionDiffService,
         private amendmentController: AmendmentControllerService,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private settings: MeetingSettingsService
+        private settings: MeetingSettingsService,
+        private translate: TranslateService
     ) {}
 
     /**
@@ -283,10 +285,10 @@ export class MotionFormatService {
                 amendmentNr.push(current_text.amend_nr);
             }
             if (current_text.amend_nr === ``) {
-                amendmentNr.push(`Amendment`);
+                amendmentNr.push(this.translate.instant(`Amendment`));
             }
         } else {
-            amendmentNr.push(`Change recommendation`);
+            amendmentNr.push(this.translate.instant(`Change recommendation`));
         }
         amendmentNr.push(`: </span></span>`);
         return amendmentNr.join(``);
