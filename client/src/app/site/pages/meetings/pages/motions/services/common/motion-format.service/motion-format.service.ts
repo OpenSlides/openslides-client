@@ -277,17 +277,18 @@ export class MotionFormatService {
                 amendmentNr.push(`<span class="margin-left-40 amendment-nr-n-icon">`);
             }
         }
+        amendmentNr.push(`<span class="amendment-nr">`);
         if (`amend_nr` in current_text) {
-            amendmentNr.push(`<span class="amendment-nr">`);
             if (typeof current_text.amend_nr === `string`) {
                 amendmentNr.push(current_text.amend_nr);
             }
             if (current_text.amend_nr === ``) {
                 amendmentNr.push(`Amendment`);
             }
-            amendmentNr.push(`:</span>`);
+        } else {
+            amendmentNr.push(`Change recommendation`);
         }
-        amendmentNr.push(`</span>`);
+        amendmentNr.push(`: </span></span>`);
         return amendmentNr.join(``);
     }
 
