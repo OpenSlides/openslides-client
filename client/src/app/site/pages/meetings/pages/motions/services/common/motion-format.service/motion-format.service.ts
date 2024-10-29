@@ -299,6 +299,7 @@ export class MotionFormatService {
             // Removes the unwanted gap between the paragraph and the amendment number
             if (text[i]?.indexOf(`amendment-nr-n-icon`) !== -1) {
                 text[i + 1] = text[i + 1]?.replace(`os-split-after`, `os-split-after margin-top-0`);
+                text[i + 1] = text[i + 1]?.replace(`<p>`, `<p class="margin-top-0">`);
             }
 
             if (text[i]?.search(`<os-linebreak`) > -1) {
