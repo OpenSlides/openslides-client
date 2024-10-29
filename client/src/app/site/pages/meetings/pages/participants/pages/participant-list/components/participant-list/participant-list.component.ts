@@ -108,6 +108,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return votes ?? 0;
     }
 
+    public sumOfDelegatedVoteWeight(user: ViewUser): number {
+        let voteWeights: number = 0;
+        user.vote_delegations_from().forEach(user => (voteWeights += user.vote_weight()));
+
+        return voteWeights;
+    }
+
     public get isUserInScope(): boolean {
         return this._isUserInScope;
     }
