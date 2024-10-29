@@ -370,7 +370,7 @@ export class MotionSlideComponent
         return html;
     }
 
-    public getAllTextChangingObjects(): ViewUnifiedChange[] {
+    private getAllTextChangingObjects(): ViewUnifiedChange[] {
         return this.allChangingObjects.filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
     }
 
