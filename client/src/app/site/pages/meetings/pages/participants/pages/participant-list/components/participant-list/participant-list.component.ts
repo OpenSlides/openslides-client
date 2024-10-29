@@ -108,6 +108,17 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return votes ?? 0;
     }
 
+    public get totalEligibleVoters(): number {
+        let votes;
+        if (this.listComponent) {
+            votes = this.listComponent.source?.reduce(
+                (previous, current) => previous + (current.isVoteCountable ? 1 : 0),
+                0
+            );
+        }
+        return votes ?? 0;
+    }
+
     public get isUserInScope(): boolean {
         return this._isUserInScope;
     }
