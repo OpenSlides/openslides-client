@@ -100,6 +100,10 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         return this.perms.isAllowed(`change_metadata`, this.motion);
     }
 
+    public get canManageAgenda(): boolean {
+        return this.perms.canManageAgenda();
+    }
+
     public get isParagraphBasedAmendment(): boolean {
         return this.isExisting && this.motion.isParagraphBasedAmendment();
     }
@@ -208,6 +212,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         return async () => {
             const update = event || this.temporaryMotion;
             if (this.newMotion) {
+                for (const key in update) {
+                    if (update[key] === null || update[key].length === 0) {
+                        delete update[key];
+                    }
+                }
                 await this.createMotion(update);
             } else {
                 await this.updateMotion(update, this.motion);
@@ -582,7 +591,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 number: [
                     ``,
                     isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
-                ],
+                ]
+            }),
+            ...(this.canManageAgenda && {
                 agenda_create: [``],
                 agenda_type: [``]
             })
