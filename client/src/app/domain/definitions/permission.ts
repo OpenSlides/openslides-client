@@ -5,10 +5,8 @@
  */
 export enum Permission {
     agendaItemCanManage = `agenda_item.can_manage`,
-    agendaItemCanManageModeratorNotes = `agenda_item.can_manage_moderator_notes`,
     agendaItemCanSee = `agenda_item.can_see`,
     agendaItemCanSeeInternal = `agenda_item.can_see_internal`,
-    agendaItemCanSeeModeratorNotes = `agenda_item.can_see_moderator_notes`,
     assignmentCanManage = `assignment.can_manage`,
     assignmentCanNominateOther = `assignment.can_nominate_other`,
     assignmentCanNominateSelf = `assignment.can_nominate_self`,
@@ -17,6 +15,8 @@ export enum Permission {
     listOfSpeakersCanBeSpeaker = `list_of_speakers.can_be_speaker`,
     listOfSpeakersCanManage = `list_of_speakers.can_manage`,
     listOfSpeakersCanSee = `list_of_speakers.can_see`,
+    listOfSpeakersCanSeeModeratorNotes = `list_of_speakers.can_see_moderator_notes`,
+    listOfSpeakersCanManageModeratorNotes = `list_of_speakers.can_manage_moderator_notes`,
     mediafileCanManage = `mediafile.can_manage`,
     mediafileCanSee = `mediafile.can_see`,
     meetingCanManageLogosAndFonts = `meeting.can_manage_logos_and_fonts`,

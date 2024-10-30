@@ -71,3 +71,24 @@
         }
     }
 }
+
+.amendment-nr-n-icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    left: -40px;
+    height: 1.5em;
+    margin-top: 25px;
+}
+
+.amendment-nr {
+    position: relative;
+    font-style: italic;
+    background-color: rgb(224, 224, 224);
+    padding-right: 4px;
+}
+
+.os-linebreak {
+    display: none !important;
+}
