@@ -1,4 +1,5 @@
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ORGANIZATION_ID } from '../../services/organization.service';
 import { ViewOrganization } from '../../view-models/view-organization';
@@ -10,6 +11,7 @@ export const getOrganizationMediafileListSubscriptionConfig: SubscriptionConfigG
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
+        fieldset: DEFAULT_FIELDSET,
         follow: [
             {
                 idField: `mediafile_ids`,

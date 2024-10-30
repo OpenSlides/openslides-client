@@ -24,9 +24,12 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: DEFAULT_FIELDSET,
+        additionalFields: [`reference_projector_id`],
         follow: [
             {
                 idField: `projector_ids`,
+                fieldset: DEFAULT_FIELDSET,
                 follow: [
                     {
                         idField: `current_projection_ids`,
@@ -41,6 +44,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     },
                     {
                         idField: `preview_projection_ids`,
+                        fieldset: DEFAULT_FIELDSET,
                         follow: [
                             {
                                 idField: `content_object_id`,
@@ -51,6 +55,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     },
                     {
                         idField: `history_projection_ids`,
+                        fieldset: DEFAULT_FIELDSET,
                         follow: [
                             {
                                 idField: `content_object_id`,
@@ -61,14 +66,16 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     }
                 ]
             },
-            `projector_countdown_ids`,
-            `projector_message_ids`,
-            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS,
-            { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
-            `list_of_speakers_ids`,
+            { idField: `projector_countdown_ids`, fieldset: DEFAULT_FIELDSET },
+            { idField: `projector_message_ids`, fieldset: DEFAULT_FIELDSET },
+            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS.map(idField => ({
+                idField,
+                fieldset: DEFAULT_FIELDSET
+            })),
+            { idField: `speaker_ids`, fieldset: DEFAULT_FIELDSET, additionalFields: [`meeting_user_id`] },
+            { idField: `list_of_speakers_ids`, fieldset: DEFAULT_FIELDSET },
             { idField: `agenda_item_ids`, fieldset: [`item_number`, `content_object_id`] }
-        ],
-        additionalFields: [`reference_projector_id`]
+        ]
     },
     subscriptionName: PROJECTOR_LIST_SUBSCRIPTION
 });

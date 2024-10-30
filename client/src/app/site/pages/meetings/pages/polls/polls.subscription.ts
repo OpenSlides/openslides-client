@@ -2,7 +2,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
+import { BaseSimplifiedModelRequest, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 import { ViewPoll } from './view-models';
@@ -50,6 +50,7 @@ export const getPollListSubscriptionConfig: SubscriptionConfigGenerator = (id: I
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: DEFAULT_FIELDSET,
         follow: [{ idField: `poll_ids`, ...pollModelRequest }]
     },
     subscriptionName: POLL_LIST_SUBSCRIPTION
@@ -83,7 +84,7 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
             {
                 idField: `global_option_id`,
                 fieldset: FULL_FIELDSET,
-                follow: [{ idField: `vote_ids` }]
+                follow: [{ idField: `vote_ids`, fieldset: DEFAULT_FIELDSET }]
             }
         ]
     },

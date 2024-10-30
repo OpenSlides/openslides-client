@@ -3,6 +3,7 @@ import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
@@ -121,10 +122,11 @@ export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenera
         viewModelCtor: ViewMotionWorkflow,
         follow: [
             {
-                idField: `state_ids`
+                idField: `state_ids`,
+                fieldset: DEFAULT_FIELDSET
             }
         ],
-        fieldset: ``
+        fieldset: []
     },
     subscriptionName: MOTION_WORKFLOW_DETAIL_SUBSCRIPTION
 });
@@ -133,6 +135,7 @@ export const getMotionsSubmodelSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: DEFAULT_FIELDSET,
         follow: [
             { idField: `motion_category_ids`, fieldset: FULL_FIELDSET },
             { idField: `motion_state_ids`, fieldset: FULL_FIELDSET },
@@ -189,13 +192,13 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             {
                 idField: `supporter_meeting_user_ids`,
+                fieldset: `participantListMinimal`,
                 follow: [
                     {
                         idField: `user_id`,
                         fieldset: `participantList`
                     }
-                ],
-                fieldset: `participantListMinimal`
+                ]
             }
         ],
         fieldset: [

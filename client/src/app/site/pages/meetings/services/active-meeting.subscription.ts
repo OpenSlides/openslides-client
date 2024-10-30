@@ -4,6 +4,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../view-models/view-meeting';
 
@@ -36,9 +37,10 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField,
                     fieldset: [`mediafile_id`]
                 })),
-                { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
+                { idField: `chat_group_ids`, fieldset: DEFAULT_FIELDSET /*, fieldset: [`chat_message_ids`]*/ },
                 {
                     idField: `chat_message_ids`,
+                    fieldset: DEFAULT_FIELDSET,
                     follow: [
                         {
                             idField: `meeting_user_id`,
@@ -54,14 +56,14 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 }, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
                 {
                     idField: `poll_ids`,
+                    fieldset: [`title`, `state`, `entitled_group_ids`],
                     follow: [
                         {
                             idField: `content_object_id`,
                             fieldset: [`title`],
                             follow: [{ idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`] }]
                         }
-                    ],
-                    fieldset: [`title`, `state`, `entitled_group_ids`]
+                    ]
                 },
                 {
                     idField: `point_of_order_category_ids`,
