@@ -108,6 +108,17 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return votes ?? 0;
     }
 
+    public isInPolldefaultGroup(user: ViewUser): boolean {
+        let isInDefaultGroup = false;
+        user.group_ids().forEach(id => {
+            if (this._poll_default_group_ids.indexOf(id) > -1) {
+                isInDefaultGroup = true;
+                return;
+            }
+        });
+        return isInDefaultGroup;
+    }
+
     public sumOfDelegatedVoteWeight(user: ViewUser): number {
         let voteWeights: number = 0;
         user.vote_delegations_from().forEach(user => (voteWeights += user.vote_weight()));
@@ -138,6 +149,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     private _allowSelfSetPresent = false;
     private _isElectronicVotingEnabled = false;
     private _isUserInScope = true;
+
+    private _poll_default_group_ids: number[] = [];
 
     private readonly selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
     private readonly selfGroupRemovalDialogContent = _(
@@ -186,7 +199,24 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .subscribe(enabled => (this.voteDelegationEnabled = enabled)),
             this.meetingSettingsService
                 .get(`users_allow_self_set_present`)
-                .subscribe(allowed => (this._allowSelfSetPresent = allowed))
+                .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
+            this.meetingSettingsService
+                .get(`assignment_poll_default_group_ids`)
+                .subscribe(group_ids => (this._poll_default_group_ids = group_ids)),
+            this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
+                group_ids.forEach(id => {
+                    if (this._poll_default_group_ids.indexOf(id) === -1) {
+                        this._poll_default_group_ids.push(id);
+                    }
+                })
+            ),
+            this.meetingSettingsService.get(`topic_poll_default_group_ids`).subscribe(group_ids =>
+                group_ids.forEach(id => {
+                    if (this._poll_default_group_ids.indexOf(id) === -1) {
+                        this._poll_default_group_ids.push(id);
+                    }
+                })
+            )
         );
     }
 

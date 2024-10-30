@@ -68,9 +68,11 @@
                         }
                     </div>
                     <div class="user-subtitle">
-                        {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
-                        @if (user.hasVoteRightFromOthers()) {
-                            + {{ sumOfDelegatedVoteWeight(user) }}
+                        @if (isInPolldefaultGroup(user)) {
+                            {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                            @if (user.hasVoteRightFromOthers()) {
+                                + {{ sumOfDelegatedVoteWeight(user) }}
+                            }
                         }
                     </div>
                 }
