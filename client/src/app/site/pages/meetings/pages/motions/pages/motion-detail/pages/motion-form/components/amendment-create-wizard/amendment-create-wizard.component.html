@@ -68,16 +68,30 @@
                                 }
                                 <div class="paragraph-text motion-text">
                                     <div>
-                                        @if (paragraph.lineFrom >= paragraph.lineTo) {
-                                            <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
-                                            </i>
-                                        }
-                                        @if (paragraph.lineFrom < paragraph.lineTo) {
-                                            <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }} -
-                                                {{ paragraph.lineTo }}:
-                                            </i>
+                                        @if (isAmendmentOfAmendment) {
+                                            @if (diffedParagraphs[i].lineFrom >= diffedParagraphs[i].lineTo) {
+                                                <i class="line-number">
+                                                    {{ 'Line' | translate }} {{ diffedParagraphs[i].lineFrom }}:
+                                                </i>
+                                            }
+                                            @if (diffedParagraphs[i].lineFrom < diffedParagraphs[i].lineTo) {
+                                                <i class="line-number">
+                                                    {{ 'Line' | translate }} {{ diffedParagraphs[i].lineFrom }} -
+                                                    {{ diffedParagraphs[i].lineTo }}:
+                                                </i>
+                                            }
+                                        } @else {
+                                            @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                                <i class="line-number">
+                                                    {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
+                                                </i>
+                                            }
+                                            @if (paragraph.lineFrom < paragraph.lineTo) {
+                                                <i class="line-number">
+                                                    {{ 'Line' | translate }} {{ paragraph.lineFrom }} -
+                                                    {{ paragraph.lineTo }}:
+                                                </i>
+                                            }
                                         }
                                     </div>
                                     <div [innerHTML]="getParagraphPreview(i) | trust: 'html'"></div>
