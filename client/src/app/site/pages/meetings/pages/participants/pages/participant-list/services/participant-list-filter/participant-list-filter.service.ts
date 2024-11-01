@@ -210,6 +210,18 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 }
             },
             {
+                property: `canVoteForGroups`,
+                shouldHideFn: (): boolean => {
+                    return !this._voteDelegationEnabled;
+                }
+            },
+            {
+                property: `isVoteCountable`,
+                shouldHideFn: (): boolean => {
+                    return !this._voteDelegationEnabled;
+                }
+            },
+            {
                 property: `delegationType`,
                 shouldHideFn: (): boolean => {
                     return !this._voteDelegationEnabled;
