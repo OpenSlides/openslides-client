@@ -60,6 +60,7 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
     modelRequest: {
         viewModelCtor: ViewPoll,
         ids,
+        fieldset: FULL_FIELDSET,
         follow: [
             { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
             {
