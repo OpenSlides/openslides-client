@@ -63,7 +63,17 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
             },
             {
                 idField: `meeting_ids`,
-                fieldset: DEFAULT_FIELDSET
+                fieldset: [
+                    `end_time`,
+                    `is_active_in_organization_id`,
+                    `location`,
+                    `locked_from_inside`,
+                    `name`,
+                    `organization_tag_ids`,
+                    `start_time`,
+                    `template_for_organization_id`,
+                    `user_ids`
+                ]
             }
         ]
     },
