@@ -124,11 +124,11 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             );
         if (this.listComponent) {
             for (const user of this.listComponent.source ?? []) {
-                if (checkGroups.intersect(user.group_ids())) {
+                if (checkGroups.intersect(user.group_ids()).length > 0) {
                     voters[user.id] = user.vote_weight();
                 }
                 for (const principal of user.vote_delegations_from()) {
-                    if (checkGroups.intersect(principal.group_ids())) {
+                    if (checkGroups.intersect(principal.group_ids()).length > 0) {
                         voters[principal.id] = principal.vote_weight();
                     }
                 }
