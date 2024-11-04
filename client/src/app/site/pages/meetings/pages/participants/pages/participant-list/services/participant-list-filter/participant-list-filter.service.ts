@@ -31,7 +31,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
 
     private userCanVoteForGroupFilterOptions: OsFilter<ViewUser> = {
         property: `canVoteForGroups`,
-        label: `Can vote for groups`,
+        label: `Voting rights`,
         options: []
     };
 
@@ -97,14 +97,6 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             this.userGroupFilterOptions,
             this.userCanVoteForGroupFilterOptions,
-            {
-                property: `isVoteCountable`,
-                label: _(`Countable vote`),
-                options: [
-                    { condition: true, label: _(`Countable`) },
-                    { condition: [false, null], label: _(`Not countable`) }
-                ]
-            },
             this.userStructureLevelFilterOptions,
             {
                 property: `delegationType`,
@@ -211,12 +203,6 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `canVoteForGroups`,
-                shouldHideFn: (): boolean => {
-                    return !this._voteDelegationEnabled;
-                }
-            },
-            {
-                property: `isVoteCountable`,
                 shouldHideFn: (): boolean => {
                     return !this._voteDelegationEnabled;
                 }

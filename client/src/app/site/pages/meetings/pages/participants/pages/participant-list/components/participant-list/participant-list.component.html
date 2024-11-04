@@ -40,12 +40,11 @@
                 <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
             } @else if (showVoteWeight) {
                 <span>
-                    ({{ 'Vote weight' | translate }} {{ totalVoteWeight }}; {{ 'For groups: Total votes' | translate }}
-                    {{ totalEligibleVoteWeights.length }}, {{ 'Vote weight' | translate }}
-                    {{ totalEligibleVoteWeight }})
+                    ({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }},
+                    {{ 'Vote weight' | translate }} {{ totalEligibleVoteWeight }})
                 </span>
             } @else {
-                <span>({{ 'For groups: Total votes' | translate }} {{ totalEligibleVoteWeights.length }})</span>
+                <span>({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }})</span>
             }
         </div>
     }
