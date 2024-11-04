@@ -1,7 +1,11 @@
 <div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
     <div class="operator-information flex-center">
         <div class="first-line one-line">
-            {{ username }}
+            @if (isLoggedIn) {
+                {{ username }}
+            } @else {
+                {{ 'Public access' | translate }}
+            }
         </div>
     </div>
     <div class="fake-fab-button flex-center">
@@ -15,7 +19,13 @@
         <div (mouseenter)="closeLanguageMenu()">
             <div class="username-wrapper action-title">
                 <div>
-                    <div class="username">{{ username }}</div>
+                    <div class="username">
+                        @if (isLoggedIn) {
+                            {{ username }}
+                        } @else {
+                            {{ 'Public access' | translate }}
+                        }
+                    </div>
                     @if (user) {
                         <div class="subtitle">{{ getOmlVerboseName() | translate }}</div>
                     }
@@ -72,7 +82,7 @@
                     <span class="menu-text">{{ 'Logout' | translate }}</span>
                 </button>
             </div>
-        } @else if (!user) {
+        } @else if (!isLoggedIn) {
             <div>
                 <button mat-menu-item (click)="login()">
                     <mat-icon class="menu-icon">login</mat-icon>

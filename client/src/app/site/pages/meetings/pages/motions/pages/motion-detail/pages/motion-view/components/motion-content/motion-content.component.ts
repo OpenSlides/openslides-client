@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
@@ -20,11 +20,21 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly ChangeRecoMode = ChangeRecoMode;
     public readonly LineNumberingMode = LineNumberingMode;
 
+    private _changeRecoMode: ChangeRecoMode;
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
+    }
+
     @Input()
     public noEditMode = false;
 
     @Input()
-    public changeRecoMode: ChangeRecoMode;
+    public set changeRecoMode(value: ChangeRecoMode) {
+        this._changeRecoMode = value;
+
+        this.updateFormatedText.emit();
+        this.cd.markForCheck();
+    }
 
     @Input()
     public lineNumberingMode: LineNumberingMode;
@@ -42,7 +52,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public showAllAmendments$ = new BehaviorSubject(false);
 
-    private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] };
+    private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] } = new BehaviorSubject([]);
 
     @Input()
     public set unifiedChanges(
@@ -65,6 +75,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public updateCrMode = new EventEmitter<ChangeRecoMode>();
+
+    public updateFormatedText = new EventEmitter<void>();
 
     public scrollToChange: ViewUnifiedChange | null = null;
 
@@ -147,10 +159,15 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.updateCrMode.emit(ChangeRecoMode.Diff);
     }
 
+    protected override onAfterSetMotion(): void {
+        this.updateFormatedText.emit();
+    }
+
     private updateObservables(): void {
         this.formattedTextPlain$ = combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
-            this.unifiedChanges$
+            this.unifiedChanges$,
+            this.updateFormatedText.pipe(startWith(undefined))
         ]).pipe(
             map(([lineLength, changes]) => {
                 if (lineLength) {

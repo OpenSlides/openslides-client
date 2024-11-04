@@ -85,9 +85,37 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: [false, null], label: _(`Is not present`) }
                 ]
             },
+            this.userGroupFilterOptions,
+            this.userStructureLevelFilterOptions,
+            {
+                property: `delegationType`,
+                label: _(`Delegation of vote`),
+                options: [
+                    {
+                        condition: DelegationType.Transferred,
+                        label: _(`Principals`)
+                    },
+                    {
+                        condition: DelegationType.Received,
+                        label: _(`Proxy holders`)
+                    },
+                    {
+                        condition: DelegationType.Neither,
+                        label: _(`No delegation of vote`)
+                    }
+                ]
+            },
+            {
+                property: `isVoteWeightOne`,
+                label: _(`Vote weight`),
+                options: [
+                    { condition: [false, null], label: _(`Has changed vote weight`) },
+                    { condition: true, label: _(`Has unchanged vote weight`) }
+                ]
+            },
             {
                 property: `isLockedOutOfMeeting`,
-                label: `Locked Out`,
+                label: `Locked out`,
                 options: [
                     { condition: true, label: `Is locked out` },
                     { condition: [false, null], label: `Is not locked out` }
@@ -109,22 +137,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: [false, null], label: _(`Is a committee`) }
                 ]
             },
-            {
-                property: `isLastEmailSent`,
-                label: _(`Last email sent`),
-                options: [
-                    { condition: true, label: _(`Got an email`) },
-                    { condition: [false, null], label: _(`Didn't get an email`) }
-                ]
-            },
-            {
-                property: `hasEmail`,
-                label: _(`Email address`),
-                options: [
-                    { condition: true, label: _(`Has an email address`) },
-                    { condition: [false, null], label: _(`Has no email address`) }
-                ]
-            },
+            this.genderFilterOption,
             {
                 property: `hasMemberNumber`,
                 label: _(`Membership number`),
@@ -142,14 +155,21 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
-                property: `isVoteWeightOne`,
-                label: _(`Vote weight`),
+                property: `isLastEmailSent`,
+                label: _(`Last email sent`),
                 options: [
-                    { condition: [false, null], label: _(`Has changed vote weight`) },
-                    { condition: true, label: _(`Has unchanged vote weight`) }
+                    { condition: true, label: _(`Got an email`) },
+                    { condition: [false, null], label: _(`Didn't get an email`) }
                 ]
             },
-            this.genderFilterOption,
+            {
+                property: `hasEmail`,
+                label: _(`Email address`),
+                options: [
+                    { condition: true, label: _(`Has an email address`) },
+                    { condition: [false, null], label: _(`Has no email address`) }
+                ]
+            },
             {
                 property: `hasSamlId`,
                 label: _(`SSO`),
@@ -157,27 +177,9 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: true, label: _(`Has SSO identification`) },
                     { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
-            },
-            {
-                property: `delegationType`,
-                label: _(`Delegation of vote`),
-                options: [
-                    {
-                        condition: DelegationType.Transferred,
-                        label: _(`Principals`)
-                    },
-                    {
-                        condition: DelegationType.Received,
-                        label: _(`Proxy holders`)
-                    },
-                    {
-                        condition: DelegationType.Neither,
-                        label: _(`No delegation of vote`)
-                    }
-                ]
             }
         ];
-        return staticFilterOptions.concat(this.userGroupFilterOptions, this.userStructureLevelFilterOptions);
+        return staticFilterOptions;
     }
 
     protected override getHideFilterSettings(): OsHideFilterSetting<ViewUser>[] {
