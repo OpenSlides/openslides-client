@@ -4,9 +4,9 @@
         class="content"
         osResized
         [ngClass]="[
-            showCollapsed ? 'collapsed' : '',
-            showCollapsed && biggerHeight ? 'collapsed-delegations' : '',
-            showCollapsed && !biggerHeight ? 'collapsed-card-content' : ''
+            isCollapsed ? 'collapsed' : '',
+            isCollapsed && biggerHeight ? 'collapsed-delegations' : '',
+            isCollapsed && !biggerHeight ? 'collapsed-card-content' : ''
         ]"
         (osResizedHeight)="onResizedHeight($event)"
     >

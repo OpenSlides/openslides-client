@@ -39,12 +39,13 @@ export class ExpandableContentWrapperComponent {
         return this._biggerHeight;
     }
 
-    public set showCollapsed(showCollapsed: boolean) {
-        this._showCollapsed = showCollapsed;
+    @Input()
+    public set isCollapsed(isCollapsed: boolean) {
+        this._isCollapsed = isCollapsed;
     }
 
-    public get showCollapsed(): boolean {
-        return this._showCollapsed;
+    public get isCollapsed(): boolean {
+        return this._isCollapsed;
     }
 
     /**
@@ -62,12 +63,12 @@ export class ExpandableContentWrapperComponent {
      */
     public isExpanded: boolean = false;
 
-    public _showCollapsed: boolean = false;
+    public _isCollapsed: boolean = false;
 
     public _biggerHeight: boolean = false;
 
     public constructor(private cd: ChangeDetectorRef) {
-        this.showCollapsed = false;
+        this.isCollapsed = false;
         this.update();
     }
 
@@ -99,7 +100,7 @@ export class ExpandableContentWrapperComponent {
     }
 
     private update(): void {
-        this.showCollapsed = !this.isExpanded && !this.disableExpandControl && this.canExpand;
+        this.isCollapsed = !this.isExpanded && !this.disableExpandControl && this.canExpand;
         this.cd.markForCheck();
     }
 }
