@@ -6,8 +6,9 @@ import { PermissionGuard } from './guards/permission.guard';
 import { SiteWrapperComponent } from './modules/site-wrapper/components/site-wrapper/site-wrapper.component';
 
 const routes: Routes = [
+    // { path: `idp`, redirectTo: `/login`, pathMatch: `prefix` },
     {
-        path: `idp`,
+        path: `login`,
         loadChildren: () => import(`./pages/login/login.module`).then(m => m.LoginModule)
     },
     {
