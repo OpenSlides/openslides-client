@@ -213,7 +213,9 @@
                         <span>({{ user.pronoun }})</span>
                     }
                     @if (!user.is_active && isAllowed('seeSensitiveData')) {
-                        <mat-icon matTooltip="{{ 'Inactive' | translate }}">block</mat-icon>
+                        <mat-icon class="red-warning-text" matTooltip="{{ 'Inactive' | translate }}">
+                            do_not_disturb_on
+                        </mat-icon>
                     }
                     @if (!user.is_physical_person) {
                         <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>

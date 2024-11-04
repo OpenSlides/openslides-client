@@ -5,6 +5,7 @@ import {
     ContentChild,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     TemplateRef,
@@ -12,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
@@ -43,7 +44,8 @@ import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/s
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit {
+export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+    private _destroyed = new EventEmitter<boolean>();
     public readonly SpeechState = SpeechState;
 
     @ViewChild(SortingListComponent)
@@ -78,6 +80,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get addSelf(): boolean {
         return (
+            !this.operator.isAnonymous &&
             this.permission.listOfSpeakersCanBeSpeaker &&
             !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated)
         );
@@ -204,13 +207,19 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 if (showFirstContribution) {
                     this.modelRequestService.subscribeTo({
                         ...getLosFirstContributionSubscriptionConfig(this.activeMeetingId),
-                        hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+                        hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id)),
+                        unusedWhen: this._destroyed.pipe(startWith(false))
                     });
                 } else {
                     this.modelRequestService.closeSubscription(LOS_FIRST_CONTRIBUTION_SUBSCRIPTION);
                 }
             })
         );
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this._destroyed.emit(true);
     }
 
     private isListOfSpeakersEmpty(): void {

@@ -3,6 +3,7 @@ import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { AuthService } from 'src/app/site/services/auth.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 interface OrgaMenuEntry extends BaseMenuEntry<OML> {
@@ -78,9 +79,14 @@ export class OrganizationNavigationComponent {
 
     public constructor(
         private authService: AuthService,
+        private operator: OperatorService,
         private menuService: MainMenuService,
         private vp: ViewPortService
-    ) {}
+    ) {
+        if (this.operator.isAnonymous) {
+            this.menuEntries = [this.menuEntries[0]];
+        }
+    }
 
     public getCustomStyleForEntry(entry: OrgaMenuEntry): { [key: string]: any } {
         return getCustomStyleForEntry(entry);

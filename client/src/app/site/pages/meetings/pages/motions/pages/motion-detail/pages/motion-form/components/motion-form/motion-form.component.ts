@@ -100,6 +100,10 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         return this.perms.isAllowed(`change_metadata`, this.motion);
     }
 
+    public get canManageAgenda(): boolean {
+        return this.perms.canManageAgenda();
+    }
+
     public get isParagraphBasedAmendment(): boolean {
         return this.isExisting && this.motion.isParagraphBasedAmendment();
     }
@@ -208,6 +212,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         return async () => {
             const update = event || this.temporaryMotion;
             if (this.newMotion) {
+                for (const key in update) {
+                    if (update[key] === null || update[key].length === 0) {
+                        delete update[key];
+                    }
+                }
                 await this.createMotion(update);
             } else {
                 await this.updateMotion(update, this.motion);
@@ -348,7 +357,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                             .open(
                                 this.translate.instant(`Parent motion text changed`),
                                 this.translate.instant(
-                                    `Do you want to update the amendment text? Your changes will be lost.`
+                                    `Do you want to update the amendment text? All changes will be lost.`
                                 )
                             )
                             .then(choice => {
@@ -422,7 +431,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                         this.prompt
                             .open(
                                 this.translate.instant(`Motion changed`),
-                                this.translate.instant(`Discard changes and update form?`)
+                                this.translate.instant(
+                                    `Are you sure you want to discard all changes and update this form?`
+                                )
                             )
                             .then(choice => {
                                 if (choice) {
@@ -536,6 +547,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     private propagateChanges(): void {
         this.canSave = this.contentForm.valid && this._canSaveParagraphBasedAmendment;
         this.temporaryMotion = { ...this._motionContent, ...this._paragraphBasedAmendmentContent };
+        this.cd.markForCheck();
     }
 
     private addNewUserToFormCtrl(newUserObj: RawUser, controlName: string): void {
@@ -579,7 +591,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 number: [
                     ``,
                     isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
-                ],
+                ]
+            }),
+            ...(this.canManageAgenda && {
                 agenda_create: [``],
                 agenda_type: [``]
             })
