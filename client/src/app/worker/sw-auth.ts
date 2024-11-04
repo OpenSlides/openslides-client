@@ -1,7 +1,9 @@
 import { Id } from '../domain/definitions/key-types';
 import { WorkerHttpAuth } from './http/auth';
+import { Broadcaster } from './interfaces';
+import { AuthMessage } from './sw-auth.interfaces';
 
-export function initAuthWorker(broadcast: (s: string, a: string, c?: any) => void): void {
+export function initAuthWorker(broadcast: Broadcaster): void {
     WorkerHttpAuth.subscribe(`auth`, (token, uid?) => onAuthUpdate(token, uid));
 
     function onAuthUpdate(token: string, userId?: Id): void {
@@ -19,27 +21,14 @@ export function initAuthWorker(broadcast: (s: string, a: string, c?: any) => voi
     }
 }
 
-export function authMessageHandler(ctx: any, e: any): void {
-    const msg = e.data?.msg;
-    const action = msg?.action;
-    switch (action) {
-        case `stop-refresh`:
-            WorkerHttpAuth.stopRefresh();
-            break;
+export function authMessageHandler(ctx: any, e: MessageEvent<AuthMessage>): void {
+    const msg = e.data.msg;
+    switch (msg.action) {
         case `update`:
-            WorkerHttpAuth.update();
+            WorkerHttpAuth.update(msg.params);
             break;
-        case `get-current-auth`:
-            Promise.all([WorkerHttpAuth.currentUser(), WorkerHttpAuth.currentToken()]).then(([user, token]) => {
-                ctx.postMessage({
-                    sender: `auth`,
-                    action: `new-user`,
-                    content: {
-                        user,
-                        token
-                    }
-                });
-            });
+        case `auth-error`:
+            WorkerHttpAuth.authError(msg.params.reason);
             break;
     }
 }

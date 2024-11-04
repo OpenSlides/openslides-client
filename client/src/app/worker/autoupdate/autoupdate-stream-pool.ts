@@ -4,9 +4,9 @@ import { ModelRequest } from '../../domain/interfaces/model-request';
 import { WorkerHttpAuth } from '../http/auth';
 import { HTTP_POOL_CONFIG, HttpStreamPool } from '../http/http-stream-pool';
 import { ErrorDescription, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from '../http/stream-utils';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     protected readonly messageSenderName: string = `autoupdate`;
@@ -141,9 +141,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     }
 
     protected async connectStream(stream: AutoupdateStream, force?: boolean): Promise<void> {
-        if (WorkerHttpAuth.updating()) {
-            await WorkerHttpAuth.updating();
-        }
+        await WorkerHttpAuth.updating();
 
         const streamHandle = stream.start(force);
         if (
@@ -225,7 +223,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
                 cb = async (s: AutoupdateStream): Promise<void> => {
                     await this.connectStream(s);
                 };
-            } else if (await WorkerHttpAuth.update()) {
+            } else if (await this.handleStreamResolvedWhenHealthy()) {
                 cb = async (s: AutoupdateStream): Promise<void> => {
                     s.failedCounter++;
                     await this.connectStream(s);
@@ -248,18 +246,21 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
-        if (error?.error.content?.type !== `auth`) {
+        if (error?.error.content?.type !== `auth` && error?.error.type !== `auth`) {
             await this.waitUntilEndpointHealthy();
         }
 
         if (stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT && error?.type !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {
-                await WorkerHttpAuth.update();
+                await this.tryReAuth();
             }
 
             await this.connectStream(stream);
-        } else if (stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT && error?.error.content?.type === `auth`) {
-            if (await WorkerHttpAuth.update()) {
+        } else if (
+            stream.failedConnects <= HTTP_POOL_CONFIG.RETRY_AMOUNT &&
+            (error?.error.content?.type === `auth` || error?.error.type === `auth`)
+        ) {
+            if (await this.tryReAuth()) {
                 await this.connectStream(stream);
             } else {
                 for (const subscription of stream.subscriptions) {

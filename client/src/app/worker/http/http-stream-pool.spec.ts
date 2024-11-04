@@ -1,7 +1,7 @@
 import fetchMock from 'fetch-mock';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
-import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { HttpStream } from './http-stream';
 import { HttpStreamPool } from './http-stream-pool';
 import { HttpSubscription } from './http-subscription';

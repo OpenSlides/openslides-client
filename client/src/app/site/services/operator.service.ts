@@ -29,7 +29,7 @@ import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
-import { AuthService } from './auth.service';
+import { AuthTokenService } from './auth-token.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -54,11 +54,11 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 })
 export class OperatorService {
     public get operatorId(): number | null {
-        return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+        return this.isAnonymous || !this.authTokenService.accessToken ? null : this.authTokenService.accessToken.userId;
     }
 
     public get isAnonymous(): boolean {
-        return !this.authService.authToken;
+        return !this.authTokenService.accessToken;
     }
 
     public get isAuthenticated(): boolean {
@@ -237,7 +237,6 @@ export class OperatorService {
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private DS: DataStoreService,
-        private authService: AuthService,
         private lifecycle: LifecycleService,
         private userRepo: UserRepositoryService,
         private meetingUserRepo: MeetingUserRepositoryService,
@@ -245,11 +244,12 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private meetingRepo: MeetingControllerService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private authTokenService: AuthTokenService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
-        this.authService.authTokenObservable.subscribe(token => {
+        this.authTokenService.accessTokenObservable.subscribe(token => {
             if (token === undefined) {
                 return;
             }

@@ -4,9 +4,9 @@ import { filter, Observable } from 'rxjs';
 import { SharedWorkerService } from '../openslides-main-module/services/shared-worker.service';
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 import { WorkerResponse } from '../worker/interfaces';
+import { AutoupdateReceiveData } from '../worker/sw-autoupdate.interfaces';
+import { ICC_ENDPOINT } from '../worker/sw-icc.interfaces';
 import { HttpService } from './http.service';
-
-const ICC_ENDPOINT = `icc`;
 
 export const ICC_PATH = `/system/icc`;
 
@@ -125,7 +125,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
         } as any);
     }
 
-    private messageObservable(meetingId: number): Observable<WorkerResponse> {
+    private messageObservable(meetingId: number): Observable<AutoupdateReceiveData> {
         return this.sharedWorker
             .listenTo(ICC_ENDPOINT)
             .pipe(
@@ -135,10 +135,10 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
                         data.content?.type === this.receivePath &&
                         data.content?.meeting_id === meetingId
                 )
-            );
+            ) as Observable<AutoupdateReceiveData>;
     }
 
-    private closedObservable(meetingId: number): Observable<WorkerResponse> {
+    private closedObservable(meetingId: number): Observable<WorkerResponse<any>> {
         return this.sharedWorker
             .listenTo(ICC_ENDPOINT)
             .pipe(

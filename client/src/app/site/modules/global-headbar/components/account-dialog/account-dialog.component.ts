@@ -16,6 +16,8 @@ import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { AccountService } from '../../../../services/account.service';
+
 interface MenuItem {
     name: string;
 }
@@ -111,7 +113,8 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private authService: AuthService,
         private translate: TranslateService,
         private fb: UntypedFormBuilder,
-        private store: StorageService
+        private store: StorageService,
+        private accountService: AccountService
     ) {
         super();
     }
@@ -173,22 +176,18 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
 
-        this.authService
-            .invalidateSessionAfter(() => this.repo.setPasswordSelf(this.self!, oldPassword, newPassword))
-            .then(() => {
-                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
-                this.changePasswordComponent.reset();
-                this.dialogRef.close();
-            })
-            .catch(e => {
-                if (e?.message) {
-                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
-                        duration: 0
-                    });
-                }
+        try {
+            await this.accountService.changePassword(oldPassword, newPassword);
+            this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
+        } catch (e) {
+            if (e?.message) {
+                this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                    duration: 0
+                });
+            }
 
-                console.log(e);
-            });
+            console.log(e);
+        }
     }
 
     public async saveUserChanges(): Promise<void> {

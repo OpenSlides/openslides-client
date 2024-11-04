@@ -96,7 +96,8 @@
     "rxjs": "^7.8.1",
     "tinycolor2": "1.6.0",
     "video.js": "^8.17.4",
-    "zone.js": "^0.14.10"
+    "zone.js": "^0.14.10",
+    "angular-oauth2-oidc": "^17.0.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.5",

@@ -1,4 +1,4 @@
-import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
+import { AutoupdateSetEndpointParams } from '../sw-autoupdate.interfaces';
 import { HttpSubscription, HttpSubscriptionCallbacks, HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling } from './http-subscription-polling';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
