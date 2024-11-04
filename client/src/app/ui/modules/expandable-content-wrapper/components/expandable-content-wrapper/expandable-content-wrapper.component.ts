@@ -31,12 +31,12 @@ export class ExpandableContentWrapperComponent {
     }
 
     @Input()
-    public set isDelegation(isDelegation: boolean) {
-        this._isDelegation = isDelegation;
+    public set biggerHeight(biggerHeight: boolean) {
+        this._biggerHeight = biggerHeight;
     }
 
-    public get isDelegation(): boolean {
-        return this._isDelegation;
+    public get biggerHeight(): boolean {
+        return this._biggerHeight;
     }
 
     public set showCollapsed(showCollapsed: boolean) {
@@ -64,7 +64,7 @@ export class ExpandableContentWrapperComponent {
 
     public _showCollapsed: boolean = false;
 
-    public _isDelegation: boolean = false;
+    public _biggerHeight: boolean = false;
 
     public constructor(private cd: ChangeDetectorRef) {
         this.showCollapsed = false;

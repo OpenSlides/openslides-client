@@ -279,7 +279,7 @@
             @if (showVoteDelegations && user!.vote_delegations_from().length > 0) {
                 <div>
                     <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
-                    <os-expandable-content-wrapper [disableExpandControl]="disableExpandControl" [isDelegation]="true">
+                    <os-expandable-content-wrapper [biggerHeight]="true" [disableExpandControl]="disableExpandControl">
                         <ul>
                             @for (delegation of user!.vote_delegations_from(); track delegation) {
                                 <li>{{ delegation }}</li>
