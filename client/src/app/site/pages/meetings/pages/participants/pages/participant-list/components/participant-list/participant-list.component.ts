@@ -204,14 +204,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .get(`assignment_poll_default_group_ids`)
                 .subscribe(group_ids => (this._poll_default_group_ids = group_ids)),
             this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
-                group_ids.forEach(id => {
+                group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {
                         this._poll_default_group_ids.push(id);
                     }
                 })
             ),
             this.meetingSettingsService.get(`topic_poll_default_group_ids`).subscribe(group_ids =>
-                group_ids.forEach(id => {
+                group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {
                         this._poll_default_group_ids.push(id);
                     }
