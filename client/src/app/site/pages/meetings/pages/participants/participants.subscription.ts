@@ -37,8 +37,8 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
                     },
                     {
                         idField: `vote_delegated_to_id`,
-                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`] }],
-                        fieldset: [`meeting_id`]
+                        fieldset: [`meeting_id`],
+                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`] }]
                     }
                 ]
             }
@@ -55,7 +55,10 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
         follow: [
             {
                 idField: `meeting_user_ids`,
-                follow: [{ idField: `user_id`, additionalFields: [`is_present_in_meeting_ids`] }]
+                fieldset: DEFAULT_FIELDSET,
+                follow: [
+                    { idField: `user_id`, fieldset: DEFAULT_FIELDSET, additionalFields: [`is_present_in_meeting_ids`] }
+                ]
             }
         ]
     },

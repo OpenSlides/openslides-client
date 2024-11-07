@@ -62,7 +62,8 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
                 follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
             },
             {
-                idField: `meeting_ids`
+                idField: `meeting_ids`,
+                fieldset: DEFAULT_FIELDSET
             }
         ]
     },
