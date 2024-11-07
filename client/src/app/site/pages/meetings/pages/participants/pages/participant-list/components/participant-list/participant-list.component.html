@@ -76,7 +76,14 @@
                             {{ user.member_number }}
                         }
                     </div>
-                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        @if (isInPolldefaultGroup(user)) {
+                            {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                            @if (user.hasVoteRightFromOthers()) {
+                                + {{ sumOfDelegatedVoteWeight(user) }} {{ ' from delegated votes' | translate }}
+                            }
+                        }
+                    </div>
                 }
                 @if (canSeeSensitiveData && !showVoteWeight) {
                     <div class="user-subtitle">
@@ -150,6 +157,7 @@
                     matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                 >
                     <os-icon-container icon="work" [noWrap]="true">
+                        <span>{{ user.vote_delegations_from().length }}:</span>
                         {{ user.vote_delegations_from() }}
                     </os-icon-container>
                 </div>

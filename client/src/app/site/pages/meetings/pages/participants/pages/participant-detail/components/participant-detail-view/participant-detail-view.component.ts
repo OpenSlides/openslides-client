@@ -101,6 +101,16 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
     }
 
+    private _disableExpandControl: boolean = false;
+
+    public get disableExpandControl(): boolean {
+        return this._disableExpandControl;
+    }
+
+    public set disableExpandControl(delegationList: ViewUser[]) {
+        this._disableExpandControl = delegationList.length < 10;
+    }
+
     public isFormValid = false;
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
@@ -223,6 +233,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
+
+        this.disableExpandControl = this.user.vote_delegations_from();
     }
 
     public isAllowed(action: string): boolean {
