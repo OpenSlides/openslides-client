@@ -135,6 +135,7 @@ export const getMotionsSubmodelSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: DEFAULT_FIELDSET,
         follow: [
             { idField: `motion_category_ids`, fieldset: FULL_FIELDSET },
             { idField: `motion_state_ids`, fieldset: FULL_FIELDSET },
