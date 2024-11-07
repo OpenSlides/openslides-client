@@ -3,6 +3,7 @@ import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
@@ -121,7 +122,8 @@ export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenera
         viewModelCtor: ViewMotionWorkflow,
         follow: [
             {
-                idField: `state_ids`
+                idField: `state_ids`,
+                fieldset: DEFAULT_FIELDSET
             }
         ],
         fieldset: []
