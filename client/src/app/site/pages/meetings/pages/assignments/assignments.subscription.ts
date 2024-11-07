@@ -3,6 +3,7 @@ import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
@@ -17,6 +18,7 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
         follow: [
             {
                 idField: `assignment_ids`,
+                fieldset: DEFAULT_FIELDSET,
                 follow: [
                     {
                         idField: `attachment_meeting_mediafile_ids`,
@@ -29,6 +31,7 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             },
             {
                 idField: `assignment_candidate_ids`,
+                fieldset: DEFAULT_FIELDSET,
                 follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
             }
         ]
