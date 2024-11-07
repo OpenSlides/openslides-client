@@ -297,12 +297,35 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get isVoteCountable(): boolean {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const present = this.isPresentInMeeting();
+        if (this.isSelfVotingAllowedDespiteDelegation() && present) {
+            return true;
+        }
         if (this.getDelegationSettingEnabled() && delegate) {
             return delegate.isPresentInMeeting();
         }
-        return this.isPresentInMeeting();
+        return present;
     }
     // ### block end.
+
+    public canVoteForGroups(): Id[] {
+        const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const present = this.isPresentInMeeting();
+        if (
+            !(
+                present &&
+                (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
+            )
+        ) {
+            return [];
+        }
+        return Array.from(
+            new Set([
+                ...this.group_ids(),
+                ...(this.vote_delegations_from() ?? []).flatMap(delegation => delegation.group_ids())
+            ])
+        );
+    }
 
     public override getDetailStateUrl(): string {
         if (this.getEnsuredActiveMeetingId && this.getEnsuredActiveMeetingId()) {
