@@ -124,7 +124,7 @@ export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenera
                 idField: `state_ids`
             }
         ],
-        fieldset: ``
+        fieldset: []
     },
     subscriptionName: MOTION_WORKFLOW_DETAIL_SUBSCRIPTION
 });
@@ -189,13 +189,13 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             {
                 idField: `supporter_meeting_user_ids`,
+                fieldset: `participantListMinimal`,
                 follow: [
                     {
                         idField: `user_id`,
                         fieldset: `participantList`
                     }
-                ],
-                fieldset: `participantListMinimal`
+                ]
             }
         ],
         fieldset: [
