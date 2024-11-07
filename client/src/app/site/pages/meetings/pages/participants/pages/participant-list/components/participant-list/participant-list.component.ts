@@ -10,6 +10,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { OsFilterOption } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -106,6 +107,39 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             );
         }
         return votes ?? 0;
+    }
+
+    public get isFilteringCanVoteForGroups(): boolean {
+        return !!this.filterService.activeFilters.filter(
+            flt => flt.property === `canVoteForGroups` && flt.options.some((opt: OsFilterOption) => opt.isActive)
+        ).length;
+    }
+
+    public get totalEligibleVoteWeights(): number[] {
+        const voters: { [key: number]: number } = {};
+        const checkGroups = this.filterService.activeFilters
+            .filter(flt => flt.property === `canVoteForGroups`)
+            .flatMap(flt =>
+                flt.options.filter((opt: OsFilterOption) => opt.isActive).map((opt: OsFilterOption) => opt.condition)
+            );
+        if (this.listComponent) {
+            for (const user of this.listComponent.source ?? []) {
+                if (checkGroups.intersect(user.group_ids()).length > 0) {
+                    voters[user.id] = user.vote_weight();
+                }
+                for (const principal of user.vote_delegations_from()) {
+                    if (checkGroups.intersect(principal.group_ids()).length > 0) {
+                        voters[principal.id] = principal.vote_weight();
+                    }
+                }
+            }
+        }
+        const weights = Object.values(voters);
+        return weights;
+    }
+
+    public get totalEligibleVoteWeight(): number {
+        return this.totalEligibleVoteWeights.reduce((partialSum, a) => partialSum + a, 0);
     }
 
     public isInPolldefaultGroup(user: ViewUser): boolean {

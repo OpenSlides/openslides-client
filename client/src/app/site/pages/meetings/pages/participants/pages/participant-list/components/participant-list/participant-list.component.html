@@ -33,10 +33,19 @@
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
-    @if (showVoteWeight) {
+    @if (showVoteWeight || isFilteringCanVoteForGroups) {
         <div class="filter-bar-info-slot">
             &nbsp;
-            <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
+            @if (showVoteWeight && !isFilteringCanVoteForGroups) {
+                <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
+            } @else if (showVoteWeight) {
+                <span>
+                    ({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }},
+                    {{ 'Vote weight' | translate }} {{ totalEligibleVoteWeight }})
+                </span>
+            } @else {
+                <span>({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }})</span>
+            }
         </div>
     }
 
