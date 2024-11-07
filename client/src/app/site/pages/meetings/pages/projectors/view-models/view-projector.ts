@@ -5,14 +5,14 @@ import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/pr
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { DEFAULT_FIELDSET, Follow } from 'src/app/site/services/model-request-builder';
+import { Follow } from 'src/app/site/services/model-request-builder';
 
 import { ViewProjection } from './view-projection';
 
 export const PROJECTOR_CONTENT_FOLLOW: Follow = {
     idField: `current_projection_ids`,
-    fieldset: `content`,
-    follow: [{ idField: `content_object_id`, fieldset: DEFAULT_FIELDSET }]
+    follow: [{ idField: `content_object_id` }],
+    fieldset: `content`
 };
 
 export class ViewProjector extends BaseViewModel<Projector> {
