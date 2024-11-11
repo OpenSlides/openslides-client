@@ -3,7 +3,6 @@
     max-width: 1000px;
     max-height: calc(100vh - 160px); // 160px is almost the summary of top bar and livestream header
     height: 95%;
-    margin-bottom: 0px !important;
 
     &.fit-height {
         height: fit-content;
