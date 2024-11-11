@@ -1,6 +1,12 @@
 @if (poll && isReady) {
     <!-- own voting -->
-    <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    @if (isUserPresent) {
+        <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    } @else {
+        <div class="text-center">
+            {{ 'You have to be present to vote.' | translate }}
+        </div>
+    }
     <!-- Delegations -->
     @if (isUserPresent && (voteDelegationEnabled | async)) {
         @for (delegation of delegations; track delegation.id) {
