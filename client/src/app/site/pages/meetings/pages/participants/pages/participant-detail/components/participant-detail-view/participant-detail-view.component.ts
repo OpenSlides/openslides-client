@@ -107,8 +107,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this._disableExpandControl;
     }
 
-    public set disableExpandControl(delegationList: ViewUser[]) {
-        this._disableExpandControl = delegationList.length < 10;
+    public set disableExpandControl(delegationLongEnough: boolean) {
+        this._disableExpandControl = delegationLongEnough;
     }
 
     public isFormValid = false;
@@ -234,7 +234,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
 
-        this.disableExpandControl = this.user?.hasVoteRightFromOthers ? this.user.vote_delegations_from() : [];
+        this.disableExpandControl = this.user?.vote_delegations_from().length < 10;
     }
 
     public isAllowed(action: string): boolean {
