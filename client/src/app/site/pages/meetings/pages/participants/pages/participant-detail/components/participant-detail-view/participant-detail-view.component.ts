@@ -234,7 +234,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
 
-        this.disableExpandControl = this.user.vote_delegations_from();
+        this.disableExpandControl = this.user?.hasVoteRightFromOthers ? this.user.vote_delegations_from() : [];
     }
 
     public isAllowed(action: string): boolean {
