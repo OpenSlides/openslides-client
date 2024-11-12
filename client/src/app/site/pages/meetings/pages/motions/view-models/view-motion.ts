@@ -347,17 +347,23 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public override getProjectionBuildDescriptor(
         meetingSettingsService: MeetingSettingsService
     ): ProjectionBuildDescriptor {
+        const choices = [
+            { value: `original`, displayName: `Original version` },
+            { value: `changed`, displayName: `Changed version` },
+            { value: `diff`, displayName: `Diff version` },
+            { value: `agreed`, displayName: `Final version` }
+        ];
+
+        if (this.modified_final_version) {
+            choices.push({ value: `modified_final_version`, displayName: `Editoral final version` });
+        }
+
         const slideOptions: SlideOptions = [
             {
                 key: `mode`,
                 displayName: _(`Which version?`),
                 default: meetingSettingsService.instant(`motions_recommendation_text_mode`)!,
-                choices: [
-                    { value: `original`, displayName: `Original version` },
-                    { value: `changed`, displayName: `Changed version` },
-                    { value: `diff`, displayName: `Diff version` },
-                    { value: `agreed`, displayName: `Final version` }
-                ]
+                choices
             }
         ];
 
