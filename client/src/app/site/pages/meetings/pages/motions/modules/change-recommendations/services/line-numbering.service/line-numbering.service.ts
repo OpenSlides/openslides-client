@@ -753,6 +753,10 @@ export class LineNumberingService {
         } else if (isInlineElement(element)) {
             return this.insertLineNumbersToInlineNode(element, length, highlight);
         } else {
+            if (element.tagName === `P` && !element.childNodes.length) {
+                element.appendChild(document.createTextNode(`\xa0`));
+            }
+
             const newLength = this.calcBlockNodeLength(element, length);
             return this.insertLineNumbersToBlockNode(element, newLength, highlight);
         }
