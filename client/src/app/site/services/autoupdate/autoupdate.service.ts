@@ -71,7 +71,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _resolveDataReceived: ((value: ModelData) => void)[] = [];
+    private _resolveDataReceived: { [key: number]: ((value: ModelData) => void)[] } = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -224,8 +224,13 @@ export class AutoupdateService {
         );
 
         let rejectReceivedData: any;
+        let resolveIdx: number;
         const receivedData = new Promise<ModelData>((resolve, reject) => {
-            this._resolveDataReceived[id] = resolve;
+            if (this._resolveDataReceived[id]) {
+                resolveIdx = this._resolveDataReceived[id].push(resolve) - 1;
+            } else {
+                this._resolveDataReceived[id] = [resolve];
+            }
             rejectReceivedData = reject;
         });
         receivedData.catch((e: Error) => {
@@ -238,9 +243,9 @@ export class AutoupdateService {
             close: (): void => {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
-                if (this._resolveDataReceived[id]) {
+                if (this._resolveDataReceived[id] && this._resolveDataReceived[id][resolveIdx]) {
                     rejectReceivedData(new Error(`Connection canceled`));
-                    delete this._resolveDataReceived[id];
+                    delete this._resolveDataReceived[id][resolveIdx];
                 }
 
                 console.debug(`[autoupdate] stream closed:`, description);
@@ -323,7 +328,12 @@ export class AutoupdateService {
                     this.communication.cleanupCollections(requestId, deletedModels);
 
                     if (this._resolveDataReceived[requestId]) {
-                        this._resolveDataReceived[requestId](modelData);
+                        for (let i = 0; i < this._resolveDataReceived[requestId].length; i++) {
+                            if (this._resolveDataReceived[requestId][i]) {
+                                this._resolveDataReceived[requestId][i](modelData);
+                                delete this._resolveDataReceived[requestId][i];
+                            }
+                        }
                         delete this._resolveDataReceived[requestId];
                     }
                 }
