@@ -176,7 +176,7 @@
         @if (meeting.isArchived) {
             <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
         }
-        @if (meeting.enable_anonymous && !operator.isAnonymous) {
+        @if (meeting.publicAccessPossible() && !operator.isAnonymous) {
             <mat-icon matTooltip="{{ 'This meeting is public' | translate }}">public</mat-icon>
         }
         @if (meeting.committee_id) {

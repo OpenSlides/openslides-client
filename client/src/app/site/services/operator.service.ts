@@ -96,17 +96,23 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return !!(this.user.committee_management_ids || []).length;
+        return !!(this.user?.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
+        return this.isSuperAdmin || this.isOrgaManager || this.readyDeferred.wasResolved
+            ? this.isCommitteeManager
+            : false;
     }
 
     public get knowsMultipleMeetings(): boolean {
         return (
             this.isAnyManager ||
-            (this.isAnonymous ? this.defaultAnonUser.hasMultipleMeetings : this.user.hasMultipleMeetings)
+            (this.isAnonymous
+                ? this.defaultAnonUser.hasMultipleMeetings
+                : this.readyDeferred.wasResolved
+                  ? this.user?.hasMultipleMeetings
+                  : false)
         );
     }
 
@@ -164,7 +170,7 @@ export class OperatorService {
     }
 
     public get ready(): Deferred<void> {
-        return this._readyDeferred;
+        return this.readyDeferred;
     }
 
     /**
@@ -227,7 +233,7 @@ export class OperatorService {
     // State management
     private _ready = false;
 
-    private _readyDeferred: Deferred<void> = new Deferred();
+    public readyDeferred: Deferred<void> = new Deferred();
 
     private _groupsLoaded = false;
     private _groupsLoadedDeferred: Deferred<void> = new Deferred();
@@ -436,7 +442,8 @@ export class OperatorService {
                 this._permissions !== undefined;
         }
         if (this.isAuthenticated) {
-            isReady = isReady && this._OML !== undefined && this._CML !== undefined;
+            isReady =
+                isReady && this._OML !== undefined && this._CML !== undefined && this._userSubject.value !== undefined;
         }
         // TODO: for developing some checks
         // console.log(
@@ -457,7 +464,7 @@ export class OperatorService {
         // );
         if (isReady) {
             this._ready = true;
-            this._readyDeferred.resolve();
+            this.readyDeferred.resolve();
             this._operatorReadySubject.next(true);
         }
     }
@@ -465,14 +472,15 @@ export class OperatorService {
     private setNotReady(): void {
         this._ready = false;
         this._operatorReadySubject.next(false);
-        if (this._readyDeferred.wasResolved) {
+        if (this.readyDeferred.wasResolved) {
             console.log(`operator: not ready`);
-            this._readyDeferred = new Deferred();
-            this._readyDeferred.then(() => console.log(`operator is ready!`));
+            this.readyDeferred = new Deferred();
+            this.readyDeferred.then(() => console.log(`operator is ready!`));
         }
     }
 
     private resetOperatorData(): void {
+        this._userSubject.next(undefined);
         this._meetingIds = undefined;
         this._groupIds = undefined;
         this._permissions = undefined;

@@ -55,7 +55,7 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                     },
                     {
                         idField: `list_of_speakers_id`,
-                        fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+                        fieldset: [`closed`, `moderator_notes`, ...MEETING_ROUTING_FIELDS],
                         follow: [
                             {
                                 idField: `speaker_ids`,
@@ -89,7 +89,7 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                                 follow: [
                                     {
                                         idField: `agenda_item_id`,
-                                        fieldset: [`item_number`, `moderator_notes`, `content_object_id`]
+                                        fieldset: [`item_number`, `content_object_id`]
                                     }
                                 ]
                             }

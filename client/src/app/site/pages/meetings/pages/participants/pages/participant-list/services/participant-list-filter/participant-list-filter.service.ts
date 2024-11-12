@@ -29,6 +29,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private userCanVoteForGroupFilterOptions: OsFilter<ViewUser> = {
+        property: `canVoteForGroups`,
+        label: `Voting rights`,
+        options: []
+    };
+
     private userStructureLevelFilterOptions: OsFilter<ViewUser> = {
         property: `structure_level_ids`,
         label: `Structure level`,
@@ -56,6 +62,10 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions
+        });
+        this.updateFilterForRepo({
+            repo: groupRepo,
+            filter: this.userCanVoteForGroupFilterOptions
         });
         this.updateFilterForRepo({
             repo: structureRepo,
@@ -86,6 +96,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             this.userGroupFilterOptions,
+            this.userCanVoteForGroupFilterOptions,
             this.userStructureLevelFilterOptions,
             {
                 property: `delegationType`,
@@ -188,6 +199,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `isVoteWeightOne`,
                 shouldHideFn: (): boolean => {
                     return !this._voteWeightEnabled;
+                }
+            },
+            {
+                property: `canVoteForGroups`,
+                shouldHideFn: (): boolean => {
+                    return !this._voteDelegationEnabled;
                 }
             },
             {

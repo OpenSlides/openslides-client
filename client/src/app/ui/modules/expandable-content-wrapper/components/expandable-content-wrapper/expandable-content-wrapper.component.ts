@@ -30,6 +30,24 @@ export class ExpandableContentWrapperComponent {
         return this._disableExpandControl;
     }
 
+    @Input()
+    public set biggerHeight(biggerHeight: boolean) {
+        this._biggerHeight = biggerHeight;
+    }
+
+    public get biggerHeight(): boolean {
+        return this._biggerHeight;
+    }
+
+    @Input()
+    public set isCollapsed(isCollapsed: boolean) {
+        this._isCollapsed = isCollapsed;
+    }
+
+    public get isCollapsed(): boolean {
+        return this._isCollapsed;
+    }
+
     /**
      * Boolean, whether the control to expand the element should be disabled or not.
      */
@@ -43,11 +61,14 @@ export class ExpandableContentWrapperComponent {
     /**
      * Boolean to see, if the content is currently expanded.
      */
-    public isExpanded = false;
+    public isExpanded: boolean = false;
 
-    public showCollapsed: boolean;
+    public _isCollapsed: boolean = false;
+
+    public _biggerHeight: boolean = false;
 
     public constructor(private cd: ChangeDetectorRef) {
+        this.isCollapsed = false;
         this.update();
     }
 
@@ -79,7 +100,7 @@ export class ExpandableContentWrapperComponent {
     }
 
     private update(): void {
-        this.showCollapsed = !this.isExpanded && !this.disableExpandControl && this.canExpand;
+        this.isCollapsed = !this.isExpanded && !this.disableExpandControl && this.canExpand;
         this.cd.markForCheck();
     }
 }

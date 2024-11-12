@@ -57,7 +57,10 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this.theme.isDarkModeObservable;
     }
 
-    public user: ViewUser | null = null;
+    public get user(): ViewUser {
+        return this.operator.user;
+    }
+
     public username = ``;
     public isLoggedIn = false;
 
@@ -65,7 +68,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this.activeMeetingIdService.meetingId;
     }
 
-    private _userId: Id | null | undefined = undefined; // to distinguish from null!
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
     private clickCounter = 0;
@@ -81,7 +83,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService,
         chessChallengeService: ChessChallengeService
     ) {
         super();
@@ -117,11 +118,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public toggleOperatorPresence(): void {
-        this.controller
+        this.userRepo
             .setPresent({
                 isPresent: !this.isPresent,
                 meetingId: this.activeMeetingId,
-                users: [this.user!]
+                users: [this.user]
             })
             .resolve();
     }
@@ -186,10 +187,5 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.operator.shortName;
-        const userId = this.operator.operatorId;
-        if (this._userId !== userId) {
-            this._userId = userId;
-            this.user = this.operator.user;
-        }
     }
 }

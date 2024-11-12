@@ -110,6 +110,8 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
 
     protected _collection = Meeting.COLLECTION;
 
+    public publicAccessPossible!: () => boolean;
+
     public getUrl(): string {
         return `/${this.id}/`;
     }

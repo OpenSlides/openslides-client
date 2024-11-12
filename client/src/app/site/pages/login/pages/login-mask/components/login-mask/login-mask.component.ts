@@ -84,10 +84,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public loading = true;
 
-    /**
-     * The message, that should appear, when the user logs in.
-     */
-    private loginMessage = `Loading data. Please wait ...`;
+    public orgaPublicAccessEnabled = true;
 
     private currentMeetingId: number | null = null;
     private guestMeetingId: number | null = null;
@@ -118,7 +115,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      */
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice))
+            this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice)),
+            this.orgaSettings.get(`enable_anonymous`).subscribe(enabled => (this.orgaPublicAccessEnabled = enabled))
         );
 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
