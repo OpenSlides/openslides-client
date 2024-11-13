@@ -232,6 +232,13 @@ export class GlobalSearchComponent implements OnDestroy {
         return resultText;
     }
 
+    /**
+     * helper to remove <mark> and </mark> from the text
+     */
+    public removeMark(text: string): string {
+        return text.replace(/<\/mark>/g, ``).replace(/<mark>/g, ``);
+    }
+
     private getPermissionByFilter(filter: string): Permission {
         if (filter === `topic`) {
             return Permission.agendaItemCanSee;
