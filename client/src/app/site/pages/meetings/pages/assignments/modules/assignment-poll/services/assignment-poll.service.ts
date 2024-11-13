@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';

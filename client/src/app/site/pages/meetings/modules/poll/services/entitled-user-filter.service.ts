@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 

@@ -108,7 +108,6 @@
     "@angular-eslint/template-parser": "^18.4.0",
     "@angular/cli": "^18.2.11",
     "@angular/compiler-cli": "^18.2.11",
-    "@colsen1991/ngx-translate-extract-marker": "^2.0.8",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.4",
     "@types/js-yaml": "^4.0.9",

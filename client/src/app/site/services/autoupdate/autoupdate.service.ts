@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { StorageService } from 'src/app/gateways/storage.service';
 

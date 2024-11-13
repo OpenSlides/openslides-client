@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 /**
  * Component for the global spinner.

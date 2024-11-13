@@ -1,5 +1,5 @@
 import { Directive, inject, ProviderToken } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
