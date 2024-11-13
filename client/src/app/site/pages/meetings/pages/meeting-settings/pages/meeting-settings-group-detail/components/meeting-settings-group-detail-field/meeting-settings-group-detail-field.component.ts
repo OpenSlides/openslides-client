@@ -276,10 +276,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     /**
      * Checks if a warning should be given
-     * 
+     *
      */
     public getWarning(): boolean {
-        if (this.setting.warn){
+        if (this.setting.warn) {
             return this.setting.warn(this.orgaSettings);
         } else {
             return false;
