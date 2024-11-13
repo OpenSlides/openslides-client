@@ -48,16 +48,18 @@ export class PruningTranslationLoader implements TranslateLoader {
                 this.ctService.customTranslationSubject
             ]).pipe(
                 map(([t, ct]) => {
-                    for (const k of Object.keys(t)) {
-                        t[k] = ct[t[k]] || t[k];
+                    if (ct) {
+                        for (const k of Object.keys(t)) {
+                            t[k] = ct[t[k]] || t[k];
+                        }
                     }
 
                     return t;
                 })
             );
-        } else {
-            return this.ctService.customTranslationSubject.pipe(map(ct => ct || {}));
         }
+
+        return this.ctService.customTranslationSubject.pipe(map(ct => ct || {}));
     }
 
     private parse(content: string): any {

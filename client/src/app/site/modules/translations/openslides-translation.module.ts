@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateDirective, TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
 
 import { CustomTranslationService } from './custom-translation.service';
 import { PruningTranslationLoader } from './translation-pruning-loader';
 
 @NgModule({
     imports: [TranslateModule],
-    exports: [TranslatePipe]
+    exports: [TranslatePipe, TranslateDirective]
 })
 export class OpenSlidesTranslationModule {
     public static forRoot(): ModuleWithProviders<TranslateModule> {
