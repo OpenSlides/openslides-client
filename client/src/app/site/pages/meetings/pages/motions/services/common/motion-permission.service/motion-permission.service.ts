@@ -55,6 +55,10 @@ export class MotionPermissionService {
         );
     }
 
+    public canManageAgenda(): boolean {
+        return this.operator.hasPerms(Permission.agendaItemCanManage);
+    }
+
     public canDoActionWhileDelegationEnabled(isAdditionalDelegationSettingEnabled: boolean): boolean {
         return !(
             !this.operator.isAnonymous &&
