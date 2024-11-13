@@ -95,7 +95,10 @@
                         <div>
                             <mat-checkbox formControlName="value">{{ setting.label | translate }}</mat-checkbox>
                             @if (setting.helpText) {
-                                <mat-hint class="hint-checkbox">{{ setting.helpText | translate }}</mat-hint>
+                                <mat-hint class="hint-checkbox settings-form-group">{{ setting.helpText | translate }}</mat-hint>                                
+                            }
+                            @if (getWarning()) {
+                                <mat-hint class="hint-checkbox red-warning-text">{{ setting.warnText | translate }}</mat-hint>
                             }
                             @if (error) {
                                 <div class="error">{{ error }}</div>

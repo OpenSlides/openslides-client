@@ -60,6 +60,7 @@ export interface SettingsInput<V = any> {
     // alternative to `choices`; overwrites `choices` if both are given
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
+    warnText?: string; // default: ""
     indentation?: number; // default: 0. Indents the input field by the given amount to simulate nested settings
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
@@ -88,6 +89,13 @@ export interface SettingsInput<V = any> {
      * @returns whether to disable the setting or not
      */
     forbidden?: (meetingView: ViewMeeting) => boolean;
+    /**
+     * A function to conditionally give a warning depending on used organization's settings
+     *
+     * @param orgaSettings: The `OrganizationSettingsService` has to be passed, because it is not injected in the
+     * settings definitions
+     */
+    warn?: (orgaSettings: OrganizationSettingsService) => boolean;
 
     hide?: boolean; // Hide the setting in the settings view
 }
@@ -207,7 +215,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`,
                         helpText: _(
                             `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
-                        )
+                        ),
+                        warnText: _('The public access setting is deactivated for this meeting.'),
+                        warn: orgaSettings => !orgaSettings.instant(`enable_anonymous`)
                     }
                 ]
             },
