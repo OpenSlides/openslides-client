@@ -23,7 +23,10 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
-import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_DETAIL_SUBSCRIPTION
+} from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
@@ -341,9 +344,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
 
         if (edit) {
-            setTimeout(() => {
-                this._userFormLoaded = true;
-            }, 1000);
+            await this.modelRequestService.waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION);
+            setTimeout(() => (this._userFormLoaded = true), 1000);
         } else {
             this._userFormLoaded = false;
         }
