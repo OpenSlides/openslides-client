@@ -36,6 +36,9 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
 
     private _changeRecoMode: ChangeRecoMode;
 
+    @Input()
+    public anonymUser: boolean;
+
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;
 
     public getTitleFn = (): string => this.getTitleWithChanges();

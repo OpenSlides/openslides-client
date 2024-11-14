@@ -26,6 +26,7 @@
                 class="primary-accent-by-theme"
                 mat-icon-button
                 matTooltipPosition="right"
+                [hidden]="anonymUser"
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 (click)="setFavorite(!isFavorite)"
             >

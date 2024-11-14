@@ -138,6 +138,7 @@
             <!-- Title -->
             <div class="title">
                 <os-motion-manage-title
+                    [anonymUser]="operator.isAnonymous"
                     [changeRecoMode]="changeRecoMode"
                     [motion]="motion"
                     (updateCrMode)="changeRecoMode = $event"
