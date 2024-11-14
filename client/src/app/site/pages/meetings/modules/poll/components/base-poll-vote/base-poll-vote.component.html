@@ -1,6 +1,12 @@
 @if (poll && isReady) {
     <!-- own voting -->
-    <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    @if (isUserPresent) {
+        <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    } @else {
+        <div class="text-center">
+            {{ 'You have to be present to vote.' | translate }}
+        </div>
+    }
     <!-- Delegations -->
     @if (isUserPresent && (voteDelegationEnabled | async)) {
         @for (delegation of delegations; track delegation.id) {
@@ -202,7 +208,7 @@
                                     </div>
                                 }
                                 @if (!settings.isSplitSingleOption && option.isListOption) {
-                                    <div class="vote-option-title" id="name">
+                                    <div class="vote-option-title grid-name-area">
                                         @if (option.content_object) {
                                             <span>
                                                 <span>{{ option.content_object.getTitle() | translate }}</span>
