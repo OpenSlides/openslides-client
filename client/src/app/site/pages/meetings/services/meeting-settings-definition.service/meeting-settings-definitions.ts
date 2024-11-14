@@ -1006,14 +1006,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `users_email_subject`,
                         label: _(`Email subject`),
-                        helpText: _(`You can use {event_name} and {username} as placeholder.`)
+                        helpText: _(
+                            `Possible placeholders for email subject and body: {title}, {first_name}, {last_name}, {groups}, {structure_levels}, {event_name}, {url}, {username} and {password}`
+                        )
                     },
                     {
                         key: `users_email_body`,
                         label: _(`Email body`),
                         type: `text`,
                         helpText: _(
-                            `Use these placeholders: {name}, {event_name}, {url}, {username}, {password}. The url referrs to the system url.`
+                            `Possible placeholders for email subject and body: {title}, {first_name}, {last_name}, {groups}, {structure_levels}, {event_name}, {url}, {username} and {password}`
                         )
                     }
                 ]
