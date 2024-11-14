@@ -279,8 +279,7 @@
             @if (showVoteDelegations && user!.vote_delegations_from().length > 0) {
                 <div>
                     <h4>
-                        {{ 'Voting right received from ' | translate }}{{ user!.vote_delegations_from().length
-                        }}{{ ' principals' | translate }}
+                        {{ 'Principals' | translate }}
                     </h4>
                     <os-expandable-content-wrapper
                         [biggerHeight]="true"
@@ -335,10 +334,10 @@
                     <!-- Locked out? -->
                     @if (isAllowed('seeSensitiveData')) {
                         <mat-icon class="margin-4" [class.red-warning-text]="user!.isLockedOutOfMeeting()">
-                            {{ user!.isLockedOutOfMeeting() ? 'visibility_off' : 'check_box_outline_blank' }}
+                            {{ user!.isLockedOutOfMeeting() ? 'visibility_off' : '' }}
                         </mat-icon>
                         <span>
-                            {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : 'Is not locked out') | translate }}
+                            {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : '') | translate }}
                         </span>
                     }
                 </div>
