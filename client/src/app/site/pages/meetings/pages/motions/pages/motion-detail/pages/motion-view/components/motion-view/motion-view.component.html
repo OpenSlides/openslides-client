@@ -138,9 +138,9 @@
             <!-- Title -->
             <div class="title">
                 <os-motion-manage-title
-                    [anonymUser]="operator.isAnonymous"
                     [changeRecoMode]="changeRecoMode"
                     [motion]="motion"
+                    [publicAccess]="operator.isAnonymous"
                     (updateCrMode)="changeRecoMode = $event"
                 ></os-motion-manage-title>
             </div>

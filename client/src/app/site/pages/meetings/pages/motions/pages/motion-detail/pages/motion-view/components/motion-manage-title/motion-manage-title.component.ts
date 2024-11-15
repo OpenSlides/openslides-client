@@ -31,13 +31,13 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this._changeRecoMode;
     }
 
+    @Input()
+    public publicAccess: boolean;
+
     @Output()
     public updateCrMode = new EventEmitter<ChangeRecoMode>();
 
     private _changeRecoMode: ChangeRecoMode;
-
-    @Input()
-    public anonymUser: boolean;
 
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;
 
