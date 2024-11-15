@@ -216,7 +216,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(
                             `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
                         ),
-                        warnText: _(`The public access setting is deactivated for this meeting.`),
+                        warnText: _(
+                            `The public access setting is deactivated for the organization. Please contact your admins or hosting providers to activate the setting.`
+                        ),
                         warn: orgaSettings => !orgaSettings.instant(`enable_anonymous`)
                     }
                 ]
