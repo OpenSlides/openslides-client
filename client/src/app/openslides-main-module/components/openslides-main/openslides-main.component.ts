@@ -92,6 +92,7 @@ export class OpenSlidesMainComponent implements OnInit {
         });
 
         this.ctService.customTranslationSubject.subscribe(() => {
+            this.translate.reloadLang(`en`);
             this.translate.reloadLang(currentLang);
         });
     }
