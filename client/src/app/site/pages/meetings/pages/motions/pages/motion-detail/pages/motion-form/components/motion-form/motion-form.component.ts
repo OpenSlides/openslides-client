@@ -509,7 +509,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                     } else {
                         delete this._motionContent[controlName];
                     }
-                    this.propagateChanges();
+                    setTimeout(() => this.propagateChanges());
                 });
             this._editSubscriptions.push(subscription);
             this.subscriptions.push(subscription);
