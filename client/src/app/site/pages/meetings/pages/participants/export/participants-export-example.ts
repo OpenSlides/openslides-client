@@ -9,6 +9,6 @@ export const participantsExportExample: any = [
         structure_level: `Berlin`,
         member_number: `123456`,
         number: `D001`,
-        locked_out: `false`
+        locked_out: `0`
     }
 ];
