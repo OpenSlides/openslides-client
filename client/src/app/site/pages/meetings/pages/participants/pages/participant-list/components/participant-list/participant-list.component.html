@@ -80,7 +80,7 @@
                         @if (isInPolldefaultGroup(user)) {
                             {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
                             @if (user.hasVoteRightFromOthers()) {
-                                + {{ sumOfDelegatedVoteWeight(user) }} {{ ' from delegated votes' | translate }}
+                                + {{ sumOfDelegatedVoteWeight(user) }} {{ 'from delegated votes' | translate }}
                             }
                         }
                     </div>
