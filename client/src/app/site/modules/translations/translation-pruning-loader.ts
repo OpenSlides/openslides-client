@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import pofile from 'pofile';
 import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 
 import { CustomTranslationService } from './custom-translation.service';
 
@@ -55,11 +55,15 @@ export class PruningTranslationLoader implements TranslateLoader {
                     }
 
                     return t;
-                })
+                }),
+                first()
             );
         }
 
-        return this.ctService.customTranslationSubject.pipe(map(ct => ct || {}));
+        return this.ctService.customTranslationSubject.pipe(
+            map(ct => ct || {}),
+            first()
+        );
     }
 
     private parse(content: string): any {
