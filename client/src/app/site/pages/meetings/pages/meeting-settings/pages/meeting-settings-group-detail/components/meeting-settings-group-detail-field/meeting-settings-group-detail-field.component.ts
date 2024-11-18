@@ -274,6 +274,18 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.cd.detach();
     }
 
+    /**
+     * Checks if a warning should be given
+     *
+     */
+    public getWarning(): boolean {
+        if (this.setting.warn) {
+            return this.setting.warn(this.orgaSettings);
+        } else {
+            return false;
+        }
+    }
+
     public getRestrictedValue<T>(value: T): T {
         if (this.setting.restrictionFn) {
             return this.setting.restrictionFn(this.orgaSettings, value);
