@@ -128,13 +128,13 @@ export const listOfSpeakersSpeakerCountSubscription = {
     follow: [
         {
             idField: `speaker_ids`,
+            fieldset: [`begin_time`, `end_time`],
             follow: [
                 {
                     idField: `point_of_order_category_id`,
                     fieldset: FULL_FIELDSET
                 }
-            ],
-            fieldset: [`begin_time`, `end_time`]
+            ]
         }
     ]
 };
@@ -151,11 +151,11 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                 follow: [
                     {
                         idField: `meeting_user_id`,
+                        fieldset: [`number`, `vote_weight`],
                         follow: [
                             { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
                             { idField: `structure_level_ids`, fieldset: [`name`] }
-                        ],
-                        fieldset: [`number`, `vote_weight`]
+                        ]
                     },
                     {
                         idField: `structure_level_list_of_speakers_id`,
