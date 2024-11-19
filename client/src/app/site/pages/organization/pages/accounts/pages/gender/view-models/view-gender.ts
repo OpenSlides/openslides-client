@@ -1,5 +1,5 @@
 import { Gender } from 'src/app/domain/models/gender/gender';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
@@ -16,4 +16,4 @@ interface IGenderRelations {
     organization: ViewOrganization;
     users: ViewUser[];
 }
-export interface ViewGender extends Gender, IGenderRelations {}
+export interface ViewGender extends Gender, ViewModelRelations<IGenderRelations> {}
