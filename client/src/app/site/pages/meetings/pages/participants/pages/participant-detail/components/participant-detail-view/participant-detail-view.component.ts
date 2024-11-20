@@ -87,7 +87,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 return true;
             } else if (this._isUserEditable && controlName !== `default_password`) {
                 return true;
-            } else if (this._isUserIniPWEditable && controlName === `default_password`) {
+            } else if (this._isDefaultPasswordEditable && controlName === `default_password`) {
                 return true;
             } else if (canUpdateUsers) {
                 return controlName === `is_present`
@@ -183,11 +183,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     public get saveButtonEnabled(): boolean {
-        // for prevent saveButton flickering
-        if (!this._userFormLoaded) {
-            return false;
-        }
-        return this.isFormValid && !this.isLockedOutAndCanManage;
+        return this._userFormLoaded && this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
     public get isLockedOutAndCanManage(): boolean {
@@ -207,7 +203,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
-    private _isUserIniPWEditable = false;
+    private _isDefaultPasswordEditable = false;
     private _isUserEditable = false;
 
     public constructor(
@@ -246,7 +242,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
-        this.updateEditable();
         this.disableExpandControl = this.user?.vote_delegations_from().length < 10;
     }
 
@@ -286,6 +281,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                     const title = user.getTitle();
                     super.setTitle(title);
                     this.user = user;
+                    this.updateEditable(this._userId);
                     this.cd.markForCheck();
                 }
             })
@@ -492,12 +488,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 
-    private async updateEditable(): Promise<void> {
-        const allowedFields = await this.userService.isEditable(+this.route.snapshot.params[`id`], [
-            `first_name`,
-            `default_password`
-        ]);
+    private async updateEditable(user_id?: Id): Promise<void> {
+        if (!user_id) {
+            return;
+        }
+        const allowedFields = await this.userService.isEditable(user_id, [`first_name`, `default_password`]);
         this._isUserEditable = allowedFields.includes(`first_name`);
-        this._isUserIniPWEditable = allowedFields.includes(`default_password`);
+        this._isDefaultPasswordEditable = allowedFields.includes(`default_password`);
     }
 }
