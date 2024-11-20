@@ -19,7 +19,7 @@ import { MotionPollPdfService } from '../../../../modules/motion-poll/services/m
     encapsulation: ViewEncapsulation.None
 })
 export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotion, MotionPollService> {
-    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`];
+    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`, `vote_verbose_translated`];
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -35,7 +35,13 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     }
 
     protected createVotesData(): BaseVoteData[] {
-        return this.poll?.options[0]?.votes;
+        const voteData = this.poll?.options[0]?.votes;
+        const baseVoteData: BaseVoteData[] = this.poll?.options[0]?.votes;
+        baseVoteData.map(
+            (element, index) =>
+                (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
+        );
+        return baseVoteData;
     }
 
     public openDialog(): void {

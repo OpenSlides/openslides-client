@@ -46,6 +46,7 @@
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
+                            [filterProps]="filterPropsSingleVotesTable"
                             [isViewingThis]="isViewingVoteslist"
                             [parent]="self"
                             [votesDataObservable]="votesDataObservable"
@@ -56,6 +57,7 @@
                     <os-entitled-users-table
                         [entitledUsersObservable]="entitledUsersObservable"
                         [isViewingThis]="isViewingEntitledUserslist"
+                        [parent]="self"
                     ></os-entitled-users-table>
                 </mat-tab>
             </mat-tab-group>

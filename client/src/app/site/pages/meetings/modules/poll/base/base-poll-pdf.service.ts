@@ -64,6 +64,10 @@ export abstract class BasePollPdfService {
         return this.activeMeetingService.meetingId!;
     }
 
+    private get activeVoteWeight(): boolean {
+        return this.meetingSettingsService.instant(`users_enable_vote_weight`);
+    }
+
     protected meetingSettingsService = inject(MeetingSettingsService);
     protected userRepo = inject(ParticipantControllerService);
     protected activeMeetingService = inject(ActiveMeetingService);
@@ -382,7 +386,7 @@ export abstract class BasePollPdfService {
                 margin: [0, 20, 0, 5],
                 bold: true
             });
-            const votesData = this.createVotesTable(exportInfo.votesData);
+            const votesData = this.createVotesTable(exportInfo.votesData, poll.type);
             pollResultPdfContent.push(votesData);
         }
 
@@ -392,7 +396,7 @@ export abstract class BasePollPdfService {
                 margin: [0, 20, 0, 5],
                 bold: true
             });
-            const usersData = this.createUsersTable(exportInfo.entitledUsersData);
+            const usersData = this.createUsersTable(exportInfo.entitledUsersData, poll.type);
             pollResultPdfContent.push(usersData);
         }
 
@@ -559,23 +563,30 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createVotesTable(votesData: BaseVoteData[]): object {
-        const pollTableBody: any[] = [
-            [
-                {
-                    text: ``,
-                    style: `tableHeader`
-                },
-                {
-                    text: this.translate.instant(`Participant`),
-                    style: `tableHeader`
-                },
-                {
-                    text: this.translate.instant(`Votes`),
-                    style: `tableHeader`
-                }
-            ]
+    private createVotesTable(votesData: BaseVoteData[], pollType: PollType): object {
+        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named;
+        let pollTableBody: any[] = [];
+        const pollTableHeader = [
+            {
+                text: ``,
+                style: `tableHeader`
+            },
+            {
+                text: this.translate.instant(`Participant`),
+                style: `tableHeader`
+            },
+            {
+                text: this.translate.instant(`Votes`),
+                style: `tableHeader`
+            }
         ];
+        if (showVoteWeight) {
+            pollTableHeader.splice(2, 0, {
+                text: this.translate.instant(`Vote Weight`),
+                style: `tableHeader`
+            });
+        }
+        pollTableBody = [pollTableHeader];
 
         let index = 1;
         for (const date of votesData.sort((entryA, entryB) =>
@@ -592,11 +603,15 @@ export abstract class BasePollPdfService {
                     text: this.parseSingleResult(date[`votes`] ?? date[`value`])
                 }
             ];
-
+            if (showVoteWeight) {
+                tableLine.splice(2, 0, {
+                    text: this.getUserVoteWeightForExport(date.user)
+                });
+            }
             pollTableBody.push(tableLine);
             index++;
         }
-        return this.generateTableObject(pollTableBody);
+        return this.generateTableObject(pollTableBody, showVoteWeight);
     }
 
     /**
@@ -604,23 +619,30 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createUsersTable(usersData: EntitledUsersTableEntry[]): object {
-        const pollTableBody: any[] = [
-            [
-                {
-                    text: ``,
-                    style: `tableHeader`
-                },
-                {
-                    text: this.translate.instant(`Participant`),
-                    style: `tableHeader`
-                },
-                {
-                    text: this.translate.instant(`Has voted`),
-                    style: `tableHeader`
-                }
-            ]
+    private createUsersTable(usersData: EntitledUsersTableEntry[], pollType: PollType): object {
+        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named;
+        let pollTableBody: any[] = [];
+        const pollTableHeader = [
+            {
+                text: ``,
+                style: `tableHeader`
+            },
+            {
+                text: this.translate.instant(`Participant`),
+                style: `tableHeader`
+            },
+            {
+                text: this.translate.instant(`Has voted`),
+                style: `tableHeader`
+            }
         ];
+        if (showVoteWeight) {
+            pollTableHeader.splice(2, 0, {
+                text: this.translate.instant(`Vote Weight`),
+                style: `tableHeader`
+            });
+        }
+        pollTableBody = [pollTableHeader];
 
         let index = 1;
         for (const date of usersData.sort((entryA, entryB) =>
@@ -651,18 +673,23 @@ export abstract class BasePollPdfService {
                     text: this.translate.instant(date.voted ? `Yes` : `No`)
                 }
             ];
+            if (showVoteWeight) {
+                tableLine.splice(2, 0, {
+                    text: this.getUserVoteWeightForExport(date.user)
+                });
+            }
 
             pollTableBody.push(tableLine);
             index++;
         }
-        return this.generateTableObject(pollTableBody);
+        return this.generateTableObject(pollTableBody, showVoteWeight);
     }
 
-    private generateTableObject(pollTableBody: any[]): object {
+    private generateTableObject(pollTableBody: any[], showVoteWeight: boolean): object {
         return [
             {
                 table: {
-                    widths: [`4%`, `48%`, `48%`],
+                    widths: showVoteWeight ? [`4%`, `32%`, `32%`, `32%`] : [`4%`, `48%`, `48%`],
                     headerRows: 1,
                     body: pollTableBody
                 },
@@ -673,6 +700,10 @@ export abstract class BasePollPdfService {
 
     private getUserNameForExport(user: ViewUser | undefined): string {
         return user?.getShortName() ?? this.translate.instant(`Anonymous`);
+    }
+
+    private getUserVoteWeightForExport(user: ViewUser | undefined): string {
+        return user?.voteWeight.toString();
     }
 
     private parseSingleResult(resultData: any, indent = 0): string {
