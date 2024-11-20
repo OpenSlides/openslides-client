@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
@@ -272,6 +272,18 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.cd.detach();
+    }
+
+    /**
+     * Checks if a warning should be given
+     *
+     */
+    public getWarning(): boolean {
+        if (this.setting.warn) {
+            return this.setting.warn(this.orgaSettings);
+        } else {
+            return false;
+        }
     }
 
     public getRestrictedValue<T>(value: T): T {
