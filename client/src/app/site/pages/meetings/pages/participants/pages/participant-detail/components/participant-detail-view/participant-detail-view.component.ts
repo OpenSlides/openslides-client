@@ -488,10 +488,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 
-    private async updateEditable(user_id?: Id): Promise<void> {
-        if (!user_id) {
-            return;
-        }
+    private async updateEditable(user_id: Id): Promise<void> {
         const allowedFields = await this.userService.isEditable(user_id, [`first_name`, `default_password`]);
         this._isUserEditable = allowedFields.includes(`first_name`);
         this._isDefaultPasswordEditable = allowedFields.includes(`default_password`);
