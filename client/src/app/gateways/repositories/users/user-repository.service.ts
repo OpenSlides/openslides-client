@@ -364,6 +364,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         viewModel.getDelegationSettingEnabled = (): boolean =>
             this.meetingSettingsService.instant(`users_enable_vote_delegations`);
+        viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
+            !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
+            !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
         return viewModel;
     }
 

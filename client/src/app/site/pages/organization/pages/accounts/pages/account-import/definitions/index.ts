@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
 import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 

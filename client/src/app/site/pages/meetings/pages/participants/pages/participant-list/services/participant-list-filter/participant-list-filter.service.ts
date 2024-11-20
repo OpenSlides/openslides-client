@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
@@ -26,6 +26,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
     private userGroupFilterOptions: OsFilter<ViewUser> = {
         property: `group_ids`,
         label: `Groups`,
+        options: []
+    };
+
+    private userCanVoteForGroupFilterOptions: OsFilter<ViewUser> = {
+        property: `canVoteForGroups`,
+        label: `Voting rights`,
         options: []
     };
 
@@ -58,6 +64,10 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             filter: this.userGroupFilterOptions
         });
         this.updateFilterForRepo({
+            repo: groupRepo,
+            filter: this.userCanVoteForGroupFilterOptions
+        });
+        this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.userStructureLevelFilterOptions
         });
@@ -86,6 +96,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             this.userGroupFilterOptions,
+            this.userCanVoteForGroupFilterOptions,
             this.userStructureLevelFilterOptions,
             {
                 property: `delegationType`,
@@ -188,6 +199,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `isVoteWeightOne`,
                 shouldHideFn: (): boolean => {
                     return !this._voteWeightEnabled;
+                }
+            },
+            {
+                property: `canVoteForGroups`,
+                shouldHideFn: (): boolean => {
+                    return !this._voteDelegationEnabled;
                 }
             },
             {

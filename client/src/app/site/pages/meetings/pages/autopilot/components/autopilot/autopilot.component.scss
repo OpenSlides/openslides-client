@@ -36,4 +36,9 @@
             max-width: 1320px;
         }
     }
+    @media (min-width: 1050px) and (max-width: 1440px) {
+        .col-right {
+            max-width: 304px;
+        }
+    }
 }

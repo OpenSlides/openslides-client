@@ -164,16 +164,15 @@
                                             ></os-attachment-control>
                                         </div>
                                     </div>
-
+                                    @if (newMotion && canManageAgenda) {
+                                        <!-- add agenda -->
+                                        <div>
+                                            <os-agenda-content-object-form
+                                                [form]="contentForm"
+                                            ></os-agenda-content-object-form>
+                                        </div>
+                                    }
                                     @if (canChangeMetadata) {
-                                        @if (newMotion) {
-                                            <div>
-                                                <os-agenda-content-object-form
-                                                    [form]="contentForm"
-                                                ></os-agenda-content-object-form>
-                                            </div>
-                                        }
-
                                         <!-- Supporter form -->
                                         @if (minSupporters) {
                                             <div class="content-field">

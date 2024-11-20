@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -99,6 +99,16 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get operatorHasEqualOrHigherOML(): boolean {
         const userOML = this.user?.organization_management_level;
         return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
+    }
+
+    private _disableExpandControl: boolean = false;
+
+    public get disableExpandControl(): boolean {
+        return this._disableExpandControl;
+    }
+
+    public set disableExpandControl(delegationLongEnough: boolean) {
+        this._disableExpandControl = delegationLongEnough;
     }
 
     public isFormValid = false;
@@ -223,6 +233,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
+
+        this.disableExpandControl = this.user?.vote_delegations_from().length < 10;
     }
 
     public isAllowed(action: string): boolean {

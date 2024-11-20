@@ -1,4 +1,4 @@
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
@@ -74,7 +74,6 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
      */
     public getEnsuredActiveMeetingId!: () => Id;
     public getEnsuredActiveMeeting!: () => ViewMeeting;
-    public getProjectedContentObjects!: () => Fqid[];
     public getMeetingMediafile!: (meetingId?: Id) => ViewMeetingMediafile;
 
     public override canAccess(): boolean {
@@ -87,11 +86,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
             }
 
             return !this.getEnsuredActiveMeetingId();
-        } else if (
-            this.meeting_mediafiles.some(
-                mm => this.getProjectedContentObjects().indexOf(`meeting_mediafile/${mm.id}`) !== -1
-            )
-        ) {
+        } else if (this.meeting_mediafiles.some(mm => !!mm.projection_ids?.length)) {
             return true;
         }
 

@@ -1,23 +1,43 @@
+@import 'src/assets/styles/variables.scss';
+
 .structure-level-list {
-    display: flex;
-    flex-wrap: wrap;
+    $auto-sizing: auto-fill;
+    $column-min-width: 186px;
+
     justify-content: start;
     padding: 8px 25px 0 25px;
+    display: grid;
+    column-gap: 16px;
+    grid-template-columns: repeat($auto-sizing, minmax($column-min-width, max-content));
+
+    @media (max-width: 1383px) {
+        $auto-sizing: auto-fit;
+    }
+
+    @include phone {
+        $column-min-width: 159px;
+        padding: 0;
+        margin-right: -20px;
+        column-gap: 5px;
+    }
+
     .structure-level {
-        min-width: 33%;
         margin-bottom: 16px;
         display: flex;
         flex-direction: row;
         justify-content: end;
+        width: min(222px, 100%);
+
+        @include phone {
+            width: min(186px, 100%);
+        }
 
         .structure-level-content {
-            width: 100%;
-
             .structure-level-color {
                 height: 3px;
                 background-color: transparent;
-                margin-left: 10%;
-                width: calc(100% - margin-left);
+                margin-right: 0;
+                width: 111px;
                 border-width: 0;
                 border-radius: 7px;
             }
@@ -32,11 +52,11 @@
             .structure-level-name {
                 line-height: 1;
                 text-align: right;
+                word-break: break-word;
             }
         }
 
         .icon-less-space-to-left {
-            width: 25px;
             margin-top: 12px;
         }
     }

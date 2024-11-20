@@ -11,7 +11,7 @@ const DESTINATION = path.resolve(path.join(__dirname, '../src/app/domain/definit
 const FILE_TEMPLATE = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-    import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+    import { _ } from "@ngx-translate/core";
     import { Settings } from 'src/app/domain/models/meetings/meeting';
 
     export const meetingSettingsDefaults: { [key in keyof Settings]: any } = {
