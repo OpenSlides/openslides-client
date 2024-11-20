@@ -8,7 +8,7 @@ import {
     Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
