@@ -21,7 +21,7 @@
             @if (meeting.isArchived) {
                 <mat-label class="archived-label">{{ 'Archived' | translate }}</mat-label>
             }
-            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
+            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id">
                 @if (isTemplateMeeting) {
                     <div class="template-indicator">
                         <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
@@ -131,7 +131,10 @@
 
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
-        @if (!meeting.isArchived && (meeting?.canBeEnteredBy(operator.user) || operator.isSuperAdmin)) {
+        @if (
+            !meeting.isArchived &&
+            (meeting?.canBeEnteredBy(operator.user) || operator.isSuperAdmin || operator.isOrgaManager)
+        ) {
             <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>

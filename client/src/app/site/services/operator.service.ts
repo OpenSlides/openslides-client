@@ -659,16 +659,7 @@ export class OperatorService {
      *
      * @returns A boolean whether an operator's CML is high enough.
      */
-    public hasCommitteePermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
-        // If a user can manage an entire organization, they can also manage every committee.
-        // Regardless, if they have no CML.
-        if (this.isOrgaManager) {
-            return true;
-        }
-        return this.hasCommitteePermissionsNonAdminCheck(committeeId, ...permissionsToCheck);
-    }
-
-    public hasCommitteePermissionsNonAdminCheck(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
+    public hasCommitteePermissionsOrOrgaPermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
         // A superadmin and orgaadmin can do everything
         if (this.isSuperAdmin || this.isOrgaManager) {
             return true;

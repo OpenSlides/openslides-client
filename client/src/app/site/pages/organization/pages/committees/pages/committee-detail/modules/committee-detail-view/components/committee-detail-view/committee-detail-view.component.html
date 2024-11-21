@@ -1,6 +1,6 @@
 <os-head-bar
     [customMenu]="true"
-    [hasMainButton]="canManageMeetingsInCommittee"
+    [hasMainButton]="canManageCommitteeOrMeetingsInCommittee"
     [mainActionTooltip]="'New meeting' | translate"
     [nav]="false"
     (mainEvent)="onCreateMeeting()"
@@ -105,7 +105,7 @@
                 </os-committee-meta-info>
             }
             <!-- Member amount -->
-            @if (canManageCommittee) {
+            @if (canManageCommitteeOrMeetingsInCommittee) {
                 <os-committee-meta-info icon="engineering" title="{{ 'Committee admin' | translate }}">
                     @if (committee.getManagers(); as managers) {
                         <os-comma-separated-listing [list]="managers">

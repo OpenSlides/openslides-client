@@ -20,10 +20,7 @@ type TestConditionalType = {
 
 @Component({
     template: `
-        <div
-            *osCmlPerms="permission; committeeId: conditionals.id; nonAdminCheck: conditionals.nonAdmin"
-            id="normal"
-        ></div>
+        <div *osCmlPerms="permission; committeeId: conditionals.id" id="normal"></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; or: conditionals.or" id="or"></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; and: conditionals.and" id="and"></div>
         <div
@@ -63,12 +60,8 @@ class MockOperatorService {
         return checkPerms.some(perm => perm === this._oml);
     }
 
-    public hasCommitteePermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
-        return this._isAdmin || this.hasCommitteePermissionsNonAdminCheck(committeeId, ...checkPerms);
-    }
-
-    public hasCommitteePermissionsNonAdminCheck(committeeId: Id | null, ...checkPerms: CML[]): boolean {
-        return checkPerms.some(perm => this._permList.includes(perm));
+    public hasCommitteePermissionsOrOrgaPermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
+        return this._isAdmin || checkPerms.some(perm => this._permList.includes(perm));
     }
 
     public changeOperatorPermsForTest(newPermList: CML[], oml?: OML | undefined): void {

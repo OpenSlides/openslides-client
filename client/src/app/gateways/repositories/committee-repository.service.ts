@@ -110,7 +110,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         const viewModel = super.createViewModel(model);
         viewModel.getViewUser = (id: Id): ViewUser => this.userRepo.getViewModel(id);
         viewModel.canAccess = (): boolean =>
-            this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
+            this.operator.hasCommitteePermissionsOrOrgaPermissions(model.id, CML.can_manage) ||
             this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
             this.operator.isInCommitteesNonAdminCheck(model);
         return viewModel;
