@@ -92,7 +92,8 @@
                                     !(settings.isSplitSingleOption && displayed_in_autopilot)
                                 ) {
                                     <b class="grid-name-area">
-                                        {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
+                                        {{ poll.options[0]?.contentTitlesAsSortedArray.length }}
+                                        {{ optionPluralLabel | translate }}
                                     </b>
                                 }
                                 @for (
