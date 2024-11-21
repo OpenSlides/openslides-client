@@ -81,7 +81,7 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
     }
 
     protected override preFilter(rawInputData: ViewMeeting[]): ViewMeeting[] {
-        return this.operator.isSuperAdmin
+        return this.operator.isSuperAdmin || this.operator.isOrgaManager
             ? rawInputData
             : rawInputData.filter(meeting => this.operator.isInMeeting(meeting.id));
     }

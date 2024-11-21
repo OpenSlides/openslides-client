@@ -50,7 +50,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get orgaManagementLevelChangeDisabled(): boolean {
-        return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
+        return (
+            this.user?.id === this.operator.operatorId &&
+            (this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isAccountAdmin)
+        );
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
