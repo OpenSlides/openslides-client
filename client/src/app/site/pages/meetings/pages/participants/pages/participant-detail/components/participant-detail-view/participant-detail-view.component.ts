@@ -281,11 +281,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                     const title = user.getTitle();
                     super.setTitle(title);
                     this.user = user;
-                    this.updateEditable(this._userId);
                     this.cd.markForCheck();
                 }
             })
         );
+        this.updateEditable();
     }
 
     public getRandomPassword(): string {
@@ -339,11 +339,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             this.goToAllUsers();
         }
 
-        if (edit) {
-            await this.modelRequestService.waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION);
-            setTimeout(() => (this._userFormLoaded = true), 1000);
-        } else {
+        if (!edit) {
             this._userFormLoaded = false;
+        } else {
+            this.modelRequestService
+                .waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION)
+                .then(() => setTimeout(() => (this._userFormLoaded = true), 1000));
         }
     }
 
@@ -488,8 +489,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
     }
 
-    private async updateEditable(user_id: Id): Promise<void> {
-        const allowedFields = await this.userService.isEditable(user_id, [`first_name`, `default_password`]);
+    private async updateEditable(): Promise<void> {
+        const allowedFields = await this.userService.isEditable(this._userId, [`first_name`, `default_password`]);
         this._isUserEditable = allowedFields.includes(`first_name`);
         this._isDefaultPasswordEditable = allowedFields.includes(`default_password`);
     }
