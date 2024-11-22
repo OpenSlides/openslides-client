@@ -24,7 +24,6 @@ import { BasePollPdfService } from './base-poll-pdf.service';
 
 export interface BaseVoteData extends Identifiable {
     user?: ViewUser;
-    vote_verbose_translated?: string | null;
 }
 
 @Directive()

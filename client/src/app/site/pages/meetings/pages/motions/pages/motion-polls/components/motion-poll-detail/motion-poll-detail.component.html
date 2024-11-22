@@ -55,9 +55,9 @@
                 </mat-tab>
                 <mat-tab label="{{ 'Entitled users' | translate }}">
                     <os-entitled-users-table
+                        [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="entitledUsersObservable"
                         [isViewingThis]="isViewingEntitledUserslist"
-                        [parent]="self"
                     ></os-entitled-users-table>
                 </mat-tab>
             </mat-tab-group>

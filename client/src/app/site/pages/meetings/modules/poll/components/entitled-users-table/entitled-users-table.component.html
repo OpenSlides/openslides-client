@@ -21,7 +21,7 @@
                                     </div>
                                 }
                                 <!-- Vote weight -->
-                                @if ((parent.voteWeightEnabled | async) && parent.poll.isNamed) {
+                                @if (displayVoteWeight) {
                                     <div>{{ 'Vote weight' | translate }}: {{ entry.user.vote_weight() }}</div>
                                 }
                                 <!-- Delegation -->

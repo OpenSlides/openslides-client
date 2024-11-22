@@ -11,6 +11,10 @@ import { MotionPollService } from '../../../../modules/motion-poll/services';
 import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
 import { MotionPollPdfService } from '../../../../modules/motion-poll/services/motion-poll-pdf.service';
 
+export interface ExtendedVoteData extends BaseVoteData {
+    vote_verbose_translated?: string | null;
+}
+
 @Component({
     selector: `os-motion-poll-detail`,
     templateUrl: `./motion-poll-detail.component.html`,
@@ -25,6 +29,10 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         return this.hasPerms() || this.poll.isPublished;
     }
 
+    public get displayVoteWeight(): boolean {
+        return this.voteWeightEnabled && this.poll.isNamed;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         pollService: MotionPollService,
@@ -34,14 +42,16 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         super(pollService, pollPdfService);
     }
 
-    protected createVotesData(): BaseVoteData[] {
+    protected createVotesData(): ExtendedVoteData[] {
         const voteData = this.poll?.options[0]?.votes;
-        const baseVoteData: BaseVoteData[] = this.poll?.options[0]?.votes;
-        baseVoteData.map(
-            (element, index) =>
-                (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
-        );
-        return baseVoteData;
+        const extendedVoteData: ExtendedVoteData[] = this.poll?.options[0]?.votes;
+        if (extendedVoteData) {
+            extendedVoteData.map(
+                (element, index) =>
+                    (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
+            );
+        }
+        return extendedVoteData;
     }
 
     public openDialog(): void {

@@ -46,7 +46,7 @@ export class EntitledUsersTableComponent {
     }
 
     @Input()
-    public parent: BasePollDetailComponent<PollContentObject, PollService>;
+    public displayVoteWeight: boolean;
 
     public readonly permission = Permission;
 
