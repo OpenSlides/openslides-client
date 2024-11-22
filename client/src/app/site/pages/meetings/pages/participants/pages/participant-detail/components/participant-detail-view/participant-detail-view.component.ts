@@ -339,12 +339,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             this.goToAllUsers();
         }
 
-        if (!edit) {
-            this._userFormLoaded = false;
+        if (edit) {
+            await this.modelRequestService.waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION);
+            setTimeout(() => (this._userFormLoaded = true), 1000);
         } else {
-            this.modelRequestService
-                .waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION)
-                .then(() => setTimeout(() => (this._userFormLoaded = true), 1000));
+            this._userFormLoaded = false;
         }
     }
 
