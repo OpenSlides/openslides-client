@@ -30,6 +30,10 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
         return this.content_object;
     }
 
+    public get contentEntries(): number {
+        return (this.content_object as SortedList).entries.length;
+    }
+
     public getOptionTitle(): OptionTitle {
         if (this.text) {
             return { title: this.text };
