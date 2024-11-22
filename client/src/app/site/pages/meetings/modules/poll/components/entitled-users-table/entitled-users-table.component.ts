@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollContentObject } from 'src/app/domain/models/poll';
 
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
-import { BasePollDetailComponent } from '../../base/base-poll-detail.component';
 import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
 import { EntitledUsersListFilterService } from '../../services/entitled-user-filter.service';
-import { PollService } from '../../services/poll.service';
 
 @Component({
     selector: `os-entitled-users-table`,
