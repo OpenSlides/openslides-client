@@ -354,7 +354,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         ];
 
         if (this.modified_final_version) {
-            choices.push({ value: `modified_final_version`, displayName: `Editoral final version` });
+            choices.push({ value: `modified_final_version`, displayName: `Final version` });
         } else {
             choices.push({ value: `agreed`, displayName: `Final version` });
         }
