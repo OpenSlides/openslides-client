@@ -350,12 +350,13 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         const choices = [
             { value: `original`, displayName: `Original version` },
             { value: `changed`, displayName: `Changed version` },
-            { value: `diff`, displayName: `Diff version` },
-            { value: `agreed`, displayName: `Final version` }
+            { value: `diff`, displayName: `Diff version` }
         ];
 
         if (this.modified_final_version) {
             choices.push({ value: `modified_final_version`, displayName: `Editoral final version` });
+        } else {
+            choices.push({ value: `agreed`, displayName: `Final version` });
         }
 
         const slideOptions: SlideOptions = [
