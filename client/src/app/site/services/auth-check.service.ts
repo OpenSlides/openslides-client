@@ -103,11 +103,7 @@ export class AuthCheckService {
         await this.fetchMeetingIfNotExists(+meetingIdString);
 
         await this.operator.ready;
-        return (
-            this.operator.isInMeeting(Number(meetingIdString)) ||
-            this.operator.isSuperAdmin ||
-            this.operator.isOrgaManager
-        );
+        return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.canSkipPermissionCheck;
     }
 
     private async fetchMeetingIfNotExists(meetingId: Id): Promise<void> {

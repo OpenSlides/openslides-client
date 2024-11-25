@@ -131,10 +131,7 @@
 
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
-        @if (
-            !meeting.isArchived &&
-            (meeting?.canBeEnteredBy(operator.user) || operator.isSuperAdmin || operator.isOrgaManager)
-        ) {
+        @if (!meeting.isArchived && (meeting?.canBeEnteredBy(operator.user) || operator.canSkipPermissionCheck)) {
             <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>

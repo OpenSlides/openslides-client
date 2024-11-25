@@ -91,6 +91,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get canSkipPermissionCheck(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager;
+    }
+
     public get isAccountAdmin(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
@@ -100,9 +104,7 @@ export class OperatorService {
     }
 
     public get isAnyManager(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager || this.readyDeferred.wasResolved
-            ? this.isCommitteeManager
-            : false;
+        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isCommitteeManager : false;
     }
 
     public get knowsMultipleMeetings(): boolean {
@@ -588,7 +590,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if ((this.isSuperAdmin || this.isOrgaManager) && !this.activeMeeting.locked_from_inside) {
+        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -612,7 +614,7 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if ((this.isSuperAdmin || this.isOrgaManager) && !this.activeMeeting.locked_from_inside) {
+        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
             return true;
         }
         const groups = this.user.groups(meetingId);
@@ -661,7 +663,7 @@ export class OperatorService {
      */
     public hasCommitteePermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
         // A superadmin and orgaadmin can do everything
-        if (this.isSuperAdmin || this.isOrgaManager) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
@@ -685,7 +687,7 @@ export class OperatorService {
      * @returns `true`, if the current operator is included in at least one of the given committees.
      */
     public isInCommittees(...committees: Committee[]): boolean {
-        if (this.isSuperAdmin || this.isOrgaManager) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         return this.isInCommitteesNonAdminCheck(...committees);
@@ -731,7 +733,7 @@ export class OperatorService {
         if (!this._groupIds) {
             return false;
         }
-        if (this.isSuperAdmin || this.isOrgaManager) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
@@ -742,7 +744,7 @@ export class OperatorService {
     }
 
     public isInMeetingIds(...meetingIds: Id[]): boolean {
-        if (this.isSuperAdmin || this.isOrgaManager) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         if (!this._meetingIds) {

@@ -85,8 +85,7 @@ export class DashboardComponent extends BaseComponent {
                 const filteredMeetings = meetings.filter(
                     meeting =>
                         this.operator.isInMeeting(meeting.id) ||
-                        this.operator.isSuperAdmin ||
-                        this.operator.isOrgaManager ||
+                        this.operator.canSkipPermissionCheck ||
                         (meeting.publicAccessPossible() && this.operator.isAnonymous)
                 );
                 const currentDate = new Date();
