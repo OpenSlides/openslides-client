@@ -517,9 +517,10 @@ describe(`utils: functions`, () => {
                 number: 1,
                 boolean: true
             },
-            string: `string`
+            string: `string`,
+            empty_string: ``
         };
-        const expected = `{\n   "array": [\n      "string1",\n      "string2"\n   ],\n   "object": {\n      "number": 1,\n      "boolean": true\n   },\n   "string": "string"\n}`;
+        const expected = `{\n   "array": [\n      "string1",\n      "string2"\n   ],\n   "object": {\n      "number": 1,\n      "boolean": true\n   },\n   "string": "string",\n   "empty_string": ""\n}`;
         it(`test with an object`, () => {
             expect(objectToFormattedString(testObject)).toBe(expected);
         });
@@ -532,6 +533,12 @@ describe(`utils: functions`, () => {
             expect(objectToFormattedString(undefined)).toBe(undefined);
             expect(objectToFormattedString(null)).toBe(undefined);
             expect(objectToFormattedString(``)).toBe(undefined);
+        });
+
+        it(`test with object with empty string`, () => {
+            const obj1 = { string: `` };
+            const expected = `{\n   "string": ""\n}`;
+            expect(objectToFormattedString(obj1)).toBe(expected);
         });
     });
 
