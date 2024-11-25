@@ -96,17 +96,14 @@ export class UserService {
                     hasPerms = true;
                 }
                 if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
-                    hasPerms =
-                        hasPerms ||
-                        this.operator.hasCommitteePermissionsOrOrgaPermissions(toCompare.id, CML.can_manage);
+                    hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }
                 if (!hasPerms && toCompare.collection === UserScope.MEETING) {
                     const committee_id = this.meetingRepo.getViewModel(toCompare.id)?.committee_id;
                     hasPerms =
                         hasPerms ||
                         this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage) ||
-                        (committee_id &&
-                            this.operator.hasCommitteePermissionsOrOrgaPermissions(committee_id, CML.can_manage));
+                        (committee_id && this.operator.hasCommitteePermissions(committee_id, CML.can_manage));
                 }
                 return hasPerms;
             });

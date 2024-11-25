@@ -60,6 +60,6 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
         if (!this._committeeId) {
             return false;
         }
-        return this.operator.hasCommitteePermissionsOrOrgaPermissions(this._committeeId, ...this.permissions);
+        return this.operator.hasCommitteePermissions(this._committeeId, ...this.permissions);
     }
 }

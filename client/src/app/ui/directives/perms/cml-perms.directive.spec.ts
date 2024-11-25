@@ -60,7 +60,7 @@ class MockOperatorService {
         return checkPerms.some(perm => perm === this._oml);
     }
 
-    public hasCommitteePermissionsOrOrgaPermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
+    public hasCommitteePermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
         return this._isAdmin || checkPerms.some(perm => this._permList.includes(perm));
     }
 
@@ -112,22 +112,6 @@ describe(`CmlPermsDirective`, () => {
         operatorService.changeOperatorPermsForTest([], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeTruthy();
-    });
-
-    it(`check if element gets restricted with non-admin-check`, async () => {
-        fixture.componentInstance.setTestComponentData({ nonAdmin: true });
-        operatorService.changeOperatorPermsForTest([CML.can_manage]);
-        update();
-        expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([]);
-        update();
-        expect(getElement(`#normal`)).toBeFalsy();
-        operatorService.changeOperatorPermsForTest([CML.can_manage], OML.superadmin);
-        update();
-        expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([], OML.superadmin);
-        update();
-        expect(getElement(`#normal`)).toBeFalsy();
     });
 
     it(`check if or condition works`, async () => {

@@ -659,7 +659,7 @@ export class OperatorService {
      *
      * @returns A boolean whether an operator's CML is high enough.
      */
-    public hasCommitteePermissionsOrOrgaPermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
+    public hasCommitteePermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
         // A superadmin and orgaadmin can do everything
         if (this.isSuperAdmin || this.isOrgaManager) {
             return true;
