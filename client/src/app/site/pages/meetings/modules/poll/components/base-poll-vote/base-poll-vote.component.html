@@ -71,13 +71,16 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid':
-                                        poll.isMethodYNA ||
-                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
+                                        !isMobile &&
+                                        (poll.isMethodYNA ||
+                                            (settings.isSplitSingleOption &&
+                                                displayed_in_autopilot &&
+                                                poll.isMethodYNA)),
                                     'yna-grid-extended':
                                         poll.isMethodYNA &&
                                         isMobile &&
                                         !settings.isSplitSingleOption &&
-                                        poll.options[0].isListOption,
+                                        poll.isListPoll,
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yn-grid':
                                         poll.isMethodYN ||
@@ -97,7 +100,7 @@
                                     !(settings.isSplitSingleOption && displayed_in_autopilot)
                                 ) {
                                     <b class="grid-name-area">
-                                        @if (poll.options[0].isListOption) {
+                                        @if (poll.isListPoll) {
                                             {{ poll.options[0]?.contentTitlesAsSortedArray.length }}
                                         } @else {
                                             {{ poll.option_ids.length }}
@@ -105,8 +108,8 @@
                                         {{ optionPluralLabel | translate }}
                                     </b>
                                 }
-                                @if (!settings.isSplitSingleOption && poll.options[0].isListOption && isMobile) {
-                                    @if (poll.options[0].content_object) {
+                                @if (!settings.isSplitSingleOption && poll.isListPoll && isMobile) {
+                                    @if (poll.options[0]?.content_object) {
                                         <div class="vote-option-title-single">
                                             <span>
                                                 <span>{{ poll.options[0].content_object.getTitle() | translate }}</span>
