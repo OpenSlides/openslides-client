@@ -396,7 +396,7 @@ export abstract class BasePollPdfService {
                 margin: [0, 20, 0, 5],
                 bold: true
             });
-            const usersData = this.createUsersTable(exportInfo.entitledUsersData, poll.type);
+            const usersData = this.createUsersTable(exportInfo.entitledUsersData);
             pollResultPdfContent.push(usersData);
         }
 
@@ -564,7 +564,8 @@ export abstract class BasePollPdfService {
      * @returns the table as pdfmake object
      */
     private createVotesTable(votesData: BaseVoteData[], pollType: PollType): object {
-        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named;
+        const isAnonymised: boolean = votesData[0].user ? false : true;
+        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named && !isAnonymised;
         let pollTableBody: any[] = [];
         const pollTableHeader = [
             {
@@ -619,8 +620,8 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createUsersTable(usersData: EntitledUsersTableEntry[], pollType: PollType): object {
-        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named;
+    private createUsersTable(usersData: EntitledUsersTableEntry[]): object {
+        const showVoteWeight: boolean = this.activeVoteWeight;
         let pollTableBody: any[] = [];
         const pollTableHeader = [
             {

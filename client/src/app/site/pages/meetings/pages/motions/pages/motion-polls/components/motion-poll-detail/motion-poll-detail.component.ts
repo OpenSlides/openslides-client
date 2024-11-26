@@ -29,9 +29,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         return this.hasPerms() || this.poll.isPublished;
     }
 
-    public get displayVoteWeight(): boolean {
-        return this.voteWeightEnabled && this.poll.isNamed;
-    }
+    public displayVoteWeight: boolean;
 
     public constructor(
         protected override translate: TranslateService,
@@ -40,6 +38,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         pollPdfService: MotionPollPdfService
     ) {
         super(pollService, pollPdfService);
+        this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
     }
 
     protected createVotesData(): ExtendedVoteData[] {
