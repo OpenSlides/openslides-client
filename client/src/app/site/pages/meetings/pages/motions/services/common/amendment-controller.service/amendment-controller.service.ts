@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { distinctUntilChanged, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -42,13 +42,7 @@ export class AmendmentControllerService {
 
     public getViewModelListObservableFor(motion: Identifiable): Observable<ViewMotion[]> {
         return this.getViewModelListObservable().pipe(
-            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id)),
-            distinctUntilChanged(
-                (prev, curr) =>
-                    prev?.length === curr?.length &&
-                    Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
-                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp))
-            )
+            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id))
         );
     }
 
