@@ -43,6 +43,10 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
         return this._editMode;
     }
 
+    public get isEmpty(): boolean {
+        return !this.motion[this.field];
+    }
+
     private _editMode = false;
 
     private _motion!: ViewMotion;
