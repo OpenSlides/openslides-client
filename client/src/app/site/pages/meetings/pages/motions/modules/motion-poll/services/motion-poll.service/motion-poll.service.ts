@@ -80,7 +80,7 @@ export class MotionPollService extends PollService {
             }
         }
 
-        poll.title = `${titlePrefix} ${title}:`;
+        poll.title = `${titlePrefix} ${title}`;
 
         return poll;
     }
