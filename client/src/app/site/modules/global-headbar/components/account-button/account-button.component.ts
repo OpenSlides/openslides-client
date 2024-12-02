@@ -114,7 +114,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public selectLanguage(abbreviation: string): void {
-        this.translate.use(abbreviation).subscribe();
+        this.translate.use(abbreviation);
     }
 
     public toggleOperatorPresence(): void {

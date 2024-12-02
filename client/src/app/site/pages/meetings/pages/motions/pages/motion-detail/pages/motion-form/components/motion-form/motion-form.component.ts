@@ -62,6 +62,8 @@ interface MotionFormFields {
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any } & {
     supporter_ids?: any;
     attachment_mediafile_ids?: any;
+    agenda_create?: any;
+    agenda_type?: any;
 };
 
 @Component({
@@ -295,6 +297,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
      */
     public async createMotion(newMotionValues: Partial<Motion>): Promise<void> {
         try {
+            this.cleanAgendaIfNoPerm(newMotionValues);
             let response: HasSequentialNumber;
             if (this._parentId) {
                 response = await this.amendmentRepo.createTextBased({
@@ -446,10 +449,19 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     }
 
     private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
+        this.cleanAgendaIfNoPerm(newMotionValues);
         try {
             await this.motionController.update(newMotionValues, motion).resolve();
         } catch (e) {
             this.raiseError(e);
+        }
+    }
+
+    private cleanAgendaIfNoPerm(newMotionValues: any): void {
+        if (!this.canManageAgenda) {
+            delete newMotionValues[`agenda_create`];
+            delete newMotionValues[`agenda_type`];
+            delete newMotionValues[`agenda_parent_id`];
         }
     }
 
@@ -509,7 +521,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                     } else {
                         delete this._motionContent[controlName];
                     }
-                    this.propagateChanges();
+                    setTimeout(() => this.propagateChanges());
                 });
             this._editSubscriptions.push(subscription);
             this.subscriptions.push(subscription);
@@ -593,10 +605,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                     isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
                 ]
             }),
-            ...(this.canManageAgenda && {
-                agenda_create: [``],
-                agenda_type: [``]
-            })
+            agenda_create: [``],
+            agenda_type: [``]
         };
 
         return this.fb.group(motionFormControls);

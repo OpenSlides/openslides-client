@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import pofile from 'pofile';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+
+import { CustomTranslationService } from './custom-translation.service';
 
 /**
  * Translation loader that replaces empty strings with nothing.
@@ -28,7 +30,10 @@ export class PruningTranslationLoader implements TranslateLoader {
      *
      * @param http httpClient to load the translation files.
      */
-    public constructor(private http: HttpClient) {}
+    public constructor(
+        private ctService: CustomTranslationService,
+        private http: HttpClient
+    ) {}
 
     /**
      * Loads a language file, stores the content, give it to the process function.
@@ -36,12 +41,29 @@ export class PruningTranslationLoader implements TranslateLoader {
      */
     public getTranslation(lang: string): Observable<any> {
         if (lang != this.defaultLanguage) {
-            return this.http
-                .get(`${this.prefix}${lang}${this.suffix}`, { responseType: `text` })
-                .pipe(map((content: string) => this.parse(content)));
-        } else {
-            return of({});
+            return combineLatest([
+                this.http
+                    .get(`${this.prefix}${lang}${this.suffix}`, { responseType: `text` })
+                    .pipe(map((content: string) => this.parse(content))),
+                this.ctService.customTranslationSubject
+            ]).pipe(
+                map(([t, ct]) => {
+                    if (ct) {
+                        for (const k of Object.keys(t)) {
+                            t[k] = ct[t[k]] || t[k];
+                        }
+                    }
+
+                    return t;
+                }),
+                first()
+            );
         }
+
+        return this.ctService.customTranslationSubject.pipe(
+            map(ct => ct || {}),
+            first()
+        );
     }
 
     private parse(content: string): any {

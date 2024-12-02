@@ -25,6 +25,10 @@
         }
         .paragraph-text {
             flex: 1;
+
+            .insert {
+                text-decoration: underline !important;
+            }
         }
     }
 
