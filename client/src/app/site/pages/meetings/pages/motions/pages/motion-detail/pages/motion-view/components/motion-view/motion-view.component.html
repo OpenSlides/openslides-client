@@ -140,6 +140,7 @@
                 <os-motion-manage-title
                     [changeRecoMode]="changeRecoMode"
                     [motion]="motion"
+                    [publicAccess]="operator.isAnonymous"
                     (updateCrMode)="changeRecoMode = $event"
                 ></os-motion-manage-title>
             </div>

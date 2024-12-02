@@ -1,5 +1,5 @@
 import { Injectable, ProviderToken } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';

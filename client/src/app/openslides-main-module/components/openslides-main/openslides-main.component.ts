@@ -14,6 +14,7 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
+import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -40,6 +41,7 @@ export class OpenSlidesMainComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
+        private ctService: CustomTranslationService,
         private translate: TranslateService,
         private storageService: StorageService,
         private config: DateFnsConfigurationService,
@@ -57,13 +59,13 @@ export class OpenSlidesMainComponent implements OnInit {
     private loadTranslation(): void {
         // manually add the supported languages
         this.translate.addLangs(Object.keys(availableTranslations));
-        // this language will be used as a fallback when a translation isn't found in the current language
-        this.translate.setDefaultLang(`en`);
         // get the browsers default language
         const browserLang = this.translate.getBrowserLang() as string;
+        let currentLang = `en`;
 
         // get language set in local storage
         this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY).then(lang => {
+            currentLang = lang as string;
             if (lang && this.translate.getLangs().includes(lang as string)) {
                 this.translate.use(lang as string);
             } else {
@@ -83,6 +85,13 @@ export class OpenSlidesMainComponent implements OnInit {
 
             // update date-fns locale
             this.updateLocaleByName(event.lang);
+
+            currentLang = event.lang;
+        });
+
+        this.ctService.customTranslationSubject.subscribe(() => {
+            this.translate.reloadLang(`en`);
+            this.translate.reloadLang(currentLang);
         });
     }
 
