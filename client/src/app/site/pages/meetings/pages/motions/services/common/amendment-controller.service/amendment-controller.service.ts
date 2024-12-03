@@ -47,7 +47,8 @@ export class AmendmentControllerService {
                 (prev, curr) =>
                     prev?.length === curr?.length &&
                     Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
-                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp))
+                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp)) &&
+                    prev?.map(e => e.state_id).equals(curr?.map(e => e.state_id))
             )
         );
     }
