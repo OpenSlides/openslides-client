@@ -81,7 +81,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public get addSelf(): boolean {
         return (
             !this.operator.isAnonymous &&
-            this.permission.listOfSpeakersCanBeSpeaker &&
+            this.canBeSpeaker &&
             !(this.voteDelegationEnabled && this.forbidDelegatorToAddSelf && this.operator.user.isVoteRightDelegated)
         );
     }
@@ -104,6 +104,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public get canSee(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanSee);
+    }
+
+    public get canBeSpeaker(): boolean {
+        return this.operator.hasPerms(this.permission.listOfSpeakersCanBeSpeaker);
     }
 
     public get canAddDueToPresence(): boolean {
