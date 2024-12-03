@@ -6,7 +6,7 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -22,15 +22,18 @@ import {
     tap
 } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { HasSequentialNumber, Selectable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Motion } from 'src/app/domain/models/motions/motion';
+import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
 import { RawUser } from 'src/app/gateways/repositories/users';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -124,6 +127,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     public NOTIFICATION_EDIT_MOTION = `notifyEditMotion`;
 
     public contentForm!: UntypedFormGroup;
+    public committeeControl!: UntypedFormControl;
+
+    public committeeValues: Selectable[] = [];
+
+    private committeeDisabledIds: number[] = [];
 
     public set canSaveParagraphBasedAmendment(can: boolean) {
         this._canSaveParagraphBasedAmendment = can;
@@ -142,12 +150,22 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     public preamble = ``;
     public reasonRequired = false;
     public minSupporters = 0;
+    public allowAdditionalSubmitter = false;
 
     public temporaryMotion: any = {};
 
     public canSave = false;
 
     public hasLoaded = new BehaviorSubject(false);
+
+    private get committeeSelectorValue(): string {
+        if (!this.committeeControl.value) {
+            return ``;
+        }
+        const searchId = +this.committeeControl.value;
+        const foundEntry = this.committeeValues.find(entry => entry.id === searchId);
+        return !!foundEntry ? foundEntry.getTitle() : ``;
+    }
 
     private titleFieldUpdateSubscription: Subscription;
 
@@ -177,7 +195,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         private amendmentRepo: AmendmentControllerService,
         private perms: MotionPermissionService,
         private prompt: PromptService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private operator: OperatorService,
+        private presenter: GetForwardingCommitteesPresenterService
     ) {
         super();
 
@@ -188,7 +208,10 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 .subscribe(value => (this.reasonRequired = value)),
             this.meetingSettingsService
                 .get(`motions_supporters_min_amount`)
-                .subscribe(value => (this.minSupporters = value))
+                .subscribe(value => (this.minSupporters = value)),
+            this.meetingSettingsService
+                .get(`motions_create_enable_additional_submitter_text`)
+                .subscribe(value => (this.allowAdditionalSubmitter = value))
         );
     }
 
@@ -205,6 +228,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 this.cd.markForCheck();
             })
         );
+        this.loadForwardingCommitteesFromPresenter();
     }
 
     /**
@@ -298,6 +322,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     public async createMotion(newMotionValues: Partial<Motion>): Promise<void> {
         try {
             this.cleanAgendaIfNoPerm(newMotionValues);
+            if (!newMotionValues.additional_submitter || !this.allowAdditionalSubmitter) {
+                delete newMotionValues.additional_submitter;
+            }
             let response: HasSequentialNumber;
             if (this._parentId) {
                 response = await this.amendmentRepo.createTextBased({
@@ -313,12 +340,29 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         }
     }
 
+    public getCommitteeDisabledFn(): (v: Selectable) => boolean {
+        return (value: Selectable) => this.committeeDisabledIds.includes(value.id);
+    }
+
+    public committeeSelectorOpenedChange(opened: boolean): void {
+        if (!opened) {
+            this.committeeDisabledIds = [];
+        }
+    }
+
     /**
      * Async load the values of the motion in the Form.
      */
     protected patchForm(): void {
         if (!this.contentForm) {
-            this.contentForm = this.createForm();
+            [this.contentForm, this.committeeControl] = this.createForm();
+            this.subscriptions.push(
+                this.committeeControl.valueChanges.subscribe(value => {
+                    if (value) {
+                        this.changeCommitteeSelector();
+                    }
+                })
+            );
         }
 
         const contentPatch: { [key: string]: any } = {};
@@ -450,6 +494,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
         this.cleanAgendaIfNoPerm(newMotionValues);
+        delete newMotionValues.additional_submitter;
         try {
             await this.motionController.update(newMotionValues, motion).resolve();
         } catch (e) {
@@ -580,7 +625,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
-    private createForm(): UntypedFormGroup {
+    private createForm(): [UntypedFormGroup, UntypedFormControl] {
         const motionFormControls: MotionFormControlsConfig = {
             title: [``, Validators.required],
             text: [``, this.isParagraphBasedAmendment ? null : Validators.required],
@@ -589,6 +634,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             attachment_mediafile_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
+            additional_submitter: [``],
             supporter_ids: [[]],
             workflow_id: [
                 +this.meetingSettingsService.instant(
@@ -609,6 +655,35 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             agenda_type: [``]
         };
 
-        return this.fb.group(motionFormControls);
+        return [this.fb.group(motionFormControls), this.fb.control(``)];
+    }
+
+    private changeCommitteeSelector(): void {
+        const value = this.contentForm.get(`additional_submitter`).value
+            ? this.contentForm.get(`additional_submitter`).value + ` · ` + this.committeeSelectorValue
+            : this.committeeSelectorValue;
+        this.committeeDisabledIds.push(+this.committeeControl.value);
+        this.committeeControl.setValue(null);
+        this.contentForm.get(`additional_submitter`).setValue(value);
+    }
+
+    private async loadForwardingCommitteesFromPresenter(): Promise<void> {
+        const meetingId = this.activeMeetingService.meetingId;
+        const committees =
+            this.operator.hasPerms(Permission.motionCanManageMetadata) && !!meetingId
+                ? await this.presenter.call({ meeting_id: meetingId })
+                : [];
+        const forwardingCommittees: (Selectable & { name: string; toString: any })[] = [];
+        for (let n = 0; n < committees.length; n++) {
+            forwardingCommittees.push({
+                id: n + 1,
+                name: committees[n],
+                getTitle: () => committees[n],
+                getListTitle: () => ``,
+                toString: () => committees[n]
+            });
+        }
+
+        this.committeeValues = forwardingCommittees;
     }
 }
