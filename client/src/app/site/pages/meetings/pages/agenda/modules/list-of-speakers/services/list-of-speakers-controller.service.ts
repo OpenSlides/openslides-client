@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 
+import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 /**
@@ -15,6 +18,7 @@ import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 export interface SpeakingTimeStructureLevelObject {
     finishedSpeakers: ViewSpeaker[];
     speakingTime: number;
+    name: string;
 }
 
 @Injectable({
@@ -23,7 +27,8 @@ export interface SpeakingTimeStructureLevelObject {
 export class ListOfSpeakersControllerService extends BaseController<ViewListOfSpeakers, ListOfSpeakers> {
     public constructor(
         controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: ListOfSpeakersRepositoryService
+        protected override repo: ListOfSpeakersRepositoryService,
+        private meetingSettings: MeetingSettingsService
     ) {
         super(controllerServiceCollector, ListOfSpeakers, repo);
     }
@@ -58,48 +63,42 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
      * @returns A list, which entries are `SpeakingTimeStructureLevelObject`.
      */
     public getSpeakingTimeStructureLevelRelation(): SpeakingTimeStructureLevelObject[] {
-        let listSpeakingTimeStructureLevel: SpeakingTimeStructureLevelObject[] = [];
+        const map_for_aggregation = new Map<Id, SpeakingTimeStructureLevelObject>();
+        const parliamentMode = this.meetingSettings.instant(`list_of_speakers_default_structure_level_time`);
         for (const los of this.getViewModelList()) {
             for (const speaker of los.finishedSpeakers) {
-                const nextEntry = this.getSpeakingTimeStructureLevelObject(speaker);
-                listSpeakingTimeStructureLevel = this.getSpeakingTimeStructureLevelList(
-                    nextEntry,
-                    listSpeakingTimeStructureLevel
-                );
+                if (!!parliamentMode) {
+                    const structureLevel = speaker.structure_level_list_of_speakers?.structure_level;
+                    if (!!structureLevel) {
+                        this.putIntoMapForAggregation(structureLevel, speaker, map_for_aggregation);
+                    }
+                } else {
+                    for (const structureLevel of speaker.user.structure_levels()) {
+                        this.putIntoMapForAggregation(structureLevel, speaker, map_for_aggregation);
+                    }
+                }
             }
         }
-        return listSpeakingTimeStructureLevel;
+        return Array.from(map_for_aggregation.values());
     }
 
-    /**
-     * Helper-function to create a `SpeakingTimeStructureLevelObject` by a given speaker.
-     *
-     * @param speaker, with whom structure-level and speaking-time is calculated.
-     *
-     * @returns The created `SpeakingTimeStructureLevelObject`.
-     */
-    private getSpeakingTimeStructureLevelObject(speaker: ViewSpeaker): SpeakingTimeStructureLevelObject {
-        return {
-            finishedSpeakers: [speaker],
-            speakingTime: this.getSpeakingTimeAsNumber(speaker)
-        };
-    }
-
-    /**
-     * Helper-function to update entries in a given list, if already existing, or create entries otherwise.
-     *
-     * @param object A `SpeakingTimeStructureLevelObject`, that contains information about speaking-time
-     * and structure-level.
-     * @param list A list, at which speaking-time, structure-level and finished_speakers are set.
-     *
-     * @returns The updated map.
-     */
-    private getSpeakingTimeStructureLevelList(
-        object: SpeakingTimeStructureLevelObject,
-        list: SpeakingTimeStructureLevelObject[]
-    ): SpeakingTimeStructureLevelObject[] {
-        list.push(object);
-        return list;
+    private putIntoMapForAggregation(
+        structureLevel: ViewStructureLevel,
+        speaker: ViewSpeaker,
+        map_for_aggregation: Map<Id, SpeakingTimeStructureLevelObject>
+    ): void {
+        const structureLevelId = structureLevel.id;
+        if (map_for_aggregation.has(structureLevelId)) {
+            const entry = map_for_aggregation.get(structureLevelId);
+            entry.finishedSpeakers.push(speaker);
+            entry.speakingTime += this.getSpeakingTimeAsNumber(speaker);
+        } else {
+            map_for_aggregation.set(structureLevelId, {
+                finishedSpeakers: [speaker],
+                speakingTime: this.getSpeakingTimeAsNumber(speaker),
+                name: structureLevel.name
+            });
+        }
     }
 
     /**
