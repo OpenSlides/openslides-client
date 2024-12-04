@@ -313,7 +313,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     /**
      * Click handler for the pdf button
      */
-    public downloadPdf(): void {
+    public async downloadPdf(): Promise<void> {
         this.pdfExport.exportSingleMotion(this.motion, {
             lnMode:
                 this.lineNumberingMode === LineNumberingMode.Inside

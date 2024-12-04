@@ -6,6 +6,7 @@ import {
     Content,
     ContentColumns,
     ContentImage,
+    ContentSvg,
     ContentTable,
     ContentText,
     Margins,
@@ -15,6 +16,7 @@ import {
     TableCell,
     TDocumentDefinitions
 } from 'pdfmake/interfaces';
+import { distinctUntilChanged } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
@@ -278,6 +280,12 @@ class PdfCreator {
     }
 }
 
+export interface HeaderLogos {
+    place: string;
+    isSVG: boolean;
+    content: string;
+}
+
 /**
  * Provides the general document structure for PDF documents, such as page margins, header, footer and styles.
  * Also provides general purpose open and download functions.
@@ -301,6 +309,8 @@ export class PdfDocumentService {
      */
     private imageUrls: string[] = [];
 
+    private headerLogos: { [place: string]: HeaderLogos } = {};
+
     private pdfWorker: Worker | null = null;
 
     private settings: Partial<Settings> = {};
@@ -316,6 +326,78 @@ export class PdfDocumentService {
         private meetingSettingsService: MeetingSettingsService
     ) {
         this.makeSettingsSubscriptions();
+        this.updateHeader([`pdf_header_l`, `pdf_header_r`]).then(() => {
+            this.mediaManageService
+                .getLogoUrlObservable(`pdf_header_l`)
+                .pipe(distinctUntilChanged())
+                .subscribe(_ => this.updateHeader([`pdf_header_l`]));
+            this.mediaManageService
+                .getLogoUrlObservable(`pdf_header_r`)
+                .pipe(distinctUntilChanged())
+                .subscribe(_ => this.updateHeader([`pdf_header_r`]));
+        });
+    }
+
+    private async updateHeader(places: any): Promise<void> {
+        for (const place of places) {
+            const url = this.mediaManageService.getLogoUrl(place);
+            const downloads = await Promise.all([url].map(url => this.httpService.downloadAsBase64(url)));
+            const svg = downloads.map(image => image.type === `image/svg+xml`)[0];
+            if (svg) {
+                this.svgFileToString(place, url);
+            } else {
+                this.headerLogos[place] = {
+                    place: place,
+                    isSVG: false,
+                    content: url
+                };
+            }
+        }
+    }
+
+    public async svgFileToString(place: string, url: string): Promise<any> {
+        fetch(url)
+            .catch((error: Error) => {
+                throw new Error(error.message);
+            })
+            .then(response => {
+                return response.text();
+            })
+            .then((text: string) => {
+                if (text.length >= 1) {
+                    const start = text.indexOf(`<svg`);
+                    const restText = text.slice(start + 5);
+                    const viewBox = this.getViewBox(text);
+                    const svgText = [`<svg `, viewBox, restText].join(``);
+                    this.headerLogos[place] = {
+                        place: place,
+                        isSVG: true,
+                        content: svgText
+                    };
+                }
+            });
+    }
+
+    private getViewBox(text: string): string {
+        let viewBox: string = ``;
+        const width: number = this.getSizeValue(text, `width="`);
+        const height: number = this.getSizeValue(text, `height="`);
+        if (width !== -1 && height !== -1) {
+            viewBox = ` viewBox=" 0 0 ` + (width + 100) + ` ` + (height + 100) + `" `;
+        }
+        return viewBox;
+    }
+
+    private getSizeValue(text: string, param: string): number {
+        const REGEX = /\d+/g;
+        if (text.search(param) !== -1) {
+            const indexStart = text.indexOf(param);
+            const indexEnd = text.indexOf(`"`, indexStart + param.length);
+            const value = Number(text.substring(indexStart + 7, indexEnd).match(REGEX)[0]);
+            return value;
+        } else {
+            return -1;
+        }
     }
 
     private makeSettingsSubscriptions(): void {
@@ -590,16 +672,26 @@ export class PdfDocumentService {
     private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): ContentColumns {
         let text: string;
         const columns: Content = [];
-        const logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
-        const logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
+        const logoHeaderLeft = this.headerLogos[`pdf_header_l`];
+        const logoHeaderRight = this.headerLogos[`pdf_header_r`];
+
         const header =
             exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
         // add the left logo to the header column
-        if (logoHeaderLeftUrl) {
+        if (logoHeaderLeft) {
+            if (logoHeaderLeft.isSVG)
+                columns.push(
+                    this.getSVG({
+                        image: logoHeaderLeft.content,
+                        fit: [180, 40],
+                        width: `20%`
+                    })
+                );
+        } else {
             columns.push(
                 this.getImage({
-                    image: logoHeaderLeftUrl,
+                    image: logoHeaderLeft.content,
                     fit: [180, 40],
                     width: `20%`
                 })
@@ -607,7 +699,7 @@ export class PdfDocumentService {
         }
 
         // Add no heading text if there are logos on the right and left.
-        if (header && !(logoHeaderRightUrl && logoHeaderLeftUrl)) {
+        if (header && !(logoHeaderRight && logoHeaderLeft)) {
             const name = this.translate.instant(this.meetingSettingsService.instant(`name`));
             const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
             const location = this.meetingSettingsService.instant(`location`);
@@ -627,19 +719,31 @@ export class PdfDocumentService {
         columns.push({
             text,
             style: `headerText`,
-            alignment: logoHeaderRightUrl ? `left` : `right`
+            alignment: logoHeaderRight ? `left` : `right`
         });
 
         // add the logo to the right
-        if (logoHeaderRightUrl) {
-            columns.push(
-                this.getImage({
-                    image: logoHeaderRightUrl,
-                    fit: [180, 40],
-                    alignment: `right`,
-                    width: `20%`
-                })
-            );
+        // add the left logo to the header column
+        if (logoHeaderRight) {
+            if (logoHeaderRight.isSVG) {
+                columns.push(
+                    this.getSVG({
+                        image: logoHeaderRight.content,
+                        fit: [180, 40],
+                        alignment: `right`,
+                        width: `20%`
+                    })
+                );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoHeaderRight.content,
+                        fit: [180, 40],
+                        alignment: `right`,
+                        width: `20%`
+                    })
+                );
+            }
         }
         const margin: Margins = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
         // pdfmake order: [left, top, right, bottom]
@@ -755,6 +859,15 @@ export class PdfDocumentService {
         this.imageUrls.push(data.image);
         return {
             image: this.removeLeadingSlash(data.image),
+            fit: data.fit,
+            width: data.width,
+            alignment: data.alignment
+        };
+    }
+
+    private getSVG(data: { image: string; fit?: [number, number]; width?: any; alignment?: Alignment }): ContentSvg {
+        return {
+            svg: data.image,
             fit: data.fit,
             width: data.width,
             alignment: data.alignment
