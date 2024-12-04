@@ -584,6 +584,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_enable_working_group_speaker`,
                         label: _(`Activate the selection field 'spokesperson'`),
                         type: `boolean`
+                    },
+                    {
+                        key: `motions_create_enable_additional_submitter_text`,
+                        label: _(`Enable text-based submitter in motion creation`),
+                        type: `boolean`
                     }
                 ]
             },

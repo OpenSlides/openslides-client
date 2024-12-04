@@ -60,6 +60,29 @@
                                     </div>
                                 }
 
+                                @if (newMotion && allowAdditionalSubmitter && canChangeMetadata) {
+                                    <div class="additional-submitter">
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Extension' | translate }}</mat-label>
+                                                <input formControlName="additional_submitter" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Committees' | translate }}</mat-label>
+                                                <os-list-search-selector
+                                                    [disableOptionWhenFn]="getCommitteeDisabledFn()"
+                                                    [formControl]="committeeControl"
+                                                    [inputListValues]="committeeValues"
+                                                    [keepOpen]="true"
+                                                    (openedChange)="committeeSelectorOpenedChange($event)"
+                                                ></os-list-search-selector>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                }
+
                                 <div class="form-id-title">
                                     <!-- number -->
                                     @if (!newMotion && canChangeMetadata) {
