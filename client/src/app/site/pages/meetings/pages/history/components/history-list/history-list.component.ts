@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
@@ -91,10 +90,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         } else {
             return this.modelsRepoMap[value].getVerboseName();
         }
-    }
-
-    public get isSuperadmin(): boolean {
-        return this.operator.hasOrganizationPermissions(OML.superadmin);
     }
 
     public constructor(
