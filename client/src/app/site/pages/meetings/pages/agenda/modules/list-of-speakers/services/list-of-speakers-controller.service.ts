@@ -68,10 +68,8 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         for (const los of this.getViewModelList()) {
             for (const speaker of los.finishedSpeakers) {
                 if (!!parliamentMode) {
-                    const structureLevel = speaker.structure_level_list_of_speakers?.structure_level;
-                    if (!!structureLevel) {
-                        this.putIntoMapForAggregation(structureLevel, speaker, map_for_aggregation);
-                    }
+                    const structureLevelOrNull = speaker.structure_level_list_of_speakers?.structure_level;
+                    this.putIntoMapForAggregation(structureLevelOrNull, speaker, map_for_aggregation);
                 } else {
                     for (const structureLevel of speaker.user.structure_levels()) {
                         this.putIntoMapForAggregation(structureLevel, speaker, map_for_aggregation);
@@ -83,11 +81,14 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
     }
 
     private putIntoMapForAggregation(
-        structureLevel: ViewStructureLevel,
+        structureLevel: ViewStructureLevel | null,
         speaker: ViewSpeaker,
         map_for_aggregation: Map<Id, SpeakingTimeStructureLevelObject>
     ): void {
-        const structureLevelId = structureLevel.id;
+        let structureLevelId = -1;
+        if (!!structureLevel) {
+            structureLevelId = structureLevel.id;
+        }
         if (map_for_aggregation.has(structureLevelId)) {
             const entry = map_for_aggregation.get(structureLevelId);
             entry.finishedSpeakers.push(speaker);
@@ -96,7 +97,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
             map_for_aggregation.set(structureLevelId, {
                 finishedSpeakers: [speaker],
                 speakingTime: this.getSpeakingTimeAsNumber(speaker),
-                name: structureLevel.name
+                name: structureLevelId === -1 ? `Without Structure Level` : structureLevel.name
             });
         }
     }
