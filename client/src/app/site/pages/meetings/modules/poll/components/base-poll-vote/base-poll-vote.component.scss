@@ -102,6 +102,15 @@
     }
 }
 
+.yna-grid-extended {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name name name name' 'subtitle subtitle subtitle subtitle' '. yes no abstain';
+    grid-template-columns: auto var(--poll-option-title-width, 70px) var(--poll-option-title-width, 70px) var(
+            --poll-option-title-width,
+            70px
+        );
+}
+
 .remove-grid-gap {
     @media (max-width: 700px) {
         //grid-gap: 0 !important;
@@ -196,6 +205,16 @@
         margin-top: auto;
         margin-bottom: auto;
     }
+}
+
+.vote-option-title-single {
+    display: flex;
+    span,
+    i {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    grid-area: subtitle;
 }
 
 .option0 {
