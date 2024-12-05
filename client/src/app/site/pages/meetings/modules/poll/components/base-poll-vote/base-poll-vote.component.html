@@ -71,7 +71,7 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid':
-                                        !isMobile &&
+                                        ((poll.isListPoll && !isMobile) || !poll.isListPoll) &&
                                         (poll.isMethodYNA ||
                                             (settings.isSplitSingleOption &&
                                                 displayed_in_autopilot &&
