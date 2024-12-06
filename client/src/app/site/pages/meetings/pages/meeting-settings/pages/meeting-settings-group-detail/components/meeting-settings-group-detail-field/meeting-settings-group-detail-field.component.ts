@@ -226,7 +226,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 }
             ]
         });
-        if (this.disabled) {
+        if (this.disabled || this.getWarning()) {
             this.form.disable();
         }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
