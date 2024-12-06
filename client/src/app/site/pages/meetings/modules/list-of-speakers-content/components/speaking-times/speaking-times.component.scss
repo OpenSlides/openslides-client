@@ -4,7 +4,6 @@
     $auto-sizing: auto-fill;
     $column-min-width: 186px;
 
-    justify-content: start;
     padding: 8px 25px 0 25px;
     display: grid;
     column-gap: 16px;
@@ -54,10 +53,6 @@
                 text-align: right;
                 word-break: break-word;
             }
-        }
-
-        .icon-less-space-to-left {
-            margin-top: 12px;
         }
     }
 }
