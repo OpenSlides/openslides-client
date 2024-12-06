@@ -6,6 +6,16 @@ os-user-detail-view h2 {
     margin-top: 0 !important;
 }
 
+.icon {
+    display: inline-table !important;
+    vertical-align: middle;
+    $icon-size: 16px;
+    font-size: $icon-size;
+    height: $icon-size;
+    width: $icon-size;
+    color: black;
+}
+
 .participation-table {
     border-collapse: collapse;
     width: 100%;

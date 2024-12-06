@@ -205,6 +205,26 @@
                                     </td>
                                 }
                                 <td class="word-break" [ngClass]="getCellClass(false, isLast, lastLine)">
+                                    <!-- Is Archived -->
+                                    @if (meeting_row.value.is_archieved) {
+                                        <span class="icon">
+                                            <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
+                                        </span>
+                                    }
+
+                                    <!--- Is public -->
+                                    @if (meeting_row.value.is_public) {
+                                        <span class="icon">
+                                            <mat-icon [matTooltip]="'Public' | translate">public</mat-icon>
+                                        </span>
+                                    }
+
+                                    <!--- Is locked from inside -->
+                                    @if (meeting_row.value.is_closed) {
+                                        <span class="icon">
+                                            <mat-icon [matTooltip]="'Closed' | translate">lock</mat-icon>
+                                        </span>
+                                    }
                                     <a [routerLink]="'/' + meeting_row.key + ''">
                                         {{ meeting_row.value.meeting_name }}
                                     </a>
