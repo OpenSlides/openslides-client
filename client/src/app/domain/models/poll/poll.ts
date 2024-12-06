@@ -52,6 +52,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public global_no!: boolean;
     public global_abstain!: boolean;
     public entitled_users_at_stop!: EntitledUsersEntry[];
+    public is_pseudoanonymized!: boolean;
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -154,6 +155,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         `title`,
         `type`,
         `backend`,
+        `is_pseudoanonymized`,
         `pollmethod`,
         `state`,
         `min_votes_amount`,
