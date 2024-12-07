@@ -1613,6 +1613,58 @@ export class MotionDiffService {
                 `</ins>`
         );
 
+        // <del>with a </del><ins>a <STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+        // <del>unformatted word</del><ins><STRONG>formatted word</STRONG></ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<]*)<\/del><ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/ins>([^<]*)<ins><\/\2><\/ins>/gi,
+            (
+                _whole: string,
+                delContent: string,
+                inlineTag: string,
+                tagAttributes: string,
+                insContent: string,
+                unchangedContent: string
+            ): string =>
+                `<del>` +
+                delContent +
+                unchangedContent +
+                `</del><ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                insContent +
+                unchangedContent +
+                `</` +
+                inlineTag +
+                `></ins>`
+        );
+
+        // <ins><STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+        // <del>unformatted word</del><ins><STRONG>unformatted sentence</STRONG></ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<del>([^<]*)<\/del><ins>([^<]*)<\/\1><\/ins>/gi,
+            (
+                _whole: string,
+                inlineTag: string,
+                tagAttributes: string,
+                unchangedContent: string,
+                delContent: string,
+                insContent: string
+            ): string =>
+                `<del>` +
+                unchangedContent +
+                delContent +
+                `</del><ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                unchangedContent +
+                insContent +
+                `</` +
+                inlineTag +
+                `></ins>`
+        );
+
         // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
         // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>
         diffUnnormalized = diffUnnormalized.replace(
