@@ -37,7 +37,7 @@
         <!-- Content -->
         <div *osScrollingTableCell="'structureLevel'; row as object" class="ellipsis-overflow">
             <div *osScrollingTableCellLabel>{{ 'Structure level' | translate }}</div>
-            {{ object.structureLevel | translate }}
+            {{ object.name }}
         </div>
         <div *osScrollingTableCell="'durationOfWordRequests'; row as object; config: { width: '100px' }">
             <div *osScrollingTableCellLabel>{{ 'Duration of requests to speak' | translate }}</div>
