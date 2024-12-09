@@ -63,38 +63,38 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
      * @returns A list, which entries are `SpeakingTimeStructureLevelObject`.
      */
     public getSpeakingTimeStructureLevelRelation(): SpeakingTimeStructureLevelObject[] {
-        const map_for_aggregation = new Map<Id, SpeakingTimeStructureLevelObject>();
+        const mapForAggregation = new Map<Id, SpeakingTimeStructureLevelObject>();
         const parliamentMode = this.meetingSettings.instant(`list_of_speakers_default_structure_level_time`);
         for (const los of this.getViewModelList()) {
             for (const speaker of los.finishedSpeakers) {
                 if (!!parliamentMode) {
                     const structureLevelOrNull = speaker.structure_level_list_of_speakers?.structure_level;
-                    this.putIntoMapForAggregation(structureLevelOrNull, speaker, map_for_aggregation);
+                    this.putIntoMapForAggregation(structureLevelOrNull, speaker, mapForAggregation);
                 } else {
                     for (const structureLevel of speaker.user.structure_levels()) {
-                        this.putIntoMapForAggregation(structureLevel, speaker, map_for_aggregation);
+                        this.putIntoMapForAggregation(structureLevel, speaker, mapForAggregation);
                     }
                 }
             }
         }
-        return Array.from(map_for_aggregation.values());
+        return Array.from(mapForAggregation.values());
     }
 
     private putIntoMapForAggregation(
         structureLevel: ViewStructureLevel | null,
         speaker: ViewSpeaker,
-        map_for_aggregation: Map<Id, SpeakingTimeStructureLevelObject>
+        mapForAggregation: Map<Id, SpeakingTimeStructureLevelObject>
     ): void {
         let structureLevelId = -1;
         if (!!structureLevel) {
             structureLevelId = structureLevel.id;
         }
-        if (map_for_aggregation.has(structureLevelId)) {
-            const entry = map_for_aggregation.get(structureLevelId);
+        if (mapForAggregation.has(structureLevelId)) {
+            const entry = mapForAggregation.get(structureLevelId);
             entry.finishedSpeakers.push(speaker);
             entry.speakingTime += this.getSpeakingTimeAsNumber(speaker);
         } else {
-            map_for_aggregation.set(structureLevelId, {
+            mapForAggregation.set(structureLevelId, {
                 finishedSpeakers: [speaker],
                 speakingTime: this.getSpeakingTimeAsNumber(speaker),
                 name: structureLevelId === -1 ? `Without Structure Level` : structureLevel.name
