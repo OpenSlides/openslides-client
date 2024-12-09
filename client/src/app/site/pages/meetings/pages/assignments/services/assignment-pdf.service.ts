@@ -200,7 +200,7 @@ export class AssignmentPdfService {
 
                 resultBody.push({
                     table: {
-                        widths: [`3%`, `61%`, `33%`],
+                        widths: [`6%`, `58%`, `33%`],
                         headerRows: 1,
                         body: pollTableBody
                     },
@@ -261,6 +261,7 @@ export class AssignmentPdfService {
                     return true;
                 }
             })
+            .filter((singleResult: VotingResult) => !!singleResult.vote)
             .map((singleResult: VotingResult) => {
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote!));
                 const resultValue = this.parsePollNumber.transform(singleResult.amount!);
