@@ -38,12 +38,15 @@ export class AssignmentPollDetailComponent
         return this.hasPerms() || this.poll.isPublished;
     }
 
+    public displayVoteWeight: boolean;
+
     public constructor(
         pollService: AssignmentPollService,
         private pollDialog: AssignmentPollDialogService,
         pollPdfService: AssignmentPollPdfService
     ) {
         super(pollService, pollPdfService);
+        this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
     }
 
     public openDialog(poll: ViewPoll): void {
