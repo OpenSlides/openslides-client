@@ -112,6 +112,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return null;
     }
 
+    public override get showAllAmendments(): boolean {
+        return this.viewService.currentShowAllAmendmentsState;
+    }
+
     public override set showAllAmendments(is: boolean) {
         this.viewService.showAllAmendmentsStateSubject.next(is);
     }
