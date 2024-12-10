@@ -286,6 +286,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                         id: this._accountId
                     })
                     .resolve();
+                if (this.personalInfoFormValue.is_present) {
+                    this.repo.setPresent(true, { ...payload, id: this._accountId }).resolve();
+                }
             } else {
                 this.repo.create(payload);
             }
