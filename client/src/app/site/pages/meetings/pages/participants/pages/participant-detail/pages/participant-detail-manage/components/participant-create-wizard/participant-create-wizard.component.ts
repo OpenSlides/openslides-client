@@ -67,7 +67,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public get patchFormValueFn(): (controlName: string, user?: ViewUser) => any | null {
         return (controlName, user) => {
             if (controlName === `is_present`) {
-                return user?.isPresentInMeeting ? user.isPresentInMeeting() : true;
+                return user?.isPresentInMeeting ? user.isPresentInMeeting() : false;
             }
             return null;
         };
@@ -286,6 +286,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                         id: this._accountId
                     })
                     .resolve();
+                if (this.personalInfoFormValue.is_present) {
+                    this.repo.setPresent(true, { ...payload, id: this._accountId }).resolve();
+                }
             } else {
                 this.repo.create(payload);
             }
