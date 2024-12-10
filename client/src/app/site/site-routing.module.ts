@@ -8,7 +8,7 @@ import { SiteWrapperComponent } from './modules/site-wrapper/components/site-wra
 const routes: Routes = [
     // { path: `idp`, redirectTo: `/login`, pathMatch: `prefix` },
     {
-        path: `login`,
+        path: `idp`,
         loadChildren: () => import(`./pages/login/login.module`).then(m => m.LoginModule)
     },
     {
