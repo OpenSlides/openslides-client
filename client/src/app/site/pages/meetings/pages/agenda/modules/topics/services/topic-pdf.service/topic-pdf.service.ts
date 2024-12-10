@@ -171,6 +171,7 @@ export class TopicPdfService {
                     return true;
                 }
             })
+            .filter((singleResult: VotingResult) => !!singleResult.vote)
             .map((singleResult: VotingResult) => {
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote!));
                 const resultValue = this.parsePollNumber.transform(singleResult.amount!);
