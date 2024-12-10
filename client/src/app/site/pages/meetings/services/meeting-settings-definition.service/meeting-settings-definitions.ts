@@ -587,7 +587,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_create_enable_additional_submitter_text`,
-                        label: _(`Activate text-based submitter field in motion creation`),
+                        label: _(`Activate submitter extension field in motion create form`),
                         helpText: _(`Requires permission to manage motions`),
                         type: `boolean`
                     }
