@@ -171,12 +171,12 @@ export class TopicPdfService {
                     return true;
                 }
             })
-            .filter((singleResult: VotingResult) => !!singleResult.vote)
             .map((singleResult: VotingResult) => {
-                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote!));
+                const pollKey = this.pollKeyVerbose.transform(singleResult.vote!);
+                const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
                 const resultValue = this.parsePollNumber.transform(singleResult.amount!);
                 const resultInPercent = this.pollPercentBase.transform(singleResult.amount!, poll, votingResult);
-                return `${votingKey}${!!votingKey ? `: ` : ``}${resultValue} ${
+                return `${votingKey}${resultValue} ${
                     singleResult.showPercent && resultInPercent ? resultInPercent : ``
                 }`;
             });
