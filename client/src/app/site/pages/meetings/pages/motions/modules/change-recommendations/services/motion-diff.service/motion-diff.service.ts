@@ -1581,7 +1581,7 @@ export class MotionDiffService {
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
+            /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
             (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del>` +
                 content +
@@ -1598,7 +1598,7 @@ export class MotionDiffService {
 
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
+            /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
             (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del><` +
                 inlineTag +
@@ -1616,7 +1616,7 @@ export class MotionDiffService {
         // <del>with a </del><ins>a <STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
         // <del>unformatted word</del><ins><STRONG>formatted word</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<del>([^<]*)<\/del><ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/ins>([^<]*)<ins><\/\2><\/ins>/gi,
+            /<del>([^<]*)<\/del><ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/ins>([^<]*)<ins><\/\2><\/ins>/gi,
             (
                 _whole: string,
                 delContent: string,
@@ -1642,7 +1642,7 @@ export class MotionDiffService {
         // <ins><STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
         // <del>unformatted word</del><ins><STRONG>unformatted sentence</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<del>([^<]*)<\/del><ins>([^<]*)<\/\1><\/ins>/gi,
+            /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<del>([^<]*)<\/del><ins>([^<]*)<\/\1><\/ins>/gi,
             (
                 _whole: string,
                 inlineTag: string,
@@ -1663,6 +1663,19 @@ export class MotionDiffService {
                 `</` +
                 inlineTag +
                 `></ins>`
+        );
+
+        // <STRONG>Bestätigung<del></STRONG></del><ins> NEU</STRONG> NEU2</ins> -->
+        // <STRONG>Bestätigung<ins> NEU</ins></STRONG><ins> NEU2</ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<\/(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)>)<\/del><ins>([^>]*)<\/\2>([^>]*)<\/ins>/gi,
+            (
+                _whole: string,
+                closingTag: string,
+                closingTagInner: string,
+                insertedText1: string,
+                insertedText2: string
+            ): string => `<ins>` + insertedText1 + `</ins>` + closingTag + `<ins>` + insertedText2 + `</ins>`
         );
 
         // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>

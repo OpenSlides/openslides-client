@@ -1186,6 +1186,18 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (3)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`,
+                    after = `<p>es war ihnen wie eine <strong>Bestätigung NEU</strong> NEU2 ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>es war ihnen wie eine <strong>Bestätigung<ins> NEU</ins></strong> <ins>NEU2 </ins>ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`
+                );
+            }
+        ));
+
         it(`works with multiple inserted paragraphs`, inject([MotionDiffService], (service: MotionDiffService) => {
             const before = `<p>This is the text before</p>`,
                 after = `<p>This is the text before</p>\n<p>This is one added line</p>\n<p>Another added line</p>`;
