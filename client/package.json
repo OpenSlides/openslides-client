@@ -48,6 +48,7 @@
     "@angular/platform-browser-dynamic": "^18.2.13",
     "@angular/router": "^18.2.13",
     "@angular/service-worker": "^18.2.13",
+    "@intevation/tiptap-extension-office-paste": "^0.0.3",
     "@material/typography": "^14.0.0",
     "@ngx-pwa/local-storage": "^18.0.0",
     "@ngx-translate/core": "^16.0.3",
