@@ -1,3 +1,4 @@
+import { _ } from '@ngx-translate/core';
 import { DetailNavigable } from 'src/app/domain/interfaces';
 import {
     PollClassType,
@@ -7,6 +8,7 @@ import {
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
+    PollType,
     PollTypeVerbose,
     VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
@@ -80,7 +82,11 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get typeVerbose(): string {
-        return PollTypeVerbose[this.type];
+        const suffix = ``;
+        if (this.is_pseudoanonymized && this.type === PollType.Named) {
+            return _(`nominal (anonymized)`);
+        }
+        return PollTypeVerbose[this.type] + suffix;
     }
 
     public getContentObjectTitle(): string | null {
