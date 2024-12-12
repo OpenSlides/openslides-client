@@ -87,10 +87,7 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
     public ngOnInit(): void {
         this.subscriptions.push(
             this.operator.permissionsObservable.subscribe(() => {
-                this._change_metadata = this.operator.hasPerms(
-                    Permission.motionCanManageMetadata,
-                    Permission.motionCanManage
-                );
+                this._change_metadata = this.operator.hasPerms(Permission.motionCanManageMetadata);
                 this.cd.markForCheck();
             })
         );
