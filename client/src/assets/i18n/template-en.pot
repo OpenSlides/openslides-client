@@ -1,3 +1,4 @@
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
 msgid ""
 msgstr ""
 "mime-version: 1.0\n"
@@ -149,6 +150,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Activate public access"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Activate submitter extension field in motion create form"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
@@ -1261,6 +1266,10 @@ msgid "Changed version in line"
 msgstr ""
 
 msgid "Changes"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/meeting-settings/pages/meeting-settings-group-list/components/meeting-settings-group-list/meeting-settings-group-list.component.ts
+msgid "Changes of all settings group will be lost!"
 msgstr ""
 
 msgid "Chat"
@@ -2588,9 +2597,6 @@ msgstr ""
 msgid "Import meeting"
 msgstr ""
 
-msgid "Import motions"
-msgstr ""
-
 msgid "Import participants"
 msgstr ""
 
@@ -2781,10 +2787,6 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Is not in archived meetings"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
-msgid "Is not locked out"
 msgstr ""
 
 msgid "Is not present"
@@ -3488,6 +3490,12 @@ msgid "Not locked out"
 msgstr ""
 
 msgid "Note, that the default password will be changed to the new generated one."
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid ""
+"Note: The public access setting is deactivated for the organization. Please "
+"contact your admins or hosting providers to activate the setting."
 msgstr ""
 
 msgid ""
@@ -4237,6 +4245,10 @@ msgstr ""
 msgid "Requires permission to manage lists of speakers"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Requires permission to manage motions"
+msgstr ""
+
 msgid "Reset"
 msgstr ""
 
@@ -4929,12 +4941,6 @@ msgid "The fields are defined as follows"
 msgstr ""
 
 msgid "The file has too few columns to be parsed properly."
-msgstr ""
-
-msgid "The file seems to have additional columns. They will be ignored."
-msgstr ""
-
-msgid "The file seems to have some ommitted columns. They will be considered empty."
 msgstr ""
 
 msgid ""
