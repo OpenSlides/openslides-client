@@ -1613,6 +1613,32 @@ export class MotionDiffService {
                 `</ins>`
         );
 
+        // <del><STRONG>Körper</del><ins>alten <STRONG>Körpergehülle</ins></STRONG> => <ins>alten </ins><STRONG><del>Körper</del><ins>Körpergehülle</ins></STRONG>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/del><ins>([^<]*)<\1>([^<]*)<\/ins><\/\1>/gi,
+            (
+                _whole: string,
+                inlineTag: string,
+                tagAttributes: string,
+                delContent: string,
+                insContent1: string,
+                insContent2: string
+            ): string =>
+                `<ins>` +
+                insContent1 +
+                `</ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `><del>` +
+                delContent +
+                `</del>` +
+                `<ins>` +
+                insContent2 +
+                `</ins></` +
+                inlineTag +
+                `>`
+        );
+
         // <del>with a </del><ins>a <STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
         // <del>unformatted word</del><ins><STRONG>formatted word</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
