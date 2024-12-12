@@ -261,7 +261,6 @@ export class AssignmentPdfService {
                     return true;
                 }
             })
-            .filter((singleResult: VotingResult) => !!singleResult.vote)
             .map((singleResult: VotingResult) => {
                 const pollKey = this.pollKeyVerbose.transform(singleResult.vote!);
                 const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
