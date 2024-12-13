@@ -1198,7 +1198,7 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
-        it(`does not fall back to block level replacement when replacement and tag insertion overlap (3)`, inject(
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (4)`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen <strong>Körper</strong> dehnte.</p>`,
