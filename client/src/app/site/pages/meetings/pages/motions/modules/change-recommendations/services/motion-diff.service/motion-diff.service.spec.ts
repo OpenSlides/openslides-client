@@ -1006,7 +1006,7 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
-        it(`does not break when an insertion followes a beginning tag occuring twice`, inject(
+        it(`does not break when an insertion follows a beginning tag occurring twice`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>\n<p>Test</p>`,
@@ -1158,6 +1158,30 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del><strong>word</strong></del><ins>word</ins> that is formatted</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (1)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>This is a text with a unformatted word and some more text</p>`,
+                    after = `<p>This is a text with a <strong>formatted word</strong> and some more text</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>This is a text with a <del>unformatted word</del><ins><strong>formatted word</strong></ins> and some more text</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (2)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>This is a text with a unformatted word and some more text</p>`,
+                    after = `<p>This is a text with a <strong>unformatted sentence</strong> and some more text</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>This is a text with a <del>unformatted word</del><ins><strong>unformatted sentence</strong></ins> and some more text</p>`
                 );
             }
         ));

@@ -98,7 +98,12 @@
                     </div>
                 }
                 @if (!canSeeSensitiveData && showVoteWeight) {
-                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                        @if (user.hasVoteRightFromOthers()) {
+                            + {{ sumOfDelegatedVoteWeight(user) }} {{ 'from delegated votes' | translate }}
+                        }
+                    </div>
                 }
             </div>
             <div class="icon-group">
