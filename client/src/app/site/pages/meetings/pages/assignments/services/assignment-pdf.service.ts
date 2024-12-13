@@ -200,7 +200,7 @@ export class AssignmentPdfService {
 
                 resultBody.push({
                     table: {
-                        widths: [`3%`, `61%`, `33%`],
+                        widths: [`6%`, `58%`, `33%`],
                         headerRows: 1,
                         body: pollTableBody
                     },
