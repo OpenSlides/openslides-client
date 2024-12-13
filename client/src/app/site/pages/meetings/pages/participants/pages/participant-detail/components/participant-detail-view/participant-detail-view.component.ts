@@ -279,7 +279,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             this.repo.getViewModelObservable(this._userId!).subscribe(user => {
                 if (user) {
                     const title = user.getTitle();
-                    super.setTitle(title);
+                    super.setTitle(title, true);
                     this.user = user;
                     this.cd.markForCheck();
                 }
