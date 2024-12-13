@@ -34,6 +34,7 @@ type ParticipationTableMeetingDataRow = {
     is_public: boolean;
     is_closed: boolean;
     is_archieved: boolean;
+    is_accessible: boolean;
 };
 
 @Component({
@@ -249,7 +250,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                     .sort((a, b) => a.localeCompare(b)),
                 is_archieved: meeting.isArchived,
                 is_closed: meeting.locked_from_inside,
-                is_public: meeting.publicAccessPossible()
+                is_public: meeting.publicAccessPossible(),
+                is_accessible: meeting.canAccess() && this.operator.isInMeeting(meeting.id)
             };
         });
         this._tableData = tableData;
