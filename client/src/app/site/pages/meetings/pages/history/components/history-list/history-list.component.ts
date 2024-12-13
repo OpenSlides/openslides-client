@@ -8,7 +8,6 @@ import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
-import { SearchDeletedModelsPresenterService } from 'src/app/gateways/presenter/search-deleted-models-presenter.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
@@ -99,7 +98,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private formBuilder: UntypedFormBuilder,
         private activatedRoute: ActivatedRoute,
         private historyPresenter: HistoryPresenterService,
-        private searchDeletedModelsPresenter: SearchDeletedModelsPresenterService,
         private operator: OperatorService,
         private motionRepo: MotionRepositoryService,
         private assignmentRepo: AssignmentRepositoryService,
@@ -313,19 +311,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      */
     public applySearch(keyTarget: EventTarget): void {
         this.dataSource.filter = (<HTMLInputElement>keyTarget).value;
-    }
-
-    public async searchDeletedMotions(filter: string): Promise<void> {
-        const result = await this.searchDeletedModelsPresenter.call({
-            collection: this.currentCollection,
-            filter_string: filter,
-            meeting_id: this.activeMeeting.id
-        });
-        Object.values(result).forEach(model => {
-            model.getTitle = (): string => this.modelsRepoMap[this.currentCollection].getTitle(model);
-            model.getListTitle = (): string => this.modelsRepoMap[this.currentCollection].getListTitle(model);
-        });
-        this.models = Object.values(result);
     }
 
     public resetListValues(event: boolean): void {

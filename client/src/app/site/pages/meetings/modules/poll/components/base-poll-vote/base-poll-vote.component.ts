@@ -17,6 +17,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
@@ -72,6 +73,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public get isUserPresent(): boolean {
         return this.user?.isPresentInMeeting();
+    }
+
+    public get isMobile(): boolean {
+        return this.viewport.isMobile;
     }
 
     public PollPropertyVerbose = PollPropertyVerbose;
@@ -147,6 +152,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected cd = inject(ChangeDetectorRef);
     private pollRepo = inject(PollControllerService);
     private operator = inject(OperatorService);
+    private viewport = inject(ViewPortService);
     private votedSubscription: Subscription;
     private votedSubscriptionPollId: Id;
 
@@ -184,6 +190,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {
                     this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                 }
+            }),
+            this.viewport.isMobileSubject.subscribe(() => {
+                this.cd.markForCheck();
             })
         );
     }
