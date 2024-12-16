@@ -145,7 +145,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (!isLockedFromInside) {
+        @if (canEditMeetingSettings()) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
@@ -167,10 +167,12 @@
                 <span>{{ 'Export' | translate }}</span>
             </button>
         }
-        <mat-divider></mat-divider>
-        <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+        @if (canEditMeetingSettings()) {
+            <mat-divider></mat-divider>
+            <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>

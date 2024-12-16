@@ -64,6 +64,13 @@ export class CommitteeMeetingPreviewComponent {
         return this.meeting?.locked_from_inside;
     }
 
+    public canEditMeetingSettings(): boolean {
+        if (this.isLockedFromInside && !this.operator.isSuperAdmin) {
+            return this.meeting.canEditMeetingSettings(this.operator.user);
+        }
+        return true;
+    }
+
     public constructor(
         private translate: TranslateService,
         private meetingRepo: MeetingControllerService,
