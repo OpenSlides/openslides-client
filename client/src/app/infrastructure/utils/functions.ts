@@ -1,4 +1,6 @@
 import { Identifiable } from 'src/app/domain/interfaces';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { Decimal, Id } from '../../domain/definitions/key-types';
 
@@ -520,4 +522,22 @@ export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: 
         }
     }
     return -1;
+}
+
+export function viewModelListEqual<M extends BaseModel>(l1: BaseViewModel<M>[], l2: BaseViewModel<M>[]): boolean {
+    if (l1?.length !== l2?.length) {
+        return false;
+    }
+
+    for (let i = 0; i < l1.length; i++) {
+        if (l1[i].viewModelUpdateTimestamp !== l2[i].viewModelUpdateTimestamp) {
+            return false;
+        }
+
+        if (l1[i].id !== l2[i].id) {
+            return false;
+        }
+    }
+
+    return true;
 }

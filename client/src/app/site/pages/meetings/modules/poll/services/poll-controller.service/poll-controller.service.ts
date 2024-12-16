@@ -10,6 +10,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({ providedIn: `root` })
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
@@ -22,12 +23,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
 
         this.getViewModelListObservableOfStarted()
             .pipe(
-                distinctUntilChanged((previous, current) => {
-                    const prevStarted = previous.map(p => p.id);
-                    const currStarted = current.map(p => p.id);
-
-                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
-                }),
+                distinctUntilChanged(viewModelListEqual),
                 map(value => value.map(p => p.id))
             )
             .subscribe(startedPolls => {

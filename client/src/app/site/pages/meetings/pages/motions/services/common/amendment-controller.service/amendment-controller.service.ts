@@ -8,6 +8,7 @@ import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../motion-controller.service';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`
@@ -43,13 +44,7 @@ export class AmendmentControllerService {
     public getViewModelListObservableFor(motion: Identifiable): Observable<ViewMotion[]> {
         return this.getViewModelListObservable().pipe(
             map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id)),
-            distinctUntilChanged(
-                (prev, curr) =>
-                    prev?.length === curr?.length &&
-                    Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
-                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp)) &&
-                    prev?.map(e => e.state_id).equals(curr?.map(e => e.state_id))
-            )
+            distinctUntilChanged(viewModelListEqual)
         );
     }
 

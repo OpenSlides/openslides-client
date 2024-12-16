@@ -13,6 +13,7 @@ import { ViewMotion } from '../../../../view-models';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`
@@ -48,12 +49,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     public getChangeRecosOfMotionObservable(motionId: Id): Observable<ViewMotionChangeRecommendation[]> {
         return this.getViewModelListObservable().pipe(
             map((recos: ViewMotionChangeRecommendation[]) => recos.filter(reco => reco.motion_id === motionId)),
-            distinctUntilChanged(
-                (prev, curr) =>
-                    prev?.length === curr?.length &&
-                    Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
-                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp))
-            )
+            distinctUntilChanged(viewModelListEqual)
         );
     }
 
