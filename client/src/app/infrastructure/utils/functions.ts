@@ -530,14 +530,18 @@ export function viewModelListEqual<M extends BaseModel>(l1: BaseViewModel<M>[], 
     }
 
     for (let i = 0; i < l1.length; i++) {
-        if (l1[i].viewModelUpdateTimestamp !== l2[i].viewModelUpdateTimestamp) {
-            return false;
-        }
-
-        if (l1[i].id !== l2[i].id) {
+        if (!viewModelEqual(l1[i], l2[i])) {
             return false;
         }
     }
 
     return true;
+}
+
+export function viewModelEqual<M extends BaseModel>(vm1: BaseViewModel<M>, vm2: BaseViewModel<M>): boolean {
+    if (!vm1 || !vm2) {
+        return false;
+    }
+
+    return vm1.viewModelUpdateTimestamp === vm2.viewModelUpdateTimestamp && vm1.id === vm2.id;
 }

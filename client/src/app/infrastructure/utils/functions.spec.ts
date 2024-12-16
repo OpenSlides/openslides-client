@@ -25,7 +25,8 @@ import {
     stripHtmlTags,
     toBase64,
     toBoolean,
-    toDecimal
+    toDecimal,
+    viewModelListEqual
 } from './functions';
 import { copy } from './transform-functions';
 
@@ -754,6 +755,69 @@ describe(`utils: functions`, () => {
 
         it(`finds first among many`, () => {
             expect(findIndexInSortedArray([1, 1, 1, 1, 1, 1, 1], 1, (a, b) => a - b)).toBe(0);
+        });
+    });
+
+    describe(`viewModelListEqual`, () => {
+        const els: any[] = [
+            { viewModelUpdateTimestamp: 1234, id: 1 },
+            { viewModelUpdateTimestamp: 1235, id: 1 },
+            { viewModelUpdateTimestamp: 1234, id: 2 },
+            { viewModelUpdateTimestamp: 1235, id: 2 },
+            { viewModelUpdateTimestamp: 1234, id: 3 }
+        ];
+
+        it(`detects change via id switch`, () => {
+            const l1 = [els[0], els[2]];
+            const l2 = [els[0], els[4]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects change via change date switch`, () => {
+            const l1 = [els[0], els[2]];
+            const l2 = [els[0], els[3]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects change via size change`, () => {
+            const l1 = [els[0], els[2]];
+            const l2 = [els[0]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects equality`, () => {
+            const l1 = [els[0], els[2], els[4]];
+            const l2 = [els[0], els[2], els[4]];
+
+            expect(viewModelListEqual(l1, l2)).toBeTrue();
+        });
+    });
+
+    describe(`viewModelEqual`, () => {
+        const els: any[] = [
+            { viewModelUpdateTimestamp: 1234, id: 1 },
+            { viewModelUpdateTimestamp: 1235, id: 1 },
+            { viewModelUpdateTimestamp: 1234, id: 2 },
+            { viewModelUpdateTimestamp: 1234, id: 1 }
+        ];
+
+        it(`detects change via id switch`, () => {
+            expect(viewModelListEqual(els[0], els[2])).toBeFalse();
+        });
+
+        it(`detects change via change date switch`, () => {
+            expect(viewModelListEqual(els[0], els[1])).toBeFalse();
+        });
+
+        it(`detects change via empty`, () => {
+            expect(viewModelListEqual(els[0], null)).toBeFalse();
+        });
+
+        it(`detects equality`, () => {
+            expect(viewModelListEqual(els[0], els[3])).toBeTrue();
         });
     });
 });
