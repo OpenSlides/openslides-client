@@ -345,9 +345,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 this.tapViewModels(Object.values(this.viewModelStore));
                 if (changedModels) {
                     await this.initChangeBasedResorting(newModels, updatedModels, newViewModels, updatedViewModels);
-                    for (const viewModel of updatedViewModels) {
-                        viewModel.viewModelUpdateTimestamp = Date.now();
-                    }
                 }
             },
             type: PipelineActionType.General,
