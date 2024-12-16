@@ -26,6 +26,7 @@ import {
     toBase64,
     toBoolean,
     toDecimal,
+    viewModelEqual,
     viewModelListEqual
 } from './functions';
 import { copy } from './transform-functions';
@@ -805,19 +806,19 @@ describe(`utils: functions`, () => {
         ];
 
         it(`detects change via id switch`, () => {
-            expect(viewModelListEqual(els[0], els[2])).toBeFalse();
+            expect(viewModelEqual(els[0], els[2])).toBeFalse();
         });
 
         it(`detects change via change date switch`, () => {
-            expect(viewModelListEqual(els[0], els[1])).toBeFalse();
+            expect(viewModelEqual(els[0], els[1])).toBeFalse();
         });
 
         it(`detects change via empty`, () => {
-            expect(viewModelListEqual(els[0], null)).toBeFalse();
+            expect(viewModelEqual(els[0], null)).toBeFalse();
         });
 
         it(`detects equality`, () => {
-            expect(viewModelListEqual(els[0], els[3])).toBeTrue();
+            expect(viewModelEqual(els[0], els[3])).toBeTrue();
         });
     });
 });
