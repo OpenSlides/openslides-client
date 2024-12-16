@@ -111,7 +111,7 @@
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.5",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@types/pdfmake": "^0.2.10",
     "@types/qrcode": "^1.5.5",
     "@types/tinycolor2": "^1.4.6",
