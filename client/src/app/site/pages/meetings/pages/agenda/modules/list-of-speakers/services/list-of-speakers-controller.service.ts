@@ -74,6 +74,9 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
                     for (const structureLevel of speaker.user?.structure_levels() ?? []) {
                         this.putIntoMapForAggregation(structureLevel, speaker, mapForAggregation);
                     }
+                    if (!(speaker.user?.structure_levels() ?? []).length) {
+                        this.putIntoMapForAggregation(null, speaker, mapForAggregation);
+                    }
                 }
             }
         }

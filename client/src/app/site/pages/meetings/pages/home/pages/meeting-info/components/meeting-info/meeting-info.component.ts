@@ -70,7 +70,13 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
                                     follow: [
                                         {
                                             idField: `meeting_user_id`,
-                                            fieldset: [`user_id`]
+                                            fieldset: [`user_id`],
+                                            follow: [
+                                                {
+                                                    idField: `structure_level_ids`,
+                                                    fieldset: [`name`]
+                                                }
+                                            ]
                                         },
                                         {
                                             idField: `structure_level_list_of_speakers_id`,
