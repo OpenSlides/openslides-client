@@ -6,11 +6,11 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({ providedIn: `root` })
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {

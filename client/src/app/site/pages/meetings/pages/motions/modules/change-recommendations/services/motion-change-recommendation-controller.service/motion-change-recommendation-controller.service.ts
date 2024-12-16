@@ -5,6 +5,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
@@ -13,7 +14,6 @@ import { ViewMotion } from '../../../../view-models';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`

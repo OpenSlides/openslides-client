@@ -5,10 +5,10 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../motion-controller.service';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`
