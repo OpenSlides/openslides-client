@@ -231,7 +231,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public onMotionUpdated(motion: ViewMotion): void {
         const title = motion.getTitle();
-        super.setTitle(title);
+        super.setTitle(title, true);
         this.motion = motion;
         this.cd.markForCheck();
     }
