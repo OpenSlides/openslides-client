@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
@@ -58,7 +59,6 @@ import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
-import { MSOfficePaste } from './extensions/office';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -163,7 +163,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         const editorConfig = {
             element: this.editorEl.nativeElement,
             extensions: [
-                MSOfficePaste,
+                OfficePaste,
                 ClearTextcolorPaste,
                 // Nodes
                 Document,
