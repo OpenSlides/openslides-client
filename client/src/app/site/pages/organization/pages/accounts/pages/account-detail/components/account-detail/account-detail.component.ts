@@ -256,7 +256,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && this.operator.isSuperAdmin)
+                    (!meeting.locked_from_inside && this.operator.canSkipPermissionCheck)
             };
         });
         this._tableData = tableData;
