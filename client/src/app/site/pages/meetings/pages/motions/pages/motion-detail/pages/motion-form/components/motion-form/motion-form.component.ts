@@ -109,6 +109,10 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         return this.perms.canManageAgenda();
     }
 
+    public get canSeeUsers(): boolean {
+        return this.operator.hasPerms(Permission.userCanSee);
+    }
+
     public get isParagraphBasedAmendment(): boolean {
         return this.isExisting && this.motion.isParagraphBasedAmendment();
     }
