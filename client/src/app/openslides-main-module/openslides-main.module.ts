@@ -1,13 +1,15 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
 
+import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
+import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
 import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
 import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
@@ -33,7 +35,6 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         BrowserModule,
         OpenSlidesMainRoutingModule,
         BrowserAnimationsModule,
-        OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production,
@@ -46,7 +47,14 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         WaitForActionDialogService,
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
         httpInterceptorProviders,
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService({
+            loader: {
+                provide: TranslateLoader,
+                useClass: PruningTranslationLoader,
+                deps: [CustomTranslationService, HttpClient]
+            }
+        })
     ]
 })
 export class OpenSlidesMainModule {}
