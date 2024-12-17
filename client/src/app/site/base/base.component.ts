@@ -93,9 +93,12 @@ export abstract class BaseComponent extends BaseUiComponent implements OnDestroy
      * Set the title in web browser using angulars TitleService
      * @param prefix The title prefix. Should be translated here.
      */
-    public setTitle(prefix: string): void {
-        const translatedPrefix = this.translate.instant(prefix);
-        this.titleService.setTitle(translatedPrefix + this.titleSuffix);
+    public setTitle(prefix: string, nonTranslate?: boolean): void {
+        let titlePrefix = prefix;
+        if (!nonTranslate) {
+            titlePrefix = this.translate.instant(prefix);
+        }
+        this.titleService.setTitle(titlePrefix + this.titleSuffix);
     }
 
     /**
