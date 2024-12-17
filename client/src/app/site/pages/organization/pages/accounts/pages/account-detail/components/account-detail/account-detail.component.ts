@@ -28,7 +28,14 @@ type ParticipationTableDataRow = {
     is_manager?: boolean;
     meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
 };
-type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: string[] };
+type ParticipationTableMeetingDataRow = {
+    meeting_name: string;
+    group_names: string[];
+    is_public: boolean;
+    is_closed: boolean;
+    is_archieved: boolean;
+    is_accessible: boolean;
+};
 
 @Component({
     selector: `os-account-detail`,
@@ -243,7 +250,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 group_names: this.user
                     .groups(meeting.id)
                     .map(group => group.getTitle())
-                    .sort((a, b) => a.localeCompare(b))
+                    .sort((a, b) => a.localeCompare(b)),
+                is_archieved: meeting.isArchived,
+                is_closed: meeting.locked_from_inside,
+                is_public: meeting.publicAccessPossible(),
+                is_accessible:
+                    (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
+                    (!meeting.locked_from_inside && this.operator.isSuperAdmin)
             };
         });
         this._tableData = tableData;
