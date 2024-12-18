@@ -318,6 +318,7 @@
                                             [formControl]="getFormControl(option.id)"
                                             max="{{ poll.max_votes_per_option }}"
                                             (change)="saveMultipleVotes(option.id, $event, delegation)"
+                                            (keyup)="saveMultipleVotes(option.id, $event, delegation)"
                                         />
                                         <mat-error>
                                             {{ getErrorInVoteEntry(option.id) }}
