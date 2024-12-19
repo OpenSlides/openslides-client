@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-export function isNumberRange(minCtrlName: string, maxCtrlName: string, errorName: string): ValidatorFn {
+export function isNumberRange(minCtrlName: string, maxCtrlName: string, errorName: string = `rangeError`): ValidatorFn {
     return (formControl: AbstractControl): { [key: string]: any } | null => {
         const min = formControl.get(minCtrlName)!.value;
         const max = formControl.get(maxCtrlName)!.value;

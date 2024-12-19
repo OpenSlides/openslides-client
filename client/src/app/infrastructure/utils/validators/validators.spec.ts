@@ -5,7 +5,7 @@ import { isUniqueAmong } from './is-unique-among';
 
 describe(`utils: validators`, () => {
     describe(`isNumberRange function`, () => {
-        const validatorFn = isNumberRange(`min`, `max`, `errorName`);
+        const validatorFn = isNumberRange(`min`, `max`);
         it(`test with correct values`, () => {
             const group = new UntypedFormGroup(
                 {
