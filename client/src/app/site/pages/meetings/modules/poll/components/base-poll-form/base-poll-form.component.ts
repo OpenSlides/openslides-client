@@ -474,7 +474,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             {
                 validators: [
                     isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
+                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
                 ]
             }
         );
