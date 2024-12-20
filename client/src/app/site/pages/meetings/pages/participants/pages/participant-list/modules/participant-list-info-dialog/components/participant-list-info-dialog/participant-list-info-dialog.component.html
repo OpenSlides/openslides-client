@@ -4,7 +4,7 @@
 <mat-dialog-content class="os-form-card-mobile">
     <mat-form-field>
         <mat-label>{{ 'Groups' | translate }}</mat-label>
-        <mat-select multiple [(ngModel)]="infoDialog.group_ids">
+        <mat-select multiple [disabled]="canOnlyEditOwnDelegation" [(ngModel)]="infoDialog.group_ids">
             @for (group of groupsObservable | async; track group) {
                 <mat-option [value]="group.id">
                     {{ group.getTitle() }}
@@ -38,6 +38,7 @@
     <mat-form-field>
         <mat-label>{{ 'Structure level' | translate }}</mat-label>
         <os-list-search-selector
+            [disabled]="canOnlyEditOwnDelegation"
             [includeNone]="true"
             [inputListValues]="structureLevelObservable"
             [multiple]="true"
@@ -46,7 +47,7 @@
     </mat-form-field>
     <mat-form-field>
         <mat-label>{{ 'Participant number' | translate }}</mat-label>
-        <input matInput type="text" [(ngModel)]="infoDialog.number" />
+        <input matInput type="text" [disabled]="canOnlyEditOwnDelegation" [(ngModel)]="infoDialog.number" />
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>

@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
@@ -8,6 +9,7 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
@@ -35,6 +37,14 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._voteDelegationEnabled;
     }
 
+    public get canOnlyEditOwnDelegation(): boolean {
+        return (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        );
+    }
+
     public structureLevelObservable: Observable<ViewStructureLevel[]>;
 
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
@@ -47,7 +57,8 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         private userSortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private structureLevelRepo: StructureLevelControllerService,
-        private meetingSettings: MeetingSettingsService
+        private meetingSettings: MeetingSettingsService,
+        private operator: OperatorService
     ) {
         super();
     }
