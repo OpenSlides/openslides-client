@@ -42,7 +42,7 @@ interface DifferedViewArguments extends Arguments {
      * The first line affected for a motion or a unified change
      */
     firstLine: number;
-    showAllChanges: boolean;
+    showAllChanges?: boolean;
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -100,8 +100,7 @@ export class MotionFormatService {
 
         return fn(targetMotion, {
             ...args,
-            firstLine: args.firstLine || targetMotion.start_line_number,
-            showAllChanges: args.showAllChanges
+            firstLine: args.firstLine || targetMotion.start_line_number
         });
     }
 
@@ -224,7 +223,7 @@ export class MotionFormatService {
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine, firstLine, showAllChanges }: DifferedViewArguments = args;
         const text: string[] = [];
-        const changesToShow = changes.filter(change => change.showInDiffView() || showAllChanges);
+        const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
