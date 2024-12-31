@@ -220,6 +220,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.UPDATE, updatePayload);
     }
 
+    public updateSelfDelegation(patch: UserPatchFn, user: ViewUser): Promise<void> {
+        const update = typeof patch === `function` ? patch(user) : patch;
+        const payload: any = {
+            username: update.username,
+            vote_delegated_to_id: update.vote_delegated_to_id,
+            meeting_id: update.meeting_id ?? this.meetingUserRepo.getActiveMeetingId()
+        };
+        return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
+    }
+
     public updateSelf(patch: UserPatchFn, user: ViewUser): Promise<void> {
         const update = typeof patch === `function` ? patch(user) : patch;
         const payload: any = {

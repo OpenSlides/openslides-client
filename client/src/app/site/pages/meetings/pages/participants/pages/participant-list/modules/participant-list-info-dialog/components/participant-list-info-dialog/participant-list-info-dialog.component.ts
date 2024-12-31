@@ -16,6 +16,7 @@ import { StructureLevelControllerService } from '../../../../../structure-levels
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 @Component({
     selector: `os-participant-list-info-dialog`,
@@ -86,5 +87,15 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public override ngOnDestroy(): void {
         this.userSortService.exitSortService();
         super.ngOnDestroy();
+    }
+
+    public getDisableOptionFn(vote_delegations: number[]): (value: Selectable) => boolean {
+        if (this.canOnlyEditOwnDelegation) {
+            return value => {
+                return vote_delegations ? !vote_delegations.some(x => x === value.id) : true;
+            };
+        } else {
+            return value => false;
+        }
     }
 }

@@ -371,7 +371,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     ) ||
                     (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
                 ) {
-                    this.repo.update(result, user).resolve();
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.repo.updateSelfDelegation(result, user);
+                    } else {
+                        this.repo.update(result, user).resolve();
+                    }
                 }
             }
         });

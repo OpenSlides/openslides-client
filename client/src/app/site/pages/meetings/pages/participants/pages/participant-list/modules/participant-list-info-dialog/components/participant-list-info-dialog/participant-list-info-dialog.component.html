@@ -16,14 +16,14 @@
         <mat-form-field>
             <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
             <os-list-search-selector
+                [disableOptionWhenFn]="getDisableOptionFn(infoDialog.vote_delegations_from_ids)"
                 [inputListValues]="otherParticipantsObservable"
                 [multiple]="true"
                 [sortFn]="false"
                 [(ngModel)]="infoDialog.vote_delegations_from_ids"
             ></os-list-search-selector>
         </mat-form-field>
-    }
-    @if (showVoteDelegations) {
+
         <mat-form-field>
             <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
             <os-list-search-selector
