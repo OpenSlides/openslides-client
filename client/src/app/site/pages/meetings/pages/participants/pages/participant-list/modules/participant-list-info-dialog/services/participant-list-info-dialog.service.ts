@@ -37,6 +37,11 @@ export interface InfoDialog {
     /**
      * Transfer voting rights from
      */
+    previous_vote_delegations_from_ids: number[];
+
+    /**
+     * Transfer voting rights from
+     */
     vote_delegations_from_ids: number[];
 
     /**

@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
@@ -16,7 +17,6 @@ import { StructureLevelControllerService } from '../../../../../structure-levels
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 @Component({
     selector: `os-participant-list-info-dialog`,
@@ -95,7 +95,13 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
                 return vote_delegations ? !vote_delegations.some(x => x === value.id) : true;
             };
         } else {
-            return value => false;
+            return _ => false;
+        }
+    }
+
+    public selectionHasChanged(data: any): void {
+        if (this.canOnlyEditOwnDelegation) {
+            this.infoDialog.previous_vote_delegations_from_ids.push(data.value.id);
         }
     }
 }

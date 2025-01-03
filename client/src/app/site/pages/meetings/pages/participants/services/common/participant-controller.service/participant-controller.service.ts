@@ -177,13 +177,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     public updateSelfDelegation(patch: ExtendedUserPatchFn, user: ViewUser): Promise<void> {
-        if (typeof patch === `function`) {
-            const updatePatch = (user: ViewUser): any => {
-                const participantPayload = patch(user);
-                return this.validatePayload(participantPayload);
-            };
-            return this.repo.updateSelfDelegation(updatePatch, user);
-        }
         return this.repo.updateSelfDelegation(this.validatePayload(patch as Partial<ViewUser>), user);
     }
 
