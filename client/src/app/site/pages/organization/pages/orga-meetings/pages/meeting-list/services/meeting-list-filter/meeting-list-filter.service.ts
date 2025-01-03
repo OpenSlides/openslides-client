@@ -38,6 +38,17 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
     protected getFilterDefinitions(): OsFilter<ViewMeeting>[] {
         let filters: OsFilter<ViewMeeting>[] = [
             {
+                property: `getStatus`,
+                label: _(`Status`),
+                options: [
+                    { label: _(`Is archived`), condition: `isArchived` },
+                    { label: _(`Is not archived`), condition: `isNotArchived` },
+                    { label: _(`Is public`), condition: `isAnonymous` },
+                    { label: _(`Is not public`), condition: `isNotAnonymous` },
+                    { label: _(`Is closed`), condition: `IsClosed` }
+                ]
+            },
+            {
                 property: `isArchived`,
                 label: _(`Archived`),
                 options: [
