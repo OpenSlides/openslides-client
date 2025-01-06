@@ -1347,7 +1347,7 @@ export class MotionDiffService {
                 htmlOldEl.content.querySelector(`.os-line-number`)
             ) {
                 const ln = htmlNewEl.content.querySelector(`.os-line-number`);
-                htmlNewEl.content.children[0].childNodes[0].before(ln);
+                htmlNewEl.content.children[0].before(ln);
                 htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;
