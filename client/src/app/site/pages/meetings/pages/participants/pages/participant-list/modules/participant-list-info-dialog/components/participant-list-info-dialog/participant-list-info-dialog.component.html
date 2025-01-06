@@ -21,7 +21,6 @@
                 [multiple]="true"
                 [sortFn]="false"
                 [(ngModel)]="infoDialog.vote_delegations_from_ids"
-                (selectionChanged)="selectionHasChanged($event)"
             ></os-list-search-selector>
         </mat-form-field>
 
@@ -59,7 +58,6 @@
         [mat-dialog-close]="{
             group_ids: infoDialog.group_ids,
             vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
-            previous_vote_delegations_from_ids: infoDialog.previous_vote_delegations_from_ids,
             vote_delegated_to_id: infoDialog.vote_delegated_to_id,
             number: infoDialog.number,
             structure_level_ids: infoDialog.structure_level_ids

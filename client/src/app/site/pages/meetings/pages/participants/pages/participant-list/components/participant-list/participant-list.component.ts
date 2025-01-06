@@ -29,7 +29,7 @@ import { ParticipantPdfExportService } from '../../../../export/participant-pdf-
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
-import { InfoDialog, ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
+import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
 import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
@@ -352,7 +352,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             group_ids: user.group_ids(),
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
-            previous_vote_delegations_from_ids: [],
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
@@ -378,15 +377,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         !this.operator.hasPerms(Permission.userCanUpdate) &&
                         user.id === this.operator.operatorId
                     ) {
-                        // Imitate self update from user where the received voting right is taken from
-                        if (result.previous_vote_delegations_from_ids.length > 0) {
-                            result.previous_vote_delegations_from_ids.forEach(element =>
-                                this.repo.updateSelfDelegation(
-                                    this.getRemovalResult(element),
-                                    this.repo.getViewModelByNumber(element.toString())
-                                )
-                            );
-                        }
                         this.repo.updateSelfDelegation(result, user);
                     } else {
                         this.repo.update(result, user).resolve();
@@ -394,13 +384,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 }
             }
         });
-    }
-
-    public getRemovalResult(userId: number): Partial<InfoDialog> {
-        return {
-            id: userId,
-            vote_delegated_to_id: null
-        };
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {

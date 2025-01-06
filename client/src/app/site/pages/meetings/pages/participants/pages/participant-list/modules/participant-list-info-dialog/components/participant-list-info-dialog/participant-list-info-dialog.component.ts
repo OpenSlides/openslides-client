@@ -98,10 +98,4 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
             return _ => false;
         }
     }
-
-    public selectionHasChanged(data: any): void {
-        if (this.canOnlyEditOwnDelegation) {
-            this.infoDialog.previous_vote_delegations_from_ids.push(data.value.id);
-        }
-    }
 }
