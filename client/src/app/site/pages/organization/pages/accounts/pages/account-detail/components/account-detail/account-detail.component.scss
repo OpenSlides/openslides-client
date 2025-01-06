@@ -24,6 +24,15 @@ os-user-detail-view h2 {
     td {
         padding-right: 5px;
         vertical-align: top;
+        .icon {
+            display: inline-table !important;
+            vertical-align: middle;
+            $icon-size: 16px;
+            font-size: $icon-size;
+            height: $icon-size;
+            width: $icon-size;
+            color: inherit;
+        }
     }
 
     .admin-column {

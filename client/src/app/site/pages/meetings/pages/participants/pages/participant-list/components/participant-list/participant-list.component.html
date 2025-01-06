@@ -98,7 +98,12 @@
                     </div>
                 }
                 @if (!canSeeSensitiveData && showVoteWeight) {
-                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                        @if (user.hasVoteRightFromOthers()) {
+                            + {{ sumOfDelegatedVoteWeight(user) }} {{ 'from delegated votes' | translate }}
+                        }
+                    </div>
                 }
             </div>
             <div class="icon-group">
@@ -257,6 +262,11 @@
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit details' | translate }}</span>
+        </button>
+
+        <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="user.id">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit user' | translate }}</span>
         </button>
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
