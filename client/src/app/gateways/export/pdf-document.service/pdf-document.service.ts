@@ -16,7 +16,6 @@ import {
     TableCell,
     TDocumentDefinitions
 } from 'pdfmake/interfaces';
-import { distinctUntilChanged } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
@@ -28,7 +27,6 @@ import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { PdfImagesService } from './pdf-images.service';
-import { resolve } from 'path';
 
 export const PDF_OPTIONS = {
     Toc: `toc`,
