@@ -243,6 +243,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         } else {
             this.contentForm.removeControl(`votes_amount`);
         }
+        if (method === `N`) {
+            this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
+        }
     }
 
     /**
