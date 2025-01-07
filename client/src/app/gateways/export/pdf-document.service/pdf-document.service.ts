@@ -28,6 +28,7 @@ import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { PdfImagesService } from './pdf-images.service';
+import { resolve } from 'path';
 
 export const PDF_OPTIONS = {
     Toc: `toc`,
@@ -309,7 +310,7 @@ export class PdfDocumentService {
      */
     private imageUrls: string[] = [];
 
-    private headerLogos: { [place: string]: HeaderLogos } = {};
+    private headerLogos: { [place: string]: HeaderLogos | null } = {};
 
     private pdfWorker: Worker | null = null;
 
@@ -326,56 +327,43 @@ export class PdfDocumentService {
         private meetingSettingsService: MeetingSettingsService
     ) {
         this.makeSettingsSubscriptions();
-        this.updateHeader([`pdf_header_l`, `pdf_header_r`]).then(() => {
-            this.mediaManageService
-                .getLogoUrlObservable(`pdf_header_l`)
-                .pipe(distinctUntilChanged())
-                .subscribe(_ => this.updateHeader([`pdf_header_l`]));
-            this.mediaManageService
-                .getLogoUrlObservable(`pdf_header_r`)
-                .pipe(distinctUntilChanged())
-                .subscribe(_ => this.updateHeader([`pdf_header_r`]));
-        });
     }
 
     private async updateHeader(places: any): Promise<void> {
-        for (const place of places) {
-            const url = this.mediaManageService.getLogoUrl(place);
-            const downloads = await Promise.all([url].map(url => this.httpService.downloadAsBase64(url)));
-            const svg = downloads.map(image => image.type === `image/svg+xml`)[0];
-            if (svg) {
-                this.svgFileToString(place, url);
-            } else {
-                this.headerLogos[place] = {
-                    place: place,
-                    isSVG: false,
-                    content: url
-                };
-            }
-        }
-    }
+        return new Promise(async resolve => {
+            for (const place of places) {
+                const url = this.mediaManageService.getLogoUrl(place);
+                if (url) {
+                    const downloads = await this.httpService.downloadAsBase64(url);
+                    const svg = downloads.type === `image/svg+xml`;
+                    if (svg) {
+                        const fetchResult = await fetch(url);
+                        const text = await fetchResult.text();
 
-    public async svgFileToString(place: string, url: string): Promise<any> {
-        fetch(url)
-            .catch((error: Error) => {
-                throw new Error(error.message);
-            })
-            .then(response => {
-                return response.text();
-            })
-            .then((text: string) => {
-                if (text.length >= 1) {
-                    const start = text.indexOf(`<svg`);
-                    const restText = text.slice(start + 5);
-                    const viewBox = this.getViewBox(text);
-                    const svgText = [`<svg `, viewBox, restText].join(``);
-                    this.headerLogos[place] = {
-                        place: place,
-                        isSVG: true,
-                        content: svgText
-                    };
+                        if (text.length >= 1) {
+                            const start = text.indexOf(`<svg`);
+                            const restText = text.slice(start + 5);
+                            const viewBox = this.getViewBox(text);
+                            const svgText = [`<svg `, viewBox, restText].join(``);
+                            this.headerLogos[place] = {
+                                place: place,
+                                isSVG: true,
+                                content: svgText
+                            };
+                        }
+                    } else {
+                        this.headerLogos[place] = {
+                            place: place,
+                            isSVG: false,
+                            content: url
+                        };
+                    }
+                } else {
+                    this.headerLogos[place] = null;
                 }
-            });
+            }
+            resolve();
+        });
     }
 
     private getViewBox(text: string): string {
@@ -550,30 +538,32 @@ export class PdfDocumentService {
     /**
      * Downloads a pdf with the standard page definitions.
      */
-    public download({
+    public async download({
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): void {
-        this.showProgress();
-        const imageUrls = this.pdfImagesService.getImageUrls();
-        this.pdfImagesService.clearImageUrls();
-        new PdfCreator({
-            ...config,
-            document: this.getStandardPaper({
+    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
+        await this.updateHeader([`pdf_header_l`, `pdf_header_r`]).then(_ => {
+            this.showProgress();
+            const imageUrls = this.pdfImagesService.getImageUrls();
+            this.pdfImagesService.clearImageUrls();
+            new PdfCreator({
                 ...config,
-                documentContent: docDefinition,
-                pageMargins: config.pageMargins,
-                pageSize: config.pageSize,
-                landscape: false,
-                imageUrls: imageUrls
-            }),
-            filename: `${filetitle}.pdf`,
-            settings: this.settings,
-            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
-            progressService: this.progressService,
-            progressSnackBarService: this.progressSnackBarService
-        }).download();
+                document: this.getStandardPaper({
+                    ...config,
+                    documentContent: docDefinition,
+                    pageMargins: config.pageMargins,
+                    pageSize: config.pageSize,
+                    landscape: false,
+                    imageUrls: imageUrls
+                }),
+                filename: `${filetitle}.pdf`,
+                settings: this.settings,
+                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
+                progressService: this.progressService,
+                progressSnackBarService: this.progressSnackBarService
+            }).download();
+        });
     }
 
     /**
@@ -680,7 +670,7 @@ export class PdfDocumentService {
 
         // add the left logo to the header column
         if (logoHeaderLeft) {
-            if (logoHeaderLeft.isSVG)
+            if (logoHeaderLeft.isSVG) {
                 columns.push(
                     this.getSVG({
                         image: logoHeaderLeft.content,
@@ -688,14 +678,15 @@ export class PdfDocumentService {
                         width: `20%`
                     })
                 );
-        } else {
-            columns.push(
-                this.getImage({
-                    image: logoHeaderLeft.content,
-                    fit: [180, 40],
-                    width: `20%`
-                })
-            );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoHeaderLeft.content,
+                        fit: [180, 40],
+                        width: `20%`
+                    })
+                );
+            }
         }
 
         // Add no heading text if there are logos on the right and left.
