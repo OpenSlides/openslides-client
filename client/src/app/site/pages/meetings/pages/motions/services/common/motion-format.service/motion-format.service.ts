@@ -14,6 +14,7 @@ import {
 import { ViewMotion } from '../../../view-models';
 import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
+import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 
 interface MotionFormatResult {
     origin_id: Id;
@@ -292,8 +293,15 @@ export class MotionFormatService {
             if (current_text.amend_nr === ``) {
                 amendmentNr.push(this.translate.instant(`Amendment`));
             }
+        } else if (current_text.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
+            const amendment = current_text as ViewMotionAmendedParagraph;
+            amendmentNr.push(amendment.getNumber(), ` - `, amendment.stateName);
         } else {
-            amendmentNr.push(this.translate.instant(`Change recommendation`));
+            if (current_text.isRejected()) {
+                amendmentNr.push(this.translate.instant(`Change recommendation - rejected`));
+            } else {
+                amendmentNr.push(this.translate.instant(`Change recommendation`));
+            }
         }
         amendmentNr.push(`: </span></span>`);
         return amendmentNr.join(``);
