@@ -226,7 +226,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 }
             ]
         });
-        if (this.disabled) {
+        if (this.disabled || this.hasWarning()) {
             this.form.disable();
         }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
@@ -278,7 +278,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * Checks if a warning should be given
      *
      */
-    public getWarning(): boolean {
+    public hasWarning(): boolean {
         if (this.setting.warn) {
             return this.setting.warn(this.orgaSettings);
         } else {
