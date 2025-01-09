@@ -198,6 +198,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         this.show1337++;
     }
 
+    protected override cleanSubscriptions(): void {
+        this._langTriggerSubscription.unsubscribe();
+        super.cleanSubscriptions();
+    }
+
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.operator.shortName;
