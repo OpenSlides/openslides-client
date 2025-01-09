@@ -12,9 +12,9 @@ import {
     MotionDiffService
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
+import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
-import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 
 interface MotionFormatResult {
     origin_id: Id;
