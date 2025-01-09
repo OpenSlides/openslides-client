@@ -48,6 +48,7 @@ export class PruningTranslationLoader implements TranslateLoader {
                 this.ctService.customTranslationSubject
             ]).pipe(
                 map(([t, ct]) => {
+                    ct = Object.entries(ct).mapToObject(([key, val]) => ({ [this.t1337(key)]: this.t1337(val) }));
                     if (ct) {
                         for (const k of Object.keys(t)) {
                             t[k] = ct[t[k]] || t[k];
