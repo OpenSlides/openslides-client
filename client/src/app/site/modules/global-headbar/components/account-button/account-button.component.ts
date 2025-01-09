@@ -3,9 +3,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { allAvailableTranslations, availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -33,7 +33,15 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`languageTrigger`, { read: MatMenuTrigger })
     public set languageTrigger(trigger: MatMenuTrigger | undefined) {
         this._languageTrigger = trigger;
+        this._langTriggerSubscription?.unsubscribe();
+        this._langTriggerSubscription = this._languageTrigger?.menuClosed.subscribe(() => {
+            if (this.show1337 < 0) {
+                this.show1337 = -20;
+            }
+        });
     }
+
+    private _langTriggerSubscription: Subscription;
 
     public get isPresent(): boolean {
         return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
@@ -63,6 +71,8 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public username = ``;
     public isLoggedIn = false;
+
+    public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
@@ -110,7 +120,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
      * language should be used.
      */
     public getLanguageName(abbreviation: string): string {
-        return availableTranslations[abbreviation] || `No language`;
+        return allAvailableTranslations[abbreviation] || `No language`;
     }
 
     public selectLanguage(abbreviation: string): void {
@@ -182,6 +192,15 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public getStructureLevel(): string {
         return ``;
+    }
+
+    public onLangIconClick(): void {
+        this.show1337++;
+    }
+
+    protected override cleanSubscriptions(): void {
+        this._langTriggerSubscription.unsubscribe();
+        super.cleanSubscriptions();
     }
 
     private onOperatorUpdate(): void {
