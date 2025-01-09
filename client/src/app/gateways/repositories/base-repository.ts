@@ -3,6 +3,7 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription }
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list';
@@ -30,10 +31,6 @@ export interface CanPerformListUpdates<M extends BaseModel, UpdateResult = any> 
 
 export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<any> {
     return repo.listUpdate && typeof repo.listUpdate === `function`;
-}
-
-export function getIntlCollatorForLang(lang: string): Intl.Collator {
-    return new Intl.Collator(lang === `1337` ? `en` : lang);
 }
 
 enum PipelineActionType {

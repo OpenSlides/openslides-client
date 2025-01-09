@@ -17,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { getIntlCollatorForLang } from 'src/app/gateways/repositories/base-repository';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';

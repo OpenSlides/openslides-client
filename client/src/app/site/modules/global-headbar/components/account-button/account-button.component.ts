@@ -199,7 +199,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     protected override cleanSubscriptions(): void {
-        this._langTriggerSubscription.unsubscribe();
+        this._langTriggerSubscription?.unsubscribe();
         super.cleanSubscriptions();
     }
 
