@@ -8,6 +8,7 @@ import { Locale } from 'date-fns';
  */
 export function langToLocale(lang: string): string {
     switch (lang) {
+        case `1337`:
         case `en`: {
             return `en-GB`;
         }

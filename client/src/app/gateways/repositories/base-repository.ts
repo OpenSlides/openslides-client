@@ -32,6 +32,10 @@ export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<
     return repo.listUpdate && typeof repo.listUpdate === `function`;
 }
 
+export function getIntlCollatorForLang(lang: string): Intl.Collator {
+    return new Intl.Collator(lang === `1337` ? `en` : lang);
+}
+
 enum PipelineActionType {
     General = `general`,
     Resort = `resort`,
@@ -185,7 +189,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
 
-        this.languageCollator = new Intl.Collator(this.translate.currentLang);
+        this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
     }
 
     public onAfterAppsLoaded(): void {
@@ -200,7 +204,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
         this.translate.onLangChange.subscribe(change => {
-            this.languageCollator = new Intl.Collator(change.lang);
+            this.languageCollator = getIntlCollatorForLang(change.lang);
             if (this.unsafeViewModelListSubject.value) {
                 this.updateViewModelListSubject(this.unsafeViewModelListSubject.value);
             }
