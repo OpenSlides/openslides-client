@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { OAuthEvent, OAuthService, OAuthSuccessEvent, TokenResponse } from 'angular-oauth2-oidc';
 import { EventType } from 'angular-oauth2-oidc/events';
+import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
@@ -109,10 +109,6 @@ export class AuthService {
             path: `/`
         });
         return;
-    }
-
-    public async startSamlLogin(): Promise<string> {
-        return this.authAdapter.startSamlLogin();
     }
 
     public async updateUser(userId: number): Promise<void> {

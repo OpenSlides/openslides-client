@@ -31,6 +31,7 @@ import { MeetingControllerService } from '../pages/meetings/services/meeting-con
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { OrganizationService } from '../pages/organization/services/organization.service';
+import { AuthService } from './auth.service';
 import { AuthTokenService } from './auth-token.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
@@ -266,6 +267,7 @@ export class OperatorService {
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private DS: DataStoreService,
+        private authService: AuthService,
         private lifecycle: LifecycleService,
         private userRepo: UserRepositoryService,
         private meetingUserRepo: MeetingUserRepositoryService,
@@ -273,7 +275,6 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private meetingRepo: MeetingControllerService,
-        private meetingSettings: MeetingSettingsService,
         private organizationService: OrganizationService,
         private meetingSettings: MeetingSettingsService,
         private authTokenService: AuthTokenService
