@@ -2,7 +2,7 @@
     <os-head-bar
         saveText="Create"
         [editMode]="true"
-        [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
+        [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && canSave"
         [nav]="false"
         [saveAction]="getSaveAction()"
         (cancelEditEvent)="cancelCreation()"
@@ -19,7 +19,7 @@
                     <button
                         mat-button
                         [disabled]="contentForm.value.selectedParagraphs.length === 0"
-                        (click)="matStepper.next()"
+                        (click)="matStepper.next(); checkCanSave()"
                     >
                         <span class="upper">{{ 'Next' | translate }}</span>
                     </button>

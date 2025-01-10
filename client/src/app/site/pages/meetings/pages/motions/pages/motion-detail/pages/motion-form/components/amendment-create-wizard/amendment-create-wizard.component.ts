@@ -68,6 +68,8 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      */
     public multipleParagraphsAllowed = false;
 
+    public canSave: boolean = false;
+
     private _parentMotionId: Id | null = null;
 
     public constructor(
@@ -139,6 +141,18 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     public getSaveAction(): () => Promise<void> {
         return () => this.saveAmendment();
+    }
+
+    public checkCanSave(): void {
+        this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
+            if (
+                this.contentForm.value.selectedParagraphs.find((para: ParagraphToChoose) => para.paragraphNo === paraNo)
+            ) {
+                this.contentForm.controls[`text_` + paraNo].valueChanges.subscribe(value => {
+                    this.canSave = value === this.paragraphs[paraNo].html ? false : true;
+                });
+            }
+        });
     }
 
     /**
