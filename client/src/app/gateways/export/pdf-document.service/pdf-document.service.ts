@@ -332,10 +332,9 @@ export class PdfDocumentService {
             for (const place of places) {
                 const url = this.mediaManageService.getLogoUrl(place);
                 if (url) {
-                    const downloads = await this.httpService.downloadAsBase64(url);
-                    const svg = downloads.type === `image/svg+xml`;
+                    const fetchResult = await fetch(url);
+                    const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
                     if (svg) {
-                        const fetchResult = await fetch(url);
                         const text = await fetchResult.text();
 
                         if (text.length >= 1) {
