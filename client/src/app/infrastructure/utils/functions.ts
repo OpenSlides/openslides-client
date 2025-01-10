@@ -521,3 +521,7 @@ export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: 
     }
     return -1;
 }
+
+export function getIntlCollatorForLang(lang: string, options?: Intl.CollatorOptions): Intl.Collator {
+    return new Intl.Collator(lang === `1337` ? `en` : lang, options);
+}
