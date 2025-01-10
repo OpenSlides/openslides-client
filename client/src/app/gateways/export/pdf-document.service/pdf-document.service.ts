@@ -364,13 +364,12 @@ export class PdfDocumentService {
     }
 
     private getViewBox(text: string): string {
-        let viewBox: string = ``;
         const width: number = this.getSizeValue(text, `width="`);
         const height: number = this.getSizeValue(text, `height="`);
         if (width !== -1 && height !== -1) {
-            viewBox = ` viewBox=" 0 0 ` + (width + 100) + ` ` + (height + 100) + `" `;
+            return ` viewBox=" 0 0 ` + (width + 100) + ` ` + (height + 100) + `" `;
         }
-        return viewBox;
+        return ``;
     }
 
     private getSizeValue(text: string, param: string): number {
@@ -380,9 +379,8 @@ export class PdfDocumentService {
             const indexEnd = text.indexOf(`"`, indexStart + param.length);
             const value = Number(text.substring(indexStart + 7, indexEnd).match(REGEX)[0]);
             return value;
-        } else {
-            return -1;
         }
+        return -1;
     }
 
     private makeSettingsSubscriptions(): void {
