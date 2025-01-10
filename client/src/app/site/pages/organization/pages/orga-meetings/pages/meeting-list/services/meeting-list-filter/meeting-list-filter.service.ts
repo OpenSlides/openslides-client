@@ -45,7 +45,7 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                     { label: _(`Is not archived`), condition: `isNotArchived` },
                     { label: _(`Is public`), condition: `isAnonymous` },
                     { label: _(`Is not public`), condition: `isNotAnonymous` },
-                    { label: _(`Is closed`), condition: `IsClosed` }
+                    { label: _(`Is closed`), condition: `isLockedFromInside` }
                 ]
             },
             {

@@ -143,9 +143,9 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public getStatus(): string[] {
         const status: string[] = [];
         this.isArchived ? status.push(`isArchived`) : status.push(`isNotArchived`);
-        this[`enable_anonymous`] ? status.push(`isAnonymous`) : status.push(`isNotAnonymous`);
-        if (this[`locked_from_inside`]) {
-            status.push(`IsClosed`);
+        this.enable_anonymous ? status.push(`isAnonymous`) : status.push(`isNotAnonymous`);
+        if (this.locked_from_inside) {
+            status.push(`isLockedFromInside`);
         }
         return status;
     }
