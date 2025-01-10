@@ -42,7 +42,7 @@ export class AuthTokenService {
             const payload = atob(rawToken.split(`.`)[1]);
             const parsedToken = JSON.parse(payload) as AuthToken;
             parsedToken.rawAccessToken = rawToken;
-            parsedToken.userId = parseInt(`${parsedToken.userId}`);
+            parsedToken.userId = parsedToken[`os_uid`];
             return parsedToken;
         } catch (e) {
             return null;
