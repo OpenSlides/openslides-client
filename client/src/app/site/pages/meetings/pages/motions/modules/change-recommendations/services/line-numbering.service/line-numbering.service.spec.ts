@@ -552,6 +552,14 @@ describe(`LineNumberingService`, () => {
             }
         ));
 
+        it(`counts empty paragraphs`, inject([LineNumberingService], (service: LineNumberingService) => {
+            const inHtml = `<p></p><p><ins>Test 123</ins></p>`;
+            const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
+            expect(outHtml).toBe(`<p>` + noMarkup(1) + `</p><p>` + noMarkup(2) + `<ins>Test 123</ins></p>`);
+            expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
+            expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
+        }));
+
         it(`does not fail in a weird case`, inject([LineNumberingService], (service: LineNumberingService) => {
             const inHtml = `<ins>seid Noch</ins><p></p><p><ins>Test 123</ins></p>`;
             const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });

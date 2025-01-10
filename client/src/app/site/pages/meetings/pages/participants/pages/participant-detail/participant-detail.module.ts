@@ -13,6 +13,7 @@ import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
+import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -44,7 +45,8 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         MatFormFieldModule,
         ReactiveFormsModule,
         DirectivesModule,
-        PipesModule
+        PipesModule,
+        ExpandableContentWrapperModule
     ]
 })
 export class ParticipantDetailModule {}

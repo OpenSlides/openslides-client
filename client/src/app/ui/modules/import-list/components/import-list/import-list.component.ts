@@ -16,7 +16,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';

@@ -155,7 +155,7 @@
         @if (mediafile.published_to_meetings_in_organization_id === 1) {
             <mat-icon
                 class="foreground-icon"
-                [matTooltip]="'File is public' | translate"
+                [matTooltip]="'Public' | translate"
                 [ngClass]="mediafile.published_to_meetings_in_organization_id === 1 ? 'margin-left-5' : 'margin-left-0'"
             >
                 public
@@ -274,7 +274,7 @@
         }
         @if (movingToPublicFolder && !movingFromPublicFolder) {
             <p class="warn" translate>
-                You are moving an Unpublished file to a public folder. The file will not be accessible in all meetings
+                You are moving an unpublished file to a public folder. The file will be accessible in ALL meetings
                 afterwards.
             </p>
         }

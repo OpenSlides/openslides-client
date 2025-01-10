@@ -209,6 +209,8 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         if (await this.promptService.open(title)) {
             try {
                 await this.repo.update({ modified_final_version: `` }, this.motion).resolve();
+                this.cancelEditingModifiedFinalVersion();
+                this.setChangeRecoMode(ChangeRecoMode.Final);
             } catch (e) {
                 this.raiseError(e);
             }

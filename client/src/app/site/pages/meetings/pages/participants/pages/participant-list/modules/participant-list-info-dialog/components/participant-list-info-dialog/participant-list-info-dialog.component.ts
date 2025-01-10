@@ -24,7 +24,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     public readonly genders = GENDERS;
 
     public get groupsObservable(): Observable<ViewGroup[]> {
-        return this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+        return this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
     }
 
     public get otherParticipantsObservable(): Observable<ViewMeetingUser[]> {

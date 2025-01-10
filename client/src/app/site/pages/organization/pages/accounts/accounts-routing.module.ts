@@ -40,6 +40,11 @@ const routes: Routes = [
                     import(`./pages/account-import/account-import.module`).then(m => m.AccountImportModule)
             },
             {
+                path: `genders`,
+                loadChildren: () =>
+                    import(`./pages/gender/pages/gender-list/gender-list.module`).then(m => m.GenderListModule)
+            },
+            {
                 path: `:id`,
                 loadChildren: () =>
                     import(`./pages/account-detail/account-detail.module`).then(m => m.AccountDetailModule)

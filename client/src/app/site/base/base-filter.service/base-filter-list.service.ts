@@ -302,6 +302,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 isActive: (<OsFilterOption>(
                                     filter.options.find(f => (<OsFilterOption>f)?.condition === model.id)
                                 ))?.isActive,
+                                skipTranslate: true,
                                 children: model.children?.length
                                     ? model.children.map((child: any) => ({
                                           label: child.getTitle(),

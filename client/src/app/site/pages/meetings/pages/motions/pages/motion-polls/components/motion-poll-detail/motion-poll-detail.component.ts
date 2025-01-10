@@ -11,6 +11,10 @@ import { MotionPollService } from '../../../../modules/motion-poll/services';
 import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
 import { MotionPollPdfService } from '../../../../modules/motion-poll/services/motion-poll-pdf.service';
 
+export interface ExtendedVoteData extends BaseVoteData {
+    vote_verbose_translated?: string | null;
+}
+
 @Component({
     selector: `os-motion-poll-detail`,
     templateUrl: `./motion-poll-detail.component.html`,
@@ -19,11 +23,13 @@ import { MotionPollPdfService } from '../../../../modules/motion-poll/services/m
     encapsulation: ViewEncapsulation.None
 })
 export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotion, MotionPollService> {
-    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`];
+    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`, `vote_verbose_translated`];
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
     }
+
+    public displayVoteWeight: boolean;
 
     public constructor(
         protected override translate: TranslateService,
@@ -32,10 +38,19 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         pollPdfService: MotionPollPdfService
     ) {
         super(pollService, pollPdfService);
+        this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
     }
 
-    protected createVotesData(): BaseVoteData[] {
-        return this.poll?.options[0]?.votes;
+    protected createVotesData(): ExtendedVoteData[] {
+        const voteData = this.poll?.options[0]?.votes;
+        const extendedVoteData: ExtendedVoteData[] = this.poll?.options[0]?.votes;
+        if (extendedVoteData) {
+            extendedVoteData.map(
+                (element, index) =>
+                    (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
+            );
+        }
+        return extendedVoteData;
     }
 
     public openDialog(): void {

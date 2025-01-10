@@ -18,6 +18,10 @@ export class PermissionGuard {
 
     public async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean | UrlTree> {
         const url = this.getCurrentNavigationUrl();
+        if (this.isLoginPage(url)) {
+            return true;
+        }
+
         if (this.osRouter.isOrganizationUrl(url)) {
             if (!(await this.authCheck.isAuthorizedToSeeOrganization())) {
                 return this.reroute.getOnlyMeetingUrlTree(url === `/info` ? [`info`] : []);
@@ -25,7 +29,7 @@ export class PermissionGuard {
         } else if (!(await this.authCheck.hasAccessToMeeting(url))) {
             return await this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
-        if (!(await this.authCheck.isAuthenticated())) {
+        if (!(await this.authCheck.isAuthenticated(url))) {
             return this.reroute.toLogin(url);
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
@@ -42,5 +46,9 @@ export class PermissionGuard {
      */
     public getCurrentNavigationUrl(): string {
         return this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.url;
+    }
+
+    private isLoginPage(url: string): boolean {
+        return url.startsWith(`/login`) || new RegExp(`^\/[0-9]+\/login`).test(url);
     }
 }

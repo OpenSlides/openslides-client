@@ -1,7 +1,8 @@
 import { FieldDescriptor, Fields, HasFields, ModelRequest } from 'src/app/domain/interfaces/model-request';
 
+import { OsMessagePort as MessagePort } from '../interfaces';
+import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from '../sw-autoupdate.interfaces';
 import { AutoupdateStream } from './autoupdate-stream';
-import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';
 
 export class AutoupdateSubscription {
     /**
@@ -52,14 +53,14 @@ export class AutoupdateSubscription {
      */
     public updateData(data: any): void {
         for (const port of this.ports) {
-            port.postMessage({
+            port.postMessage(<AutoupdateReceiveData>{
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
                     streamIdDescriptions: { [this.id]: this.description },
                     data: data
                 }
-            } as AutoupdateReceiveData);
+            });
         }
     }
 

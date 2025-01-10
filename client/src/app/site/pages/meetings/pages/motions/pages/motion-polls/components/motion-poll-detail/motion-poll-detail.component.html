@@ -46,6 +46,7 @@
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
+                            [filterProps]="filterPropsSingleVotesTable"
                             [isViewingThis]="isViewingVoteslist"
                             [parent]="self"
                             [votesDataObservable]="votesDataObservable"
@@ -54,6 +55,7 @@
                 </mat-tab>
                 <mat-tab label="{{ 'Entitled users' | translate }}">
                     <os-entitled-users-table
+                        [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="entitledUsersObservable"
                         [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
@@ -76,7 +78,7 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named'"
+        *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named' && !poll.is_pseudoanonymized"
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

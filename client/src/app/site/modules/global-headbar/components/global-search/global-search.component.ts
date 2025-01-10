@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { pairwise, startWith, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -230,6 +230,13 @@ export class GlobalSearchComponent implements OnDestroy {
         }
 
         return resultText;
+    }
+
+    /**
+     * helper to remove <mark> and </mark> from the text
+     */
+    public removeMark(text: string): string {
+        return text.replace(/<\/mark>/g, ``).replace(/<mark>/g, ``);
     }
 
     private getPermissionByFilter(filter: string): Permission {

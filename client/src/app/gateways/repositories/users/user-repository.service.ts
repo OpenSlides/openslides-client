@@ -105,7 +105,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `gender`,
+            `gender_id`,
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
@@ -148,7 +148,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const data = usersToCreate.map(user => {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
-                user: this.sanitizePayload(this.getBaseUserPayload(user), true),
+                user: this.sanitizePayload(this.getBaseUserPayloadCreate(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
                           first_meeting_user: this.sanitizePayload(
@@ -213,7 +213,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             const updates = Array.isArray(dirtyUpdate) ? dirtyUpdate : [dirtyUpdate];
             return updates.map(update => ({
                 id: user.id,
-                ...this.sanitizePayload(this.getBaseUserPayload(update)),
+                ...this.sanitizePayload(this.getBaseUserPayloadUpdate(update)),
                 ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
             }));
         });
@@ -226,7 +226,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: update.email,
             username: update.username,
             pronoun: update.pronoun,
-            gender: update.gender
+            gender_id: update.gender_id
         };
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
@@ -248,7 +248,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.ASSIGN_MEETINGS, payload);
     }
 
-    private getBaseUserPayload(partialUser: Partial<ViewUser>): any {
+    private getBaseUserPayloadUpdate(partialUser: Partial<ViewUser>): any {
         const partialPayload: Partial<User> = {
             pronoun: partialUser.pronoun,
             title: partialUser.title,
@@ -259,13 +259,19 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
-            gender: partialUser.gender,
+            gender_id: partialUser.gender_id,
             email: partialUser.email,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_management_ids: partialUser.committee_management_ids
         };
 
+        return partialPayload;
+    }
+
+    private getBaseUserPayloadCreate(partialUser: Partial<ViewUser>): any {
+        const partialPayload = this.getBaseUserPayloadUpdate(partialUser);
+        partialPayload.is_present_in_meeting_ids = partialUser.is_present_in_meeting_ids;
         return partialPayload;
     }
 
@@ -364,6 +370,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         viewModel.getDelegationSettingEnabled = (): boolean =>
             this.meetingSettingsService.instant(`users_enable_vote_delegations`);
+        viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
+            !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
+            !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
         return viewModel;
     }
 

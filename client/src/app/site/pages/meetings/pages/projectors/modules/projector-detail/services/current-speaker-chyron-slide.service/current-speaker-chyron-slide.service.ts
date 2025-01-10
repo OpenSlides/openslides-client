@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';

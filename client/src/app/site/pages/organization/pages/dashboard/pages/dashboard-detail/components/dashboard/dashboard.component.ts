@@ -83,7 +83,10 @@ export class DashboardComponent extends BaseComponent {
         this.subscriptions.push(
             this.meetingRepo.getViewModelListObservable().subscribe(meetings => {
                 const filteredMeetings = meetings.filter(
-                    meeting => this.operator.isInMeeting(meeting.id) || this.operator.isSuperAdmin
+                    meeting =>
+                        this.operator.isInMeeting(meeting.id) ||
+                        this.operator.isSuperAdmin ||
+                        (meeting.publicAccessPossible() && this.operator.isAnonymous)
                 );
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);

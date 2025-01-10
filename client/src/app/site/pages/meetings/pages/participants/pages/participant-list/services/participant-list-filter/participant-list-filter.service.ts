@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
@@ -29,9 +29,21 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private userCanVoteForGroupFilterOptions: OsFilter<ViewUser> = {
+        property: `canVoteForGroups`,
+        label: `Voting rights`,
+        options: []
+    };
+
     private userStructureLevelFilterOptions: OsFilter<ViewUser> = {
         property: `structure_level_ids`,
         label: `Structure level`,
+        options: []
+    };
+
+    private genderFilterOption: OsFilter<ViewUser> = {
+        property: `gender_id`,
+        label: _(`Gender`),
         options: []
     };
 
@@ -42,6 +54,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
+        genderRepo: GenderControllerService,
         private meetingSettings: MeetingSettingsService,
         private operator: OperatorService
     ) {
@@ -51,8 +64,17 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             filter: this.userGroupFilterOptions
         });
         this.updateFilterForRepo({
+            repo: groupRepo,
+            filter: this.userCanVoteForGroupFilterOptions
+        });
+        this.updateFilterForRepo({
             repo: structureRepo,
             filter: this.userStructureLevelFilterOptions
+        });
+        this.updateFilterForRepo({
+            repo: genderRepo,
+            filter: this.genderFilterOption,
+            noneOptionLabel: _(`not specified`)
         });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
         this.meetingSettings
@@ -73,9 +95,38 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: [false, null], label: _(`Is not present`) }
                 ]
             },
+            this.userGroupFilterOptions,
+            this.userCanVoteForGroupFilterOptions,
+            this.userStructureLevelFilterOptions,
+            {
+                property: `delegationType`,
+                label: _(`Delegation of vote`),
+                options: [
+                    {
+                        condition: DelegationType.Transferred,
+                        label: _(`Principals`)
+                    },
+                    {
+                        condition: DelegationType.Received,
+                        label: _(`Proxy holders`)
+                    },
+                    {
+                        condition: DelegationType.Neither,
+                        label: _(`No delegation of vote`)
+                    }
+                ]
+            },
+            {
+                property: `isVoteWeightOne`,
+                label: _(`Vote weight`),
+                options: [
+                    { condition: [false, null], label: _(`Has changed vote weight`) },
+                    { condition: true, label: _(`Has unchanged vote weight`) }
+                ]
+            },
             {
                 property: `isLockedOutOfMeeting`,
-                label: `Locked Out`,
+                label: `Locked out`,
                 options: [
                     { condition: true, label: `Is locked out` },
                     { condition: [false, null], label: `Is not locked out` }
@@ -97,22 +148,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: [false, null], label: _(`Is a committee`) }
                 ]
             },
-            {
-                property: `isLastEmailSent`,
-                label: _(`Last email sent`),
-                options: [
-                    { condition: true, label: _(`Got an email`) },
-                    { condition: [false, null], label: _(`Didn't get an email`) }
-                ]
-            },
-            {
-                property: `hasEmail`,
-                label: _(`Email address`),
-                options: [
-                    { condition: true, label: _(`Has an email address`) },
-                    { condition: [false, null], label: _(`Has no email address`) }
-                ]
-            },
+            this.genderFilterOption,
             {
                 property: `hasMemberNumber`,
                 label: _(`Membership number`),
@@ -130,22 +166,19 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
-                property: `isVoteWeightOne`,
-                label: _(`Vote weight`),
+                property: `isLastEmailSent`,
+                label: _(`Last email sent`),
                 options: [
-                    { condition: [false, null], label: _(`Has changed vote weight`) },
-                    { condition: true, label: _(`Has unchanged vote weight`) }
+                    { condition: true, label: _(`Got an email`) },
+                    { condition: [false, null], label: _(`Didn't get an email`) }
                 ]
             },
             {
-                property: `gender`,
-                label: _(`Gender`),
+                property: `hasEmail`,
+                label: _(`Email address`),
                 options: [
-                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
-                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
-                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
-                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
-                    { condition: null, label: _(`not specified`) }
+                    { condition: true, label: _(`Has an email address`) },
+                    { condition: [false, null], label: _(`Has no email address`) }
                 ]
             },
             {
@@ -155,27 +188,9 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                     { condition: true, label: _(`Has SSO identification`) },
                     { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
-            },
-            {
-                property: `delegationType`,
-                label: _(`Delegation of vote`),
-                options: [
-                    {
-                        condition: DelegationType.Transferred,
-                        label: _(`Principals`)
-                    },
-                    {
-                        condition: DelegationType.Received,
-                        label: _(`Proxy holders`)
-                    },
-                    {
-                        condition: DelegationType.Neither,
-                        label: _(`No delegation of vote`)
-                    }
-                ]
             }
         ];
-        return staticFilterOptions.concat(this.userGroupFilterOptions, this.userStructureLevelFilterOptions);
+        return staticFilterOptions;
     }
 
     protected override getHideFilterSettings(): OsHideFilterSetting<ViewUser>[] {
@@ -184,6 +199,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `isVoteWeightOne`,
                 shouldHideFn: (): boolean => {
                     return !this._voteWeightEnabled;
+                }
+            },
+            {
+                property: `canVoteForGroups`,
+                shouldHideFn: (): boolean => {
+                    return !this._voteDelegationEnabled;
                 }
             },
             {

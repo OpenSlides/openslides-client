@@ -88,6 +88,11 @@ export class RerouteService {
         if (previousUrl) {
             this.osRouter.setNextAfterLoginUrl(previousUrl);
         }
+
+        if (this.osRouter.getCurrentMeetingId()) {
+            return this.router.createUrlTree([this.osRouter.getCurrentMeetingId(), `login`]);
+        }
+
         return this.router.createUrlTree([`login`]);
     }
 }

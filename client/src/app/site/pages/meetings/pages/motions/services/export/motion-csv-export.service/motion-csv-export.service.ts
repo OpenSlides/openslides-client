@@ -56,6 +56,8 @@ const MotionCsvExportExample: MotionCsvExport[] = [
     providedIn: MotionsExportModule
 })
 export class MotionCsvExportService {
+    public crMode = ChangeRecoMode;
+
     public constructor(
         private csvExport: MeetingCsvExportService,
         private translate: TranslateService,
@@ -96,7 +98,7 @@ export class MotionCsvExportService {
         crMode?: ChangeRecoMode
     ): void {
         if (!crMode) {
-            crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
+            crMode = this.crMode.Original;
         }
 
         const properties = sortMotionPropertyList([`number`, `title`].concat(contentToExport));

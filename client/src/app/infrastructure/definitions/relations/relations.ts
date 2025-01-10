@@ -21,6 +21,7 @@ import {
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
@@ -165,6 +166,13 @@ export const RELATIONS: Relation[] = [
         AField: `theme`,
         BField: `theme_for_organization`
     }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewGender,
+        OField: `genders`,
+        MField: `organization`,
+        isFullList: true
+    }),
     // ########## Organization tags
     ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({
         viewModel: ViewOrganizationTag,
@@ -271,6 +279,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMeetingUser,
         AField: `meeting_users`,
         BField: `structure_levels`
+    }),
+    ...makeM2O({
+        MViewModel: ViewUser,
+        OViewModel: ViewGender,
+        MField: `gender`,
+        OField: `users`
     }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
@@ -651,6 +665,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewGroup,
         AField: `default_group`,
         BField: `default_group_for_meeting`
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewGroup,
+        AField: `anonymous_group`,
+        BField: `anonymous_group_for_meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,

@@ -4,10 +4,8 @@ import { PermissionsMap } from './permission.config';
 
 export const permissionChildren: PermissionsMap = {
     'agenda_item.can_manage': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
-    'agenda_item.can_manage_moderator_notes': [Permission.agendaItemCanSeeModeratorNotes, Permission.agendaItemCanSee],
     'agenda_item.can_see': [],
     'agenda_item.can_see_internal': [Permission.agendaItemCanSee],
-    'agenda_item.can_see_moderator_notes': [Permission.agendaItemCanSee],
     'assignment.can_manage': [Permission.assignmentCanNominateOther, Permission.assignmentCanSee],
     'assignment.can_nominate_other': [Permission.assignmentCanSee],
     'assignment.can_nominate_self': [Permission.assignmentCanSee],
@@ -16,6 +14,8 @@ export const permissionChildren: PermissionsMap = {
     'list_of_speakers.can_be_speaker': [],
     'list_of_speakers.can_manage': [Permission.listOfSpeakersCanSee],
     'list_of_speakers.can_see': [],
+    'list_of_speakers.can_see_moderator_notes': [],
+    'list_of_speakers.can_manage_moderator_notes': [Permission.listOfSpeakersCanSeeModeratorNotes],
     'mediafile.can_manage': [Permission.mediafileCanSee],
     'mediafile.can_see': [],
     'meeting.can_manage_logos_and_fonts': [],
@@ -59,15 +59,8 @@ export const permissionChildren: PermissionsMap = {
 
 export const permissionParents: PermissionsMap = {
     'agenda_item.can_manage': [],
-    'agenda_item.can_manage_moderator_notes': [],
-    'agenda_item.can_see': [
-        Permission.agendaItemCanSeeInternal,
-        Permission.agendaItemCanManage,
-        Permission.agendaItemCanSeeModeratorNotes,
-        Permission.agendaItemCanManageModeratorNotes
-    ],
+    'agenda_item.can_see': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanManage],
     'agenda_item.can_see_internal': [Permission.agendaItemCanManage],
-    'agenda_item.can_see_moderator_notes': [Permission.agendaItemCanManageModeratorNotes],
     'assignment.can_manage': [],
     'assignment.can_nominate_other': [Permission.assignmentCanManage],
     'assignment.can_nominate_self': [],
@@ -80,6 +73,8 @@ export const permissionParents: PermissionsMap = {
     'list_of_speakers.can_be_speaker': [],
     'list_of_speakers.can_manage': [],
     'list_of_speakers.can_see': [Permission.listOfSpeakersCanManage],
+    'list_of_speakers.can_see_moderator_notes': [Permission.listOfSpeakersCanManageModeratorNotes],
+    'list_of_speakers.can_manage_moderator_notes': [],
     'mediafile.can_manage': [],
     'mediafile.can_see': [Permission.mediafileCanManage],
     'meeting.can_manage_logos_and_fonts': [],

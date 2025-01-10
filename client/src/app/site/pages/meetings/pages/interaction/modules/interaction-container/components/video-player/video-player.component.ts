@@ -11,7 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';

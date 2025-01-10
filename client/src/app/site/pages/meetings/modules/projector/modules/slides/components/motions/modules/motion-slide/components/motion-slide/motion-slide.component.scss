@@ -16,7 +16,6 @@
 #sidebox {
     width: 260px;
     right: 0;
-    background: #d3d3d3;
     border-radius: 7px 0 0 7px;
     padding: 3px 7px 10px 10px;
     position: fixed;
@@ -45,6 +44,10 @@
     }
 }
 
+.metatable-background {
+    background-color: #ddd;
+}
+
 .spacer {
     min-width: 1px;
 }
@@ -67,4 +70,25 @@
             }
         }
     }
+}
+
+.amendment-nr-n-icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    left: -40px;
+    height: 1.5em;
+    margin-top: 25px;
+}
+
+.amendment-nr {
+    position: relative;
+    font-style: italic;
+    background-color: rgb(224, 224, 224);
+    padding-right: 4px;
+}
+
+.os-linebreak {
+    display: none !important;
 }

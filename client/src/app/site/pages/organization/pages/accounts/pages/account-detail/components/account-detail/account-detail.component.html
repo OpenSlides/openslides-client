@@ -158,7 +158,7 @@
                     @for (row of tableData | keyvalue: tableDataAscOrderCompare; track row; let lastLine = $last) {
                         <!-- Handle committees without meetings-->
                         @if (!getNumberOfKeys(row.value.meetings)) {
-                            <tr [ngClass]="getCellClass(true, true, lastLine)">
+                            <tr class="word-break" [ngClass]="getCellClass(true, true, lastLine)">
                                 <td>
                                     <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                                 </td>
@@ -184,7 +184,7 @@
                             let isFirst = $first;
                             let isLast = $last
                         ) {
-                            <tr [ngClass]="getCellClass(true, true, lastLine)">
+                            <tr class="word-break" [ngClass]="getCellClass(true, true, lastLine)">
                                 @if (isFirst) {
                                     <td [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
                                         <a [routerLink]="'/committees/' + row.key + ''">
@@ -204,12 +204,45 @@
                                         }
                                     </td>
                                 }
-                                <td [ngClass]="getCellClass(false, isLast, lastLine)">
-                                    <a [routerLink]="'/' + meeting_row.key + ''">
+                                <td class="word-break" [ngClass]="getCellClass(false, isLast, lastLine)">
+                                    <!-- Is Archived -->
+                                    @if (meeting_row.value.is_archieved) {
+                                        <span class="icon">
+                                            <mat-icon
+                                                [matTooltip]="'Archived' | translate"
+                                                [matTooltipPosition]="'left'"
+                                            >
+                                                archive
+                                            </mat-icon>
+                                        </span>
+                                    }
+
+                                    <!--- Is public -->
+                                    @if (meeting_row.value.is_public) {
+                                        <span class="icon">
+                                            <mat-icon [matTooltip]="'Public' | translate" [matTooltipPosition]="'left'">
+                                                public
+                                            </mat-icon>
+                                        </span>
+                                    }
+
+                                    <!--- Is locked from inside -->
+                                    @if (meeting_row.value.is_closed) {
+                                        <span class="icon">
+                                            <mat-icon [matTooltip]="'Closed' | translate" [matTooltipPosition]="'left'">
+                                                lock
+                                            </mat-icon>
+                                        </span>
+                                    }
+                                    @if (meeting_row.value.is_accessible) {
+                                        <a [routerLink]="'/' + meeting_row.key + ''">
+                                            {{ meeting_row.value.meeting_name }}
+                                        </a>
+                                    } @else {
                                         {{ meeting_row.value.meeting_name }}
-                                    </a>
+                                    }
                                 </td>
-                                <td [ngClass]="getCellClass(false, isLast, lastLine)">
+                                <td class="word-break" [ngClass]="getCellClass(false, isLast, lastLine)">
                                     @for (group of meeting_row.value.group_names; track group; let lastGroup = $last) {
                                         <span>{{ group }}{{ !lastGroup ? ', ' : '' }}</span>
                                     }

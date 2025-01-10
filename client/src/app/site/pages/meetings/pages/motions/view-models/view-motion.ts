@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
@@ -347,17 +347,24 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public override getProjectionBuildDescriptor(
         meetingSettingsService: MeetingSettingsService
     ): ProjectionBuildDescriptor {
+        const choices = [
+            { value: `original`, displayName: `Original version` },
+            { value: `changed`, displayName: `Changed version` },
+            { value: `diff`, displayName: `Diff version` }
+        ];
+
+        if (this.modified_final_version) {
+            choices.push({ value: `modified_final_version`, displayName: `Final version` });
+        } else {
+            choices.push({ value: `agreed`, displayName: `Final version` });
+        }
+
         const slideOptions: SlideOptions = [
             {
                 key: `mode`,
                 displayName: _(`Which version?`),
                 default: meetingSettingsService.instant(`motions_recommendation_text_mode`)!,
-                choices: [
-                    { value: `original`, displayName: `Original version` },
-                    { value: `changed`, displayName: `Changed version` },
-                    { value: `diff`, displayName: `Diff version` },
-                    { value: `agreed`, displayName: `Final version` }
-                ]
+                choices
             }
         ];
 

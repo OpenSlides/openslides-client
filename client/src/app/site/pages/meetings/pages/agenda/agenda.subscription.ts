@@ -106,9 +106,9 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
             },
             {
                 idField: `list_of_speakers_id`,
-                ...listOfSpeakersSpeakerCountSubscription
+                fieldset: FULL_FIELDSET
             },
-            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`, `moderator_notes`] }
+            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`] }
         ]
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
@@ -128,13 +128,13 @@ export const listOfSpeakersSpeakerCountSubscription = {
     follow: [
         {
             idField: `speaker_ids`,
+            fieldset: [`begin_time`, `end_time`],
             follow: [
                 {
                     idField: `point_of_order_category_id`,
                     fieldset: FULL_FIELDSET
                 }
-            ],
-            fieldset: [`begin_time`, `end_time`]
+            ]
         }
     ]
 };
@@ -151,11 +151,11 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                 follow: [
                     {
                         idField: `meeting_user_id`,
+                        fieldset: [`number`, `vote_weight`],
                         follow: [
                             { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
                             { idField: `structure_level_ids`, fieldset: [`name`] }
-                        ],
-                        fieldset: [`number`, `vote_weight`]
+                        ]
                     },
                     {
                         idField: `structure_level_list_of_speakers_id`,
@@ -166,11 +166,6 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                         fieldset: FULL_FIELDSET
                     }
                 ]
-            },
-            {
-                idField: `content_object_id`,
-                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
-                follow: [{ idField: `agenda_item_id`, fieldset: [`moderator_notes`, `content_object_id`] }]
             },
             {
                 idField: `structure_level_list_of_speakers_ids`,

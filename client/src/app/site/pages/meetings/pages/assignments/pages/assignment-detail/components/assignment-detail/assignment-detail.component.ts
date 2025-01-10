@@ -200,7 +200,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
                 if (assignment) {
                     const title = assignment.getTitle();
-                    super.setTitle(title);
+                    super.setTitle(title, true);
                     this.assignment = assignment;
                     if (!this.isEditing) {
                         this.patchForm(this.assignment);

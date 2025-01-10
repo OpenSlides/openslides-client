@@ -24,6 +24,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        additionalFields: [`reference_projector_id`],
         follow: [
             {
                 idField: `projector_ids`,
@@ -61,14 +62,13 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     }
                 ]
             },
-            `projector_countdown_ids`,
-            `projector_message_ids`,
-            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS,
+            { idField: `projector_countdown_ids` },
+            { idField: `projector_message_ids` },
             { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
-            `list_of_speakers_ids`,
-            { idField: `agenda_item_ids`, fieldset: [`item_number`, `content_object_id`] }
-        ],
-        additionalFields: [`reference_projector_id`]
+            { idField: `list_of_speakers_ids` },
+            { idField: `agenda_item_ids`, fieldset: [`item_number`, `content_object_id`] },
+            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS
+        ]
     },
     subscriptionName: PROJECTOR_LIST_SUBSCRIPTION
 });

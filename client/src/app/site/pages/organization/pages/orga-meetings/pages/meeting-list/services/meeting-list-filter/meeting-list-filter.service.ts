@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -43,6 +43,14 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                 options: [
                     { label: _(`Is archived`), condition: true },
                     { label: _(`Is not archived`), condition: [false, null] }
+                ]
+            },
+            {
+                property: `enable_anonymous`,
+                label: _(`Public`),
+                options: [
+                    { label: _(`Is public`), condition: true },
+                    { label: _(`Is not public`), condition: [false, null] }
                 ]
             },
             {

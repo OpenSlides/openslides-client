@@ -608,8 +608,8 @@ export class PdfDocumentService {
 
         // Add no heading text if there are logos on the right and left.
         if (header && !(logoHeaderRightUrl && logoHeaderLeftUrl)) {
-            const name = this.translate.instant(this.meetingSettingsService.instant(`name`));
-            const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
+            const name = this.meetingSettingsService.instant(`name`);
+            const description = this.meetingSettingsService.instant(`description`);
             const location = this.meetingSettingsService.instant(`location`);
             const start_time = this.meetingSettingsService.instant(`start_time`);
             const end_time = this.meetingSettingsService.instant(`end_time`);

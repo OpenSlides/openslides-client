@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';

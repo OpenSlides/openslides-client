@@ -113,5 +113,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     private destroy(): void {
         this.cleanSubscriptions();
+        this.viewService.showAllAmendmentsStateSubject.next(false);
     }
 }

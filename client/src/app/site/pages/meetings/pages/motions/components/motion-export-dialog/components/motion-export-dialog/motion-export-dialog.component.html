@@ -31,10 +31,10 @@
                     <mat-button-toggle [value]="crMode.Original">
                         <span>{{ 'Original version' | translate }}</span>
                     </mat-button-toggle>
-                    <mat-button-toggle [value]="crMode.Changed">
+                    <mat-button-toggle [disabled]="isCSVExport" [value]="crMode.Changed">
                         <span>{{ 'Changed version' | translate }}</span>
                     </mat-button-toggle>
-                    <mat-button-toggle #diffVersionButton [value]="crMode.Diff">
+                    <mat-button-toggle #diffVersionButton [disabled]="isCSVExport" [value]="crMode.Diff">
                         <span>{{ 'Diff version' | translate }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle [value]="crMode.ModifiedFinal">

@@ -22,6 +22,7 @@ export class OrganizationSetting {
     public limit_of_users!: number;
     public default_language!: string;
     public require_duplicate_from!: boolean;
+    public enable_anonymous!: boolean;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -34,7 +35,6 @@ export class OrganizationSetting {
     public saml_metadata_idp!: string;
     public saml_metadata_sp!: string;
     public saml_private_key!: string;
-    public genders!: string[];
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -52,6 +52,7 @@ export class Organization extends BaseModel<Organization> {
     public archived_meeting_ids!: Id[]; // (meeting/is_archived_in_organization_id)[];
     public template_meeting_ids!: Id[]; // (meeting/template_for_organization_id)[];
     public mediafile_ids!: Id[];
+    public gender_ids!: Id[]; // (gender/organization_id);
     public published_mediafile_ids!: Id[];
 
     public constructor(input?: any) {
@@ -66,13 +67,14 @@ export class Organization extends BaseModel<Organization> {
         `privacy_policy`,
         `login_text`,
         `reset_password_verbose_errors`,
-        `genders`,
+        `gender_ids`,
         `enable_electronic_voting`,
         `enable_chat`,
         `limit_of_meetings`,
         `limit_of_users`,
         `default_language`,
         `require_duplicate_from`,
+        `enable_anonymous`,
         `saml_enabled`,
         `saml_login_button_text`,
         `saml_attr_mapping`,

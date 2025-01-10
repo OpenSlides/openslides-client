@@ -28,6 +28,7 @@ export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
 interface IGroupRelations {
     default_group_for_meeting: ViewMeeting;
     admin_group_for_meeting: ViewMeeting;
+    anonymous_group_for_meeting: ViewMeeting;
     meeting_mediafile_access_groups: ViewMediafile[];
     meeting_mediafile_inherited_access_groups: ViewMediafile[];
     read_comment_sections: ViewMotionCommentSection[];

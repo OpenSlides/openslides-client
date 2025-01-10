@@ -21,7 +21,7 @@ import {
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/autoupdate/interfaces-autoupdate';
+} from 'src/app/worker/sw-autoupdate.interfaces';
 
 import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
 import { SpinnerService } from '../../modules/global-spinner';
@@ -36,7 +36,7 @@ import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
 })
 export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
-    private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
+    private openResolvers = new Map<string, ((value: number | PromiseLike<number>) => void)[]>();
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
     private unhealtyTimeout: any;
@@ -71,6 +71,9 @@ export class AutoupdateCommunicationService {
                         break;
                     case `set-connection-mode`:
                         this.handleSetConnectionMode(<string>msg.content);
+                        break;
+                    case `check-auth`:
+                        this.authService.invalidateSessionAfter();
                         break;
                 }
             });
@@ -130,7 +133,11 @@ export class AutoupdateCommunicationService {
     public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
         return new Promise((resolve, reject) => {
             const requestHash = djb2hash(JSON.stringify(request));
-            this.openResolvers.set(requestHash, resolve);
+            if (this.openResolvers.has(requestHash)) {
+                this.openResolvers.get(requestHash).push(resolve);
+            } else {
+                this.openResolvers.set(requestHash, [resolve]);
+            }
             this.sharedWorker
                 .sendMessage(`autoupdate`, {
                     action: `open`,
@@ -235,7 +242,7 @@ export class AutoupdateCommunicationService {
     private handleReceiveError(data: AutoupdateReceiveError): void {
         if (data.content.data?.reason === `Logout`) {
             if (this.authService.isAuthenticated) {
-                this.authService.logout();
+                this.authService.invalidateSessionAfter();
             }
             return;
         } else if (data.content.data?.terminate) {
@@ -298,7 +305,7 @@ export class AutoupdateCommunicationService {
             return;
         }
 
-        this.openResolvers.get(data.content.requestHash)(data.content?.streamId);
+        this.openResolvers.get(data.content.requestHash).forEach(r => r(data.content?.streamId));
         this.openResolvers.delete(data.content.requestHash);
     }
 

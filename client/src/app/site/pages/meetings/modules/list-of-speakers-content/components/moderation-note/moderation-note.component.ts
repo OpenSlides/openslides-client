@@ -12,10 +12,10 @@ import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
+import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewAgendaItem, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
@@ -32,8 +32,8 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
 
     public moderatorNoteForm: UntypedFormGroup;
 
-    public get agendaItem(): ViewAgendaItem<any> {
-        return this.agendaItemRepo.getViewModelUnsafe(this._contentObject?.getModel().agenda_item_id);
+    public get listOfSpeakers(): ViewListOfSpeakers {
+        return this._listOfSpeakers;
     }
 
     @Input()
@@ -50,13 +50,13 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
     }
 
     public get moderatorNotes(): Observable<string> {
-        return this.agendaItemRepo
-            .getViewModelObservable(this._contentObject?.getModel().agenda_item_id)
-            .pipe(map(item => item?.moderator_notes));
+        return this.LoSRepo.getViewModelObservable(this._listOfSpeakers?.getModel().id).pipe(
+            map(item => item?.moderator_notes)
+        );
     }
 
     private get moderatorNotesForForm(): string {
-        return this.agendaItemRepo.getViewModel(this._contentObject?.getModel().agenda_item_id).moderator_notes;
+        return this._listOfSpeakers?.getModel().moderator_notes;
     }
 
     public get canSeeModerationNote(): boolean {
@@ -82,7 +82,7 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
         protected override translate: TranslateService,
         private operator: OperatorService,
         private formBuilder: FormBuilder,
-        protected agendaItemRepo: AgendaItemRepositoryService,
+        protected LoSRepo: ListOfSpeakersRepositoryService,
         private cd: ChangeDetectorRef
     ) {
         super();
@@ -94,8 +94,8 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
 
     public ngOnInit(): void {
         this.operator.permissionsObservable.subscribe(() => {
-            this._canSeeModerationNote = this.operator.hasPerms(Permission.agendaItemCanSeeModeratorNotes);
-            this._canManageModerationNote = this.operator.hasPerms(Permission.agendaItemCanManageModeratorNotes);
+            this._canSeeModerationNote = this.operator.hasPerms(Permission.listOfSpeakersCanSeeModeratorNotes);
+            this._canManageModerationNote = this.operator.hasPerms(Permission.listOfSpeakersCanManageModeratorNotes);
             this.cd.markForCheck();
         });
     }
@@ -108,8 +108,7 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
     }
 
     public saveChangesModerationNote(): void {
-        this.agendaItemRepo
-            .update(this.moderatorNoteForm.value, this.agendaItem)
+        this.LoSRepo.update(this.moderatorNoteForm.value, this.listOfSpeakers)
             .then(() => {
                 this.isEditing = false;
             })

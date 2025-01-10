@@ -317,6 +317,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
             submitter_ids: partialMotion.submitter_ids,
+            additional_submitter: partialMotion.additional_submitter,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids:

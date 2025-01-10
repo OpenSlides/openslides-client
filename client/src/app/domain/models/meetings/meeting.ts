@@ -139,6 +139,8 @@ export class Settings {
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
     public motions_export_follow_recommendation!: boolean;
+    public motions_hide_metadata_background: boolean;
+    public motions_create_enable_additional_submitter_text: boolean;
 
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
@@ -146,6 +148,7 @@ export class Settings {
     public motion_poll_default_onehundred_percent_base!: PollPercentBase;
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
+    public motion_poll_default_method!: PollMethod;
 
     // Users
     public users_enable_presence_view!: boolean;
@@ -253,6 +256,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
+    public anonymous_group_id!: Id; // group/anonymous_group_for_meeting_id;
 
     public list_of_speakers_countdown_id: Id; // projector_countdown/used_as_list_of_speakers_meeting_id;
     public poll_countdown_id: Id; // projector_countdown/used_as_poll_countdown_meeting_id;
@@ -369,8 +373,10 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_enable_reason_on_projector`,
         `motions_enable_sidebox_on_projector`,
         `motions_enable_recommendation_on_projector`,
+        `motions_hide_metadata_background`,
         `motions_show_referring_motions`,
         `motions_show_sequential_number`,
+        `motions_create_enable_additional_submitter_text`,
         `motions_recommendations_by`,
         `motions_block_slide_columns`,
         `motions_recommendation_text_mode`,
@@ -394,6 +400,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,
+        `motion_poll_default_method`,
         `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
@@ -513,7 +520,8 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_motion_poll_ids`,
         `default_projector_poll_ids`,
         `default_group_id`,
-        `admin_group_id`
+        `admin_group_id`,
+        `anonymous_group_id`
     ];
 }
 export interface Meeting

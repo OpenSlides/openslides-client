@@ -117,7 +117,7 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get gender(): string {
-        return this.user ? this.user.gender : ``;
+        return this.user ? this.user.gender?.name : ``;
     }
 
     public get contentType(): string {

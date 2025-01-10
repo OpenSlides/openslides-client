@@ -61,6 +61,7 @@ module.exports = {
                     'message': 'Please use a typecast or explicitly instantiate a new Observable.'
                 }],
                 'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
+                'no-debugger': ['error'],
                 '@typescript-eslint/no-unnecessary-type-constraint': ['error'],
                 '@typescript-eslint/no-this-alias': ['error'],
                 '@typescript-eslint/adjacent-overload-signatures': ['error'],

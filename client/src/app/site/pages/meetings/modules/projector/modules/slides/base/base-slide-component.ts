@@ -30,8 +30,19 @@ export abstract class BaseSlideComponent<T extends object> {
     /**
      * The projector where this slide is projected on.
      */
+    private _projector!: ViewProjector;
+    public get projector(): ViewProjector {
+        return this._projector;
+    }
+
     @Input()
-    public projector!: ViewProjector;
+    public set projector(value: ViewProjector) {
+        this.setProjector(value);
+    }
+
+    protected setProjector(value: ViewProjector): void {
+        this._projector = value;
+    }
 
     protected setData(value: SlideData<T>): void {
         this._data = value;

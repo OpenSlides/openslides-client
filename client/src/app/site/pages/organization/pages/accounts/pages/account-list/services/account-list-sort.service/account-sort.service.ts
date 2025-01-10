@@ -1,5 +1,5 @@
 import { Injectable, ProviderToken } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -21,7 +21,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `member_number`, label: _(`Membership number`) },
         { property: `is_active`, label: _(`Is active`) },
         { property: `default_vote_weight`, label: _(`Vote weight`) },
-        { property: `gender`, label: _(`Gender`) },
+        { property: `gender_name`, label: _(`Gender`) },
         { property: `id`, label: _(`Sequential number`) },
         { property: `numberOfMeetings`, label: _(`Amount of meetings`), baseKeys: [`meeting_ids`] },
         { property: `last_email_sent`, label: _(`Last email sent`) },

@@ -86,6 +86,12 @@
                     border: 1px dashed #bbb;
                 }
             }
+            p {
+                br:only-child {
+                    content: '';
+                    display: inline-block;
+                }
+            }
 
             @include detail-view-appearance;
         }

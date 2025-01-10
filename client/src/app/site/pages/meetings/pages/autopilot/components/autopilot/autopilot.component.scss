@@ -36,4 +36,19 @@
             max-width: 1320px;
         }
     }
+    @media screen and (min-width: 1550px) {
+        .col-right {
+            flex-grow: 2;
+        }
+    }
+    @media (max-width: 1440px) {
+        .col-right {
+            max-width: 304px;
+        }
+    }
+    @media (min-width: 1820px) {
+        .col-right {
+            max-width: 690px;
+        }
+    }
 }

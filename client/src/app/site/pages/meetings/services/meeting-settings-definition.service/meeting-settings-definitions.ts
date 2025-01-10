@@ -1,5 +1,5 @@
 import { ValidatorFn, Validators } from '@angular/forms';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
@@ -13,6 +13,7 @@ import { createEmailValidator } from 'src/app/infrastructure/utils/validators/em
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
+import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
@@ -59,6 +60,7 @@ export interface SettingsInput<V = any> {
     // alternative to `choices`; overwrites `choices` if both are given
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
+    warnText?: string; // default: ""
     indentation?: number; // default: 0. Indents the input field by the given amount to simulate nested settings
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
@@ -87,6 +89,13 @@ export interface SettingsInput<V = any> {
      * @returns whether to disable the setting or not
      */
     forbidden?: (meetingView: ViewMeeting) => boolean;
+    /**
+     * A function to conditionally give a warning depending on used organization's settings
+     *
+     * @param orgaSettings: The `OrganizationSettingsService` has to be passed, because it is not injected in the
+     * settings definitions
+     */
+    warn?: (orgaSettings: OrganizationSettingsService) => boolean;
 
     hide?: boolean; // Hide the setting in the settings view
 }
@@ -185,7 +194,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`System`),
+                settings: [
                     {
                         key: `locked_from_inside`,
                         label: _(`Activate closed meeting`),
@@ -194,6 +208,18 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         ),
                         type: `boolean`,
                         forbidden: meetingView => meetingView.isTemplate
+                    },
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Activate public access`),
+                        type: `boolean`,
+                        helpText: _(
+                            `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
+                        ),
+                        warnText: _(
+                            `Note: The public access setting is deactivated for the organization. Please contact your admins or hosting providers to activate the setting.`
+                        ),
+                        warn: orgaSettings => !orgaSettings.instant(`enable_anonymous`)
                     }
                 ]
             },
@@ -558,6 +584,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_enable_working_group_speaker`,
                         label: _(`Activate the selection field 'spokesperson'`),
                         type: `boolean`
+                    },
+                    {
+                        key: `motions_create_enable_additional_submitter_text`,
+                        label: _(`Activate submitter extension field in motion create form`),
+                        helpText: _(`Requires permission to manage motion metadata`),
+                        type: `boolean`
                     }
                 ]
             },
@@ -632,6 +664,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Show meta information box beside the title on projector`),
                         type: `boolean`,
                         helpText: _(`If deactivated it is displayed below the title`)
+                    },
+                    {
+                        key: `motions_hide_metadata_background`,
+                        label: _(`Make background color from meta information box on the projector transparent`),
+                        type: `boolean`
                     },
                     {
                         key: `motions_block_slide_columns`,
@@ -765,6 +802,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motion_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
+                    },
+                    {
+                        key: `motion_poll_default_method`,
+                        label: _(`Default vote method`),
+                        type: `choice`,
+                        choices: MotionPollMethodVerbose
                     },
                     {
                         key: `motion_poll_default_onehundred_percent_base`,
@@ -981,14 +1024,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `users_email_subject`,
                         label: _(`Email subject`),
-                        helpText: _(`You can use {event_name} and {username} as placeholder.`)
+                        helpText: _(
+                            `Possible placeholders for email subject and body: {title}, {first_name}, {last_name}, {groups}, {structure_levels}, {event_name}, {url}, {username} and {password}`
+                        )
                     },
                     {
                         key: `users_email_body`,
                         label: _(`Email body`),
                         type: `text`,
                         helpText: _(
-                            `Use these placeholders: {name}, {event_name}, {url}, {username}, {password}. The url referrs to the system url.`
+                            `Possible placeholders for email subject and body: {title}, {first_name}, {last_name}, {groups}, {structure_levels}, {event_name}, {url}, {username} and {password}`
                         )
                     }
                 ]

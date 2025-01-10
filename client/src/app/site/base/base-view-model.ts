@@ -70,6 +70,7 @@ export interface BaseViewModel extends Displayable, Identifiable, HasCollection 
     getTitle: () => string;
     getListTitle: () => string;
     getDelegationSettingEnabled: () => boolean;
+    isSelfVotingAllowedDespiteDelegation: () => boolean;
 
     /**
      * Returns the verbose name.

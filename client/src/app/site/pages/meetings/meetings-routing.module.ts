@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { Permission } from '../../../domain/definitions/permission';
+import { AuthGuard } from '../../guards/auth.guard';
 import { PermissionGuard } from '../../guards/permission.guard';
 import { MeetingsNavigationWrapperComponent } from './modules/meetings-navigation/components/meetings-navigation-wrapper/meetings-navigation-wrapper.component';
 
@@ -12,9 +13,7 @@ const routes: Routes = [
         children: [
             {
                 path: ``,
-                loadChildren: () => import(`./pages/home/home.module`).then(m => m.HomeModule),
-                data: { meetingPermissions: [Permission.meetingCanSeeFrontpage] },
-                canLoad: [PermissionGuard]
+                loadChildren: () => import(`./pages/home/home.module`).then(m => m.HomeModule)
             },
             {
                 path: `agenda`,
@@ -86,7 +85,14 @@ const routes: Routes = [
                 path: `error`,
                 loadChildren: () => import(`../error/error.module`).then(m => m.ErrorModule)
             }
-        ]
+        ],
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        canLoad: [PermissionGuard]
+    },
+    {
+        path: `login`,
+        loadChildren: () => import(`../login/login.module`).then(m => m.LoginModule)
     }
 ];
 

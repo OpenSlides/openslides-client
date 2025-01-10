@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { fromUnixTime, getHours, getMinutes, isDate } from 'date-fns';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
 import { ViewMotion } from '../../../../../../view-models';
 
 @Component({
@@ -14,7 +15,7 @@ import { ViewMotion } from '../../../../../../view-models';
     styleUrls: [`./motion-manage-timestamp.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionManageTimestampComponent extends BaseUiComponent {
+export class MotionManageTimestampComponent extends BaseUiComponent implements OnInit {
     public get motion(): ViewMotion {
         return this._motion;
     }
@@ -43,14 +44,24 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
         return this._editMode;
     }
 
+    public get isEmpty(): boolean {
+        return !this.motion[this.field];
+    }
+
+    public get canChangeMetadata(): boolean {
+        return this._change_metadata;
+    }
+
     private _editMode = false;
+    private _change_metadata = false;
 
     private _motion!: ViewMotion;
 
     public constructor(
-        public perms: MotionPermissionService,
         private motionController: MotionControllerService,
-        private fb: UntypedFormBuilder
+        private fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
     ) {
         super();
 
@@ -69,6 +80,15 @@ export class MotionManageTimestampComponent extends BaseUiComponent {
                 if (!!currTime !== isDate(this.form.get(`date`).value)) {
                     this.form.get(`date`).setValue(!!currTime ? new Date() : null);
                 }
+            })
+        );
+    }
+
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this.operator.permissionsObservable.subscribe(() => {
+                this._change_metadata = this.operator.hasPerms(Permission.motionCanManageMetadata);
+                this.cd.markForCheck();
             })
         );
     }

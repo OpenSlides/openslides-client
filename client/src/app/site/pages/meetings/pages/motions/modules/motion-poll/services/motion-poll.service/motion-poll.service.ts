@@ -38,6 +38,7 @@ export interface TableDataEntryCreationInput {
 })
 export class MotionPollService extends PollService {
     public defaultPercentBase!: PollPercentBase;
+    public defaultPollMethod: PollMethod | undefined;
     public defaultPollType!: PollType;
     public defaultGroupIds!: number[];
 
@@ -52,6 +53,9 @@ export class MotionPollService extends PollService {
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingSettingsService.get(`motion_poll_default_type`).subscribe(type => (this.defaultPollType = type));
         this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(ids => (this.defaultGroupIds = ids));
+        this.meetingSettingsService
+            .get(`motion_poll_default_method`)
+            .subscribe(method => (this.defaultPollMethod = method));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
@@ -59,7 +63,7 @@ export class MotionPollService extends PollService {
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
-            pollmethod: PollMethod.YNA
+            pollmethod: this.defaultPollMethod
         };
 
         let titlePrefix = this.translate.instant(`Motion`);
@@ -76,7 +80,7 @@ export class MotionPollService extends PollService {
             }
         }
 
-        poll.title = `${titlePrefix} ${title}:`;
+        poll.title = `${titlePrefix} ${title}`;
 
         return poll;
     }

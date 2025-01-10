@@ -1,4 +1,4 @@
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
@@ -42,7 +42,6 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
      * @returns The id of the currently active meeting
      */
     public getEnsuredActiveMeetingId!: () => Id;
-    public getProjectedContentObjects!: () => Fqid[];
 
     public override canAccess(): boolean {
         return this.getEnsuredActiveMeetingId() === this.meeting_id || !this.getEnsuredActiveMeetingId();
@@ -50,6 +49,10 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
 
     public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.mediafile;
+    }
+
+    public override getDetailStateUrl(): string {
+        return this.url;
     }
 }
 interface IMeetingMediafileRelations {

@@ -64,10 +64,14 @@ class UnknownRelationError extends Error {}
 class UnknownFieldsetError extends Error {}
 
 /**
+ * @deprecated Naming of this in unclear. Use `FULL_FIELDSET` instead
+ *
  * Fieldset used if no fieldset is specified
  */
 export const DEFAULT_FIELDSET = `detail`;
 /**
+ * @deprecated Use ROUTING_FIELDSET from `app/domain/fieldsets/mist.ts` instead
+ *
  * Fieldset used for navigation purposes
  */
 export const ROUTING_FIELDSET = `routing`;

@@ -68,15 +68,19 @@
                                 }
                                 <div class="paragraph-text motion-text">
                                     <div>
-                                        @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                        @let currentParagraphLineFrom =
+                                            isAmendmentOfAmendment ? diffedParagraphs[i].lineFrom : paragraph.lineFrom;
+                                        @let currentParagraphLineTo =
+                                            isAmendmentOfAmendment ? diffedParagraphs[i].lineTo : paragraph.lineTo;
+                                        @if (currentParagraphLineFrom >= currentParagraphLineTo) {
                                             <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
+                                                {{ 'Line' | translate }} {{ currentParagraphLineFrom }}:
                                             </i>
                                         }
-                                        @if (paragraph.lineFrom < paragraph.lineTo) {
+                                        @if (currentParagraphLineFrom < currentParagraphLineTo) {
                                             <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }} -
-                                                {{ paragraph.lineTo }}:
+                                                {{ 'Line' | translate }} {{ currentParagraphLineFrom }} -
+                                                {{ currentParagraphLineTo }}:
                                             </i>
                                         }
                                     </div>

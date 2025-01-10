@@ -147,7 +147,7 @@
     }
 
     @if (!editTopic) {
-        <os-moderation-note [contentObject]="topic"></os-moderation-note>
+        <os-moderation-note [listOfSpeakers]="topic?.list_of_speakers"></os-moderation-note>
     }
     @if (!editTopic) {
         <div class="spacer-bottom-60">

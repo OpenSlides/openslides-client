@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { IMAGE_MIMETYPES, PDF_MIMETYPES } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { MediafileSlideData } from '../mediafile-slide-data';
@@ -10,6 +12,9 @@ import { MediafileSlideData } from '../mediafile-slide-data';
     styleUrls: [`./mediafile-slide.component.scss`]
 })
 export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideData> {
+    @ViewChild(PdfViewerComponent)
+    public pdfViewer: PdfViewerComponent;
+
     public get url(): string {
         return `/system/media/get/${this.data.data.id}`;
     }
@@ -38,8 +43,25 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
         return this.data.options[`fullscreen`] ?? true;
     }
 
+    public pdfLoaded(): void {
+        this.updatePdfScroll();
+    }
+
     public constructor() {
         super();
         (window as any).pdfWorkerSrc = new URL(`pdfjs/pdf.worker.min.mjs`, import.meta.url).toString();
+    }
+
+    protected override setProjector(value: ViewProjector): void {
+        super.setProjector(value);
+        if (this.pdfViewer) {
+            this.updatePdfScroll();
+        }
+    }
+
+    private updatePdfScroll(): void {
+        this.pdfViewer.pdfViewerContainer.nativeElement.scroll({
+            top: this.scroll
+        });
     }
 }

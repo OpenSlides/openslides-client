@@ -11,7 +11,6 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
 import { MeetingMediafileRepositoryService } from '../meeting-mediafile/meeting-mediafile-repository.service';
-import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
@@ -26,7 +25,6 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
         private activeMeetingService: ActiveMeetingService,
-        private projectionRepo: ProjectionRepositoryService,
         private meetingMediaRepo: MeetingMediafileRepositoryService
     ) {
         super(repositoryServiceCollector, Mediafile);
@@ -146,8 +144,6 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         const viewModel = super.createViewModel(model);
         viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingId;
         viewModel.getEnsuredActiveMeeting = (): ViewMeeting => this.activeMeetingService.meeting;
-        viewModel.getProjectedContentObjects = (): string[] =>
-            this.projectionRepo.getViewModelList().map(p => p.content_object_id);
         viewModel.getMeetingMediafile = (): ViewMeetingMediafile => this.getMeetingMediafile(model);
         return viewModel;
     }

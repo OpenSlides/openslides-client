@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';

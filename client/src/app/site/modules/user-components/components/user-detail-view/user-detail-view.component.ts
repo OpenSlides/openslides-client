@@ -21,10 +21,11 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
+import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
+import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { GENDERS } from '../../../../../domain/models/users/user';
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OneOfValidator } from '../../validators';
 
@@ -123,11 +124,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public personalInfoForm!: UntypedFormGroup;
 
-    public genders = GENDERS;
-
     public get isSelf(): boolean {
         return this.operator.operatorId === this._user?.id;
     }
+
+    public genderListSubscriptionConfig = getGenderListSubscriptionConfig();
 
     private set _initialState(state: any | null) {
         this._initialStateString = JSON.stringify(state);
@@ -153,6 +154,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public constructor(
         private fb: UntypedFormBuilder,
         private operator: OperatorService,
+        public genderRepo: GenderControllerService,
         private cd: ChangeDetectorRef
     ) {
         super();
@@ -306,7 +308,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             title: [``],
             first_name: [``],
             last_name: [``],
-            gender: [``],
+            gender_id: [``],
             email: [``, [createEmailValidator()]],
             last_email_sent: [``],
             default_password: [``],
