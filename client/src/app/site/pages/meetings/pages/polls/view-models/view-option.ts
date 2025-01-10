@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 import { OptionData, OptionTitle } from '../../../../../../domain/models/poll/generic-poll';
 import { Option } from '../../../../../../domain/models/poll/option';

@@ -120,11 +120,13 @@ export class OpenSlidesRouterService {
         return !urlSegments[0] || Number.isNaN(Number(urlSegments[0]));
     }
 
-    /**
-     * Checks if the operator is in a specified meeting
-     * @param info a string containing the meetingId of the meeting that is to be checked, or a full url (from which a meetingId can be extracted)
-     * @returns the meetingId from the url or (if info is not a url) Number(info), NaN if no number can be extracted
-     */
+    public getCurrentMeetingId(): number {
+        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
+        const segments = url.split(`/`);
+        const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
+        return Number(meetingIdString) || null;
+    }
+
     public getMeetingId(info: string): number {
         const segments = info.split(`/`);
         const meetingIdString = segments.length > 1 ? segments[1] : segments[0];

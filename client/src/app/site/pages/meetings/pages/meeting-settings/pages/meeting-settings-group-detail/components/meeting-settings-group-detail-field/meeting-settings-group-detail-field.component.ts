@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
@@ -194,7 +194,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public ngOnInit(): void {
         // filter out empty results in group observable. We never have no groups and it messes up
         // the settings change detection
-        this.groupObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable().pipe(
+        this.groupObservable = this.groupRepo.getViewModelListWithoutSystemGroupsObservable().pipe(
             filter(groups => !!groups.length),
             map(groups => this.getRestrictedValue(groups))
         );
@@ -226,7 +226,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 }
             ]
         });
-        if (this.disabled) {
+        if (this.disabled || this.hasWarning()) {
             this.form.disable();
         }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
@@ -272,6 +272,18 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.cd.detach();
+    }
+
+    /**
+     * Checks if a warning should be given
+     *
+     */
+    public hasWarning(): boolean {
+        if (this.setting.warn) {
+            return this.setting.warn(this.orgaSettings);
+        } else {
+            return false;
+        }
     }
 
     public getRestrictedValue<T>(value: T): T {

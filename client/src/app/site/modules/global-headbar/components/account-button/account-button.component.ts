@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { allAvailableTranslations, availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -33,10 +33,18 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`languageTrigger`, { read: MatMenuTrigger })
     public set languageTrigger(trigger: MatMenuTrigger | undefined) {
         this._languageTrigger = trigger;
+        this._langTriggerSubscription?.unsubscribe();
+        this._langTriggerSubscription = this._languageTrigger?.menuClosed.subscribe(() => {
+            if (this.show1337 < 0) {
+                this.show1337 = -20;
+            }
+        });
     }
 
+    private _langTriggerSubscription: Subscription;
+
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId)
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
             ? this.user.isPresentInMeeting()
             : false;
     }
@@ -57,16 +65,19 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this.theme.isDarkModeObservable;
     }
 
-    public user: ViewUser | null = null;
+    public get user(): ViewUser {
+        return this.operator.user;
+    }
+
     public username = ``;
     public isLoggedIn = false;
+
+    public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
     }
 
-    private _userId: Id | null | undefined = undefined; // to distinguish from null!
-    private _userSubscription: Subscription | null = null;
     private _isAllowedSelfSetPresent = false;
     private _languageTrigger: MatMenuTrigger | undefined = undefined;
     private clickCounter = 0;
@@ -82,7 +93,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private controller: UserControllerService,
         chessChallengeService: ChessChallengeService
     ) {
         super();
@@ -110,19 +120,19 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
      * language should be used.
      */
     public getLanguageName(abbreviation: string): string {
-        return availableTranslations[abbreviation] || `No language`;
+        return allAvailableTranslations[abbreviation] || `No language`;
     }
 
     public selectLanguage(abbreviation: string): void {
-        this.translate.use(abbreviation).subscribe();
+        this.translate.use(abbreviation);
     }
 
     public toggleOperatorPresence(): void {
-        this.controller
+        this.userRepo
             .setPresent({
                 isPresent: !this.isPresent,
                 meetingId: this.activeMeetingId,
-                users: [this.user!]
+                users: [this.user]
             })
             .resolve();
     }
@@ -135,8 +145,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async login(): Promise<void> {
-        debugger;
-        this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        if (this.activeMeetingId) {
+            this.router.navigate([`/`, this.activeMeetingId, `login`]);
+        } else {
+            this.router.navigate([`/`, `login`]);
+        }
     }
 
     public async logout(): Promise<void> {
@@ -180,29 +193,17 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return ``;
     }
 
-    private onOperatorUpdate(): void {
-        this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
-        const userId = this.operator.operatorId;
-        if (this._userId !== userId) {
-            this._userId = userId;
-            this.doUserUpdate();
-        }
+    public onLangIconClick(): void {
+        this.show1337++;
     }
 
-    private doUserUpdate(): void {
-        if (!this._userId) {
-            this.user = null;
-            return;
-        }
+    protected override cleanSubscriptions(): void {
+        this._langTriggerSubscription?.unsubscribe();
+        super.cleanSubscriptions();
+    }
 
-        if (this._userSubscription) {
-            this._userSubscription.unsubscribe();
-        }
-        this._userSubscription = this.userRepo.getViewModelObservable(this._userId).subscribe(user => {
-            if (user !== undefined) {
-                this.user = user;
-            }
-        });
+    private onOperatorUpdate(): void {
+        this.isLoggedIn = !this.operator.isAnonymous;
+        this.username = this.operator.shortName;
     }
 }

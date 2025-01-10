@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import {

@@ -46,7 +46,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * determine if we are in the amendment of amendment mode
      */
-    private isAmendmentOfAmendment = false;
+    public isAmendmentOfAmendment = false;
 
     /**
      * Change recommendation content.

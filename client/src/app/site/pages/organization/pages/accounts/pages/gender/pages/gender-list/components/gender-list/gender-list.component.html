@@ -1,0 +1,113 @@
+<os-head-bar
+    [hasMainButton]="true"
+    [mainActionTooltip]="'New gender' | translate"
+    [multiSelectMode]="isMultiSelect"
+    (mainEvent)="openGenderDialog()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Genders' | translate }}</h2>
+    </div>
+
+    <!-- Menu -->
+    <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="genderMenu"><mat-icon>more_vert</mat-icon></button>
+    </ng-container>
+
+    <!-- Multiselect info -->
+    <ng-container class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
+    </ng-container>
+</os-head-bar>
+
+<os-list
+    listStorageKey="genders"
+    [filterProps]="['name']"
+    [hiddenInMobile]="['info', 'menu']"
+    [listObservable]="repo.getViewModelListObservable()"
+    [multiSelect]="isMultiSelect"
+    [vScrollFixed]="60"
+    [(selectedRows)]="selectedRows"
+>
+    <div *osScrollingTableCell="'name'; row as gender" class="cell-slot fill">
+        <div>
+            {{ gender.name }}
+        </div>
+    </div>
+    <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
+        @if (gender.id > 4 && !isMultiSelect) {
+            <button mat-icon-button (click)="openGenderDialog(gender)">
+                <mat-icon>edit</mat-icon>
+            </button>
+        }
+    </div>
+    <div *osScrollingTableCell="'delete'; row as gender; config: { width: 40 }" class="cell-slot fill">
+        @if (gender.id > 4 && !isMultiSelect) {
+            <button color="warn" mat-icon-button (click)="deleteGenders(gender)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        }
+    </div>
+</os-list>
+
+<mat-menu #genderMenu="matMenu">
+    @if (!isMultiSelect) {
+        <div>
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+        </div>
+    } @else {
+        <div>
+            <button mat-menu-item (click)="selectAll()">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'Select all' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Deselect all' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button
+                class="red-warning-text"
+                mat-menu-item
+                [disabled]="!selectedRows.length || hasDefaultGenderSelected"
+                [matTooltip]="hasDefaultGenderSelected ? translate.instant('Default genders cannot be deleted.') : ''"
+                (click)="deleteSelectedGenders()"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </div>
+    }
+</mat-menu>
+
+<!-- Template for gender dialog -->
+<ng-template #genderDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'Gender' | translate }}</span>
+    </h1>
+    <mat-dialog-content class="os-form-card-mobile">
+        <form tabindex="-1" [formGroup]="genderForm" (keydown)="onKeyDown($event)">
+            <!-- Name -->
+            <mat-form-field class="os-dialog-large">
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input formControlName="name" matInput required />
+                <mat-error>
+                    {{ 'A name is required' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button [disabled]="!genderForm.valid" [mat-dialog-close]="true">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </mat-dialog-actions>
+</ng-template>

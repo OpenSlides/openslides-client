@@ -243,6 +243,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         } else {
             this.contentForm.removeControl(`votes_amount`);
         }
+        if (method === `N`) {
+            this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
+        }
     }
 
     /**
@@ -474,7 +477,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             {
                 validators: [
                     isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
+                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
                 ]
             }
         );

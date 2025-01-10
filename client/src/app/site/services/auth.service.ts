@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { OAuthEvent, OAuthService, OAuthSuccessEvent, TokenResponse } from 'angular-oauth2-oidc';
 import { EventType } from 'angular-oauth2-oidc/events';
 import { Observable } from 'rxjs';
@@ -46,6 +47,7 @@ export class AuthService {
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
+        private cookie: CookieService,
         private DS: DataStoreService,
         private oauthService: OAuthService,
         private httpService: HttpService
@@ -101,6 +103,18 @@ export class AuthService {
         }
     }
 
+    public async anonLogin(): Promise<void> {
+        this.cookie.set(`anonymous-auth`, ``, {
+            sameSite: `Strict`,
+            path: `/`
+        });
+        return;
+    }
+
+    public async startSamlLogin(): Promise<string> {
+        return this.authAdapter.startSamlLogin();
+    }
+
     public async updateUser(userId: number): Promise<void> {
         if (userId) {
             this._loginEvent.emit();
@@ -154,8 +168,12 @@ export class AuthService {
         this.lifecycleService.bootup();
     }
 
+    public async logoutAnonymous(): Promise<void> {
+        this.cookie.delete(`anonymous-auth`, `/`);
+    }
+
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken;
+        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
     }
 
     public async startOidcWorkflow(): Promise<void> {

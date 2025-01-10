@@ -12,11 +12,12 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -228,7 +229,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public ngOnInit(): void {
         this._languageCollator = new Intl.Collator(this.translate.currentLang);
         this.translate.onLangChange.subscribe(changeEvent => {
-            this._languageCollator = new Intl.Collator(changeEvent.lang);
+            this._languageCollator = getIntlCollatorForLang(changeEvent.lang);
             this.updateView();
         });
         if (this.sourceFiles instanceof Observable) {
@@ -274,13 +275,11 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     public async togglePublish(file: ViewMediafile): Promise<void> {
         const publishing = !file.isPublishedOrganizationWide;
-        let title: string = _(`Make file/directory public`);
-        let content = this.translate.instant(
-            `Do you want to publish this file/directory? Every admin in every meeting will be able to see this file/directory and all it's contents.`
-        );
+        let title: string = _(`Are you sure you want to make this file/folder public?`);
+        let content = this.translate.instant(`Every admin in every meeting will be able to see this content.`);
         let confirm: string = _(`Publish`);
         if (!publishing) {
-            title = _(`Unpublish file/directory`);
+            title = _(`Are you sure you want to unpublish this file/folder?`);
             content = ``;
             if (file.meeting_mediafiles?.length) {
                 content = this.translate.instant(`File is used in:`);

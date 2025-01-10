@@ -42,7 +42,7 @@
         @if (projector!.show_clock) {
             <os-projector-clock [color]="projector!.header_font_color"></os-projector-clock>
         }
-        @for (slide of slides | async; track slide) {
+        @for (slide of slides | async; track slide.id) {
             <div>
                 <os-slide-container
                     [projector]="projector!"

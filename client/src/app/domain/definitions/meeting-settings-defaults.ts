@@ -1,6 +1,6 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
     name: `Meeting title`,
@@ -44,6 +44,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_enable_reason_on_projector: false,
     motions_enable_recommendation_on_projector: true,
     motions_show_referring_motions: true,
+    motions_hide_metadata_background: false,
     motions_enable_sidebox_on_projector: false,
     motions_show_sequential_number: true,
     motions_recommendation_text_mode: `diff`,
@@ -60,6 +61,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_supporters_min_amount: 0,
     motions_block_slide_columns: 3,
     motion_poll_default_type: `pseudoanonymous`,
+    motion_poll_default_method: `YNA`,
     motion_poll_default_onehundred_percent_base: `YNA`,
     motion_poll_ballot_paper_selection: `CUSTOM_NUMBER`,
     motion_poll_ballot_paper_number: 8,

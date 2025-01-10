@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -346,9 +346,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async doUpdateMeeting(): Promise<void> {
+        const options =
+            this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+                ? {}
+                : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {
             meeting: this.editMeeting!,
-            options: this.getUsersToUpdateForMeetingObject()
+            options: options
         });
         this.goBack();
     }

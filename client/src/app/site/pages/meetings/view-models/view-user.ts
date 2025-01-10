@@ -2,6 +2,7 @@ import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
+import { ViewGender } from '../../organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
@@ -110,6 +111,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get hasMemberNumber(): boolean {
         return !!this.member_number;
+    }
+
+    public get gender_name(): string {
+        return this.gender?.name ?? ``;
     }
 
     // Will be set by the repository
@@ -265,7 +270,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public structure_levels(meetingId?: Id): ViewStructureLevel[] {
-        return this.getMeetingUser(meetingId)?.structure_levels ?? [];
+        return (this.getMeetingUser(meetingId)?.structure_levels ?? []).sort((a, b) => a.name.localeCompare(b.name));
     }
 
     public structure_level(meetingId?: Id): string {
@@ -292,12 +297,35 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get isVoteCountable(): boolean {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const present = this.isPresentInMeeting();
+        if (this.isSelfVotingAllowedDespiteDelegation() && present) {
+            return true;
+        }
         if (this.getDelegationSettingEnabled() && delegate) {
             return delegate.isPresentInMeeting();
         }
-        return this.isPresentInMeeting();
+        return present;
     }
     // ### block end.
+
+    public canVoteForGroups(): Id[] {
+        const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const present = this.isPresentInMeeting();
+        if (
+            !(
+                present &&
+                (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
+            )
+        ) {
+            return [];
+        }
+        return Array.from(
+            new Set([
+                ...this.group_ids(),
+                ...(this.vote_delegations_from() ?? []).flatMap(delegation => delegation.group_ids())
+            ])
+        );
+    }
 
     public override getDetailStateUrl(): string {
         if (this.getEnsuredActiveMeetingId && this.getEnsuredActiveMeetingId()) {
@@ -364,6 +392,7 @@ interface IUserRelations {
     options: ViewOption[];
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
+    gender?: ViewGender;
 }
 
 export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}

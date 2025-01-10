@@ -10,7 +10,7 @@ import {
     mergeMap,
     Observable
 } from 'rxjs';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -104,7 +104,9 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     /**
      * All slides to show on this projector
      */
-    public slides: Observable<SlideData<object>[]> = new Observable<SlideData<object>[]>();
+    public slides: Observable<(SlideData<object> & { id: Id })[]> = new Observable<
+        (SlideData<object> & { id: Id })[]
+    >();
 
     /**
      * Info about if the user is offline.
@@ -174,13 +176,14 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
                     (projector?.current_projections || []).map(
                         projection =>
                             ({
+                                id: projection.id,
                                 collection: projection.content?.collection,
                                 data: projection.content,
                                 stable: !!projection.stable,
                                 type: projection.type || ``,
                                 options: projection.options || {},
                                 ...(!!projection.content?.[`error`] && {error: projection.content[`error`]})
-                            }) as SlideData
+                            }) as SlideData & { id: Id }
                     )
                 )
             )

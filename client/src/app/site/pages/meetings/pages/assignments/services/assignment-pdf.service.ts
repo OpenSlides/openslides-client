@@ -200,7 +200,7 @@ export class AssignmentPdfService {
 
                 resultBody.push({
                     table: {
-                        widths: [`3%`, `61%`, `33%`],
+                        widths: [`6%`, `58%`, `33%`],
                         headerRows: 1,
                         body: pollTableBody
                     },
@@ -262,10 +262,11 @@ export class AssignmentPdfService {
                 }
             })
             .map((singleResult: VotingResult) => {
-                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote!));
+                const pollKey = this.pollKeyVerbose.transform(singleResult.vote!);
+                const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
                 const resultValue = this.parsePollNumber.transform(singleResult.amount!);
                 const resultInPercent = this.pollPercentBase.transform(singleResult.amount!, poll, votingResult);
-                return `${votingKey}${!!votingKey ? `: ` : ``}${resultValue} ${
+                return `${votingKey}${resultValue} ${
                     singleResult.showPercent && resultInPercent ? resultInPercent : ``
                 }`;
             });

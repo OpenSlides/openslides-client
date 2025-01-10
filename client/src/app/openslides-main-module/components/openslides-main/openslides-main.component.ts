@@ -1,11 +1,12 @@
-import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ApplicationRef, Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { allAvailableTranslations } from 'src/app/domain/definitions/languages';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
@@ -14,6 +15,7 @@ import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { AuthService } from 'src/app/site/services/auth.service';
+import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -38,6 +40,7 @@ export class OpenSlidesMainComponent implements OnInit {
     public title = `OpenSlides`;
 
     public constructor(
+        @Inject(DOCUMENT) private document: Document,
         _viewContainer: ViewContainerRef,
         _openslidesService: OpenSlidesService,
         private appRef: ApplicationRef,
@@ -45,6 +48,7 @@ export class OpenSlidesMainComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
+        private ctService: CustomTranslationService,
         private translate: TranslateService,
         private storageService: StorageService,
         private config: DateFnsConfigurationService,
@@ -66,14 +70,14 @@ export class OpenSlidesMainComponent implements OnInit {
 
     private loadTranslation(): void {
         // manually add the supported languages
-        this.translate.addLangs(Object.keys(availableTranslations));
-        // this language will be used as a fallback when a translation isn't found in the current language
-        this.translate.setDefaultLang(`en`);
+        this.translate.addLangs(Object.keys(allAvailableTranslations));
         // get the browsers default language
         const browserLang = this.translate.getBrowserLang() as string;
+        let currentLang = `en`;
 
         // get language set in local storage
         this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY).then(lang => {
+            currentLang = lang as string;
             if (lang && this.translate.getLangs().includes(lang as string)) {
                 this.translate.use(lang as string);
             } else {
@@ -93,10 +97,18 @@ export class OpenSlidesMainComponent implements OnInit {
 
             // update date-fns locale
             this.updateLocaleByName(event.lang);
+
+            currentLang = event.lang;
+        });
+
+        this.ctService.customTranslationSubject.subscribe(() => {
+            this.translate.reloadLang(`en`);
+            this.translate.reloadLang(currentLang);
         });
     }
 
     private async updateLocaleByName(name: string): Promise<void> {
+        this.document.documentElement.lang = name;
         this.config.setLocale(await langToTimeLocale(name));
     }
 

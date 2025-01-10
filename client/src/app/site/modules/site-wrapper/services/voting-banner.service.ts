@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -68,7 +68,7 @@ export class VotingBannerService {
     }
 
     private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }): void {
-        if (this.activeMeeting.meetingId) {
+        if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
             const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(
                 poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined

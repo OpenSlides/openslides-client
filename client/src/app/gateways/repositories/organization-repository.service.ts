@@ -45,7 +45,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `saml_metadata_idp`,
             `saml_metadata_sp`,
             `saml_private_key`,
-            `genders`
+            `enable_anonymous`
         );
         return {
             ...super.getFieldsets(),

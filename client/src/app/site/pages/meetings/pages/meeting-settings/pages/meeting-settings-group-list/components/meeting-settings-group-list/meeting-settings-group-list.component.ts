@@ -32,10 +32,10 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
      * Resets every config for all registered group.
      */
     public async resetAll(): Promise<void> {
-        const title = this.translate.instant(
+        const title = this.translate.instant([
             `Are you sure you want to reset all options to default settings?`,
             `Changes of all settings group will be lost!`
-        );
+        ]);
         if (await this.promptDialog.open(title)) {
             await this.meetingRepo.update(this.getDefaultValues(), { meeting: this.activeMeeting! });
         }

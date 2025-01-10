@@ -142,16 +142,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {
         return this.repo.getViewModelObservable(id).pipe(
             map(user => {
-                if (!user?.meeting_users) {
+                const meeting_user = user?.meeting_users?.find(u => u.meeting_id === this.activeMeetingId);
+                if (!meeting_user) {
                     return of(user);
                 }
-
-                return this.meetingUserRepo
-                    .getViewModelObservable(user.meeting_users.find(u => u.meeting_id === this.activeMeetingId).id)
-                    .pipe(
-                        filter(u => !!u),
-                        map(u => u.user)
-                    );
+                return this.meetingUserRepo.getViewModelObservable(meeting_user.id).pipe(
+                    filter(u => !!u),
+                    map(u => u.user)
+                );
             }),
             switchAll()
         );

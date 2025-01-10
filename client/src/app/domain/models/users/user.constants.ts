@@ -1,8 +1,8 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 import { User } from './user';
 
-export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
+export const userHeadersAndVerboseNames: { [key in keyof User | 'gender']?: any } = {
     title: _(`Title`),
     first_name: _(`Given name`),
     last_name: _(`Surname`),

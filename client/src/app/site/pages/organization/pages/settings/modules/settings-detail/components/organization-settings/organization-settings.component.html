@@ -38,7 +38,6 @@
                             }
                         </mat-select>
                     </mat-form-field>
-                    <!-- require_duplicate_from -->
                     <section>
                         <mat-checkbox formControlName="require_duplicate_from">
                             {{ 'Public template required for creating new meeting' | translate }}
@@ -105,6 +104,13 @@
                             {{ 'Enable chat globally' | translate }}
                         </mat-checkbox>
                     </section>
+
+                    <section>
+                        <mat-checkbox formControlName="enable_anonymous">
+                            {{ 'Enable public meetings' | translate }}
+                        </mat-checkbox>
+                    </section>
+
                     <section>
                         <mat-form-field subscriptSizing="dynamic">
                             <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>

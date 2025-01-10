@@ -15,13 +15,13 @@ export const MSOfficePaste = Extension.create({
 const OfficePastePlugin = new Plugin({
     props: {
         transformPastedHTML(html: string): string {
-            console.log([html]);
+            console.debug([html]);
             if (html.indexOf(`microsoft-com`) !== -1 && html.indexOf(`office`) !== -1) {
                 html = transformLists(html);
                 html = transformRemoveBookmarks(html);
                 html = transformMsoStyles(html);
             }
-            console.log([html]);
+            console.debug([html]);
             return html;
         }
     }

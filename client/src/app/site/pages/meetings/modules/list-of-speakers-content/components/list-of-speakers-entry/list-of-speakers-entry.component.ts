@@ -3,13 +3,14 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -38,7 +39,8 @@ import { SpeakerUserSelectDialogService } from '../../modules/speaker-user-selec
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implements OnInit {
+export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
+    private _destroyed = new EventEmitter<boolean>();
     public readonly SpeechState = SpeechState;
 
     @ViewChild(SortingListComponent)
@@ -137,13 +139,19 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
                 if (showFirstContribution) {
                     this.modelRequestService.subscribeTo({
                         ...getLosFirstContributionSubscriptionConfig(this.activeMeetingId),
-                        hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+                        hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id)),
+                        unusedWhen: this._destroyed.pipe(startWith(false))
                     });
                 } else {
                     this.modelRequestService.closeSubscription(LOS_FIRST_CONTRIBUTION_SUBSCRIPTION);
                 }
             })
         );
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this._destroyed.emit(true);
     }
 
     /**

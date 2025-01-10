@@ -253,6 +253,7 @@ os-dashboard {
 
     .meeting-box-left {
         width: calc(95% - 50px);
+        flex-grow: 1;
 
         @media (max-width: 960px) {
             width: 90%;
