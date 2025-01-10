@@ -234,7 +234,7 @@
     >
         <button
             mat-icon-button
-            [disabled]="isMultiSelect"
+            [disabled]="isMultiSelect || !canEditOwnDelegation(user)"
             [matMenuTriggerData]="{ user: user }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
