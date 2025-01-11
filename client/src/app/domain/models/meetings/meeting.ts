@@ -209,7 +209,7 @@ export class Settings {
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = `meeting`;
-    public static ACCESSIBILITY_FIELD: keyof Meeting = `locked_from_inside`;
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `language`;
 
     public imported_at!: number;
 
