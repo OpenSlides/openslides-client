@@ -524,13 +524,19 @@ export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: 
     return -1;
 }
 
-export function viewModelListEqual<M extends BaseModel>(l1: BaseViewModel<M>[], l2: BaseViewModel<M>[]): boolean {
+export function viewModelListEqual<M extends BaseModel>(
+    l1: BaseViewModel<M>[],
+    l2: BaseViewModel<M>[],
+    checkContent = true
+): boolean {
     if (l1?.length !== l2?.length) {
         return false;
     }
 
     for (let i = 0; i < l1.length; i++) {
-        if (!viewModelEqual(l1[i], l2[i])) {
+        if (checkContent && !viewModelEqual(l1[i], l2[i])) {
+            return false;
+        } else if (!checkContent && l1[i].id !== l2[i].id) {
             return false;
         }
     }

@@ -45,7 +45,7 @@ export class ActivePollsService {
             .getViewModelListObservable()
             .pipe(
                 map(polls => polls.filter(p => p.isStarted)),
-                distinctUntilChanged(viewModelListEqual)
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false))
             )
             .subscribe(polls => {
                 this.pollIds = polls.map(poll => poll.id);

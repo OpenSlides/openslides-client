@@ -23,7 +23,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
 
         this.getViewModelListObservableOfStarted()
             .pipe(
-                distinctUntilChanged(viewModelListEqual),
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false)),
                 map(value => value.map(p => p.id))
             )
             .subscribe(startedPolls => {

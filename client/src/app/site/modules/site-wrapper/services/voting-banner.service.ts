@@ -44,7 +44,9 @@ export class VotingBannerService {
     ) {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
-            this.activePolls.activePollsObservable.pipe(distinctUntilChanged(viewModelListEqual)),
+            this.activePolls.activePollsObservable.pipe(
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false))
+            ),
             this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
             this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged()),
             this.operator.userObservable.pipe(
