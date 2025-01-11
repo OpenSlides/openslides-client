@@ -145,7 +145,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (canEditMeetingSettings()) {
+        @if (canEditMeetingSetting) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
@@ -167,7 +167,7 @@
                 <span>{{ 'Export' | translate }}</span>
             </button>
         }
-        @if (canEditMeetingSettings()) {
+        @if (canEditMeetingSetting) {
             <mat-divider></mat-divider>
             <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
                 <mat-icon>delete</mat-icon>

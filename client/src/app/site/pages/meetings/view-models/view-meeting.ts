@@ -140,7 +140,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return !this.locked_from_inside || user.group_ids(this.id).length > 0;
     }
 
-    public canEditMeetingSettings(user: ViewUser): boolean {
+    public canEditMeetingSetting(user: ViewUser): boolean {
         return user.getMeetingUser(this.id)?.group_ids.includes(this.meeting.admin_group_id);
     }
 }
