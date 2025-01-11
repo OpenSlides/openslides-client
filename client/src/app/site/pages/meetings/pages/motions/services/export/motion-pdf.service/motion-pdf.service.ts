@@ -38,6 +38,7 @@ interface CreateTextData {
     crMode: ChangeRecoMode;
     lineHeight: number;
     onlyChangedLines?: boolean;
+    showAllChanges?: boolean;
 }
 
 interface MotionToDocDefData {
@@ -106,6 +107,7 @@ export class MotionPdfService {
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
         const contentToExport = exportInfo ? exportInfo.content : null;
         let commentsToExport = exportInfo ? exportInfo.comments : null;
+        const showAllChanges = exportInfo ? exportInfo.showAllChanges : null;
 
         // get the line length from the config
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`) as number;
@@ -140,7 +142,8 @@ export class MotionPdfService {
                 lineLength,
                 crMode,
                 infoToExport,
-                optionToFollowRecommendation
+                optionToFollowRecommendation,
+                showAllChanges
             );
             motionPdfContent.push(metaInfo);
         }
@@ -157,7 +160,8 @@ export class MotionPdfService {
                 lnMode,
                 crMode,
                 lineHeight,
-                onlyChangedLines
+                onlyChangedLines,
+                showAllChanges
             });
             motionPdfContent.push(text);
         }
@@ -251,7 +255,8 @@ export class MotionPdfService {
         lineLength: number,
         crMode: ChangeRecoMode,
         infoToExport: InfoToExport[] | null | undefined,
-        optionToFollowRecommendation?: boolean
+        optionToFollowRecommendation?: boolean,
+        showAllChanges?: boolean
     ): Content {
         const metaTableBody = [];
 
@@ -529,13 +534,13 @@ export class MotionPdfService {
                     } else if (change.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
                         const amendment = change as ViewMotionAmendedParagraph;
                         let summaryText = `(${this.translate.instant(`Amendment`)} ${amendment.getNumber()}) -`;
-                        if (amendment.isRejected()) {
-                            summaryText += ` ${this.translate.instant(`Rejected`)}`;
-                        } else if (amendment.isAccepted()) {
+                        if (showAllChanges || amendment.isAccepted()) {
                             summaryText += ` ${this.translate.instant(amendment.stateName)}`;
                             // only append line and change, if the merge of the state of the amendment is accepted.
                             columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line} `);
                             columnChangeType.push(summaryText);
+                        } else if (amendment.isRejected()) {
+                            summaryText += ` ${this.translate.instant(`Rejected`)}`;
                         }
                     }
                 }
@@ -635,7 +640,15 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText({ crMode, lineHeight, lineLength, lnMode, motion, onlyChangedLines }: CreateTextData): Content {
+    private createText({
+        crMode,
+        lineHeight,
+        lineLength,
+        lnMode,
+        motion,
+        onlyChangedLines,
+        showAllChanges
+    }: CreateTextData): Content {
         let htmlText = ``;
 
         if (motion.isParagraphBasedAmendment()) {
@@ -680,7 +693,8 @@ export class MotionPdfService {
                 crMode,
                 changes: textChanges,
                 lineLength,
-                firstLine: motion.firstLine
+                firstLine: motion.firstLine,
+                showAllChanges: showAllChanges
             });
             // reformat motion text to split long HTML elements to easier convert into PDF
             htmlText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);

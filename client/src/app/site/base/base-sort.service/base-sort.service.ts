@@ -1,6 +1,7 @@
 import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { OsSortProperty } from './os-sort';
@@ -28,7 +29,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
     protected translate = inject(TranslateService);
 
     public constructor() {
-        this.intl = new Intl.Collator(this.translate.currentLang, {
+        this.intl = getIntlCollatorForLang(this.translate.currentLang, {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`

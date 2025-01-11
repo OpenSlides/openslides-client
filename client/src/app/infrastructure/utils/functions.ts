@@ -545,3 +545,7 @@ export function viewModelEqual<M extends BaseModel>(vm1: BaseViewModel<M>, vm2: 
 
     return vm1.viewModelUpdateTimestamp === vm2.viewModelUpdateTimestamp && vm1.id === vm2.id;
 }
+
+export function getIntlCollatorForLang(lang: string, options?: Intl.CollatorOptions): Intl.Collator {
+    return new Intl.Collator(lang === `1337` ? `en` : lang, options);
+}

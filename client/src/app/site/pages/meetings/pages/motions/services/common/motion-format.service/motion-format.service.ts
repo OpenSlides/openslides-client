@@ -12,6 +12,7 @@ import {
     MotionDiffService
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
+import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
 
@@ -42,6 +43,7 @@ interface DifferedViewArguments extends Arguments {
      * The first line affected for a motion or a unified change
      */
     firstLine: number;
+    showAllChanges?: boolean;
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -57,6 +59,7 @@ interface FormatMotionConfig extends Arguments {
      * The first line affected for a motion or a unified change
      */
     firstLine?: number;
+    showAllChanges?: boolean;
 }
 
 @Injectable({
@@ -96,7 +99,10 @@ export class MotionFormatService {
             throw new Error(`unrecognized ChangeRecoMode option (${crMode})`);
         }
 
-        return fn(targetMotion, { ...args, firstLine: args.firstLine || targetMotion.start_line_number });
+        return fn(targetMotion, {
+            ...args,
+            firstLine: args.firstLine || targetMotion.start_line_number
+        });
     }
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
@@ -216,9 +222,9 @@ export class MotionFormatService {
     };
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
+        const { changes, lineLength, highlightedLine, firstLine, showAllChanges }: DifferedViewArguments = args;
         const text: string[] = [];
-        const changesToShow = changes.filter(change => change.showInDiffView());
+        const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
@@ -287,8 +293,15 @@ export class MotionFormatService {
             if (current_text.amend_nr === ``) {
                 amendmentNr.push(this.translate.instant(`Amendment`));
             }
+        } else if (current_text.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
+            const amendment = current_text as ViewMotionAmendedParagraph;
+            amendmentNr.push(amendment.getNumber(), ` - `, amendment.stateName);
         } else {
-            amendmentNr.push(this.translate.instant(`Change recommendation`));
+            if (current_text.isRejected()) {
+                amendmentNr.push(this.translate.instant(`Change recommendation - rejected`));
+            } else {
+                amendmentNr.push(this.translate.instant(`Change recommendation`));
+            }
         }
         amendmentNr.push(`: </span></span>`);
         return amendmentNr.join(``);
