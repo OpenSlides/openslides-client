@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import pofile from 'pofile';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
@@ -30,6 +30,10 @@ export class PruningTranslationLoader implements TranslateLoader {
      * @param lang language string (en, fr, de, ...)
      */
     public getTranslation(lang: string): Observable<any> {
+        if (lang === `en`) {
+            return of({});
+        }
+
         let poUrl = `${this.prefix}${lang}${this.suffix}`;
         if (lang === `1337`) {
             poUrl = `${this.prefix}de${this.suffix}`;
