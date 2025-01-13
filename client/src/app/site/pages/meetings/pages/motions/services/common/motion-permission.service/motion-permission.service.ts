@@ -176,17 +176,6 @@ export class MotionPermissionService {
             case `change_state`: {
                 // check also for empty ViewMotion object (e.g. if motion.id is null)
                 // important for creating new motion as normal user
-                console.log(
-                    `CHANGE STATE`,
-                    motion,
-                    this.operator.hasPerms(Permission.motionCanManage),
-                    this.operator.hasPerms(Permission.motionCanManageMetadata),
-                    !!motion.state &&
-                        motion.state.allow_submitter_edit &&
-                        !this.operator.isAnonymous &&
-                        motion.submitters &&
-                        motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId)
-                );
                 if (!motion || !motion.id) {
                     return false;
                 }
