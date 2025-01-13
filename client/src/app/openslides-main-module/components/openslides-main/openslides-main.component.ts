@@ -14,7 +14,6 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
-import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -41,7 +40,6 @@ export class OpenSlidesMainComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
-        private ctService: CustomTranslationService,
         private translate: TranslateService,
         private storageService: StorageService,
         private config: DateFnsConfigurationService,
@@ -56,38 +54,33 @@ export class OpenSlidesMainComponent implements OnInit {
         this.loadCustomIcons();
     }
 
-    private async loadTranslation(): Promise<void> {
+    private loadTranslation(): void {
         // manually add the supported languages
         this.translate.addLangs(Object.keys(allAvailableTranslations));
-        this.translate.setDefaultLang(`en`);
         // get the browsers default language
         const browserLang = this.translate.getBrowserLang() as string;
-        let currentLang = `en`;
 
         // get language set in local storage
-        const lang = (await this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY)) as string;
-        currentLang = lang;
-        if (lang && this.translate.getLangs().includes(lang as string)) {
-            this.translate.use(lang as string);
-        } else {
-            // try to use the browser language if it is available. If not, uses english.
-            this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
-        }
+        this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY).then(lang => {
+            if (lang && this.translate.getLangs().includes(lang as string)) {
+                this.translate.use(lang as string);
+            } else {
+                // try to use the browser language if it is available. If not, uses english.
+                this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
+            }
 
-        // set date-fns locale
-        this.updateLocaleByName(this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang);
+            // set date-fns locale
+            this.updateLocaleByName(
+                this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang
+            );
+        });
 
         // listen for language changes
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
             this.storageService.set(CURRENT_LANGUAGE_STORAGE_KEY, event.lang);
-            currentLang = event.lang;
 
             // update date-fns locale
-            this.updateLocaleByName(currentLang);
-        });
-
-        this.ctService.customTranslationSubject.subscribe(() => {
-            this.translate.reloadLang(currentLang);
+            this.updateLocaleByName(event.lang);
         });
     }
 
