@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionBlockServiceModule } from '../motion-block-service.module';
@@ -25,7 +25,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     private _blockId = 0;
 
     public constructor(
-        store: MeetingActiveFiltersService,
+        store: ActiveFiltersService,
         protected override translate: TranslateService
     ) {
         super(store);
