@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
@@ -73,7 +73,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     private _canEditMeetingSubscription: Subscription;
 
     public constructor(
-        private cd: ChangeDetectorRef,
         private translate: TranslateService,
         private meetingRepo: MeetingControllerService,
         private meetingService: MeetingService,
@@ -102,7 +101,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
             this._canEditMeetingSubscription.unsubscribe();
             this._canEditMeetingSubscription = null;
         }
-        this.cd.detach();
     }
 
     public async onArchive(): Promise<void> {
