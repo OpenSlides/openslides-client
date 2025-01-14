@@ -105,8 +105,9 @@ export class CommitteeMeetingPreviewComponent {
     public async onDeleteMeeting(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this meeting?`);
         const content = this.title;
+        const confirm = this.translate.instant(`Yes, delete`);
 
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.open(title, content, confirm);
         if (confirmed) {
             await this.meetingRepo.delete(this.meeting);
         }

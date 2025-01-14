@@ -14,6 +14,7 @@ interface PromptDialogData {
     styleUrls: [`./prompt-dialog.component.scss`]
 })
 export class PromptDialogComponent {
+
     public constructor(
         public dialogRef: MatDialogRef<PromptDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: PromptDialogData
