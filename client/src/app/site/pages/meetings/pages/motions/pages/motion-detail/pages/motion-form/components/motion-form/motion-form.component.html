@@ -36,7 +36,7 @@
                                 <!-- Submitter -->
                                 @if (newMotion) {
                                     <div class="content-field">
-                                        @if (canChangeMetadata) {
+                                        @if (canChangeMetadata && canSeeUsers) {
                                             <mat-form-field>
                                                 <mat-label>{{ 'Submitters' | translate }}</mat-label>
                                                 <os-repo-search-selector
@@ -56,6 +56,10 @@
                                                     </ng-template>
                                                 </os-repo-search-selector>
                                             </mat-form-field>
+                                        } @else if (canChangeMetadata && allowAdditionalSubmitter) {
+                                            <h3>
+                                                <span>{{ 'Submitters' | translate }}</span>
+                                            </h3>
                                         }
                                     </div>
                                 }
