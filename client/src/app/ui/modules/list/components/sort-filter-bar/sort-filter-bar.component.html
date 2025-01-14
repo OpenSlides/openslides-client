@@ -79,7 +79,11 @@
 
         <!-- Filter button -->
         @if (hasFilters) {
-            <button mat-button (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
+            <button
+                mat-button
+                style="width: max-content"
+                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+            >
                 <mat-icon
                     matBadgeColor="accent"
                     matBadgeSize="small"

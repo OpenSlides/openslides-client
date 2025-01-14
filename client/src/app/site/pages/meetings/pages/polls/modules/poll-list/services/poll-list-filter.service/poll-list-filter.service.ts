@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { OsFilter } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewPoll } from '../../../../view-models';
 import { PollListServiceModule } from '../poll-list-service.module';
@@ -11,14 +10,14 @@ import { PollListServiceModule } from '../poll-list-service.module';
 @Injectable({
     providedIn: PollListServiceModule
 })
-export class PollListFilterService extends BaseMeetingFilterListService<ViewPoll> {
+export class PollListFilterService extends BaseFilterListService<ViewPoll> {
     /**
      * set the storage key name
      */
     protected storageKey = `PollList`;
 
     public constructor(
-        store: MeetingActiveFiltersService,
+        store: ActiveFiltersService,
         private translate: TranslateService
     ) {
         super(store);

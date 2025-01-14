@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { allAvailableTranslations } from 'src/app/domain/definitions/languages';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
@@ -58,7 +58,7 @@ export class OpenSlidesMainComponent implements OnInit {
 
     private loadTranslation(): void {
         // manually add the supported languages
-        this.translate.addLangs(Object.keys(availableTranslations));
+        this.translate.addLangs(Object.keys(allAvailableTranslations));
         // get the browsers default language
         const browserLang = this.translate.getBrowserLang() as string;
         let currentLang = `en`;

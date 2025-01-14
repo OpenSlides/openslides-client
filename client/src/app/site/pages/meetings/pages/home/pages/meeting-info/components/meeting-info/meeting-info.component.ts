@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -50,13 +51,44 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
                             ]
                         },
                         {
+                            idField: `speaker_ids`,
+                            fieldset: [`id`, `begin_time`, `end_time`],
+                            follow: [
+                                {
+                                    idField: `structure_level_list_of_speakers_id`,
+                                    fieldset: FULL_FIELDSET
+                                }
+                            ]
+                        },
+                        {
                             idField: `list_of_speakers_ids`,
                             fieldset: [],
                             follow: [
                                 {
                                     idField: `speaker_ids`,
                                     fieldset: [`begin_time`, `end_time`, `point_of_order`],
-                                    follow: [`meeting_user_id`]
+                                    follow: [
+                                        {
+                                            idField: `meeting_user_id`,
+                                            fieldset: [`user_id`],
+                                            follow: [
+                                                {
+                                                    idField: `structure_level_ids`,
+                                                    fieldset: [`name`]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            idField: `structure_level_list_of_speakers_id`,
+                                            fieldset: FULL_FIELDSET,
+                                            follow: [
+                                                {
+                                                    idField: `structure_level_id`,
+                                                    fieldset: [`name`]
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         }

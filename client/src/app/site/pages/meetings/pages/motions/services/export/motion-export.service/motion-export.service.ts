@@ -20,6 +20,7 @@ export interface MotionExportInfo {
     metaInfo?: InfoToExport[];
     pdfOptions?: string[];
     comments?: number[];
+    showAllChanges?: boolean;
 }
 
 @Injectable({
