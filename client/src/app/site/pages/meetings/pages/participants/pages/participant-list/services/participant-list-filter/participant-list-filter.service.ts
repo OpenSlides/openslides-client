@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseFilterListService, OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
@@ -17,7 +16,7 @@ import { ParticipantListServiceModule } from '../participant-list-service.module
 @Injectable({
     providedIn: ParticipantListServiceModule
 })
-export class ParticipantListFilterService extends BaseMeetingFilterListService<ViewUser> {
+export class ParticipantListFilterService extends BaseFilterListService<ViewUser> {
     /**
      * set the storage key name
      */
@@ -51,7 +50,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
     private _voteDelegationEnabled: boolean;
 
     public constructor(
-        store: MeetingActiveFiltersService,
+        store: ActiveFiltersService,
         groupRepo: GroupControllerService,
         structureRepo: StructureLevelControllerService,
         genderRepo: GenderControllerService,
