@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -67,6 +68,8 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      * Indicates if an amendment can change multiple paragraphs or only one
      */
     public multipleParagraphsAllowed = false;
+
+    @ViewChild(`matStepper`, { read: MatStepper }) public stepper: MatStepper;
 
     public canSave: boolean = false;
 
@@ -144,6 +147,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     }
 
     public checkCanSave(): void {
+        this.stepper.next();
         this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
             if (
                 this.contentForm.value.selectedParagraphs.find((para: ParagraphToChoose) => para.paragraphNo === paraNo)
