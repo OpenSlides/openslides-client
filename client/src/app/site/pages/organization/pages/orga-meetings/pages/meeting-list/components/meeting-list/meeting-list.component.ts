@@ -71,8 +71,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         const title = this.translate.instant(toTranslate);
         const content = meeting?.name ?? ``;
         const confirm = this.translate.instant(`Yes, delete`);
+        const decline = ``;
+        const deletion = true;
 
-        const answer = await this.promptService.open(title, content, confirm);
+        const answer = await this.promptService.open(title, content, confirm, decline, deletion);
         if (answer) {
             await this.meetingController.delete(...toDelete);
         }
