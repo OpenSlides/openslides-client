@@ -41,6 +41,7 @@ export class ActionService {
         if (!this.isAllowed()) {
             return null;
         }
+        console.log(`send requests:`, requests);
         const response = await this.http.post<T>(handleSeparately ? ACTION_SEPARATELY_URL : ACTION_URL, requests, {
             catchError
         });
