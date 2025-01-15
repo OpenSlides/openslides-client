@@ -21,9 +21,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
 
     private _changeRecoMode: ChangeRecoMode;
-    public get changeRecoMode(): ChangeRecoMode {
-        return this._changeRecoMode;
-    }
 
     @Input()
     public noEditMode = false;
@@ -34,6 +31,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
         this.updateFormatedText.emit();
         this.cd.markForCheck();
+    }
+
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
     }
 
     @Input()
