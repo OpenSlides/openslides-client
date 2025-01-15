@@ -127,7 +127,18 @@ span {
             margin-left: 0 !important;
             margin-top: 0 !important;
         }
+
+        .original-motion-card {
+            border-color: #ff9001;
+            border-width: 2px;
+        }
     }
+}
+
+.origin-motion-meta-data-container {
+    border-radius: 3px;
+    padding: 0.5em;
+    margin-bottom: 1em;
 }
 
 .mobile-view {

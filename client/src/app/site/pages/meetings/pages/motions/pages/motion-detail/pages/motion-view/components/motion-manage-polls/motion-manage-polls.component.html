@@ -1,7 +1,17 @@
 <div class="spacer-top-20 spacer-bottom-20">
     @if (motion && motion.polls$ | async; as polls) {
-        @for (poll of polls | reverse; track poll.id) {
-            <os-motion-poll [pollViewModel]="poll" (dialogOpened)="onEditPoll(poll)"></os-motion-poll>
+        @if (inTabs && polls.length > 1) {
+            <mat-tab-group>
+                @for (poll of polls | reverse; track poll.id) {
+                    <mat-tab [label]="poll.title">
+                        <os-motion-poll [pollViewModel]="poll" (dialogOpened)="onEditPoll(poll)"></os-motion-poll>
+                    </mat-tab>
+                }
+            </mat-tab-group>
+        } @else {
+            @for (poll of polls | reverse; track poll.id) {
+                <os-motion-poll [pollViewModel]="poll" (dialogOpened)="onEditPoll(poll)"></os-motion-poll>
+            }
         }
     }
     @if (!hideAdd) {
