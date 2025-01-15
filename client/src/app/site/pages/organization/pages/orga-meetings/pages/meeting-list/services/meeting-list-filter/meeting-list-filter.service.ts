@@ -36,34 +36,8 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
     }
 
     protected getFilterDefinitions(): OsFilter<ViewMeeting>[] {
-        let filters: OsFilter<ViewMeeting>[] = [
-            {
-                property: `getStatus`,
-                label: _(`Status`),
-                options: [
-                    { label: _(`Is archived`), condition: `isArchived` },
-                    { label: _(`Is not archived`), condition: `isNotArchived` },
-                    { label: _(`Is public`), condition: `isAnonymous` },
-                    { label: _(`Is not public`), condition: `isNotAnonymous` },
-                    { label: _(`Is closed`), condition: `isLockedFromInside` }
-                ]
-            },
-            {
-                property: `isArchived`,
-                label: _(`Archived`),
-                options: [
-                    { label: _(`Is archived`), condition: true },
-                    { label: _(`Is not archived`), condition: [false, null] }
-                ]
-            },
-            {
-                property: `enable_anonymous`,
-                label: _(`Public`),
-                options: [
-                    { label: _(`Is public`), condition: true },
-                    { label: _(`Is not public`), condition: [false, null] }
-                ]
-            },
+        const filters: OsFilter<ViewMeeting>[] = [
+            this.getStatusFilter(),
             {
                 property: `relatedTime`,
                 label: _(`Time`),
@@ -77,18 +51,28 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
             this.orgaTagFilterOptions
         ];
 
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
-            filters = filters.concat({
-                property: `isTemplate`,
-                label: _(`Public template`),
-                options: [
-                    { label: _(`Is a template`), condition: true },
-                    { label: _(`Is not a template`), condition: [false, null] }
-                ]
-            });
-        }
-
         return filters;
+    }
+
+    private getStatusFilter(): OsFilter<ViewMeeting> {
+        const filter: OsFilter<ViewMeeting> = {
+            property: `getStatus`,
+            label: _(`Status`),
+            options: [
+                { label: _(`Is archived`), condition: `isArchived` },
+                { label: _(`Is not archived`), condition: `isNotArchived` },
+                { label: _(`Is public`), condition: `isAnonymous` },
+                { label: _(`Is not public`), condition: `isNotAnonymous` },
+                { label: _(`Is closed`), condition: `isLockedFromInside` }
+            ]
+        };
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+            filter.options = filter.options.concat([
+                { label: _(`Is a template`), condition: `isTemplate` },
+                { label: _(`Is not a template`), condition: `isNotTemplate` }
+            ]);
+        }
+        return filter;
     }
 
     protected override preFilter(rawInputData: ViewMeeting[]): ViewMeeting[] {
