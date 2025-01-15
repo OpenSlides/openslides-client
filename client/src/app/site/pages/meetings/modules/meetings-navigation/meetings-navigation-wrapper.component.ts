@@ -1,25 +1,48 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavigationEnd } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { NavigationEnd, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { NotifyService } from 'src/app/gateways/notify.service';
 import { navItemAnim } from 'src/app/infrastructure/animations';
 import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
+import { GlobalHeadbarModule } from 'src/app/site/modules/global-headbar';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { SidenavModule } from 'src/app/ui/modules/sidenav';
 import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
-import { ChatNotificationService, ChatService } from '../../../../pages/chat';
-import { LoadFontService } from '../../../../services/load-font.service';
+import { ChatNotificationService, ChatService } from '../../pages/chat';
+import { InteractionModule } from '../../pages/interaction/interaction.module';
+import { LoadFontService } from '../../services/load-font.service';
 
 @Component({
     selector: `os-meetings-navigation-wrapper`,
     templateUrl: `./meetings-navigation-wrapper.component.html`,
     styleUrls: [`./meetings-navigation-wrapper.component.scss`],
-    animations: [navItemAnim]
+    animations: [navItemAnim],
+    imports: [
+        CommonModule,
+        SidenavModule,
+        DirectivesModule,
+        GlobalHeadbarModule,
+        InteractionModule,
+        TranslatePipe,
+        MatMenuModule,
+        MatDividerModule,
+        MatIconModule,
+        MatBadgeModule,
+        RouterModule
+    ],
+    standalone: true
 })
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {
     /**
@@ -59,7 +82,6 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
     public constructor(
         _loadFontService: LoadFontService, // just to initialize this service
         _notifyService: NotifyService, // just to initialize this service
-        protected override translate: TranslateService,
         private vp: ViewPortService,
         private mainMenuService: MainMenuService,
         private chatNotificationService: ChatNotificationService,

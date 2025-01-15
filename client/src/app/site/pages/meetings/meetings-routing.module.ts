@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Permission } from '../../../domain/definitions/permission';
 import { AuthGuard } from '../../guards/auth.guard';
 import { PermissionGuard } from '../../guards/permission.guard';
-import { MeetingsNavigationWrapperComponent } from './modules/meetings-navigation/components/meetings-navigation-wrapper/meetings-navigation-wrapper.component';
+import { MeetingsNavigationWrapperComponent } from './modules/meetings-navigation/meetings-navigation-wrapper.component';
 
 const routes: Routes = [
     {
