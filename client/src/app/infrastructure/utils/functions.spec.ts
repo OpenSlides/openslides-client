@@ -762,36 +762,35 @@ describe(`utils: functions`, () => {
     describe(`viewModelListEqual`, () => {
         const els: any[] = [
             { viewModelUpdateTimestamp: 1234, id: 1 },
-            { viewModelUpdateTimestamp: 1235, id: 1 },
             { viewModelUpdateTimestamp: 1234, id: 2 },
             { viewModelUpdateTimestamp: 1235, id: 2 },
             { viewModelUpdateTimestamp: 1234, id: 3 }
         ];
 
         it(`detects change via id switch`, () => {
-            const l1 = [els[0], els[2]];
-            const l2 = [els[0], els[4]];
-
-            expect(viewModelListEqual(l1, l2)).toBeFalse();
-        });
-
-        it(`detects change via change date switch`, () => {
-            const l1 = [els[0], els[2]];
+            const l1 = [els[0], els[1]];
             const l2 = [els[0], els[3]];
 
             expect(viewModelListEqual(l1, l2)).toBeFalse();
         });
 
+        it(`detects change via change date switch`, () => {
+            const l1 = [els[0], els[1]];
+            const l2 = [els[0], els[2]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
         it(`detects change via size change`, () => {
-            const l1 = [els[0], els[2]];
+            const l1 = [els[0], els[1]];
             const l2 = [els[0]];
 
             expect(viewModelListEqual(l1, l2)).toBeFalse();
         });
 
         it(`detects equality`, () => {
-            const l1 = [els[0], els[2], els[4]];
-            const l2 = [els[0], els[2], els[4]];
+            const l1 = [els[0], els[1], els[3]];
+            const l2 = [els[0], els[1], els[3]];
 
             expect(viewModelListEqual(l1, l2)).toBeTrue();
         });
