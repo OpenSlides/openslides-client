@@ -305,7 +305,6 @@ export class MotionSlideComponent
 
     private recalcMotionText(): void {
         const changes = this.crMode === ChangeRecoMode.Original ? [] : this.getAllTextChangingObjects();
-        console.log(changes);
         this.formattedMotionTextPlain = this.motionFormatService.formatMotion({
             targetMotion: this.data.data,
             crMode: this.crMode,
