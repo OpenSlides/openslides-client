@@ -5,6 +5,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
@@ -48,12 +49,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     public getChangeRecosOfMotionObservable(motionId: Id): Observable<ViewMotionChangeRecommendation[]> {
         return this.getViewModelListObservable().pipe(
             map((recos: ViewMotionChangeRecommendation[]) => recos.filter(reco => reco.motion_id === motionId)),
-            distinctUntilChanged(
-                (prev, curr) =>
-                    prev?.length === curr?.length &&
-                    Math.max(...prev.map(e => e.viewModelUpdateTimestamp)) ===
-                        Math.max(...curr.map(e => e.viewModelUpdateTimestamp))
-            )
+            distinctUntilChanged(viewModelListEqual)
         );
     }
 
