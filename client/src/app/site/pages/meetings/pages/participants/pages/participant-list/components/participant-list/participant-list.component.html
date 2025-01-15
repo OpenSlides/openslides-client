@@ -234,7 +234,7 @@
     >
         <button
             mat-icon-button
-            [disabled]="isMultiSelect"
+            [disabled]="isMultiSelect || !canEditOwnDelegation(user)"
             [matMenuTriggerData]="{ user: user }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
@@ -258,11 +258,16 @@
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
         }
-
-        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
-            <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit details' | translate }}</span>
-        </button>
+        @if (canEditOwnDelegation(user)) {
+            <button
+                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
+                mat-menu-item
+                (click)="openEditInfo(user)"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit details' | translate }}</span>
+            </button>
+        }
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="user.id">
             <mat-icon>edit</mat-icon>
@@ -335,6 +340,14 @@
             <button *osPerms="permission.userCanUpdate" mat-menu-item routerLink="speaker-list">
                 <mat-icon>record_voice_over</mat-icon>
                 <span translate>Contributions</span>
+            </button>
+            <button
+                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(operator.user)"
+                mat-menu-item
+                (click)="openEditInfo(operator.user)"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Change your delegation' | translate }}</span>
             </button>
             <button mat-menu-item (click)="pdfExportUserList()">
                 <mat-icon>picture_as_pdf</mat-icon>
