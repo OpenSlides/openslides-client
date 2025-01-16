@@ -98,11 +98,7 @@ export class OpenSlidesRouterService {
         // Navigate to login if the user is not already there
         if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
             this.setNextAfterLoginUrl(url);
-            if (this.getCurrentMeetingId()) {
-                this.router.navigate([`/`, this.getCurrentMeetingId(), UrlTarget.LOGIN]);
-            } else {
-                this.router.navigate([`/`, UrlTarget.LOGIN]);
-            }
+            this.router.navigate([`/`, UrlTarget.LOGIN]);
         }
     }
 
