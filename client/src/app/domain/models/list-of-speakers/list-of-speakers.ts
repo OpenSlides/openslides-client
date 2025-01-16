@@ -28,12 +28,12 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         `id`,
         `closed`,
         `sequential_number`,
+        `moderator_notes`,
         `content_object_id`,
         `speaker_ids`,
         `structure_level_list_of_speakers_ids`,
         `projection_ids`,
-        `meeting_id`,
-        `moderator_notes`
+        `meeting_id`
     ];
 }
 export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}

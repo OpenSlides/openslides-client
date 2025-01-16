@@ -217,7 +217,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             `Enables public access to this meeting without login data. Permissions can be set after activation in the new group 'Public'.`
                         ),
                         warnText: _(
-                            `The public access setting is deactivated for the organization. Please contact your admins or hosting providers to activate the setting.`
+                            `Note: The public access setting is deactivated for the organization. Please contact your admins or hosting providers to activate the setting.`
                         ),
                         warn: orgaSettings => !orgaSettings.instant(`enable_anonymous`)
                     }
@@ -583,6 +583,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `motions_enable_working_group_speaker`,
                         label: _(`Activate the selection field 'spokesperson'`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_create_enable_additional_submitter_text`,
+                        label: _(`Activate submitter extension field in motion create form`),
+                        helpText: _(`Requires permission to manage motion metadata`),
                         type: `boolean`
                     }
                 ]
