@@ -36,7 +36,7 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
     }
 
     protected getFilterDefinitions(): OsFilter<ViewMeeting>[] {
-        const filters: OsFilter<ViewMeeting>[] = [
+        return [
             this.getStatusFilter(),
             {
                 property: `relatedTime`,
@@ -50,8 +50,6 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
             },
             this.orgaTagFilterOptions
         ];
-
-        return filters;
     }
 
     private getStatusFilter(): OsFilter<ViewMeeting> {
