@@ -29,7 +29,12 @@
             </p>
 
             @if (poll.canBeVotedFor()) {
-                <os-poll-progress [poll]="poll"></os-poll-progress>
+                <div class="type-and-state italic spacer-bottom-20 break-word">
+                    <!-- State -->
+                    <i>
+                        {{ 'Voting in progress' | translate }}
+                    </i>
+                </div>
             }
             @if (poll.isMotionPoll) {
                 <div>

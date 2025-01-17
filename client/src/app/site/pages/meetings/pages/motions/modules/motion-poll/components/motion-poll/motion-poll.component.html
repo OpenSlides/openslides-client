@@ -41,7 +41,11 @@
                     </span>
                     <!-- State -->
                     <span class="break-word">
-                        {{ poll.stateVerbose | translate }}
+                        @if (isAnonymous && poll.canBeVotedFor()) {
+                            {{ 'Voting in progress' | translate }}
+                        } @else {
+                            {{ poll.stateVerbose | translate }}
+                        }
                     </span>
                 </div>
             </div>

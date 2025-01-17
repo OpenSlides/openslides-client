@@ -59,6 +59,10 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
         return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
     }
 
+    public get isAnonymous(): boolean {
+        return this.operator.isAnonymousLoggedIn;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         private formBuilder: UntypedFormBuilder,
