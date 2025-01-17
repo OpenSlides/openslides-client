@@ -56,9 +56,6 @@
 
     padding: 0 0.75em;
     border-radius: 4px;
-    @include desktop {
-        padding: 0 0.75em 0 calc(0.75em + 38px);
-    }
     .speaker-start {
         .mat-mdc-icon-button.speaker-control-button {
             @include custom-size-button(46px, 42px);
@@ -75,6 +72,12 @@
         .icon {
             color: #fff;
         }
+    }
+}
+
+.desktop-speaker-indent {
+    @include desktop {
+        padding: 0 0.75em 0 calc(0.75em + 38px);
     }
 }
 
