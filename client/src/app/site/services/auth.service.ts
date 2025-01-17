@@ -124,6 +124,7 @@ export class AuthService {
         try {
             const response = await callback();
             if (response?.success) {
+                this.lifecycleService.shutdown();
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
                 this.sharedWorker.sendMessage(`auth`, { action: `update` });
