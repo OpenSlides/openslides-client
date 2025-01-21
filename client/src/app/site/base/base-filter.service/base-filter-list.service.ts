@@ -461,7 +461,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             if (!oldDefinition) {
                 return;
             }
-            if (definition.options.length === 0 && oldDefinition.options.length) {
+
+            const optionsNotLoaded =
+                definition.options.length === 0 ||
+                (definition.options.length === 1 &&
+                    typeof definition.options[0] !== `string` &&
+                    definition.options[0].condition === null);
+            if (optionsNotLoaded && oldDefinition.options.length) {
                 definition.options = oldDefinition.options;
             } else {
                 oldDefinition.options.forEach(option => {

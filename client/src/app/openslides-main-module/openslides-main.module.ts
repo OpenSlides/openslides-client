@@ -1,14 +1,17 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
 
+import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
+import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
+import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
 import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
 import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
@@ -53,7 +56,20 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         WaitForActionDialogService,
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
         httpInterceptorProviders,
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService({
+            defaultLanguage: `en`,
+            loader: {
+                provide: TranslateLoader,
+                useClass: PruningTranslationLoader,
+                deps: [HttpClient]
+            },
+            parser: {
+                provide: TranslateParser,
+                useClass: CustomTranslationParser,
+                deps: [CustomTranslationService]
+            }
+        })
     ]
 })
 export class OpenSlidesMainModule {}

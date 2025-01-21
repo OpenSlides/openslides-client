@@ -6,6 +6,7 @@ import {
     Content,
     ContentColumns,
     ContentImage,
+    ContentSvg,
     ContentTable,
     ContentText,
     Margins,
@@ -278,6 +279,12 @@ class PdfCreator {
     }
 }
 
+export interface HeaderLogos {
+    place: string;
+    isSVG: boolean;
+    content: string;
+}
+
 /**
  * Provides the general document structure for PDF documents, such as page margins, header, footer and styles.
  * Also provides general purpose open and download functions.
@@ -301,6 +308,8 @@ export class PdfDocumentService {
      */
     private imageUrls: string[] = [];
 
+    private headerLogos: { [place: string]: HeaderLogos | null } = {};
+
     private pdfWorker: Worker | null = null;
 
     private settings: Partial<Settings> = {};
@@ -316,6 +325,62 @@ export class PdfDocumentService {
         private meetingSettingsService: MeetingSettingsService
     ) {
         this.makeSettingsSubscriptions();
+    }
+
+    private async updateHeader(places: any): Promise<void> {
+        return new Promise(async resolve => {
+            for (const place of places) {
+                const url = this.mediaManageService.getLogoUrl(place);
+                if (url) {
+                    const fetchResult = await fetch(url);
+                    const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
+                    if (svg) {
+                        const text = await fetchResult.text();
+
+                        if (text.length >= 1) {
+                            const start = text.indexOf(`<svg`);
+                            const restText = text.slice(start + 5);
+                            const viewBox = this.getViewBox(text);
+                            const svgText = [`<svg `, viewBox, restText].join(``);
+                            this.headerLogos[place] = {
+                                place: place,
+                                isSVG: true,
+                                content: svgText
+                            };
+                        }
+                    } else {
+                        this.headerLogos[place] = {
+                            place: place,
+                            isSVG: false,
+                            content: url
+                        };
+                    }
+                } else {
+                    this.headerLogos[place] = null;
+                }
+            }
+            resolve();
+        });
+    }
+
+    private getViewBox(text: string): string {
+        const width: number = this.getSizeValue(text, `width="`);
+        const height: number = this.getSizeValue(text, `height="`);
+        if (width !== -1 && height !== -1) {
+            return ` viewBox=" 0 0 ` + (width + 100) + ` ` + (height + 100) + `" `;
+        }
+        return ``;
+    }
+
+    private getSizeValue(text: string, param: string): number {
+        const REGEX = /\d+/g;
+        if (text.search(param) !== -1) {
+            const indexStart = text.indexOf(param);
+            const indexEnd = text.indexOf(`"`, indexStart + param.length);
+            const value = Number(text.substring(indexStart + 7, indexEnd).match(REGEX)[0]);
+            return value;
+        }
+        return -1;
     }
 
     private makeSettingsSubscriptions(): void {
@@ -468,30 +533,32 @@ export class PdfDocumentService {
     /**
      * Downloads a pdf with the standard page definitions.
      */
-    public download({
+    public async download({
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): void {
-        this.showProgress();
-        const imageUrls = this.pdfImagesService.getImageUrls();
-        this.pdfImagesService.clearImageUrls();
-        new PdfCreator({
-            ...config,
-            document: this.getStandardPaper({
+    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
+        await this.updateHeader([`pdf_header_l`, `pdf_header_r`]).then(_ => {
+            this.showProgress();
+            const imageUrls = this.pdfImagesService.getImageUrls();
+            this.pdfImagesService.clearImageUrls();
+            new PdfCreator({
                 ...config,
-                documentContent: docDefinition,
-                pageMargins: config.pageMargins,
-                pageSize: config.pageSize,
-                landscape: false,
-                imageUrls: imageUrls
-            }),
-            filename: `${filetitle}.pdf`,
-            settings: this.settings,
-            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
-            progressService: this.progressService,
-            progressSnackBarService: this.progressSnackBarService
-        }).download();
+                document: this.getStandardPaper({
+                    ...config,
+                    documentContent: docDefinition,
+                    pageMargins: config.pageMargins,
+                    pageSize: config.pageSize,
+                    landscape: false,
+                    imageUrls: imageUrls
+                }),
+                filename: `${filetitle}.pdf`,
+                settings: this.settings,
+                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
+                progressService: this.progressService,
+                progressSnackBarService: this.progressSnackBarService
+            }).download();
+        });
     }
 
     /**
@@ -590,24 +657,35 @@ export class PdfDocumentService {
     private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): ContentColumns {
         let text: string;
         const columns: Content = [];
-        const logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
-        const logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
+        const logoHeaderLeft = this.headerLogos[`pdf_header_l`];
+        const logoHeaderRight = this.headerLogos[`pdf_header_r`];
+
         const header =
             exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
         // add the left logo to the header column
-        if (logoHeaderLeftUrl) {
-            columns.push(
-                this.getImage({
-                    image: logoHeaderLeftUrl,
-                    fit: [180, 40],
-                    width: `20%`
-                })
-            );
+        if (logoHeaderLeft) {
+            if (logoHeaderLeft.isSVG) {
+                columns.push(
+                    this.getSVG({
+                        image: logoHeaderLeft.content,
+                        fit: [180, 40],
+                        width: `20%`
+                    })
+                );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoHeaderLeft.content,
+                        fit: [180, 40],
+                        width: `20%`
+                    })
+                );
+            }
         }
 
         // Add no heading text if there are logos on the right and left.
-        if (header && !(logoHeaderRightUrl && logoHeaderLeftUrl)) {
+        if (header && !(logoHeaderRight && logoHeaderLeft)) {
             const name = this.meetingSettingsService.instant(`name`);
             const description = this.meetingSettingsService.instant(`description`);
             const location = this.meetingSettingsService.instant(`location`);
@@ -627,19 +705,31 @@ export class PdfDocumentService {
         columns.push({
             text,
             style: `headerText`,
-            alignment: logoHeaderRightUrl ? `left` : `right`
+            alignment: logoHeaderRight ? `left` : `right`
         });
 
         // add the logo to the right
-        if (logoHeaderRightUrl) {
-            columns.push(
-                this.getImage({
-                    image: logoHeaderRightUrl,
-                    fit: [180, 40],
-                    alignment: `right`,
-                    width: `20%`
-                })
-            );
+        // add the left logo to the header column
+        if (logoHeaderRight) {
+            if (logoHeaderRight.isSVG) {
+                columns.push(
+                    this.getSVG({
+                        image: logoHeaderRight.content,
+                        fit: [180, 40],
+                        alignment: `right`,
+                        width: `20%`
+                    })
+                );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoHeaderRight.content,
+                        fit: [180, 40],
+                        alignment: `right`,
+                        width: `20%`
+                    })
+                );
+            }
         }
         const margin: Margins = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
         // pdfmake order: [left, top, right, bottom]
@@ -755,6 +845,15 @@ export class PdfDocumentService {
         this.imageUrls.push(data.image);
         return {
             image: this.removeLeadingSlash(data.image),
+            fit: data.fit,
+            width: data.width,
+            alignment: data.alignment
+        };
+    }
+
+    private getSVG(data: { image: string; fit?: [number, number]; width?: any; alignment?: Alignment }): ContentSvg {
+        return {
+            svg: data.image,
             fit: data.fit,
             width: data.width,
             alignment: data.alignment
