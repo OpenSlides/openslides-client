@@ -36,6 +36,13 @@
         </div>
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
 
+        @if (poll.isEVoting && poll.isStarted) {
+            <div *osPerms="[permission.motionCanManagePolls, permission.pollCanManage]">
+                <h2>{{ 'Live Vote Register' | translate }}</h2>
+                <os-entitled-users-table [entitledUsersObservable]="liveRegisterObservable"></os-entitled-users-table>
+            </div>
+        }
+
         <!-- Named table: only show if votes are present -->
         @if (showResults && poll.stateHasVotes && poll.isEVoting) {
             @if (poll.type === 'named') {

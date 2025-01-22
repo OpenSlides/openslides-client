@@ -81,6 +81,11 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         return this._entitledUsersSubject;
     }
 
+    // the observable for the live-register
+    public get liveRegisterObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._liveRegisterObservable;
+    }
+
     public get self(): BasePollDetailComponent<V, S> {
         return this;
     }
@@ -115,6 +120,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private _votesDataSubject = new BehaviorSubject<BaseVoteData[]>([]);
     private _currentOperator!: ViewUser;
     private _pollId!: Id;
+    private _liveRegisterObservable = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
 
     protected repo = inject(PollControllerService);
     protected route = inject(ActivatedRoute);
@@ -220,6 +226,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         this.setVotesData(this.createVotesData());
         this.onAfterSetVotesData();
         this.setEntitledUsersData();
+        this.setLiveRegisterData();
     }
 
     private setEntitledUsersData(): void {
@@ -273,6 +280,35 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this._entitledUsersSubject.next(entries);
                     this.cd.markForCheck();
                 }))
+        );
+    }
+
+    private setLiveRegisterData(): void {
+        const userIds = new Set<number>(this.poll.has_voted_user_ids);
+        this.subscriptions.push(
+            this.userRepo
+                .getViewModelListObservable()
+                .pipe(
+                    filter(users => !!users.length),
+                    map(users => users.filter(user => userIds.has(user.id)))
+                )
+                .subscribe(users => {
+                    const entries: EntitledUsersTableEntry[] = [];
+                    for (const user_id of this.poll.has_voted_user_ids || []) {
+                        const user = users.find(user => user.id === user_id);
+                        entries.push({
+                            id: user_id,
+                            user: user,
+                            voted_verbose: `voted:true`,
+                            user_id: user_id,
+                            present: user?.isPresentInMeeting(),
+                            voted: true
+                        });
+                    }
+
+                    this._liveRegisterObservable.next(entries);
+                    this.cd.markForCheck();
+                })
         );
     }
 
