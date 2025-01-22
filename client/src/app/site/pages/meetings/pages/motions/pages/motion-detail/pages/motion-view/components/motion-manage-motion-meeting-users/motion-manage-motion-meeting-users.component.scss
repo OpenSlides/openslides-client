@@ -29,14 +29,4 @@
     margin: 5px 0;
     border: 1px solid #dddddd;
     height: auto;
-    &,
-    ::ng-deep span {
-        .mdc-evolution-chip__text-label {
-            -webkit-user-select: none;
-            user-select: none;
-            white-space: pre-wrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-    }
 }
