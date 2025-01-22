@@ -74,14 +74,10 @@
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                                 @if (contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')) {
-                                    <mat-error>
-                                        {{ 'There are not enough options.' | translate }}
-                                    </mat-error>
+                                    <mat-error>{{ getErrorMessage('notEnoughOptionsError') }}</mat-error>
                                 }
                                 @if (contentForm.controls['votes_amount'].hasError('rangeError')) {
-                                    <mat-error>
-                                        {{ 'Min votes cannot be greater than max votes.' | translate }}
-                                    </mat-error>
+                                    <mat-error>{{ getErrorMessage('rangeError') }}</mat-error>
                                 }
                             </mat-form-field>
                         }
@@ -117,9 +113,7 @@
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                                 @if (contentForm.controls['votes_amount'].hasError('rangeErrorMaxPerOption')) {
-                                    <mat-error>
-                                        {{ 'Max votes per option cannot be greater than max votes.' | translate }}
-                                    </mat-error>
+                                    <mat-error>{{ getErrorMessage('rangeErrorMaxPerOption') }}</mat-error>
                                 }
                             </mat-form-field>
                         </ng-container>
