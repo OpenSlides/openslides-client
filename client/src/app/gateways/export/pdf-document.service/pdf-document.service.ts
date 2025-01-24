@@ -538,7 +538,7 @@ export class PdfDocumentService {
         filename: filetitle,
         ...config
     }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
-        await this.updateHeader([`pdf_header_l`, `pdf_header_r`]).then(_ => {
+        await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]).then(_ => {
             this.showProgress();
             const imageUrls = this.pdfImagesService.getImageUrls();
             this.pdfImagesService.clearImageUrls();
@@ -757,8 +757,8 @@ export class PdfDocumentService {
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: [number, number];
-        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
-        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
+        const logoFooterLeft = this.headerLogos[`pdf_footer_l`];
+        const logoFooterRight = this.headerLogos[`pdf_footer_r`];
 
         let footerPageNumber = ``;
         if (showPageNr) {
@@ -778,7 +778,7 @@ export class PdfDocumentService {
         }
 
         // if there is a single logo, give it a lot of space
-        if (logoFooterLeftUrl && logoFooterRightUrl) {
+        if (logoFooterLeft && logoFooterRight) {
             logoContainerWidth = `20%`;
             logoContainerSize = [180, 40];
         } else {
@@ -787,26 +787,35 @@ export class PdfDocumentService {
         }
 
         // the position of the page number depends on the logos
-        if (logoFooterLeftUrl && logoFooterRightUrl) {
+        if (logoFooterLeft && logoFooterRight) {
             pageNumberPosition = `center`;
-        } else if (logoFooterLeftUrl && !logoFooterRightUrl) {
+        } else if (logoFooterLeft && !logoFooterRight) {
             pageNumberPosition = `right`;
-        } else if (logoFooterRightUrl && !logoFooterLeftUrl) {
+        } else if (logoFooterRight && !logoFooterLeft) {
             pageNumberPosition = `left`;
         } else {
             pageNumberPosition = numberPosition!;
         }
 
         // add the left footer logo, if any
-        if (logoFooterLeftUrl) {
-            columns.push(
-                this.getImage({
-                    image: logoFooterLeftUrl,
-                    fit: logoContainerSize,
-                    width: logoContainerWidth,
-                    alignment: `left`
-                })
-            );
+        if (logoFooterLeft) {
+            if (logoFooterLeft.isSVG) {
+                columns.push(
+                    this.getSVG({
+                        image: logoFooterLeft.content,
+                        fit: logoContainerSize,
+                        width: logoContainerWidth
+                    })
+                );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoFooterLeft.content,
+                        fit: logoContainerSize,
+                        width: logoContainerWidth
+                    })
+                );
+            }
         }
 
         // add the page number
@@ -817,15 +826,26 @@ export class PdfDocumentService {
         });
 
         // add the right footer logo, if any
-        if (logoFooterRightUrl) {
-            columns.push(
-                this.getImage({
-                    image: logoFooterRightUrl,
-                    fit: logoContainerSize,
-                    width: logoContainerWidth,
-                    alignment: `right`
-                })
-            );
+        if (logoFooterRight) {
+            if (logoFooterRight.isSVG) {
+                columns.push(
+                    this.getSVG({
+                        image: logoFooterRight.content,
+                        fit: logoContainerSize,
+                        alignment: `right`,
+                        width: logoContainerWidth
+                    })
+                );
+            } else {
+                columns.push(
+                    this.getImage({
+                        image: logoFooterRight.content,
+                        fit: logoContainerSize,
+                        alignment: `right`,
+                        width: logoContainerWidth
+                    })
+                );
+            }
         }
 
         const margin = [lrMargin ? lrMargin[0] : 75, 0, lrMargin ? lrMargin[0] : 75, 10];
