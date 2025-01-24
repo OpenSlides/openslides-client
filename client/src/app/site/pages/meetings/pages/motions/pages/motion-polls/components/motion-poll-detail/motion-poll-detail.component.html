@@ -35,21 +35,16 @@
             </span>
         </div>
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
-
-        @if (poll.isEVoting && poll.isStarted) {
-            <div *osPerms="[permission.motionCanManagePolls, permission.pollCanManage]">
-                <h2>{{ 'Live Vote Register' | translate }}</h2>
-                <os-entitled-users-table [entitledUsersObservable]="liveRegisterObservable"></os-entitled-users-table>
-            </div>
+        @if (poll.isStarted) {
+            <os-poll-progress [poll]="poll"></os-poll-progress>
+        }
+        <!-- Named table: only show if votes are present -->
+        @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.type === 'named') {
+            <os-poll-filted-votes-chart [poll]="poll"></os-poll-filted-votes-chart>
         }
 
-        <!-- Named table: only show if votes are present -->
-        @if (showResults && poll.stateHasVotes && poll.isEVoting) {
-            @if (poll.type === 'named') {
-                <os-poll-filted-votes-chart [poll]="poll"></os-poll-filted-votes-chart>
-            }
-
-            <mat-tab-group (selectedTabChange)="onTabChange()">
+        <mat-tab-group (selectedTabChange)="onTabChange()">
+            @if (showResults && poll.stateHasVotes && poll.isEVoting) {
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
@@ -67,10 +62,17 @@
                         [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
-            </mat-tab-group>
-        }
-        <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+            }
+            @if (poll.isEVoting && poll.isStarted) {
+                <mat-tab *osPerms="permission.motionCanManagePolls" label="{{ 'Live Vote Register' | translate }}">
+                    <os-entitled-users-table
+                        [entitledUsersObservable]="liveRegisterObservable"
+                    ></os-entitled-users-table>
+                </mat-tab>
+            }
+        </mat-tab-group>
     }
+    <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
 </ng-template>
 
 <!-- More Menu -->
