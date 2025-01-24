@@ -284,28 +284,30 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     }
 
     private setLiveRegisterData(): void {
-        const userIds = new Set<number>(this.poll.has_voted_user_ids);
+        const entitledGroupIds = this.poll.entitled_group_ids;
+
         this.subscriptions.push(
             this.userRepo
                 .getViewModelListObservable()
                 .pipe(
                     filter(users => !!users.length),
-                    map(users => users.filter(user => userIds.has(user.id)))
+                    map(users => users.filter(user => user.showAtLiveVoteRegister(entitledGroupIds)))
                 )
                 .subscribe(users => {
                     const entries: EntitledUsersTableEntry[] = [];
-                    for (const user_id of this.poll.has_voted_user_ids || []) {
-                        const user = users.find(user => user.id === user_id);
+                    for (const user of users || []) {
+                        const delegateToId = user.vote_delegated_to_id();
                         entries.push({
-                            id: user_id,
+                            id: user.id,
                             user: user,
                             voted_verbose: `voted:true`,
-                            user_id: user_id,
+                            user_id: user.id,
                             present: user?.isPresentInMeeting(),
-                            voted: true
+                            voted: (this.poll.has_voted_user_ids ?? []).includes(user.id),
+                            vote_delegated_to_user_id: delegateToId,
+                            vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
                         });
                     }
-
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
                 })

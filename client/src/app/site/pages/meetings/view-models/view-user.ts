@@ -327,6 +327,23 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         );
     }
 
+    public showAtLiveVoteRegister(entitledGroupsIds: Id[]): boolean {
+        if (this.group_ids().some(groupId => entitledGroupsIds.includes(groupId))) {
+            return true;
+        } else if (
+            (this.vote_delegations_from() ?? [])
+                .flatMap(delegation => delegation.group_ids())
+                .some(groupId => entitledGroupsIds.includes(groupId))
+        ) {
+            return (
+                this.getDelegationSettingEnabled() &&
+                (!this.vote_delegated_to(this.getEnsuredActiveMeetingId()) ||
+                    this.isSelfVotingAllowedDespiteDelegation())
+            );
+        }
+        return false;
+    }
+
     public override getDetailStateUrl(): string {
         if (this.getEnsuredActiveMeetingId && this.getEnsuredActiveMeetingId()) {
             return `/${this.getEnsuredActiveMeetingId()}/participants/${this.id}`;
