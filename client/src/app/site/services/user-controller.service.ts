@@ -71,8 +71,13 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         return this.repo.setPassword(user, password, setAsDefault);
     }
 
-    public setPasswordSelf(user: Identifiable, oldPassword: string, newPassword: string): Promise<void> {
-        return this.repo.setPasswordSelf(user, oldPassword, newPassword);
+    public async setPasswordSelf(user: Identifiable, oldPassword: string, newPassword: string): Promise<any> {
+        const result = await this.repo.setPasswordSelf(user, oldPassword, newPassword);
+        if (result === null) {
+            return { success: true };
+        }
+
+        return result;
     }
 
     public resetPasswordToDefault(...users: Identifiable[]): Promise<void> {
