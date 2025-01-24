@@ -39,16 +39,11 @@
                 <div class="assignment-result-wrapper">
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-                    @if (poll.isEVoting && poll.isStarted) {
-                        <div *osPerms="[permission.motionCanManagePolls, permission.pollCanManage]">
-                            <h2>{{ 'Live Vote Register' | translate }}</h2>
-                            <os-entitled-users-table
-                                [entitledUsersObservable]="liveRegisterObservable"
-                            ></os-entitled-users-table>
-                        </div>
+                    @if (poll.isStarted) {
+                        <os-poll-progress [poll]="poll"></os-poll-progress>
                     }
-                    @if (showResults && poll.stateHasVotes && poll.isEVoting) {
-                        <mat-tab-group (selectedTabChange)="onTabChange()">
+                    <mat-tab-group (selectedTabChange)="onTabChange()">
+                        @if (showResults && poll.stateHasVotes && poll.isEVoting) {
                             <mat-tab label="{{ 'Single votes' | translate }}">
                                 <!-- Single Votes Table -->
                                 <div class="named-result-table">
@@ -70,8 +65,15 @@
                                     [isViewingThis]="isViewingEntitledUserslist"
                                 ></os-entitled-users-table>
                             </mat-tab>
-                        </mat-tab-group>
-                    }
+                        }
+                        @if (poll.isEVoting && poll.isStarted) {
+                            <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Live Vote Register' | translate }}">
+                                <os-entitled-users-table
+                                    [entitledUsersObservable]="liveRegisterObservable"
+                                ></os-entitled-users-table>
+                            </mat-tab>
+                        }
+                    </mat-tab-group>
                 </div>
             }
         </div>
