@@ -14,6 +14,7 @@ import { ViewMotion } from '../../../../view-models';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
+import { CommentsModule } from '../../../../pages/comments/comments.module';
 
 @Injectable({
     providedIn: `root`
@@ -150,7 +151,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
-        changeReco.text = this.diffService.extractMotionLineRange(motionText, lineRange, false, lineLength);
+        changeReco.text = this.diffService.extractMotionLineRange(motionText, lineRange, true, lineLength);
         changeReco.rejected = false;
         changeReco.motion_id = motion.id;
 

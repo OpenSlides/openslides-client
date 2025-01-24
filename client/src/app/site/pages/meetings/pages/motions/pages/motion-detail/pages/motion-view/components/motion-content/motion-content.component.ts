@@ -134,6 +134,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 lineRange,
                 this.lineLength
             );
+            console.log(data.changeRecommendation);
         }
         this.dialog.openContentChangeRecommendationDialog(data);
     }

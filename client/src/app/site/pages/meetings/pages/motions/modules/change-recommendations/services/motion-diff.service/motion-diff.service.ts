@@ -14,6 +14,7 @@ import {
 import { ViewUnifiedChangeType } from '../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
+import { Console } from 'console';
 
 const ELEMENT_NODE = Node.ELEMENT_NODE;
 const TEXT_NODE = Node.TEXT_NODE;
@@ -242,12 +243,17 @@ export class MotionDiffService {
         html = DomHelpers.normalizeStyleAttributes(html);
         html = DomHelpers.htmlToUppercase(html);
 
+        console.log(`raw html `, html);
+
         // remove whitespaces infront of closing tags
         html = html
             .replace(/\s+<\/P>/gi, `</P>`)
             .replace(/\s+<\/DIV>/gi, `</DIV>`)
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
+
+        //html = html.replace(/<SPAN[^>]+os-line-number[^>]+?>/gi, `<os-line-number>`).replace(/<\/SPAN>/gi, ``);
+        html = html.replace(/<\/SPAN>/gi, ``);
 
         html = html.replace(/\u00A0/g, ` `); // replace no break space
         html = html.replace(/\u2013/g, `-`);
@@ -257,6 +263,8 @@ export class MotionDiffService {
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
         html = html.replace(/[ \n\t]+/gi, ` `);
         html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
+
+        console.log(`processed html`, html);
 
         return html;
     }
@@ -348,6 +356,23 @@ export class MotionDiffService {
                 newArr[i + 1] = { text: newArr[i + 1], row: newArr[i].row + 1 };
                 oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: i + 1 };
             }
+            if (
+                typeof oldArr[newArr[i].row + 1] === `string`
+                    ? oldArr[newArr[i].row + 1].includes(`os-line-number`)
+                    : false
+            ) {
+                oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: i };
+                if (
+                    newArr[i].text !== null &&
+                    newArr[i + 1].text === undefined &&
+                    newArr[i].row + 2 < oldArr.length &&
+                    oldArr[newArr[i].row + 2].text === undefined &&
+                    newArr[i + 1] === oldArr[newArr[i].row + 2]
+                ) {
+                    newArr[i + 1] = { text: newArr[i + 1], row: newArr[i].row + 2 };
+                    oldArr[newArr[i].row + 2] = { text: oldArr[newArr[i].row + 2], row: i + 1 };
+                }
+            }
         }
 
         for (let i = newArr.length - 1; i > 0; i--) {
@@ -360,6 +385,23 @@ export class MotionDiffService {
             ) {
                 newArr[i - 1] = { text: newArr[i - 1], row: newArr[i].row - 1 };
                 oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: i - 1 };
+            }
+            if (
+                typeof oldArr[newArr[i].row - 1] === `string`
+                    ? oldArr[newArr[i].row - 1].includes(`os-line-number`)
+                    : false
+            ) {
+                oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: i - 1 };
+                if (
+                    newArr[i].text !== null &&
+                    newArr[i - 1].text === undefined &&
+                    newArr[i].row - 2 < oldArr.length &&
+                    oldArr[newArr[i].row - 2].text === undefined &&
+                    newArr[i - 1] === oldArr[newArr[i].row - 2]
+                ) {
+                    newArr[i - 1] = { text: newArr[i - 1], row: newArr[i].row - 2 };
+                    oldArr[newArr[i].row - 2] = { text: oldArr[newArr[i].row - 2], row: i - 1 };
+                }
             }
         }
 
@@ -424,8 +466,11 @@ export class MotionDiffService {
     private diffString(oldStr: string, newStr: string): string {
         oldStr = this.normalizeHtmlForDiff(oldStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
         newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
+        console.log(`oldStr`, this.tokenizeHtml(oldStr));
+        console.log(`newStr`, this.tokenizeHtml(newStr));
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
+        console.log(`out`, out);
 
         let str = ``;
         if (out.n.length === 0) {
@@ -1398,6 +1443,22 @@ export class MotionDiffService {
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
+        console.log(`diff`, str);
+        console.log(`firstLineNumber`, firstLineNumber);
+        console.log(`lineLength`, lineLength);
+        // Since the closing </span> tag is removed in order to handle changes over multiple lines,
+        // they need to be added again to construct a valid html
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del><span[^>]+os-line-number[^>]+?><\/del>\s*/gi,
+            (found: string): string =>
+                found
+                    .toLowerCase()
+                    .replace(/> /gi, `>&nbsp;</span>`)
+                    .replace(/<del>/gi, ``)
+                    .replace(/<\/del>/gi, ``)
+        );
+        console.log(`diff2`, diffUnnormalized);
+
         // Remove <del> tags that only delete line numbers
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
@@ -1756,6 +1817,8 @@ export class MotionDiffService {
         if (isSplitBefore) {
             diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
         }
+
+        console.log(`processed diff`, diff);
 
         this.diffCache.put(cacheKey, diff);
         return diff;
