@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 
-import { ProjectorModule } from '../../../../modules/projector/projector.module';
+import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
 import { AssignmentPollServiceModule } from '../../../assignments/modules/assignment-poll/services/assignment-poll-service.module';
 import { MotionPollServiceModule } from '../../../motions/modules/motion-poll';
@@ -19,7 +19,7 @@ import { FullscreenProjectorRoutingModule } from './fullscreen-projector-routing
         CommonModule,
         FullscreenProjectorRoutingModule,
         RouterModule,
-        ProjectorModule,
+        ProjectorComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
         AssignmentPollServiceModule,

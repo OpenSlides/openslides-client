@@ -1,25 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import {
-    auditTime,
-    BehaviorSubject,
-    combineLatest,
-    distinctUntilChanged,
-    filter,
-    map,
-    merge,
-    mergeMap,
-    Observable
-} from 'rxjs';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { PipesModule } from 'src/app/ui/pipes';
 
-import { Dimension, SlideData } from '../../../../pages/projectors/definitions';
+import { Dimension } from '../../../../pages/projectors/definitions';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, DirectivesModule, PipesModule],
     selector: `os-projector`,
     templateUrl: `./projector.component.html`,
     styleUrls: [`./projector.component.scss`]
@@ -34,6 +28,10 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
 
     public get projector(): ViewProjector | null {
         return this.projectorSubject.getValue();
+    }
+
+    public get url(): string {
+        return `/system/projector/get/${this.projector.id}`;
     }
 
     /**
@@ -99,13 +97,6 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     };
 
     /**
-     * All slides to show on this projector
-     */
-    public slides: Observable<(SlideData<object> & { id: Id })[]> = new Observable<
-        (SlideData<object> & { id: Id })[]
-    >();
-
-    /**
      * Info about if the user is offline.
      */
     public isOffline = false;
@@ -118,10 +109,6 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
         return this.meetingSettingsService.get(`description`);
     }
 
-    public get projectorLogoObservable(): Observable<string> {
-        return this.mediaManageService.getLogoUrlObservable(`projector_main`);
-    }
-
     // Some settings for the view from the config.
     public enableHeaderAndFooter = true;
     public enableTitle = true;
@@ -129,7 +116,6 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     public constructor(
         private offlineService: ConnectionStatusService,
         private elementRef: ElementRef,
-        private mediaManageService: MediaManageService,
         private meetingSettingsService: MeetingSettingsService
     ) {
         super();
@@ -141,40 +127,9 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
         document.head.appendChild(this.styleElement);
 
         // projector logo / background-image
-        this.mediaManageService.getLogoUrlObservable(`projector_header`).subscribe(url => {
-            this.css.headerFooter.backgroundImage = url ? `url('${url}')` : `none`;
-            this.updateCSS();
-        });
-
         this.subscriptions.push(
             this.offlineService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline))
         );
-
-        const trigger$ = merge(
-            this.projectorSubject,
-            this.projectorSubject.pipe(mergeMap(projector => projector?.current_projections$ || []))
-        );
-
-        this.slides = combineLatest([this.projectorSubject, trigger$])
-            .pipe(filter(([projector, _]) => (projector?.current_projections || []).every(p => !!p.content)))
-            .pipe(
-                map(([projector, _]) =>
-                    (projector?.current_projections || []).map(
-                        projection =>
-                            ({
-                                id: projection.id,
-                                collection: projection.content?.collection,
-                                data: projection.content,
-                                stable: !!projection.stable,
-                                type: projection.type || ``,
-                                options: projection.options || {},
-                                ...(!!projection.content?.[`error`] && { error: projection.content[`error`] })
-                            }) as SlideData & { id: Id }
-                    )
-                )
-            )
-            .pipe(auditTime(20))
-            .pipe(distinctUntilChanged((prev, next) => JSON.stringify(prev) === JSON.stringify(next)));
 
         this.subscriptions.push(
             this.projectorSubject.subscribe(projector => {
@@ -202,6 +157,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     }
 
     public onResized(): void {
+        console.log(`onResized`, this.containerElement);
         if (this.containerElement) {
             this.updateScaling();
         }

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ServerTimeService } from 'src/app/gateways/server-time.service';
 
@@ -14,6 +15,8 @@ export enum CountdownState {
 }
 
 @Component({
+    standalone: true,
+    imports: [CommonModule],
     selector: `os-countdown-time`,
     templateUrl: `./countdown-time.component.html`,
     styleUrls: [`./countdown-time.component.scss`],

@@ -23,7 +23,7 @@ import { ParticipantCommonServiceModule } from '../../pages/participants/service
 import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
 import { ProjectorButtonModule } from '../meetings-component-collector/projector-button/projector-button.module';
 import { ParticipantSearchSelectorModule } from '../participant-search-selector';
-import { CountdownTimeModule } from '../projector/modules/countdown-time/countdown-time.module';
+import { CountdownTimeComponent } from '../projector/components/countdown-time/countdown-time.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersEntryComponent } from './components/list-of-speakers-entry/list-of-speakers-entry.component';
 import { ModerationNoteComponent } from './components/moderation-note/moderation-note.component';
@@ -64,7 +64,7 @@ const DECLARATIONS = [
         PointOfOrderDialogModule,
         SpeakerUserSelectDialogModule,
         ProjectorButtonModule,
-        CountdownTimeModule,
+        CountdownTimeComponent,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         PipesModule
