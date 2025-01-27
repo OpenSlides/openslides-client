@@ -263,7 +263,6 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             ...entry,
                             id: entry.user_id,
                             user: users.find(user => user.id === entry.user_id),
-                            voted_verbose: `voted:${entry.voted}`,
                             vote_delegated_to: entry.vote_delegated_to_user_id
                                 ? users.find(user => user.id === entry.vote_delegated_to_user_id)
                                 : null,
@@ -314,7 +313,6 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                         entries.push({
                             id: user.id,
                             user: user,
-                            voted_verbose: `voted:${voted}`,
                             user_id: user.id,
                             present: user?.isPresentInMeeting(),
                             voted: voted,
