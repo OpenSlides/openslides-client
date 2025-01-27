@@ -86,7 +86,7 @@
     "ng2-charts": "^7.0.0",
     "ng2-pdf-viewer": "^10.3.4",
     "ngx-cookie-service": "^18.0.0",
-    "ngx-date-fns": "^11.0.1",
+    "ngx-date-fns": "^12.0.0",
     "ngx-device-detector": "^8.0.0",
     "ngx-file-drop": "^16.0.0",
     "ngx-material-timepicker": "^13.1.1",
