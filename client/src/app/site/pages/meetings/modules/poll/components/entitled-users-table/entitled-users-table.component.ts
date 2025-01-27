@@ -51,7 +51,8 @@ export class EntitledUsersTableComponent {
         `user.full_name`,
         `vote_delegated_to.full_name`,
         `user_merged_into`,
-        `delegation_user_merged_into`
+        `delegation_user_merged_into`,
+        `voted_verbose`
     ];
 
     public constructor(
