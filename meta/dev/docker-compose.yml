@@ -1,0 +1,21 @@
+version: "3"
+services:
+    models:
+        build: .
+        user: $USER_ID:$GROUP_ID
+        volumes:
+            - ..:/app
+        depends_on:
+            - postgres
+        networks:
+            - postgres
+    postgres:
+        image: postgres:15
+        environment:
+            - POSTGRES_USER=openslides
+            - POSTGRES_PASSWORD=openslides
+            - POSTGRES_DB=openslides
+        networks:
+            - postgres
+networks:
+    postgres:

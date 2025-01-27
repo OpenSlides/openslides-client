@@ -1,0 +1,290 @@
+agenda_item:
+  contains:
+    - topic
+  searchable:
+    - item_number
+    - comment
+    - meeting_id
+  additional:
+    - id
+    - content_object_id
+  relations:
+    content_object_id:
+      type: generic-relation
+      fields:
+        id: null
+        title: null
+        text: null
+        meeting_id: null
+    meeting_id:
+      type: relation
+      collection: meeting
+      fields:
+        id: null
+        name: null
+assignment:
+  searchable:
+    - title
+    - description
+    - meeting_id
+  additional:
+    - id
+    - sequential_number
+  relations:
+    meeting_id:
+      type: relation
+      collection: meeting
+      fields:
+        id: null
+        name: null
+committee:
+  contains:
+    - meeting
+  searchable:
+    - name
+    - description
+    - external_id
+  additional:
+    - id
+mediafile:
+  searchable:
+    - title
+    - filename
+    - owner_id
+  additional:
+    - id
+    - is_directory
+  relations:
+    owner_id:
+      type: generic-relation
+      fields:
+        id: null
+        name: null
+meeting:
+  searchable:
+    - external_id
+    - welcome_title
+    - welcome_text
+    - name
+    - description
+    - location
+  additional:
+    - id
+    - committee_id
+  relations:
+    committee_id:
+      type: relation
+      collection: committee
+      fields:
+        id: null
+        name: null
+motion:
+  searchable:
+    - number
+    - title
+    - text
+    - reason
+    - meeting_id
+    - amendment_paragraphs
+    - additional_submitter
+  searchable_config:
+    amendment_paragraphs:
+      type: json-int-string-map
+      analyzer: html
+  additional:
+    - id
+    - sequential_number
+    - submitter_ids
+  relations:
+    meeting_id:
+      type: relation
+      collection: meeting
+      fields:
+        id: null
+        name: null
+        motions_show_sequential_number: null
+    submitter_ids:
+      type: relation-list
+      collection: motion_submitter
+      fields:
+        id: null
+        weight: null
+        meeting_user_id:
+          type: relation
+          collection: meeting_user
+          fields:
+            id: null
+            number: null
+            structure_level_ids:
+              type: relation-list
+              collection: structure_level
+              fields:
+                id: null
+                name: null
+            vote_weight: null
+            user_id:
+              type: relation
+              collection: user
+              fields:
+                id: null
+                title: null
+                first_name: null
+                last_name: null
+                pronoun: null
+                username: null
+                gender_id:
+                  type: relation
+                  collection: gender
+                  fields: 
+                    id: null
+                    name: null
+motion_change_recommendation:
+  contains:
+    - motion
+  searchable:
+    - other_description
+    - text
+    - meeting_id
+  additional:
+    - id
+    - motion_id
+  relations:
+    motion_id:
+      type: relation
+      collection: motion
+      fields:
+        id: null
+        title: null
+        number: null
+        sequential_number: null
+        meeting_id: null
+    meeting_id:
+      type: relation
+      collection: meeting
+      fields:
+        id: null
+        name: null
+        motions_show_sequential_number: null
+poll:
+  contains:
+    - topic
+    - motion
+    - assignment
+  searchable:
+    - title
+    - description
+    - meeting_id
+  additional:
+    - id
+    - sequential_number
+    - content_object_id
+  relations:
+    content_object_id:
+      type: generic-relation
+      fields:
+        id: null
+        title: null
+        number: null
+        sequential_number: null
+        meeting_id:
+          type: relation
+          collection: meeting
+          fields:
+            id: null
+            name: null
+            motions_show_sequential_number: null
+tag:
+  contains:
+    - topic
+    - motion
+    - assignment
+  searchable:
+    - name
+    - meeting_id
+  additional:
+    - id
+    - tagged_ids
+  relations:
+    tagged_ids:
+      type: generic-relation-list
+      fields:
+        id: null
+        name: null
+        title: null
+        description: null
+        number: null
+        text: null
+        sequential_number: null
+        meeting_id:
+          type: relation
+          collection: meeting
+          fields:
+            id: null
+            name: null
+            motions_show_sequential_number: null
+        content_object_id:
+          type: generic-relation
+          fields:
+            id: null
+            title: null
+            text: null
+            meeting_id:
+              type: relation
+              collection: meeting
+              fields:
+                id: null
+                name: null
+topic:
+  searchable:
+    - title
+    - text
+    - meeting_id
+  additional:
+    - id
+    - sequential_number
+  relations:
+    meeting_id:
+      type: relation
+      collection: meeting
+      fields:
+        id: null
+        name: null
+user:
+  searchable:
+    - username
+    - pronoun
+    - title
+    - first_name
+    - last_name
+    - email
+    - organization_management_level
+    - meeting_ids
+    - owner_id
+    - member_number
+  searchable_config:
+    first_name:
+      analyzer: simple
+    last_name:
+      analyzer: simple
+    email:
+      analyzer: simple
+  additional:
+    - id
+  relations:
+    meeting_user_ids:
+      type: relation-list
+      collection: meeting_user
+      fields:
+        id:
+        meeting_id:
+          type: relation
+          collection: meeting
+          fields:
+            id: null
+            name: null
+    gender_id:
+      type: relation
+      collection: gender
+      fields: 
+        id: null
+        name: null
