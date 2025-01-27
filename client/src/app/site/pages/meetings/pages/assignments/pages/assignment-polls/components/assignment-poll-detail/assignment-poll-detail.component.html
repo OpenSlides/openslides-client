@@ -39,9 +39,6 @@
                 <div class="assignment-result-wrapper">
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-                    @if (poll.isStarted) {
-                        <os-poll-progress [poll]="poll"></os-poll-progress>
-                    }
                     <mat-tab-group (selectedTabChange)="onTabChange()">
                         @if (showResults && poll.stateHasVotes && poll.isEVoting) {
                             <mat-tab label="{{ 'Single votes' | translate }}">
