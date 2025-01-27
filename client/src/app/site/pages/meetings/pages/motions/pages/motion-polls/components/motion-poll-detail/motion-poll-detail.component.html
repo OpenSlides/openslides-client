@@ -62,11 +62,17 @@
                         [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
-            }
-            @if (poll.isEVoting && poll.isStarted) {
-                <mat-tab *osPerms="permission.motionCanManagePolls" label="{{ 'Live Vote Register' | translate }}">
+            } @else if (poll.isEVoting && poll.isStarted) {
+                <mat-tab label="{{ 'Single votes' | translate }}">
+                    <div class="named-result-table">
+                        {{ 'No data available' | translate }}
+                    </div>
+                </mat-tab>
+                <mat-tab *osPerms="permission.motionCanManagePolls" label="{{ 'Entitled users' | translate }}">
                     <os-entitled-users-table
+                        [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="liveRegisterObservable"
+                        [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
             }
