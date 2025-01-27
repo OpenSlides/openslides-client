@@ -310,13 +310,14 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     const entries: EntitledUsersTableEntry[] = [];
                     for (const user of users || []) {
                         const delegateToId = user.vote_delegated_to_id();
+                        const voted = (this.poll.has_voted_user_ids ?? []).includes(user.id);
                         entries.push({
                             id: user.id,
                             user: user,
-                            voted_verbose: `voted:true`,
+                            voted_verbose: `voted:${voted}`,
                             user_id: user.id,
                             present: user?.isPresentInMeeting(),
-                            voted: (this.poll.has_voted_user_ids ?? []).includes(user.id),
+                            voted: voted,
                             vote_delegated_to_user_id: delegateToId,
                             vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
                         });
