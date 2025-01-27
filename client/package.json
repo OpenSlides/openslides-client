@@ -77,7 +77,7 @@
     "chart.js": "^4.4.7",
     "cm-chess": "^3.5.1",
     "cm-chessboard": "^8.7.5",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "fzstd": "^0.1.1",
