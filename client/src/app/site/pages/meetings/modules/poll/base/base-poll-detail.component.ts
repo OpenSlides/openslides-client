@@ -109,6 +109,9 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
 
+    public countVoteAllowedAndPresent = 0;
+    public countVoteAllowed = 0;
+
     protected get canSeeVotes(): boolean {
         return (this.hasPerms() && this.poll!.isFinished) || this.poll!.isPublished;
     }
@@ -322,6 +325,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
                         });
                     }
+                    this.countVoteAllowedAndPresent = entries.filter(e => e.present).length;
+                    this.countVoteAllowed = entries.length;
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
                 })

@@ -37,6 +37,16 @@
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
         @if (poll.isStarted) {
             <os-poll-progress [poll]="poll"></os-poll-progress>
+            <div *osPerms="permission.motionCanManagePolls" class="poll-content">
+                <div class="user-subtitle">
+                    {{ 'Present people allowed to vote:' | translate }}
+                    {{ countVoteAllowedAndPresent }}
+                </div>
+                <div class="user-subtitle">
+                    {{ 'All people allowed to vote:' | translate }}
+                    {{ countVoteAllowed }}
+                </div>
+            </div>
         }
         <!-- Named table: only show if votes are present -->
         @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.type === 'named') {

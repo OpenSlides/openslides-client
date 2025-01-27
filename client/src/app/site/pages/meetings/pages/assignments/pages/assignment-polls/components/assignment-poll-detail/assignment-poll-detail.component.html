@@ -41,6 +41,16 @@
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
                     @if (poll.isStarted) {
                         <os-poll-progress [poll]="poll"></os-poll-progress>
+                        <div *osPerms="permission.pollCanManage" class="poll-content">
+                            <div class="user-subtitle">
+                                {{ 'Present people allowed to vote:' | translate }}
+                                {{ countVoteAllowedAndPresent }}
+                            </div>
+                            <div class="user-subtitle">
+                                {{ 'All people allowed to vote:' | translate }}
+                                {{ countVoteAllowed }}
+                            </div>
+                        </div>
                     }
                     <mat-tab-group (selectedTabChange)="onTabChange()">
                         @if (showResults && poll.stateHasVotes && poll.isEVoting) {
