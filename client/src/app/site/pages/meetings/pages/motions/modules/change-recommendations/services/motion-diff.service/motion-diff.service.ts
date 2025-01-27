@@ -14,7 +14,6 @@ import {
 import { ViewUnifiedChangeType } from '../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
-import { Console } from 'console';
 
 const ELEMENT_NODE = Node.ELEMENT_NODE;
 const TEXT_NODE = Node.TEXT_NODE;
@@ -250,7 +249,7 @@ export class MotionDiffService {
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
 
-        // Remove closing tag of span for diff algorith
+        // Remove closing tag of span for diff algorithm
         html = html.replace(/&nbsp;<\/SPAN>/gi, ` `);
         html = html.replace(/<\/SPAN>/gi, ``);
         html = html.replace(/<P.*?os-split-before.*?>/gi, (found: string): string =>
@@ -1420,34 +1419,30 @@ export class MotionDiffService {
         const isSplitAfter = htmlOld.includes(`os-split-after`) ? true : false;
         const isSplitBefore = htmlOld.includes(`os-split-before`) ? true : false;
 
-        //htmlOld = htmlOld.replace(
-        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-        //    (_match: string, beginning: string): string => {
-        //        isSplitAfter = true;
-        //        return beginning;
-        //    }
-        //);
-        //htmlNew = htmlNew.replace(
-        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-        //    (_match: string, beginning: string): string => {
-        //        isSplitAfter = true;
-        //        return beginning;
-        //    }
-        //);
-        //htmlOld = htmlOld.replace(
-        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-        //    (_match: string, beginning: string): string => {
-        //        isSplitBefore = true;
-        //        return beginning;
-        //    }
-        //);
-        //htmlNew = htmlNew.replace(
-        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-        //    (_match: string, beginning: string): string => {
-        //        isSplitBefore = true;
-        //        return beginning;
-        //    }
-        //);
+        htmlOld = htmlOld.replace(
+            /(\s*<(?:ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+            (_match: string, beginning: string): string => {
+                return beginning;
+            }
+        );
+        htmlNew = htmlNew.replace(
+            /(\s*<(?:ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+            (_match: string, beginning: string): string => {
+                return beginning;
+            }
+        );
+        htmlOld = htmlOld.replace(
+            /(\s*<(?:ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+            (_match: string, beginning: string): string => {
+                return beginning;
+            }
+        );
+        htmlNew = htmlNew.replace(
+            /(\s*<(?:ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+            (_match: string, beginning: string): string => {
+                return beginning;
+            }
+        );
 
         // Performing the actual diff
         const str = this.diffString(htmlOld, htmlNew);

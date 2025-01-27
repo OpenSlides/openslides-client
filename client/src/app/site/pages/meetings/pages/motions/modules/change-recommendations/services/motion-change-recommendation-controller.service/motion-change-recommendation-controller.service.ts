@@ -14,7 +14,6 @@ import { ViewMotion } from '../../../../view-models';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
-import { CommentsModule } from '../../../../pages/comments/comments.module';
 
 @Injectable({
     providedIn: `root`
