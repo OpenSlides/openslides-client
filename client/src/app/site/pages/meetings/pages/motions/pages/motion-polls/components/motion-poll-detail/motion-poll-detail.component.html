@@ -35,6 +35,9 @@
             </span>
         </div>
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
+        @if (poll.isStarted) {
+            <os-poll-progress [poll]="poll"></os-poll-progress>
+        }
         <!-- Named table: only show if votes are present -->
         @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.type === 'named') {
             <os-poll-filted-votes-chart [poll]="poll"></os-poll-filted-votes-chart>
