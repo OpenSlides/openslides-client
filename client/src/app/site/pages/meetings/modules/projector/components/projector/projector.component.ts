@@ -157,7 +157,6 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     }
 
     public onResized(): void {
-        console.log(`onResized`, this.containerElement);
         if (this.containerElement) {
             this.updateScaling();
         }
