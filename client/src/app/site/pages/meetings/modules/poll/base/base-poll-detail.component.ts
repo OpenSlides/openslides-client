@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { PollContentObject } from 'src/app/domain/models/poll';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
@@ -131,6 +132,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     protected cd = inject(ChangeDetectorRef);
     protected userRepo = inject(ParticipantControllerService);
     private scrollTableManage = inject(ScrollingTableManageService);
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
 
     public constructor(
         protected pollService: S,
@@ -284,14 +286,25 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     }
 
     private setLiveRegisterData(): void {
-        const entitledGroupIds = this.poll.entitled_group_ids;
+        const userIds = new Set<Id>([]);
+        for (const group of this.poll.entitled_groups) {
+            const meetingUserIds = group.meeting_user_ids ?? [];
+            meetingUserIds.forEach(mu_id => userIds.add(this.meetingUserRepo.getViewModel(mu_id)?.user_id));
+        }
+        const delegates = new Set<Id>([]);
+        Array.from(userIds).forEach(userId => {
+            if (this.userRepo.getViewModel(userId)?.vote_delegated_to_id()) {
+                delegates.add(this.userRepo.getViewModel(userId)?.vote_delegated_to_id());
+            }
+        });
+        userIds.update(delegates);
 
         this.subscriptions.push(
             this.userRepo
                 .getViewModelListObservable()
                 .pipe(
                     filter(users => !!users.length),
-                    map(users => users.filter(user => user.showAtLiveVoteRegister(entitledGroupIds)))
+                    map(users => users.filter(user => userIds.has(user.id)))
                 )
                 .subscribe(users => {
                     const entries: EntitledUsersTableEntry[] = [];
