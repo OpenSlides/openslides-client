@@ -243,8 +243,6 @@ export class MotionDiffService {
         html = DomHelpers.normalizeStyleAttributes(html);
         html = DomHelpers.htmlToUppercase(html);
 
-        console.log(`raw html `, html);
-
         // remove whitespaces infront of closing tags
         html = html
             .replace(/\s+<\/P>/gi, `</P>`)
@@ -252,8 +250,17 @@ export class MotionDiffService {
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
 
-        //html = html.replace(/<SPAN[^>]+os-line-number[^>]+?>/gi, `<os-line-number>`).replace(/<\/SPAN>/gi, ``);
+        // Remove closing tag of span for diff algorith
+        html = html.replace(/&nbsp;<\/SPAN>/gi, ` `);
         html = html.replace(/<\/SPAN>/gi, ``);
+        html = html.replace(/<P.*?os-split-before.*?>/gi, (found: string): string =>
+            found.replace(/os-split-before/gi, ``)
+        );
+        html = html.replace(/<P.*?os-split-after.*?>/gi, (found: string): string =>
+            found.replace(/os-split-after/gi, ``)
+        );
+        html = html.replace(/(<BR .*?>)/gi, (found: string, _: string): string => found.replace(/os-line-break/gi, ``));
+        html = html.replace(/ CLASS=" "/gi, ``).replace(/ CLASS=""/gi, ``);
 
         html = html.replace(/\u00A0/g, ` `); // replace no break space
         html = html.replace(/\u2013/g, `-`);
@@ -262,9 +269,7 @@ export class MotionDiffService {
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
         html = html.replace(/[ \n\t]+/gi, ` `);
-        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
-
-        console.log(`processed html`, html);
+        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1`);
 
         return html;
     }
@@ -361,7 +366,7 @@ export class MotionDiffService {
                     ? oldArr[newArr[i].row + 1].includes(`os-line-number`)
                     : false
             ) {
-                oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: i };
+                oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: -1 };
                 if (
                     newArr[i].text !== null &&
                     newArr[i + 1].text === undefined &&
@@ -391,7 +396,7 @@ export class MotionDiffService {
                     ? oldArr[newArr[i].row - 1].includes(`os-line-number`)
                     : false
             ) {
-                oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: i - 1 };
+                oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: -1 };
                 if (
                     newArr[i].text !== null &&
                     newArr[i - 1].text === undefined &&
@@ -414,6 +419,14 @@ export class MotionDiffService {
             if (newArr[z].row && newArr[z].row < lastRow) {
                 oldArr[newArr[z].row] = oldArr[newArr[z].row].text;
                 newArr[z] = newArr[z].text;
+            }
+        }
+
+        // This fixes the problem that <span> is not present in the newArray but for multi paragraph
+        // change recommendations was handled before as dict
+        for (let z = 0; z < oldArr.length; z++) {
+            if (oldArr[z].row === -1) {
+                oldArr[z] = oldArr[z].text;
             }
         }
 
@@ -466,11 +479,8 @@ export class MotionDiffService {
     private diffString(oldStr: string, newStr: string): string {
         oldStr = this.normalizeHtmlForDiff(oldStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
         newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
-        console.log(`oldStr`, this.tokenizeHtml(oldStr));
-        console.log(`newStr`, this.tokenizeHtml(newStr));
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
-        console.log(`out`, out);
 
         let str = ``;
         if (out.n.length === 0) {
@@ -1406,36 +1416,38 @@ export class MotionDiffService {
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
-        let isSplitAfter = false;
-        let isSplitBefore = false;
-        htmlOld = htmlOld.replace(
-            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (_match: string, beginning: string): string => {
-                isSplitAfter = true;
-                return beginning;
-            }
-        );
-        htmlNew = htmlNew.replace(
-            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (_match: string, beginning: string): string => {
-                isSplitAfter = true;
-                return beginning;
-            }
-        );
-        htmlOld = htmlOld.replace(
-            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (_match: string, beginning: string): string => {
-                isSplitBefore = true;
-                return beginning;
-            }
-        );
-        htmlNew = htmlNew.replace(
-            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (_match: string, beginning: string): string => {
-                isSplitBefore = true;
-                return beginning;
-            }
-        );
+
+        const isSplitAfter = htmlOld.includes(`os-split-after`) ? true : false;
+        const isSplitBefore = htmlOld.includes(`os-split-before`) ? true : false;
+
+        //htmlOld = htmlOld.replace(
+        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+        //    (_match: string, beginning: string): string => {
+        //        isSplitAfter = true;
+        //        return beginning;
+        //    }
+        //);
+        //htmlNew = htmlNew.replace(
+        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+        //    (_match: string, beginning: string): string => {
+        //        isSplitAfter = true;
+        //        return beginning;
+        //    }
+        //);
+        //htmlOld = htmlOld.replace(
+        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+        //    (_match: string, beginning: string): string => {
+        //        isSplitBefore = true;
+        //        return beginning;
+        //    }
+        //);
+        //htmlNew = htmlNew.replace(
+        //    /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+        //    (_match: string, beginning: string): string => {
+        //        isSplitBefore = true;
+        //        return beginning;
+        //    }
+        //);
 
         // Performing the actual diff
         const str = this.diffString(htmlOld, htmlNew);
@@ -1443,21 +1455,11 @@ export class MotionDiffService {
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
-        console.log(`diff`, str);
-        console.log(`firstLineNumber`, firstLineNumber);
-        console.log(`lineLength`, lineLength);
         // Since the closing </span> tag is removed in order to handle changes over multiple lines,
         // they need to be added again to construct a valid html
-        diffUnnormalized = diffUnnormalized.replace(
-            /<del><span[^>]+os-line-number[^>]+?><\/del>\s*/gi,
-            (found: string): string =>
-                found
-                    .toLowerCase()
-                    .replace(/> /gi, `>&nbsp;</span>`)
-                    .replace(/<del>/gi, ``)
-                    .replace(/<\/del>/gi, ``)
+        diffUnnormalized = diffUnnormalized.replace(/<span[^>]+os-line-number[^>]+?>\s*/gi, (found: string): string =>
+            found.toLowerCase().replace(/>/gi, `>&nbsp;</span>`)
         );
-        console.log(`diff2`, diffUnnormalized);
 
         // Remove <del> tags that only delete line numbers
         // We need to do this before removing </del><del> as done in one of the next statements
@@ -1526,7 +1528,7 @@ export class MotionDiffService {
             }
         );
 
-        // Replace spaces in line numbers by &nbsp;
+        // Replace spaces in line numbers by &nbsp; - not needed anymore?
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
             (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
@@ -1817,8 +1819,6 @@ export class MotionDiffService {
         if (isSplitBefore) {
             diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
         }
-
-        console.log(`processed diff`, diff);
 
         this.diffCache.put(cacheKey, diff);
         return diff;
