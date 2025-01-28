@@ -1,3 +1,4 @@
+@import 'src/assets/styles/variables.scss';
 .poll-preview-title {
     margin: 0;
 }
@@ -7,6 +8,47 @@
         display: grid;
         column-gap: 1em;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .flex-info-grid {
+        display: grid;
+        gap: 1em;
+        grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) minmax(100px, 1fr);
+        grid-template-areas:
+            'first second third'
+            '. fourth fourth';
+        @include phone {
+            grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) !important;
+            grid-template-areas:
+                'first second'
+                'third fourth' !important;
+        }
+    }
+
+    .first {
+        grid-area: first;
+        .mat-mdc-text-field-wrapper {
+            flex: unset;
+        }
+    }
+    .second {
+        grid-area: second;
+        .mat-mdc-text-field-wrapper {
+            flex: unset;
+        }
+    }
+
+    .third {
+        grid-area: third;
+        .mat-mdc-text-field-wrapper {
+            flex: unset;
+        }
+    }
+    .fourth {
+        grid-area: fourth;
+        .mat-mdc-text-field-wrapper {
+            flex: unset;
+        }
     }
 
     .mat-mdc-checkbox {

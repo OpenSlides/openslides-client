@@ -176,6 +176,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.repo.updateSelf(patch, participant);
     }
 
+    public updateSelfDelegation(patch: ExtendedUserPatchFn, user: ViewUser): Promise<void> {
+        return this.repo.updateSelfDelegation(this.validatePayload(patch as Partial<ViewUser>), user);
+    }
+
     public delete(participants: Identifiable[], handle_separately = false): Action<void> {
         return this.repo.delete(participants, handle_separately) as Action<void>;
     }

@@ -542,4 +542,17 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public keepEntryOrder(): number {
         return 0;
     }
+
+    public getErrorMessage(message: string): string {
+        switch (message) {
+            case `notEnoughOptionsError`:
+                return this.translate.instant(`There are not enough options.`);
+            case `rangeError`:
+                return this.translate.instant(`Min votes cannot be greater than max votes.`);
+            case `rangeErrorMaxPerOption`:
+                return this.translate.instant(`Max votes per option cannot be greater than max votes.`);
+            default:
+                return ``;
+        }
+    }
 }
