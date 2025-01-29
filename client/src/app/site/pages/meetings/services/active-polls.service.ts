@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { PollControllerService } from '../modules/poll/services/poll-controller.service';
@@ -44,12 +45,7 @@ export class ActivePollsService {
             .getViewModelListObservable()
             .pipe(
                 map(polls => polls.filter(p => p.isStarted)),
-                distinctUntilChanged((previous, current) => {
-                    const prevStarted = previous.map(p => p.id);
-                    const currStarted = current.map(p => p.id);
-
-                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
-                })
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false))
             )
             .subscribe(polls => {
                 this.pollIds = polls.map(poll => poll.id);

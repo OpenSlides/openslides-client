@@ -135,6 +135,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
+    public get operatorIsSubmitter(): boolean {
+        return (
+            this.motion.submitters &&
+            this.motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId)
+        );
+    }
+
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
     private _forwardingAvailable = false;

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { Topic } from 'src/app/domain/models/topics/topic';
-import { OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
 import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
@@ -17,7 +16,7 @@ import { AgendaItemListServiceModule } from '../agenda-item-list-service.module'
 @Injectable({
     providedIn: AgendaItemListServiceModule
 })
-export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAgendaItem> {
+export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
      */
@@ -36,7 +35,7 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
      * @param translate Translation service
      */
     public constructor(
-        store: MeetingActiveFiltersService,
+        store: ActiveFiltersService,
         private translate: TranslateService,
         tagRepo: TagControllerService
     ) {

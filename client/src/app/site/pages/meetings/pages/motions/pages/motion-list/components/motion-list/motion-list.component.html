@@ -511,15 +511,6 @@
                     <span>{{ 'Export' | translate }}</span>
                 </button>
             }
-            <!-- Import -->
-            @if (perms.isAllowed('manage')) {
-                <div>
-                    <button mat-menu-item routerLink="import">
-                        <mat-icon>cloud_upload</mat-icon>
-                        <span>{{ 'Import' | translate }}</span>
-                    </button>
-                </div>
-            }
             <div *osPerms="permission.meetingCanManageSettings">
                 <mat-divider></mat-divider>
                 <!-- Settings -->

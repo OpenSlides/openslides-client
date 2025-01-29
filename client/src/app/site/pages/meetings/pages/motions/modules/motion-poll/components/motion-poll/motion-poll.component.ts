@@ -43,6 +43,10 @@ export class MotionPollComponent extends BasePollComponent {
         return false;
     }
 
+    public get isAnonymous(): boolean {
+        return this.operator.isAnonymousLoggedIn;
+    }
+
     public get canSeeVotes(): boolean {
         const option = this.poll.options[0];
         return (

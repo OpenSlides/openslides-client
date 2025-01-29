@@ -6,6 +6,7 @@ interface PromptDialogData {
     content: string;
     confirm?: string;
     decline?: string;
+    deletion?: boolean;
 }
 
 @Component({

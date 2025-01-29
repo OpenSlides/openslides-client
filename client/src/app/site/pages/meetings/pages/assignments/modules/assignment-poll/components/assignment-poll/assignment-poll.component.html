@@ -28,8 +28,12 @@
                             }
                             &middot;&nbsp;
                         </span>
-                        <span>
-                            {{ poll.stateVerbose | translate }}
+                        <span class="break-word">
+                            @if (isAnonymous && poll.canBeVotedFor()) {
+                                {{ 'Voting in progress' | translate }}
+                            } @else {
+                                {{ poll.stateVerbose | translate }}
+                            }
                         </span>
                     </div>
                     <!-- Menu -->

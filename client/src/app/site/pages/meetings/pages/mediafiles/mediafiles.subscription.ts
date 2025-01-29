@@ -43,7 +43,7 @@ export const getMediafilesListMinimalSubscriptionConfig: SubscriptionConfigGener
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`mediafile_ids`, `meeting_mediafile_ids`]
+        follow: [{ idField: `mediafile_ids` }, { idField: `meeting_mediafile_ids` }]
     },
     subscriptionName: MEDIAFILES_LIST_MINIMAL_SUBSCRIPTION
 });

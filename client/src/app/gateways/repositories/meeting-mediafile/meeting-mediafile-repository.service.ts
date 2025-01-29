@@ -5,7 +5,6 @@ import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafil
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { BaseRepository } from '../base-repository';
-import { ProjectionRepositoryService } from '../projections/projection-repository.service';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
 @Injectable({
@@ -16,8 +15,7 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private projectionRepo: ProjectionRepositoryService
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(repositoryServiceCollector, MeetingMediafile);
 
@@ -66,8 +64,6 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
     protected override createViewModel(model: MeetingMediafile): ViewMeetingMediafile {
         const viewModel = super.createViewModel(model);
         viewModel.getEnsuredActiveMeetingId = (): number => this.activeMeetingIdService.meetingId;
-        viewModel.getProjectedContentObjects = (): string[] =>
-            this.projectionRepo.getViewModelList().map(p => p.content_object_id);
         return viewModel;
     }
 }

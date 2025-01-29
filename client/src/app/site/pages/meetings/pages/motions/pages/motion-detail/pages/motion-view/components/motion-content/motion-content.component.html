@@ -57,7 +57,7 @@
 
 <div class="motion-content">
     <!-- Reason -->
-    @if (motion.reason) {
+    @if (showReason) {
         <div>
             <h3>{{ 'Reason' | translate }}</h3>
             <div class="motion-text underlined-links" [innerHtml]="motion.reason | trust: 'html'"></div>

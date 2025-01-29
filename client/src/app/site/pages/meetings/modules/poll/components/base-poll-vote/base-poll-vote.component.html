@@ -1,6 +1,12 @@
 @if (poll && isReady) {
     <!-- own voting -->
-    <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    @if (isUserPresent) {
+        <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+    } @else {
+        <div class="text-center">
+            {{ 'You have to be present to vote.' | translate }}
+        </div>
+    }
     <!-- Delegations -->
     @if (isUserPresent && (voteDelegationEnabled | async)) {
         @for (delegation of delegations; track delegation.id) {
@@ -65,8 +71,16 @@
                             <div
                                 [ngClass]="{
                                     'yna-grid':
-                                        poll.isMethodYNA ||
-                                        (settings.isSplitSingleOption && displayed_in_autopilot && poll.isMethodYNA),
+                                        ((poll.isListPoll && !isMobile) || !poll.isListPoll) &&
+                                        (poll.isMethodYNA ||
+                                            (settings.isSplitSingleOption &&
+                                                displayed_in_autopilot &&
+                                                poll.isMethodYNA)),
+                                    'yna-grid-extended':
+                                        poll.isMethodYNA &&
+                                        isMobile &&
+                                        !settings.isSplitSingleOption &&
+                                        poll.isListPoll,
                                     'remove-grid-gap': settings.isSplitSingleOption && displayed_in_autopilot,
                                     'yn-grid':
                                         poll.isMethodYN ||
@@ -86,8 +100,22 @@
                                     !(settings.isSplitSingleOption && displayed_in_autopilot)
                                 ) {
                                     <b class="grid-name-area">
-                                        {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
+                                        @if (poll.isListPoll) {
+                                            {{ poll.options[0]?.contentTitlesAsSortedArray.length }}
+                                        } @else {
+                                            {{ poll.option_ids.length }}
+                                        }
+                                        {{ optionPluralLabel | translate }}
                                     </b>
+                                }
+                                @if (!settings.isSplitSingleOption && poll.isListPoll && isMobile) {
+                                    @if (poll.options[0]?.content_object) {
+                                        <div class="vote-option-title-single">
+                                            <span>
+                                                <span>{{ poll.options[0].content_object.getTitle() | translate }}</span>
+                                            </span>
+                                        </div>
+                                    }
                                 }
                                 @for (
                                     action of voteActions.length ? voteActions : voteOptions;
@@ -201,8 +229,8 @@
                                         }
                                     </div>
                                 }
-                                @if (!settings.isSplitSingleOption && option.isListOption) {
-                                    <div class="vote-option-title" id="name">
+                                @if (!settings.isSplitSingleOption && option.isListOption && !isMobile) {
+                                    <div class="vote-option-title grid-name-area">
                                         @if (option.content_object) {
                                             <span>
                                                 <span>{{ option.content_object.getTitle() | translate }}</span>

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 interface ErrorMessageResponse {
     message: string;

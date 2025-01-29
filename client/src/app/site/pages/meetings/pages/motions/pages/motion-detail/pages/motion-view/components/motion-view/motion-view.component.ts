@@ -249,7 +249,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public onMotionUpdated(motion: ViewMotion): void {
         const title = motion.getTitle();
-        super.setTitle(title);
+        super.setTitle(title, true);
         this.motion = motion;
         this.cd.markForCheck();
     }
@@ -339,7 +339,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     : this.lineNumberingMode,
             crMode: this.changeRecoMode,
             // export all comment fields as well as personal note
-            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
+            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID]),
+            showAllChanges: this.showAllAmendments
         });
     }
 

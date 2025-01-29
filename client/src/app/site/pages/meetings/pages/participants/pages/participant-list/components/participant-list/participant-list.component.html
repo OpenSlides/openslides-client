@@ -33,10 +33,19 @@
     [(selectedRows)]="selectedRows"
 >
     <!-- extra content in the filter bar -->
-    @if (showVoteWeight) {
+    @if (showVoteWeight || isFilteringCanVoteForGroups) {
         <div class="filter-bar-info-slot">
             &nbsp;
-            <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
+            @if (showVoteWeight && !isFilteringCanVoteForGroups) {
+                <span>({{ 'Vote weight' | translate }} {{ totalVoteWeight }})</span>
+            } @else if (showVoteWeight) {
+                <span>
+                    ({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }},
+                    {{ 'Vote weight' | translate }} {{ totalEligibleVoteWeight }})
+                </span>
+            } @else {
+                <span>({{ 'Voting rights' | translate }} {{ totalEligibleVoteWeights.length }})</span>
+            }
         </div>
     }
 
@@ -67,7 +76,14 @@
                             {{ user.member_number }}
                         }
                     </div>
-                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        @if (isInPolldefaultGroup(user)) {
+                            {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                            @if (user.hasVoteRightFromOthers()) {
+                                + {{ sumOfDelegatedVoteWeight(user) }} {{ 'from delegated votes' | translate }}
+                            }
+                        }
+                    </div>
                 }
                 @if (canSeeSensitiveData && !showVoteWeight) {
                     <div class="user-subtitle">
@@ -82,7 +98,12 @@
                     </div>
                 }
                 @if (!canSeeSensitiveData && showVoteWeight) {
-                    <div class="user-subtitle">{{ 'Vote weight' | translate }}: {{ user.vote_weight() }}</div>
+                    <div class="user-subtitle">
+                        {{ 'Vote weight' | translate }}: {{ user.vote_weight() }}
+                        @if (user.hasVoteRightFromOthers()) {
+                            + {{ sumOfDelegatedVoteWeight(user) }} {{ 'from delegated votes' | translate }}
+                        }
+                    </div>
                 }
             </div>
             <div class="icon-group">
@@ -141,6 +162,7 @@
                     matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                 >
                     <os-icon-container icon="work" [noWrap]="true">
+                        <span>{{ user.vote_delegations_from().length }}:</span>
                         {{ user.vote_delegations_from() }}
                     </os-icon-container>
                 </div>
@@ -212,7 +234,7 @@
     >
         <button
             mat-icon-button
-            [disabled]="isMultiSelect"
+            [disabled]="isMultiSelect || !canEditOwnDelegation(user)"
             [matMenuTriggerData]="{ user: user }"
             [matMenuTriggerFor]="singleItemMenu"
             (click)="$event.stopPropagation()"
@@ -236,10 +258,20 @@
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
         }
+        @if (canEditOwnDelegation(user)) {
+            <button
+                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
+                mat-menu-item
+                (click)="openEditInfo(user)"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit details' | translate }}</span>
+            </button>
+        }
 
-        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="openEditInfo(user)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="user.id">
             <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit details' | translate }}</span>
+            <span>{{ 'Edit user' | translate }}</span>
         </button>
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
@@ -308,6 +340,14 @@
             <button *osPerms="permission.userCanUpdate" mat-menu-item routerLink="speaker-list">
                 <mat-icon>record_voice_over</mat-icon>
                 <span translate>Contributions</span>
+            </button>
+            <button
+                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(operator.user)"
+                mat-menu-item
+                (click)="openEditInfo(operator.user)"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Change your delegation' | translate }}</span>
             </button>
             <button mat-menu-item (click)="pdfExportUserList()">
                 <mat-icon>picture_as_pdf</mat-icon>

@@ -4,6 +4,7 @@ import { distinctUntilChanged, map, skip } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
@@ -50,6 +51,8 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
             this.getAccountSubscriptionForCurrentPerm(this.operator.hasOrganizationPermissions(OML.can_manage_users)),
             { hideWhenMeetingChanged: true }
         );
+
+        this.subscribeTo(getMeetingListSubscriptionConfig(), { hideWhenMeetingChanged: true });
 
         this.subscriptions.push(
             this.operator.userObservable

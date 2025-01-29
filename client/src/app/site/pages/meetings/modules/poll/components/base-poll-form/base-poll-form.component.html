@@ -44,10 +44,10 @@
                     </mat-form-field>
                 }
             </div>
-            <div class="info-grid">
+            <div class="flex-info-grid">
                 <!-- Poll Methods -->
                 @if (!isCreatedList && filteredPollMethods && !hideSelects.pollMethod) {
-                    <mat-form-field>
+                    <mat-form-field class="first">
                         <mat-label>{{ PollPropertyVerbose.pollmethod | translate }}</mat-label>
                         <mat-select formControlName="pollmethod" required>
                             @for (option of filteredPollMethods | keyvalue: keepEntryOrder; track option) {
@@ -63,7 +63,7 @@
                     <ng-container formGroupName="votes_amount">
                         <!-- Min Amount of Votes -->
                         @if (showMinMaxVotes(data)) {
-                            <mat-form-field>
+                            <mat-form-field class="second" subscriptSizing="dynamic">
                                 <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
                                 <input
                                     formControlName="min_votes_amount"
@@ -74,20 +74,16 @@
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
                                 @if (contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')) {
-                                    <mat-error>
-                                        {{ 'There are not enough options.' | translate }}
-                                    </mat-error>
+                                    <mat-error>{{ getErrorMessage('notEnoughOptionsError') }}</mat-error>
                                 }
                                 @if (contentForm.controls['votes_amount'].hasError('rangeError')) {
-                                    <mat-error>
-                                        {{ 'Min votes cannot be greater than max votes.' | translate }}
-                                    </mat-error>
+                                    <mat-error>{{ getErrorMessage('rangeError') }}</mat-error>
                                 }
                             </mat-form-field>
                         }
                         <!-- Max Amount of Votes -->
                         @if (showMinMaxVotes(data)) {
-                            <mat-form-field>
+                            <mat-form-field class="third">
                                 <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
                                 <input
                                     formControlName="max_votes_amount"
@@ -103,10 +99,10 @@
                 }
                 <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
                 @if (pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)) {
-                    <div class="third-option">
+                    <div class="fourth">
                         <ng-container formGroupName="votes_amount">
                             <!-- Max Amount of Votes per Option -->
-                            <mat-form-field>
+                            <mat-form-field subscriptSizing="dynamic">
                                 <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
                                 <input
                                     formControlName="max_votes_per_option"
@@ -116,6 +112,9 @@
                                     type="number"
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
+                                @if (contentForm.controls['votes_amount'].hasError('rangeErrorMaxPerOption')) {
+                                    <mat-error>{{ getErrorMessage('rangeErrorMaxPerOption') }}</mat-error>
+                                }
                             </mat-form-field>
                         </ng-container>
                     </div>

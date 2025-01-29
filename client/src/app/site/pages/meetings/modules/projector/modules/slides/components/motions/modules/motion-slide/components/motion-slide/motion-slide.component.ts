@@ -258,17 +258,25 @@ export class MotionSlideComponent
 
         if (this.data.data.change_recommendations) {
             this.data.data.change_recommendations.forEach(change => {
+                let lineFrom = change.line_from;
+                let lineTo = change.line_to;
                 if (this.data.data.start_line_number > 1) {
                     const offset = this.data.data.start_line_number - 1;
-                    if (change.line_from) {
-                        change.line_from += offset;
+                    if (lineFrom) {
+                        lineFrom += offset;
                     }
 
-                    if (change.line_to) {
-                        change.line_to += offset;
+                    if (lineTo) {
+                        lineTo += offset;
                     }
                 }
-                this.allChangingObjects.push(new ChangeRecommendationUnifiedChange(change));
+                this.allChangingObjects.push(
+                    new ChangeRecommendationUnifiedChange({
+                        ...change,
+                        line_from: lineFrom,
+                        line_to: lineTo
+                    })
+                );
             });
         }
         if (this.data.data.amendments) {

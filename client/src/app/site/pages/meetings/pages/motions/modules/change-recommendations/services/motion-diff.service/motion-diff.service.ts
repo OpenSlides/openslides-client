@@ -1347,7 +1347,9 @@ export class MotionDiffService {
                 htmlOldEl.content.querySelector(`.os-line-number`)
             ) {
                 const ln = htmlNewEl.content.querySelector(`.os-line-number`);
-                htmlNewEl.content.children[0].childNodes[0].before(ln);
+                htmlNewEl.content.children[0].childNodes.length > 0
+                    ? htmlNewEl.content.children[0].childNodes[0].before(ln)
+                    : htmlNewEl.content.children[0].before(ln);
                 htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;
@@ -1581,7 +1583,7 @@ export class MotionDiffService {
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
+            /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
             (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del>` +
                 content +
@@ -1598,7 +1600,7 @@ export class MotionDiffService {
 
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
-            /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
+            /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
             (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del><` +
                 inlineTag +
@@ -1611,6 +1613,97 @@ export class MotionDiffService {
                 `<ins>` +
                 content +
                 `</ins>`
+        );
+
+        // <del><STRONG>Körper</del><ins>alten <STRONG>Körpergehülle</ins></STRONG> => <ins>alten </ins><STRONG><del>Körper</del><ins>Körpergehülle</ins></STRONG>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/del><ins>([^<]*)<\1>([^<]*)<\/ins><\/\1>/gi,
+            (
+                _whole: string,
+                inlineTag: string,
+                tagAttributes: string,
+                delContent: string,
+                insContent1: string,
+                insContent2: string
+            ): string =>
+                `<ins>` +
+                insContent1 +
+                `</ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `><del>` +
+                delContent +
+                `</del>` +
+                `<ins>` +
+                insContent2 +
+                `</ins></` +
+                inlineTag +
+                `>`
+        );
+
+        // <del>with a </del><ins>a <STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+        // <del>unformatted word</del><ins><STRONG>formatted word</STRONG></ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<]*)<\/del><ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/ins>([^<]*)<ins><\/\2><\/ins>/gi,
+            (
+                _whole: string,
+                delContent: string,
+                inlineTag: string,
+                tagAttributes: string,
+                insContent: string,
+                unchangedContent: string
+            ): string =>
+                `<del>` +
+                delContent +
+                unchangedContent +
+                `</del><ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                insContent +
+                unchangedContent +
+                `</` +
+                inlineTag +
+                `></ins>`
+        );
+
+        // <ins><STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+        // <del>unformatted word</del><ins><STRONG>unformatted sentence</STRONG></ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<del>([^<]*)<\/del><ins>([^<]*)<\/\1><\/ins>/gi,
+            (
+                _whole: string,
+                inlineTag: string,
+                tagAttributes: string,
+                unchangedContent: string,
+                delContent: string,
+                insContent: string
+            ): string =>
+                `<del>` +
+                unchangedContent +
+                delContent +
+                `</del><ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                unchangedContent +
+                insContent +
+                `</` +
+                inlineTag +
+                `></ins>`
+        );
+
+        // <STRONG>Bestätigung<del></STRONG></del><ins> NEU</STRONG> NEU2</ins> -->
+        // <STRONG>Bestätigung<ins> NEU</ins></STRONG><ins> NEU2</ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<\/(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)>)<\/del><ins>([^>]*)<\/\2>([^>]*)<\/ins>/gi,
+            (
+                _whole: string,
+                closingTag: string,
+                closingTagInner: string,
+                insertedText1: string,
+                insertedText2: string
+            ): string => `<ins>` + insertedText1 + `</ins>` + closingTag + `<ins>` + insertedText2 + `</ins>`
         );
 
         // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>

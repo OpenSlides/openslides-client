@@ -1,6 +1,8 @@
 <h4>
-    <span class="title-font">{{ title }}</span>
-    @if (perms.isAllowed('change_metadata')) {
+    @if (!isEmpty || canChangeMetadata) {
+        <span class="title-font">{{ title }}</span>
+    }
+    @if (canChangeMetadata) {
         @if (isEditMode) {
             <button class="small-button" disableRipple mat-icon-button type="button" (click)="onCancel()">
                 <mat-icon>close</mat-icon>
@@ -13,7 +15,7 @@
     }
 </h4>
 
-@if (!isEditMode || !perms.isAllowed('change_metadata')) {
+@if (!isEditMode || !canChangeMetadata) {
     <div>
         <div>{{ motion[field] | localizedDate }}</div>
     </div>

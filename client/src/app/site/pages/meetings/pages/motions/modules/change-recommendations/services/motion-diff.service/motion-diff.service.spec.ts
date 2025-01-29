@@ -1006,7 +1006,7 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
-        it(`does not break when an insertion followes a beginning tag occuring twice`, inject(
+        it(`does not break when an insertion follows a beginning tag occurring twice`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>\n<p>Test</p>`,
@@ -1158,6 +1158,54 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del><strong>word</strong></del><ins>word</ins> that is formatted</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (1)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>This is a text with a unformatted word and some more text</p>`,
+                    after = `<p>This is a text with a <strong>formatted word</strong> and some more text</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>This is a text with a <del>unformatted word</del><ins><strong>formatted word</strong></ins> and some more text</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (2)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>This is a text with a unformatted word and some more text</p>`,
+                    after = `<p>This is a text with a <strong>unformatted sentence</strong> and some more text</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>This is a text with a <del>unformatted word</del><ins><strong>unformatted sentence</strong></ins> and some more text</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (3)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`,
+                    after = `<p>es war ihnen wie eine <strong>Bestätigung NEU</strong> NEU2 ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>es war ihnen wie eine <strong>Bestätigung<ins> NEU</ins></strong> <ins>NEU2 </ins>ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`
+                );
+            }
+        ));
+
+        it(`does not fall back to block level replacement when replacement and tag insertion overlap (4)`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const before = `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen <strong>Körper</strong> dehnte.</p>`,
+                    after = `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen alten <strong>Körpergehülle</strong> dehnte.</p>`;
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen <ins>alten </ins><strong><del>Körper</del><ins>Körpergehülle</ins></strong> dehnte.</p>`
                 );
             }
         ));

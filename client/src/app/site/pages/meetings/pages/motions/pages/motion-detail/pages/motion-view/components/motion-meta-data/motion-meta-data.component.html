@@ -76,7 +76,10 @@
 @if (motion.state$ | async; as motionState) {
     <div>
         <os-motion-extension-field
-            [canBeEdited]="perms.isAllowed('change_state', motion) || !!motionState.submitter_withdraw_state"
+            [canBeEdited]="
+                perms.isAllowed('change_state', motion) ||
+                (!!motionState.submitter_withdraw_state && operatorIsSubmitter)
+            "
             [chipValue]="stateLabel | translate"
             [classes]="motion.stateCssColor"
             extensionLabel="{{ 'Extension' | translate }}"
@@ -116,7 +119,7 @@
                             </button>
                         }
                     </div>
-                } @else if (!!motionState.submitter_withdraw_state) {
+                } @else if (!!motionState.submitter_withdraw_state && operatorIsSubmitter) {
                     <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
                         {{ motion.state.submitter_withdraw_state.name }}
                     </button>
