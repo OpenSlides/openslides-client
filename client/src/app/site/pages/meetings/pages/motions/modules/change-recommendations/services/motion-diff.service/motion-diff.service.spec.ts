@@ -919,7 +919,7 @@ describe(`MotionDiffService`, () => {
                     `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
                     `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Ebene 2` +
                     `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
-                    `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
+                    `Ebene 3<ins>a</ins>` +
                     `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`;
 
@@ -1018,7 +1018,6 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
-
         it(`detects inline insertions exceeding block paragraphs`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
