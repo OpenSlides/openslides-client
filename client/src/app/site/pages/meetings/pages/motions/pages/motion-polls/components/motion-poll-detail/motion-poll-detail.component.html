@@ -53,8 +53,8 @@
             <os-poll-filted-votes-chart [poll]="poll"></os-poll-filted-votes-chart>
         }
 
-        <mat-tab-group (selectedTabChange)="onTabChange()">
-            @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+        @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+            <mat-tab-group (selectedTabChange)="onTabChange()">
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         <os-votes-table
@@ -72,7 +72,9 @@
                         [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
-            } @else if (poll.isEVoting && poll.isStarted) {
+            </mat-tab-group>
+        } @else if (poll.isEVoting && poll.isStarted) {
+            <mat-tab-group>
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">
                         {{ 'No data available' | translate }}
@@ -82,11 +84,10 @@
                     <os-entitled-users-table
                         [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="liveRegisterObservable"
-                        [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
-            }
-        </mat-tab-group>
+            </mat-tab-group>
+        }
     }
     <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
 </ng-template>
