@@ -96,7 +96,38 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {
-        return committee.meetings.sort((a, b) => b.end_time - a.end_time);
+        return committee.meetings.sort((a, b) => {
+            const end_time = b.end_time - a.end_time;
+            if (Number.isNaN(end_time)) {
+                if (b.end_time) {
+                    return b.end_time;
+                }
+                if (a.end_time) {
+                    return -a.end_time;
+                }
+                return this.getMeetingTitleSorted(a.name, b.name);
+            }
+            if (end_time === 0) {
+                return this.getMeetingTitleSorted(a.name, b.name);
+            }
+            return end_time;
+        });
+    }
+
+    private getMeetingTitleSorted(a_name: string, b_name: string): number {
+        for (let i = 0; i <= a_name.length; i++) {
+            if (!(a_name[i] === b_name[i])) {
+                if (!b_name[i]) {
+                    return 1;
+                }
+                if (a_name[i] > b_name[i]) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        return 0;
     }
 
     public toggleForwardingList(): void {
