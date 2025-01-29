@@ -1,3 +1,4 @@
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
 msgid ""
 msgstr ""
 "mime-version: 1.0\n"
@@ -149,6 +150,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Activate public access"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Activate submitter extension field in motion create form"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
@@ -1263,6 +1268,10 @@ msgstr ""
 msgid "Changes"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/pages/meeting-settings/pages/meeting-settings-group-list/components/meeting-settings-group-list/meeting-settings-group-list.component.ts
+msgid "Changes of all settings group will be lost!"
+msgstr ""
+
 msgid "Chat"
 msgstr ""
 
@@ -1994,6 +2003,10 @@ msgstr ""
 msgid "Enable point of orders for other participants"
 msgstr ""
 
+#: /app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Enable public meetings"
+msgstr ""
+
 msgid "Enable specifications and ranking for possible motions"
 msgstr ""
 
@@ -2584,9 +2597,6 @@ msgstr ""
 msgid "Import meeting"
 msgstr ""
 
-msgid "Import motions"
-msgstr ""
-
 msgid "Import participants"
 msgstr ""
 
@@ -2777,10 +2787,6 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Is not in archived meetings"
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
-msgid "Is not locked out"
 msgstr ""
 
 msgid "Is not present"
@@ -3486,6 +3492,12 @@ msgstr ""
 msgid "Note, that the default password will be changed to the new generated one."
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid ""
+"Note: The public access setting is deactivated for the organization. Please "
+"contact your admins or hosting providers to activate the setting."
+msgstr ""
+
 msgid ""
 "Note: Your own password was not changed. Please use the password change "
 "dialog instead."
@@ -3941,6 +3953,13 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid ""
+"Possible placeholders for email subject and body: {title}, {first_name}, "
+"{last_name}, {groups}, {structure_levels}, {event_name}, {url}, {username} "
+"and {password}"
+msgstr ""
+
 msgid "Possible points of order"
 msgstr ""
 
@@ -4224,6 +4243,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Requires permission to manage lists of speakers"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Requires permission to manage motions"
 msgstr ""
 
 msgid "Reset"
@@ -4920,12 +4943,6 @@ msgstr ""
 msgid "The file has too few columns to be parsed properly."
 msgstr ""
 
-msgid "The file seems to have additional columns. They will be ignored."
-msgstr ""
-
-msgid "The file seems to have some ommitted columns. They will be considered empty."
-msgstr ""
-
 msgid ""
 "The import can not proceed. There is likely a problem with the import data, "
 "please check the preview for details."
@@ -5323,11 +5340,6 @@ msgstr ""
 msgid "Use the following custom number"
 msgstr ""
 
-msgid ""
-"Use these placeholders: {name}, {event_name}, {url}, {username}, "
-"{password}. The url referrs to the system url."
-msgstr ""
-
 msgid "Used for WLAN QRCode projection."
 msgstr ""
 
@@ -5448,6 +5460,11 @@ msgid "Voting right for"
 msgstr ""
 
 msgid "Voting right received from (principals)"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "Voting rights"
 msgstr ""
 
 msgid "Voting started"
@@ -5621,9 +5638,6 @@ msgid "You can not vote right now because the voting has not yet started."
 msgstr ""
 
 msgid "You can only anonymize named polls."
-msgstr ""
-
-msgid "You can use {event_name} and {username} as placeholder."
 msgstr ""
 
 msgid "You cannot change the recommendation of motions in different workflows!"
@@ -5830,6 +5844,10 @@ msgid "female"
 msgstr ""
 
 msgid "finished (unpublished)"
+msgstr ""
+
+#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "from delegated votes"
 msgstr ""
 
 msgid "fullscreen"

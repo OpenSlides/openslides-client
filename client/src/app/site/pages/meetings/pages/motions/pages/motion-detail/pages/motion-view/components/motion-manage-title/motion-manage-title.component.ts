@@ -31,6 +31,9 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this._changeRecoMode;
     }
 
+    @Input()
+    public publicAccess: boolean;
+
     @Output()
     public updateCrMode = new EventEmitter<ChangeRecoMode>();
 

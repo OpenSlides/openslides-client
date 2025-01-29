@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 const PollValues: any = {
     votesvalid: `Valid votes`,

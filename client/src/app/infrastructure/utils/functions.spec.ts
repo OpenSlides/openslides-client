@@ -25,7 +25,9 @@ import {
     stripHtmlTags,
     toBase64,
     toBoolean,
-    toDecimal
+    toDecimal,
+    viewModelEqual,
+    viewModelListEqual
 } from './functions';
 import { copy } from './transform-functions';
 
@@ -517,9 +519,10 @@ describe(`utils: functions`, () => {
                 number: 1,
                 boolean: true
             },
-            string: `string`
+            string: `string`,
+            empty_string: ``
         };
-        const expected = `{\n   "array": [\n      "string1",\n      "string2"\n   ],\n   "object": {\n      "number": 1,\n      "boolean": true\n   },\n   "string": "string"\n}`;
+        const expected = `{\n   "array": [\n      "string1",\n      "string2"\n   ],\n   "object": {\n      "number": 1,\n      "boolean": true\n   },\n   "string": "string",\n   "empty_string": ""\n}`;
         it(`test with an object`, () => {
             expect(objectToFormattedString(testObject)).toBe(expected);
         });
@@ -532,6 +535,12 @@ describe(`utils: functions`, () => {
             expect(objectToFormattedString(undefined)).toBe(undefined);
             expect(objectToFormattedString(null)).toBe(undefined);
             expect(objectToFormattedString(``)).toBe(undefined);
+        });
+
+        it(`test with object with empty string`, () => {
+            const obj1 = { string: `` };
+            const expected = `{\n   "string": ""\n}`;
+            expect(objectToFormattedString(obj1)).toBe(expected);
         });
     });
 
@@ -747,6 +756,68 @@ describe(`utils: functions`, () => {
 
         it(`finds first among many`, () => {
             expect(findIndexInSortedArray([1, 1, 1, 1, 1, 1, 1], 1, (a, b) => a - b)).toBe(0);
+        });
+    });
+
+    describe(`viewModelListEqual`, () => {
+        const els: any[] = [
+            { viewModelUpdateTimestamp: 1234, id: 1 },
+            { viewModelUpdateTimestamp: 1234, id: 2 },
+            { viewModelUpdateTimestamp: 1235, id: 2 },
+            { viewModelUpdateTimestamp: 1234, id: 3 }
+        ];
+
+        it(`detects change via id switch`, () => {
+            const l1 = [els[0], els[1]];
+            const l2 = [els[0], els[3]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects change via change date switch`, () => {
+            const l1 = [els[0], els[1]];
+            const l2 = [els[0], els[2]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects change via size change`, () => {
+            const l1 = [els[0], els[1]];
+            const l2 = [els[0]];
+
+            expect(viewModelListEqual(l1, l2)).toBeFalse();
+        });
+
+        it(`detects equality`, () => {
+            const l1 = [els[0], els[1], els[3]];
+            const l2 = [els[0], els[1], els[3]];
+
+            expect(viewModelListEqual(l1, l2)).toBeTrue();
+        });
+    });
+
+    describe(`viewModelEqual`, () => {
+        const els: any[] = [
+            { viewModelUpdateTimestamp: 1234, id: 1 },
+            { viewModelUpdateTimestamp: 1235, id: 1 },
+            { viewModelUpdateTimestamp: 1234, id: 2 },
+            { viewModelUpdateTimestamp: 1234, id: 1 }
+        ];
+
+        it(`detects change via id switch`, () => {
+            expect(viewModelEqual(els[0], els[2])).toBeFalse();
+        });
+
+        it(`detects change via change date switch`, () => {
+            expect(viewModelEqual(els[0], els[1])).toBeFalse();
+        });
+
+        it(`detects change via empty`, () => {
+            expect(viewModelEqual(els[0], null)).toBeFalse();
+        });
+
+        it(`detects equality`, () => {
+            expect(viewModelEqual(els[0], els[3])).toBeTrue();
         });
     });
 });

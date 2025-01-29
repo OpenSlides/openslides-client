@@ -73,6 +73,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.motion.showPreamble;
     }
 
+    public get showReason(): boolean {
+        return !!this.motion.reason?.replace(/<p>/, ``).replace(/<\/p>/, ``).trim();
+    }
+
     public get canChangeMetadata(): boolean {
         return this.perms.isAllowed(`change_metadata`, this.motion);
     }

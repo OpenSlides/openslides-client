@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 import { Permission } from './permission';
 
@@ -248,6 +248,11 @@ Meeting specific information: Structure level, Group, Participant number, About 
                 display_name: _(`Can manage participants`),
                 help_text: _(`Can create, modify, delete participant datasets and administrate group permissions.`),
                 value: Permission.userCanManage
+            },
+            {
+                display_name: _(`Can edit own delegation`),
+                help_text: _(`Can set and remove delegation vote.`),
+                value: Permission.userCanEditOwnDelegation
             }
         ]
     },

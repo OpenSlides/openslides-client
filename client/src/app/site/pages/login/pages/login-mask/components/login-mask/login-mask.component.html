@@ -40,15 +40,13 @@
                 >
                     {{ samlLoginButtonText || 'SAML Login' | translate }}
                 </button>
-                <br />
                 @if (guestsEnabled) {
                     <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">
                         {{ 'Public access' | translate }}
                     </button>
                 }
-                <br />
                 <mat-expansion-panel
-                    class="spacer-bottom-10"
+                    class="spacer-bottom-10 spacer-top-25"
                     style="border-radius: 4px !important"
                     (afterCollapse)="setLoginAreaExpansion(false)"
                     (afterExpand)="setLoginAreaExpansion(true)"

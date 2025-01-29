@@ -80,6 +80,10 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         return null;
     }
 
+    public getActiveMeetingId(): number {
+        return this.activeMeetingId;
+    }
+
     public override deleteModels(ids: Id[]): void {
         ids.forEach(id => {
             const user = this.viewModelStore[id];

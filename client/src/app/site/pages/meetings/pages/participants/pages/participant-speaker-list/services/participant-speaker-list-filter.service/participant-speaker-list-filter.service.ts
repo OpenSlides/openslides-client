@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
-import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseFilterListService, OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewSpeaker } from '../../../../../agenda';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
@@ -13,7 +12,7 @@ import { ParticipantSpeakerListServiceModule } from '../participant-speaker-list
 @Injectable({
     providedIn: ParticipantSpeakerListServiceModule
 })
-export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListService<ViewSpeaker> {
+export class ParticipantSpeakerListFilterService extends BaseFilterListService<ViewSpeaker> {
     /**
      * set the storage key name
      */
@@ -25,7 +24,7 @@ export class ParticipantSpeakerListFilterService extends BaseMeetingFilterListSe
         options: []
     };
 
-    public constructor(store: MeetingActiveFiltersService, structureRepo: StructureLevelControllerService) {
+    public constructor(store: ActiveFiltersService, structureRepo: StructureLevelControllerService) {
         super(store);
 
         this.updateFilterForRepo({

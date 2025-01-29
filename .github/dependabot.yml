@@ -36,6 +36,11 @@ updates:
           patterns:
             - "cm-chess*"
     open-pull-requests-limit: 42
+    ignore:
+      - dependency-name: "@angular*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@schematics/angular"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "docker"
     directory: "/"

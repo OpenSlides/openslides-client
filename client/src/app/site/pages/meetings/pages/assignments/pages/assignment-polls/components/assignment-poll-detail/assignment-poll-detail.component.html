@@ -57,6 +57,7 @@
                             </mat-tab>
                             <mat-tab label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="entitledUsersObservable"
                                     [isViewingThis]="isViewingEntitledUserslist"
                                 ></os-entitled-users-table>
@@ -84,7 +85,7 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="permission.assignmentCanManage; and: poll && poll.type === 'named'"
+        *osPerms="permission.assignmentCanManage; and: poll && poll.type === 'named' && !poll.is_pseudoanonymized"
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 export const LogoDisplayNames = {
     projector_main: _(`Projector logo`),
@@ -25,14 +25,14 @@ export const FontDisplayNames = {
 };
 export type FontPlace = keyof typeof FontDisplayNames;
 export const FontDefaults: { [place in FontPlace]: string } = {
-    regular: `assets/fonts/fira-sans-latin-400.woff`,
-    italic: `assets/fonts/fira-sans-latin-400italic.woff`,
-    bold: `assets/fonts/fira-sans-latin-500.woff`,
-    bold_italic: `assets/fonts/fira-sans-latin-500italic.woff`,
-    monospace: `assets/fonts/roboto-condensed-bold.woff`,
-    chyron_speaker_name: `assets/fonts/fira-sans-latin-400.woff`,
-    projector_h1: `assets/fonts/fira-sans-latin-500.woff`,
-    projector_h2: `assets/fonts/fira-sans-latin-400.woff`
+    regular: `/assets/fonts/fira-sans-latin-400.woff`,
+    italic: `/assets/fonts/fira-sans-latin-400italic.woff`,
+    bold: `/assets/fonts/fira-sans-latin-500.woff`,
+    bold_italic: `/assets/fonts/fira-sans-latin-500italic.woff`,
+    monospace: `/assets/fonts/roboto-condensed-bold.woff`,
+    chyron_speaker_name: `/assets/fonts/fira-sans-latin-400.woff`,
+    projector_h1: `/assets/fonts/fira-sans-latin-500.woff`,
+    projector_h2: `/assets/fonts/fira-sans-latin-400.woff`
 };
 export const FONT_PLACES = Object.keys(FontDisplayNames) as FontPlace[];
 
