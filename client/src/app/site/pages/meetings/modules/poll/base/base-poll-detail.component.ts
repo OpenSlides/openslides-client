@@ -301,7 +301,6 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
             }
         });
         userIds.update(delegates);
-
         this.subscriptions.push(
             this.userRepo
                 .getViewModelListObservable()
@@ -325,7 +324,11 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
                         });
                     }
-                    this.countVoteAllowedAndPresent = entries.filter(e => e.present).length;
+                    this.countVoteAllowedAndPresent = entries.filter(entry => {
+                        const countable = entry.user.isVoteCountable;
+                        const inVoteGroup = this.poll.entitled_group_ids.intersect(entry.user.group_ids()).length;
+                        return countable && inVoteGroup;
+                    }).length;
                     this.countVoteAllowed = entries.length;
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
