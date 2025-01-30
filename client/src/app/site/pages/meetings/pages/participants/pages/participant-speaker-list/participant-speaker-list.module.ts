@@ -15,7 +15,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
-import { CountdownTimeModule } from '../../../../modules/projector/modules/countdown-time/countdown-time.module';
+import { CountdownTimeComponent } from '../../../../modules/projector/components/countdown-time/countdown-time.component';
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantSpeakerListComponent } from './components/participant-speaker-list/participant-speaker-list.component';
 import { ParticipantSpeakerListRoutingModule } from './participant-speaker-list-routing.module';
@@ -33,7 +33,7 @@ import { ParticipantSpeakerListServiceModule } from './services/participant-spea
         ChoiceDialogModule,
         HeadBarModule,
         IconContainerModule,
-        CountdownTimeModule,
+        CountdownTimeComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
         OpenSlidesTranslationModule.forChild(),

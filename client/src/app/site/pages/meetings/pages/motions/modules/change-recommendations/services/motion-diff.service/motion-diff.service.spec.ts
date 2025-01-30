@@ -4,7 +4,6 @@ import { htmlToFragment, nodesToHtml } from 'src/app/infrastructure/utils/dom-he
 import { E2EImportsModule } from 'src/e2e-imports.module';
 import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
-import { ChangeRecommendationUnifiedChange } from '../../../../../../modules/projector/modules/slides/components/motions/modules/motion-slide/change-recommendation-unified-change';
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { LineNumberingService } from '../line-numbering.service';
@@ -1582,7 +1581,7 @@ describe(`MotionDiffService`, () => {
                         `<p>Test 1x</p>`,
                         { from: 1, to: 1 }
                     ),
-                    new ChangeRecommendationUnifiedChange({
+                    new TestChangeRecommendation({
                         id: 2,
                         rejected: false,
                         line_from: 1,

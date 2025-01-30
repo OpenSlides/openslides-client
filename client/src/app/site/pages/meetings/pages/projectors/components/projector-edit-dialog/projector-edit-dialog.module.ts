@@ -14,7 +14,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
-import { ProjectorModule } from '../../../../modules/projector/projector.module';
+import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorEditDialogComponent } from './components/projector-edit-dialog/projector-edit-dialog.component';
 
 @NgModule({
@@ -33,7 +33,7 @@ import { ProjectorEditDialogComponent } from './components/projector-edit-dialog
         MatButtonModule,
         MatSelectModule,
         ReactiveFormsModule,
-        ProjectorModule,
+        ProjectorComponent,
         OpenSlidesTranslationModule.forChild()
     ]
 })
