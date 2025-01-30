@@ -80,25 +80,41 @@
                 </div>
                 <table class="result-table">
                     <tr>
-                        <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
-                        <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
-                        <th class="verticalSplit">
-                            {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
-                        </th>
+                        <th><mat-icon class="result-success-icon">add_circle</mat-icon></th>
+                        <th>{{ 'Account successfully assigned' | translate }}</th>
                     </tr>
                     <tr>
-                        <td class="verticalSplit">
+                        <td></td>
+                        <td>
                             <ng-container
                                 [ngTemplateOutlet]="tableData"
                                 [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
                             ></ng-container>
                         </td>
-                        <td class="verticalSplit">
+                    </tr>
+                    <tr>
+                        <th><mat-icon color="warn">warning</mat-icon></th>
+                        <th>{{ 'Group not found - assigned to default group' | translate }}</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
                             <ng-container
                                 [ngTemplateOutlet]="tableData"
                                 [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
                             ></ng-container>
                         </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <mat-icon color="accent">info</mat-icon>
+                        </th>
+                        <th>
+                            {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td></td>
                         <td class="verticalSplit">
                             <ng-container
                                 [ngTemplateOutlet]="tableData"

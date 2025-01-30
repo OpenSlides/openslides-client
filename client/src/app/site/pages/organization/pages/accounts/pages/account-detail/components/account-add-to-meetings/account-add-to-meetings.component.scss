@@ -5,7 +5,6 @@
 
 .assign-meetings-subtext {
     margin-bottom: 10px;
-    margin-left: 10px;
 }
 
 .result-table {
@@ -13,7 +12,7 @@
     text-align: left;
     border-collapse: collapse;
     width: 95%;
-    margin-left: 10px;
+    margin-left: 0px;
 
     tr {
         border: none;
@@ -21,8 +20,6 @@
 
     td,
     th {
-        border-right: solid 1px grey;
-        border-left: solid 1px grey;
         vertical-align: top;
         padding: 0 10px;
 
@@ -31,19 +28,9 @@
         }
     }
 
-    .verticalSplit {
-        border-top: none;
-        border-bottom: none;
-    }
-
-    .verticalSplit:first-of-type {
-        border-left: none;
-        padding-left: 0;
-    }
-
-    .verticalSplit:last-of-type {
-        border-right: none;
-        padding-right: 0;
+    td:first-child,
+    th:first-child {
+        width: 25px;
     }
 }
 
@@ -80,4 +67,8 @@
 .await-result-spinner {
     margin-left: auto;
     margin-right: auto;
+}
+
+.result-success-icon {
+    color: lightgreen;
 }
