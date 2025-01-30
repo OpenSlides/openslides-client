@@ -99,7 +99,7 @@
     "tinycolor2": "1.6.0",
     "video.js": "^8.21.0",
     "zone.js": "^0.14.10",
-    "angular-oauth2-oidc": "^17.0.2"
+    "angular-oauth2-oidc": "^18.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.12",

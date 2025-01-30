@@ -233,7 +233,7 @@ export class HttpService {
 
             // Fetch the resource as a blob
             const response = await fetch(url, {
-                headers: { Authentication: `Bearer ${this.authTokenService.rawAccessToken}` }
+                headers: { Authorization: `Bearer ${this.authTokenService.rawAccessToken}` }
             });
             if (!response.ok) {
                 throw new Error(`Network response was not ok`);

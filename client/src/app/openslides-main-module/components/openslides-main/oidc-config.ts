@@ -5,7 +5,7 @@ export const authCodeFlowConfig: AuthConfig = {
     redirectUri: window.location.origin + `/`,
     clientId: `os-ui`,
     responseType: `code`,
-    scope: `openid profile email offline_access`,
+    scope: `openid profile email offline_access os`,
     showDebugInformation: true,
     timeoutFactor: 0.75,
     openUri: (uri: string) => {
