@@ -123,12 +123,16 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public async assign(): Promise<void> {
         if (this.user) {
             this.waitingForResults = true;
-            const result = await this.userController
-                .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
-                .resolve();
-            if (result) {
-                this.lastGroupName = this.groupName;
-                this.parseIntoResultSubject(result);
+            try {
+                const result = await this.userController
+                    .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
+                    .resolve();
+                if (result) {
+                    this.lastGroupName = this.groupName;
+                    this.parseIntoResultSubject(result);
+                }
+            } catch (e) {
+                console.warn(`Found:`, e);
             }
             this.waitingForResults = false;
         }
