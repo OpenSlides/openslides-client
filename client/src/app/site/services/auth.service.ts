@@ -130,6 +130,7 @@ export class AuthService {
             const response = callback ? await callback() : { success: true };
             console.debug(`auth: Invalidate session after`, response);
             if (response?.success) {
+                this.lifecycleService.shutdown();
                 this.authTokenService.setRawAccessToken(null);
                 this._logoutEvent.emit();
                 this.sharedWorker.sendMessage(`auth`, { action: `update` });
