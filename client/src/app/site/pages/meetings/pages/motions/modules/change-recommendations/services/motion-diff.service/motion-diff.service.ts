@@ -256,6 +256,7 @@ export class MotionDiffService {
             (found: string, _span: string, _whitespace: string, _spanClose: string): string => _span
         );
         html = html.replace(/<P>&nbsp;/gi, `<P>`);
+        html = html.replace(/<BR>&nbsp;/gi, `<BR CLASS="os-line-break">`);
         html = html.replace(/ CLASS=" "/gi, ``).replace(/ CLASS=""/gi, ``);
 
         html = html.replace(/\u00A0/g, ` `); // replace no break space
@@ -1575,13 +1576,22 @@ export class MotionDiffService {
             /<(ins|del)>([\s\S]*?)<\/\1>/gi,
             (whole: string, insDel: string): string => {
                 const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
-                return whole.replace(
+                whole = whole.replace(
                     /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                     (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                         const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
                 );
+                /* 
+                whole = whole.replace(
+                    /(<(\/p).*?>)(<p>)/gi,
+                    (_whole2: string, closing: string, _blockTag: string, opening: string): string => {
+                        const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
+                        return closing + modifiedTag;
+                    }
+                );*/
+                return whole;
             }
         );
 
