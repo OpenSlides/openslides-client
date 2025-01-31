@@ -57,12 +57,18 @@ describe(`ThemeService`, () => {
     });
 
     it(`get currentAccentColor`, () => {
-        expect(service.currentAccentColor).toBe(`#2196f3`);
+        expect(service.currentAccentColor).toBe(ThemeService.DEFAULT_ACCENT_COLOR);
     });
 
-    it(`use getPollColor()`, () => {
+    it(`use getPollColor`, () => {
         expect(service.getPollColor(`yes`)).toBe(GENERAL_DEFAULT_COLORS[`yes`]);
         expect(service.getPollColor(`no`)).toBe(GENERAL_DEFAULT_COLORS[`no`]);
         expect(service.getPollColor(`abstain`)).toBe(GENERAL_DEFAULT_COLORS[`abstain`]);
+    });
+
+    it(`check getDefaultColorPalette`, () => {
+        expect(service.getDefaultColorByPalette(`warn`)).toBe(ThemeService.DEFAULT_WARN_COLOR);
+        expect(service.getDefaultColorByPalette(`primary`)).toBe(ThemeService.DEFAULT_PRIMARY_COLOR);
+        expect(service.getDefaultColorByPalette(`accent`)).toBe(ThemeService.DEFAULT_ACCENT_COLOR);
     });
 });
