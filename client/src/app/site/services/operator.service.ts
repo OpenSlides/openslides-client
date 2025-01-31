@@ -32,6 +32,7 @@ import { MeetingSettingsService } from '../pages/meetings/services/meeting-setti
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { OrganizationService } from '../pages/organization/services/organization.service';
 import { AuthService } from './auth.service';
+import { AuthTokenService } from './auth-token.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -56,7 +57,7 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 })
 export class OperatorService {
     public get operatorId(): number | null {
-        return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+        return this.isAnonymous || !this.authTokenService.accessToken ? null : this.authTokenService.accessToken.userId;
     }
 
     public get isAnonymousLoggedIn(): boolean {
@@ -64,7 +65,7 @@ export class OperatorService {
     }
 
     public get isAnonymous(): boolean {
-        return !this.authService.authToken;
+        return !this.authTokenService.accessToken;
     }
 
     public get isAuthenticated(): boolean {
@@ -274,12 +275,13 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private meetingRepo: MeetingControllerService,
+        private organizationService: OrganizationService,
         private meetingSettings: MeetingSettingsService,
-        private organizationService: OrganizationService
+        private authTokenService: AuthTokenService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
-        this.authService.authTokenObservable.subscribe(token => {
+        this.authTokenService.accessTokenObservable.subscribe(token => {
             if (token === undefined) {
                 return;
             }

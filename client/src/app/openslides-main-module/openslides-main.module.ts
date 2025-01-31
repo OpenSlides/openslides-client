@@ -5,9 +5,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { environment } from 'src/environments/environment';
 
+import { OpenSlidesTranslationModule } from '../site/modules/translations';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
@@ -36,6 +38,13 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         BrowserModule,
         OpenSlidesMainRoutingModule,
         BrowserAnimationsModule,
+        OAuthModule.forRoot({
+            resourceServer: {
+                allowedUrls: [window.location.origin],
+                sendAccessToken: true
+            }
+        }),
+        OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production,

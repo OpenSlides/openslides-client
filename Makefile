@@ -3,6 +3,8 @@ docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/
 build-dev:
 	docker build -t openslides-client-dev -f Dockerfile.dev .
 
+build-dev-fullstack: | build-dev
+
 build-prod:
 	docker build -t openslides-client -f Dockerfile .
 

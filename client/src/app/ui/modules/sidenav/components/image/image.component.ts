@@ -52,14 +52,11 @@ export class ImageComponent {
 
     private startLoading(): void {
         if (!this.loaded && this._source) {
-            this.loadResource();
+            this.http.getBlobUrl(this._source).then(url => {
+                this.resource = url;
+                this.loaded = true
+            })
         }
-    }
-
-    private loadResource(): void {
-        this.http.get<Blob>(this._source!, null, { responseType: `blob` }).then(response => {
-            this.readBlobData(response);
-        });
     }
 
     private readBlobData(data: Blob): void {

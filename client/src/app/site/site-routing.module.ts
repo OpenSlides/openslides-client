@@ -5,8 +5,9 @@ import { AuthGuard } from './guards/auth.guard';
 import { SiteWrapperComponent } from './modules/site-wrapper/components/site-wrapper/site-wrapper.component';
 
 const routes: Routes = [
+    // { path: `idp`, redirectTo: `/login`, pathMatch: `prefix` },
     {
-        path: `login`,
+        path: `idp`,
         loadChildren: () => import(`./pages/login/login.module`).then(m => m.LoginModule)
     },
     {

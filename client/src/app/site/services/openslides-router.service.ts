@@ -63,9 +63,6 @@ export class OpenSlidesRouterService {
         private updateService: UpdateService,
         private operator: OperatorService
     ) {
-        _auth.logoutObservable.subscribe(() => {
-            this.navigateToLogin();
-        });
         router.events
             .pipe(
                 filter(event => event instanceof RoutesRecognized),

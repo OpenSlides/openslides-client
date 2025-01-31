@@ -1,13 +1,6 @@
-import {
-    HttpErrorResponse,
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpResponse
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { AuthTokenService } from '../../site/services/auth-token.service';
 
@@ -16,27 +9,14 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     public constructor(private authTokenService: AuthTokenService) {}
 
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (this.authTokenService.rawAccessToken) {
+        if (this.authTokenService.accessToken) {
+            const authentication = `Bearer ` + this.authTokenService.accessToken.rawAccessToken;
             request = request.clone({
-                setHeaders: {
-                    authentication: this.authTokenService.rawAccessToken
-                }
+                headers: new HttpHeaders({
+                    authentication
+                })
             });
         }
-        return next.handle(request).pipe(
-            tap({
-                next: httpEvent => {
-                    if (httpEvent instanceof HttpResponse && httpEvent.headers.get(`authentication`)) {
-                        // Successful request
-                        this.authTokenService.setRawAccessToken(httpEvent.headers.get(`Authentication`));
-                    }
-                },
-                error: (error: unknown) => {
-                    if (error instanceof HttpErrorResponse) {
-                        // Here you can cache failed responses and try again
-                    }
-                }
-            })
-        );
+        return next.handle(request);
     }
 }

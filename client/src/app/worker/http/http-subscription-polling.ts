@@ -103,7 +103,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         };
 
         if (this.endpoint.authToken) {
-            headers.authentication = this.endpoint.authToken;
+            headers.authentication = 'Bearer ' + this.endpoint.authToken;
         }
 
         return headers;

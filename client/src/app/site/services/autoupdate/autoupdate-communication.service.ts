@@ -21,7 +21,7 @@ import {
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/autoupdate/interfaces-autoupdate';
+} from 'src/app/worker/sw-autoupdate.interfaces';
 
 import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
 import { SpinnerService } from '../../modules/global-spinner';
@@ -71,6 +71,9 @@ export class AutoupdateCommunicationService {
                         break;
                     case `set-connection-mode`:
                         this.handleSetConnectionMode(<string>msg.content);
+                        break;
+                    case `check-auth`:
+                        this.authService.invalidateSessionAfter();
                         break;
                 }
             });
@@ -239,7 +242,7 @@ export class AutoupdateCommunicationService {
     private handleReceiveError(data: AutoupdateReceiveError): void {
         if (data.content.data?.reason === `Logout`) {
             if (this.authService.isAuthenticated) {
-                this.authService.logout();
+                this.authService.invalidateSessionAfter();
             }
             return;
         } else if (data.content.data?.terminate) {

@@ -145,7 +145,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async login(): Promise<void> {
-        await this.authService.logoutAnonymous();
         if (this.activeMeetingId) {
             this.router.navigate([`/`, this.activeMeetingId, `login`]);
         } else {

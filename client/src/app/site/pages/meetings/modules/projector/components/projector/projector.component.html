@@ -8,14 +8,12 @@
         @if (projector && projector.show_header_footer) {
             <div class="headerFooter" id="header">
                 <!-- projector logo -->
-                @if (projectorLogoObservable | async; as projectorLogo) {
-                    @if (projector.show_logo) {
-                        <img
-                            class="projector-logo-main"
-                            [alt]="'Projector logo' | translate"
-                            src="{{ projectorLogo }}"
-                        />
-                    }
+                @if (projector.show_logo) {
+                    <img
+                        class="projector-logo-main"
+                        [alt]="'Projector logo' | translate"
+                        src="{{ projectorLogo }}"
+                    />
                 }
                 @if (projector.show_title) {
                     <div id="eventdata">
