@@ -12,6 +12,8 @@
             <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
     </div>
+
+    <ng-content></ng-content>
 </div>
 
 <div class="metadata-detail" role="region" [ngClass]="{ active: expanded }">

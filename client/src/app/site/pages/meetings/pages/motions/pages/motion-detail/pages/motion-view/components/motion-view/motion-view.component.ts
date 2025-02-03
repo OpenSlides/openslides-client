@@ -80,6 +80,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
     public originMotionsLoaded = [];
+    public originMotionsChangeRecoMode: { [key: Id]: ChangeRecoMode } = {};
+    public originMotionsLineNumberingMode: { [key: Id]: LineNumberingMode } = {};
     public originUnifiedChanges: { [key: Id]: ViewUnifiedChange[] } = {};
 
     private get unifiedChanges(): ViewUnifiedChange[] {
@@ -370,6 +372,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 originMotion.change_recommendations,
                 originMotion.amendments
             );
+            this.originMotionsChangeRecoMode[id] = ChangeRecoMode.Diff;
+            this.originMotionsLineNumberingMode[id] =
+                originMotion.meeting?.motions_default_line_numbering || this.lineNumberingMode;
         }
     }
 

@@ -209,12 +209,22 @@
                 <mat-tab [label]="originMotion?.meeting?.name">
                     <mat-card class="os-card original-motion-card">
                         <mat-card-content>
-                            <os-origin-motion-meta-data [motion]="originMotion"></os-origin-motion-meta-data>
+                            <os-origin-motion-meta-data [motion]="originMotion">
+                                <os-motion-highlight-form
+                                    #highlightForm
+                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                    [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
+                                    [motion]="originMotion"
+                                    [noEdit]="true"
+                                    (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
+                                    (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
+                                ></os-motion-highlight-form>
+                            </os-origin-motion-meta-data>
 
                             <os-motion-content
                                 #content
-                                [changeRecoMode]="changeRecoMode"
-                                [lineNumberingMode]="originMotion?.meeting?.motions_default_line_numbering"
+                                [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                [lineNumberingMode]="originMotionsLineNumberingMode[originMotion.id]"
                                 [motion]="originMotion"
                                 [noEditMode]="true"
                                 [showAllAmendments]="true"

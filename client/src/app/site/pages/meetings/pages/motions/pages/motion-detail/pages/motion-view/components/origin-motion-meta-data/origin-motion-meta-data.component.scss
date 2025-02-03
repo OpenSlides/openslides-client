@@ -16,9 +16,8 @@ span.referencelist {
 
 .origin-motion-header {
     display: flex;
-    min-height: 65px;
     justify-content: space-between;
-    margin-bottom: 16px;
+    align-items: center;
     .title h1 {
         display: inline-block;
         padding-right: 12px;
@@ -31,4 +30,3 @@ span.referencelist {
         display: block;
     }
 }
-
