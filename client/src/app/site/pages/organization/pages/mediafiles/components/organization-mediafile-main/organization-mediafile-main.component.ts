@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import {
+    BaseModelRequestHandlerComponent,
+    ModelRequestConfig
+} from 'src/app/site/base/base-model-request-handler.component';
+
+import { getOrganizationMediafileListSubscriptionConfig } from '../../mediafiles.subscription';
 
 @Component({
     selector: `os-organization-mediafile-main`,
@@ -7,4 +12,8 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
     styleUrls: [`./organization-mediafile-main.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationMediafileMainComponent extends BaseModelRequestHandlerComponent {}
+export class OrganizationMediafileMainComponent extends BaseModelRequestHandlerComponent {
+    protected override onShouldCreateModelRequests(): void | ModelRequestConfig[] {
+        this.subscribeTo(getOrganizationMediafileListSubscriptionConfig(), { hideWhenMeetingChanged: true });
+    }
+}

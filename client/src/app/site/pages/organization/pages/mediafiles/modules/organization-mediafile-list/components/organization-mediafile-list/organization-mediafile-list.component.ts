@@ -24,6 +24,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
+import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles.subscription';
+
 @Component({
     selector: `os-organization-mediafile-list`,
     templateUrl: `./organization-mediafile-list.component.html`,
@@ -186,7 +188,10 @@ export class OrganizationMediafileListComponent
 
     public async changeDirectory(directoryId: number | null): Promise<void> {
         const mediafilesSubscribed = (
-            await Promise.all([this.modelRequestService.subscriptionGotData(ORGANIZATION_SUBSCRIPTION)])
+            await Promise.all([
+                this.modelRequestService.subscriptionGotData(ORGANIZATION_SUBSCRIPTION),
+                this.modelRequestService.subscriptionGotData(ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION)
+            ])
         ).some(val => !!val);
         if (!mediafilesSubscribed) {
             setTimeout(() => this.changeDirectory(directoryId), 50);
