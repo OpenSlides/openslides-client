@@ -1,8 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { TranslateDirective, TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import {
+    TranslateDirective,
+    TranslateLoader,
+    TranslateModule,
+    TranslateParser,
+    TranslatePipe
+} from '@ngx-translate/core';
 
 import { CustomTranslationService } from './custom-translation.service';
+import { CustomTranslationParser } from './translation-parser';
 import { PruningTranslationLoader } from './translation-pruning-loader';
 
 @NgModule({
@@ -16,7 +23,12 @@ export class OpenSlidesTranslationModule {
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,
-                deps: [CustomTranslationService, HttpClient]
+                deps: [HttpClient]
+            },
+            parser: {
+                provide: TranslateParser,
+                useClass: CustomTranslationParser,
+                deps: [CustomTranslationService]
             }
         });
     }
@@ -28,7 +40,12 @@ export class OpenSlidesTranslationModule {
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,
-                deps: [CustomTranslationService, HttpClient]
+                deps: [HttpClient]
+            },
+            parser: {
+                provide: TranslateParser,
+                useClass: CustomTranslationParser,
+                deps: [CustomTranslationService]
             }
         });
     }

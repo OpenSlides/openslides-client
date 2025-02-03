@@ -36,7 +36,7 @@
                                 <!-- Submitter -->
                                 @if (newMotion) {
                                     <div class="content-field">
-                                        @if (canChangeMetadata) {
+                                        @if (canChangeMetadata && canSeeUsers) {
                                             <mat-form-field>
                                                 <mat-label>{{ 'Submitters' | translate }}</mat-label>
                                                 <os-repo-search-selector
@@ -56,7 +56,34 @@
                                                     </ng-template>
                                                 </os-repo-search-selector>
                                             </mat-form-field>
+                                        } @else if (canChangeMetadata && allowAdditionalSubmitter) {
+                                            <h3>
+                                                <span>{{ 'Submitters' | translate }}</span>
+                                            </h3>
                                         }
+                                    </div>
+                                }
+
+                                @if (newMotion && allowAdditionalSubmitter && canChangeMetadata) {
+                                    <div class="additional-submitter">
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Extension' | translate }}</mat-label>
+                                                <input formControlName="additional_submitter" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="content-field">
+                                            <mat-form-field>
+                                                <mat-label>{{ 'Committees' | translate }}</mat-label>
+                                                <os-list-search-selector
+                                                    [disableOptionWhenFn]="getCommitteeDisabledFn()"
+                                                    [formControl]="committeeControl"
+                                                    [inputListValues]="committeeValues"
+                                                    [keepOpen]="true"
+                                                    (openedChange)="committeeSelectorOpenedChange($event)"
+                                                ></os-list-search-selector>
+                                            </mat-form-field>
+                                        </div>
                                     </div>
                                 }
 

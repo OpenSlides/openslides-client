@@ -43,6 +43,7 @@ import { AmendmentListFilterService } from '../../../../../../services/list/amen
 import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
+import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
 import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
 
 @Component({
@@ -72,6 +73,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
+    }
+
+    public get showAllChanges(): boolean {
+        return this.motionDetailService.currentShowAllAmendmentsState;
     }
 
     /**
@@ -143,7 +148,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService
+        private originUrlService: MotionDetailViewOriginUrlService,
+        private motionDetailService: MotionDetailViewService
     ) {
         super();
 
@@ -231,7 +237,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public onMotionUpdated(motion: ViewMotion): void {
         const title = motion.getTitle();
-        super.setTitle(title);
+        super.setTitle(title, true);
         this.motion = motion;
         this.cd.markForCheck();
     }
@@ -321,7 +327,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     : this.lineNumberingMode,
             crMode: this.changeRecoMode,
             // export all comment fields as well as personal note
-            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
+            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID]),
+            showAllChanges: this.showAllChanges
         });
     }
 

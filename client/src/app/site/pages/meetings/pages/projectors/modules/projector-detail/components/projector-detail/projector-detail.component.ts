@@ -349,7 +349,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             this.repo.getViewModelObservable(this._projectorId!).subscribe(projector => {
                 if (projector) {
                     const title = projector.name;
-                    super.setTitle(title);
+                    super.setTitle(title, true);
                     this.projector = projector;
                 }
             })

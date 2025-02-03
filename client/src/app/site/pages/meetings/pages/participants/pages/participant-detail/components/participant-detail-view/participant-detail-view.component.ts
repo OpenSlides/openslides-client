@@ -23,7 +23,10 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
-import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_DETAIL_SUBSCRIPTION
+} from '../../../../participants.subscription';
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
@@ -80,7 +83,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
             const canUpdateUsers = this.isAllowed(`update`);
-            if (this._isUserInScope || (this.newUser && canUpdateUsers)) {
+            if (this.newUser && canUpdateUsers) {
+                return true;
+            } else if (this._isUserEditable && controlName !== `default_password`) {
+                return true;
+            } else if (this._isDefaultPasswordEditable && controlName === `default_password`) {
                 return true;
             } else if (canUpdateUsers) {
                 return controlName === `is_present`
@@ -176,7 +183,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     public get saveButtonEnabled(): boolean {
-        return this.isFormValid && !this.isLockedOutAndCanManage;
+        return this._userFormLoaded && this.isFormValid && !this.isLockedOutAndCanManage;
     }
 
     public get isLockedOutAndCanManage(): boolean {
@@ -192,10 +199,12 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
+    private _userFormLoaded = false;
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
-    private _isUserInScope = false;
+    private _isDefaultPasswordEditable = false;
+    private _isUserEditable = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -233,7 +242,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
         // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
-
         this.disableExpandControl = this.user?.vote_delegations_from().length < 10;
     }
 
@@ -271,15 +279,13 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             this.repo.getViewModelObservable(this._userId!).subscribe(user => {
                 if (user) {
                     const title = user.getTitle();
-                    super.setTitle(title);
+                    super.setTitle(title, true);
                     this.user = user;
                     this.cd.markForCheck();
                 }
-            }),
-            this.operator.operatorUpdated.subscribe(
-                async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
-            )
+            })
         );
+        this.updateEditable();
     }
 
     public getRandomPassword(): string {
@@ -326,15 +332,18 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * @param edit
      */
     public async setEditMode(edit: boolean): Promise<void> {
-        if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
-        }
-
         this.isEditingSubject.next(edit);
 
         // case: abort creation of a new user
         if (this.newUser && !edit) {
             this.goToAllUsers();
+        }
+
+        if (edit) {
+            await this.modelRequestService.waitSubscriptionReady(PARTICIPANT_DETAIL_SUBSCRIPTION);
+            setTimeout(() => (this._userFormLoaded = true), 1000);
+        } else {
+            this._userFormLoaded = false;
         }
     }
 
@@ -477,5 +486,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     private checkSelectedGroupsCanManage(): boolean {
         return this.usersGroups.some(group => group.hasPermission(Permission.userCanManage));
+    }
+
+    private async updateEditable(): Promise<void> {
+        const allowedFields = await this.userService.isEditable(this._userId, [`first_name`, `default_password`]);
+        this._isUserEditable = allowedFields.includes(`first_name`);
+        this._isDefaultPasswordEditable = allowedFields.includes(`default_password`);
     }
 }

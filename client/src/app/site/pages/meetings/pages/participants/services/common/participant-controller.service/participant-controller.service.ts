@@ -142,16 +142,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {
         return this.repo.getViewModelObservable(id).pipe(
             map(user => {
-                if (!user?.meeting_users) {
+                const meeting_user = user?.meeting_users?.find(u => u.meeting_id === this.activeMeetingId);
+                if (!meeting_user) {
                     return of(user);
                 }
-
-                return this.meetingUserRepo
-                    .getViewModelObservable(user.meeting_users.find(u => u.meeting_id === this.activeMeetingId).id)
-                    .pipe(
-                        filter(u => !!u),
-                        map(u => u.user)
-                    );
+                return this.meetingUserRepo.getViewModelObservable(meeting_user.id).pipe(
+                    filter(u => !!u),
+                    map(u => u.user)
+                );
             }),
             switchAll()
         );
@@ -176,6 +174,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public updateSelf(patch: UserPatchFn, participant: ViewUser): Promise<void> {
         return this.repo.updateSelf(patch, participant);
+    }
+
+    public updateSelfDelegation(patch: ExtendedUserPatchFn, user: ViewUser): Promise<void> {
+        return this.repo.updateSelfDelegation(this.validatePayload(patch as Partial<ViewUser>), user);
     }
 
     public delete(participants: Identifiable[], handle_separately = false): Action<void> {
