@@ -74,9 +74,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public motion!: ViewMotion;
 
     private _changes: ViewUnifiedChange[] = [];
+
     @Input()
     public set changes(changes: ViewUnifiedChange[]) {
-        this._changes = changes;
+        this._changes = changes || [];
         this.updateAllTextChangingObjects();
     }
 

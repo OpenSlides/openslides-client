@@ -65,7 +65,7 @@
                 [internal]="motion?.state?.is_internal"
                 [listValueTransformFns]="[motionTransformFn]"
                 [searchLists]="searchLists"
-                [title]="motion.meeting.motions_recommendations_by"
+                [title]="motion.meeting?.motions_recommendations_by"
                 (succeeded)="setRecommendationExtension($event)"
             ></os-motion-extension-field>
             <!-- recommendation referenced motions -->

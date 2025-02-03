@@ -368,7 +368,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this.originMotionsLoaded.push(originMotion);
             this.originMotionsLoaded.sort((a, b) => b.id - a.id);
             this.originUnifiedChanges[id] = this.motionLineNumbering.recalcUnifiedChanges(
-                originMotion.meeting.motions_line_length,
+                originMotion.meeting?.motions_line_length || this.meetingSettingsService.instant(`motions_line_length`),
                 originMotion.change_recommendations,
                 originMotion.amendments
             );
