@@ -98,16 +98,15 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {
         return committee.meetings.sort((a, b) => {
             const end_time = b.end_time - a.end_time;
-            const collator = new Intl.Collator(`en`);
             if (Number.isNaN(end_time)) {
                 if (b.end_time) {
                     return b.end_time;
                 } else if (a.end_time) {
                     return -a.end_time;
                 }
-                return collator.compare(a.name, b.name);
+                return a.name.localeCompare(b.name);
             } else if (end_time === 0) {
-                return collator.compare(a.name, b.name);
+                return a.name.localeCompare(b.name);
             }
             return end_time;
         });
