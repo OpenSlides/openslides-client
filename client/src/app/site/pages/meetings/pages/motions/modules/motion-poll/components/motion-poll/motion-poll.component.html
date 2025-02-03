@@ -84,7 +84,7 @@
                 }
                 <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
             } @else {
-                <span class="poll-link-wrapper">
+                <span [ngClass]="{ 'poll-link-wrapper': isSameMeeting }">
                     <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
                 </span>
             }
@@ -101,7 +101,11 @@
 }
 
 <ng-template #viewTemplate>
-    <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
+    @if (isSameMeeting) {
+        <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
+    } @else {
+        <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
+    }
 </ng-template>
 
 <ng-template #emptyTemplate>
