@@ -555,11 +555,11 @@ export class MotionPdfService {
                     {
                         columns: [
                             {
-                                text: columnLineNumbers.join(`\n`),
+                                stack: columnLineNumbers,
                                 width: `auto`
                             },
                             {
-                                text: columnChangeType.join(`\n`),
+                                stack: columnChangeType,
                                 width: `auto`
                             }
                         ],
