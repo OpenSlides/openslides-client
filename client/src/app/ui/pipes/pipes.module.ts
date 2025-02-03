@@ -11,22 +11,14 @@ import { ToArrayPipe } from './to-array/to-array.pipe';
 import { ToStringPipe } from './to-string/to-string.pipe';
 import { TrustPipe } from './trust/trust.pipe';
 
-const DECLARATIONS = [
-    LocalizedDatePipe,
-    LocalizedDateRangePipe,
-    TrustPipe,
-    ReversePipe,
-    ReadableBytesPipe,
-    TimePipe,
-    EntriesPipe,
-    ToStringPipe,
-    ToArrayPipe
-];
+const DECLARATIONS = [TrustPipe, ReversePipe, ReadableBytesPipe, TimePipe, EntriesPipe, ToArrayPipe];
+const STANDALONES = [LocalizedDatePipe, LocalizedDateRangePipe, ToStringPipe];
+const EXPORTS = [...DECLARATIONS, ...STANDALONES];
 
 @NgModule({
-    exports: DECLARATIONS,
+    exports: EXPORTS,
     declarations: DECLARATIONS,
-    imports: [CommonModule],
+    imports: [CommonModule, ...STANDALONES],
     providers: [SlicePipe, AsyncPipe]
 })
 export class PipesModule {}

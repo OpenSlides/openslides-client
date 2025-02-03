@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: `toString` })
+@Pipe({ name: `toString`, standalone: true })
 export class ToStringPipe implements PipeTransform {
     public transform<T>(value?: number | string | T, key?: unknown): string {
         if (typeof value === `function`) {
