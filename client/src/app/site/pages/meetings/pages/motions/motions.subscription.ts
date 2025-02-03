@@ -280,7 +280,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
             { idField: `category_id`, fieldset: [`name`, `parent_id`, `meeting_id`] },
             { idField: `block_id`, fieldset: [`title`, `meeting_id`] },
-            { idField: `recommendation_id`, fieldset: [`name`] },
+            { idField: `recommendation_id`, fieldset: [`name`, `meeting_id`, `recommendation_label`] },
             {
                 idField: `meeting_id`,
                 fieldset: [
