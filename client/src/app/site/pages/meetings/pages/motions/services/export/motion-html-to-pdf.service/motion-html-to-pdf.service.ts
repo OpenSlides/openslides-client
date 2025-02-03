@@ -145,6 +145,14 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     ]
                 };
             }
+        } else if (element.getAttribute(`class`) === `amendment-nr-n-icon`) {
+            const children = this.parseChildren(data.element, data.styles);
+            const newParagraph = {
+                columns: [],
+                margin: [0, 0]
+            };
+            newParagraph.columns = children;
+            return newParagraph;
         } else {
             return super.createSpanParagraph(data);
         }

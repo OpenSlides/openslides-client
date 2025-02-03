@@ -49,7 +49,6 @@ function initPdfMake(data: any): void {
     pdfMake.fonts = {
         PdfFont: data.fonts
     };
-
     pdfMake.vfs = data.vfs;
 }
 
