@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -349,7 +349,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             this.repo.getViewModelObservable(this._projectorId!).subscribe(projector => {
                 if (projector) {
                     const title = projector.name;
-                    super.setTitle(title);
+                    super.setTitle(title, true);
                     this.projector = projector;
                 }
             })

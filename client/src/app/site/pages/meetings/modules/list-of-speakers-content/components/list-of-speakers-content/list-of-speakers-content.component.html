@@ -122,43 +122,42 @@
                 <span translate>You have to be present to add yourself.</span>
             }
         </div>
-
-        @if (addSelf) {
-            <div class="add-self-buttons">
-                <!-- Add me and remove me if OP has correct permission -->
-                @if (!isOpInWaitlist()) {
-                    <button mat-stroked-button [disabled]="closed || !canAddDueToPresence" (click)="addMyself()">
-                        <mat-icon>add</mat-icon>
-                        <span>{{ 'Add me' | translate }}</span>
-                    </button>
-                }
-                @if (isOpInWaitlist()) {
-                    <button mat-stroked-button (click)="removeSpeaker()">
-                        <mat-icon>remove</mat-icon>
-                        <span>{{ 'Remove me' | translate }}</span>
-                    </button>
-                }
-                <!-- Point Of order -->
-                @if (showPointOfOrders && !isOpInWaitlist(true)) {
-                    <button
-                        color="warn"
-                        mat-stroked-button
-                        [disabled]="restrictPointOfOrderActions && closed"
-                        (click)="addPointOfOrder()"
-                    >
-                        <mat-icon>warning</mat-icon>
-                        &nbsp;
-                        <span>
-                            {{ 'Point of order' | translate }}
-                        </span>
-                    </button>
-                }
-                @if (showPointOfOrders && isOpInWaitlist(true)) {
-                    <button color="warn" mat-stroked-button (click)="removePointOfOrder()">
-                        <mat-icon>remove</mat-icon>
-                        <span translate>Withdraw point of order</span>
-                    </button>
-                }
+        <div class="add-self-buttons">
+            <!-- Add me and remove me if OP has correct permission -->
+            @if (addSelf && !isOpInWaitlist()) {
+                <button mat-stroked-button [disabled]="closed || !canAddDueToPresence" (click)="addMyself()">
+                    <mat-icon>add</mat-icon>
+                    <span>{{ 'Add me' | translate }}</span>
+                </button>
+            }
+            @if (isOpInWaitlist()) {
+                <button mat-stroked-button (click)="removeSpeaker()">
+                    <mat-icon>remove</mat-icon>
+                    <span>{{ 'Remove me' | translate }}</span>
+                </button>
+            }
+            <!-- Point Of order -->
+            @if (addSelf && showPointOfOrders && !isOpInWaitlist(true)) {
+                <button
+                    color="warn"
+                    mat-stroked-button
+                    [disabled]="restrictPointOfOrderActions && closed"
+                    (click)="addPointOfOrder()"
+                >
+                    <mat-icon>warning</mat-icon>
+                    &nbsp;
+                    <span>
+                        {{ 'Point of order' | translate }}
+                    </span>
+                </button>
+            }
+            @if (showPointOfOrders && isOpInWaitlist(true)) {
+                <button color="warn" mat-stroked-button (click)="removePointOfOrder()">
+                    <mat-icon>remove</mat-icon>
+                    <span translate>Withdraw point of order</span>
+                </button>
+            }
+            @if (addSelf) {
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
                     <button mat-stroked-button [disabled]="closed || !activeSpeaker" (click)="addInterposedQuestion()">
@@ -169,7 +168,7 @@
                         </span>
                     </button>
                 }
-            </div>
-        }
+            }
+        </div>
     </mat-card-content>
 </mat-card>

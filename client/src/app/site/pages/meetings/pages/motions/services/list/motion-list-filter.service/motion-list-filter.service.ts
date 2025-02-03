@@ -1,14 +1,18 @@
 import { inject, Injectable } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Restriction } from 'src/app/domain/models/motions/motion-state';
 import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
-import { OsFilter, OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import {
+    BaseFilterListService,
+    OsFilter,
+    OsFilterOption,
+    OsFilterOptions
+} from 'src/app/site/base/base-filter.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
@@ -42,7 +46,7 @@ interface WorkflowConfiguration {
 @Injectable({
     providedIn: MotionsListServiceModule
 })
-export class MotionListFilterService extends BaseMeetingFilterListService<ViewMotion> {
+export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     /**
      * set the storage key name
      */
@@ -202,7 +206,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
 
-    public constructor(store: MeetingActiveFiltersService) {
+    public constructor(store: ActiveFiltersService) {
         super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();

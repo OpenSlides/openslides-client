@@ -140,6 +140,7 @@ export class Settings {
     public motions_export_submitter_recommendation!: boolean;
     public motions_export_follow_recommendation!: boolean;
     public motions_hide_metadata_background: boolean;
+    public motions_create_enable_additional_submitter_text: boolean;
 
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
@@ -375,6 +376,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_hide_metadata_background`,
         `motions_show_referring_motions`,
         `motions_show_sequential_number`,
+        `motions_create_enable_additional_submitter_text`,
         `motions_recommendations_by`,
         `motions_block_slide_columns`,
         `motions_recommendation_text_mode`,

@@ -1,4 +1,4 @@
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
@@ -63,7 +63,6 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         `closed`,
         `type`,
         `duration`,
-        `moderator_notes`,
         `is_internal`,
         `is_hidden`,
         `level`,

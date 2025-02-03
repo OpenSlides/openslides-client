@@ -13,6 +13,7 @@ export class AmendmentParagraphUnifiedChange implements ViewUnifiedChange {
     public type!: number;
     public merge_amendment_into_final: MergeAmendment;
     public merge_amendment_into_diff: MergeAmendment;
+    public amend_nr: string;
 
     public constructor(
         data: AmendmentData,
@@ -23,6 +24,7 @@ export class AmendmentParagraphUnifiedChange implements ViewUnifiedChange {
         this.id = data.id;
         this.merge_amendment_into_final = data.merge_amendment_into_final;
         this.merge_amendment_into_diff = data.merge_amendment_into_diff;
+        this.amend_nr = data.number;
     }
 
     public getTitle(): string {

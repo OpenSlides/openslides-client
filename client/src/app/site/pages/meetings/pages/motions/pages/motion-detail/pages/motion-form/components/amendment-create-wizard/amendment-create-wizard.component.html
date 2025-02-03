@@ -2,7 +2,7 @@
     <os-head-bar
         saveText="Create"
         [editMode]="true"
-        [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
+        [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && canSave"
         [nav]="false"
         [saveAction]="getSaveAction()"
         (cancelEditEvent)="cancelCreation()"
@@ -19,7 +19,7 @@
                     <button
                         mat-button
                         [disabled]="contentForm.value.selectedParagraphs.length === 0"
-                        (click)="matStepper.next()"
+                        (click)="checkCanSave()"
                     >
                         <span class="upper">{{ 'Next' | translate }}</span>
                     </button>
@@ -68,15 +68,19 @@
                                 }
                                 <div class="paragraph-text motion-text">
                                     <div>
-                                        @if (paragraph.lineFrom >= paragraph.lineTo) {
+                                        @let currentParagraphLineFrom =
+                                            isAmendmentOfAmendment ? diffedParagraphs[i].lineFrom : paragraph.lineFrom;
+                                        @let currentParagraphLineTo =
+                                            isAmendmentOfAmendment ? diffedParagraphs[i].lineTo : paragraph.lineTo;
+                                        @if (currentParagraphLineFrom >= currentParagraphLineTo) {
                                             <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
+                                                {{ 'Line' | translate }} {{ currentParagraphLineFrom }}:
                                             </i>
                                         }
-                                        @if (paragraph.lineFrom < paragraph.lineTo) {
+                                        @if (currentParagraphLineFrom < currentParagraphLineTo) {
                                             <i class="line-number">
-                                                {{ 'Line' | translate }} {{ paragraph.lineFrom }} -
-                                                {{ paragraph.lineTo }}:
+                                                {{ 'Line' | translate }} {{ currentParagraphLineFrom }} -
+                                                {{ currentParagraphLineTo }}:
                                             </i>
                                         }
                                     </div>

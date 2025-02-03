@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { ColumnRestriction } from 'src/app/ui/modules/list';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog/services/prompt.service';
 
 import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
@@ -39,7 +39,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         public filterService: MeetingListFilterService,
         public sortService: MeetingListSortService,
         private csvExport: MeetingCsvExportService,
-        private choiceService: ChoiceService
+        private promptService: PromptService
     ) {
         super();
         super.setTitle(`Meetings`);
@@ -70,8 +70,11 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
             : _(`Are you sure you want to delete all selected meetings?`);
         const title = this.translate.instant(toTranslate);
         const content = meeting?.name ?? ``;
+        const confirm = this.translate.instant(`Yes, delete`);
+        const decline = ``;
+        const deletion = true;
 
-        const answer = await this.choiceService.open({ title, content, actions: [_(`Yes`)] });
+        const answer = await this.promptService.open(title, content, confirm, decline, deletion);
         if (answer) {
             await this.meetingController.delete(...toDelete);
         }

@@ -51,7 +51,8 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `pollmethod`,
             `onehundred_percent_base`,
             `backend`,
-            `content_object_id`
+            `content_object_id`,
+            `is_pseudoanonymized`
         ];
         return {
             ...super.getFieldsets(),

@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -46,7 +47,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * determine if we are in the amendment of amendment mode
      */
-    private isAmendmentOfAmendment = false;
+    public isAmendmentOfAmendment = false;
 
     /**
      * Change recommendation content.
@@ -67,6 +68,10 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      * Indicates if an amendment can change multiple paragraphs or only one
      */
     public multipleParagraphsAllowed = false;
+
+    @ViewChild(`matStepper`, { read: MatStepper }) public stepper: MatStepper;
+
+    public canSave: boolean = false;
 
     private _parentMotionId: Id | null = null;
 
@@ -139,6 +144,19 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     public getSaveAction(): () => Promise<void> {
         return () => this.saveAmendment();
+    }
+
+    public checkCanSave(): void {
+        this.stepper.next();
+        this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
+            if (
+                this.contentForm.value.selectedParagraphs.find((para: ParagraphToChoose) => para.paragraphNo === paraNo)
+            ) {
+                this.contentForm.controls[`text_` + paraNo].valueChanges.subscribe(value => {
+                    this.canSave = value === this.paragraphs[paraNo].html ? false : true;
+                });
+            }
+        });
     }
 
     /**

@@ -280,7 +280,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             // also ensures edition cannot be interrupted by autoupdate
             if (newViewTopic) {
                 const title = newViewTopic.getListTitle();
-                super.setTitle(title);
+                super.setTitle(title, true);
                 this.topic = newViewTopic;
                 // personalInfoForm is undefined during 'new' and directly after reloading
                 if (!this.editTopic) {

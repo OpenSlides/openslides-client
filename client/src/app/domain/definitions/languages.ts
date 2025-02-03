@@ -7,3 +7,8 @@ export const availableTranslations = {
     es: `Español`,
     ru: `русский`
 };
+
+export const allAvailableTranslations = {
+    ...availableTranslations,
+    [`1337`]: `1337`
+};

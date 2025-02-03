@@ -19,11 +19,6 @@ export class PruningTranslationLoader implements TranslateLoader {
     private suffix = `.po`;
 
     /**
-     * Default language which must not be translated.
-     */
-    private defaultLanguage = `en`;
-
-    /**
      * Constructor to load the HttpClient
      *
      * @param http httpClient to load the translation files.
@@ -35,26 +30,59 @@ export class PruningTranslationLoader implements TranslateLoader {
      * @param lang language string (en, fr, de, ...)
      */
     public getTranslation(lang: string): Observable<any> {
-        if (lang != this.defaultLanguage) {
-            return this.http
-                .get(`${this.prefix}${lang}${this.suffix}`, { responseType: `text` })
-                .pipe(map((content: string) => this.parse(content)));
-        } else {
+        if (lang === `en`) {
             return of({});
         }
+
+        let poUrl = `${this.prefix}${lang}${this.suffix}`;
+        if (lang === `1337`) {
+            poUrl = `${this.prefix}de${this.suffix}`;
+        }
+
+        return this.http
+            .get(poUrl, { responseType: `text` })
+            .pipe(map((content: string) => this.parse(content, lang === `1337`)));
     }
 
-    private parse(content: string): any {
+    private parse(content: string, t1337: boolean): any {
         const translations: { [key: string]: string } = {};
 
         const po = pofile.parse(content);
         for (const item of po.items) {
-            const translation: string = item.msgstr.pop();
+            const translation: string = t1337 ? this.t1337(item.msgid) : item.msgstr.pop();
             if (item.msgid.length > 0 && translation.length > 0) {
                 translations[item.msgid] = translation;
             }
         }
 
         return translations;
+    }
+
+    private dict1337: { [char: string]: string } = {
+        a: `4`,
+        b: `8`,
+        c: `(`,
+        e: `3`,
+        f: `PH`,
+        g: `6`,
+        h: `#`,
+        i: `!`,
+        k: `|<`,
+        l: `1`,
+        o: `°`,
+        q: `0`,
+        s: `5`,
+        t: `7`,
+        v: `\\/`,
+        w: `VV`,
+        y: `\`/`,
+        z: `2`
+    };
+
+    private t1337(str: string): string {
+        return str
+            .toLowerCase()
+            .split(``)
+            .reduce((prev, curr) => prev + (this.dict1337[curr] ?? curr.toUpperCase()), ``);
     }
 }

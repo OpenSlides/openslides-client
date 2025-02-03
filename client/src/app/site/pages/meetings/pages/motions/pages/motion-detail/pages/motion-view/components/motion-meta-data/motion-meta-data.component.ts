@@ -112,6 +112,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return null;
     }
 
+    public override get showAllAmendments(): boolean {
+        return this.viewService.currentShowAllAmendmentsState;
+    }
+
     public override set showAllAmendments(is: boolean) {
         this.viewService.showAllAmendmentsStateSubject.next(is);
     }
@@ -122,6 +126,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             this.operator.hasPerms(Permission.motionCanForward) &&
             this._forwardingAvailable &&
             !this.motion.derived_motions.length
+        );
+    }
+
+    public get operatorIsSubmitter(): boolean {
+        return (
+            this.motion.submitters &&
+            this.motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId)
         );
     }
 

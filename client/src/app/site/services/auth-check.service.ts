@@ -97,7 +97,7 @@ export class AuthCheckService {
         if (typeof info === `string`) {
             meetingIdString = this.osRouter.getMeetingId(info);
         }
-        if (Number.isNaN(Number(meetingIdString))) {
+        if (Number.isNaN(Number(meetingIdString)) || +meetingIdString <= 0) {
             return false;
         }
         await this.fetchMeetingIfNotExists(+meetingIdString);

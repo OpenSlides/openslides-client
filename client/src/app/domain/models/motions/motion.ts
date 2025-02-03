@@ -96,7 +96,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     }
 
     public amendment_paragraph_text(paragraphNumber: number): string | null {
-        return this.amendment_paragraphs && this.amendment_paragraphs[paragraphNumber]
+        return this.amendment_paragraphs && typeof this.amendment_paragraphs[paragraphNumber] === `string`
             ? this.amendment_paragraphs[paragraphNumber]
             : null;
     }

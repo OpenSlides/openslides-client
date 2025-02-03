@@ -148,7 +148,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const data = usersToCreate.map(user => {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
-                user: this.sanitizePayload(this.getBaseUserPayload(user), true),
+                user: this.sanitizePayload(this.getBaseUserPayloadCreate(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
                           first_meeting_user: this.sanitizePayload(
@@ -213,11 +213,22 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             const updates = Array.isArray(dirtyUpdate) ? dirtyUpdate : [dirtyUpdate];
             return updates.map(update => ({
                 id: user.id,
-                ...this.sanitizePayload(this.getBaseUserPayload(update)),
+                ...this.sanitizePayload(this.getBaseUserPayloadUpdate(update)),
                 ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
             }));
         });
         return this.createAction(UserAction.UPDATE, updatePayload);
+    }
+
+    public updateSelfDelegation(patch: UserPatchFn, user: ViewUser): Promise<void> {
+        const update = typeof patch === `function` ? patch(user) : patch;
+        const payload: any = {
+            username: update.username,
+            vote_delegated_to_id: update.vote_delegated_to_id,
+            vote_delegations_from_ids: update.vote_delegations_from_ids,
+            meeting_id: update.meeting_id ?? this.meetingUserRepo.getActiveMeetingId()
+        };
+        return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
 
     public updateSelf(patch: UserPatchFn, user: ViewUser): Promise<void> {
@@ -248,7 +259,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.ASSIGN_MEETINGS, payload);
     }
 
-    private getBaseUserPayload(partialUser: Partial<ViewUser>): any {
+    private getBaseUserPayloadUpdate(partialUser: Partial<ViewUser>): any {
         const partialPayload: Partial<User> = {
             pronoun: partialUser.pronoun,
             title: partialUser.title,
@@ -266,6 +277,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             committee_management_ids: partialUser.committee_management_ids
         };
 
+        return partialPayload;
+    }
+
+    private getBaseUserPayloadCreate(partialUser: Partial<ViewUser>): any {
+        const partialPayload = this.getBaseUserPayloadUpdate(partialUser);
+        partialPayload.is_present_in_meeting_ids = partialUser.is_present_in_meeting_ids;
         return partialPayload;
     }
 
@@ -364,6 +381,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.getEnsuredActiveMeetingId = (): Id => this.activeMeetingIdService.meetingId;
         viewModel.getDelegationSettingEnabled = (): boolean =>
             this.meetingSettingsService.instant(`users_enable_vote_delegations`);
+        viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
+            !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
+            !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
         return viewModel;
     }
 

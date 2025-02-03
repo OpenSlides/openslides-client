@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
@@ -10,6 +10,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { OsFilterOption } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -108,6 +109,57 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return votes ?? 0;
     }
 
+    public get isFilteringCanVoteForGroups(): boolean {
+        return !!this.filterService.activeFilters.filter(
+            flt => flt.property === `canVoteForGroups` && flt.options.some((opt: OsFilterOption) => opt.isActive)
+        ).length;
+    }
+
+    public get totalEligibleVoteWeights(): number[] {
+        const voters: { [key: number]: number } = {};
+        const checkGroups = this.filterService.activeFilters
+            .filter(flt => flt.property === `canVoteForGroups`)
+            .flatMap(flt =>
+                flt.options.filter((opt: OsFilterOption) => opt.isActive).map((opt: OsFilterOption) => opt.condition)
+            );
+        if (this.listComponent) {
+            for (const user of this.listComponent.source ?? []) {
+                if (checkGroups.intersect(user.group_ids()).length > 0) {
+                    voters[user.id] = user.vote_weight();
+                }
+                for (const principal of user.vote_delegations_from()) {
+                    if (checkGroups.intersect(principal.group_ids()).length > 0) {
+                        voters[principal.id] = principal.vote_weight();
+                    }
+                }
+            }
+        }
+        const weights = Object.values(voters);
+        return weights;
+    }
+
+    public get totalEligibleVoteWeight(): number {
+        return this.totalEligibleVoteWeights.reduce((partialSum, a) => partialSum + a, 0);
+    }
+
+    public isInPolldefaultGroup(user: ViewUser): boolean {
+        let isInDefaultGroup = false;
+        user.group_ids().forEach(id => {
+            if (this._poll_default_group_ids.indexOf(id) > -1) {
+                isInDefaultGroup = true;
+                return;
+            }
+        });
+        return isInDefaultGroup;
+    }
+
+    public sumOfDelegatedVoteWeight(user: ViewUser): number {
+        let voteWeights: number = 0;
+        user.vote_delegations_from().forEach(user => (voteWeights += user.vote_weight()));
+
+        return voteWeights;
+    }
+
     public get isUserInScope(): boolean {
         return this._isUserInScope;
     }
@@ -131,6 +183,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     private _allowSelfSetPresent = false;
     private _isElectronicVotingEnabled = false;
     private _isUserInScope = true;
+
+    private _poll_default_group_ids: number[] = [];
 
     private readonly selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
     private readonly selfGroupRemovalDialogContent = _(
@@ -179,7 +233,24 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .subscribe(enabled => (this.voteDelegationEnabled = enabled)),
             this.meetingSettingsService
                 .get(`users_allow_self_set_present`)
-                .subscribe(allowed => (this._allowSelfSetPresent = allowed))
+                .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
+            this.meetingSettingsService
+                .get(`assignment_poll_default_group_ids`)
+                .subscribe(group_ids => (this._poll_default_group_ids = group_ids)),
+            this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
+                group_ids?.forEach(id => {
+                    if (this._poll_default_group_ids.indexOf(id) === -1) {
+                        this._poll_default_group_ids.push(id);
+                    }
+                })
+            ),
+            this.meetingSettingsService.get(`topic_poll_default_group_ids`).subscribe(group_ids =>
+                group_ids?.forEach(id => {
+                    if (this._poll_default_group_ids.indexOf(id) === -1) {
+                        this._poll_default_group_ids.push(id);
+                    }
+                })
+            )
         );
     }
 
@@ -204,6 +275,23 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         const userOML = user?.organization_management_level;
         const sufficientOML = userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
         return !user?.saml_id && this.userService.isAllowed(`changePassword`, false) && sufficientOML;
+    }
+
+    public canEditOwnDelegation(user: ViewUser): boolean {
+        if (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return this.operator.operatorId === user.id;
+        } else if (
+            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public isUserPresent(user: ViewUser): boolean {
@@ -251,7 +339,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
     public async openEditInfo(user: ViewUser, ev?: MouseEvent): Promise<void> {
-        if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) {
+        if (
+            (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) &&
+            !this.canEditOwnDelegation(user)
+        ) {
             return;
         }
         ev?.stopPropagation();
@@ -280,7 +371,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     ) ||
                     (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
                 ) {
-                    this.repo.update(result, user).resolve();
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.repo.updateSelfDelegation(result, user);
+                    } else {
+                        this.repo.update(result, user).resolve();
+                    }
                 }
             }
         });
@@ -515,7 +615,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public canSeeItemMenu(): boolean {
-        return this.operator.hasPerms(Permission.userCanUpdate);
+        return (
+            this.operator.hasPerms(Permission.userCanUpdate) ||
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+        );
     }
 
     /**

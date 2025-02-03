@@ -2,7 +2,7 @@ import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@colsen1991/ngx-translate-extract-marker';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
@@ -28,7 +28,14 @@ type ParticipationTableDataRow = {
     is_manager?: boolean;
     meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
 };
-type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: string[] };
+type ParticipationTableMeetingDataRow = {
+    meeting_name: string;
+    group_names: string[];
+    is_public: boolean;
+    is_closed: boolean;
+    is_archieved: boolean;
+    is_accessible: boolean;
+};
 
 @Component({
     selector: `os-account-detail`,
@@ -240,7 +247,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 group_names: this.user
                     .groups(meeting.id)
                     .map(group => group.getTitle())
-                    .sort((a, b) => a.localeCompare(b))
+                    .sort((a, b) => a.localeCompare(b)),
+                is_archieved: meeting.isArchived,
+                is_closed: meeting.locked_from_inside,
+                is_public: meeting.publicAccessPossible(),
+                is_accessible:
+                    (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
+                    (!meeting.locked_from_inside && this.operator.isSuperAdmin)
             };
         });
         this._tableData = tableData;
