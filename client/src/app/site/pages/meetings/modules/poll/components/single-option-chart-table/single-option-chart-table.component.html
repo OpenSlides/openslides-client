@@ -5,7 +5,7 @@
                 @if (shouldShowHead) {
                     <tr>
                         <th></th>
-                        <th colspan="2">{{ 'Votes' | translate }}</th>
+                        <th colspan="2" [ngClass]="textSizeClass">{{ 'Votes' | translate }}</th>
                     </tr>
                 }
                 @for (row of tableData; track row; let i = $index) {

@@ -1,0 +1,31 @@
+.poll-result-area {
+    margin-top: 10px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 7fr;
+    gap: 10px;
+
+    .summary-area {
+        padding: 0 20px;
+    }
+
+    .votes-area {
+        display: inline-flex;
+
+        .votes-column {
+            display: flex;
+            flex-direction: column;
+            padding-left: 5px;
+            flex-grow: 1;
+            gap: 5px;
+
+            .vote-entry {
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}

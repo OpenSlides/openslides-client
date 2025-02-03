@@ -1,29 +1,32 @@
 @if (poll) {
-    <div class="result-wrapper">
-        @if (hasResults) {
-            @if (canSeeResults) {
-                <os-single-option-chart-table
-                    [iconSize]="iconSize"
-                    [poll]="poll"
-                    [pollService]="motionPollService"
-                    [shouldShowEntitled]="isPercentBaseEntitled"
-                    [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
-                    [shouldShowHead]="true"
-                    [tableData]="tableData"
-                ></os-single-option-chart-table>
+    <div class="result-wrapper-wrapper">
+        <ng-content></ng-content>
+        <div class="result-wrapper">
+            @if (hasResults) {
+                @if (canSeeResults) {
+                    <os-single-option-chart-table
+                        [iconSize]="iconSize"
+                        [poll]="poll"
+                        [pollService]="motionPollService"
+                        [shouldShowEntitled]="isPercentBaseEntitled"
+                        [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
+                        [shouldShowHead]="true"
+                        [tableData]="tableData"
+                    ></os-single-option-chart-table>
+                } @else {
+                    <div>
+                        <i>
+                            {{ 'Counting of votes is in progress ...' | translate }}
+                        </i>
+                    </div>
+                }
             } @else {
                 <div>
                     <i>
-                        {{ 'Counting of votes is in progress ...' | translate }}
+                        {{ 'No results yet.' | translate }}
                     </i>
                 </div>
             }
-        } @else {
-            <div>
-                <i>
-                    {{ 'No results yet.' | translate }}
-                </i>
-            </div>
-        }
+        </div>
     </div>
 }

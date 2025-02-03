@@ -4,10 +4,13 @@
     outline: none;
 }
 
-.result-wrapper {
-    cursor: pointer;
-    display: grid;
-    grid-gap: 2em;
+.result-wrapper-wrapper {
     margin: 2em 25px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+    .result-wrapper {
+        cursor: pointer;
+        display: grid;
+        grid-gap: 2em;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
 }

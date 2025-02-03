@@ -1,4 +1,4 @@
-import { Fqid } from 'src/app/domain/definitions/key-types';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import {
     EntitledUsersEntry,
     PollMethod,
@@ -25,6 +25,7 @@ interface TitleInformation extends TitleInformationWithAgendaItem {
 }
 
 export interface PollSlideData {
+    id: Id;
     content_object_id: Fqid;
     title_information: TitleInformation;
     title: string;

@@ -125,6 +125,16 @@ export const Slides: SlideManifest[] = [
         scrollable: true
     },
     {
+        path: `poll_single_votes`,
+        loadChildren: () =>
+            import(`../components/poll-single-votes-slide/poll-single-votes-slide.module`).then(
+                m => m.PollSingleVotesSlideModule
+            ),
+        verboseName: _(`Motion poll vote`),
+        scaleable: true,
+        scrollable: true
+    },
+    {
         path: `projector_countdown`,
         loadChildren: () =>
             import(`../components/projector-countdown-slide/projector-countdown-slide.module`).then(
