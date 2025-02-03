@@ -13,3 +13,22 @@ div.origin-view {
 span.referencelist {
     display: inline-block;
 }
+
+.origin-motion-header {
+    display: flex;
+    min-height: 65px;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    .title h1 {
+        display: inline-block;
+        padding-right: 12px;
+    }
+}
+
+.metadata-detail {
+    display: none;
+    &.active {
+        display: block;
+    }
+}
+

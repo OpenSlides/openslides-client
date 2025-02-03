@@ -35,6 +35,8 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     @Input()
     public changeRecoMode: ChangeRecoMode;
 
+    public expanded = false;
+
     /**
      * @returns the current recommendation label (with extension)
      */
