@@ -50,7 +50,6 @@ function initPdfMake(data: any): void {
         PdfFont: data.fonts,
         LineNumbering: { normal: `fira-sans-latin-400.woff` }
     };
-
     pdfMake.vfs = data.vfs;
 }
 
