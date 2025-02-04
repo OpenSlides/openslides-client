@@ -4,12 +4,11 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces';
 
 import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-settings';
-import { ChoiceDialogModule } from '../choice-dialog.module';
-import { ChoiceDialogComponent } from '../components/choice-dialog/choice-dialog.component';
+import { ChoiceDialogComponent } from '../choice-dialog.component';
 import { ChoiceAnswer, ChoiceDialogConfig } from '../definitions';
 
 @Injectable({
-    providedIn: ChoiceDialogModule
+    providedIn: ChoiceDialogComponent
 })
 export class ChoiceService {
     public constructor(private dialog: MatDialog) {}

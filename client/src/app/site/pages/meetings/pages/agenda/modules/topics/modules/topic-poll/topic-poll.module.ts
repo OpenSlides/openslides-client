@@ -17,7 +17,7 @@ import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meeti
 import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
@@ -54,7 +54,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         PollModule,
         MatDialogModule,
         MatButtonModule,
-        ChoiceDialogModule,
+        ChoiceDialogComponent,
         MatIconModule,
         MatDividerModule,
         MatMenuModule,

@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChipComponent } from 'src/app/ui/modules/chip';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
@@ -30,7 +30,7 @@ import { MeetingListServiceModule } from './services/meeting-list-service.module
         ScrollingTableModule,
         HeadBarModule,
         ChipComponent,
-        ChoiceDialogModule,
+        ChoiceDialogComponent,
         OpenSlidesTranslationModule.forChild(),
         MatDividerModule,
         MatMenuModule,
