@@ -7,9 +7,7 @@ import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-sett
 import { ChoiceDialogComponent } from '../choice-dialog.component';
 import { ChoiceAnswer, ChoiceDialogConfig } from '../definitions';
 
-@Injectable({
-    providedIn: ChoiceDialogComponent
-})
+@Injectable({ providedIn: `root` })
 export class ChoiceService {
     public constructor(private dialog: MatDialog) {}
 
