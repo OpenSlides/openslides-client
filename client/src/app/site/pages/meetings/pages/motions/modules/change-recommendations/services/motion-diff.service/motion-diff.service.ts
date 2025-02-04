@@ -248,16 +248,6 @@ export class MotionDiffService {
             .replace(/\s+<\/DIV>/gi, `</DIV>`)
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
-        html = html.replace(/<LI>&nbsp;/gi, `<LI>`);
-
-        // Remove closing tag of span for diff algorithm
-        html = html.replace(
-            /(<SPAN[^>]+os-line-number[^>]+?>)((\s*|&nbsp;)?<\/SPAN>)/gi,
-            (found: string, _span: string, _whitespace: string, _spanClose: string): string => _span
-        );
-        html = html.replace(/<P>&nbsp;/gi, `<P>`);
-        html = html.replace(/<BR>&nbsp;/gi, `<BR CLASS="os-line-break">`);
-        html = html.replace(/ CLASS=" "/gi, ``).replace(/ CLASS=""/gi, ``);
 
         html = html.replace(/\u00A0/g, ` `); // replace no break space
         html = html.replace(/\u2013/g, `-`);
@@ -265,8 +255,8 @@ export class MotionDiffService {
 
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
-        html = html.replace(/(\n\t)+/gi, ``);
-        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1`);
+        html = html.replace(/[ \n\t]+/gi, ` `);
+        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
         return html;
     }
@@ -358,23 +348,6 @@ export class MotionDiffService {
                 newArr[i + 1] = { text: newArr[i + 1], row: newArr[i].row + 1 };
                 oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: i + 1 };
             }
-            if (
-                typeof oldArr[newArr[i].row + 1] === `string`
-                    ? oldArr[newArr[i].row + 1].includes(`os-line-number`)
-                    : false
-            ) {
-                oldArr[newArr[i].row + 1] = { text: oldArr[newArr[i].row + 1], row: -1 };
-                if (
-                    newArr[i].text !== null &&
-                    newArr[i + 1].text === undefined &&
-                    newArr[i].row + 2 < oldArr.length &&
-                    oldArr[newArr[i].row + 2].text === undefined &&
-                    newArr[i + 1] === oldArr[newArr[i].row + 2]
-                ) {
-                    newArr[i + 1] = { text: newArr[i + 1], row: newArr[i].row + 2 };
-                    oldArr[newArr[i].row + 2] = { text: oldArr[newArr[i].row + 2], row: i + 1 };
-                }
-            }
         }
 
         for (let i = newArr.length - 1; i > 0; i--) {
@@ -388,23 +361,6 @@ export class MotionDiffService {
                 newArr[i - 1] = { text: newArr[i - 1], row: newArr[i].row - 1 };
                 oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: i - 1 };
             }
-            if (
-                typeof oldArr[newArr[i].row - 1] === `string`
-                    ? oldArr[newArr[i].row - 1].includes(`os-line-number`)
-                    : false
-            ) {
-                oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: -1 };
-                if (
-                    newArr[i].text !== null &&
-                    newArr[i - 1].text === undefined &&
-                    newArr[i].row - 2 < oldArr.length &&
-                    oldArr[newArr[i].row - 2].text === undefined &&
-                    newArr[i - 1] === oldArr[newArr[i].row - 2]
-                ) {
-                    newArr[i - 1] = { text: newArr[i - 1], row: newArr[i].row - 2 };
-                    oldArr[newArr[i].row - 2] = { text: oldArr[newArr[i].row - 2], row: i - 1 };
-                }
-            }
         }
 
         // This fixes the problem tested by "does not lose words when changes are moved X-wise"
@@ -416,14 +372,6 @@ export class MotionDiffService {
             if (newArr[z].row && newArr[z].row < lastRow) {
                 oldArr[newArr[z].row] = oldArr[newArr[z].row].text;
                 newArr[z] = newArr[z].text;
-            }
-        }
-
-        // This fixes the problem that <span> is not present in the newArray but for multi paragraph
-        // change recommendations was handled before as dict
-        for (let z = 0; z < oldArr.length; z++) {
-            if (oldArr[z].row === -1) {
-                oldArr[z] = oldArr[z].text;
             }
         }
 
@@ -478,6 +426,7 @@ export class MotionDiffService {
         newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
+
         let str = ``;
         if (out.n.length === 0) {
             for (let i = 0; i < out.o.length; i++) {
@@ -1412,31 +1361,33 @@ export class MotionDiffService {
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
-
-        const isSplitAfter = htmlOld.includes(`os-split-after`) ? true : false;
-        const isSplitBefore = htmlOld.includes(`os-split-before`) ? true : false;
-
+        let isSplitAfter = false;
+        let isSplitBefore = false;
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
             (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
             (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
             (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
             (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
@@ -1447,29 +1398,12 @@ export class MotionDiffService {
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
-        // Since the closing </span> tag is removed in order to handle changes over multiple lines,
-        // they need to be added again to construct a valid html
-        diffUnnormalized = diffUnnormalized.replace(/<span[^>]+os-line-number[^>]+?>\s*/gi, (found: string): string =>
-            found.toLowerCase().replace(/>/gi, `> </span>`)
-        );
-
         // Remove <del> tags that only delete line numbers
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
-            /<del>(((<BR.*?>)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)(<\/del>)?/gi,
-            (_found: string, _tag: string, _brWithDel: string, plainBr: string, span: string, _del: string): string => {
-                return (plainBr !== undefined ? plainBr : ``) + span + ` </span>`;
-            }
-        );
-
-        // If we have a <del></P><P></del><SPAN os-line-number></SPAN><ins>new words</ins><ins><P></P></ins>
-        // new words were added at the end of the last sentence and new ones at the beginning of the next sentence.
-        // The deletion and insertion around the paragraphs can therefore be deleted
-        diffUnnormalized = diffUnnormalized.replace(
-            /(<del><\/P><\/del><del><P+.*?><\/del>)(<span+.*?<\/span>)?(<ins>+.*?<\/ins>)(<ins><\/P><\/ins><ins><P+.*?><\/ins>)/gi,
-            (_found: string, _delP: string, _span: string, _insText: string, _insP: string): string => {
-                return _insText + _delP.replace(/<del>/gi, ``).replace(/<\/del>/gi, ``) + (_span ? _span : ``);
-            }
+            /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
+            (_found: string, _tag: string, _brWithDel: string, plainBr: string, span: string): string =>
+                (plainBr !== undefined ? plainBr : ``) + span + ` </span>`
         );
 
         // Merging individual insert/delete statements into bigger blocks
@@ -1531,10 +1465,20 @@ export class MotionDiffService {
             }
         );
 
-        // Replace spaces in line numbers by &nbsp; - not needed anymore?
+        // Replace spaces in line numbers by &nbsp;
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
             (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
+        );
+
+        // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
+        // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
+        // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)<ins>([\s\S]*?)\1<\/ins>/gi,
+            (found: string, paragraph: string, span: string, insText: string): string => {
+                return `<ins>` + insText + `<\/ins>` + paragraph + span;
+            }
         );
 
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
@@ -1576,36 +1520,21 @@ export class MotionDiffService {
             /<(ins|del)>([\s\S]*?)<\/\1>/gi,
             (whole: string, insDel: string): string => {
                 const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
-                whole = whole.replace(
+                return whole.replace(
                     /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                     (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                         const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
                 );
-                /* 
-                whole = whole.replace(
-                    /(<(\/p).*?>)(<p>)/gi,
-                    (_whole2: string, closing: string, _blockTag: string, opening: string): string => {
-                        const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
-                        return closing + modifiedTag;
-                    }
-                );*/
-                return whole;
             }
         );
 
         // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted text</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
-            (_whole: string, deleted: string, tag: string, inserted: string, white: string): string => {
-                // for the case:
-                // <del></P></del><ins>inserted.</P>\n\n</ins> => <del></del><ins>inserted.</ins></P>\n
-                if ((tag === `p` || tag === `P`) && white.includes(`\n\n`)) {
-                    white = white.replace(/\n\n/gi, `\n`);
-                }
-                return `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white;
-            }
+            (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
+                `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white
         );
 
         // <ins>...</p><p>...</ins> => <ins>...</ins></p><p><ins>...</ins>
@@ -1646,12 +1575,6 @@ export class MotionDiffService {
                     return whole;
                 }
             }
-        );
-
-        // For inserted paragraphs
-        diffUnnormalized = diffUnnormalized.replace(
-            /\n(\n<\/ins><P(\s*)class="insert")/gi,
-            (_whole: string, _insP: string): string => _insP
         );
 
         // Cleanup leftovers from the operation above, when <ins></ins>-tags ore <ins> </ins>-tags are left
