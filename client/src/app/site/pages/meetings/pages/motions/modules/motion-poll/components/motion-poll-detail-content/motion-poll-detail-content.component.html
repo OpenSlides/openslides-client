@@ -1,5 +1,5 @@
 @if (poll) {
-    <div class="result-wrapper-wrapper">
+    <div [ngClass]="{ 'result-wrapper-wrapper': iconSize !== 'medium' }">
         <ng-content></ng-content>
         <div class="result-wrapper">
             @if (hasResults) {

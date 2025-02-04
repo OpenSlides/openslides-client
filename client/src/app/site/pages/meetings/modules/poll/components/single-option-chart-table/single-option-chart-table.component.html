@@ -1,5 +1,5 @@
 @if (poll) {
-    <div class="result-wrapper">
+    <div [ngClass]="{ 'result-wrapper': true, 'result-wrapper-additional': iconSize !== 'medium' }">
         <table class="result-table">
             <tbody>
                 @if (shouldShowHead) {
