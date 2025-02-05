@@ -1471,6 +1471,16 @@ export class MotionDiffService {
             (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
         );
 
+        // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
+        // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
+        // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)<ins>([\s\S]*?)\1<\/ins>/gi,
+            (_found: string, paragraph: string, span: string, insText: string): string => {
+                return `<ins>` + insText + `<\/ins>` + paragraph + span;
+            }
+        );
+
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
         diffUnnormalized = diffUnnormalized.replace(
             /<(p|div|blockquote|li)([^>]*)><(ins|del)>([\s\S]*?)<\/\1>(\s*)<(p|div|blockquote|li)([^>]*)><\/\3>/gi,
