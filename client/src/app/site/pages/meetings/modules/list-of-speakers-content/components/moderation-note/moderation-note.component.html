@@ -33,6 +33,15 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                         }
+                        @if (showModerationNotesExport) {
+                            <button
+                                mat-icon-button
+                                matTooltip="{{ 'Export moderator note as PDF' | translate }}"
+                                (click)="onDownloadPDF()"
+                            >
+                                <mat-icon>picture_as_pdf</mat-icon>
+                            </button>
+                        }
                     </div>
                 }
             </div>
