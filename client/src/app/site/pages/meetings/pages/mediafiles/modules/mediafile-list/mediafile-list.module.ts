@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { FileListModule } from 'src/app/ui/modules/file-list/file-list.module';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
@@ -28,7 +28,7 @@ import { MediafileListServiceModule } from './services/mediafile-list-service.mo
     declarations: [MediafileListComponent],
     imports: [
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         MediafileListRoutingModule,
         MediafileListServiceModule,
         MediafileCommonServiceModule,

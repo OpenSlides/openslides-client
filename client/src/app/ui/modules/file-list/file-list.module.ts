@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
 import { ListModule } from 'src/app/ui/modules/list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -37,7 +37,7 @@ const DECLARATIONS = [FileListComponent];
         IconContainerModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild(),
-        CommaSeparatedListingModule
+        CommaSeparatedListingComponent
     ]
 })
 export class FileListModule {}

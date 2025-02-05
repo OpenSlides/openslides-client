@@ -4,7 +4,8 @@ import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } 
     selector: `os-comma-separated-listing`,
     templateUrl: `./comma-separated-listing.component.html`,
     styleUrls: [`./comma-separated-listing.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class CommaSeparatedListingComponent<T = unknown> {
     /**
