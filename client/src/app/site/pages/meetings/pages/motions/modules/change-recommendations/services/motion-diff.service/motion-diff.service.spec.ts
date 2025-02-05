@@ -1258,6 +1258,7 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
+
         it(`detects amendment insert on an empty paragraph`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
@@ -1286,6 +1287,7 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
+
         it(`detects changes over a blank line between two paragraphs`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {

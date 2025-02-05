@@ -1476,7 +1476,7 @@ export class MotionDiffService {
         // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)<ins>([\s\S]*?)\1<\/ins>/gi,
-            (found: string, paragraph: string, span: string, insText: string): string => {
+            (_found: string, paragraph: string, span: string, insText: string): string => {
                 return `<ins>` + insText + `<\/ins>` + paragraph + span;
             }
         );
