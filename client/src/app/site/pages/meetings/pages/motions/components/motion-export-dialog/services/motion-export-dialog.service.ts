@@ -13,10 +13,10 @@ import { MotionExportInfo } from '../../../services/export/motion-export.service
 import { MotionExportService } from '../../../services/export/motion-export.service';
 import { ViewMotion } from '../../../view-models';
 import { MotionExportDialogComponent } from '../components/motion-export-dialog/motion-export-dialog.component';
-import { MotionExportDialogModule } from '../motion-export-dialog.module';
+import { MotionExportModule } from '../../../pages/motion-export/motion-export.module';
 
 @Injectable({
-    providedIn: MotionExportDialogModule
+    providedIn: MotionExportModule
 })
 export class MotionExportDialogService extends BaseDialogService<
     MotionExportDialogComponent,

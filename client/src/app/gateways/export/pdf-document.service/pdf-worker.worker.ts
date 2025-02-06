@@ -48,7 +48,7 @@ function applyLayout(content: any): void {
 function initPdfMake(data: any): void {
     pdfMake.fonts = {
         PdfFont: data.fonts,
-        LineNumbering: { normal: `fira-sans-latin-400.woff` }
+        LineNumbering: { normal: `/assets/fonts/fira-sans-latin-400.woff` }
     };
 
     pdfMake.vfs = data.vfs;

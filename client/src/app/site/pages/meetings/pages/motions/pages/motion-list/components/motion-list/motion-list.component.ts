@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
@@ -9,7 +9,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';
 
-import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
@@ -129,7 +128,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public filterService: MotionListFilterService,
         public sortService: MotionListSortService,
         private infoDialog: MotionListInfoDialogService,
-        private exportDialog: MotionExportDialogService,
         private categoryController: MotionCategoryControllerService,
         private motionBlockController: MotionBlockControllerService,
         public motionRepo: MotionControllerService,
@@ -297,16 +295,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     }
 
     /**
-     * Opens the export dialog.
-     * The export will be limited to the selected data if multiselect modus is
-     * active and there are rows selected
-     */
-    public async openExportDialog(): Promise<void> {
-        const motions = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
-        await this.exportDialog.export(motions);
-    }
-
-    /**
      * This function saves the selected view by changes.
      *
      * @param value is the new view the user has selected.
@@ -378,5 +366,14 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         this.storage
             .get<MotionListviewType>(`motionListView`)
             .then(type => (this.selectedView = isAvailable && type ? type : `list`));
+    }
+
+    public exportAllMotions(): void {
+        const motions = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
+        console.log(`motions`, motions);
+        //this.motionExportDialogService.motions = motions;
+        this.router.navigate([`motion-export`], {
+            relativeTo: this.route
+        });
     }
 }

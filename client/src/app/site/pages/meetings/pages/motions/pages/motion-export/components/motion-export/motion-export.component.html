@@ -1,0 +1,146 @@
+<os-head-bar [goBack]="true" [isSaveButtonEnabled]="true" [nav]="false">
+    <div class="title-slot">
+        <h2>{{ 'Motion Export' | translate }}</h2>
+    </div>
+    <ng-container class="menu-slot">
+        <button mat-button (click)="exportMotions()">
+            <span class="upper">{{ 'Export' | translate }}</span>
+        </button>
+    </ng-container>
+</os-head-bar>
+
+<mat-card class="os-card import-table spacer-bottom-60">
+    <mat-card-content>
+        <mat-tab-group>
+            <mat-tab label="PDF">
+                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+            </mat-tab>
+            <mat-tab label="CSV">
+                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+            </mat-tab>
+            <mat-tab label="XLSX">
+                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #exportPdf>
+    <form [formGroup]="exportForm">
+        <!-- Content -->
+        <div class="motion-export-wrapper">
+            <div>
+                <p class="toggle-group-head">{{ 'Line numbering' | translate }}</p>
+                <mat-chip-listbox formControlName="lnMode">
+                    <mat-chip-option [value]="lnMode.None">
+                        <span>{{ 'None' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option [value]="lnMode.Outside">
+                        <span>{{ 'Outside' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+
+            <div>
+                <p class="toggle-group-head">{{ 'Change recommendations' | translate }}</p>
+                <mat-chip-listbox class="smaller-buttons" formControlName="crMode">
+                    <mat-chip-option [value]="crMode.Original">
+                        <span>{{ 'Original version' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option [disabled]="isCSVExport" [value]="crMode.Changed">
+                        <span>{{ 'Changed version' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #diffVersionButton [disabled]="isCSVExport" [value]="crMode.Diff">
+                        <span>{{ 'Diff version' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option [value]="crMode.ModifiedFinal">
+                        <span>{{ 'Final version' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+
+            <div>
+                <p class="toggle-group-head">{{ 'Content' | translate }}</p>
+                <mat-chip-listbox class="smaller-buttons" formControlName="content" multiple>
+                    <mat-chip-option value="text">
+                        <span>{{ 'Text' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option value="reason">
+                        <span>{{ 'Reason' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+
+            <div>
+                <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
+                <mat-chip-listbox class="smaller-buttons" formControlName="metaInfo" multiple>
+                    @for (metaInfo of metaInfoExportOrder; track metaInfo) {
+                        <mat-chip-option [value]="metaInfo">
+                            <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
+                        </mat-chip-option>
+                    }
+                    <mat-chip-option *osPerms="permission.listOfSpeakersCanSee" #speakersButton value="speakers">
+                        <span>{{ 'Speakers' | translate }}</span>
+                    </mat-chip-option>
+                    @if (workingGroupSpeakerActive) {
+                        <mat-chip-option #workingGroupSpeakerButton value="working_group_speakers">
+                            <span>{{ 'Spokesperson' | translate }}</span>
+                        </mat-chip-option>
+                    }
+                    <mat-chip-option #votingResultButton value="polls">
+                        <span>{{ 'Voting result' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #referringMotionsButton value="referring_motions">
+                        <span>{{ 'Referring motions' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+            <div>
+                <p class="toggle-group-head">{{ 'PDF options' | translate }}</p>
+                <mat-chip-listbox class="smaller-buttons" formControlName="pdfOptions" multiple>
+                    <mat-chip-option #toc value="toc" [disabled]="continuousTextButton?.checked">
+                        <span>{{ 'Table of contents' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #header value="header">
+                        <span>{{ 'Header' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option value="page">
+                        <span>{{ 'Page numbers' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option value="date">
+                        <span>{{ 'Current date' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option value="attachments">
+                        <span>{{ 'Attachments' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #addBreaks value="addBreaks" [disabled]="continuousTextButton?.checked">
+                        <span>{{ 'Enforce page breaks' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #continuousText value="continuousText">
+                        <span>{{ 'Continuous text' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option value="onlyChangedLines">
+                        <span>{{ 'Short form for amendments' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+
+            <div>
+                <p class="toggle-group-head">{{ 'Comments' | translate }}</p>
+                <mat-chip-listbox class="smaller-buttons" formControlName="comments" multiple>
+                    <mat-chip-option [value]="PERSONAL_NOTE_ID">
+                        <span>{{ 'Personal note' | translate }}</span>
+                    </mat-chip-option>
+                    @for (comment of commentsToExport; track comment) {
+                        <mat-chip-option [value]="comment.id">
+                            <span>{{ comment.name }}</span>
+                        </mat-chip-option>
+                    }
+                </mat-chip-listbox>
+                <!-- TODO only if not csv -->
+            </div>
+
+            <br />
+        </div>
+    </form>
+</ng-template>
