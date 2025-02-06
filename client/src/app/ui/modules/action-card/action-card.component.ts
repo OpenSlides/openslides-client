@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { DirectivesModule } from '../../directives';
-import { ExpandableContentWrapperModule } from '../expandable-content-wrapper';
+import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper';
 
 @Component({
     selector: `os-action-card`,
@@ -17,7 +17,7 @@ import { ExpandableContentWrapperModule } from '../expandable-content-wrapper';
         CommonModule,
         MatCardModule,
         DirectivesModule,
-        ExpandableContentWrapperModule,
+        ExpandableContentWrapperComponent,
         OpenSlidesTranslationModule
     ]
 })

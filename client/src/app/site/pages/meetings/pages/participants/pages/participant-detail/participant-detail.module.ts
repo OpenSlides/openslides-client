@@ -13,7 +13,7 @@ import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
-import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
+import { ExpandableContentWrapperComponent } from 'src/app/ui/modules/expandable-content-wrapper';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -46,7 +46,7 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         ReactiveFormsModule,
         DirectivesModule,
         PipesModule,
-        ExpandableContentWrapperModule
+        ExpandableContentWrapperComponent
     ]
 })
 export class ParticipantDetailModule {}
