@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,8 +11,14 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -19,6 +26,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -26,8 +34,13 @@ import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/activ
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
-import { PromptService } from '../../../prompt-dialog';
-import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
+import { PipesModule } from '../../pipes';
+import { CommaSeparatedListingComponent } from '../comma-separated-listing';
+import { IconContainerModule } from '../icon-container';
+import { ListModule } from '../list';
+import { PromptService } from '../prompt-dialog';
+import { END_POSITION, START_POSITION } from '../scrolling-table/directives/scrolling-table-cell-position';
+import { SearchSelectorModule } from '../search-selector';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -60,7 +73,25 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
     selector: `os-file-list`,
     templateUrl: `./file-list.component.html`,
     styleUrls: [`./file-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatMenuModule,
+        MatTooltipModule,
+        MatButtonModule,
+        MatDialogModule,
+        ListModule,
+        SearchSelectorModule,
+        IconContainerModule,
+        PipesModule,
+        OpenSlidesTranslationModule,
+        CommaSeparatedListingComponent
+    ]
 })
 export class FileListComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
