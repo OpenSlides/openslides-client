@@ -1,12 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { CustomIcon } from '../../definitions';
+import { CustomIcon } from './definitions';
 
 @Component({
     selector: `os-custom-icon`,
     templateUrl: `./custom-icon.component.html`,
     styleUrls: [`./custom-icon.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CommonModule]
 })
 export class CustomIconComponent {
     @Input()
