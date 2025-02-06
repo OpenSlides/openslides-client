@@ -146,6 +146,7 @@ export class MeetingPdfExportService {
             // create a list without redundancies
             new Set(this.mediaManageService.allFontPlaces.map(place => `${this.mediaManageService.getFontUrl(place)}`))
         );
+        fontPathList.push(this.mediaManageService.getLineNumberingFont());
 
         const promises = fontPathList.map(fontPath =>
             this.httpService.downloadAsBase64(fontPath).then(file => ({
