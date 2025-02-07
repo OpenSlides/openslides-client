@@ -14,7 +14,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
