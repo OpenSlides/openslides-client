@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
+import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule } from '@angular/material/checkbox';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
-import { PromptService } from '../../../prompt-dialog';
+import { PromptDialogModule, PromptService } from '../prompt-dialog';
 
 @Component({
     selector: `os-prompt-checkbox`,
@@ -9,7 +11,9 @@ import { PromptService } from '../../../prompt-dialog';
     styleUrls: [`./prompt-checkbox.component.scss`],
     providers: [
         { provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: `noop` } as MatCheckboxDefaultOptions }
-    ]
+    ],
+    standalone: true,
+    imports: [CommonModule, OpenSlidesTranslationModule, MatCheckboxModule, PromptDialogModule]
 })
 export class PromptCheckboxComponent {
     /**
