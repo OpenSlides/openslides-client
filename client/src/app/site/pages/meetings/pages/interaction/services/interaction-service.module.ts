@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { OpenSlidesOverlayModule } from 'src/app/ui/modules/openslides-overlay';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 @NgModule({
-    imports: [PromptDialogModule, OpenSlidesOverlayModule]
+    imports: [PromptDialogComponent, OpenSlidesOverlayModule]
 })
 export class InteractionServiceModule {}

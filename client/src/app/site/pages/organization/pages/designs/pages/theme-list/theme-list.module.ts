@@ -9,7 +9,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptCheckboxComponent } from 'src/app/ui/modules/prompt-checkbox';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { ThemeBuilderDialogModule } from '../../modules/theme-builder-dialog/theme-builder-dialog.module';
 import { ThemeCommonServiceModule } from '../../services/theme-common-service.module';
@@ -23,7 +23,7 @@ import { ThemeListRoutingModule } from './theme-list-routing.module';
         ThemeListRoutingModule,
         ThemeCommonServiceModule,
         ThemeBuilderDialogModule,
-        PromptDialogModule,
+        PromptDialogComponent,
         HeadBarModule,
         ListModule,
         OpenSlidesTranslationModule.forChild(),

@@ -14,7 +14,7 @@ import { MediafileCommonServiceModule } from 'src/app/site/pages/meetings/pages/
 import { DirectivesModule } from 'src/app/ui/directives';
 import { FileListModule } from 'src/app/ui/modules/file-list/file-list.module';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { OrganizationMediafileListComponent } from './components/organization-mediafile-list/organization-mediafile-list.component';
 import { OrganizationMediafileListRoutingModule } from './organization-mediafile-list-routing.module';
@@ -36,7 +36,7 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         OrganizationMediafileListRoutingModule,
         MediafileCommonServiceModule,
         MediafileListServiceModule,
-        PromptDialogModule,
+        PromptDialogComponent,
         DirectivesModule,
         MatTooltipModule
     ]

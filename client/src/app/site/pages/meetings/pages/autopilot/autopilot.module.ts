@@ -20,7 +20,7 @@ import { AssignmentPollModule } from 'src/app/site/pages/meetings/pages/assignme
 import { MotionPollModule } from 'src/app/site/pages/meetings/pages/motions/modules/motion-poll';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
 import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
@@ -39,7 +39,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         CommonModule,
         RouterModule,
         AutopilotRoutingModule,
-        PromptDialogModule,
+        PromptDialogComponent,
         InteractionServiceModule,
         FormsModule,
         ProjectorModule,

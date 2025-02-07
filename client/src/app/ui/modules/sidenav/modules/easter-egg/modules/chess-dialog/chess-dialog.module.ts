@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { PromptDialogModule, PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent, PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ChessDialogComponent } from './components/chess-dialog/chess-dialog.component';
 
@@ -16,7 +16,7 @@ import { ChessDialogComponent } from './components/chess-dialog/chess-dialog.com
         MatIconModule,
         MatDialogModule,
         OpenSlidesTranslationModule.forChild(),
-        PromptDialogModule
+        PromptDialogComponent
     ],
     providers: [PromptService]
 })

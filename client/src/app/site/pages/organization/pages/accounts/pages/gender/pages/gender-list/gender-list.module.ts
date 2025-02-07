@@ -13,7 +13,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ChipComponent } from 'src/app/ui/modules/chip';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar/head-bar.module';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { GenderListComponent } from './components/gender-list/gender-list.component';
 import { GenderListRoutingModule } from './gender-list-routing.module';
@@ -23,7 +23,7 @@ import { GenderListRoutingModule } from './gender-list-routing.module';
     imports: [
         CommonModule,
         GenderListRoutingModule,
-        PromptDialogModule,
+        PromptDialogComponent,
         HeadBarModule,
         ListModule,
         ChipComponent,
