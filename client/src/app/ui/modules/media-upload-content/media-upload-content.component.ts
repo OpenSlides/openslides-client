@@ -1,13 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
+import { PipesModule } from '../../pipes';
+import { FileUploadModule } from '../file-upload';
+import { FileData } from '../file-upload/components/file-upload/file-upload.component';
+import { SearchSelectorModule } from '../search-selector';
 
 let uniqueCounter = 0;
 
@@ -19,7 +27,20 @@ export interface UploadSuccessEvent {
 @Component({
     selector: `os-media-upload-content`,
     templateUrl: `./media-upload-content.component.html`,
-    styleUrls: [`./media-upload-content.component.scss`]
+    styleUrls: [`./media-upload-content.component.scss`],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        PipesModule,
+        SearchSelectorModule,
+        FileUploadModule,
+        OpenSlidesTranslationModule
+    ]
 })
 export class MediaUploadContentComponent extends BaseUiComponent implements OnInit {
     /**
