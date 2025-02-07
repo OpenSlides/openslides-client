@@ -10,7 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container/icon-container.module';
 import { ListModule } from 'src/app/ui/modules/list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -34,7 +34,7 @@ const DECLARATIONS = [FileListComponent];
         MatDialogModule,
         ListModule,
         SearchSelectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         PipesModule,
         OpenSlidesTranslationModule.forChild(),
         CommaSeparatedListingModule

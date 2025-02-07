@@ -22,7 +22,7 @@ import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
 import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -72,7 +72,7 @@ const COMPONENTS = [
         PipesModule,
         ChoiceDialogComponent,
         MeetingsComponentCollectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         ExpandableContentWrapperModule,
         OpenSlidesTranslationModule.forChild()
     ],
