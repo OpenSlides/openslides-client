@@ -77,6 +77,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return !!this.projector.nonStableCurrentProjections;
     }
 
+    public get isPdfProjection(): boolean {
+        return this.projector?.nonStableCurrentProjections?.some(
+            projection =>
+                projection.content_object_id.includes(`mediafile`) &&
+                typeof projection.content[`mimetype`] === `string` &&
+                projection.content[`mimetype`].endsWith(`/pdf`)
+        );
+    }
+
     public get currentProjectionIsLoS(): boolean {
         for (const projection of this.projector.nonStableCurrentProjections) {
             if (hasListOfSpeakers(projection.content_object)) {
@@ -94,6 +103,10 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public get noWiFiData(): boolean {
         return this._noWiFiData;
+    }
+
+    public get projectorHeight(): number {
+        return Math.floor(this.projector.height / 100);
     }
 
     private _hasEnoughWiFiData: boolean;
