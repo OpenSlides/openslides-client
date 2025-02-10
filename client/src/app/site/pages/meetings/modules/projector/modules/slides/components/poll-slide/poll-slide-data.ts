@@ -15,6 +15,20 @@ export interface SlidePollOption {
     abstain?: number;
     text?: string;
     content_object?: TitleInformation;
+    votes?: SlidePollVote[];
+}
+
+export interface SlidePollVote {
+    user_id: Id;
+    user?: SlidePollUser;
+    value: string;
+}
+
+export interface SlidePollUser {
+    id: string;
+    first_name: string;
+    last_name: string;
+    title: string;
 }
 
 export const SlidePollOptionFields: (keyof SlidePollOption)[] = [`abstain`, `no`, `yes`];
@@ -22,6 +36,10 @@ export const SlidePollOptionFields: (keyof SlidePollOption)[] = [`abstain`, `no`
 interface TitleInformation extends TitleInformationWithAgendaItem {
     collection: string;
     [key: string]: any; // Each content object can have a variety of fields.
+}
+
+export interface PollSlideEntitledUsersEntry extends EntitledUsersEntry {
+    user?: SlidePollUser;
 }
 
 export interface PollSlideData {
@@ -38,7 +56,7 @@ export interface PollSlideData {
     options: SlidePollOption[];
 
     // These keys are only available, if poll/state == "published"
-    entitled_users_at_stop: EntitledUsersEntry[];
+    entitled_users_at_stop: PollSlideEntitledUsersEntry[];
     pollmethod: PollMethod;
     onehundred_percent_base: PollPercentBase;
     votesvalid: number;

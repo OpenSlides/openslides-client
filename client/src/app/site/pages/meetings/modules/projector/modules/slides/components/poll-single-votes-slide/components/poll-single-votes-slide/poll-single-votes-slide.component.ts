@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { EntitledUsersEntry } from 'src/app/domain/models/poll';
 import { User } from 'src/app/domain/models/users/user';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { PollSlideComponent } from '../../../poll-slide/components/poll-slide.component';
-import { PollSlideData } from '../../../poll-slide/poll-slide-data';
+import {
+    PollSlideData,
+    PollSlideEntitledUsersEntry,
+    SlidePollUser,
+    SlidePollVote
+} from '../../../poll-slide/poll-slide-data';
 
 type VoteResult = `Y` | `N` | `A` | `X`;
 const ENTRIES_PER_PAGE = 9;
@@ -38,24 +37,20 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
     private _userVotesFormatted: [string, VoteResult][][] = [];
 
     private _votes: {
-        [key: string]: ViewVote;
+        [key: string]: SlidePollVote;
     } = {};
 
     private _entitledUsers: {
-        [key: string]: EntitledUsersEntry;
-    };
+        [key: string]: PollSlideEntitledUsersEntry;
+    } = {};
 
     private _meetingSettingsSubscriptions: Subscription[];
 
     public constructor(
-        private userController: UserControllerService,
-        private pollController: PollControllerService,
         private meetingSettings: MeetingSettingsService,
-        pollService: PollService,
         collectionMapperService: CollectionMapperService
     ) {
-        // TODO: Once the autoupdate is done, remove the controllers and maybe the meetingSettings
-        super(pollService, collectionMapperService);
+        super(collectionMapperService);
         this._meetingSettingsSubscriptions = [
             this.meetingSettings.get(`motion_poll_projection_max_columns`).subscribe(max => {
                 this._maxColumns = max;
@@ -73,16 +68,16 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
     }
 
     protected override setData(value: SlideData<PollSlideData>): void {
-        // TODO: Pull all this data out of the autoupdate projections
-        const poll = this.pollController.getViewModel(value.data.id);
-        console.log(`poll`, value, poll);
+        const poll = value.data;
         if (poll && poll.options.length === 1) {
-            this._votes = poll.options[0].votes.mapToObject(vote => ({
-                [vote.user_id]: vote
-            }));
-            this._entitledUsers = value.data.entitled_users_at_stop.mapToObject(user => ({
-                [user.user_merged_into_id ?? user.user_id]: user
-            }));
+            this._votes =
+                poll.options[0].votes?.mapToObject(vote => ({
+                    [vote.user_id]: vote
+                })) || {};
+            this._entitledUsers =
+                value.data.entitled_users_at_stop?.mapToObject(user => ({
+                    [user.user_merged_into_id ?? user.user_id]: user
+                })) || {};
             this.calculateUserVotes();
             this.invalid = false;
         } else {
@@ -93,16 +88,23 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
 
     private calculateUserVotes(): void {
         this._userVotes = Array.from(new Set([...Object.keys(this._votes), ...Object.keys(this._entitledUsers)]))
-            .map(id => [...this.getNameAndSortValue(+id, this._orderBy), this._votes[id] ? this._votes[id].value : `X`])
+            .map(id => [
+                ...(this.getNameAndSortValue(this._entitledUsers[id]?.user || this._votes[id]?.user, this._orderBy) || [
+                    `User`,
+                    `${id}`
+                ]),
+                this._votes[id] ? this._votes[id].value : `X`
+            ])
             .sort((a, b) => a[1].localeCompare(b[1]))
             .map(([user, _, vote]) => [user, vote as VoteResult]);
         this.formatUserVotes();
-        console.log(`userVotes`, this._userVotes, this._userVotesFormatted);
     }
 
-    private getNameAndSortValue(userId: Id, by: keyof User): [string, string] {
-        // TODO: Pull all this data out of the autoupdate projections
-        const user = this.userController.getViewModel(+userId);
+    private getNameAndSortValue(user: SlidePollUser, by: keyof User): [string, string] {
+        if (user == undefined) {
+            return null;
+        }
+
         const first = `${user.title ?? ``} ${user.first_name ?? ``}`.trim();
         if (first && user.last_name) {
             if (by === `last_name`) {
@@ -125,7 +127,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             }
             return [user.last_name, `${user.last_name}`];
         }
-        return [user.username, user.username];
+        return null;
     }
 
     private formatUserVotes(): void {
