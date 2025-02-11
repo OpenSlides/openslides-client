@@ -22,7 +22,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -71,7 +71,7 @@ const MODULES = [MotionPollServiceModule];
         PollModule,
         MeetingsComponentCollectorModule,
         OpenSlidesTranslationModule.forChild(),
-        IconContainerModule
+        IconContainerComponent
     ],
     exports: [...MODULES, ...DECLARATIONS, PollModule],
     declarations: [MotionPollDialogComponent, MotionPollFormComponent, ...DECLARATIONS],

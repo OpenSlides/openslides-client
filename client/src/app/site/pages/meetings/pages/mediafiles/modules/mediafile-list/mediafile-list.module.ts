@@ -15,7 +15,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
@@ -46,7 +46,7 @@ import { MediafileListServiceModule } from './services/mediafile-list-service.mo
         MeetingsComponentCollectorModule,
         HeadBarModule,
         SearchSelectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         DirectivesModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild()

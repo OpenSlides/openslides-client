@@ -9,7 +9,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChipComponent } from 'src/app/ui/modules/chip';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
@@ -23,7 +23,7 @@ import { CommitteeListServiceModule } from './services/committee-list-service.mo
         CommonModule,
         CommitteeListRoutingModule,
         CommitteeListServiceModule,
-        IconContainerModule,
+        IconContainerComponent,
         ListModule,
         ScrollingTableModule,
         HeadBarModule,

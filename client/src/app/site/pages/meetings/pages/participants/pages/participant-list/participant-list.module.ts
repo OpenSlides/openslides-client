@@ -13,7 +13,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
@@ -37,7 +37,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         UserComponentsModule,
         ChoiceDialogComponent,
         HeadBarModule,
-        IconContainerModule,
+        IconContainerComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
         OpenSlidesTranslationModule.forChild(),
