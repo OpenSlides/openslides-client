@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { DirectivesModule } from '../../directives';
 import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper';
@@ -13,13 +12,7 @@ import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [
-        CommonModule,
-        MatCardModule,
-        DirectivesModule,
-        ExpandableContentWrapperComponent,
-        OpenSlidesTranslationModule
-    ]
+    imports: [CommonModule, MatCardModule, DirectivesModule, ExpandableContentWrapperComponent]
 })
 export class ActionCardComponent {
     /**
