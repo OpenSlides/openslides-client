@@ -12,7 +12,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { CountdownTimeModule } from '../../../../modules/projector/modules/countdown-time/countdown-time.module';
@@ -32,7 +32,7 @@ import { ParticipantSpeakerListServiceModule } from './services/participant-spea
         UserComponentsModule,
         ChoiceDialogComponent,
         HeadBarModule,
-        IconContainerModule,
+        IconContainerComponent,
         CountdownTimeModule,
         DirectivesModule,
         MeetingsComponentCollectorModule,
