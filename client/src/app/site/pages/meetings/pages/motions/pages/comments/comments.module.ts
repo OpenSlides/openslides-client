@@ -12,7 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -30,7 +30,7 @@ import { CommentSectionSortComponent } from './components/comment-section-sort/c
         SortingModule,
         HeadBarModule,
         SearchSelectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         PipesModule,
         OpenSlidesTranslationModule.forChild(),
         MatCardModule,

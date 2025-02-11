@@ -18,11 +18,11 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
 import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -70,9 +70,9 @@ const COMPONENTS = [
         PollModule,
         DirectivesModule,
         PipesModule,
-        ChoiceDialogModule,
+        ChoiceDialogComponent,
         MeetingsComponentCollectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         ExpandableContentWrapperModule,
         OpenSlidesTranslationModule.forChild()
     ],
