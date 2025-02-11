@@ -213,6 +213,10 @@ export class HtmlToPdfService {
                 newParagraph = this.createListParagraph(createPayload);
                 break;
             }
+            case `svg`: {
+                newParagraph = this.createSVGParagraph(createPayload);
+                break;
+            }
             default: {
                 newParagraph = this.createDefaultParagraph(createPayload);
                 break;
@@ -308,6 +312,20 @@ export class HtmlToPdfService {
         };
 
         newParagraph.text = children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a svg element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createSVGParagraph(data: CreateSpecificParagraphPayload): any {
+        const newParagraph = {
+            ...this.create(`svg`),
+            width: 20
+        };
+
+        newParagraph.stack = [{ svg: data.element.outerHTML.replace(/\n/g, ``) }];
         return newParagraph;
     }
 
