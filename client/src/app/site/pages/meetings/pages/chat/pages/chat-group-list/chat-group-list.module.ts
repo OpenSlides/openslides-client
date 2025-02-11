@@ -13,7 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { VerticalTabGroupModule } from 'src/app/ui/modules/vertical-tab-group';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -37,7 +37,7 @@ import { ChatGroupListComponent } from './components/chat-group-list/chat-group-
         ChatGroupListRoutingModule,
         ChatGroupDialogModule,
         PipesModule,
-        IconContainerModule,
+        IconContainerComponent,
         VerticalTabGroupModule,
         HeadBarModule,
         OpenSlidesTranslationModule.forChild(),
