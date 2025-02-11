@@ -11,10 +11,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
@@ -38,10 +38,10 @@ const OS_MODULES = [
     HeadBarModule,
     ListModule,
     MeetingsComponentCollectorModule,
-    IconContainerModule,
+    IconContainerComponent,
     DirectivesModule,
     PromptDialogModule,
-    ChoiceDialogModule,
+    ChoiceDialogComponent,
     OpenSlidesTranslationModule.forChild()
 ];
 

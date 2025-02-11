@@ -14,7 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
@@ -58,7 +58,7 @@ const COMPONENTS = [
         MatRadioModule,
         ReactiveFormsModule,
         MatTooltipModule,
-        IconContainerModule,
+        IconContainerComponent,
         FormsModule,
         VotingPrivacyDialogModule,
         ListModule,

@@ -1,11 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { DirectivesModule } from '../../directives';
+import { ExpandableContentWrapperModule } from '../expandable-content-wrapper';
 
 @Component({
     selector: `os-action-card`,
     templateUrl: `./action-card.component.html`,
     styleUrls: [`./action-card.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatCardModule,
+        DirectivesModule,
+        ExpandableContentWrapperModule,
+        OpenSlidesTranslationModule
+    ]
 })
 export class ActionCardComponent {
     /**

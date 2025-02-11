@@ -1,17 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
-import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OsOptionSelectionChanged, SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
-import { ChoiceAnswer, ChoiceDialogConfig } from '../../definitions';
+import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
 
 @Component({
     selector: `os-choice-dialog`,
     templateUrl: `./choice-dialog.component.html`,
     styleUrls: [`./choice-dialog.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        SearchSelectorModule,
+        OpenSlidesTranslationModule
+    ]
 })
 export class ChoiceDialogComponent {
     /**
