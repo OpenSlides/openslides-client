@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { MotionMultiselectActionsComponent } from './components/motion-multiselect-actions/motion-multiselect-actions.component';
@@ -22,7 +22,7 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         MatIconModule,
         MatDividerModule,
         MatMenuModule,
-        ChoiceDialogModule,
+        ChoiceDialogComponent,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule

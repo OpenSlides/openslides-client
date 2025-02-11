@@ -14,7 +14,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { GridModule } from 'src/app/ui/modules/grid';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { MotionExportDialogModule } from '../../components/motion-export-dialog/motion-export-dialog.module';
@@ -48,7 +48,7 @@ import { MotionListRoutingModule } from './motion-list-routing.module';
         HeadBarModule,
         MeetingsComponentCollectorModule,
         GridModule,
-        IconContainerModule,
+        IconContainerComponent,
         PipesModule,
         DirectivesModule
     ]
