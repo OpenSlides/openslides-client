@@ -4,7 +4,7 @@ import { MatChipOption } from '@angular/material/chips';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
@@ -152,6 +152,7 @@ export class MotionExportComponent extends BaseComponent {
     public motionsNr: number = 0;
 
     public motions: number[];
+    private motions_models: ViewMotion[];
 
     public disabledControls: string[] = [];
 
@@ -161,6 +162,8 @@ export class MotionExportComponent extends BaseComponent {
     protected get meetingSettingsService(): MeetingSettingsService {
         return this.componentServiceCollector.meetingSettingsService;
     }
+
+    private repoSub: Subscription;
 
     /**
      * Constructor
@@ -182,6 +185,19 @@ export class MotionExportComponent extends BaseComponent {
                 this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
             })
         );
+        this.repoSub = this.motionRepo.getViewModelListObservable().subscribe(_ => {
+            this.motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
+            this.createForm().then(_ => {
+                if (!this.motions_models.includes(null)) {
+                    // check available keywords and settings
+                    this.hasAvailableVariables();
+                    // disable pageLayout if only one motion is selected
+                    if (this.motionsNr === 1) {
+                        this.disableControl(`pageLayout`);
+                    }
+                }
+            });
+        });
         this.motionsNr = this.motions.length;
         this.workingGroupSpeakerActive = this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)!;
         this.commentsSubject = this.commentRepo.getViewModelListObservable();
@@ -189,14 +205,6 @@ export class MotionExportComponent extends BaseComponent {
         this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(
             metaData => !noMetaData.some(noMeta => metaData === noMeta)
         );
-        this.createForm().then(_ => {
-            // check available keywords and settings
-            this.hasAvailableVariables();
-            // disable pageLayout if only one motion is selected
-            if (this.motionsNr === 1) {
-                this.disableControl(`pageLayout`);
-            }
-        });
     }
 
     // React to changes on the file format
@@ -230,12 +238,13 @@ export class MotionExportComponent extends BaseComponent {
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
+        return;
     }
 
     // Function to determine whioch options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
     public hasAvailableVariables(): void {
-        //this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `id`);
+        this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `id`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
         this.filterFormControlDefaults(`metaInfo`, `motions_show_referring_motions`, `referring_motions`);
 
@@ -247,20 +256,11 @@ export class MotionExportComponent extends BaseComponent {
             this.filterFormControlDefaults(`metaInfo`, `motions_export_submitter_recommendation`, `recommendation`);
             this.changeStateOfChipOption(this.recommendationChipOption, true, `recommendation`);
         }
-        const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
-        this.filterFormControlAvailableValues(motions_models, `personrelated`, `editors`, this.editorsChipOption);
-        this.filterFormControlAvailableValues(motions_models, `metaInfo`, `category`, this.categoryChipOption);
-        this.filterFormControlAvailableValues(motions_models, `metaInfo`, `tags`, this.tagChipOption);
-        this.filterFormControlAvailableValues(
-            motions_models,
-            `metaInfo`,
-            `recommendation`,
-            this.recommendationChipOption
-        );
-        if (motions_models.filter(m => (m ? m[`blocks`] : false)).length === 0) {
-            this.deselectOption(`metaInfo`, `block`);
-            this.changeStateOfChipOption(this.blockChipOption, true, `block`);
-        }
+        this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
+        this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
+        this.filterFormControlAvailableValues(`metaInfo`, `tags`, this.tagChipOption);
+        this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
+        this.filterFormControlAvailableValues(`metaInfo`, `recommendation`, this.recommendationChipOption);
         return;
     }
 
@@ -273,9 +273,14 @@ export class MotionExportComponent extends BaseComponent {
      * @param nextState The next state the ChipOption will assume.
      */
     private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
-        this.disabledControls.push(value);
         if (chipOption) {
-            chipOption.disabled = nextState;
+            if (nextState) {
+                chipOption.disabled = nextState;
+                this.disabledControls.push(value);
+            } else {
+                chipOption.disabled = nextState;
+                this.disabledControls.filter(obj => !obj.includes(value));
+            }
         }
     }
 
@@ -309,7 +314,7 @@ export class MotionExportComponent extends BaseComponent {
     private deselectOption(formGroup: string, value: string): void {
         this.dialogForm
             .get(formGroup)
-            .setValue(this.dialogForm.get(formGroup).value.filter(obj => !obj.includes(value)));
+            .setValue(this.dialogForm.get(formGroup).value?.filter(obj => !obj.includes(value)));
     }
 
     // Helper function to determine if mat-chip-option should be selected
@@ -332,19 +337,15 @@ export class MotionExportComponent extends BaseComponent {
 
     // Helper function to filter and disable form control values based on availability of the properties
     // in the chosen motions
-    public filterFormControlAvailableValues(
-        motions_models: ViewMotion[],
-        formControl: string,
-        value: string,
-        chipOption: MatChipOption
-    ): void {
-        if (motions_models.filter(m => (m ? m[value] : false)).length === 0) {
-            this.deselectOption(formControl, value);
-            this.changeStateOfChipOption(chipOption, true, value);
+    public filterFormControlAvailableValues(formControl: string, val: string, chipOption: MatChipOption): void {
+        if (this.motions_models.filter(m => (m ? m[val] : false)).length === 0) {
+            this.deselectOption(formControl, val);
+            this.changeStateOfChipOption(chipOption, true, val);
         }
     }
 
     public async exportMotions(): Promise<void> {
+        this.repoSub.unsubscribe();
         this.exportForm = this.formBuilder.group({
             format: [],
             lnMode: [],
