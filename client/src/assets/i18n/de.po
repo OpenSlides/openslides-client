@@ -1041,6 +1041,10 @@ msgstr ""
 "Darf folgende Antragsmetadaten bearbeiten und zuweisen: Antragsteller*in, "
 "Status, Empfehlung, Sachgebiet, Antragsblock und Schlagwörter."
 
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can edit own delegation"
+msgstr "Darf eigene Stimmrechtsübertragung anpassen"
+
 msgid "Can forward motions"
 msgstr "Darf Anträge weiterleiten"
 
@@ -1302,6 +1306,10 @@ msgstr ""
 msgid "Can see the projector"
 msgstr "Darf den Projektor sehen"
 
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can set and remove own delegation."
+msgstr "Kann eigene Stimmrechtsübertragungen setzen und entfernen."
+
 msgid "Can support motions"
 msgstr "Darf Anträge unterstützen"
 
@@ -1408,6 +1416,10 @@ msgstr "Änderungsempfehlung - Abgelehnt"
 
 msgid "Change recommendations"
 msgstr "Änderungsempfehlungen"
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "Change your delegation"
+msgstr "Eigene Stimmrechtsübertragung bearbeiten"
 
 msgid "Changed by"
 msgstr "Bearbeitet von"
@@ -3262,6 +3274,11 @@ msgstr "Mandatswechsel erfolgreich."
 msgid "Mark as personal favorite"
 msgstr "Als persönlichen Favorit markieren"
 
+#: app/src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component.ts
+msgid "Max votes per option cannot be greater than max votes."
+msgstr ""
+"Max. Stimmenanzahl pro Option kann nicht größer sein als max. Stimmenanzahl"
+
 msgid "Maximum amount of votes"
 msgstr "Maximale Stimmenanzahl"
 
@@ -4540,8 +4557,9 @@ msgstr "Erforderliches Recht um diese Seite zu sehen:"
 msgid "Requires permission to manage lists of speakers"
 msgstr "Benötigt Recht zum Verwalten von Redelisten"
 
-msgid "Requires permission to manage motions"
-msgstr "Benötigt Recht zum Verwalten von Anträgen"
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Requires permission to manage motion metadata"
+msgstr "Benötigt Berechtigung um Antragsmetadaten zu verwalten"
 
 msgid "Reset"
 msgstr "Zurücksetzen"
@@ -5820,6 +5838,10 @@ msgstr ""
 "Die Stimmabgabe endet nach kurzer (einige Sekunden/Minuten) oder langer "
 "(einige Tage/Wochen) Zeitspanne."
 
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll/assignment-poll.component.html
+msgid "Voting in progress"
+msgstr "Stimmabgabe läuft"
+
 msgid "Voting is currently in progress."
 msgstr "Stimmabgabe läuft aktuell "
 
@@ -6129,6 +6151,14 @@ msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 "Sie haben die maximale Anzahl von Stimmen erreicht. Deselektieren Sie zuerst"
 " eine Auswahl."
+
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.html
+msgid ""
+"You will be logged out when you change your password. You must then log in "
+"with the new password."
+msgstr ""
+"Sie werden abgemeldet, wenn Sie Ihr Passwort ändern. Sie müssen sich "
+"anschließend mit dem neuen Passwort anmelden."
 
 msgid "You won!"
 msgstr "Du hast gewonnen!"
