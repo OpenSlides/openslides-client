@@ -36,7 +36,7 @@ import { ListComponent } from 'src/app/ui/modules/list/components';
 
 import { PipesModule } from '../../pipes';
 import { CommaSeparatedListingComponent } from '../comma-separated-listing';
-import { IconContainerModule } from '../icon-container';
+import { IconContainerComponent } from '../icon-container';
 import { ListModule } from '../list';
 import { PromptService } from '../prompt-dialog';
 import { END_POSITION, START_POSITION } from '../scrolling-table/directives/scrolling-table-cell-position';
@@ -87,7 +87,7 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
         MatDialogModule,
         ListModule,
         SearchSelectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         PipesModule,
         OpenSlidesTranslationModule,
         CommaSeparatedListingComponent
