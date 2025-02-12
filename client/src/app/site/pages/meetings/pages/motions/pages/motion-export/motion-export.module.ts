@@ -21,11 +21,11 @@ import { MotionExportRoutingModule } from './motion-export-routing.module';
         MotionExportRoutingModule,
         ReactiveFormsModule,
         MatButtonToggleModule,
+        MotionsExportModule,
         MatButtonModule,
         MatCardModule,
         MatChipsModule,
         MatTabsModule,
-        MotionsExportModule,
         DirectivesModule,
         HeadBarModule,
         OpenSlidesTranslationModule.forChild()

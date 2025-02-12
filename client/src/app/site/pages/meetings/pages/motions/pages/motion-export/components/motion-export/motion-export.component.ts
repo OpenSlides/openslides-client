@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
-import { auditTime, Observable } from 'rxjs';
-import {
-    ChangeRecoMode,
-    LineNumberingMode,
-    MOTION_PDF_OPTIONS,
-    PERSONAL_NOTE_ID
-} from 'src/app/domain/models/motions/motions.constants';
+import { MatChipOption } from '@angular/material/chips';
+import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
-import { MotionExportInfo } from '../../../../services/export/motion-export.service';
+import { MotionExportService } from '../../../../services/export/motion-export.service';
+import { MotionExportDialogService } from '../../services/motion-export-dialog.service';
 
 @Component({
     selector: `os-motion-export`,
@@ -23,7 +25,9 @@ import { MotionExportInfo } from '../../../../services/export/motion-export.serv
     styleUrls: [`./motion-export.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeeting> implements OnInit {
+export class MotionExportComponent extends BaseComponent {
+    private readonly route = inject(ActivatedRoute);
+
     /**
      * import PERSONAL_NOTE_ID for use in template
      */
@@ -48,28 +52,61 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
      * The form that contains the export information.
      */
     public exportForm!: UntypedFormGroup;
+    /**
+     * The form that contains the export information in the shape needed
+     * for the view.
+     */
+    public dialogForm!: UntypedFormGroup;
 
     public workingGroupSpeakerActive: boolean;
 
     /**
-     * Store the subject to the ViewMotionCommentSection
+     * The default pdf export values in contrast to the restored values
      */
-    private commentsSubject: Observable<ViewMotionCommentSection[]>;
+    private pdfDefaults = {
+        format: ExportFileFormat.PDF,
+        lnMode: [this.lnMode.Outside],
+        crMode: [this.crMode.Diff],
+        content: [`title`, `number`, `text`, `reason`, `id`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
+        personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
+        pageLayout: [`toc`, `addBreaks`],
+        headerFooter: [`header`, `page`],
+        comments: []
+    };
 
     /**
-     * The default export values in contrast to the restored values
+     * The default csv export values in contrast to the restored values
      */
-    private defaults: MotionExportInfo = {
-        format: ExportFileFormat.PDF,
-        content: [`text`, `reason`],
-        pdfOptions: [
-            MOTION_PDF_OPTIONS.Toc,
-            MOTION_PDF_OPTIONS.Header,
-            MOTION_PDF_OPTIONS.Page,
-            MOTION_PDF_OPTIONS.AddBreaks
-        ],
-        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`]
+    private csvDefaults = {
+        format: ExportFileFormat.CSV,
+        lnMode: [],
+        crMode: [this.crMode.Original],
+        content: [`title`, `number`, `text`, `reason`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`, `speakers`],
+        personrelated: [`submitters`, `supporters`, `editors`],
+        pageLayout: [],
+        headerFooter: [],
+        comments: []
     };
+
+    /**
+     * The default xlsx export values in contrast to the restored values
+     */
+    private xlsxDefaults = {
+        format: ExportFileFormat.XLSX,
+        lnMode: [],
+        crMode: [],
+        content: [`title`, `number`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`, `speakers`],
+        personrelated: [`submitters`, `supporters`, `editors`],
+        pageLayout: [],
+        headerFooter: [],
+        comments: []
+    };
+
+    // Store fileformats with corresponding tab group index
+    private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV, ExportFileFormat.XLSX];
 
     /**
      * Determine the export order of the meta data
@@ -84,48 +121,46 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
     }
 
     /**
-     * To deactivate the export-as-diff button
+     * Store the subject to the ViewMotionCommentSection
      */
-    @ViewChild(`diffVersionButton`, { static: true })
-    public diffVersionButton!: MatButtonToggle;
+    private commentsSubject: Observable<ViewMotionCommentSection[]>;
 
-    /**
-     * To deactivate the voting result button
-     */
-    @ViewChild(`votingResultButton`, { static: true })
-    public votingResultButton!: MatButtonToggle;
+    @ViewChild(`tabGroup`)
+    public tabGroup!: MatTabGroup;
 
-    /**
-     * To deactivate the referring motions button
-     */
-    @ViewChild(`referringMotionsButton`, { static: true })
-    public referringMotionsButton!: MatButtonToggle;
+    @ViewChild(`editorsChipOption`)
+    public editorsChipOption!: MatChipOption;
 
-    /**
-     * To deactivate the speakers button.
-     */
-    @ViewChild(`speakersButton`)
-    public speakersButton!: MatButtonToggle;
+    @ViewChild(`recommendationChipOption`)
+    public recommendationChipOption!: MatChipOption;
 
-    /**
-     * To deactivate the working group button.
-     */
-    @ViewChild(`workingGroupSpeakerButton`)
-    public workingGroupSpeakerButton!: MatButtonToggle;
+    @ViewChild(`categoryChipOption`)
+    public categoryChipOption!: MatChipOption;
 
-    /**
-     * To deactivate the toc button.
-     */
-    @ViewChild(MOTION_PDF_OPTIONS.Toc)
-    public tocButton!: MatButtonToggle;
+    @ViewChild(`tagChipOption`)
+    public tagChipOption!: MatChipOption;
 
-    @ViewChild(MOTION_PDF_OPTIONS.AddBreaks)
-    public addBreaksButton!: MatButtonToggle;
+    @ViewChild(`blockChipOption`)
+    public blockChipOption!: MatChipOption;
 
-    @ViewChild(MOTION_PDF_OPTIONS.ContinuousText)
-    public continuousTextButton!: MatButtonToggle;
+    @ViewChild(`continuousText`)
+    public continuousTextChipOption!: MatChipOption;
 
     public isCSVExport = false;
+    public isXLSXExport = false;
+
+    public motionsNr: number = 0;
+
+    public motions: number[];
+
+    public disabledControls: string[] = [];
+
+    public override componentServiceCollector = inject(MeetingComponentServiceCollectorService);
+    protected override translate = inject(TranslateService);
+
+    protected get meetingSettingsService(): MeetingSettingsService {
+        return this.componentServiceCollector.meetingSettingsService;
+    }
 
     /**
      * Constructor
@@ -136,120 +171,112 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
     public constructor(
         public formBuilder: UntypedFormBuilder,
         public commentRepo: MotionCommentSectionControllerService,
+        public motionExportDialogService: MotionExportDialogService,
+        private motionRepo: MotionRepositoryService,
+        private exportService: MotionExportService,
         private store: StorageService
     ) {
         super();
-        this.defaults.lnMode = this.meetingSettingsService.instant(`motions_default_line_numbering`)!;
-        this.defaults.crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
+        this.subscriptions.push(
+            this.route.queryParams.subscribe(params => {
+                this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
+            })
+        );
+        this.motionsNr = this.motions.length;
         this.workingGroupSpeakerActive = this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)!;
         this.commentsSubject = this.commentRepo.getViewModelListObservable();
-        if (this.meetingSettingsService.instant(`motions_show_sequential_number`)) {
-            this.defaults.metaInfo!.push(`id`);
-        }
         // Get the export order, exclude everything that does not count as meta-data
         this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(
             metaData => !noMetaData.some(noMeta => metaData === noMeta)
         );
-        this.createForm();
-    }
-
-    /**
-     * Init.
-     * Observes the form for changes to react dynamically
-     */
-    public ngOnInit(): void {
-        super.setTitle(`Motion Export`);
-        this.subscriptions.push(
-            this.exportForm.valueChanges.pipe(auditTime(500)).subscribe((value: MotionExportInfo) => {
-                this.store.set(`motion_export_selection`, value);
-            }),
-
-            this.exportForm
-                .get(`format`)!
-                .valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value))
-        );
-    }
-
-    /**
-     * React to changes on the file format
-     * @param format
-     */
-    private onFormatChange(format: ExportFileFormat): void {
-        this.isCSVExport = format === ExportFileFormat.CSV;
-
-        // XLSX cannot have "content"
-        if (format === ExportFileFormat.XLSX) {
-            this.disableControl(`content`);
-            this.changeStateOfButton(this.speakersButton, false);
-            if (this.workingGroupSpeakerButton) {
-                this.changeStateOfButton(this.workingGroupSpeakerButton, false);
+        this.createForm().then(_ => {
+            // check available keywords and settings
+            this.hasAvailableVariables();
+            // disable pageLayout if only one motion is selected
+            if (this.motionsNr === 1) {
+                this.disableControl(`pageLayout`);
             }
+        });
+    }
+
+    // React to changes on the file format
+    public tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+        this.isCSVExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.CSV;
+        this.isXLSXExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.XLSX;
+
+        if (this.isCSVExport) {
+            this.dialogForm.patchValue(this.csvDefaults);
+        } else if (this.isXLSXExport) {
+            this.dialogForm.patchValue(this.xlsxDefaults);
         } else {
-            this.enableControl(`content`);
-            this.changeStateOfButton(this.speakersButton, true);
-            if (this.workingGroupSpeakerButton) {
-                this.changeStateOfButton(this.workingGroupSpeakerButton, true);
-            }
+            this.dialogForm.patchValue(this.pdfDefaults);
         }
+        this.hasAvailableVariables();
+    };
 
-        if (format === ExportFileFormat.CSV || format === ExportFileFormat.XLSX) {
-            this.disableControl(`lnMode`);
-            this.disableControl(`pdfOptions`);
-
-            // remove the selection of "votingResult"
-            if (format === ExportFileFormat.CSV) {
-                this.disableMetaInfoControl(`polls`, `speakers`);
-            } else {
-                this.disableMetaInfoControl(`polls`);
-                this.disableControl(`crMode`);
-            }
-            this.votingResultButton.disabled = true;
-            this.referringMotionsButton.disabled = true;
-        }
-
-        if (format === ExportFileFormat.PDF) {
-            this.enableControl(`lnMode`);
-            this.enableControl(`crMode`);
-            this.enableControl(`pdfOptions`);
-            this.votingResultButton.disabled = false;
-            this.referringMotionsButton.disabled = false;
-        }
-
-        if (format === ExportFileFormat.CSV) {
-            if (this.exportForm.get(`crMode`)!.getRawValue() === (this.crMode.Changed || this.crMode.Diff)) {
-                this.exportForm.get(`crMode`)!.setValue(this.getOffState(`crMode`));
-            }
-            this.enableControl(`crMode`);
-        }
+    /**
+     * Creates the form with default values
+     */
+    public async createForm(): Promise<void> {
+        this.dialogForm = this.formBuilder.group({
+            format: [],
+            lnMode: [],
+            crMode: [],
+            content: [],
+            metaInfo: [],
+            personrelated: [],
+            pageLayout: [],
+            headerFooter: [],
+            comments: []
+        });
+        this.dialogForm.patchValue(this.pdfDefaults);
     }
 
-    public onChange(event: MatButtonToggleChange): void {
-        if (event.value.includes(MOTION_PDF_OPTIONS.ContinuousText)) {
-            this.tocButton.checked = false;
-            this.addBreaksButton.checked = false;
+    // Function to determine whioch options are available, set as defaults and disabled
+    // (based on property binding with the formgroup)
+    public hasAvailableVariables(): void {
+        //this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `id`);
+        this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
+        this.filterFormControlDefaults(`metaInfo`, `motions_show_referring_motions`, `referring_motions`);
+
+        if (!this.meetingSettingsService.instant(`motions_enable_editor`)) {
+            this.filterFormControlDefaults(`personrelated`, `motions_enable_editor`, `editors`);
+            this.changeStateOfChipOption(this.editorsChipOption, true, `editors`);
         }
+        if (!this.meetingSettingsService.instant(`motions_export_submitter_recommendation`)) {
+            this.filterFormControlDefaults(`metaInfo`, `motions_export_submitter_recommendation`, `recommendation`);
+            this.changeStateOfChipOption(this.recommendationChipOption, true, `recommendation`);
+        }
+        const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
+        this.filterFormControlAvailableValues(motions_models, `personrelated`, `editors`, this.editorsChipOption);
+        this.filterFormControlAvailableValues(motions_models, `metaInfo`, `category`, this.categoryChipOption);
+        this.filterFormControlAvailableValues(motions_models, `metaInfo`, `tags`, this.tagChipOption);
+        this.filterFormControlAvailableValues(
+            motions_models,
+            `metaInfo`,
+            `recommendation`,
+            this.recommendationChipOption
+        );
+        if (motions_models.filter(m => (m ? m[`blocks`] : false)).length === 0) {
+            this.deselectOption(`metaInfo`, `block`);
+            this.changeStateOfChipOption(this.blockChipOption, true, `block`);
+        }
+        return;
     }
 
     /**
-     * Function to change the state of the property `disabled` of a given button.
+     * Function to change the state of the property `disabled` of a given ChipOption.
      *
-     * Ensures, that the button exists.
+     * Ensures, that the ChipOption exists.
      *
-     * @param button The button whose state will change.
-     * @param nextState The next state the button will assume.
+     * @param chipOption The ChipOption whose state will change.
+     * @param nextState The next state the ChipOption will assume.
      */
-    private changeStateOfButton(button: MatButtonToggle, nextState: boolean): void {
-        if (button) {
-            button.disabled = nextState;
+    private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
+        this.disabledControls.push(value);
+        if (chipOption) {
+            chipOption.disabled = nextState;
         }
-    }
-
-    /**
-     * Helper function to easier enable a control
-     * @param name
-     */
-    private enableControl(name: string): void {
-        this.exportForm.get(name)!.enable();
     }
 
     /**
@@ -258,8 +285,8 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
      * @param name
      */
     private disableControl(name: string): void {
-        this.exportForm.get(name)!.disable();
-        this.exportForm.get(name)!.setValue(this.getOffState(name));
+        this.dialogForm.get(name)!.disable();
+        this.dialogForm.get(name)!.setValue(this.getOffState(name));
     }
 
     /**
@@ -278,23 +305,46 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
         }
     }
 
-    /**
-     * Function to deactivate at least one field of the meta-info.
-     *
-     * @param fields All fields to deactivate.
-     */
-    private disableMetaInfoControl(...fields: string[]): void {
-        let metaInfoVal: string[] = this.exportForm.get(`metaInfo`)!.value;
-        if (metaInfoVal) {
-            metaInfoVal = metaInfoVal.filter(info => !fields.includes(info));
-            this.exportForm.get(`metaInfo`)!.setValue(metaInfoVal);
+    // Helper function to exclude option from formcontrol and deselect it
+    private deselectOption(formGroup: string, value: string): void {
+        this.dialogForm
+            .get(formGroup)
+            .setValue(this.dialogForm.get(formGroup).value.filter(obj => !obj.includes(value)));
+    }
+
+    // Helper function to determine if mat-chip-option should be selected
+    // Needed, because using the binding with formControl does not disable mat-chip-option
+    public isDisabled(value: string): boolean {
+        return this.disabledControls.includes(value);
+    }
+
+    // Helper function to filter form control values as set as default based on the meeting settings
+    public filterFormControlDefaults(formControl: string, setting: keyof Settings, value?: string): void {
+        value = value ? value : setting.toString();
+        this.dialogForm
+            .get(formControl)
+            .setValue(
+                !this.meetingSettingsService.instant(setting)
+                    ? this.dialogForm.get(formControl).value.filter(obj => !obj.includes(value))
+                    : this.dialogForm.get(formControl).value
+            );
+    }
+
+    // Helper function to filter and disable form control values based on availability of the properties
+    // in the chosen motions
+    public filterFormControlAvailableValues(
+        motions_models: ViewMotion[],
+        formControl: string,
+        value: string,
+        chipOption: MatChipOption
+    ): void {
+        if (motions_models.filter(m => (m ? m[value] : false)).length === 0) {
+            this.deselectOption(formControl, value);
+            this.changeStateOfChipOption(chipOption, true, value);
         }
     }
 
-    /**
-     * Creates the form with default values
-     */
-    public createForm(): void {
+    public async exportMotions(): Promise<void> {
         this.exportForm = this.formBuilder.group({
             format: [],
             lnMode: [],
@@ -304,43 +354,12 @@ export class MotionExportComponent extends BaseMeetingListViewComponent<ViewMeet
             pdfOptions: [],
             comments: []
         });
-
-        // restore selection or set default
-        this.store.get<MotionExportInfo>(`motion_export_selection`).then(restored => {
-            if (restored) {
-                if (!this.workingGroupSpeakerActive && restored.metaInfo?.includes(`working_group_speakers`)) {
-                    restored.metaInfo.splice(restored.metaInfo.indexOf(`working_group_speakers`));
-                }
-
-                this.exportForm.patchValue(restored);
-            } else {
-                this.exportForm.patchValue(this.defaults);
-            }
-        });
-    }
-
-    /**
-     * Gets the untranslated label for metaData
-     */
-    public getLabelForMetadata(metaDataName: string): string {
-        switch (metaDataName) {
-            case `polls`: {
-                return `Voting result`;
-            }
-            case `id`: {
-                return `Sequential number`;
-            }
-            case `block`: {
-                return `Motion block`;
-            }
-            default: {
-                return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1).replace(`_`, ` `);
-            }
-        }
-    }
-
-    public exportMotions(): void {
-        console.log(`---- export ----`);
-        return;
+        const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
+        this.exportForm.patchValue(this.motionExportDialogService.dialogToExportForm(this.dialogForm));
+        await this.motionExportDialogService.export(this.exportForm.value, motions_models);
+        // The timeout is needed for the repos to update their view model list subjects
+        setTimeout(() => {
+            this.exportService.evaluateExportRequest(this.exportForm.value, motions_models);
+        }, 2000);
     }
 }

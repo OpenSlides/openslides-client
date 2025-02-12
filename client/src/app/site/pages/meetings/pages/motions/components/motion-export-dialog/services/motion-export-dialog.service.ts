@@ -7,13 +7,13 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { getMotionDetailSubscriptionConfig } from '../../../motions.subscription';
+import { MotionExportModule } from '../../../pages/motion-export/motion-export.module';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service';
 import { MotionExportInfo } from '../../../services/export/motion-export.service';
 import { MotionExportService } from '../../../services/export/motion-export.service';
 import { ViewMotion } from '../../../view-models';
 import { MotionExportDialogComponent } from '../components/motion-export-dialog/motion-export-dialog.component';
-import { MotionExportModule } from '../../../pages/motion-export/motion-export.module';
 
 @Injectable({
     providedIn: MotionExportModule

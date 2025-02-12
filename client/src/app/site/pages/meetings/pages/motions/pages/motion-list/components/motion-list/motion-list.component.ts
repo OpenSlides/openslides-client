@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
@@ -19,6 +19,7 @@ import { MotionPermissionService } from '../../../../services/common/motion-perm
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { ViewMotion } from '../../../../view-models';
+import { MotionExportDialogService } from '../../../motion-export/services/motion-export-dialog.service';
 import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
 
 /**
@@ -133,6 +134,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public motionRepo: MotionControllerService,
         public amendmentController: AmendmentControllerService,
         public motionService: MotionForwardDialogService,
+        public motionExportDialogService: MotionExportDialogService,
         public multiselectService: MotionMultiselectService,
         public perms: MotionPermissionService,
         public vp: ViewPortService,
@@ -370,10 +372,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     public exportAllMotions(): void {
         const motions = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
-        console.log(`motions`, motions);
-        //this.motionExportDialogService.motions = motions;
+        const motions_ids = motions.map(motion => motion.id);
         this.router.navigate([`motion-export`], {
-            relativeTo: this.route
+            relativeTo: this.route,
+            queryParams: { motions: motions_ids }
         });
     }
 }
