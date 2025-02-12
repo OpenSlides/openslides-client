@@ -79,12 +79,13 @@
                     } @else if (poll.isEVoting && poll.isStarted) {
                         <mat-tab-group>
                             <mat-tab label="{{ 'Single votes' | translate }}">
-                                <div class="no-content">{{ 'No data available' | translate }}</div>
+                                <div class="no-content no-data-margins">{{ 'No data available' | translate }}</div>
                             </mat-tab>
                             <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="liveRegisterObservable"
+                                    [isViewingThis]="true"
                                 ></os-entitled-users-table>
                             </mat-tab>
                         </mat-tab-group>
