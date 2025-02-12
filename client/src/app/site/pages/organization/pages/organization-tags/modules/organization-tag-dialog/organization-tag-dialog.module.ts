@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChipModule } from 'src/app/ui/modules/chip';
+import { ChipComponent } from 'src/app/ui/modules/chip';
 
 import { OrganizationTagDialogComponent } from './components/organization-tag-dialog.component';
 
@@ -22,7 +22,7 @@ import { OrganizationTagDialogComponent } from './components/organization-tag-di
         ReactiveFormsModule,
         MatTooltipModule,
         MatIconModule,
-        ChipModule,
+        ChipComponent,
         MatDialogModule,
         MatButtonModule,
         MatInputModule,

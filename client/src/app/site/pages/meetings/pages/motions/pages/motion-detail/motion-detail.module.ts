@@ -22,8 +22,8 @@ import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.m
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ActionCardModule } from 'src/app/ui/modules/action-card';
-import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ActionCardComponent } from 'src/app/ui/modules/action-card';
+import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { DatepickerModule } from 'src/app/ui/modules/datepicker';
 import { EditorModule } from 'src/app/ui/modules/editor';
@@ -101,14 +101,14 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionsExportModule,
         AgendaItemCommonServiceModule,
         ParticipantCommonServiceModule,
-        ChoiceDialogModule,
+        ChoiceDialogComponent,
         DirectivesModule,
         PipesModule,
         IconContainerModule,
         SortingModule,
         SearchSelectorModule,
         EditorModule,
-        ActionCardModule,
+        ActionCardComponent,
         HeadBarModule,
         AttachmentControlModule,
         MeetingsComponentCollectorModule,

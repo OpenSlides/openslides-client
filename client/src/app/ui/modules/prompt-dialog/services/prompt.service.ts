@@ -22,10 +22,16 @@ export class PromptService {
      * @param title The title to display in the dialog
      * @param content The content in the dialog
      */
-    public async open(title: string, content = ``, confirm?: string, decline?: string): Promise<any> {
+    public async open(
+        title: string,
+        content = ``,
+        confirm?: string,
+        decline?: string,
+        deletion?: boolean
+    ): Promise<any> {
         this.dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
-            data: { title, content, confirm, decline }
+            data: { title, content, confirm, decline, deletion }
         });
         return firstValueFrom(this.dialogRef.afterClosed());
     }

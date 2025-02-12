@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ChipModule } from 'src/app/ui/modules/chip';
+import { ChipComponent } from 'src/app/ui/modules/chip';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar/head-bar.module';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
@@ -26,7 +26,7 @@ import { GenderListRoutingModule } from './gender-list-routing.module';
         PromptDialogModule,
         HeadBarModule,
         ListModule,
-        ChipModule,
+        ChipComponent,
         OpenSlidesTranslationModule.forChild(),
         MatIconModule,
         MatMenuModule,

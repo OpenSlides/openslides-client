@@ -86,6 +86,10 @@ export class MediaManageService {
         }
     }
 
+    public getLineNumberingFont(): string {
+        return FontDefaults[`regular`];
+    }
+
     public getPlacesDisplayNames(mediafile: ViewMeetingMediafile): string[] {
         let uses: string[] = [];
         uses = uses.concat(mediafile.getLogoPlaces().map(place => (<any>LogoDisplayNames)[place]));

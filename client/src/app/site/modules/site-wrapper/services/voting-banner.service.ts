@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -44,12 +45,7 @@ export class VotingBannerService {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
             this.activePolls.activePollsObservable.pipe(
-                distinctUntilChanged((previous, current) => {
-                    const prevStarted = previous.map(p => p.id);
-                    const currStarted = current.map(p => p.id);
-
-                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
-                })
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false))
             ),
             this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
             this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged()),

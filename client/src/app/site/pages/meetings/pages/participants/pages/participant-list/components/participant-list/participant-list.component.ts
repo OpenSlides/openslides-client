@@ -277,6 +277,23 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return !user?.saml_id && this.userService.isAllowed(`changePassword`, false) && sufficientOML;
     }
 
+    public canEditOwnDelegation(user: ViewUser): boolean {
+        if (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return this.operator.operatorId === user.id;
+        } else if (
+            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public isUserPresent(user: ViewUser): boolean {
         return user.isPresentInMeeting();
     }
@@ -322,7 +339,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
     public async openEditInfo(user: ViewUser, ev?: MouseEvent): Promise<void> {
-        if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) {
+        if (
+            (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanUpdate)) &&
+            !this.canEditOwnDelegation(user)
+        ) {
             return;
         }
         ev?.stopPropagation();
@@ -351,7 +371,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     ) ||
                     (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
                 ) {
-                    this.repo.update(result, user).resolve();
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.repo.updateSelfDelegation(result, user);
+                    } else {
+                        this.repo.update(result, user).resolve();
+                    }
                 }
             }
         });
@@ -586,7 +615,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public canSeeItemMenu(): boolean {
-        return this.operator.hasPerms(Permission.userCanUpdate);
+        return (
+            this.operator.hasPerms(Permission.userCanUpdate) ||
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+        );
     }
 
     /**
