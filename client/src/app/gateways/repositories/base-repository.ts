@@ -3,6 +3,7 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription }
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list';
@@ -185,7 +186,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
 
-        this.languageCollator = new Intl.Collator(this.translate.currentLang);
+        this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
     }
 
     public onAfterAppsLoaded(): void {
@@ -200,7 +201,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
         this.translate.onLangChange.subscribe(change => {
-            this.languageCollator = new Intl.Collator(change.lang);
+            this.languageCollator = getIntlCollatorForLang(change.lang);
             if (this.unsafeViewModelListSubject.value) {
                 this.updateViewModelListSubject(this.unsafeViewModelListSubject.value);
             }
@@ -345,9 +346,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 this.tapViewModels(Object.values(this.viewModelStore));
                 if (changedModels) {
                     await this.initChangeBasedResorting(newModels, updatedModels, newViewModels, updatedViewModels);
-                    for (const viewModel of updatedViewModels) {
-                        viewModel.viewModelUpdateTimestamp = Date.now();
-                    }
                 }
             },
             type: PipelineActionType.General,

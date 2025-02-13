@@ -19,8 +19,8 @@ describe(`ChipComponent`, () => {
 
     beforeEach(() => {
         testBed = TestBed.configureTestingModule({
-            declarations: [ChipComponent, TestComponent],
-            imports: [MatChipsModule]
+            declarations: [TestComponent],
+            imports: [MatChipsModule, ChipComponent]
         });
         fixture = testBed.createComponent(ChipComponent);
         component = fixture.componentInstance;

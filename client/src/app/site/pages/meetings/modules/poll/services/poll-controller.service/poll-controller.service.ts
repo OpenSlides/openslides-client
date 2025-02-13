@@ -6,6 +6,7 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { viewModelListEqual } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
@@ -22,12 +23,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
 
         this.getViewModelListObservableOfStarted()
             .pipe(
-                distinctUntilChanged((previous, current) => {
-                    const prevStarted = previous.map(p => p.id);
-                    const currStarted = current.map(p => p.id);
-
-                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
-                }),
+                distinctUntilChanged((l1, l2) => viewModelListEqual(l1, l2, false)),
                 map(value => value.map(p => p.id))
             )
             .subscribe(startedPolls => {

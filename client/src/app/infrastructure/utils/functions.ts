@@ -1,4 +1,6 @@
 import { Identifiable } from 'src/app/domain/interfaces';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { Decimal, Id } from '../../domain/definitions/key-types';
 
@@ -520,4 +522,36 @@ export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: 
         }
     }
     return -1;
+}
+
+export function viewModelListEqual<M extends BaseModel>(
+    l1: BaseViewModel<M>[],
+    l2: BaseViewModel<M>[],
+    checkContent = true
+): boolean {
+    if (l1?.length !== l2?.length) {
+        return false;
+    }
+
+    for (let i = 0; i < l1.length; i++) {
+        if (checkContent && !viewModelEqual(l1[i], l2[i])) {
+            return false;
+        } else if (!checkContent && l1[i].id !== l2[i].id) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+export function viewModelEqual<M extends BaseModel>(vm1: BaseViewModel<M>, vm2: BaseViewModel<M>): boolean {
+    if (!vm1 || !vm2) {
+        return false;
+    }
+
+    return vm1.viewModelUpdateTimestamp === vm2.viewModelUpdateTimestamp && vm1.id === vm2.id;
+}
+
+export function getIntlCollatorForLang(lang: string, options?: Intl.CollatorOptions): Intl.Collator {
+    return new Intl.Collator(lang === `1337` ? `en` : lang, options);
 }

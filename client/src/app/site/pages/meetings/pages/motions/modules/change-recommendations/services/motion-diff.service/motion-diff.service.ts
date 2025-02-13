@@ -1347,7 +1347,9 @@ export class MotionDiffService {
                 htmlOldEl.content.querySelector(`.os-line-number`)
             ) {
                 const ln = htmlNewEl.content.querySelector(`.os-line-number`);
-                htmlNewEl.content.children[0].childNodes[0].before(ln);
+                htmlNewEl.content.children[0].childNodes.length > 0
+                    ? htmlNewEl.content.children[0].childNodes[0].before(ln)
+                    : htmlNewEl.content.children[0].before(ln);
                 htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;
@@ -1467,6 +1469,16 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
             (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
+        );
+
+        // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
+        // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
+        // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)<ins>([\s\S]*?)\1<\/ins>/gi,
+            (_found: string, paragraph: string, span: string, insText: string): string => {
+                return `<ins>` + insText + `<\/ins>` + paragraph + span;
+            }
         );
 
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>

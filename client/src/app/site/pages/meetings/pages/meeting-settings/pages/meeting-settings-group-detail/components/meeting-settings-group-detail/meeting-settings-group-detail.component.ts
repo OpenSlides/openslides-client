@@ -213,7 +213,7 @@ export class MeetingSettingsGroupDetailComponent
     }
 
     public hasErrors(): boolean {
-        return this.settingsFields?.some(field => !field.disabled && !field.valid);
+        return this.settingsFields?.some(field => !field.disabled && !field.hasWarning() && !field.valid);
     }
 
     /**

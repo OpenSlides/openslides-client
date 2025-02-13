@@ -243,6 +243,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         } else {
             this.contentForm.removeControl(`votes_amount`);
         }
+        if (method === `N`) {
+            this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
+        }
     }
 
     /**
@@ -474,7 +477,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             {
                 validators: [
                     isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
+                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
                 ]
             }
         );
@@ -537,5 +541,18 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      */
     public keepEntryOrder(): number {
         return 0;
+    }
+
+    public getErrorMessage(message: string): string {
+        switch (message) {
+            case `notEnoughOptionsError`:
+                return this.translate.instant(`There are not enough options.`);
+            case `rangeError`:
+                return this.translate.instant(`Min votes cannot be greater than max votes.`);
+            case `rangeErrorMaxPerOption`:
+                return this.translate.instant(`Max votes per option cannot be greater than max votes.`);
+            default:
+                return ``;
+        }
     }
 }

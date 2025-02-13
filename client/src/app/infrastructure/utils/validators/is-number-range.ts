@@ -1,11 +1,11 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-export function isNumberRange(minCtrlName: string, maxCtrlName: string): ValidatorFn {
+export function isNumberRange(minCtrlName: string, maxCtrlName: string, errorName: string = `rangeError`): ValidatorFn {
     return (formControl: AbstractControl): { [key: string]: any } | null => {
         const min = formControl.get(minCtrlName)!.value;
         const max = formControl.get(maxCtrlName)!.value;
         if (+min > +max || Number.isNaN(+min) || Number.isNaN(+max)) {
-            return { rangeError: true };
+            return { [errorName]: true };
         }
         return null;
     };

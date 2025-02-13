@@ -65,7 +65,7 @@
 
         <!-- select language -->
         <button #languageTrigger mat-menu-item [matMenuTriggerFor]="languageMenu">
-            <mat-icon class="menu-icon">language</mat-icon>
+            <mat-icon class="menu-icon" (click)="onLangIconClick()">language</mat-icon>
             <span class="menu-text">{{ getCurrentLanguageName() }}</span>
         </button>
 
@@ -108,6 +108,12 @@
             <button mat-menu-item (click)="selectLanguage(lang.key)">
                 <mat-icon>{{ getCurrentLanguageName() === lang.value ? 'check' : '' }}</mat-icon>
                 <span>{{ lang.value }}</span>
+            </button>
+        }
+        @if (show1337 >= 0 || getCurrentLanguageName() === '1337') {
+            <button mat-menu-item (click)="selectLanguage('1337')">
+                <mat-icon>{{ getCurrentLanguageName() === '1337' ? 'check' : '' }}</mat-icon>
+                <span>1337</span>
             </button>
         }
     </ng-template>
