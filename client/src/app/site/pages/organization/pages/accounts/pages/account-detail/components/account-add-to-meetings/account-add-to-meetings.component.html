@@ -21,9 +21,10 @@
             <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
             <div class="assign-meetings-subtext">
                 <p translate>
-                    Please select your target meetings and state the name of the group, which the user should be
-                    assigned to in each meeting.
+                    Please select your target meetings and enter the name of an existing group which should be assigned
+                    to the account in each meeting.
                 </p>
+                <p translate>Important: New groups are not created.</p>
                 <br />
                 <p>
                     <i>
@@ -81,7 +82,7 @@
                 <table class="result-table">
                     <tr>
                         <th><mat-icon class="result-success-icon">add_circle</mat-icon></th>
-                        <th>{{ 'Account successfully assigned' | translate }}</th>
+                        <th>{{ 'Account successfully added.' | translate }}</th>
                     </tr>
                     <tr>
                         <td></td>
@@ -94,7 +95,7 @@
                     </tr>
                     <tr>
                         <th><mat-icon color="warn">warning</mat-icon></th>
-                        <th>{{ 'Group not found - assigned to default group' | translate }}</th>
+                        <th>{{ 'Group not found. Account added to the group “Default”.' | translate }}</th>
                     </tr>
                     <tr>
                         <td></td>
@@ -110,7 +111,7 @@
                             <mat-icon color="accent">info</mat-icon>
                         </th>
                         <th>
-                            {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
+                            {{ 'Group not found. Account already belongs to another group.' | translate }}
                         </th>
                     </tr>
                     <tr>
