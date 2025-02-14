@@ -156,11 +156,19 @@
         }
         <!-- No results yet -->
         @if (!hasResults) {
-            <div>
-                <i>
-                    {{ 'No results yet.' | translate }}
-                </i>
-            </div>
+            @if (isStarted) {
+                <div>
+                    <i>
+                        {{ 'Voting in progress.' | translate }}
+                    </i>
+                </div>
+            } @else {
+                <div>
+                    <i>
+                        {{ 'No results yet.' | translate }}
+                    </i>
+                </div>
+            }
         }
         <!-- Has results, but user cannot see -->
         @if (hasResults && !canSeeResults) {

@@ -18,6 +18,12 @@
                     </i>
                 </div>
             }
+        } @else if (isStarted) {
+            <div>
+                <i>
+                    {{ 'Voting in progress.' | translate }}
+                </i>
+            </div>
         } @else {
             <div>
                 <i>
