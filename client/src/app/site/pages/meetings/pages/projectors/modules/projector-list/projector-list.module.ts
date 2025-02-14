@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ActionCardModule } from 'src/app/ui/modules/action-card/action-card.module';
+import { ActionCardComponent } from 'src/app/ui/modules/action-card';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
@@ -38,13 +38,13 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         HeadBarModule,
         PromptDialogModule,
         ProjectorModule,
-        ActionCardModule,
+        ActionCardComponent,
         DirectivesModule,
         ProjectorEditDialogModule,
         AssignmentPollServiceModule,
         MotionPollServiceModule,
         TopicPollServiceModule,
-        IconContainerModule,
+        IconContainerComponent,
         OpenSlidesTranslationModule.forChild()
     ]
 })

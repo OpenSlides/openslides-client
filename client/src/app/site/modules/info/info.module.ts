@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { EditorModule } from 'src/app/ui/modules/editor';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { InfoActionsComponent } from './components/info-actions/info-actions.component';
@@ -29,7 +29,7 @@ const DECLARATIONS = [LegalNoticeContentComponent, PrivacyPolicyContentComponent
         EditorModule,
         ReactiveFormsModule,
         MatDividerModule,
-        IconContainerModule,
+        IconContainerComponent,
         DirectivesModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild(),

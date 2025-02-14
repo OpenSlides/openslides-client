@@ -271,7 +271,7 @@
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="user.id">
             <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit user' | translate }}</span>
+            <span>{{ 'Edit participant' | translate }}</span>
         </button>
 
         <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="switchParticipants(user)">
