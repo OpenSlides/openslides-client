@@ -72,7 +72,7 @@
                         <mat-icon>attach_file</mat-icon>
                     </h3>
                     <mat-list dense>
-                        @for (file of sortedAttachmentsObservable | async; track file.id) {
+                        @for (file of sortedAttachments$ | async; track file.id) {
                             <mat-list-item>
                                 <a target="_blank" [routerLink]="file.url">{{ file.title }}</a>
                             </mat-list-item>

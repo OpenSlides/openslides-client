@@ -90,7 +90,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.motion.hasAttachments();
     }
 
-    public get sortedAttachmentsObservable(): Observable<ViewMeetingMediafile[]> {
+    public get sortedAttachments$(): Observable<ViewMeetingMediafile[]> {
         return this.motion.attachment_meeting_mediafiles$.pipe(
             map(files => files.sort((a, b) => a.getTitle().localeCompare(b.getTitle())))
         );
