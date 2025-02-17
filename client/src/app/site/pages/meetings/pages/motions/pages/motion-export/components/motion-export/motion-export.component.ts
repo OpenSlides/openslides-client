@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatChipOption } from '@angular/material/chips';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
@@ -25,7 +25,7 @@ import { MotionExportDialogService } from '../../services/motion-export-dialog.s
     styleUrls: [`./motion-export.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class MotionExportComponent extends BaseComponent {
+export class MotionExportComponent extends BaseComponent implements AfterViewInit {
     private readonly route = inject(ActivatedRoute);
 
     /**
@@ -146,6 +146,9 @@ export class MotionExportComponent extends BaseComponent {
     @ViewChild(`continuousText`)
     public continuousTextChipOption!: MatChipOption;
 
+    @ViewChild(`spokespersonChip`)
+    public spokespersonChip!: MatChipOption;
+
     public isCSVExport = false;
     public isXLSXExport = false;
 
@@ -185,6 +188,7 @@ export class MotionExportComponent extends BaseComponent {
                 this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
             })
         );
+        // wait either for all viewmodels of motions to be loaded or for the view
         this.repoSub = this.motionRepo.getViewModelListObservable().subscribe(_ => {
             this.motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
             this.createForm().then(_ => {
@@ -205,6 +209,12 @@ export class MotionExportComponent extends BaseComponent {
         this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(
             metaData => !noMetaData.some(noMeta => metaData === noMeta)
         );
+    }
+
+    public ngAfterViewInit(): void {
+        if (!this.motions_models.includes(null)) {
+            this.hasAvailableVariables();
+        }
     }
 
     // React to changes on the file format
@@ -256,7 +266,16 @@ export class MotionExportComponent extends BaseComponent {
             this.filterFormControlDefaults(`metaInfo`, `motions_export_submitter_recommendation`, `recommendation`);
             this.changeStateOfChipOption(this.recommendationChipOption, true, `recommendation`);
         }
+        if (!this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)) {
+            this.filterFormControlDefaults(
+                `personrelated`,
+                `motions_enable_working_group_speaker`,
+                `working_group_speakers`
+            );
+            this.changeStateOfChipOption(this.spokespersonChip, true, `working_group_speakers`);
+        }
         this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
+        this.filterFormControlAvailableValues(`personrelated`, `working_group_speakers`, this.spokespersonChip);
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `tags`, this.tagChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
