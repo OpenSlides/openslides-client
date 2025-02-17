@@ -203,35 +203,39 @@
     @if (originMotionsLoaded.length) {
         <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
             <mat-tab [label]="motion?.meeting?.name">
-                <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
+                <div class="motion-tab-content">
+                    <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
+                </div>
             </mat-tab>
             @for (originMotion of originMotionsLoaded; track originMotion.id) {
                 <mat-tab [label]="originMotion?.meeting?.name">
-                    <mat-card class="os-card original-motion-card">
-                        <mat-card-content>
-                            <os-origin-motion-meta-data [motion]="originMotion">
-                                <os-motion-highlight-form
-                                    #highlightForm
-                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
-                                    [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
-                                    [motion]="originMotion"
-                                    [noEdit]="true"
-                                    (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
-                                    (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
-                                ></os-motion-highlight-form>
-                            </os-origin-motion-meta-data>
+                    <div class="motion-tab-content">
+                        <mat-card class="os-card original-motion-card">
+                            <mat-card-content>
+                                <os-origin-motion-meta-data [motion]="originMotion">
+                                    <os-motion-highlight-form
+                                        #highlightForm
+                                        [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                        [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
+                                        [motion]="originMotion"
+                                        [noEdit]="true"
+                                        (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
+                                        (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
+                                    ></os-motion-highlight-form>
+                                </os-origin-motion-meta-data>
 
-                            <os-motion-content
-                                #content
-                                [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
-                                [lineNumberingMode]="originMotionsLineNumberingMode[originMotion.id]"
-                                [motion]="originMotion"
-                                [noEditMode]="true"
-                                [showAllAmendments]="true"
-                                [unifiedChanges]="originUnifiedChanges[originMotion.id]"
-                            ></os-motion-content>
-                        </mat-card-content>
-                    </mat-card>
+                                <os-motion-content
+                                    #content
+                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                    [lineNumberingMode]="originMotionsLineNumberingMode[originMotion.id]"
+                                    [motion]="originMotion"
+                                    [noEditMode]="true"
+                                    [showAllAmendments]="true"
+                                    [unifiedChanges]="originUnifiedChanges[originMotion.id]"
+                                ></os-motion-content>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
                 </mat-tab>
             }
         </mat-tab-group>
