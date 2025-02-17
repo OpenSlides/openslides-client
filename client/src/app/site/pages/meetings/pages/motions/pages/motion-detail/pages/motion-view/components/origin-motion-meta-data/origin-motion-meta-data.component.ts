@@ -5,12 +5,10 @@ import { Selectable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
 import { ViewMotion, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -97,14 +95,12 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
     public constructor(
         protected override translate: TranslateService,
         public perms: MotionPermissionService,
-        private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
         private meetingController: MeetingControllerService,
         public motionSubmitterRepo: MotionSubmitterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private participantSort: ParticipantListSortService,
-        private presenter: GetForwardingCommitteesPresenterService
+        private participantSort: ParticipantListSortService
     ) {
         super();
     }

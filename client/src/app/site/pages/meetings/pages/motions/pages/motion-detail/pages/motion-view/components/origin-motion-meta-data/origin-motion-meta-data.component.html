@@ -7,13 +7,15 @@
             }
             {{ motion.title }}
         </h1>
+    </div>
 
-        <button mat-mini-fab (click)="expanded = !expanded">
+    <div class="motion-controls">
+        <ng-content></ng-content>
+
+        <button class="expand-button" mat-mini-fab (click)="expanded = !expanded">
             <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
     </div>
-
-    <ng-content></ng-content>
 </div>
 
 <div class="metadata-detail" role="region" [ngClass]="{ active: expanded }">

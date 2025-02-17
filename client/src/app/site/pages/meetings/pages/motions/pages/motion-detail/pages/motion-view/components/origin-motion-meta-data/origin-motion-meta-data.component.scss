@@ -15,12 +15,17 @@ span.referencelist {
 }
 
 .origin-motion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .title h1 {
-        display: inline-block;
-        padding-right: 12px;
+    .motion-controls {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+
+    }
+
+    .expand-button {
+        margin-left: 16px;
+        margin-bottom: 16px;
     }
 }
 
