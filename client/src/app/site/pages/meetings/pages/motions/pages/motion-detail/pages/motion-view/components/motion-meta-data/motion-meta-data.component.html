@@ -347,6 +347,7 @@
                         <mat-slide-toggle
                             *osPerms="permission.motionCanSeeOrigin"
                             [aria-label]="'Load origin motion' | translate"
+                            [checked]="originMotionStatus[origin.id]"
                             (change)="toggleOriginMotion($event, origin.id)"
                         ></mat-slide-toggle>
                     </div>

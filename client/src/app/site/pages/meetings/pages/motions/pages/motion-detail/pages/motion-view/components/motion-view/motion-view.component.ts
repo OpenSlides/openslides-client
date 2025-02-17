@@ -79,7 +79,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
-    public originMotionsLoaded = [];
+    public originMotionsLoaded: ViewMotion[] = [];
     public originMotionsChangeRecoMode: { [key: Id]: ChangeRecoMode } = {};
     public originMotionsLineNumberingMode: { [key: Id]: LineNumberingMode } = {};
     public originUnifiedChanges: { [key: Id]: ViewUnifiedChange[] } = {};

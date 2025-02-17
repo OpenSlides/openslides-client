@@ -190,6 +190,7 @@
 <ng-template #metaInfoTemplate>
     <div>
         <os-motion-meta-data
+            [activeOriginMotions]="originMotionsLoaded"
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
             (disableOriginMotion)="hideOriginMotion($event)"

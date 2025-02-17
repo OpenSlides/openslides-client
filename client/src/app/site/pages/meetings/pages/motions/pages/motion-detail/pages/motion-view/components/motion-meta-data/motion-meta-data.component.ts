@@ -38,6 +38,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public changeRecoMode: ChangeRecoMode;
 
+    @Input()
+    public activeOriginMotions: ViewMotion[];
+
     @Output()
     public enableOriginMotion = new EventEmitter<Id>();
 
@@ -46,6 +49,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     @Output()
     public setShowAllAmendments = new EventEmitter<boolean>();
+
+    public originMotionStatus: { [key: number]: boolean } = {};
 
     /**
      * Determine if the name of supporters are visible
@@ -186,6 +191,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public ngOnInit(): void {
         this.participantSort.initSorting();
+
+        for (const motion of this.activeOriginMotions) {
+            this.originMotionStatus[motion.id] = true;
+        }
 
         this.subscriptions.push(
             this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
