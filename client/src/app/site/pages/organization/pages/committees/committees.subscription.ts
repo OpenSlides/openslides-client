@@ -74,7 +74,8 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
                     `name`,
                     `organization_tag_ids`,
                     `start_time`,
-                    `user_ids`
+                    `user_ids`,
+                    `template_for_organization_id`
                 ]
             }
         ]
