@@ -11,9 +11,9 @@ import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
@@ -28,7 +28,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
     declarations: [ParticipantListComponent, ParticipantSwitchDialogComponent],
     imports: [
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         ParticipantListRoutingModule,
         ParticipantListServiceModule,
         ParticipantListInfoDialogModule,
@@ -37,7 +37,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         UserComponentsModule,
         ChoiceDialogComponent,
         HeadBarModule,
-        IconContainerModule,
+        IconContainerComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
         OpenSlidesTranslationModule.forChild(),

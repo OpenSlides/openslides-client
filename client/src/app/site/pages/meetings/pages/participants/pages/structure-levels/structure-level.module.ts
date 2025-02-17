@@ -15,7 +15,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -44,7 +44,7 @@ import { StructureLevelRoutingModule } from './structure-level-routing.module';
         RouterModule,
         DirectivesModule,
         ChoiceDialogComponent,
-        IconContainerModule,
+        IconContainerComponent,
         PromptDialogComponent,
         PipesModule
     ]

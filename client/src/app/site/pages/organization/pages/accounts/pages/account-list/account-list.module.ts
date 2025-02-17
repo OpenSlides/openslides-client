@@ -15,7 +15,7 @@ import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -49,7 +49,7 @@ import { AccountListServiceModule } from './services/account-list-service.module
         MatButtonModule,
         OpenSlidesTranslationModule.forChild(),
         MatFormFieldModule,
-        IconContainerModule,
+        IconContainerComponent,
         RouterModule,
         PipesModule,
         MatDialogModule,

@@ -11,7 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChipComponent } from 'src/app/ui/modules/chip';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { MeetingTimeComponent } from '../../../../../../ui/modules/meeting-time/meeting-time.component';
 import { OpenSlidesTranslationModule } from '../../../../../modules/translations';
@@ -40,7 +40,7 @@ const DECLARATIONS = [CommitteeMetaInfoComponent, CommitteeMeetingPreviewCompone
         MeetingTimeComponent,
         DirectivesModule,
         ChipComponent,
-        IconContainerModule
+        IconContainerComponent
     ]
 })
 export class CommitteeComponentsModule {}
