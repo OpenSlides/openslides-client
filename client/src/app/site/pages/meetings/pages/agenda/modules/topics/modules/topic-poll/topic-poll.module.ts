@@ -18,8 +18,8 @@ import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
+import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules';
@@ -44,9 +44,9 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         TopicPollFormComponent
     ],
     imports: [
-        CustomIconModule,
+        CustomIconComponent,
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         TopicPollServiceModule,
         TopicCommonServiceModule,
         FormsModule,

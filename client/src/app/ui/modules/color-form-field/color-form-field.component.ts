@@ -1,14 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
-import { BaseFormControlComponent } from '../../../../base/base-form-control';
+import { BaseFormControlComponent } from '../../base/base-form-control';
 
 @Component({
     selector: `os-color-form-field`,
     templateUrl: `./color-form-field.component.html`,
     styleUrls: [`./color-form-field.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => ColorFormFieldComponent) }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => ColorFormFieldComponent) }],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        OpenSlidesTranslationModule,
+        MatTooltipModule,
+        FormsModule
+    ]
 })
 export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
     @Input()

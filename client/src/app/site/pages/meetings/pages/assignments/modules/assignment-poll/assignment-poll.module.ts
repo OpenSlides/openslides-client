@@ -19,9 +19,9 @@ import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { CustomIconModule } from 'src/app/ui/modules/custom-icon';
-import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
+import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
+import { ExpandableContentWrapperComponent } from 'src/app/ui/modules/expandable-content-wrapper';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -47,9 +47,9 @@ const COMPONENTS = [
     declarations: [...COMPONENTS, AssignmentPollDialogComponent, AssignmentPollFormComponent],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
-        CustomIconModule,
+        CustomIconComponent,
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         AssignmentPollServiceModule,
         AssignmentCommonServiceModule,
         RouterModule,
@@ -72,8 +72,8 @@ const COMPONENTS = [
         PipesModule,
         ChoiceDialogComponent,
         MeetingsComponentCollectorModule,
+        ExpandableContentWrapperComponent,
         IconContainerComponent,
-        ExpandableContentWrapperModule,
         OpenSlidesTranslationModule.forChild()
     ],
     providers: [{ provide: PollService, useClass: AssignmentPollService }]
