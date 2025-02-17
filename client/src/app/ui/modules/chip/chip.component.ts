@@ -1,11 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input } from '@angular/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
 import { Color, ColorService } from 'src/app/site/services/color.service';
 
 @Component({
     selector: `os-chip`,
     templateUrl: `./chip.component.html`,
-    styleUrls: [`./chip.component.scss`]
+    styleUrls: [`./chip.component.scss`],
+    standalone: true,
+    imports: [CommonModule, MatChipsModule, MatRippleModule]
 })
 export class ChipComponent {
     /**
