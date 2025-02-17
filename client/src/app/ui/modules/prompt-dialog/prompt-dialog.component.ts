@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface PromptDialogData {
     title: string;
@@ -17,7 +17,7 @@ interface PromptDialogData {
     templateUrl: `./prompt-dialog.component.html`,
     styleUrls: [`./prompt-dialog.component.scss`],
     standalone: true,
-    imports: [CommonModule, MatDialogModule, MatButtonModule, OpenSlidesTranslationModule]
+    imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class PromptDialogComponent {
     public constructor(
