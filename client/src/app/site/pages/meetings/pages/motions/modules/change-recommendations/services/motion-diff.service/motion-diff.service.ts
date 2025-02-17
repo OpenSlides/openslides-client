@@ -1398,6 +1398,13 @@ export class MotionDiffService {
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
+        // Handles insertions in empty paragraphs
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<SPAN[^>]+os-line-number[^>]+?>)<\/del>(<ins>[\s\S]*?<\/ins>)\s<del><\/SPAN><\/del>/gi,
+            (_whole: string, span: string, insertedText: string): string =>
+                `<del>` + span + ` </SPAN></del>` + insertedText + `<ins> </ins>`
+        );
+
         // Remove <del> tags that only delete line numbers
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
@@ -1463,13 +1470,6 @@ export class MotionDiffService {
 
                 return out;
             }
-        );
-
-        // Handles insertions in empty paragraphs
-        diffUnnormalized = diffUnnormalized.replace(
-            /<del>(<SPAN[^>]+os-line-number[^>]+?>)<\/del>(<ins>[\s\S]*?<\/ins>)\s<del><\/SPAN><\/del>/gi,
-            (_whole: string, span: string, insertedText: string): string =>
-                `<del>` + span + ` </SPAN></del>` + insertedText + ` `
         );
 
         // Replace spaces in line numbers by &nbsp;

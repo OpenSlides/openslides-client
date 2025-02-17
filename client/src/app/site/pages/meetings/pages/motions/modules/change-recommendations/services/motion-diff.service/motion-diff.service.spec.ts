@@ -1316,6 +1316,16 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
+
+        it(`detects two words inserted in empty paragraph`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml = `<p>` + noMarkup(1) + `</p>`,
+                    outHtml = `<p>Lorem ipsum</p>`;
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(`<p>` + noMarkup(1) + `<ins>Lorem ipsum</ins></p>`);
+            }
+        ));
     });
 
     describe(`ignoring line numbers`, () => {
