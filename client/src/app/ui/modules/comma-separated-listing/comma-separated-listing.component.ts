@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core';
 
 @Component({
     selector: `os-comma-separated-listing`,
     templateUrl: `./comma-separated-listing.component.html`,
     styleUrls: [`./comma-separated-listing.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CommonModule]
 })
 export class CommaSeparatedListingComponent<T = unknown> {
     /**
