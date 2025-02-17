@@ -9,72 +9,80 @@
     </ng-container>
 </os-head-bar>
 
-<mat-card>
-    <mat-card-content>
-        <mat-tab-group #tabGroup (selectedTabChange)="tabChanged($event)">
-            <mat-tab label="PDF">
-                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
-            </mat-tab>
-            <mat-tab label="CSV">
-                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
-            </mat-tab>
-            <mat-tab label="XLSX">
-                <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
-            </mat-tab>
-        </mat-tab-group>
-    </mat-card-content>
-</mat-card>
+<div class="motion-export-card">
+    <mat-tab-group #tabGroup mat-stretch-tabs="false" (selectedTabChange)="tabChanged($event)">
+        <mat-tab label="PDF">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+        <mat-tab label="CSV">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+        <mat-tab label="XLSX">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+</div>
 
 <ng-template #exportPdf>
     <form [formGroup]="dialogForm">
         <!-- Content -->
         <div class="motion-export-wrapper">
             @if (!isXLSXExport) {
-                <div>
-                    <p class="toggle-group-head">{{ 'Text version' | translate }}</p>
-                    <mat-chip-listbox class="smaller-buttons" formControlName="crMode">
-                        <mat-chip-option [value]="crMode.Original">
-                            <span>{{ 'Original version' | translate }}</span>
+                <p class="toggle-group-head">{{ 'Text version' | translate }}</p>
+                <mat-chip-listbox formControlName="crMode">
+                    <mat-chip-option #crModeOriginalChip class="os-amount-chips" [value]="crMode.Original">
+                        <span>{{ 'Original version' | translate }}</span>
+                    </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: crModeOriginalChip }"></ng-container>
+                    @if (!isCSVExport) {
+                        <mat-chip-option #crModeChangedChip class="no-highlight" [value]="crMode.Changed">
+                            <span>{{ 'Changed version' | translate }}</span>
                         </mat-chip-option>
-                        @if (!isCSVExport) {
-                            <mat-chip-option [value]="crMode.Changed">
-                                <span>{{ 'Changed version' | translate }}</span>
-                            </mat-chip-option>
-                            <mat-chip-option [value]="crMode.Diff">
-                                <span>{{ 'Diff version' | translate }}</span>
-                            </mat-chip-option>
-                        }
-                        <mat-chip-option [value]="crMode.ModifiedFinal">
-                            <span>{{ 'Final version' | translate }}</span>
+                        <ng-container
+                            *ngTemplateOutlet="badge; context: { $implicit: crModeChangedChip }"
+                        ></ng-container>
+                        <mat-chip-option #crModeDiffChip class="no-highlight" [value]="crMode.Diff">
+                            <span>{{ 'Diff version' | translate }}</span>
                         </mat-chip-option>
-                    </mat-chip-listbox>
-                </div>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: crModeDiffChip }"></ng-container>
+                    }
+                    <mat-chip-option #crModeFinalChip class="no-highlight" [value]="crMode.ModifiedFinal">
+                        <span>{{ 'Final version' | translate }}</span>
+                    </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: crModeFinalChip }"></ng-container>
+                </mat-chip-listbox>
             }
 
             <div>
                 <p class="toggle-group-head">{{ 'Content' | translate }}</p>
-                <mat-chip-listbox class="smaller-buttons" formControlName="content" multiple>
-                    <mat-chip-option value="title">
+                <mat-chip-listbox formControlName="content" multiple>
+                    <mat-chip-option #titleChip class="no-highlight" value="title">
                         <span>{{ 'Title' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option value="number">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: titleChip }"></ng-container>
+                    <mat-chip-option #numberChip class="no-highlight" value="number">
                         <span>{{ 'Number' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: numberChip }"></ng-container>
                     @if (!isXLSXExport) {
-                        <mat-chip-option value="text">
+                        <mat-chip-option #textChip class="no-highlight" value="text">
                             <span>{{ 'Text' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option value="reason">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: textChip }"></ng-container>
+                        <mat-chip-option #reasonChip class="no-highlight" value="reason">
                             <span>{{ 'Reason' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: reasonChip }"></ng-container>
                     }
-                    <mat-chip-option value="id">
+                    <mat-chip-option #idChip class="no-highlight" value="id">
                         <span>{{ 'Sequential number' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: idChip }"></ng-container>
                     @if (!isCSVExport && !isXLSXExport) {
-                        <mat-chip-option value="attachments">
+                        <mat-chip-option #attachmentsChip class="no-highlight" value="attachments">
                             <span>{{ 'Attachments' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: attachmentsChip }"></ng-container>
                     }
                 </mat-chip-listbox>
             </div>
@@ -83,136 +91,183 @@
                 <div>
                     <p class="toggle-group-head">{{ 'Line numbering' | translate }}</p>
                     <mat-chip-listbox formControlName="lnMode">
-                        <mat-chip-option [value]="lnMode.None">
+                        <mat-chip-option #lnModeNoneChip class="no-highlight" [value]="lnMode.None">
                             <span>{{ 'None' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option [value]="lnMode.Outside">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: lnModeNoneChip }"></ng-container>
+                        <mat-chip-option #lnModeOutsideChip class="no-highlight" [value]="lnMode.Outside">
                             <span>{{ 'Outside' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container
+                            *ngTemplateOutlet="badge; context: { $implicit: lnModeOutsideChip }"
+                        ></ng-container>
                     </mat-chip-listbox>
                 </div>
             }
 
             <div>
                 <p class="toggle-group-head">{{ 'Person-related fields' | translate }}</p>
-                <mat-chip-listbox class="smaller-buttons" formControlName="personrelated" multiple>
-                    <mat-chip-option value="submitters">
+                <mat-chip-listbox formControlName="personrelated" multiple>
+                    <mat-chip-option #submittersChip class="no-highlight" value="submitters">
                         <span>{{ 'Submitters' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option value="supporters">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: submittersChip }"></ng-container>
+                    <mat-chip-option #supportersChip class="no-highlight" value="supporters">
                         <span>{{ 'Supporters' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: supportersChip }"></ng-container>
                     <mat-chip-option
                         #editorsChipOption
+                        class="no-highlight"
                         value="editors"
                         [disabled]="isDisabled(editorsChipOption.value)"
                     >
                         <span>{{ 'Motion editors' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: editorsChipOption }"></ng-container>
                     @if (workingGroupSpeakerActive) {
-                        <mat-chip-option value="working_group_speakers">
+                        <mat-chip-option #spokespersonChip class="no-highlight" value="working_group_speakers">
                             <span>{{ 'Spokesperson' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container
+                            *ngTemplateOutlet="badge; context: { $implicit: spokespersonChip }"
+                        ></ng-container>
                     }
                 </mat-chip-listbox>
             </div>
 
             <div>
                 <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
-                <mat-chip-listbox class="smaller-buttons" formControlName="metaInfo" multiple>
-                    <mat-chip-option value="state">
+                <mat-chip-listbox formControlName="metaInfo" multiple>
+                    <mat-chip-option #stateChip class="no-highlight" value="state">
                         <span>{{ 'State' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: stateChip }"></ng-container>
                     <mat-chip-option
                         #recommendationChipOption
+                        class="no-highlight"
                         value="recommendation"
                         [disabled]="isDisabled(recommendationChipOption.value)"
                     >
                         <span>{{ 'Recommendation' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container
+                        *ngTemplateOutlet="badge; context: { $implicit: recommendationChipOption }"
+                    ></ng-container>
                     <mat-chip-option
                         #categoryChipOption
+                        class="no-highlight"
                         value="category"
                         [disabled]="isDisabled(categoryChipOption.value)"
                     >
                         <span>{{ 'Category' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option #tagChipOption value="tags" [disabled]="isDisabled(tagChipOption.value)">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: categoryChipOption }"></ng-container>
+                    <mat-chip-option
+                        #tagChipOption
+                        class="no-highlight"
+                        value="tags"
+                        [disabled]="isDisabled(tagChipOption.value)"
+                    >
                         <span>{{ 'Tags' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option #blockChipOption value="block" [disabled]="isDisabled(blockChipOption.value)">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: tagChipOption }"></ng-container>
+                    <mat-chip-option
+                        #blockChipOption
+                        class="no-highlight"
+                        value="block"
+                        [disabled]="isDisabled(blockChipOption.value)"
+                    >
                         <span>{{ 'Motion block' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option value="polls">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: blockChipOption }"></ng-container>
+                    <mat-chip-option #pollsChip class="no-highlight" value="polls">
                         <span>{{ 'Voting result' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option value="referring_motions">
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: pollsChip }"></ng-container>
+                    <mat-chip-option #referringMotionsChip class="no-highlight" value="referring_motions">
                         <span>{{ 'Referring motions' | translate }}</span>
                     </mat-chip-option>
-                    @if (isCSVExport || isXLSXExport) {
-                        <mat-chip-option
-                            *osPerms="permission.listOfSpeakersCanSee"
-                            #speakRequestsChipOption
-                            value="speakers"
-                        >
+                    <ng-container
+                        *ngTemplateOutlet="badge; context: { $implicit: referringMotionsChip }"
+                    ></ng-container>
+                    @if ((isCSVExport || isXLSXExport) && permission.listOfSpeakersCanSee) {
+                        <mat-chip-option #speakRequestsChipOption class="no-highlight" value="speakers">
                             <span>{{ 'Open requests to speak' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container
+                            *ngTemplateOutlet="badge; context: { $implicit: speakRequestsChipOption }"
+                        ></ng-container>
                     }
                 </mat-chip-listbox>
             </div>
 
             @if (!isCSVExport && !isXLSXExport) {
                 <div>
-                    <p class="toggle-group-head">{{ 'page layout' | translate }}</p>
-                    <mat-chip-listbox class="smaller-buttons" formControlName="pageLayout" multiple>
+                    <p class="toggle-group-head">{{ 'Page layout' | translate }}</p>
+                    <mat-chip-listbox formControlName="pageLayout" multiple>
                         <mat-chip-option
                             #toc
+                            class="no-highlight"
                             value="toc"
                             [disabled]="continuousTextChipOption ? continuousTextChipOption?.selected : false"
                         >
                             <span>{{ 'Table of contents' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: toc }"></ng-container>
                         <mat-chip-option
+                            #addBreaksChip
+                            class="no-highlight"
                             value="addBreaks"
                             [disabled]="continuousTextChipOption ? continuousTextChipOption?.selected : false"
                         >
                             <span>{{ 'Enforce page breaks' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option #continuousText value="continuousText">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: addBreaksChip }"></ng-container>
+                        <mat-chip-option #continuousText class="no-highlight" value="continuousText">
                             <span>{{ 'Continuous text' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option value="onlyChangedLines">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: continuousText }"></ng-container>
+                        <mat-chip-option #changedLinesChip class="no-highlight" value="onlyChangedLines">
                             <span>{{ 'Short form for amendments' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container
+                            *ngTemplateOutlet="badge; context: { $implicit: changedLinesChip }"
+                        ></ng-container>
                     </mat-chip-listbox>
                 </div>
 
                 <div>
                     <p class="toggle-group-head">{{ 'Header and footer' | translate }}</p>
-                    <mat-chip-listbox class="smaller-buttons" formControlName="headerFooter" multiple>
-                        <mat-chip-option #header value="header">
+                    <mat-chip-listbox formControlName="headerFooter" multiple>
+                        <mat-chip-option #header class="no-highlight" value="header">
                             <span>{{ 'Header' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option value="page">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: header }"></ng-container>
+                        <mat-chip-option #pageChip class="no-highlight" value="page">
                             <span>{{ 'Page numbers' | translate }}</span>
                         </mat-chip-option>
-                        <mat-chip-option value="date">
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: pageChip }"></ng-container>
+                        <mat-chip-option #dateChip class="no-highlight" value="date">
                             <span>{{ 'Current date' | translate }}</span>
                         </mat-chip-option>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: dateChip }"></ng-container>
                     </mat-chip-listbox>
                 </div>
             }
 
             <div>
                 <p class="toggle-group-head">{{ 'Notes and Comments' | translate }}</p>
-                <mat-chip-listbox class="smaller-buttons" formControlName="comments" multiple>
-                    <mat-chip-option [value]="PERSONAL_NOTE_ID">
+                <mat-chip-listbox formControlName="comments" multiple>
+                    <mat-chip-option #commentsChip class="no-highlight" [value]="PERSONAL_NOTE_ID">
                         <span>{{ 'Personal note' | translate }}</span>
                     </mat-chip-option>
+                    <ng-container *ngTemplateOutlet="badge; context: { $implicit: commentsChip }"></ng-container>
                     @for (comment of commentsToExport; track comment) {
-                        <mat-chip-option [value]="comment.id">
+                        <mat-chip-option #commChip class="no-highlight" [value]="comment.id">
                             <span>{{ comment.name }}</span>
                         </mat-chip-option>
+                        <ng-container *ngTemplateOutlet="badge; context: { $implicit: commChip }"></ng-container>
                     }
                 </mat-chip-listbox>
                 <!-- TODO only if not csv -->
@@ -221,4 +276,16 @@
             <br />
         </div>
     </form>
+</ng-template>
+
+<ng-template #badge let-chip>
+    @if (chip) {
+        <mat-icon
+            class="mat-Badge check-badge"
+            mat-Badge="1"
+            [ngStyle]="{ visibility: chip.selected ? 'visible' : 'hidden' }"
+        >
+            check_circle
+        </mat-icon>
+    }
 </ng-template>

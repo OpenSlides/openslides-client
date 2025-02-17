@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -25,6 +26,7 @@ import { MotionExportRoutingModule } from './motion-export-routing.module';
         MatButtonModule,
         MatCardModule,
         MatChipsModule,
+        MatIconModule,
         MatTabsModule,
         DirectivesModule,
         HeadBarModule,

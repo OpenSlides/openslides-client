@@ -1,13 +1,49 @@
+@import 'src/assets/styles/colors.scss';
+
 .motion-export-wrapper {
     .toggle-group-head {
-        margin-bottom: 0;
+        margin-bottom: 0px;
+        margin-top: 30px;
     }
 
-    .test {
-        background-color: red;
+    mat-chip-listbox {
+        padding-right: 95px !important;
+        mat-chip-option {
+            margin-top: 10px !important;
+            margin-right: 0px !important;
+            background-color: var(--mat-chip-option-background-color) !important ;
+            span {
+                color: var(--mat-menu-item-label) !important;
+                button {
+                    padding-left: 12px !important;
+                    .mdc-evolution-chip__graphic {
+                        display: none;
+                        height: 0px !important;
+                        width: 0px !important;
+                    }
+                }
+            }
+            &.mat-mdc-chip-disabled {
+                background-color: var(--mat-tree-container-background-color) !important;
+            }
+        }
     }
+}
 
-    h1 {
-        margin: 0;
-    }
+.check-badge {
+    display: hidden;
+    color: $os-lightblue;
+    background-color: white;
+    transform: translateX(-50%);
+    border-radius: 100% !important;
+    z-index: 9999 !important;
+}
+
+.motion-export-card {
+    width: 90%;
+    height: 90%;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    margin-left: 72px !important;
+    font-size: 1rem;
 }
