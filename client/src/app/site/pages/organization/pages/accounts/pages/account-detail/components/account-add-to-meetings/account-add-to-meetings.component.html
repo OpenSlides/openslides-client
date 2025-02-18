@@ -79,7 +79,7 @@
                 <table class="result-table">
                     @if ($any(resultsTableDataSubjects['succeeded'] | async).length) {
                         <tr>
-                            <th><mat-icon class="result-success-icon">add_circle</mat-icon></th>
+                            <th><mat-icon class="result-success-icon">add_circle_outline</mat-icon></th>
                             <th>{{ 'Account successfully added.' | translate }}</th>
                         </tr>
                         <tr>
@@ -94,7 +94,7 @@
                     }
                     @if ($any(resultsTableDataSubjects['standard_group'] | async).length) {
                         <tr>
-                            <th><mat-icon color="warn">warning</mat-icon></th>
+                            <th><mat-icon color="warn">warning_amber</mat-icon></th>
                             <th>{{ 'Group not found. Account added to the group “Default”.' | translate }}</th>
                         </tr>
                         <tr>
@@ -110,7 +110,7 @@
                     @if ($any(resultsTableDataSubjects['nothing'] | async).length) {
                         <tr>
                             <th>
-                                <mat-icon color="accent">info</mat-icon>
+                                <mat-icon color="accent">info_outline</mat-icon>
                             </th>
                             <th>
                                 {{ 'Group not found. Account already belongs to another group.' | translate }}
