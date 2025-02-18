@@ -258,18 +258,8 @@
                 <span>{{ 'Present' | translate }}</span>
             </mat-checkbox>
         }
-        @if (canEditOwnDelegation(user)) {
-            <button
-                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
-                mat-menu-item
-                (click)="openEditInfo(user)"
-            >
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'Edit details' | translate }}</span>
-            </button>
-        }
 
-        <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="user.id">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="goToEditUser(user.id)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit participant' | translate }}</span>
         </button>
