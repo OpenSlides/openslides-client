@@ -1,1 +1,1 @@
-export * from './custom-icon.module';
+export * from './custom-icon.component';

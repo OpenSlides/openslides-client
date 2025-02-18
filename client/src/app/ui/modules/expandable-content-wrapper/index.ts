@@ -1,1 +1,1 @@
-export * from './expandable-content-wrapper.module';
+export * from './expandable-content-wrapper.component';

@@ -84,6 +84,16 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
                 idField: `global_option_id`,
                 fieldset: FULL_FIELDSET,
                 follow: [{ idField: `vote_ids` }]
+            },
+            {
+                idField: `entitled_group_ids`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `meeting_user_ids`,
+                        fieldset: [`user_id`]
+                    }
+                ]
             }
         ]
     },

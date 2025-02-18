@@ -1,10 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { DirectivesModule } from '../../directives';
 
 @Component({
     selector: `os-expandable-content-wrapper`,
     templateUrl: `./expandable-content-wrapper.component.html`,
     styleUrls: [`./expandable-content-wrapper.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CommonModule, DirectivesModule, OpenSlidesTranslationModule]
 })
 export class ExpandableContentWrapperComponent {
     /**
