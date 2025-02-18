@@ -18,7 +18,7 @@
 <mat-card class="os-card" style="padding-right: 30px">
     <mat-card-content>
         <div class="assign-meetings-element">
-            <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
+            <h2>{{ 'Add to meetings' | translate }}</h2>
             <div class="assign-meetings-subtext">
                 <p translate>
                     Please select your target meetings and enter the name of an existing group which should be assigned
@@ -76,53 +76,56 @@
             <!-- Display results -->
             <div class="assign-meetings-element">
                 <h2>{{ 'Results' | translate }}</h2>
-                <div class="assign-meetings-subtext">
-                    <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
-                </div>
                 <table class="result-table">
-                    <tr>
-                        <th><mat-icon class="result-success-icon">add_circle</mat-icon></th>
-                        <th>{{ 'Account successfully added.' | translate }}</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
-                            ></ng-container>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><mat-icon color="warn">warning</mat-icon></th>
-                        <th>{{ 'Group not found. Account added to the group “Default”.' | translate }}</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
-                            ></ng-container>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <mat-icon color="accent">info</mat-icon>
-                        </th>
-                        <th>
-                            {{ 'Group not found. Account already belongs to another group.' | translate }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td class="verticalSplit">
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
-                            ></ng-container>
-                        </td>
-                    </tr>
+                    @if ($any(resultsTableDataSubjects['succeeded'] | async).length) {
+                        <tr>
+                            <th><mat-icon class="result-success-icon">add_circle</mat-icon></th>
+                            <th>{{ 'Account successfully added.' | translate }}</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
+                    @if ($any(resultsTableDataSubjects['standard_group'] | async).length) {
+                        <tr>
+                            <th><mat-icon color="warn">warning</mat-icon></th>
+                            <th>{{ 'Group not found. Account added to the group “Default”.' | translate }}</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
+                    @if ($any(resultsTableDataSubjects['nothing'] | async).length) {
+                        <tr>
+                            <th>
+                                <mat-icon color="accent">info</mat-icon>
+                            </th>
+                            <th>
+                                {{ 'Group not found. Account already belongs to another group.' | translate }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="verticalSplit">
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
                 </table>
             </div>
         </mat-card-content>
