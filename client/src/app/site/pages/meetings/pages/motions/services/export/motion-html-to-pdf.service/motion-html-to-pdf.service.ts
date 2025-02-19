@@ -264,7 +264,10 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     text: line.lineNumber,
                     color: `gray`,
                     fontSize: 8,
-                    font: `LineNumbering`
+                    font: `LineNumbering`,
+                    bold: false,
+                    italics: false,
+                    bolditalics: false
                 }
             ],
             marginBottom: line.marginBottom,
