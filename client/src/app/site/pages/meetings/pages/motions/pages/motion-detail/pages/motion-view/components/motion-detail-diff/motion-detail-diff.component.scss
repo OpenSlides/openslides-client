@@ -40,10 +40,16 @@
     }
 
     .status-row {
-        font-style: italic;
-        color: gray;
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        .collission-hint {
+            padding-right: 4px;
+        }
 
-        & > *:last-of-type:after {
+        & > .status-content:last-child:after {
+            font-style: italic;
+            color: gray;
             content: ':';
         }
     }

@@ -66,22 +66,6 @@
                     class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
                     [class.collides]="hasCollissions(change, allTextChangingObjects)"
                 >
-                    <div class="collission-hint">
-                        @if (
-                            isAmendment(change) &&
-                            showAllAmendments &&
-                            change.amendment.change_recommendation_ids?.length
-                        ) {
-                            <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
-                                warning
-                            </mat-icon>
-                        }
-                        @if (hasCollissions(change, allTextChangingObjects)) {
-                            <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
-                                warning
-                            </mat-icon>
-                        }
-                    </div>
                     <div class="action-row">
                         <button
                             *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode"
@@ -103,22 +87,41 @@
                             </button>
                         }
                     </div>
-                    @if (isChangeRecommendation(change) && change.isRejected()) {
-                        <div class="status-row">
-                            <i class="grey">{{ 'Rejected' | translate }}</i>
+                    <div class="status-row">
+                        <div class="collission-hint">
+                            @if (
+                                isAmendment(change) &&
+                                showAllAmendments &&
+                                change.amendment.change_recommendation_ids?.length
+                            ) {
+                                <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
+                                    info
+                                </mat-icon>
+                            }
+                            @if (hasCollissions(change, allTextChangingObjects)) {
+                                <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
+                                    warning
+                                </mat-icon>
+                            }
                         </div>
-                    }
-                    <!-- If it's an amendment, only accepted ones will be passed to this component
-          by default (== !showAllAmendments). In this case, don't show the prefix.
-          However, if showAllAmendments === true, the prefix should be shown alwayes,
-          even if it's accepted -->
-                    @if (isAmendment(change) && showAllAmendments) {
-                        <div class="status-row">
-                            <i class="grey">{{ change.amendment.number }}</i>
-                            <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
-                            <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
-                        </div>
-                    }
+
+                        @if (isChangeRecommendation(change) && change.isRejected()) {
+                            <div class="status-content">
+                                <i class="grey">{{ 'Rejected' | translate }}</i>
+                            </div>
+                        }
+                        <!-- If it's an amendment, only accepted ones will be passed to this component
+            by default (== !showAllAmendments). In this case, don't show the prefix.
+            However, if showAllAmendments === true, the prefix should be shown alwayes,
+            even if it's accepted -->
+                        @if (isAmendment(change) && showAllAmendments) {
+                            <div class="status-content">
+                                <i class="grey">{{ change.amendment.number }}</i>
+                                <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
+                                <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
+                            </div>
+                        }
+                    </div>
                     <div
                         class="motion-text motion-text-diff"
                         [attr.data-change-id]="change.getChangeId()"
