@@ -1398,6 +1398,13 @@ export class MotionDiffService {
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
+        // Handles insertions in empty paragraphs
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>(<SPAN[^>]+os-line-number[^>]+?>)<\/del>(<ins>[\s\S]*?<\/ins>)\s<del><\/SPAN><\/del>/gi,
+            (_whole: string, span: string, insertedText: string): string =>
+                `<del>` + span + ` </SPAN></del>` + insertedText + `<ins> </ins>`
+        );
+
         // Remove <del> tags that only delete line numbers
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
@@ -1475,8 +1482,8 @@ export class MotionDiffService {
         // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
         // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
         diffUnnormalized = diffUnnormalized.replace(
-            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)<ins>([\s\S]*?)\1<\/ins>/gi,
-            (_found: string, paragraph: string, span: string, insText: string): string => {
+            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)(<del> <\/del>)?<ins>([\s\S]*?)\1<\/ins>/gi,
+            (_found: string, paragraph: string, span: string, _emptyDel: string, insText: string): string => {
                 return `<ins>` + insText + `<\/ins>` + paragraph + span;
             }
         );
