@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { Action } from 'src/app/gateways/actions';
@@ -19,6 +20,14 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
     public getTitle = (viewMotionState: ViewMotionState): string => viewMotionState.name;
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Workflows` : `Workflow`);
+
+    public override getViewModelList(): ViewMotionState[] {
+        return this.filterForeignMeetingModelsFromList(super.getViewModelList());
+    }
+
+    public override getViewModelListObservable(): Observable<ViewMotionState[]> {
+        return super.getViewModelListObservable().pipe(map(states => this.filterForeignMeetingModelsFromList(states)));
+    }
 
     public async create(model: Partial<MotionState>): Promise<Identifiable> {
         const payload = {

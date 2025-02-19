@@ -10,7 +10,7 @@
             maxBufferPx="300"
             minBufferPx="100"
         >
-            <ul>
+            <ul class="changes-list">
                 <li *cdkVirtualFor="let change of changes; let index = index">
                     <span class="one-line">
                         <a href="" (click)="scrollToChangeClicked(change, $event)">
@@ -42,7 +42,7 @@
                                 {{ change.stateName }}
                             }
                         </i>
-                        @if (isAmendment(change)) {
+                        @if (isAmendment(change) && canAccess(change.amendment)) {
                             <a
                                 class="smaller-icon-button amendment-link"
                                 mat-icon-button
