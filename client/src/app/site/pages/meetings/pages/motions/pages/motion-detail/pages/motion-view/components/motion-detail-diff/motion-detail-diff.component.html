@@ -89,15 +89,6 @@
                     </div>
                     <div class="status-row">
                         <div class="collission-hint">
-                            @if (
-                                isAmendment(change) &&
-                                showAllAmendments &&
-                                change.amendment.change_recommendation_ids?.length
-                            ) {
-                                <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
-                                    info
-                                </mat-icon>
-                            }
                             @if (hasCollissions(change, allTextChangingObjects)) {
                                 <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
                                     warning
@@ -130,6 +121,15 @@
                         [class.line-numbers-outside]="isLineNumberingOutside()"
                         [innerHTML]="getDiff(change) | trust: 'html'"
                     ></div>
+                    @if (
+                        isAmendment(change) && showAllAmendments && change.amendment.change_recommendation_ids?.length
+                    ) {
+                        <div class="amendment-cr-hint">
+                            <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
+                                info
+                            </mat-icon>
+                        </div>
+                    }
                 </div>
             </div>
         }

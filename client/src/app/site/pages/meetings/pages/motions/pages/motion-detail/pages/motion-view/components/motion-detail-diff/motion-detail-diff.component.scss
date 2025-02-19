@@ -39,6 +39,15 @@
         }
     }
 
+    .amendment-cr-hint {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        padding: 0 12px;
+        color: var(--theme-primary-500);
+    }
+
     .status-row {
         display: flex;
         align-items: flex-start;
