@@ -8,7 +8,6 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ChipComponent } from 'src/app/ui/modules/chip';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar/head-bar.module';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { OrganizationTagDialogModule } from '../../modules/organization-tag-dialog/organization-tag-dialog.module';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
@@ -20,7 +19,6 @@ import { OrganizationTagListRoutingModule } from './organization-tag-list-routin
         CommonModule,
         OrganizationTagListRoutingModule,
         OrganizationTagDialogModule,
-        PromptDialogComponent,
         HeadBarModule,
         ListModule,
         ChipComponent,

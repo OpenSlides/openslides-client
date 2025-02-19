@@ -12,7 +12,6 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardComponent } from 'src/app/ui/modules/action-card';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
 import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
@@ -36,7 +35,6 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         MatCheckboxModule,
         ReactiveFormsModule,
         HeadBarModule,
-        PromptDialogComponent,
         ProjectorModule,
         ActionCardComponent,
         DirectivesModule,

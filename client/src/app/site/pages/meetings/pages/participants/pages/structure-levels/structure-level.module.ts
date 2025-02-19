@@ -17,7 +17,6 @@ import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { StructureLevelListComponent } from './components/structure-level-list/structure-level-list.component';
@@ -45,7 +44,6 @@ import { StructureLevelRoutingModule } from './structure-level-routing.module';
         DirectivesModule,
         ChoiceDialogComponent,
         IconContainerComponent,
-        PromptDialogComponent,
         PipesModule
     ]
 })

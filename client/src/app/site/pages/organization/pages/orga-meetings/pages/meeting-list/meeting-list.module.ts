@@ -12,7 +12,6 @@ import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
-import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
@@ -37,8 +36,7 @@ import { MeetingListServiceModule } from './services/meeting-list-service.module
         MatIconModule,
         MatTooltipModule,
         MatButtonModule,
-        DirectivesModule,
-        MeetingTimeComponent
+        DirectivesModule
     ]
 })
 export class MeetingListModule {}

@@ -17,7 +17,6 @@ import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { AccountExportServiceModule } from '../../services/account-export-service.module';
@@ -37,7 +36,6 @@ import { AccountListServiceModule } from './services/account-list-service.module
         AccountExportServiceModule,
         AccountCommonServiceModule,
         UserComponentsModule,
-        PromptDialogComponent,
         DirectivesModule,
         ChoiceDialogComponent,
         HeadBarModule,

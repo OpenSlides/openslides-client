@@ -14,7 +14,6 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PromptDialogComponent } from 'src/app/ui/modules/prompt-dialog';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -49,7 +48,6 @@ import { AccountPasswordComponent } from './components/account-password/account-
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
-        PromptDialogComponent,
         HeadBarModule,
         DirectivesModule,
         UserComponentsModule,
