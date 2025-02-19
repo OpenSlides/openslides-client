@@ -1,4 +1,4 @@
 <div #container class="projector-container" id="container" (osResized)="onResized()">
     <div class="blocker"></div>
-    <iframe class="projector" id="projector" [src]="url | trust: 'resourceUrl'" (load)="onResized()"></iframe>
+    <div class="projector" id="projector"></div>
 </div>

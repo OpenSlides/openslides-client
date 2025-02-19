@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { AuthTokenService } from 'src/app/site/services/auth-token.service';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -18,7 +19,7 @@ import { Dimension } from '../../../../pages/projectors/definitions';
     templateUrl: `./projector.component.html`,
     styleUrls: [`./projector.component.scss`]
 })
-export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
+export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDestroy {
     private readonly projectorSubject = new BehaviorSubject<ViewProjector | null>(null);
 
     @Input()
@@ -116,7 +117,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     public constructor(
         private offlineService: ConnectionStatusService,
         private elementRef: ElementRef,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private authTokenService: AuthTokenService
     ) {
         super();
 
@@ -154,6 +156,17 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
                 this.updateCSS();
             })
         );
+    }
+
+    public ngOnInit(): void {
+        const projectorScript = `/system/projector/static/projector.js`;
+        import(projectorScript).then(M => {
+            M.Projector(
+                document.getElementById(`projector`),
+                this.projector.id,
+                () => this.authTokenService.rawAccessToken
+            );
+        });
     }
 
     public onResized(): void {
