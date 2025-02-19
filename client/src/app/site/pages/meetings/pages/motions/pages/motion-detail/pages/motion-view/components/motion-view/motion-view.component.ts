@@ -79,6 +79,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public hasChangeRecommendations: boolean = false;
     public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
 
+    public originMotionTabSelected: number = 0;
     public originMotionsLoaded: ViewMotion[] = [];
     public originMotionsChangeRecoMode: { [key: Id]: ChangeRecoMode } = {};
     public originMotionsLineNumberingMode: { [key: Id]: LineNumberingMode } = {};
@@ -211,6 +212,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this.hasLoaded$.next(false);
         }
 
+        this.originMotionTabSelected = 0;
         this.originMotionsLoaded = [];
         this.unifiedChanges$.next([]);
         this.subscriptions.delete(`motion`);

@@ -202,7 +202,7 @@
 
 <ng-template #contentTemplate>
     @if (originMotionsLoaded.length) {
-        <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
+        <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" [(selectedIndex)]="originMotionTabSelected">
             <mat-tab [label]="motion?.meeting?.name">
                 <div class="motion-tab-content">
                     <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
