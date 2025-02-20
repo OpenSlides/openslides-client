@@ -5,7 +5,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/components/media-upload-content/media-upload-content.component';
+import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/media-upload-content.component';
 
 @Component({
     selector: `os-organization-mediafile-upload`,
