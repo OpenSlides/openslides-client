@@ -14,7 +14,6 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { GridModule } from 'src/app/ui/modules/grid';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectionDialogModule } from '../../../../modules/meetings-component-collector/projection-dialog/projection-dialog.module';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
@@ -44,7 +43,6 @@ import { ProjectorDetailServiceModule } from './services/projector-detail-servic
         ProjectorMessageDialogModule,
         ProjectorModule,
         ProjectionDialogModule,
-        PromptDialogModule,
         IconContainerComponent,
         GridModule,
         DirectivesModule,
