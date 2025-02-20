@@ -270,6 +270,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }
+        if (this.isCreateView) {
+            rawForm[`set_as_template`] = [false];
+        }
 
         this.meetingForm = this.formBuilder.group(rawForm);
         this.onAfterCreateForm();

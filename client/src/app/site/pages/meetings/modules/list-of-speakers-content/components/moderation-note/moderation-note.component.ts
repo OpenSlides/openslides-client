@@ -19,13 +19,15 @@ import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
+import { ModerationNotePdfService } from '../../services/moderation-note-pdf.service/moderation-note-pdf.service';
 
 @Component({
     selector: `os-moderation-note`,
     templateUrl: `./moderation-note.component.html`,
     styleUrls: [`./moderation-note.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ModerationNotePdfService]
 })
 export class ModerationNoteComponent extends BaseMeetingComponent implements OnInit {
     public isEditing = false;
@@ -48,6 +50,9 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
     public set contentObject(contentObject: BaseViewModel) {
         this._contentObject = contentObject;
     }
+
+    @Input()
+    public showModerationNotesExport = true;
 
     public get moderatorNotes(): Observable<string> {
         return this.LoSRepo.getViewModelObservable(this._listOfSpeakers?.getModel().id).pipe(
@@ -83,6 +88,7 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
         private operator: OperatorService,
         private formBuilder: FormBuilder,
         protected LoSRepo: ListOfSpeakersRepositoryService,
+        private moderationNotePdfService: ModerationNotePdfService,
         private cd: ChangeDetectorRef
     ) {
         super();
@@ -113,5 +119,12 @@ export class ModerationNoteComponent extends BaseMeetingComponent implements OnI
                 this.isEditing = false;
             })
             .catch(this.raiseError);
+    }
+
+    public onDownloadPDF(): void {
+        this.moderationNotePdfService.exportSingleModerationNote(
+            this.moderatorNotesForForm,
+            this._listOfSpeakers?.getTitle()
+        );
     }
 }

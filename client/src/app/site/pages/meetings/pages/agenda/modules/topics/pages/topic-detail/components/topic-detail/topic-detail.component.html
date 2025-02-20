@@ -80,7 +80,7 @@
                                 :
                             </h3>
                             <mat-list dense>
-                                @for (file of topic.attachment_meeting_mediafiles; track file) {
+                                @for (file of sortedAttachments; track file) {
                                     <mat-list-item>
                                         <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                     </mat-list-item>

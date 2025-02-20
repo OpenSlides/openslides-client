@@ -12,9 +12,8 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MediafileListServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-service.module';
 import { MediafileCommonServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common-service.module';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { FileListModule } from 'src/app/ui/modules/file-list/file-list.module';
+import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { OrganizationMediafileListComponent } from './components/organization-mediafile-list/organization-mediafile-list.component';
 import { OrganizationMediafileListRoutingModule } from './organization-mediafile-list-routing.module';
@@ -27,7 +26,7 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         OpenSlidesTranslationModule.forChild(),
         MatIconModule,
         MatMenuModule,
-        FileListModule,
+        FileListComponent,
         MatDividerModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -36,7 +35,6 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         OrganizationMediafileListRoutingModule,
         MediafileCommonServiceModule,
         MediafileListServiceModule,
-        PromptDialogModule,
         DirectivesModule,
         MatTooltipModule
     ]

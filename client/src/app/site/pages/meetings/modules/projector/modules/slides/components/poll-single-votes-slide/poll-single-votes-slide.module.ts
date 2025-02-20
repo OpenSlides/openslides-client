@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MotionPollModule } from 'src/app/site/pages/meetings/pages/motions/modules/motion-poll';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { SlideToken } from '../../definitions';
 import { PollSlideModule } from '../poll-slide/poll-slide.module';
@@ -13,7 +13,7 @@ import { PollSingleVotesSlideComponent } from './components/poll-single-votes-sl
         CommonModule,
         MotionPollModule,
         PollSlideModule,
-        IconContainerModule,
+        IconContainerComponent,
         OpenSlidesTranslationModule.forChild()
     ],
     declarations: [PollSingleVotesSlideComponent],

@@ -55,6 +55,10 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         return this.isFinished || this.isPublished;
     }
 
+    public get isStarted(): boolean {
+        return this.state === PollState.Started;
+    }
+
     public get isFinished(): boolean {
         return this.state === PollState.Finished;
     }
