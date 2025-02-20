@@ -280,7 +280,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        if (!this.operator.isSuperAdmin && !this.isMeetingAdmin && !this.isCreateView) {
+        if (!this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
@@ -350,7 +350,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private async doUpdateMeeting(): Promise<void> {
         const options =
-            this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+            this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
                 ? {}
                 : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {

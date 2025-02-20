@@ -91,6 +91,10 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get canSkipPermissionCheck(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager;
+    }
+
     public get isAccountAdmin(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
@@ -100,9 +104,7 @@ export class OperatorService {
     }
 
     public get isAnyManager(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager || this.readyDeferred.wasResolved
-            ? this.isCommitteeManager
-            : false;
+        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isCommitteeManager : false;
     }
 
     public get knowsMultipleMeetings(): boolean {
@@ -588,7 +590,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
+        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -612,7 +614,7 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if (this.isSuperAdmin && !this.activeMeeting.locked_from_inside) {
+        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
             return true;
         }
         const groups = this.user.groups(meetingId);
@@ -660,17 +662,8 @@ export class OperatorService {
      * @returns A boolean whether an operator's CML is high enough.
      */
     public hasCommitteePermissions(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
-        // If a user can manage an entire organization, they can also manage every committee.
-        // Regardless, if they have no CML.
-        if (this.isOrgaManager) {
-            return true;
-        }
-        return this.hasCommitteePermissionsNonAdminCheck(committeeId, ...permissionsToCheck);
-    }
-
-    public hasCommitteePermissionsNonAdminCheck(committeeId: Id | null, ...permissionsToCheck: CML[]): boolean {
-        // A superadmin can still do everything
-        if (this.isSuperAdmin) {
+        // A superadmin and orgaadmin can do everything
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
@@ -694,7 +687,7 @@ export class OperatorService {
      * @returns `true`, if the current operator is included in at least one of the given committees.
      */
     public isInCommittees(...committees: Committee[]): boolean {
-        if (this.isSuperAdmin) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         return this.isInCommitteesNonAdminCheck(...committees);
@@ -714,7 +707,7 @@ export class OperatorService {
 
     /**
      * This function checks if the operator is in one of the given groups. It is also a permission check.
-     * That means, if the operator is an admin or a superadmin, this function will return `true`, too.
+     * That means, if the operator is an admin a superadmin or an orgaadmin, this function will return `true`, too.
      *
      * TODO: what if no active meeting??
      *
@@ -728,19 +721,19 @@ export class OperatorService {
 
     /**
      * This checks if an operator is in at least one of the given groups. It is also a permission check.
-     * That means, if the operator is an admin or a superadmin, this function returns `true`, too.
+     * That means, if the operator is an admin, a superadmin or an orgaadmin, this function returns `true`, too.
      *
      * TODO: what if no active meeting??
      *
      * @param groups The group ids to check
      *
-     * @returns `true`, if the operator is in at least one group or they are an admin or a superadmin.
+     * @returns `true`, if the operator is in at least one group or they are an admin. a superadmin or a orgaadmin.
      */
     public isInGroupIds(...groupIds: Id[]): boolean {
         if (!this._groupIds) {
             return false;
         }
-        if (this.isSuperAdmin) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
@@ -751,7 +744,7 @@ export class OperatorService {
     }
 
     public isInMeetingIds(...meetingIds: Id[]): boolean {
-        if (this.isSuperAdmin) {
+        if (this.canSkipPermissionCheck) {
             return true;
         }
         if (!this._meetingIds) {
@@ -762,8 +755,8 @@ export class OperatorService {
 
     /**
      * Function to clear check if an operator is in at least of the given groups.
-     * This check is not a check for permissions and does neither include a check for an admin
-     * nor include a check for a superadmin.
+     * This check is not a check for permissions and does
+     * neither include a check for an admin, a superadmin, nor an orgaadmin
      *
      * @param groups The group ids to check
      *
