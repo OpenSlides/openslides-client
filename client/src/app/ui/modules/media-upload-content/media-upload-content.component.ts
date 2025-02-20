@@ -4,11 +4,11 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -39,7 +39,7 @@ export interface UploadSuccessEvent {
         PipesModule,
         SearchSelectorModule,
         FileUploadModule,
-        OpenSlidesTranslationModule
+        TranslatePipe
     ]
 })
 export class MediaUploadContentComponent extends BaseUiComponent implements OnInit {
