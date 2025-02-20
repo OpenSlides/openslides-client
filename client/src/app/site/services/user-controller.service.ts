@@ -67,6 +67,10 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         await this.repo.delete(userIds).resolve();
     }
 
+    public async deleteFromMeeting(user: ViewUser, meeting_id: Id): Promise<void> {
+        await this.repo.bulkRemoveUserFromMeeting([user], { id: meeting_id }).resolve();
+    }
+
     public setPassword(user: Identifiable, password: string, setAsDefault?: boolean): Promise<void> {
         return this.repo.setPassword(user, password, setAsDefault);
     }

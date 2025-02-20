@@ -13,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable, startWith } from 'rxjs';
+import { firstValueFrom, map, Observable, startWith, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
@@ -25,6 +25,7 @@ import { InteractionService } from 'src/app/site/pages/meetings/pages/interactio
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
@@ -183,7 +184,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
-        private interactionService: InteractionService
+        private interactionService: InteractionService,
+        private userController: UserControllerService
     ) {
         super();
     }
@@ -264,8 +266,25 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.canReaddLastSpeakerEvent.emit(canReaddLast);
     }
 
-    public addMyself(): void {
-        this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
+    public async addMyself(): Promise<void> {
+        // if superadmin is not part of the meeting, add it temporarily to get a meetingUserId
+        if (this.operator.isSuperAdmin && !this.operator.user.getMeetingUser()) {
+            await this.userController
+                .assignMeetings(this.operator.user, { meeting_ids: [this.activeMeetingId], group_name: `Admin` })
+                .resolve();
+            await new Promise<void>(resolve => {
+                const subscription: Subscription = this.userRepository.getViewModelListObservable().subscribe(_ => {
+                    if (this.userRepository.getViewModel(this._currentUser!.id).getMeetingUser()) {
+                        this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
+                        subscription.unsubscribe();
+                        this.userController.deleteFromMeeting(this._currentUser!, this.activeMeetingId as Id);
+                        resolve();
+                    }
+                });
+            });
+        } else {
+            this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
+        }
     }
 
     /**
