@@ -11,8 +11,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardComponent } from 'src/app/ui/modules/action-card';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
 import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
@@ -36,7 +35,6 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         MatCheckboxModule,
         ReactiveFormsModule,
         HeadBarModule,
-        PromptDialogModule,
         ProjectorModule,
         ActionCardComponent,
         DirectivesModule,
@@ -44,7 +42,7 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         AssignmentPollServiceModule,
         MotionPollServiceModule,
         TopicPollServiceModule,
-        IconContainerModule,
+        IconContainerComponent,
         OpenSlidesTranslationModule.forChild()
     ]
 })

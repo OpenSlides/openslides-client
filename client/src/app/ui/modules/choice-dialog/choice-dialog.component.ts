@@ -3,9 +3,9 @@ import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { OsOptionSelectionChanged, SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
 import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
@@ -23,7 +23,7 @@ import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
         ReactiveFormsModule,
         FormsModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule
+        TranslatePipe
     ]
 })
 export class ChoiceDialogComponent {
