@@ -16,7 +16,6 @@ import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separat
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemCommonServiceModule } from '../../services/agenda-item-common-service.module';
 import { AgendaItemListRoutingModule } from './agenda-item-list-routing.module';
@@ -40,7 +39,6 @@ const OS_MODULES = [
     MeetingsComponentCollectorModule,
     IconContainerComponent,
     DirectivesModule,
-    PromptDialogModule,
     ChoiceDialogComponent,
     OpenSlidesTranslationModule.forChild()
 ];
