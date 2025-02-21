@@ -112,6 +112,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public editorReady = false;
 
+    public inside = false;
+
     public headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
 
     public textColorSet = new Set(DEFAULT_COLOR_PALETE);
@@ -442,5 +444,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         return dom.body.innerHTML;
+    }
+
+    public toggleInside(): void {
+        this.inside = !this.inside;
+    }
+
+    public IsInside(): number {
+        return this.inside ? 0 : -1;
     }
 }
