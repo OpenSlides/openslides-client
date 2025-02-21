@@ -289,7 +289,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 }
             });
         }
-        if (this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
+        if (this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
