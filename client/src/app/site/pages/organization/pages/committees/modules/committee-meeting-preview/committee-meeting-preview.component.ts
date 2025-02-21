@@ -1,5 +1,6 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -16,7 +17,7 @@ import { MeetingService } from '../services/meeting.service';
     styleUrls: [`./committee-meeting-preview.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class CommitteeMeetingPreviewComponent {
+export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     @Input() public meeting!: ViewMeeting;
     @Input() public committee!: ViewCommittee;
     @Input() public isCMAndRequireDuplicateFrom!: boolean;
@@ -64,6 +65,13 @@ export class CommitteeMeetingPreviewComponent {
         return this.meeting?.locked_from_inside;
     }
 
+    public get canEditMeetingSetting(): boolean {
+        return this._canEditMeetingSetting;
+    }
+
+    private _canEditMeetingSetting = true;
+    private _canEditMeetingSubscription: Subscription;
+
     public constructor(
         private translate: TranslateService,
         private meetingRepo: MeetingControllerService,
@@ -71,6 +79,29 @@ export class CommitteeMeetingPreviewComponent {
         private promptService: PromptService,
         public operator: OperatorService
     ) {}
+
+    /**
+     * Get the subject
+     */
+    public ngOnInit(): void {
+        this._canEditMeetingSubscription = this.operator.operatorUpdated.subscribe(() => {
+            if (this.isLockedFromInside && !this.operator.isSuperAdmin) {
+                this._canEditMeetingSetting = this.meeting.canEditMeetingSetting(this.operator.user);
+            } else {
+                this._canEditMeetingSetting = true;
+            }
+        });
+    }
+
+    /**
+     * clear the Subscriptions
+     */
+    public ngOnDestroy(): void {
+        if (this._canEditMeetingSubscription) {
+            this._canEditMeetingSubscription.unsubscribe();
+            this._canEditMeetingSubscription = null;
+        }
+    }
 
     public async onArchive(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to archive this meeting?`);

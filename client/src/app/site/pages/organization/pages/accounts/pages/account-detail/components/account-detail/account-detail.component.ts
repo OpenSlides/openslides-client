@@ -57,7 +57,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get orgaManagementLevelChangeDisabled(): boolean {
-        return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
+        return (
+            this.user?.id === this.operator.operatorId &&
+            (this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isAccountAdmin)
+        );
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
@@ -253,7 +256,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && this.operator.isSuperAdmin)
+                    (!meeting.locked_from_inside && this.operator.canSkipPermissionCheck)
             };
         });
         this._tableData = tableData;

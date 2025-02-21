@@ -150,6 +150,10 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         }
         return status;
     }
+
+    public canEditMeetingSetting(user: ViewUser): boolean {
+        return user.getMeetingUser(this.id)?.group_ids.includes(this.meeting.admin_group_id);
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
