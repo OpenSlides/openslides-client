@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ 'Are you sure you want to duplicate this meeting?' | translate }}</h2>
+<mat-dialog-content>
+    {{ data.content }}
+    <form [formGroup]="form">
+        <mat-form-field appearance="fill">
+            <mat-label>{{ 'External ID' | translate }}</mat-label>
+            <input formControlName="externalId" matInput />
+            @if (form.invalid) {
+                <mat-hint class="foreground-warn">{{ 'already exists' | translate }}</mat-hint>
+            }
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button color="warn" mat-button [disabled]="form.invalid" (click)="onClone()">{{ 'Duplicate' | translate }}</button>
+    <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
+</mat-dialog-actions>

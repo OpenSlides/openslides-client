@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.subscription';
+import {
+    getCommitteeDetailSubscriptionConfig,
+    getCommitteeMeetingDetailExternalIdsSubscriptionConfig
+} from '../../../../committees.subscription';
 
 @Component({
     selector: `os-committee-detail`,
@@ -21,5 +24,6 @@ export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
         if (+params[`committeeId`]) {
             this.subscribeTo(getCommitteeDetailSubscriptionConfig(+params[`committeeId`]), { hideWhenDestroyed: true });
         }
+        this.subscribeTo(getCommitteeMeetingDetailExternalIdsSubscriptionConfig());
     }
 }
