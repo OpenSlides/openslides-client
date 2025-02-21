@@ -1,4 +1,4 @@
-#: /app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-detail/components/participant-detail-view/participant-detail-view.component.html
 msgid ""
 msgstr ""
 "mime-version: 1.0\n"
@@ -925,6 +925,10 @@ msgid ""
 "recommendation, category, motion blocks and tags."
 msgstr ""
 
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can edit own delegation"
+msgstr ""
+
 msgid "Can forward motions"
 msgstr ""
 
@@ -1155,6 +1159,10 @@ msgstr ""
 msgid "Can see the projector"
 msgstr ""
 
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can set and remove own delegation."
+msgstr ""
+
 msgid "Can support motions"
 msgstr ""
 
@@ -1250,7 +1258,15 @@ msgstr ""
 msgid "Change recommendation"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/services/common/motion-format.service/motion-format.service.ts
+msgid "Change recommendation - rejected"
+msgstr ""
+
 msgid "Change recommendations"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "Change your delegation"
 msgstr ""
 
 msgid "Changed by"
@@ -1898,6 +1914,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/moderation-note/moderation-note.component.html
 msgid "Edit moderation note"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
+msgid "Edit participant"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component.html
@@ -2736,6 +2756,10 @@ msgstr ""
 msgid "Is candidate"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/orga-meetings/pages/meeting-list/services/meeting-list-filter/meeting-list-filter.service.ts
+msgid "Is closed"
+msgstr ""
+
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Is committee admin"
 msgstr ""
@@ -3004,6 +3028,10 @@ msgid "Mandates switched sucessfully!"
 msgstr ""
 
 msgid "Mark as personal favorite"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component.ts
+msgid "Max votes per option cannot be greater than max votes."
 msgstr ""
 
 msgid "Maximum amount of votes"
@@ -4245,8 +4273,8 @@ msgstr ""
 msgid "Requires permission to manage lists of speakers"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
-msgid "Requires permission to manage motions"
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Requires permission to manage motion metadata"
 msgstr ""
 
 msgid "Reset"
@@ -5393,6 +5421,10 @@ msgstr ""
 msgid "Vote"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service.ts
+msgid "Vote Weight"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Vote delegation"
 msgstr ""
@@ -5433,6 +5465,10 @@ msgstr ""
 msgid ""
 "Voting ends after short (some seconds/minutes) or long (some days/weeks) "
 "time period."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll/assignment-poll.component.html
+msgid "Voting in progress"
 msgstr ""
 
 msgid "Voting is currently in progress."
@@ -5585,6 +5621,10 @@ msgstr ""
 msgid "Yes per option"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/modules/committee-meeting-preview/committee-meeting-preview.component.ts
+msgid "Yes, delete"
+msgstr ""
+
 msgid "Yes, inclusive meetings"
 msgstr ""
 
@@ -5699,6 +5739,12 @@ msgid "You reached the maximum amount of votes. Deselect one option first."
 msgstr ""
 
 msgid "You reached the maximum amount of votes. Deselect somebody first."
+msgstr ""
+
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.html
+msgid ""
+"You will be logged out when you change your password. You must then log in "
+"with the new password."
 msgstr ""
 
 msgid "You won!"
@@ -5942,6 +5988,10 @@ msgid "no natural person"
 msgstr ""
 
 msgid "nominal"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/polls/view-models/view-poll.ts
+msgid "nominal (anonymized)"
 msgstr ""
 
 msgid "non-binary"

@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { PollContentObject } from 'src/app/domain/models/poll';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
@@ -81,6 +82,11 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         return this._entitledUsersSubject;
     }
 
+    // the observable for the live-register
+    public get liveRegisterObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._liveRegisterObservable;
+    }
+
     public get self(): BasePollDetailComponent<V, S> {
         return this;
     }
@@ -103,6 +109,9 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
 
+    public countVoteAllowedAndPresent = 0;
+    public countVoteAllowed = 0;
+
     protected get canSeeVotes(): boolean {
         return (this.hasPerms() && this.poll!.isFinished) || this.poll!.isPublished;
     }
@@ -115,6 +124,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private _votesDataSubject = new BehaviorSubject<BaseVoteData[]>([]);
     private _currentOperator!: ViewUser;
     private _pollId!: Id;
+    private _liveRegisterObservable = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
 
     protected repo = inject(PollControllerService);
     protected route = inject(ActivatedRoute);
@@ -125,6 +135,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     protected cd = inject(ChangeDetectorRef);
     protected userRepo = inject(ParticipantControllerService);
     private scrollTableManage = inject(ScrollingTableManageService);
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
 
     public constructor(
         protected pollService: S,
@@ -220,6 +231,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         this.setVotesData(this.createVotesData());
         this.onAfterSetVotesData();
         this.setEntitledUsersData();
+        this.setLiveRegisterData();
     }
 
     private setEntitledUsersData(): void {
@@ -273,6 +285,54 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this._entitledUsersSubject.next(entries);
                     this.cd.markForCheck();
                 }))
+        );
+    }
+
+    private setLiveRegisterData(): void {
+        const userIds = new Set<Id>([]);
+        for (const group of this.poll.entitled_groups) {
+            const meetingUserIds = group.meeting_user_ids ?? [];
+            meetingUserIds.forEach(mu_id => userIds.add(this.meetingUserRepo.getViewModel(mu_id)?.user_id));
+        }
+        const delegates = new Set<Id>([]);
+        Array.from(userIds).forEach(userId => {
+            if (this.userRepo.getViewModel(userId)?.vote_delegated_to_id()) {
+                delegates.add(this.userRepo.getViewModel(userId)?.vote_delegated_to_id());
+            }
+        });
+        userIds.update(delegates);
+        this.subscriptions.push(
+            this.userRepo
+                .getViewModelListObservable()
+                .pipe(
+                    filter(users => !!users.length),
+                    map(users => users.filter(user => userIds.has(user.id)))
+                )
+                .subscribe(users => {
+                    const entries: EntitledUsersTableEntry[] = [];
+                    for (const user of users || []) {
+                        const delegateToId = user.vote_delegated_to_id();
+                        const voted = (this.poll.has_voted_user_ids ?? []).includes(user.id);
+                        entries.push({
+                            id: user.id,
+                            user: user,
+                            voted_verbose: `voted:${voted}`,
+                            user_id: user.id,
+                            present: user?.isPresentInMeeting(),
+                            voted: voted,
+                            vote_delegated_to_user_id: delegateToId,
+                            vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
+                        });
+                    }
+                    this.countVoteAllowedAndPresent = entries.filter(entry => {
+                        const countable = entry.user.isVoteCountable;
+                        const inVoteGroup = this.poll.entitled_group_ids.intersect(entry.user.group_ids()).length;
+                        return countable && inVoteGroup;
+                    }).length;
+                    this.countVoteAllowed = entries.length;
+                    this._liveRegisterObservable.next(entries);
+                    this.cd.markForCheck();
+                })
         );
     }
 

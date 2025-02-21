@@ -9,6 +9,6 @@ export const getOrganizationTagListSubscriptionConfig: SubscriptionConfigGenerat
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
-        follow: [{ idField: `organization_tag_ids` }]
+        follow: [{ idField: `organization_tag_ids`, fieldset: [`color`, `name`] }]
     }
 });

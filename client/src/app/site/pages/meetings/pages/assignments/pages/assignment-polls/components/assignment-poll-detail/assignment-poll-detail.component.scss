@@ -48,3 +48,15 @@
         height: 100%;
     }
 }
+
+.poll-content {
+    text-align: right;
+    display: grid;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+
+.no-data-margins {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
