@@ -49,6 +49,13 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
     private containerElement: ElementRef | null = null;
 
     /**
+     * The container element. THis is neede to get the size of the element,
+     * in which the projector must fit and be scaled to.
+     */
+    @ViewChild(`projector`, { static: true })
+    private projectorElement: ElementRef | null = null;
+
+    /**
      * The css class assigned to this projector.
      */
     private projectorClass: string;
@@ -162,7 +169,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
         const projectorScript = `/system/projector/static/projector.js`;
         import(projectorScript).then(M => {
             M.Projector(
-                document.getElementById(`projector`),
+                this.projectorElement.nativeElement,
                 this.projector.id,
                 () => this.authTokenService.rawAccessToken
             );
