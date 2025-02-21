@@ -112,10 +112,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public editorReady = false;
 
-    public inside = false;
+    private inside = false;
 
     public focusText = false;
-
     public focusBackground = false;
 
     public headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
