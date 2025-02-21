@@ -114,6 +114,10 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public inside = false;
 
+    public focusText = false;
+
+    public focusBackground = false;
+
     public headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
 
     public textColorSet = new Set(DEFAULT_COLOR_PALETE);
@@ -450,7 +454,16 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.inside = !this.inside;
     }
 
-    public IsInside(): number {
+    public isInside(): number {
         return this.inside ? 0 : -1;
+    }
+
+    public setFocus(help?: boolean): void {
+        this.focusText = help;
+        if (help === undefined) {
+            this.focusBackground = help;
+        } else {
+            this.focusBackground = !help;
+        }
     }
 }

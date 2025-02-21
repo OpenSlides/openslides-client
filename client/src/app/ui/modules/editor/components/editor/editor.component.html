@@ -12,7 +12,7 @@
                     mat-ripple
                     type="button"
                     [ngClass]="{ active: isGodButtonActive }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="godButtonAction()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -24,7 +24,7 @@
                     mat-ripple
                     type="button"
                     [matMenuTriggerFor]="formatMenu"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>arrow_drop_down</mat-icon>
@@ -126,7 +126,7 @@
                     type="button"
                     [matTooltip]="'Bold' | translate"
                     [ngClass]="{ active: editor.isActive('bold') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleBold().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -137,7 +137,7 @@
                     type="button"
                     [matTooltip]="'Italic' | translate"
                     [ngClass]="{ active: editor.isActive('italic') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleItalic().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -148,7 +148,7 @@
                     type="button"
                     [matTooltip]="'Underline' | translate"
                     [ngClass]="{ active: editor.isActive('underline') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleUnderline().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -159,7 +159,7 @@
                     type="button"
                     [matTooltip]="'Strikethrough' | translate"
                     [ngClass]="{ active: editor.isActive('strike') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleStrike().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -176,7 +176,7 @@
                     [ngStyle]="{
                         color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
                     }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="-1"
                     (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -186,6 +186,7 @@
                     class="more color-selection"
                     mat-ripple
                     type="button"
+                    [ngClass]="{ focused: focusText }"
                     [tabindex]="-1"
                     (click)="updateColorSets()"
                     (keydown.Escape)="toggleInside()"
@@ -194,9 +195,12 @@
                     <input
                         list="text-colors"
                         type="color"
-                        [tabindex]="IsInside()"
+                        [matTooltip]="'Choose color' | translate"
+                        [tabindex]="isInside()"
                         [value]="editor.getAttributes('textStyle')['color']"
                         (change)="updateFontColor($event)"
+                        (focus)="setFocus(true)"
+                        (focusout)="setFocus()"
                         (keydown.Escape)="toggleInside()"
                     />
                 </button>
@@ -208,7 +212,7 @@
                     [matTooltip]="'Background color' | translate"
                     [ngClass]="{ active: editor.isActive('highlight') }"
                     [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -218,6 +222,7 @@
                     class="more color-selection"
                     mat-ripple
                     type="button"
+                    [ngClass]="{ focused: focusBackground }"
                     [tabindex]="-1"
                     (click)="updateColorSets()"
                     (keydown.Escape)="toggleInside()"
@@ -226,9 +231,12 @@
                     <input
                         list="background-colors"
                         type="color"
-                        [tabindex]="IsInside()"
+                        [matTooltip]="'Choose color' | translate"
+                        [tabindex]="isInside()"
                         [value]="editor.getAttributes('highlight')['color']"
                         (change)="updateHighlightColor($event)"
+                        (focus)="setFocus(false)"
+                        (focusout)="setFocus()"
                         (keydown.Escape)="toggleInside()"
                     />
                 </button>
@@ -237,7 +245,7 @@
                 mat-ripple
                 type="button"
                 [matTooltip]="'Clear formatting' | translate"
-                [tabindex]="IsInside()"
+                [tabindex]="isInside()"
                 (click)="clearSelectedFormat()"
                 (keydown.Escape)="toggleInside()"
             >
@@ -251,7 +259,7 @@
                     type="button"
                     [matTooltip]="'Bullet list' | translate"
                     [ngClass]="{ active: editor.isActive('bulletList') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleBulletList().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -263,7 +271,7 @@
                     type="button"
                     [matTooltip]="'Numbered list' | translate"
                     [ngClass]="{ active: editor.isActive('orderedList') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleOrderedList().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -277,7 +285,7 @@
                     type="button"
                     [matTooltip]="'Insert/edit link' | translate"
                     [ngClass]="{ active: editor.isActive('link') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="setLinkDialog()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -289,7 +297,7 @@
                     type="button"
                     [matTooltip]="'Insert/edit image' | translate"
                     [ngClass]="{ active: editor.isActive('image') }"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="setImageDialog()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -303,7 +311,7 @@
                     type="button"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().undo().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -315,7 +323,7 @@
                     type="button"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
-                    [tabindex]="IsInside()"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().redo().run()"
                     (keydown.Escape)="toggleInside()"
                 >
@@ -327,7 +335,7 @@
                 mat-ripple
                 type="button"
                 [matTooltip]="'Source code' | translate"
-                [tabindex]="IsInside()"
+                [tabindex]="isInside()"
                 (click)="editCode()"
                 (keydown.Escape)="toggleInside()"
             >
