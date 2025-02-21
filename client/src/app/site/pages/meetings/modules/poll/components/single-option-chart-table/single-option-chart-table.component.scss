@@ -4,10 +4,18 @@
     outline: none;
 }
 
+.result-wrapper-additional {
+    .result-table {
+        tr {
+            height: 40px;
+        }
+    }
+}
+
 .result-wrapper {
     cursor: pointer;
     display: grid;
-    grid-gap: 2em;
+    grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .result-table {
@@ -18,7 +26,6 @@
         }
 
         tr {
-            height: 40px;
             border-bottom: none !important;
 
             .result-cell-definition {

@@ -149,6 +149,8 @@ export class Settings {
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
     public motion_poll_default_method!: PollMethod;
+    public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
+    public motion_poll_projection_max_columns!: number;
 
     // Users
     public users_enable_presence_view!: boolean;
@@ -404,6 +406,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
+        `motion_poll_projection_name_order_first`,
+        `motion_poll_projection_max_columns`,
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
         `meeting_user_ids`,
