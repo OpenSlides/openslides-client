@@ -1,21 +1,33 @@
 @import 'src/assets/styles/colors.scss';
 
 .motion-export-wrapper {
+    margin-right: 72px !important;
     .toggle-group-head {
         margin-bottom: 0px;
         margin-top: 30px;
     }
 
     mat-chip-listbox {
-        padding-right: 95px !important;
+        display: flex;
+        padding-left: 5px !important;
+        padding-right: 60px !important;
         mat-chip-option {
-            margin-top: 10px !important;
-            margin-right: 0px !important;
-            background-color: var(--mat-chip-option-background-color) !important ;
-            span {
-                color: var(--mat-menu-item-label) !important;
+            justify-content: space-between;
+            padding-left: 1px;
+            margin: 10px 30px 10px 5px !important;
+            background-color: var(--mat-tree-container-background-color) !important;
+            outline-style: solid;
+            outline-width: 1px;
+            outline-color: var(--mat-chip-option-background-color);
+            span.mat-badge-content {
+                font-size: 18px;
+                background-color: $os-lightblue;
+            }
+            span.mdc-evolution-chip__cell {
                 button {
-                    padding-left: 12px !important;
+                    padding-left: 5px !important;
+                    padding-right: 5px !important;
+                    text-align: center;
                     .mdc-evolution-chip__graphic {
                         display: none;
                         height: 0px !important;
@@ -24,19 +36,15 @@
                 }
             }
             &.mat-mdc-chip-disabled {
-                background-color: var(--mat-tree-container-background-color) !important;
+                outline-color: var(--mat-chip-option-background-color);
+            }
+            &.mat-mdc-chip-selected {
+                --mdc-chip-selected-label-text-color: var(--mat-sidenav-content-text-color) !important;
+                background-color: var(--mat-chip-option-background-color) !important;
+                outline-style: none;
             }
         }
     }
-}
-
-.check-badge {
-    display: hidden;
-    color: $os-lightblue;
-    background-color: white;
-    transform: translateX(-50%);
-    border-radius: 100% !important;
-    z-index: 9999 !important;
 }
 
 .motion-export-card {

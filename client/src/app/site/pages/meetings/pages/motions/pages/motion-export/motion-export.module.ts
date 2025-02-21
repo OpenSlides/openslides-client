@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +23,7 @@ import { MotionExportRoutingModule } from './motion-export-routing.module';
         MotionExportRoutingModule,
         ReactiveFormsModule,
         MatButtonToggleModule,
+        MatBadgeModule,
         MotionsExportModule,
         MatButtonModule,
         MatCardModule,
