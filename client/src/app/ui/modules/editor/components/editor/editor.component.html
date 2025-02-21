@@ -176,7 +176,7 @@
                     [ngStyle]="{
                         color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
                     }"
-                    [tabindex]="-1"
+                    [tabindex]="isInside()"
                     (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
                     (keydown.Escape)="toggleInside()"
                 >
