@@ -18,7 +18,6 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
 import { MotionExportService } from '../../../../services/export/motion-export.service';
 import { MotionExportDialogService } from '../../services/motion-export-dialog.service';
-
 @Component({
     selector: `os-motion-export`,
     templateUrl: `./motion-export.component.html`,
@@ -65,7 +64,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private pdfDefaults = {
         format: ExportFileFormat.PDF,
-        lnMode: [this.lnMode.Outside],
+        lnMode: [],
         crMode: [this.crMode.Diff],
         content: [`title`, `number`, `text`, `reason`, `id`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
@@ -148,6 +147,15 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     @ViewChild(`spokespersonChip`)
     public spokespersonChip!: MatChipOption;
+
+    @ViewChild(`referringMotionsChip`)
+    public referringMotionsChip!: MatChipOption;
+
+    @ViewChild(`tableOfContentChip`)
+    public tableOfContentChip!: MatChipOption;
+
+    @ViewChild(`addBreaksChip`)
+    public addBreaksChip!: MatChipOption;
 
     public isCSVExport = false;
     public isXLSXExport = false;
@@ -248,6 +256,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
+        const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
+        lnDefaultMode === this.lnMode.Inside
+            ? this.dialogForm.get(`lnMode`).setValue([])
+            : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
         return;
     }
 
@@ -256,14 +268,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public hasAvailableVariables(): void {
         this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `id`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
-        this.filterFormControlDefaults(`metaInfo`, `motions_show_referring_motions`, `referring_motions`);
-
+        if (!this.meetingSettingsService.instant(`motions_show_referring_motions`)) {
+            this.filterFormControlDefaults(`metaInfo`, `motions_show_referring_motions`, `referring_motions`);
+            this.changeStateOfChipOption(this.referringMotionsChip, true, `referring_motions`);
+        }
         if (!this.meetingSettingsService.instant(`motions_enable_editor`)) {
             this.filterFormControlDefaults(`personrelated`, `motions_enable_editor`, `editors`);
             this.changeStateOfChipOption(this.editorsChipOption, true, `editors`);
         }
-        if (!this.meetingSettingsService.instant(`motions_export_submitter_recommendation`)) {
-            this.filterFormControlDefaults(`metaInfo`, `motions_export_submitter_recommendation`, `recommendation`);
+        if (!this.meetingSettingsService.instant(`motions_recommendations_by`)) {
+            this.filterFormControlDefaults(`metaInfo`, `motions_recommendations_by`, `recommendation`);
             this.changeStateOfChipOption(this.recommendationChipOption, true, `recommendation`);
         }
         if (!this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)) {
@@ -274,12 +288,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             );
             this.changeStateOfChipOption(this.spokespersonChip, true, `working_group_speakers`);
         }
+        this.filterFormControlAvailableValues(`metaInfo`, `referring_motions`, this.referringMotionsChip);
         this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
         this.filterFormControlAvailableValues(`personrelated`, `working_group_speakers`, this.spokespersonChip);
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
-        this.filterFormControlAvailableValues(`metaInfo`, `tags`, this.tagChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `recommendation`, this.recommendationChipOption);
+        if (this.motions_models.filter(m => (m ? m.hasTags() : false)).length === 0) {
+            this.deselectOption(`metaInfo`, `tags`);
+            this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
+        }
         return;
     }
 
@@ -291,7 +309,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * @param chipOption The ChipOption whose state will change.
      * @param nextState The next state the ChipOption will assume.
      */
-    private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
+    public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             if (nextState) {
                 chipOption.disabled = nextState;
@@ -329,6 +347,18 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
     }
 
+    public disablePageLayoutOption(): void {
+        if (this.continuousTextChipOption.selected) {
+            this.deselectOption(`pageLayout`, `toc`);
+            this.deselectOption(`pageLayout`, `addBreaks`);
+            this.changeStateOfChipOption(this.addBreaksChip, true, `addBreaks`);
+            this.changeStateOfChipOption(this.tableOfContentChip, true, `toc`);
+        } else {
+            this.changeStateOfChipOption(this.addBreaksChip, false, `addBreaks`);
+            this.changeStateOfChipOption(this.tableOfContentChip, false, `toc`);
+        }
+    }
+
     // Helper function to exclude option from formcontrol and deselect it
     private deselectOption(formGroup: string, value: string): void {
         this.dialogForm
@@ -357,7 +387,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     // Helper function to filter and disable form control values based on availability of the properties
     // in the chosen motions
     public filterFormControlAvailableValues(formControl: string, val: string, chipOption: MatChipOption): void {
-        if (this.motions_models.filter(m => (m ? m[val] : false)).length === 0) {
+        if (this.motions_models.filter(m => (m[val] === null || m[val]?.length === 0 ? false : m[val])).length === 0) {
             this.deselectOption(formControl, val);
             this.changeStateOfChipOption(chipOption, true, val);
         }
