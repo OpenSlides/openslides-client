@@ -65,6 +65,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
      */
     private styleElement: HTMLStyleElement | null = null;
 
+    private destroyProjector: () => void;
+
     /**
      * All current css rules for the projector. when updating this, call `updateCSS()` afterwards.
      */
@@ -168,7 +170,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
     public ngOnInit(): void {
         const projectorScript = `/system/projector/static/projector.js`;
         import(projectorScript).then(M => {
-            M.Projector(
+            this.destroyProjector = M.Projector(
                 this.projectorElement.nativeElement,
                 this.projector.id,
                 () => this.authTokenService.rawAccessToken
@@ -238,6 +240,10 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
         if (this.styleElement) {
             document.head.removeChild(this.styleElement);
             this.styleElement = null;
+        }
+
+        if (this.destroyProjector) {
+            this.destroyProjector();
         }
     }
 }
