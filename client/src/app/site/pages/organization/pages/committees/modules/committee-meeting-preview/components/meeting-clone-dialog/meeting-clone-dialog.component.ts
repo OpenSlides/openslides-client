@@ -35,6 +35,7 @@ export class MeetingCloneDialogComponent {
         this.form = this.fb.group({
             external_id: [``, isUniqueAmong<string>(data.existingExternalIds, (a, b) => a === b, [null, ``])]
         });
+        this.form.valueChanges.subscribe(() => this.onChange());
     }
 
     public onCancel(): void {
@@ -43,5 +44,11 @@ export class MeetingCloneDialogComponent {
 
     public onClone(): void {
         this.dialogRef.close(this.form.value);
+    }
+
+    private onChange(): void {
+        if (!this.form.touched) {
+            this.form.markAllAsTouched();
+        }
     }
 }
