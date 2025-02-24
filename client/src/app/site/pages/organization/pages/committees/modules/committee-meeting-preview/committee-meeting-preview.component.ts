@@ -107,10 +107,9 @@ export class CommitteeMeetingPreviewComponent {
             }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(async result => {
             if (result) {
-                console.log(`XXX1:`, result);
-                // await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
+                await this.meetingRepo.duplicate({ meeting_id: this.meeting.id, ...result }).resolve();
             }
         });
     }

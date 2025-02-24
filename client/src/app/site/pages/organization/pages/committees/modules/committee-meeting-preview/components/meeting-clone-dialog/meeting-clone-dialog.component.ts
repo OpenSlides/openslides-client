@@ -22,7 +22,7 @@ import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique
     ],
     templateUrl: `./meeting-clone-dialog.component.html`,
     styleUrl: `./meeting-clone-dialog.component.scss`,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingCloneDialogComponent {
     public form: FormGroup;
@@ -32,9 +32,8 @@ export class MeetingCloneDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb: FormBuilder
     ) {
-        console.log(`XXX2`, data.existingExternalIds);
         this.form = this.fb.group({
-            externalId: [``, isUniqueAmong<string>(data.existingExternalIds, (a, b) => a === b, [null, ``])]
+            external_id: [``, isUniqueAmong<string>(data.existingExternalIds, (a, b) => a === b, [null, ``])]
         });
     }
 
