@@ -94,7 +94,7 @@ export class MotionExportDialogService {
         exportInfo[`crMode`] = dialogForm.get(`crMode`).value as ChangeRecoMode;
         exportInfo[`lnMode`] = dialogForm.get(`lnMode`).value as LineNumberingMode;
         exportInfo[`comments`] = dialogForm.get(`comments`).value;
-        exportInfo[`content`] = dialogForm.get(`content`).value;
+        exportInfo[`content`] = dialogForm.get(`content`).value.filter(obj => !obj.includes(`id`));
 
         let intersection = [
             `submitters`,
@@ -106,7 +106,6 @@ export class MotionExportDialogService {
             `tags`,
             `polls`,
             `speakers`,
-            `id`,
             `sequential_number`,
             `referring_motions`,
             `allcomments`,

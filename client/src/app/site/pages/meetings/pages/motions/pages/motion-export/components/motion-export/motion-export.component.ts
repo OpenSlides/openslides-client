@@ -66,7 +66,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         format: ExportFileFormat.PDF,
         lnMode: [],
         crMode: [this.crMode.Diff],
-        content: [`title`, `number`, `text`, `reason`, `id`],
+        content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
         pageLayout: [`toc`, `addBreaks`],
@@ -266,7 +266,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     // Function to determine whioch options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
     public hasAvailableVariables(): void {
-        this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `id`);
+        this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `sequential_number`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
         if (!this.meetingSettingsService.instant(`motions_show_referring_motions`)) {
             this.filterFormControlDefaults(`metaInfo`, `motions_show_referring_motions`, `referring_motions`);
