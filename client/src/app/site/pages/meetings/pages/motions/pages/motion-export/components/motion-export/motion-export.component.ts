@@ -82,7 +82,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         lnMode: [],
         crMode: [this.crMode.Original],
         content: [`title`, `number`, `text`, `reason`],
-        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`, `speakers`],
+        metaInfo: [
+            `state`,
+            `recommendation`,
+            `category`,
+            `tags`,
+            `block`,
+            `polls`,
+            `referring_motions`,
+            `list_of_speakers`
+        ],
         personrelated: [`submitters`, `supporters`, `editors`],
         pageLayout: [],
         headerFooter: [],
@@ -97,7 +106,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         lnMode: [],
         crMode: [],
         content: [`title`, `number`],
-        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`, `speakers`],
+        metaInfo: [
+            `state`,
+            `recommendation`,
+            `category`,
+            `tags`,
+            `block`,
+            `polls`,
+            `referring_motions`,
+            `list_of_speakers`
+        ],
         personrelated: [`submitters`, `supporters`, `editors`],
         pageLayout: [],
         headerFooter: [],
@@ -288,12 +306,23 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             );
             this.changeStateOfChipOption(this.spokespersonChip, true, `working_group_speakers`);
         }
-        this.filterFormControlAvailableValues(`metaInfo`, `referring_motions`, this.referringMotionsChip);
+        //this.filterFormControlAvailableValues(`metaInfo`, `referring_motions`, this.referringMotionsChip);
         this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
         this.filterFormControlAvailableValues(`personrelated`, `working_group_speakers`, this.spokespersonChip);
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `recommendation`, this.recommendationChipOption);
+        if (
+            this.motions_models.filter(m =>
+                m[`referenced_in_motion_recommendation_extensions`] === null ||
+                m[`referenced_in_motion_recommendation_extensions`]?.length === 0
+                    ? false
+                    : m[`referenced_in_motion_recommendation_extensions`]
+            ).length === 0
+        ) {
+            this.deselectOption(`metaInfo`, `referring_motions`);
+            this.changeStateOfChipOption(this.referringMotionsChip, true, `referring_motions`);
+        }
         if (this.motions_models.filter(m => (m ? m.hasTags() : false)).length === 0) {
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);

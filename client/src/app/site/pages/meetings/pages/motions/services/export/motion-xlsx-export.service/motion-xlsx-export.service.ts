@@ -81,9 +81,7 @@ export class MotionXlsxExportService {
      */
     public exportMotionList({ motions, infoToExport = [], commentIds }: MotionXlsxExportConfig): void {
         const workbook = new Workbook();
-        const properties: string[] = infoToExport.includes(`speakers`)
-            ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
-            : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
+        const properties: string[] = sortMotionPropertyList([`number`, `title`].concat(infoToExport));
         if (infoToExport.includes(`working_group_speakers`)) {
             properties.push(`working_group_speakers`);
         }
@@ -115,7 +113,7 @@ export class MotionXlsxExportService {
                     case `block`:
                         propertyHeader = _(`Motion block`);
                         break;
-                    case `speakers`:
+                    case `list_of_speakers`:
                         propertyHeader = _(`Open requests to speak`);
                         break;
                     case `working_group_speakers`:
@@ -161,7 +159,7 @@ export class MotionXlsxExportService {
                     if (property === `submitters`) {
                         return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
                     }
-                    if (property === `speakers`) {
+                    if (property === `list_of_speakers`) {
                         return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
                             ? motion.list_of_speakers.waitingSpeakerAmount
                             : ``;

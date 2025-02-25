@@ -105,7 +105,7 @@ export class MotionExportDialogService {
             `block`,
             `tags`,
             `polls`,
-            `speakers`,
+            `list_of_speakers`,
             `sequential_number`,
             `referring_motions`,
             `allcomments`,

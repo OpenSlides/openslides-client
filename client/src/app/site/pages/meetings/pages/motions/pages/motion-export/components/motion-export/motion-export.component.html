@@ -262,6 +262,7 @@
                         matBadge="&#x2713;"
                         matBadgeOverlap="true"
                         value="referring_motions"
+                        [disabled]="isDisabled(referringMotionsChip.value)"
                         [matBadgeHidden]="referringMotionsChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Referring motions' | translate }}</span>
@@ -280,7 +281,7 @@
                             #speakRequestsChipOption
                             matBadge="&#x2713;"
                             matBadgeOverlap="true"
-                            value="speakers"
+                            value="list_of_speakers"
                             [matBadgeHidden]="speakRequestsChipOption.selected ? 'false' : 'true'"
                         >
                             <span>{{ 'Open requests to speak' | translate }}</span>
