@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/domain/models/users/user';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
@@ -14,27 +15,72 @@ import {
 } from '../../../poll-slide/poll-slide-data';
 
 type VoteResult = `Y` | `N` | `A` | `X`;
-const ENTRIES_PER_PAGE = 9;
+// const ENTRIES_PER_PAGE = 11;
+const CHART_AREA_WIDTH = 480;
+const CHART_AREA_HEIGHT = 320;
+const ENTRY_HEIGHT = 50;
+const TITLE_HEIGHT = 55;
+const HEADER_FOOTER_HEIGHT = 105;
+
+interface FormattedVotesArea {
+    left: [string, VoteResult][][];
+    center: [string, VoteResult][][];
+    right: [string, VoteResult][][];
+}
+
+interface FormattedVotes {
+    top: FormattedVotesArea;
+    center: FormattedVotesArea;
+    bottom: FormattedVotesArea;
+}
 
 @Component({
     selector: `os-motion-poll-single-votes-slide`,
     templateUrl: `./poll-single-votes-slide.component.html`,
-    styleUrls: [`./poll-single-votes-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`./poll-single-votes-slide.component.scss`]
 })
 export class PollSingleVotesSlideComponent extends PollSlideComponent implements OnDestroy {
     public invalid = false;
 
-    public get userVotes(): [string, VoteResult][][] {
-        return this._userVotesFormatted;
+    public get gridStyle(): { [key: string]: any } {
+        return {
+            [`grid-template-columns`]: `${this.bufferLeft}fr ${this.chartColumns}fr ${this._columns - this.bufferLeft - this.chartColumns}`
+        };
     }
+
+    public get columnStyle(): { [key: string]: any } {
+        return {
+            [`width`]: `${Math.floor(((this.projector?.width ?? 100) - 100) / this._columns - 5)}px`
+        };
+    }
+
+    public get centerStyle(): { [key: string]: any } {
+        return {
+            [`width`]: `${Math.floor((((this.projector?.width ?? 100) - 100) / this._columns) * this.chartColumns) - 5}px`,
+            [`height`]: `${this.chartRows * ENTRY_HEIGHT}px`
+        };
+    }
+
+    public get innerCenterStyle(): { [key: string]: any } {
+        return {
+            [`max-width`]: `${CHART_AREA_WIDTH}px`,
+            [`max-height`]: `${CHART_AREA_HEIGHT}px`,
+            [`height`]: `${CHART_AREA_HEIGHT}px`,
+            [`margin`]: `auto`
+        };
+    }
+
+    public bufferUp: number;
+    public bufferLeft: number;
+    public chartRows: number;
+    public chartColumns: number;
+    public userVotesFormatted: FormattedVotes;
 
     private _columns = 6;
 
     private _maxColumns = 6;
     private _orderBy: keyof User = `last_name`;
     private _userVotes: [string, VoteResult][] = [];
-    private _userVotesFormatted: [string, VoteResult][][] = [];
 
     private _votes: {
         [key: string]: SlidePollVote;
@@ -45,6 +91,15 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
     } = {};
 
     private _meetingSettingsSubscriptions: Subscription[];
+
+    public override set projector(value: ViewProjector) {
+        super.projector = value;
+        this.formatUserVotes();
+    }
+
+    public override get projector(): ViewProjector {
+        return super.projector;
+    }
 
     public constructor(
         private meetingSettings: MeetingSettingsService,
@@ -130,18 +185,119 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
         return null;
     }
 
+    // private formatUserVotes(): void {
+    //     this._columns = Math.min(this._userVotes.length / ENTRIES_PER_PAGE, this._maxColumns);
+    //     const perColumn = Math.floor(this._userVotes.length / this._columns);
+    //     let overflow = this._userVotes.length - perColumn * this._columns;
+    //     let nextIndex = 0;
+    //     const votesFormatted: [string, VoteResult][][] = [];
+    //     for (let i = 0; i < this._columns; i++) {
+    //         const untilIndex = nextIndex + perColumn + (overflow > 0 ? 1 : 0);
+    //         votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));
+    //         nextIndex = untilIndex;
+    //         overflow--;
+    //     }
+    //     this._userVotesFormatted = votesFormatted;
+    // }
+
     private formatUserVotes(): void {
-        this._columns = Math.min(this._userVotes.length / ENTRIES_PER_PAGE, this._maxColumns);
-        const perColumn = Math.floor(this._userVotes.length / this._columns);
-        let overflow = this._userVotes.length - perColumn * this._columns;
-        let nextIndex = 0;
-        const votesFormatted: [string, VoteResult][][] = [];
-        for (let i = 0; i < this._columns; i++) {
-            const untilIndex = nextIndex + perColumn + (overflow > 0 ? 1 : 0);
-            votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));
-            nextIndex = untilIndex;
-            overflow--;
+        if (!this.projector || !this._userVotes) {
+            return;
         }
-        this._userVotesFormatted = votesFormatted;
+        const visibleHeight =
+            this.projector.height - TITLE_HEIGHT - (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : 0);
+        const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
+        this.chartRows = Math.min(Math.ceil(visibleRows * ((CHART_AREA_HEIGHT + 10) / visibleHeight)), visibleRows);
+        console.log(visibleRows, this.chartRows);
+        this.bufferUp = Math.floor((visibleRows - this.chartRows) / 2);
+        const width = this.projector.width - 100;
+        let [chartColumns, maxVisibleEntries] = this.calculateEntryNumberForColumns(
+            this._maxColumns,
+            width,
+            visibleRows,
+            this.chartRows
+        );
+        if (maxVisibleEntries <= this._userVotes.length) {
+            this._columns = this._maxColumns;
+        } else {
+            for (let columns = this._maxColumns - 1; columns > 0; columns--) {
+                const [newChartColumns, newMaxVisibleEntries] = this.calculateEntryNumberForColumns(
+                    columns,
+                    width,
+                    visibleRows,
+                    this.chartRows
+                );
+                if (newMaxVisibleEntries <= this._userVotes.length) {
+                    this._columns = columns + 1;
+                    break;
+                }
+                [chartColumns, maxVisibleEntries] = [newChartColumns, newMaxVisibleEntries];
+            }
+        }
+        this.chartColumns = chartColumns;
+        this.bufferLeft = Math.floor((this._columns - this.chartColumns) / 2);
+        const overflow = this._userVotes.length - maxVisibleEntries;
+        const overflowPerColumn = Math.floor(overflow / this._columns);
+        const additionalOverflowColumns = overflow % this._columns;
+        let nextIndex = 0;
+        const votesFormatted: FormattedVotes = {
+            top: {
+                left: [],
+                center: [],
+                right: []
+            },
+            center: {
+                left: [],
+                center: [],
+                right: []
+            },
+            bottom: {
+                left: [],
+                center: [],
+                right: []
+            }
+        };
+        for (let i = 0; i < this._columns; i++) {
+            let untilIndex = Math.min(nextIndex + this.bufferUp, this._userVotes.length);
+            const side: keyof FormattedVotesArea =
+                i < this.bufferLeft ? `left` : i >= this.bufferLeft + this.chartColumns ? `right` : `center`;
+            votesFormatted.top[side].push(this._userVotes.slice(nextIndex, untilIndex));
+            nextIndex = untilIndex;
+            if (i < this.bufferLeft || i >= this.bufferLeft + this.chartColumns) {
+                untilIndex = Math.min(nextIndex + this.chartRows, this._userVotes.length);
+                votesFormatted.center[side].push(this._userVotes.slice(nextIndex, untilIndex));
+                nextIndex = untilIndex;
+            }
+            untilIndex =
+                nextIndex +
+                visibleRows -
+                this.bufferUp -
+                this.chartRows +
+                overflowPerColumn +
+                (i < additionalOverflowColumns ? 1 : 0);
+            votesFormatted.bottom[side].push(this._userVotes.slice(nextIndex, untilIndex));
+            nextIndex = untilIndex;
+        }
+        this.userVotesFormatted = votesFormatted;
+        console.log(
+            `FORMATTED`,
+            this.bufferLeft,
+            this.chartColumns,
+            this.bufferUp,
+            this.chartRows,
+            this.userVotesFormatted
+        );
+    }
+
+    private calculateEntryNumberForColumns(
+        columns: number,
+        width: number,
+        visibleRows: number,
+        chartRows: number
+    ): [number, number] {
+        const spacePerColumn = Math.floor(width / columns);
+        const chartColumns = Math.min(Math.ceil((CHART_AREA_WIDTH + 10) / spacePerColumn), columns);
+        const maxVisibleEntries = chartColumns * (visibleRows - chartRows) + (columns - chartColumns) * visibleRows;
+        return [chartColumns, maxVisibleEntries];
     }
 }
