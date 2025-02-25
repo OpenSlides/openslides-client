@@ -276,7 +276,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.dialogForm.patchValue(this.pdfDefaults);
         const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
         lnDefaultMode === this.lnMode.Inside
-            ? this.dialogForm.get(`lnMode`).setValue([])
+            ? this.dialogForm.get(`lnMode`).setValue(this.lnMode.Outside)
             : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
         return;
     }
