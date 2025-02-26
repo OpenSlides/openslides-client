@@ -1,13 +1,10 @@
 import { Injectable, Type } from '@angular/core';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 
-import { OverlayComponent } from '../components/overlay/overlay.component';
 import { CustomOverlayConfig, OverlayInstance } from '../definitions';
-import { OpenSlidesOverlayModule } from '../openslides-overlay.module';
+import { OverlayComponent } from '../overlay.component';
 
-@Injectable({
-    providedIn: OpenSlidesOverlayModule
-})
+@Injectable({ providedIn: `root` })
 export class OverlayService {
     public constructor(private domService: DomService) {}
 

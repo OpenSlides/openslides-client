@@ -13,8 +13,7 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { DirectivesModule } from 'src/app/ui/directives';
 import { GridModule } from 'src/app/ui/modules/grid';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { ProjectionDialogModule } from '../../../../modules/meetings-component-collector/projection-dialog/projection-dialog.module';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
@@ -44,8 +43,7 @@ import { ProjectorDetailServiceModule } from './services/projector-detail-servic
         ProjectorMessageDialogModule,
         ProjectorModule,
         ProjectionDialogModule,
-        PromptDialogModule,
-        IconContainerModule,
+        IconContainerComponent,
         GridModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),

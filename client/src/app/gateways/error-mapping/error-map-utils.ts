@@ -45,7 +45,8 @@ const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
     [
         /Only one of start_time and end_time is not allowed./,
         _(`Start and end time must either both be set or both be empty`)
-    ]
+    ],
+    [/Cannot create non-template meeting without admin_ids/, _(`Cannot create non-template meeting without admin_ids`)]
 ]);
 
 /**
