@@ -44,9 +44,9 @@ export const Slides: SlideManifest[] = [
     {
         path: `current_list_of_speakers`,
         loadChildren: () =>
-            import(
-                `../components/list-of-speakers/modules/current-list-of-speakers-slide/current-list-of-speakers-slide.module`
-            ).then(m => m.CurrentListOfSpeakersSlideModule),
+            import(`../components/list-of-speakers/modules/current-los-slide/current-los-slide.module`).then(
+                m => m.CurrentLosSlideModule
+            ),
         verboseName: _(`Current list of speakers`),
         scaleable: true,
         scrollable: true
