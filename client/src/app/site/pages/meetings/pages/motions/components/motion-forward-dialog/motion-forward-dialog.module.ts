@@ -7,9 +7,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { MeetingTimeModule } from 'src/app/ui/modules/meeting-time/meeting-time.module';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
+import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 
 import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
 
@@ -23,9 +23,9 @@ import { MotionForwardDialogComponent } from './components/motion-forward-dialog
         MatRadioModule,
         MatTableModule,
         FormsModule,
-        IconContainerModule,
-        MeetingTimeModule,
-        CommaSeparatedListingModule,
+        IconContainerComponent,
+        MeetingTimeComponent,
+        CommaSeparatedListingComponent,
         OpenSlidesTranslationModule.forChild()
     ]
 })
