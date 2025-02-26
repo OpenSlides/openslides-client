@@ -5,7 +5,7 @@
         [matTooltip]="iconTooltip"
         [matTooltipClass]="iconTooltipClass"
         [matTooltipPosition]="iconTooltipPosition"
-        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        [ngClass]="calculatedIconClass"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
     >

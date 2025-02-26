@@ -127,8 +127,13 @@
     <os-projector-button
         *osPerms="permission.projectorCanManage"
         [menuItem]="true"
-        [object]="poll"
+        [object]="projectionConfig"
     ></os-projector-button>
+    <!-- @for (pollDescriptor of poll.getProjectionBuildDescriptors() | keyvalue; track pollDescriptor.key) {
+        <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="pollDescriptor.value">
+            {{ pollDescriptor.key | translate }}
+        </os-projector-button>
+    } -->
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>

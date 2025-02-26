@@ -1,0 +1,111 @@
+.poll-result-area {
+    margin-top: 10px;
+}
+
+.content-grid {
+    display: grid;
+    width: 100%;
+    gap: 0 5px;
+    // grid-template-columns: 2fr 7fr;
+    // gap: 10px;
+
+    .top-left {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    .top-center {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    .top-right {
+        grid-column: 3;
+        grid-row: 1;
+    }
+    .center-left {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    .center-area {
+        grid-column: 2;
+        grid-row: 2;
+        display: table;
+        border: 0.5px solid rgba(128, 128, 128, 0.2);
+        padding: 5px;
+        background-color: #fcfcfc;
+        border-radius: 5px;
+
+        div {
+            display: table-cell;
+            vertical-align: middle;
+            max-width: 480px;
+            max-height: 240px;
+            width: 480px;
+            height: 240px;
+            margin: auto;
+        }
+    }
+    .center-right {
+        grid-column: 3;
+        grid-row: 2;
+    }
+    .bottom-left {
+        grid-column: 1;
+        grid-row: 3;
+    }
+    .bottom-center {
+        grid-column: 2;
+        grid-row: 3;
+    }
+    .bottom-right {
+        grid-column: 3;
+        grid-row: 3;
+    }
+
+    .border-top {
+        .votes-column {
+            border-top: 0.5px solid rgba(128, 128, 128, 0.2);
+        }
+    }
+
+    .votes-area {
+        display: inline-flex;
+        gap: 0 5px;
+        height: 100%;
+
+        .votes-column {
+            display: flex;
+            flex-direction: column;
+            // padding-left: 5px;
+            flex-grow: 1;
+            height: 100%;
+            // gap: 5px;
+
+            .vote-entry {
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+            }
+
+            :not(:last-child) {
+                border-bottom: 0.5px solid rgba(128, 128, 128, 0.2);
+            }
+        }
+    }
+}
+
+.slidetitle {
+    border-bottom: 0 !important;
+    padding-bottom: 0 !important;
+
+    h1,
+    h2 {
+        margin: 0 !important;
+    }
+    h1 {
+        font-size: 25px !important;
+    }
+    h2 {
+        font-size: 14px !important;
+        line-height: 14px !important;
+    }
+}

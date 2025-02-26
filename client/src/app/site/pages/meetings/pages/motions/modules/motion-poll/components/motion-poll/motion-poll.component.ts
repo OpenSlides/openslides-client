@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
+import { ProjectionDialogConfig } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/components/projection-dialog/projection-dialog.component';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -61,6 +63,19 @@ export class MotionPollComponent extends BasePollComponent {
 
     public get isPublished(): boolean {
         return this.poll.state === PollState.Published;
+    }
+
+    public get projectionConfig(): ProjectionDialogConfig {
+        const typeChoices: [string, string][] = [[`poll`, _(`Standard projection`)]];
+        if (this.poll.type === `named`) {
+            typeChoices.push([`poll_single_votes`, _(`Single votes projection`)]);
+        }
+        console.log(`typeChoices`, typeChoices);
+        return {
+            descriptor: this.poll.getProjectionBuildDescriptor(),
+            allowReferenceProjector: true,
+            typeChoices
+        };
     }
 
     public constructor(

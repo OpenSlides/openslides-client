@@ -29,6 +29,21 @@ export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
     projector?: ViewProjector;
+    typeChoices?: [string, string][];
+}
+export function isProjectionDialogConfig(obj: any): obj is ProjectionDialogConfig {
+    return (
+        obj &&
+        obj.descriptor !== undefined &&
+        isProjectionBuildDescriptor(obj.descriptor) &&
+        obj.allowReferenceProjector !== undefined &&
+        (!obj.projector || obj.projector instanceof ViewProjector) &&
+        (!obj.typeChoices ||
+            (Array.isArray(obj.typeChoices) &&
+                obj.typeChoices.every(
+                    entry => Array.isArray(entry) && entry.length === 2 && entry.every(val => typeof val === `string`)
+                )))
+    );
 }
 
 @Component({
@@ -60,6 +75,8 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
     public allowReferenceProjector = true;
     public projectorSelectable = false;
+    public selectedTypeChoice: string;
+    public typeChoices: [string, string][];
     private currentProjectionOptions: { [key: string]: any } = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
@@ -74,13 +91,21 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         this.descriptor = isProjectionBuildDescriptor(data) ? data : data.descriptor;
         this.allowReferenceProjector = !isProjectionBuildDescriptor(data) && data.allowReferenceProjector;
         this.projectorSelectable = isProjectionBuildDescriptor(data) || !data.projector;
+        this.typeChoices = !isProjectionBuildDescriptor(data) ? data.typeChoices : undefined;
+        if (this.typeChoices) {
+            this.selectedTypeChoice = this.typeChoices[0][0];
+        }
+        console.log(`AAAAA`, this.typeChoices, this.selectedTypeChoice);
         if (!this.projectorSelectable && !isProjectionBuildDescriptor(data)) {
             this.selectedProjectors = [data.projector.id];
         }
 
         const projector = !isProjectionBuildDescriptor(data) && data.projector;
         if (projector) {
-            const projections = this.projectorService.getMatchingProjectionsFromProjector(this.descriptor, projector);
+            const projections = this.projectorService.getMatchingProjectionsFromProjector(
+                this.getDescriptor(),
+                projector
+            );
 
             if (projections.length === 1) {
                 this.currentProjectionOptions = projections[0].options || {};
@@ -157,7 +182,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public isProjectedOn(projector: ViewProjector): boolean {
-        return this.projectorService.isProjectedOn(this.descriptor, projector);
+        return this.projectorService.isProjectedOn(this.getDescriptor(), projector);
     }
 
     public isDecisionOption(option: SlideOption): option is SlideDecisionOption {
@@ -171,7 +196,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onProject(): void {
         this.dialogRef.close({
             action: `project`,
-            resultDescriptor: this.descriptor,
+            resultDescriptor: this.getDescriptor(),
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues,
             keepActiveProjections: !this.projectorSelectable
@@ -181,7 +206,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onAddToPreview(): void {
         this.dialogRef.close({
             action: `addToPreview`,
-            resultDescriptor: this.descriptor,
+            resultDescriptor: this.getDescriptor(),
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
@@ -190,10 +215,20 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onHide(): void {
         this.dialogRef.close({
             action: `hide`,
-            resultDescriptor: this.descriptor,
+            resultDescriptor: this.getDescriptor(),
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
+    }
+
+    private getDescriptor(): ProjectionBuildDescriptor {
+        if (this.typeChoices?.length > 1) {
+            return {
+                ...this.descriptor,
+                type: this.selectedTypeChoice
+            };
+        }
+        return this.descriptor;
     }
 
     public onCancel(): void {
