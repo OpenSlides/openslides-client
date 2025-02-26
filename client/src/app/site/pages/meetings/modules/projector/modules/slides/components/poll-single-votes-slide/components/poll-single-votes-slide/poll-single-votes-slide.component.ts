@@ -15,23 +15,23 @@ import {
 } from '../../../poll-slide/poll-slide-data';
 
 type VoteResult = `Y` | `N` | `A` | `X`;
-// const ENTRIES_PER_PAGE = 11;
 const CHART_AREA_WIDTH = 450;
 const CHART_AREA_HEIGHT = 300;
 const ENTRY_HEIGHT = 50;
 const TITLE_HEIGHT = 55;
 const HEADER_FOOTER_HEIGHT = 105;
+const NO_HEADER_TOP_MARGIN = 40;
 
 interface FormattedVotesArea {
-    left: [string, VoteResult][][];
-    center: [string, VoteResult][][];
-    right: [string, VoteResult][][];
+    left?: [string, VoteResult][][];
+    center?: [string, VoteResult][][];
+    right?: [string, VoteResult][][];
 }
 
 interface FormattedVotes {
-    top: FormattedVotesArea;
-    center: FormattedVotesArea;
-    bottom: FormattedVotesArea;
+    top?: FormattedVotesArea;
+    center?: FormattedVotesArea;
+    bottom?: FormattedVotesArea;
 }
 
 @Component({
@@ -42,33 +42,9 @@ interface FormattedVotes {
 export class PollSingleVotesSlideComponent extends PollSlideComponent implements OnDestroy {
     public invalid = false;
 
-    public get gridStyle(): { [key: string]: any } {
-        return {
-            [`grid-template-columns`]: `${this.bufferLeft}fr ${this.chartColumns}fr ${this._columns - this.bufferLeft - this.chartColumns}`
-        };
-    }
+    public gridStyle: { [key: string]: any } = {};
 
-    public get columnStyle(): { [key: string]: any } {
-        return {
-            [`width`]: `${Math.floor(((this.projector?.width ?? 100) - 100) / this._columns - 5)}px`
-        };
-    }
-
-    public get centerStyle(): { [key: string]: any } {
-        return {
-            [`width`]: `${Math.floor((((this.projector?.width ?? 100) - 100) / this._columns) * this.chartColumns) - 5}px`,
-            [`height`]: `${this.chartRows * ENTRY_HEIGHT}px`
-        };
-    }
-
-    public get innerCenterStyle(): { [key: string]: any } {
-        return {
-            [`max-width`]: `${CHART_AREA_WIDTH}px`,
-            [`max-height`]: `${CHART_AREA_HEIGHT}px`,
-            [`height`]: `${CHART_AREA_HEIGHT}px`,
-            [`margin`]: `auto`
-        };
-    }
+    public columnStyle: { [key: string]: any } = {};
 
     public bufferUp: number;
     public bufferLeft: number;
@@ -185,33 +161,19 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
         return null;
     }
 
-    // private formatUserVotes(): void {
-    //     this._columns = Math.min(this._userVotes.length / ENTRIES_PER_PAGE, this._maxColumns);
-    //     const perColumn = Math.floor(this._userVotes.length / this._columns);
-    //     let overflow = this._userVotes.length - perColumn * this._columns;
-    //     let nextIndex = 0;
-    //     const votesFormatted: [string, VoteResult][][] = [];
-    //     for (let i = 0; i < this._columns; i++) {
-    //         const untilIndex = nextIndex + perColumn + (overflow > 0 ? 1 : 0);
-    //         votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));
-    //         nextIndex = untilIndex;
-    //         overflow--;
-    //     }
-    //     this._userVotesFormatted = votesFormatted;
-    // }
-
     private formatUserVotes(): void {
         if (!this.projector || !this._userVotes) {
             return;
         }
         const visibleHeight =
-            this.projector.height - TITLE_HEIGHT - (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : 0);
+            this.projector.height -
+            TITLE_HEIGHT -
+            (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN);
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
         this.chartRows = Math.min(Math.ceil(visibleRows * ((CHART_AREA_HEIGHT + 10) / visibleHeight)), visibleRows);
-        console.log(visibleRows, this.chartRows);
         this.bufferUp = Math.floor((visibleRows - this.chartRows) / 2);
         const width = this.projector.width - 100;
-        let [chartColumns, maxVisibleEntries] = this.calculateEntryNumberForColumns(
+        let [chartColumns, bufferLeft, maxVisibleEntries] = this.calculateEntryNumberForColumns(
             this._maxColumns,
             width,
             visibleRows,
@@ -221,7 +183,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             this._columns = this._maxColumns;
         } else {
             for (let columns = this._maxColumns - 1; columns > 0; columns--) {
-                const [newChartColumns, newMaxVisibleEntries] = this.calculateEntryNumberForColumns(
+                const [newChartColumns, newBufferLeft, newMaxVisibleEntries] = this.calculateEntryNumberForColumns(
                     columns,
                     width,
                     visibleRows,
@@ -231,36 +193,25 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
                     this._columns = columns + 1;
                     break;
                 }
-                [chartColumns, maxVisibleEntries] = [newChartColumns, newMaxVisibleEntries];
+                [chartColumns, bufferLeft, maxVisibleEntries] = [newChartColumns, newBufferLeft, newMaxVisibleEntries];
             }
         }
         this.chartColumns = chartColumns;
-        this.bufferLeft = Math.floor((this._columns - this.chartColumns) / 2);
+        this.bufferLeft = bufferLeft;
         const overflow = this._userVotes.length - maxVisibleEntries;
         const overflowPerColumn = Math.floor(overflow / this._columns);
         const additionalOverflowColumns = overflow % this._columns;
+        console.log(
+            `height ${this.projector.height},\nvisibleHeight ${visibleHeight},\nvisibleRows ${visibleRows},\nchartRows ${this.chartRows},\nbufferUp ${this.bufferUp},\nwidth ${width},\nchartColumns ${chartColumns},\nbufferLeft ${bufferLeft},\nmaxVisibleEntries ${maxVisibleEntries},\ncolumns ${this._columns},\noverflow ${overflow},\noverflowPerColumn ${overflowPerColumn},\nadditionalOverflowColumns ${additionalOverflowColumns}`
+        );
+        const votesFormatted: FormattedVotes = [`top`, `center`, `bottom`].mapToObject(key => ({
+            [key]: [`left`, `center`, `right`].mapToObject(innerKey => ({ [innerKey]: [] }))
+        }));
         let nextIndex = 0;
-        const votesFormatted: FormattedVotes = {
-            top: {
-                left: [],
-                center: [],
-                right: []
-            },
-            center: {
-                left: [],
-                center: [],
-                right: []
-            },
-            bottom: {
-                left: [],
-                center: [],
-                right: []
-            }
-        };
         for (let i = 0; i < this._columns; i++) {
-            let untilIndex = Math.min(nextIndex + this.bufferUp, this._userVotes.length);
             const side: keyof FormattedVotesArea =
                 i < this.bufferLeft ? `left` : i >= this.bufferLeft + this.chartColumns ? `right` : `center`;
+            let untilIndex = Math.min(nextIndex + this.bufferUp, this._userVotes.length);
             votesFormatted.top[side].push(this._userVotes.slice(nextIndex, untilIndex));
             nextIndex = untilIndex;
             if (i < this.bufferLeft || i >= this.bufferLeft + this.chartColumns) {
@@ -278,14 +229,23 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             votesFormatted.bottom[side].push(this._userVotes.slice(nextIndex, untilIndex));
             nextIndex = untilIndex;
         }
-        this.userVotesFormatted = votesFormatted;
-        console.log(
-            `FORMATTED`,
-            this.bufferLeft,
-            this.chartColumns,
-            this.bufferUp,
-            this.chartRows,
-            this.userVotesFormatted
+        let templateColumns = `${this.chartColumns}fr`;
+        if (this.bufferLeft) {
+            templateColumns = `${this.bufferLeft}fr ${templateColumns} ${this.bufferLeft}fr`;
+        }
+        this.gridStyle = {
+            [`grid-template-columns`]: templateColumns
+        };
+        this.columnStyle = {
+            [`width`]: `${Math.floor(((this.projector?.width ?? 100) - 100) / this._columns - 5)}px`
+        };
+        this.userVotesFormatted = Object.entries(votesFormatted).mapToObject(
+            ([key, area]: [keyof FormattedVotes, FormattedVotesArea]) => {
+                if (Object.values(area).some(val => val.length)) {
+                    return { [key]: Object.entries(area).mapToObject(([k, v]) => (v.length ? { [k]: v } : {})) };
+                }
+                return {};
+            }
         );
     }
 
@@ -294,10 +254,12 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
         width: number,
         visibleRows: number,
         chartRows: number
-    ): [number, number] {
+    ): [number, number, number] {
         const spacePerColumn = Math.floor(width / columns);
-        const chartColumns = Math.min(Math.ceil((CHART_AREA_WIDTH + 10) / spacePerColumn), columns);
+        let chartColumns = Math.min(Math.ceil((CHART_AREA_WIDTH + 10) / spacePerColumn), columns);
+        const bufferLeft = Math.floor((columns - chartColumns) / 2);
+        chartColumns = columns - bufferLeft * 2;
         const maxVisibleEntries = chartColumns * (visibleRows - chartRows) + (columns - chartColumns) * visibleRows;
-        return [chartColumns, maxVisibleEntries];
+        return [chartColumns, bufferLeft, maxVisibleEntries];
     }
 }

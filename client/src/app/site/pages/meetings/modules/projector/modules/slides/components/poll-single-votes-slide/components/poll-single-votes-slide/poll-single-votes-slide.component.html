@@ -1,4 +1,4 @@
-@if (data?.data) {
+@if (data?.data && userVotesFormatted) {
     <div class="slidetitle">
         <ng-container>
             <h1>{{ title }}</h1>
@@ -14,25 +14,25 @@
                     <div class="top-left">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top.left }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.left }"
                         ></ng-container>
                     </div>
                     <div class="top-center">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top.center }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.center }"
                         ></ng-container>
                     </div>
                     <div class="top-right">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top.right }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.right }"
                         ></ng-container>
                     </div>
-                    <div class="center-left">
+                    <div [ngClass]="{ 'center-left': true, 'border-top': bufferUp > 0 }">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center.left }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center?.left }"
                         ></ng-container>
                     </div>
                     <div class="center-area">
@@ -45,28 +45,28 @@
                             ></os-motion-poll-detail-content>
                         </div>
                     </div>
-                    <div class="center-right">
+                    <div [ngClass]="{ 'center-right': true, 'border-top': bufferUp > 0 }">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center.right }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center?.right }"
                         ></ng-container>
                     </div>
-                    <div class="bottom-left">
+                    <div class="bottom-left border-top">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom.left }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.left }"
                         ></ng-container>
                     </div>
                     <div class="bottom-center">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom.center }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.center }"
                         ></ng-container>
                     </div>
-                    <div class="bottom-right">
+                    <div class="bottom-right border-top">
                         <ng-container
                             [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom.right }"
+                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.right }"
                         ></ng-container>
                     </div>
                 </div>
@@ -78,31 +78,33 @@
 }
 
 <ng-template #entries let-entries="entries">
-    <div class="votes-area">
-        @for (column of entries; track column) {
-            <div class="votes-column" [ngStyle]="columnStyle">
-                @for (user of column; track user[0]) {
-                    <div class="vote-entry">
-                        @if (user[1] === 'Y') {
-                            <os-icon-container icon="check_circle" iconClass="yes">
-                                {{ user[0] }}
-                            </os-icon-container>
-                        } @else if (user[1] === 'N') {
-                            <os-icon-container icon="cancel" iconClass="no">
-                                {{ user[0] }}
-                            </os-icon-container>
-                        } @else if (user[1] === 'A') {
-                            <os-icon-container icon="circle" iconClass="abstain">
-                                {{ user[0] }}
-                            </os-icon-container>
-                        } @else {
-                            <os-icon-container icon="radio_button_unchecked" iconClass="no-content">
-                                {{ user[0] }}
-                            </os-icon-container>
-                        }
-                    </div>
-                }
-            </div>
-        }
-    </div>
+    @if (entries) {
+        <div class="votes-area">
+            @for (column of entries; track column) {
+                <div class="votes-column" [ngStyle]="columnStyle">
+                    @for (user of column; track user[0]) {
+                        <div class="vote-entry">
+                            @if (user[1] === 'Y') {
+                                <os-icon-container icon="check_circle" iconClass="yes">
+                                    {{ user[0] }}
+                                </os-icon-container>
+                            } @else if (user[1] === 'N') {
+                                <os-icon-container icon="cancel" iconClass="no">
+                                    {{ user[0] }}
+                                </os-icon-container>
+                            } @else if (user[1] === 'A') {
+                                <os-icon-container icon="circle" iconClass="abstain">
+                                    {{ user[0] }}
+                                </os-icon-container>
+                            } @else {
+                                <os-icon-container icon="radio_button_unchecked" iconClass="no-content">
+                                    {{ user[0] }}
+                                </os-icon-container>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
 </ng-template>
