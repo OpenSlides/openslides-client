@@ -27,10 +27,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public lastGroupName = ``;
 
     public meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
-
-    public get meetings$(): Observable<ViewMeeting[]> {
-        return this.meetingsSubject.pipe(filter(meetings => !!meetings.length));
-    }
+    public meetings$: Observable<ViewMeeting[]> | null = null;
 
     public get warningMessage(): string {
         if (!this.selectedMeetings?.length) {
@@ -119,6 +116,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
         );
+        this.setMeetingsObservable();
     }
 
     public async assign(): Promise<void> {
@@ -167,5 +165,9 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     private updatePermissions(): void {
         this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
+    private setMeetingsObservable(): void {
+        this.meetings$ = this.meetingsSubject.pipe(filter(meetings => !!meetings.length));
     }
 }
