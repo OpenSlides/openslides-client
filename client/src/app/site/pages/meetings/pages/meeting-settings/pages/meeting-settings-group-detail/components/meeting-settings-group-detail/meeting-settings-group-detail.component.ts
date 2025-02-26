@@ -128,14 +128,6 @@ export class MeetingSettingsGroupDetailComponent
         this.cd.detach();
         try {
             const data = deepCopy(this.changedSettings);
-            for (const field of this.settingsFields) {
-                if (field.disabled) {
-                    const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
-                    for (const key of keys) {
-                        delete data[key];
-                    }
-                }
-            }
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
                     data[key] = data[key].map((val: unknown) =>
