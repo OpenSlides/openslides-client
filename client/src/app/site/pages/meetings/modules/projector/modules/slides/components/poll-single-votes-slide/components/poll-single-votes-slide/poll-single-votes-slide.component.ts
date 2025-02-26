@@ -16,8 +16,8 @@ import {
 
 type VoteResult = `Y` | `N` | `A` | `X`;
 // const ENTRIES_PER_PAGE = 11;
-const CHART_AREA_WIDTH = 480;
-const CHART_AREA_HEIGHT = 320;
+const CHART_AREA_WIDTH = 450;
+const CHART_AREA_HEIGHT = 300;
 const ENTRY_HEIGHT = 50;
 const TITLE_HEIGHT = 55;
 const HEADER_FOOTER_HEIGHT = 105;

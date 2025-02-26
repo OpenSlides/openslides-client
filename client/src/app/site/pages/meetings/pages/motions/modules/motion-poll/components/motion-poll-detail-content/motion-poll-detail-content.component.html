@@ -8,10 +8,11 @@
                         [iconSize]="iconSize"
                         [poll]="poll"
                         [pollService]="motionPollService"
-                        [shouldShowEntitled]="isPercentBaseEntitled"
+                        [shouldShowEntitled]="isPercentBaseEntitled || shouldShowEntitled"
                         [shouldShowEntitledPresent]="isPercentBaseEntitledPresent"
                         [shouldShowHead]="true"
                         [tableData]="tableData"
+                        [title]="title"
                     ></os-single-option-chart-table>
                 } @else {
                     <div>

@@ -69,6 +69,9 @@ export class SingleOptionChartTableComponent {
     @Input()
     public shouldShowEntitledPresent = false;
 
+    @Input()
+    public title: string = ``;
+
     public get chartData(): ChartData {
         return this._chartData;
     }

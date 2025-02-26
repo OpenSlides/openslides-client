@@ -20,8 +20,12 @@
 
     .result-table {
         // display: block;
-        th {
+        .right-header {
+            font-weight: initial;
             text-align: right;
+        }
+        .left-header {
+            text-align: left;
             font-weight: initial;
         }
 

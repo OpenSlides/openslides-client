@@ -35,11 +35,14 @@
                             [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center.left }"
                         ></ng-container>
                     </div>
-                    <div class="center">
+                    <div class="center-area">
                         <div>
-                            <os-motion-poll-detail-content iconSize="medium" [poll]="polldata">
-                                <!-- <h1 class="margin">{{ 'Result' | translate }}</h1> -->
-                            </os-motion-poll-detail-content>
+                            <os-motion-poll-detail-content
+                                iconSize="medium"
+                                [poll]="polldata"
+                                [shouldShowEntitled]="true"
+                                title="{{ 'Result' | translate }}"
+                            ></os-motion-poll-detail-content>
                         </div>
                     </div>
                     <div class="center-right">
@@ -66,33 +69,6 @@
                             [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom.right }"
                         ></ng-container>
                     </div>
-                    <!-- <div class="votes-area">
-                        @for (column of userVotes; track column) {
-                            <div class="votes-column">
-                                @for (user of column; track user[0]) {
-                                    <div class="vote-entry">
-                                        @if (user[1] === 'Y') {
-                                            <os-icon-container icon="check_circle" iconClass="yes">
-                                                {{ user[0] }}
-                                            </os-icon-container>
-                                        } @else if (user[1] === 'N') {
-                                            <os-icon-container icon="cancel" iconClass="no">
-                                                {{ user[0] }}
-                                            </os-icon-container>
-                                        } @else if (user[1] === 'A') {
-                                            <os-icon-container icon="circle" iconClass="abstain">
-                                                {{ user[0] }}
-                                            </os-icon-container>
-                                        } @else {
-                                            <os-icon-container icon="radio_button_unchecked" iconClass="no-content">
-                                                {{ user[0] }}
-                                            </os-icon-container>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        }
-                    </div> -->
                 </div>
             } @else {
                 <i>Wrong poll type for this projection</i>
