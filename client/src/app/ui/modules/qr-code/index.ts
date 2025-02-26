@@ -1,1 +1,1 @@
-export * from './qr-code.module';
+export * from './qr-code.component';
