@@ -18,7 +18,7 @@ import { RepositoryServiceCollectorService } from './repository-service-collecto
 import { UserAction } from './users/user-action';
 
 export enum MeetingProjectionType {
-    CurrentListOfSpeakers = `current_list_of_speakers`,
+    CurrentListOfSpeakers = `current_los`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
     CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
     CurrentStructureLevelList = `current_structure_level_list`,

@@ -4,7 +4,7 @@ export const PROJECTIONDEFAULT = {
     agendaItemList: `agenda_item_list`,
     topics: `topic`,
     listOfSpeakers: `list_of_speakers`,
-    currentListOfSpeakers: `current_list_of_speakers`,
+    currentListOfSpeakers: `current_los`,
     motion: `motion`,
     amendment: `amendment`,
     motionBlock: `motion_block`,
