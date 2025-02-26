@@ -131,12 +131,12 @@ span {
             margin-left: 0 !important;
             margin-top: 0 !important;
         }
-
-        .original-motion-card {
-            border-color: #ff9001;
-            border-width: 2px;
-        }
     }
+}
+
+.mat-mdc-card.original-motion-card {
+    border-color: #ff9001;
+    border-width: 2px;
 }
 
 .origin-motion-meta-data-container {
