@@ -30,10 +30,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public forwardingExpanded = false;
     public requireDuplicateFrom = false;
 
-    public get canManageMeetingsInCommittee(): boolean {
-        return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
-    }
-
     public get canManageCommittee(): boolean {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
