@@ -150,6 +150,12 @@ span {
         padding: 27px;
         max-width: 100%;
     }
+
+    .mat-mdc-tab-header + .mat-mdc-tab-body-wrapper {
+        .os-card {
+            margin-top: 0 !important;
+        }
+    }
 }
 
 .supporters {
