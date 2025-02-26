@@ -213,17 +213,17 @@
                     <div class="motion-tab-content">
                         <mat-card class="os-card original-motion-card">
                             <mat-card-content>
-                                <os-origin-motion-meta-data [motion]="originMotion">
-                                    <os-motion-highlight-form
-                                        #highlightForm
-                                        [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
-                                        [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
-                                        [motion]="originMotion"
-                                        [noEdit]="true"
-                                        (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
-                                        (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
-                                    ></os-motion-highlight-form>
-                                </os-origin-motion-meta-data>
+                                <os-origin-motion-meta-data [motion]="originMotion"></os-origin-motion-meta-data>
+
+                                <os-motion-highlight-form
+                                    #highlightForm
+                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                    [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
+                                    [motion]="originMotion"
+                                    [noEdit]="true"
+                                    (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
+                                    (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
+                                ></os-motion-highlight-form>
 
                                 <os-motion-content
                                     #content

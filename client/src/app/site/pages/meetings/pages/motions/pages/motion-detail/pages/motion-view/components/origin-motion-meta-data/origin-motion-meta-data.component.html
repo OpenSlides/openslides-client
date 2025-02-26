@@ -10,9 +10,8 @@
     </div>
 
     <div class="motion-controls">
-        <ng-content></ng-content>
-
-        <button class="expand-button" mat-mini-fab (click)="expanded = !expanded">
+        <button class="expand-button" mat-button (click)="expanded = !expanded">
+            Metadata
             <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
     </div>

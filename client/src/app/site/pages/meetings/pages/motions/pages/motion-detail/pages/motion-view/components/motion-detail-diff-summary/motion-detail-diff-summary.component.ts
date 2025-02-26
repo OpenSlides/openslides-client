@@ -79,7 +79,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     public canAccess(origin: ViewMotion): boolean {
         const motion = origin as ViewMotion;
-        return motion.sequential_number && motion.meeting?.canAccess();
+        return motion.sequential_number && motion.meeting?.id === this.activeMeetingId;
     }
 
     /**
