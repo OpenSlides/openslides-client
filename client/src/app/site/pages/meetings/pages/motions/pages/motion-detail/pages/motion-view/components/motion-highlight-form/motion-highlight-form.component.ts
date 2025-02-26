@@ -29,6 +29,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     private readonly lineNumberMenuTrigger!: MatMenuTrigger;
 
     @Input()
+    public noEdit = false;
+
+    @Input()
     public lineNumberingMode: LineNumberingMode;
 
     @Input()
