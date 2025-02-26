@@ -130,7 +130,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/poll-single-votes-slide/poll-single-votes-slide.module`).then(
                 m => m.PollSingleVotesSlideModule
             ),
-        verboseName: _(`Motion poll vote`),
+        verboseName: _(`Single votes`),
         scaleable: true,
         scrollable: true
     },
