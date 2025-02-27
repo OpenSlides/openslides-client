@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
-import { getMotionDetailSubscriptionConfig } from '../../../motions.subscription';
 import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service';
 import { ExportFileFormat } from '../../../services/export/definitions';
@@ -31,60 +30,6 @@ export class MotionExportDialogService {
         private motionLineNumbering: MotionLineNumberingService,
         public formBuilder: UntypedFormBuilder
     ) {}
-
-    public async export(exportInfo: MotionExportInfo, motions: ViewMotion[]): Promise<void> {
-        if (exportInfo) {
-            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions.map(m => m.id)));
-            const amendments = this.amendmentRepo.getViewModelList();
-            this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
-        }
-    }
-
-    // Transform form of type MotionExportInfo into custom form for motion export
-    public exportFormToDialogForm(exportInfo: UntypedFormGroup): UntypedFormGroup {
-        const dialogForm = this.formBuilder.group({});
-        dialogForm.addControl(`format`, exportInfo.get(`format`));
-        dialogForm.addControl(`crMode`, exportInfo.get(`crMode`));
-        dialogForm.addControl(`lnMode`, exportInfo.get(`lnMode`));
-        dialogForm.addControl(`comments`, exportInfo.get(`comments`));
-
-        let intersection = [
-            `state`,
-            `recommendation`,
-            `category`,
-            `tags`,
-            `block`,
-            `polls`,
-            `referring_motions`,
-            `speakers`
-        ].filter(element => exportInfo.get(`metaInfo`).value?.includes(element));
-        dialogForm.addControl(`metaInfo`, new FormControl(intersection));
-
-        intersection = [`toc`, `addBreaks`, `continuousText`, `onlyChangedLines`].filter(element =>
-            exportInfo.get(`pdfOptions`).value?.includes(element)
-        );
-        dialogForm.addControl(`pageLayout`, new FormControl(intersection));
-
-        intersection = [`header`, `page`, `date`].filter(element =>
-            exportInfo.get(`pdfOptions`).value?.includes(element)
-        );
-        dialogForm.addControl(`headerFooter`, new FormControl(intersection));
-
-        intersection = [`text`, `reason`, `id`, `attachments`].filter(
-            element =>
-                exportInfo.get(`content`).value?.includes(element) ||
-                exportInfo.get(`metaInfo`).value?.includes(element) ||
-                exportInfo.get(`pdfOptions`).value?.includes(element)
-        );
-        dialogForm.addControl(`content`, new FormControl(intersection));
-
-        intersection = [`submmitters`, `supporters`, `editors`].filter(element =>
-            exportInfo.get(`metaInfo`).value?.includes(element)
-        );
-        dialogForm.addControl(`personrelated`, new FormControl(intersection));
-
-        return dialogForm;
-    }
 
     // Transform form of motion export to MotionExportInfo for further processing
     public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {

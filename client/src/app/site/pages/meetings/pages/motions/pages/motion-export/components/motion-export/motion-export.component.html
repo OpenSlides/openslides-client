@@ -32,7 +32,7 @@
                 <mat-chip-listbox formControlName="crMode">
                     <mat-chip-option
                         #crModeOriginalChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         [matBadgeHidden]="crModeOriginalChip.selected ? 'false' : 'true'"
                         [value]="crMode.Original"
@@ -42,7 +42,7 @@
                     @if (!isCSVExport) {
                         <mat-chip-option
                             #crModeChangedChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             [matBadgeHidden]="crModeChangedChip.selected ? 'false' : 'true'"
                             [value]="crMode.Changed"
@@ -51,7 +51,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #crModeDiffChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             [matBadgeHidden]="crModeDiffChip.selected ? 'false' : 'true'"
                             [value]="crMode.Diff"
@@ -61,7 +61,7 @@
                     }
                     <mat-chip-option
                         #crModeFinalChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         [matBadgeHidden]="crModeFinalChip.selected ? 'false' : 'true'"
                         [value]="crMode.ModifiedFinal"
@@ -76,7 +76,7 @@
                 <mat-chip-listbox formControlName="content" multiple>
                     <mat-chip-option
                         #titleChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="title"
                         [matBadgeHidden]="titleChip.selected ? 'false' : 'true'"
@@ -85,7 +85,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #numberChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="number"
                         [matBadgeHidden]="numberChip.selected ? 'false' : 'true'"
@@ -95,7 +95,7 @@
                     @if (!isXLSXExport) {
                         <mat-chip-option
                             #textChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="text"
                             [matBadgeHidden]="textChip.selected ? 'false' : 'true'"
@@ -104,7 +104,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #reasonChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="reason"
                             [matBadgeHidden]="reasonChip.selected ? 'false' : 'true'"
@@ -114,7 +114,7 @@
                     }
                     <mat-chip-option
                         #idChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="sequential_number"
                         [matBadgeHidden]="idChip.selected ? 'false' : 'true'"
@@ -124,7 +124,7 @@
                     @if (!isCSVExport && !isXLSXExport) {
                         <mat-chip-option
                             #attachmentsChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="attachments"
                             [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
@@ -141,7 +141,7 @@
                     <mat-chip-listbox formControlName="lnMode">
                         <mat-chip-option
                             #lnModeNoneChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             [matBadgeHidden]="lnModeNoneChip.selected ? 'false' : 'true'"
                             [value]="lnMode.None"
@@ -150,7 +150,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #lnModeOutsideChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             [matBadgeHidden]="lnModeOutsideChip.selected ? 'false' : 'true'"
                             [value]="lnMode.Outside"
@@ -166,7 +166,7 @@
                 <mat-chip-listbox formControlName="personrelated" multiple>
                     <mat-chip-option
                         #submittersChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="submitters"
                         [matBadgeHidden]="submittersChip.selected ? 'false' : 'true'"
@@ -175,7 +175,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #supportersChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="supporters"
                         [matBadgeHidden]="supportersChip.selected ? 'false' : 'true'"
@@ -184,7 +184,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #editorsChipOption
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="editors"
                         [disabled]="isDisabled(editorsChipOption.value)"
@@ -194,7 +194,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #spokespersonChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="working_group_speakers"
                         [disabled]="isDisabled(spokespersonChip.value)"
@@ -210,7 +210,7 @@
                 <mat-chip-listbox formControlName="metaInfo" multiple>
                     <mat-chip-option
                         #stateChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="state"
                         [matBadgeHidden]="stateChip.selected ? 'false' : 'true'"
@@ -219,7 +219,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #recommendationChipOption
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="recommendation"
                         [disabled]="isDisabled(recommendationChipOption.value)"
@@ -229,7 +229,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #categoryChipOption
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="category"
                         [disabled]="isDisabled(categoryChipOption.value)"
@@ -239,7 +239,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #tagChipOption
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="tags"
                         [disabled]="isDisabled(tagChipOption.value)"
@@ -249,7 +249,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #blockChipOption
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="block"
                         [disabled]="isDisabled(blockChipOption.value)"
@@ -259,7 +259,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #referringMotionsChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="referring_motions"
                         [disabled]="isDisabled(referringMotionsChip.value)"
@@ -269,7 +269,7 @@
                     </mat-chip-option>
                     <mat-chip-option
                         #pollsChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         value="polls"
                         [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
@@ -279,7 +279,7 @@
                     @if ((isCSVExport || isXLSXExport) && permission.listOfSpeakersCanSee) {
                         <mat-chip-option
                             #speakRequestsChipOption
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="list_of_speakers"
                             [matBadgeHidden]="speakRequestsChipOption.selected ? 'false' : 'true'"
@@ -296,7 +296,7 @@
                     <mat-chip-listbox formControlName="pageLayout" multiple>
                         <mat-chip-option
                             #tableOfContentChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="toc"
                             [disabled]="isDisabled(tableOfContentChip.value)"
@@ -306,7 +306,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #addBreaksChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="addBreaks"
                             [disabled]="isDisabled(addBreaksChip.value)"
@@ -316,7 +316,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #continuousText
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="continuousText"
                             [matBadgeHidden]="continuousText.selected ? 'false' : 'true'"
@@ -326,7 +326,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #changedLinesChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="onlyChangedLines"
                             [matBadgeHidden]="changedLinesChip.selected ? 'false' : 'true'"
@@ -341,7 +341,7 @@
                     <mat-chip-listbox formControlName="headerFooter" multiple>
                         <mat-chip-option
                             #header
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="header"
                             [matBadgeHidden]="header.selected ? 'false' : 'true'"
@@ -350,7 +350,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #pageChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="page"
                             [matBadgeHidden]="pageChip.selected ? 'false' : 'true'"
@@ -359,7 +359,7 @@
                         </mat-chip-option>
                         <mat-chip-option
                             #dateChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             value="date"
                             [matBadgeHidden]="dateChip.selected ? 'false' : 'true'"
@@ -375,7 +375,7 @@
                 <mat-chip-listbox formControlName="comments" multiple>
                     <mat-chip-option
                         #commentsChip
-                        matBadge="&#x2713;"
+                        matBadge="&check;"
                         matBadgeOverlap="true"
                         [matBadgeHidden]="commentsChip.selected ? 'false' : 'true'"
                         [value]="PERSONAL_NOTE_ID"
@@ -385,7 +385,7 @@
                     @for (comment of commentsToExport; track comment) {
                         <mat-chip-option
                             #commChip
-                            matBadge="&#x2713;"
+                            matBadge="&check;"
                             matBadgeOverlap="true"
                             [matBadgeHidden]="commChip.selected ? 'false' : 'true'"
                             [value]="comment.id"
@@ -394,9 +394,7 @@
                         </mat-chip-option>
                     }
                 </mat-chip-listbox>
-                <!-- TODO only if not csv -->
             </div>
-
             <br />
         </div>
     </form>

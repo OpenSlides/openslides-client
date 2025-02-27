@@ -15,6 +15,9 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
+import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
+import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
 import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
 import { MotionExportService } from '../../../../services/export/motion-export.service';
 import { MotionExportDialogService } from '../../services/motion-export-dialog.service';
@@ -206,7 +209,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         public motionExportDialogService: MotionExportDialogService,
         private motionRepo: MotionRepositoryService,
         private exportService: MotionExportService,
-        private store: StorageService
+        private store: StorageService,
+        private amendmentRepo: AmendmentControllerService,
+        private motionLineNumbering: MotionLineNumberingService
     ) {
         super();
         this.subscriptions.push(
@@ -435,10 +440,18 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         });
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
         this.exportForm.patchValue(this.motionExportDialogService.dialogToExportForm(this.dialogForm));
-        await this.motionExportDialogService.export(this.exportForm.value, motions_models);
-        // The timeout is needed for the repos to update their view model list subjects
-        setTimeout(() => {
-            this.exportService.evaluateExportRequest(this.exportForm.value, motions_models);
-        }, 2000);
+        const exportInfo = this.exportForm.value;
+
+        if (exportInfo) {
+            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
+            const amendments = this.amendmentRepo.getViewModelList();
+            this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+
+            // The timeout is needed for the repos to update their view model list subjects
+            this.exportService.evaluateExportRequest(
+                exportInfo,
+                motions_models.map(m => this.motionRepo.getViewModel(m.id))
+            );
+        }
     }
 }
