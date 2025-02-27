@@ -65,9 +65,9 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get typeChoices(): [string, string][] {
-        const typeChoices: [string, string][] = [[`poll`, _(`Standard projection`)]];
+        const typeChoices: [string, string][] = [[`poll`, _(`Standard`)]];
         if (this.poll.type === `named`) {
-            typeChoices.push([`poll_single_votes`, _(`Single votes projection`)]);
+            typeChoices.push([`poll_single_votes`, _(`Single votes`)]);
         }
         return typeChoices;
     }

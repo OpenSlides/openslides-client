@@ -27,7 +27,7 @@
         }
         @if (typeChoices && typeChoices.length > 1) {
             <div>
-                <h3>{{ 'Projection type' | translate }}</h3>
+                <h3>{{ 'Which version?' | translate }}</h3>
                 <mat-radio-group name="type" [(ngModel)]="selectedTypeChoice">
                     @for (entry of typeChoices; track entry[0]; let idx = $index) {
                         <mat-radio-button [checked]="idx === 0" [value]="entry[0]">
