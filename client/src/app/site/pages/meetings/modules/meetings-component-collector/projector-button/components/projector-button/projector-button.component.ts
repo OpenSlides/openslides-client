@@ -11,10 +11,7 @@ import {
     ProjectionBuildDescriptor
 } from 'src/app/site/pages/meetings/view-models';
 
-import {
-    isProjectionDialogConfig,
-    ProjectionDialogConfig
-} from '../../../projection-dialog/components/projection-dialog/projection-dialog.component';
+import { isProjectionDialogConfig } from '../../../projection-dialog/components/projection-dialog/projection-dialog.component';
 
 @Component({
     selector: `os-projector-button`,
@@ -27,14 +24,14 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      * The object to project.
      */
 
-    private _object: ProjectionBuildDescriptor | Projectable | ProjectionDialogConfig | null = null;
+    private _object: ProjectionBuildDescriptor | Projectable | null = null;
 
-    public get object(): ProjectionBuildDescriptor | Projectable | ProjectionDialogConfig {
+    public get object(): ProjectionBuildDescriptor | Projectable {
         return this._object!;
     }
 
     @Input()
-    public set object(obj: ProjectionBuildDescriptor | Projectable | ProjectionDialogConfig | null) {
+    public set object(obj: ProjectionBuildDescriptor | Projectable | null) {
         if (isProjectable(obj) || isProjectionBuildDescriptor(obj) || isProjectionDialogConfig(obj)) {
             this._object = obj;
         } else {
@@ -79,6 +76,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public useToggleDialog = false;
 
+    @Input()
+    public typeChoices: [string, string][];
+
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
@@ -87,23 +87,15 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (!this.object) {
             return;
         }
-        const descriptor = this.projectorService.ensureDescriptor(
-            isProjectionDialogConfig(this.object) ? this.object.descriptor : this.object
-        );
-        const isConfig = isProjectionDialogConfig(this.object);
-        const config: ProjectionDialogConfig = isConfig
-            ? ({ ...this.object, descriptor } as ProjectionDialogConfig)
-            : { descriptor, allowReferenceProjector: true };
+        const descriptor = this.projectorService.ensureDescriptor(this.object);
         if (this.useToggleDialog) {
             this.projectionDialogService.openProjectDialogFor({
-                ...config,
+                descriptor,
+                typeChoices: this.typeChoices,
                 projector: this.projector,
                 allowReferenceProjector: true
             });
         } else if (this.projector) {
-            if (isConfig) {
-                throw Error(`Method not implemented if projector is given with dialog config`);
-            }
             if (this.ignoreStable && this._projection) {
                 descriptor.stable = this._projection.stable;
             }
@@ -111,7 +103,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         } else {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor({
-                ...config,
+                descriptor,
+                typeChoices: this.typeChoices,
                 allowReferenceProjector: this.allowReferenceProjector
             });
         }

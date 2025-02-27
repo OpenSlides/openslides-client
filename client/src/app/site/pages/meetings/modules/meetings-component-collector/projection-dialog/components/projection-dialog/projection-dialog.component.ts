@@ -95,7 +95,6 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
         if (this.typeChoices) {
             this.selectedTypeChoice = this.typeChoices[0][0];
         }
-        console.log(`AAAAA`, this.typeChoices, this.selectedTypeChoice);
         if (!this.projectorSelectable && !isProjectionBuildDescriptor(data)) {
             this.selectedProjectors = [data.projector.id];
         }
