@@ -62,7 +62,10 @@
                             </td>
                             <!-- Percent numbers -->
                             <td class="result-cell-definition">
-                                @if (row.value[0].showPercent) {
+                                @if (
+                                    row.value[0].showPercent ||
+                                    (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                ) {
                                     <span>
                                         {{ row.value[0].amount! | pollPercentBase: poll }}
                                     </span>
@@ -79,7 +82,9 @@
                     <tr class="entitled-users-row">
                         <td>{{ 'Entitled users' | translate }}</td>
                         <td class="result-cell-definition">
-                            {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
+                            @if (poll.onehundred_percent_base === 'entitled') {
+                                {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
+                            }
                         </td>
                         <td class="result-cell-definition">
                             {{ poll.entitled_users_at_stop.length }}

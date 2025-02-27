@@ -76,10 +76,8 @@
         .votes-column {
             display: flex;
             flex-direction: column;
-            // padding-left: 5px;
             flex-grow: 1;
             height: 100%;
-            // gap: 5px;
 
             .vote-entry {
                 min-height: 52px;

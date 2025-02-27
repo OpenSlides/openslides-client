@@ -836,7 +836,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `motion_poll_projection_max_columns`,
                         label: _(
-                            `Maximum number of columns in single votes projection. More than 7 are not recommended.`
+                            `Maximum number of columns in single votes projection. It is recommended to use fewer rows on projectors with smaller width, to ensure columns do not get too thin.`
                         ),
                         type: `integer`
                     }
