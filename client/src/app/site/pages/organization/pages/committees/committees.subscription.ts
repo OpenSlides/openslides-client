@@ -127,6 +127,7 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
 export const getCommitteeMeetingDetailExternalIdsSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
         fieldset: [],
         follow: [
             {
@@ -139,8 +140,7 @@ export const getCommitteeMeetingDetailExternalIdsSubscriptionConfig: Subscriptio
                     }
                 ]
             }
-        ],
-        ids: [1]
+        ]
     },
     subscriptionName: MEETING_EXTERNAL_IDS_SUBSCRIPTION,
     hideWhenDestroyed: true
