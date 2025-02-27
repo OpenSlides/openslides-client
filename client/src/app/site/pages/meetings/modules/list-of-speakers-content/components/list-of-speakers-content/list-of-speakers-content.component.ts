@@ -12,6 +12,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -118,6 +119,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.canManage && this.isCallEnabled;
     }
 
+    public get isSuperadminNotInMeeting(): boolean {
+        return this.operator.isSuperAdmin && !this.operator.user.getMeetingUser();
+    }
+
     @Input()
     public set listOfSpeakers(los: ViewListOfSpeakers) {
         if (los) {
@@ -183,6 +188,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private viewport: ViewPortService,
         private cd: ChangeDetectorRef,
         private dialog: PointOfOrderDialogService,
+        private snackBar: MatSnackBar,
         private interactionService: InteractionService
     ) {
         super();
@@ -265,7 +271,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public addMyself(): void {
-        this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
+        if (this.isSuperadminNotInMeeting) {
+            const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
+            this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
+        } else {
+            this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
+        }
     }
 
     /**
@@ -293,17 +304,22 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async addPointOfOrder(): Promise<void> {
-        const dialogRef = await this.dialog.open();
-        try {
-            const result = await firstValueFrom(dialogRef.afterClosed());
-            if (result) {
-                await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
-                    pointOfOrder: true,
-                    ...result
-                });
+        if (this.isSuperadminNotInMeeting) {
+            const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
+            this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
+        } else {
+            const dialogRef = await this.dialog.open();
+            try {
+                const result = await firstValueFrom(dialogRef.afterClosed());
+                if (result) {
+                    await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
+                        pointOfOrder: true,
+                        ...result
+                    });
+                }
+            } catch (e) {
+                this.raiseError(e);
             }
-        } catch (e) {
-            this.raiseError(e);
         }
     }
 
