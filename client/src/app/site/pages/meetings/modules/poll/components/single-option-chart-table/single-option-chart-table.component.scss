@@ -45,9 +45,22 @@
                 padding: 7px 0;
             }
 
-            :nth-child(2) {
+            :nth-child(2):not(th) {
                 padding-left: 14px;
                 padding-right: 14px;
+            }
+        }
+
+        .text-gigantic {
+            tr {
+                td {
+                    padding: 15px 0;
+                }
+
+                :nth-child(2):not(th) {
+                    padding-left: 40px;
+                    padding-right: 40px;
+                }
             }
         }
 
