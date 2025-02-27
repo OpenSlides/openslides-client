@@ -16,12 +16,13 @@ import {
 } from '../../../poll-slide/poll-slide-data';
 
 type VoteResult = `Y` | `N` | `A` | `X`;
-const CHART_AREA_WIDTH = 465;
-const CHART_AREA_HEIGHT = 310;
+const CHART_AREA_WIDTH = 480;
+const CHART_AREA_HEIGHT = 300;
 const ENTRY_HEIGHT = 53;
 const TITLE_HEIGHT = 55;
 const HEADER_FOOTER_HEIGHT = 125;
 const NO_HEADER_TOP_MARGIN = 40;
+const CHART_ROWS = Math.ceil((CHART_AREA_HEIGHT - 10) / ENTRY_HEIGHT);
 
 interface FormattedVotesArea {
     left?: [string, VoteResult][][];
@@ -40,7 +41,6 @@ interface UserVotesFormat {
     bufferLeft: number;
     bufferUp: number;
     chartColumns: number;
-    chartRows: number;
     bufferDown: number;
 }
 
@@ -201,14 +201,13 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             TITLE_HEIGHT -
             (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN);
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
-        const chartRows = Math.min(Math.ceil(visibleRows * ((CHART_AREA_HEIGHT + 10) / visibleHeight)), visibleRows);
-        const bufferUp = Math.floor((visibleRows - chartRows) / 2);
+        const bufferUp = Math.max(Math.floor((visibleRows - CHART_ROWS) / 2), 0);
         const width = this.projector.width - 100;
         let [chartColumns, bufferLeft, maxVisibleEntries] = this.calculateEntryNumberForColumns(
             this._maxColumns,
             width,
             visibleRows,
-            chartRows
+            CHART_ROWS
         );
         let columns = this._maxColumns;
         if (maxVisibleEntries > this._userVotes.length) {
@@ -217,7 +216,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
                     checkColumns,
                     width,
                     visibleRows,
-                    chartRows
+                    CHART_ROWS
                 );
                 if (newMaxVisibleEntries <= this._userVotes.length) {
                     columns = checkColumns + 1;
@@ -227,7 +226,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             }
         }
         const overflow = this._userVotes.length - maxVisibleEntries;
-        let bufferDown = visibleRows - bufferUp - chartRows;
+        let bufferDown = visibleRows - bufferUp - CHART_ROWS;
         bufferDown = overflow <= 0 ? bufferDown : bufferDown + Math.ceil(overflow / columns);
         console.log(`FORMAT`, {
             CHART_AREA_HEIGHT,
@@ -238,7 +237,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             bufferLeft,
             bufferUp,
             chartColumns,
-            chartRows,
+            chartRows: CHART_ROWS,
             bufferDown
         });
         return {
@@ -246,13 +245,12 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             bufferLeft,
             bufferUp,
             chartColumns,
-            chartRows,
             bufferDown
         };
     }
 
     private calculateFormattedUserVotes(format: UserVotesFormat): void {
-        const { columns, bufferLeft, bufferUp, chartColumns, chartRows, bufferDown } = format;
+        const { columns, bufferLeft, bufferUp, chartColumns, bufferDown } = format;
         const votesFormatted: FormattedVotes = [`top`, `center`, `bottom`].mapToObject(key => ({
             [key]: [`left`, `center`, `right`].mapToObject(innerKey => ({ [innerKey]: [] }))
         }));
@@ -265,7 +263,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
             if (stop) break;
             nextIndex = untilIndex;
             if (i < bufferLeft || i >= bufferLeft + chartColumns) {
-                [stop, untilIndex] = this.calcStopAndActualUntilIndex(nextIndex + chartRows);
+                [stop, untilIndex] = this.calcStopAndActualUntilIndex(nextIndex + CHART_ROWS);
                 votesFormatted.center[side].push(this._userVotes.slice(nextIndex, untilIndex));
                 if (stop) break;
                 nextIndex = untilIndex;

@@ -17,8 +17,13 @@
     display: grid;
     grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    justify-items: center;
+    align-items: center;
 
     .result-table {
+        border-collapse: collapse;
+        height: fit-content;
+        width: fit-content;
         // display: block;
         .right-header {
             font-weight: initial;
@@ -35,6 +40,19 @@
             .result-cell-definition {
                 text-align: right;
             }
+
+            td {
+                padding: 7px 0;
+            }
+
+            :nth-child(2) {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+
+        .votesvalid {
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
 
         .text {
@@ -58,5 +76,6 @@
 
     .doughnut-chart {
         display: block;
+        width: 100%;
     }
 }
