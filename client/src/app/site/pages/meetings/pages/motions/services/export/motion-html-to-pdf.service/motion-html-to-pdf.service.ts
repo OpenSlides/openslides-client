@@ -258,13 +258,18 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     // Add a blank with the normal font size here, so in rare cases the text
                     // is rendered on the next page and the line number on the previous page.
                     text: ` `,
-                    decoration: ``
+                    decoration: ``,
+                    alignment: `left`
                 },
                 {
                     text: line.lineNumber,
                     color: `gray`,
                     fontSize: 8,
-                    font: `LineNumbering`
+                    font: `LineNumbering`,
+                    bold: false,
+                    italics: false,
+                    bolditalics: false,
+                    alignment: `left`
                 }
             ],
             marginBottom: line.marginBottom,

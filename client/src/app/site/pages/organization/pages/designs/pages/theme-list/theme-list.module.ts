@@ -8,8 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
-import { PromptCheckboxModule } from 'src/app/ui/modules/prompt-checkbox';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PromptCheckboxComponent } from 'src/app/ui/modules/prompt-checkbox';
 
 import { ThemeBuilderDialogModule } from '../../modules/theme-builder-dialog/theme-builder-dialog.module';
 import { ThemeCommonServiceModule } from '../../services/theme-common-service.module';
@@ -23,7 +22,6 @@ import { ThemeListRoutingModule } from './theme-list-routing.module';
         ThemeListRoutingModule,
         ThemeCommonServiceModule,
         ThemeBuilderDialogModule,
-        PromptDialogModule,
         HeadBarModule,
         ListModule,
         OpenSlidesTranslationModule.forChild(),
@@ -32,7 +30,7 @@ import { ThemeListRoutingModule } from './theme-list-routing.module';
         MatTooltipModule,
         MatButtonModule,
         MatCheckboxModule,
-        PromptCheckboxModule
+        PromptCheckboxComponent
     ]
 })
 export class ThemeListModule {}
