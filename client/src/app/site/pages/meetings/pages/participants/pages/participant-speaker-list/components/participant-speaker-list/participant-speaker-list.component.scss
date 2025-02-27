@@ -24,3 +24,11 @@
     margin-left: 1em;
     z-index: 3;
 }
+
+.no-pointer {
+    cursor: default;
+}
+
+.pointer {
+    cursor: pointer;
+}

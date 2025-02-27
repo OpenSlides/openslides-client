@@ -19,7 +19,10 @@
     [(selectedRows)]="selectedRows"
 >
     <!-- Name column -->
-    <div *osScrollingTableCell="'short_name'; row as speaker; rowContext as rowContext" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'short_name'; row as speaker; rowContext as rowContext"
+        class="cell-slot fill no-pointer"
+    >
         <div class="nameCell">
             <div>
                 <div class="flex-vertical-center">
@@ -29,10 +32,10 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill">
+    <div *osScrollingTableCell="'info'; row as speaker; config: { width: 200 }" class="cell-slot fill no-pointer">
         <div class="infoCell">
             @if (speaker.list_of_speakers?.content_object) {
-                <a class="spacer-top-5" [routerLink]="viewModelUrl(speaker) || null" [state]="{ back: 'true' }">
+                <a class="spacer-top-5 pointer" [routerLink]="viewModelUrl(speaker) || null" [state]="{ back: 'true' }">
                     <os-icon-container [icon]="getSpeakerIcon(speaker)">
                         {{ speaker.topic }}
                     </os-icon-container>
