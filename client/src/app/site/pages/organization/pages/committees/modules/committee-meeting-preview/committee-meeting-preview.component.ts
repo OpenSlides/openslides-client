@@ -5,9 +5,11 @@ import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { getCommitteeMeetingDetailExternalIdsSubscriptionConfig } from '../../committees.subscription';
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
 import { MeetingCloneDialogComponent } from './components/meeting-clone-dialog/meeting-clone-dialog.component';
@@ -72,7 +74,8 @@ export class CommitteeMeetingPreviewComponent {
         private meetingService: MeetingService,
         private promptService: PromptService,
         private dialog: MatDialog,
-        public operator: OperatorService
+        public operator: OperatorService,
+        private modelRequestService: ModelRequestService
     ) {}
 
     public async onArchive(): Promise<void> {
@@ -96,6 +99,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async onDuplicate(): Promise<void> {
+        await this.modelRequestService.fetch(getCommitteeMeetingDetailExternalIdsSubscriptionConfig());
         const dialogRef = this.dialog.open(MeetingCloneDialogComponent, {
             width: `290px`,
             data: {

@@ -10,7 +10,7 @@ export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list_minimal`;
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
-const MEETING_EXTERNAL_IDS_SUBSCRIPTION = `committee_meeting_detail_meetings_external_id`;
+export const MEETING_EXTERNAL_IDS_SUBSCRIPTION = `committee_meeting_detail_meetings_external_id`;
 
 export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
