@@ -29,18 +29,18 @@
         grid-column: 2;
         grid-row: 2;
         display: table;
-        border: 0.5px solid rgba(128, 128, 128, 0.2);
-        padding: 5px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        padding: 4px;
         background-color: #fcfcfc;
         border-radius: 5px;
 
-        div {
+        .center-content {
             display: table-cell;
             vertical-align: middle;
             max-width: 480px;
-            max-height: 240px;
-            width: 480px;
-            height: 240px;
+            max-height: 320px;
+            width: 450px;
+            height: 300px;
             margin: auto;
         }
     }
@@ -55,6 +55,7 @@
     .bottom-center {
         grid-column: 2;
         grid-row: 3;
+        padding-top: 1px;
     }
     .bottom-right {
         grid-column: 3;
@@ -63,7 +64,7 @@
 
     .border-top {
         .votes-column {
-            border-top: 0.5px solid rgba(128, 128, 128, 0.2);
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
     }
 
@@ -81,13 +82,13 @@
             // gap: 5px;
 
             .vote-entry {
-                min-height: 50px;
+                min-height: 52px;
                 display: flex;
                 align-items: center;
             }
 
             :not(:last-child) {
-                border-bottom: 0.5px solid rgba(128, 128, 128, 0.2);
+                border-bottom: 1px solid rgba(128, 128, 128, 0.2);
             }
         }
     }
