@@ -18,7 +18,7 @@ import {
 type VoteResult = `Y` | `N` | `A` | `X`;
 const CHART_AREA_WIDTH = 480;
 const CHART_AREA_HEIGHT = 300;
-const ENTRY_HEIGHT = 20;
+const ENTRY_HEIGHT = 30;
 const TITLE_HEIGHT = 55;
 const HEADER_FOOTER_HEIGHT = 125;
 const NO_HEADER_TOP_MARGIN = 40;
@@ -228,18 +228,6 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
         const overflow = this._userVotes.length - maxVisibleEntries;
         let bufferDown = visibleRows - bufferUp - CHART_ROWS;
         bufferDown = overflow <= 0 ? bufferDown : bufferDown + Math.ceil(overflow / columns);
-        console.log(`FORMAT`, {
-            CHART_AREA_HEIGHT,
-            projHeight: this.projector.height,
-            visibleHeight,
-            visibleRows,
-            columns,
-            bufferLeft,
-            bufferUp,
-            chartColumns,
-            chartRows: CHART_ROWS,
-            bufferDown
-        });
         return {
             columns,
             bufferLeft,

@@ -36,12 +36,14 @@
                         ></ng-container>
                     </div>
                     <div class="center-area">
-                        <div class="center-content">
-                            <os-motion-poll-detail-content
-                                iconSize="medium"
-                                [poll]="polldata"
-                                [shouldShowEntitled]="true"
-                            ></os-motion-poll-detail-content>
+                        <div class="center-content-wrapper">
+                            <div class="center-content">
+                                <os-motion-poll-detail-content
+                                    iconSize="medium"
+                                    [poll]="polldata"
+                                    [shouldShowEntitled]="true"
+                                ></os-motion-poll-detail-content>
+                            </div>
                         </div>
                     </div>
                     <div [ngClass]="{ 'center-right': true, 'border-top': bufferUp > 0 }">

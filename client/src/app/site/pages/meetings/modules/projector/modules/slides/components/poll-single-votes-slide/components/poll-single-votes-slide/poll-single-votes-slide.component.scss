@@ -26,18 +26,23 @@
     .center-area {
         grid-column: 2;
         grid-row: 2;
-        display: table;
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        box-shadow: 0 0 5px 2px rgba(128, 128, 128, 0.2);
-        padding: 4px;
-        background-color: #fcfcfc;
-        border-radius: 5px;
 
-        .center-content {
-            vertical-align: middle;
-            width: 480px;
-            height: 300px;
-            margin: auto;
+        .center-content-wrapper {
+            width: calc(100% - 10px);
+            height: calc(100% - 10px);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            box-shadow: 0 0 5px 2px rgba(128, 128, 128, 0.2);
+            padding: 4px;
+            background-color: #fcfcfc;
+            border-radius: 5px;
+            display: grid;
+            align-items: center;
+
+            .center-content {
+                width: 480px;
+                height: 300px;
+                margin: auto;
+            }
         }
     }
     .center-right {
@@ -76,7 +81,7 @@
             height: 100%;
 
             .vote-entry {
-                min-height: 20px;
+                min-height: 29px;
                 display: flex;
                 align-items: center;
             }
