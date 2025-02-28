@@ -84,19 +84,19 @@
                     @for (user of column; track user[0]) {
                         <div class="vote-entry">
                             @if (user[1] === 'Y') {
-                                <os-icon-container icon="check_circle" iconClass="yes">
+                                <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
                                     {{ user[0] }}
                                 </os-icon-container>
                             } @else if (user[1] === 'N') {
-                                <os-icon-container icon="cancel" iconClass="no">
+                                <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
                                     {{ user[0] }}
                                 </os-icon-container>
                             } @else if (user[1] === 'A') {
-                                <os-icon-container icon="circle" iconClass="abstain">
+                                <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
                                     {{ user[0] }}
                                 </os-icon-container>
                             } @else {
-                                <os-icon-container icon="radio_button_unchecked" iconClass="no-content">
+                                <os-icon-container icon="radio_button_unchecked" iconClass="no-content" [noWrap]="true">
                                     {{ user[0] }}
                                 </os-icon-container>
                             }

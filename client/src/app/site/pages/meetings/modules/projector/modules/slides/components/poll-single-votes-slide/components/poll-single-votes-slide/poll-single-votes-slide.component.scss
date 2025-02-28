@@ -6,8 +6,6 @@
     display: grid;
     width: 100%;
     gap: 0 5px;
-    // grid-template-columns: 2fr 7fr;
-    // gap: 10px;
 
     .top-left {
         grid-column: 1;
@@ -78,7 +76,7 @@
             height: 100%;
 
             .vote-entry {
-                min-height: 52px;
+                min-height: 20px;
                 display: flex;
                 align-items: center;
             }
