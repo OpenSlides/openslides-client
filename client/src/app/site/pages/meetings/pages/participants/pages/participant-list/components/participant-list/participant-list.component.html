@@ -259,7 +259,7 @@
             </mat-checkbox>
         }
 
-        <button *osPerms="permission.userCanUpdate" mat-menu-item (click)="goToEditUser(user.id)">
+        <button *osPerms="permission.userCanUpdate" mat-menu-item [routerLink]="[user.id, 'edit']">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit participant' | translate }}</span>
         </button>
