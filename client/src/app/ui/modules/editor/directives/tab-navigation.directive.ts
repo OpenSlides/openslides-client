@@ -1,7 +1,8 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-    selector: `[osTabNavigation]`
+    selector: `[osTabNavigation]`,
+    exportAs: `isDisabled`
 })
 export class TabNavigationDirective {
     @Input()
@@ -18,6 +19,8 @@ export class TabNavigationDirective {
             case `ArrowRight`:
                 if (buttonIndex < this.buttonList.length - 1) {
                     newIndex++;
+                } else if (buttonIndex === this.buttonList.length - 1) {
+                    newIndex = 0;
                 }
                 while (buttons[newIndex].nativeElement.disabled) {
                     newIndex++;
@@ -26,6 +29,8 @@ export class TabNavigationDirective {
             case `ArrowLeft`:
                 if (buttonIndex > 0) {
                     newIndex--;
+                } else if (buttonIndex === 0) {
+                    newIndex = this.buttonList.length - 1;
                 }
                 while (buttons[newIndex].nativeElement.disabled) {
                     newIndex--;
@@ -34,15 +39,34 @@ export class TabNavigationDirective {
             default:
                 return;
         }
-
-        const buttonToFocus = buttons[newIndex];
-        buttonToFocus.nativeElement.focus();
+        this.buttonToFocus = buttons[newIndex];
+        this.buttonToFocus.nativeElement.focus();
         this.button.nativeElement.tabIndex = -1;
-        buttonToFocus.nativeElement.tabIndex = 0;
+        this.buttonToFocus.nativeElement.tabIndex = 0;
     }
 
-    public constructor(private button: ElementRef) {}
+    @Input()
+    public setDisabled(): void {
+        const buttonIndex = this.findButtonIndex();
+        let newIndex = buttonIndex;
+        const buttons = this.buttonList.toArray();
+        if (buttonIndex > 0) {
+            newIndex--;
+        } else if (buttonIndex === 0) {
+            newIndex = this.buttonList.length - 1;
+        }
+        while (buttons[newIndex].nativeElement.disabled) {
+            newIndex--;
+        }
+        this.buttonToFocus = buttons[newIndex];
+        this.buttonToFocus.nativeElement.focus();
+        this.button.nativeElement.tabIndex = -1;
+        this.buttonToFocus.nativeElement.tabIndex = 0;
+    }
 
+    private buttonToFocus: ElementRef;
+
+    public constructor(private button: ElementRef) {}
     private findButtonIndex(): number {
         return this.buttonList
             .toArray()

@@ -47,6 +47,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
+import { TabNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -101,6 +102,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @ViewChildren(`btn`)
     public buttonElements!: QueryList<ElementRef>;
+
+    @ViewChild(`isDisabled`) public isDisabled: TabNavigationDirective;
 
     @Input()
     public customSettings: object = {};

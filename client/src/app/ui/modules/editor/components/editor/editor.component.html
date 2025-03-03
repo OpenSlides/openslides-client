@@ -329,6 +329,7 @@
             <div class="button-group">
                 <button
                     #btn
+                    #isDisabled="isDisabled"
                     mat-ripple
                     osTabNavigation
                     tabindex="-1"
@@ -336,13 +337,14 @@
                     [buttonList]="buttonElements"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
-                    (click)="editor.chain().focus().undo().run()"
+                    (click)="editor.chain().focus().undo().run() && isDisabled.setDisabled()"
                 >
                     <mat-icon>undo</mat-icon>
                 </button>
 
                 <button
                     #btn
+                    #isDisabled="isDisabled"
                     mat-ripple
                     osTabNavigation
                     tabindex="-1"
@@ -350,7 +352,7 @@
                     [buttonList]="buttonElements"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
-                    (click)="editor.chain().focus().redo().run()"
+                    (click)="editor.chain().focus().redo().run() && isDisabled.setDisabled()"
                 >
                     <mat-icon>redo</mat-icon>
                 </button>
