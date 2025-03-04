@@ -114,6 +114,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Output()
     public leaveFocus = new EventEmitter<void>();
 
+    public focusText = false;
+    public focusBackground = false;
+
     public override contentForm!: UntypedFormControl;
 
     public editor: Editor;
@@ -488,5 +491,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         return dom.body.innerHTML;
+    }
+
+    public setFocus(help?: boolean): void {
+        this.focusText = help;
+        if (help === undefined) {
+            this.focusBackground = help;
+        } else {
+            this.focusBackground = !help;
+        }
     }
 }

@@ -67,6 +67,7 @@ export class TabNavigationDirective {
     private buttonToFocus: ElementRef;
 
     public constructor(private button: ElementRef) {}
+
     private findButtonIndex(): number {
         return this.buttonList
             .toArray()

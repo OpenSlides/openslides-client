@@ -198,22 +198,25 @@
                     <mat-icon>format_color_text</mat-icon>
                 </button>
                 <button
-                    #btn
                     class="more color-selection"
                     mat-ripple
-                    osTabNavigation
-                    tabindex="-1"
                     type="button"
-                    [buttonList]="buttonElements"
+                    [ngClass]="{ focused: focusText }"
                     (click)="updateColorSets()"
                 >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
+                        #btn
                         list="text-colors"
+                        osTabNavigation
                         tabindex="-1"
                         type="color"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Text color' | translate"
                         [value]="editor.getAttributes('textStyle')['color']"
                         (change)="updateFontColor($event)"
+                        (focus)="setFocus(true)"
+                        (focusout)="setFocus()"
                     />
                 </button>
             </div>
@@ -233,22 +236,25 @@
                     <mat-icon>format_color_fill</mat-icon>
                 </button>
                 <button
-                    #btn
                     class="more color-selection"
                     mat-ripple
-                    osTabNavigation
-                    tabindex="-1"
                     type="button"
-                    [buttonList]="buttonElements"
+                    [ngClass]="{ focused: focusBackground }"
                     (click)="updateColorSets()"
                 >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
+                        #btn
                         list="background-colors"
+                        osTabNavigation
                         tabindex="-1"
                         type="color"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Background color' | translate"
                         [value]="editor.getAttributes('highlight')['color']"
                         (change)="updateHighlightColor($event)"
+                        (focus)="setFocus(false)"
+                        (focusout)="setFocus()"
                     />
                 </button>
             </div>
