@@ -1,0 +1,168 @@
+<os-head-bar
+    [editMode]="true"
+    [goBack]="true"
+    [isSaveButtonEnabled]="saveButtonEnabled"
+    [nav]="false"
+    [saveAction]="getSaveAction()"
+    (mainEvent)="onCancel()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>
+            @if (user) {
+                <span>{{ user.full_name }}</span>
+            }
+        </h2>
+    </div>
+</os-head-bar>
+
+@if (user && isAllowed('changePersonal')) {
+    <os-user-detail-view
+        [additionalFormControls]="additionalFormControls"
+        [generatePasswordFn]="randomPasswordFn"
+        [isAllowedFn]="isAllowedFn"
+        [isEditing]="true"
+        [patchFormValueFn]="patchFormValueFn"
+        [shouldEnableFormControlFn]="shouldEnableFormControlFn"
+        [user]="user"
+        (changeEvent)="updateByValueChange($event)"
+        (errorEvent)="formErrors = $event"
+        (submitEvent)="saveUser()"
+        (validEvent)="isFormValid = $event"
+    >
+        <ng-template #editView let-form="form">
+            <div [formGroup]="form">
+                <h2>{{ 'Meeting specific information' | translate }}</h2>
+                <!-- Present? -->
+                <div [formGroup]="form">
+                    <mat-checkbox
+                        formControlName="is_present"
+                        matTooltipPosition="right"
+                        matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
+                    >
+                        <span>{{ 'present' | translate }}</span>
+                    </mat-checkbox>
+                </div>
+                <div [formGroup]="form">
+                    <!-- Locked out? -->
+                    <mat-checkbox
+                        formControlName="locked_out"
+                        matTooltipPosition="right"
+                        matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
+                    >
+                        <span>{{ 'locked out' | translate }}</span>
+                    </mat-checkbox>
+                </div>
+                @if (isLockedOutAndCanManage) {
+                    <p class="red-warning-text padding-left-12" translate>
+                        It is not allowed to set the permisson 'Can manage participants' to a locked out user. Please
+                        unset the lockout state before adding a group with this permission.
+                    </p>
+                }
+                <div>
+                    <!-- Strucuture Level -->
+                    <mat-form-field
+                        class="distance"
+                        [ngClass]="{
+                            form37: showVoteWeight,
+                            form70: !showVoteWeight
+                        }"
+                    >
+                        <mat-label>{{ 'Structure level' | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="structure_level_ids"
+                            [includeNone]="true"
+                            [inputListValues]="structureLevelObservable"
+                            [multiple]="true"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                    <!-- Participant Number -->
+                    <mat-form-field
+                        [ngClass]="{
+                            distance: showVoteWeight,
+                            form37: showVoteWeight,
+                            form25: !showVoteWeight
+                        }"
+                    >
+                        <mat-label>{{ 'Participant number' | translate }}</mat-label>
+                        <input formControlName="number" matInput type="text" />
+                    </mat-form-field>
+                    <!-- Vote weight -->
+                    @if (showVoteWeight) {
+                        <mat-form-field class="form16 force-min-with">
+                            <mat-label>{{ 'Vote weight' | translate }}</mat-label>
+                            <input formControlName="vote_weight" matInput type="number" />
+                            @if (isVoteWeightError && form.controls['vote_weight'].value > 0) {
+                                <mat-error translate>
+                                    Please select a vote weight greater than or equal to 0.000001
+                                </mat-error>
+                            }
+                            @if (isVoteWeightError && form.controls['vote_weight'].value <= 0) {
+                                <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                            }
+                        </mat-form-field>
+                    }
+                </div>
+                @if (isAllowed('seeName')) {
+                    <div>
+                        <!-- Groups -->
+                        <mat-form-field class="form100 force-min-with">
+                            <mat-label>{{ 'Groups' | translate }}</mat-label>
+                            <os-list-search-selector
+                                formControlName="group_ids"
+                                [inputListValues]="groups"
+                                [multiple]="true"
+                                [sortFn]="sortFn"
+                            ></os-list-search-selector>
+                        </mat-form-field>
+                        <!-- Delegate Vote -->
+                        @if (showVoteDelegations) {
+                            <mat-form-field class="form100 force-min-with">
+                                <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
+                                <os-repo-search-selector
+                                    formControlName="vote_delegations_from_ids"
+                                    [multiple]="true"
+                                    [repo]="repo"
+                                    [sortService]="sortService"
+                                    [subscriptionConfig]="participantSubscriptionConfig"
+                                ></os-repo-search-selector>
+                            </mat-form-field>
+                        }
+                        <!-- Delegate Vote -->
+                        @if (showVoteDelegations) {
+                            <mat-form-field class="form100 force-min-with">
+                                <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
+                                <os-repo-search-selector
+                                    formControlName="vote_delegated_to_id"
+                                    [includeNone]="true"
+                                    [multiple]="false"
+                                    [repo]="repo"
+                                    [sortService]="sortService"
+                                    [subscriptionConfig]="participantSubscriptionConfig"
+                                ></os-repo-search-selector>
+                            </mat-form-field>
+                        }
+                    </div>
+                }
+                <!-- About me -->
+                @if (isAllowed('seePersonal')) {
+                    <div class="spacer-bottom-20">
+                        <!-- The HTML Editor -->
+                        <h4>{{ 'About me' | translate }}</h4>
+                        <os-editor formControlName="about_me"></os-editor>
+                    </div>
+                }
+                @if (isAllowed('update')) {
+                    <div>
+                        <!-- Comment -->
+                        <mat-form-field class="form100 force-min-width" subscriptSizing="dynamic">
+                            <mat-label>{{ 'Comment' | translate }}</mat-label>
+                            <input formControlName="comment" matInput />
+                            <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
+                        </mat-form-field>
+                    </div>
+                }
+            </div>
+        </ng-template>
+    </os-user-detail-view>
+}

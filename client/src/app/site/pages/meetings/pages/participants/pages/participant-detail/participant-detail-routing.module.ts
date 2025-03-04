@@ -4,9 +4,10 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { PermissionGuard } from 'src/app/site/guards/permission.guard';
 
 import { ParticipantDetailComponent } from './components/participant-detail/participant-detail.component';
+import { ParticipantDetailEditComponent } from './components/participant-detail-edit/participant-detail-edit.component';
 import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
 
-const MANAGED_DETAIL_ROUTES = [`new`, `edit`];
+const MANAGED_DETAIL_ROUTES = [`new`];
 
 const routes: Routes = [
     {
@@ -25,6 +26,12 @@ const routes: Routes = [
             {
                 path: `:id`,
                 component: ParticipantDetailViewComponent
+            },
+            {
+                path: `:id/edit`,
+                component: ParticipantDetailEditComponent,
+                data: { meetingPermissions: [Permission.userCanUpdate] },
+                canLoad: [PermissionGuard]
             }
         ]
     }

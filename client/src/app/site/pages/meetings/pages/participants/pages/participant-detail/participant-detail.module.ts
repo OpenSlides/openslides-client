@@ -20,11 +20,12 @@ import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantDetailComponent } from './components/participant-detail/participant-detail.component';
+import { ParticipantDetailEditComponent } from './components/participant-detail-edit/participant-detail-edit.component';
 import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
 import { ParticipantDetailRoutingModule } from './participant-detail-routing.module';
 
 @NgModule({
-    declarations: [ParticipantDetailComponent, ParticipantDetailViewComponent],
+    declarations: [ParticipantDetailComponent, ParticipantDetailViewComponent, ParticipantDetailEditComponent],
     imports: [
         CommonModule,
         CommaSeparatedListingComponent,
