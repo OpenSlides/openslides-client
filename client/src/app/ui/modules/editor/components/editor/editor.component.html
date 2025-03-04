@@ -1,18 +1,32 @@
 <div class="editor">
     @if (editorReady) {
-        <div class="editor-menu">
+        <div
+            aria-label="'Press Enter to reach the editor functions' | translate"
+            class="editor-menu"
+            tabindex="0"
+            (keydown.Enter)="toggleInside()"
+        >
             <div class="button-group">
                 <button
                     class="text"
                     mat-ripple
                     type="button"
                     [ngClass]="{ active: isGodButtonActive }"
+                    [tabindex]="isInside()"
                     (click)="godButtonAction()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     {{ godButtonText }}
                 </button>
 
-                <button class="more" mat-ripple type="button" [matMenuTriggerFor]="formatMenu">
+                <button
+                    class="more"
+                    mat-ripple
+                    type="button"
+                    [matMenuTriggerFor]="formatMenu"
+                    [tabindex]="isInside()"
+                    (keydown.Escape)="toggleInside()"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                 </button>
             </div>
@@ -112,7 +126,9 @@
                     type="button"
                     [matTooltip]="'Bold' | translate"
                     [ngClass]="{ active: editor.isActive('bold') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleBold().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_bold</mat-icon>
                 </button>
@@ -121,7 +137,9 @@
                     type="button"
                     [matTooltip]="'Italic' | translate"
                     [ngClass]="{ active: editor.isActive('italic') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleItalic().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_italic</mat-icon>
                 </button>
@@ -130,7 +148,9 @@
                     type="button"
                     [matTooltip]="'Underline' | translate"
                     [ngClass]="{ active: editor.isActive('underline') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleUnderline().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_underline</mat-icon>
                 </button>
@@ -139,7 +159,9 @@
                     type="button"
                     [matTooltip]="'Strikethrough' | translate"
                     [ngClass]="{ active: editor.isActive('strike') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleStrike().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_strikethrough</mat-icon>
                 </button>
@@ -154,17 +176,32 @@
                     [ngStyle]="{
                         color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
                     }"
+                    [tabindex]="isInside()"
                     (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_color_text</mat-icon>
                 </button>
-                <button class="more color-selection" mat-ripple type="button" (click)="updateColorSets()">
+                <button
+                    class="more color-selection"
+                    mat-ripple
+                    type="button"
+                    [ngClass]="{ focused: focusText }"
+                    [tabindex]="-1"
+                    (click)="updateColorSets()"
+                    (keydown.Escape)="toggleInside()"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
                         list="text-colors"
                         type="color"
+                        [matTooltip]="'Choose color' | translate"
+                        [tabindex]="isInside()"
                         [value]="editor.getAttributes('textStyle')['color']"
                         (change)="updateFontColor($event)"
+                        (focus)="setFocus(true)"
+                        (focusout)="setFocus()"
+                        (keydown.Escape)="toggleInside()"
                     />
                 </button>
             </div>
@@ -175,17 +212,32 @@
                     [matTooltip]="'Background color' | translate"
                     [ngClass]="{ active: editor.isActive('highlight') }"
                     [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
+                    [tabindex]="isInside()"
                     (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_color_fill</mat-icon>
                 </button>
-                <button class="more color-selection" mat-ripple type="button" (click)="updateColorSets()">
+                <button
+                    class="more color-selection"
+                    mat-ripple
+                    type="button"
+                    [ngClass]="{ focused: focusBackground }"
+                    [tabindex]="-1"
+                    (click)="updateColorSets()"
+                    (keydown.Escape)="toggleInside()"
+                >
                     <mat-icon>arrow_drop_down</mat-icon>
                     <input
                         list="background-colors"
                         type="color"
+                        [matTooltip]="'Choose color' | translate"
+                        [tabindex]="isInside()"
                         [value]="editor.getAttributes('highlight')['color']"
                         (change)="updateHighlightColor($event)"
+                        (focus)="setFocus(false)"
+                        (focusout)="setFocus()"
+                        (keydown.Escape)="toggleInside()"
                     />
                 </button>
             </div>
@@ -193,7 +245,9 @@
                 mat-ripple
                 type="button"
                 [matTooltip]="'Clear formatting' | translate"
+                [tabindex]="isInside()"
                 (click)="clearSelectedFormat()"
+                (keydown.Escape)="toggleInside()"
             >
                 <mat-icon>format_clear</mat-icon>
             </button>
@@ -205,7 +259,9 @@
                     type="button"
                     [matTooltip]="'Bullet list' | translate"
                     [ngClass]="{ active: editor.isActive('bulletList') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleBulletList().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_list_bulleted</mat-icon>
                 </button>
@@ -215,7 +271,9 @@
                     type="button"
                     [matTooltip]="'Numbered list' | translate"
                     [ngClass]="{ active: editor.isActive('orderedList') }"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().toggleOrderedList().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>format_list_numbered</mat-icon>
                 </button>
@@ -227,7 +285,9 @@
                     type="button"
                     [matTooltip]="'Insert/edit link' | translate"
                     [ngClass]="{ active: editor.isActive('link') }"
+                    [tabindex]="isInside()"
                     (click)="setLinkDialog()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>link</mat-icon>
                 </button>
@@ -237,7 +297,9 @@
                     type="button"
                     [matTooltip]="'Insert/edit image' | translate"
                     [ngClass]="{ active: editor.isActive('image') }"
+                    [tabindex]="isInside()"
                     (click)="setImageDialog()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>image</mat-icon>
                 </button>
@@ -249,7 +311,9 @@
                     type="button"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().undo().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>undo</mat-icon>
                 </button>
@@ -259,13 +323,22 @@
                     type="button"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
+                    [tabindex]="isInside()"
                     (click)="editor.chain().focus().redo().run()"
+                    (keydown.Escape)="toggleInside()"
                 >
                     <mat-icon>redo</mat-icon>
                 </button>
             </div>
 
-            <button mat-ripple type="button" [matTooltip]="'Source code' | translate" (click)="editCode()">
+            <button
+                mat-ripple
+                type="button"
+                [matTooltip]="'Source code' | translate"
+                [tabindex]="isInside()"
+                (click)="editCode()"
+                (keydown.Escape)="toggleInside()"
+            >
                 <mat-icon>code</mat-icon>
             </button>
         </div>
