@@ -209,7 +209,7 @@ export class Settings {
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = `meeting`;
-    public static ACCESSIBILITY_FIELD: keyof Meeting = `projector_countdown_default_time`;
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `language`;
 
     public imported_at!: number;
 
