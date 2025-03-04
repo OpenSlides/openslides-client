@@ -823,6 +823,22 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(
                             `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
                         )
+                    },
+                    {
+                        key: `motion_poll_projection_name_order_first`,
+                        label: _(`Name sorting priority on single votes projection`),
+                        type: `choice`,
+                        choices: {
+                            first_name: _(`Given name`),
+                            last_name: _(`Last name`)
+                        }
+                    },
+                    {
+                        key: `motion_poll_projection_max_columns`,
+                        label: _(
+                            `Maximum number of columns in single votes projection. It is recommended to use fewer rows on projectors with smaller width, to ensure columns do not get too thin.`
+                        ),
+                        type: `integer`
                     }
                 ]
             },
