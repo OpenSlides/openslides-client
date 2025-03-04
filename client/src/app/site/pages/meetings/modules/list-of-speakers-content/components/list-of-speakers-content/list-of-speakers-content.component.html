@@ -51,15 +51,27 @@
 
         <!-- Current Speaker -->
         @if (activeSpeaker) {
-            <div class="current-speaker background-accent">
-                <os-list-of-speakers-entry
-                    [showcolor]="false"
-                    [speaker]="activeSpeaker"
-                    (pauseSpeech)="onPauseButton(activeSpeaker)"
-                    (startSpeech)="onStartButton(activeSpeaker)"
-                    (stopSpeech)="onStopButton(activeSpeaker)"
-                />
-            </div>
+            @if (canManage) {
+                <div class="current-speaker desktop-speaker-indent background-accent">
+                    <os-list-of-speakers-entry
+                        [showcolor]="false"
+                        [speaker]="activeSpeaker"
+                        (pauseSpeech)="onPauseButton(activeSpeaker)"
+                        (startSpeech)="onStartButton(activeSpeaker)"
+                        (stopSpeech)="onStopButton(activeSpeaker)"
+                    />
+                </div>
+            } @else {
+                <div class="current-speaker background-accent">
+                    <os-list-of-speakers-entry
+                        [showcolor]="false"
+                        [speaker]="activeSpeaker"
+                        (pauseSpeech)="onPauseButton(activeSpeaker)"
+                        (startSpeech)="onStartButton(activeSpeaker)"
+                        (stopSpeech)="onStopButton(activeSpeaker)"
+                    />
+                </div>
+            }
         }
         @if (interposedQuestions.length) {
             <div class="interposed-questions">

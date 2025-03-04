@@ -1,1 +1,1 @@
-export * from './color-form-field.module';
+export * from './color-form-field.component';

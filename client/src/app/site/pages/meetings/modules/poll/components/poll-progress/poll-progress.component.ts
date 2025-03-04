@@ -27,7 +27,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     public max = 1;
 
     public get votescast(): number {
-        return this.poll?.vote_count || 0;
+        return this.poll?.has_voted_user_ids?.length || 0;
     }
 
     public get canSeeProgressBar(): boolean {

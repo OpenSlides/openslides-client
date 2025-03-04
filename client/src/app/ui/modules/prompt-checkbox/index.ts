@@ -1,1 +1,1 @@
-export * from './prompt-checkbox.module';
+export * from './prompt-checkbox.component';

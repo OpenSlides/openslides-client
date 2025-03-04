@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
@@ -38,7 +38,7 @@ const MODULES = [MatInputModule, MatMenuModule];
     exports: [...DECLARATIONS, ...MODULES],
     imports: [
         CommonModule,
-        IconContainerModule,
+        IconContainerComponent,
         OpenSlidesTranslationModule.forChild(),
         ScrollingModule,
         FormsModule,

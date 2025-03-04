@@ -38,7 +38,7 @@
     }
     @media screen and (min-width: 1550px) {
         .col-right {
-            flex-grow: 2;
+            flex-grow: 3;
         }
     }
     @media (max-width: 1440px) {
@@ -48,7 +48,7 @@
     }
     @media (min-width: 1820px) {
         .col-right {
-            max-width: 690px;
+            max-width: 623px;
         }
     }
 }

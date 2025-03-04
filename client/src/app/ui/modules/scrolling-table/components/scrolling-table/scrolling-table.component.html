@@ -1,7 +1,12 @@
 @if (cellDefinitionsObservable | async; as definitions) {
     @if (hasDataObservable | async) {
         <div #cdkContainer [style.height]="calculateContainerHeight()">
-            <cdk-virtual-scroll-viewport class="virtual-scroll-viewport background-card" [itemSize]="rowHeight">
+            <cdk-virtual-scroll-viewport
+                class="virtual-scroll-viewport background-card"
+                [itemSize]="rowHeight"
+                [maxBufferPx]="rowHeight * 8"
+                [minBufferPx]="rowHeight * 6"
+            >
                 @if (showHeader) {
                     <div
                         class="flex-vertical-center placeholder divider-bottom scrolling-table-header"

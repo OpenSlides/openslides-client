@@ -15,7 +15,7 @@ import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definit
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -122,6 +122,10 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public get tagsAvailable(): boolean {
         return this.tagsObserver.getValue().length > 0;
+    }
+
+    public get sortedAttachments(): ViewMeetingMediafile[] {
+        return this.assignment.attachment_meeting_mediafiles.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
     }
 
     /**

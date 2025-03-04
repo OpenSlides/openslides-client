@@ -20,6 +20,7 @@ import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-li
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
+import { MeetingExportModule } from '../../services/export';
 import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
 import { ProjectorButtonModule } from '../meetings-component-collector/projector-button/projector-button.module';
 import { ParticipantSearchSelectorModule } from '../participant-search-selector';
@@ -67,7 +68,8 @@ const DECLARATIONS = [
         CountdownTimeModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
-        PipesModule
+        PipesModule,
+        MeetingExportModule
     ]
 })
 export class ListOfSpeakersContentModule {}

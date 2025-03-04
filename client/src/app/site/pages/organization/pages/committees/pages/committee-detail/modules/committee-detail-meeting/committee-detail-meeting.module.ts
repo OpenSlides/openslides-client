@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +31,7 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         HeadBarModule,
         MatFormFieldModule,
         MatCardModule,
+        MatCheckboxModule,
         MatInputModule,
         MatSelectModule,
         MatIconModule,

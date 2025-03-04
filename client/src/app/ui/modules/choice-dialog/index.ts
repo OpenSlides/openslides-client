@@ -1,2 +1,2 @@
-export * from './choice-dialog.module';
+export * from './choice-dialog.component';
 export * from './services';

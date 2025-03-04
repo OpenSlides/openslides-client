@@ -31,3 +31,15 @@
 .openslides-theme .pbl-ngrid-no-data {
     top: 10%;
 }
+
+.poll-content {
+    text-align: right;
+    display: grid;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+
+.no-data-margins {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
@@ -38,7 +38,7 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     styleUrls: [`./participant-detail-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ParticipantDetailViewComponent extends BaseMeetingComponent {
+export class ParticipantDetailViewComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(UserDetailViewComponent)
     private userDetailView;
 
@@ -245,6 +245,14 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         this.disableExpandControl = this.user?.vote_delegations_from().length < 10;
     }
 
+    public ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            if (params[`view`] === `edit` && this.isAllowed(`changePersonal`) && !!this.user) {
+                this.setEditMode(params[`view`]);
+            }
+        });
+    }
+
     public isAllowed(action: string): boolean {
         return this.userService.isAllowed(action, this.ownPage);
     }
@@ -344,6 +352,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             setTimeout(() => (this._userFormLoaded = true), 1000);
         } else {
             this._userFormLoaded = false;
+            this.router.navigate([], { queryParams: {} });
         }
     }
 

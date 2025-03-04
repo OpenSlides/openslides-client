@@ -127,7 +127,10 @@
             <!-- Moderator Note-->
             @if (hasCurrentProjection && disabledContentElements['moderation-note'] !== true) {
                 <div>
-                    <os-moderation-note [listOfSpeakers]="listOfSpeakers"></os-moderation-note>
+                    <os-moderation-note
+                        [listOfSpeakers]="listOfSpeakers"
+                        [showModerationNotesExport]="false"
+                    ></os-moderation-note>
                 </div>
             }
 

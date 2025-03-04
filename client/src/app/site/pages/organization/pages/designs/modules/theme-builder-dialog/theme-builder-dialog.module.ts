@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ColorFormFieldModule } from 'src/app/ui/modules/color-form-field/color-form-field.module';
+import { ColorFormFieldComponent } from 'src/app/ui/modules/color-form-field';
 
 import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog.component';
 
@@ -21,7 +21,7 @@ import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog.c
         MatDialogModule,
         ReactiveFormsModule,
         MatInputModule,
-        ColorFormFieldModule,
+        ColorFormFieldComponent,
         OpenSlidesTranslationModule.forChild()
     ]
 })

@@ -39,6 +39,19 @@
                 <div class="assignment-result-wrapper">
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
+                    @if (poll.isStarted) {
+                        <os-poll-progress [poll]="poll"></os-poll-progress>
+                        <div *osPerms="permission.pollCanManage" class="poll-content">
+                            <div class="user-subtitle">
+                                {{ 'Present people allowed to vote:' | translate }}
+                                {{ countVoteAllowedAndPresent }}
+                            </div>
+                            <div class="user-subtitle">
+                                {{ 'All people allowed to vote:' | translate }}
+                                {{ countVoteAllowed }}
+                            </div>
+                        </div>
+                    }
                     @if (showResults && poll.stateHasVotes && poll.isEVoting) {
                         <mat-tab-group (selectedTabChange)="onTabChange()">
                             <mat-tab label="{{ 'Single votes' | translate }}">
@@ -60,6 +73,18 @@
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="entitledUsersObservable"
                                     [isViewingThis]="isViewingEntitledUserslist"
+                                ></os-entitled-users-table>
+                            </mat-tab>
+                        </mat-tab-group>
+                    } @else if (poll.isEVoting && poll.isStarted) {
+                        <mat-tab-group>
+                            <mat-tab label="{{ 'Single votes' | translate }}">
+                                <div class="no-content no-data-margins">{{ 'No data available' | translate }}</div>
+                            </mat-tab>
+                            <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Entitled users' | translate }}">
+                                <os-entitled-users-table
+                                    [displayVoteWeight]="displayVoteWeight"
+                                    [entitledUsersObservable]="liveRegisterObservable"
                                 ></os-entitled-users-table>
                             </mat-tab>
                         </mat-tab-group>

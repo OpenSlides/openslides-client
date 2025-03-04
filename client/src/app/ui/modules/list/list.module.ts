@@ -15,7 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { InputModule } from 'src/app/ui/modules/input';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
@@ -47,6 +47,6 @@ const DECLARATIONS = [ListComponent, ViewListComponent];
 @NgModule({
     exports: [...DECLARATIONS, ScrollingTableModule],
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
-    imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerModule, InputModule, ...MODULES]
+    imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerComponent, InputModule, ...MODULES]
 })
 export class ListModule {}

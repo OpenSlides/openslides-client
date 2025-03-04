@@ -2,7 +2,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
 import { ViewCommittee } from './view-models';
@@ -54,7 +53,7 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewCommittee,
         ids: [id],
-        fieldset: DEFAULT_FIELDSET,
+        fieldset: [`description`, `forward_to_committee_ids`, `id`, `manager_ids`],
         follow: [
             {
                 idField: `user_ids`,
@@ -62,7 +61,22 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
                 follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
             },
             {
-                idField: `meeting_ids`
+                idField: `meeting_ids`,
+                fieldset: [
+                    `committee_id`,
+                    `enable_anonymous`,
+                    `end_time`,
+                    `id`,
+                    `is_active_in_organization_id`,
+                    `is_archived_in_organization_id`,
+                    `location`,
+                    `locked_from_inside`,
+                    `name`,
+                    `organization_tag_ids`,
+                    `start_time`,
+                    `user_ids`,
+                    `template_for_organization_id`
+                ]
             }
         ]
     },

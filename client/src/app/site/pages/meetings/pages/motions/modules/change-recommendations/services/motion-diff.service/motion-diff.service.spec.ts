@@ -1258,6 +1258,74 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
+
+        it(`detects amendment insert on an empty paragraph`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml =
+                        `<p>` +
+                        noMarkup(1) +
+                        `Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>` +
+                        `<p>` +
+                        noMarkup(2) +
+                        `</p>` +
+                        `<p>` +
+                        noMarkup(3) +
+                        `Aenean commodo ligula eget dolor.</p>`,
+                    outHtml = `<p>Lorem ipsum ipsum sit amet, consectetuer adipiscing elit.</p><p>hier neuer Text</p><p>Aenean commodo neu ligula eget dolor.</p>`;
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(
+                    `<p>` +
+                        noMarkup(1) +
+                        `Lorem ipsum <del>dolor</del><ins>ipsum</ins> sit amet, consectetuer adipiscing elit.</p>` +
+                        `<p>` +
+                        noMarkup(2) +
+                        `<ins>hier neuer Text</ins></p>` +
+                        `<p>` +
+                        noMarkup(3) +
+                        `Aenean commodo <ins>neu </ins>ligula eget dolor.</p>`
+                );
+            }
+        ));
+
+        it(`detects changes over a blank line between two paragraphs`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml =
+                        `<p>` +
+                        noMarkup(1) +
+                        `Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>` +
+                        `<p>` +
+                        noMarkup(2) +
+                        `</p>` +
+                        `<p>` +
+                        noMarkup(3) +
+                        `Aenean commodo ligula eget dolor.</p>`,
+                    outHtml = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p><p>neuer Text</p><p>Aenean commodo ligula eget dolor.</p>`;
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(
+                    `<p>` +
+                        noMarkup(1) +
+                        `Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>` +
+                        `<p>` +
+                        noMarkup(2) +
+                        `<ins>neuer Text</ins></p>` +
+                        `<p>` +
+                        noMarkup(3) +
+                        `Aenean commodo ligula eget dolor.</p>`
+                );
+            }
+        ));
+
+        it(`detects two words inserted in empty paragraph`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml = `<p>` + noMarkup(1) + `</p>`,
+                    outHtml = `<p>Lorem ipsum</p>`;
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(`<p>` + noMarkup(1) + `<ins>Lorem ipsum</ins></p>`);
+            }
+        ));
     });
 
     describe(`ignoring line numbers`, () => {

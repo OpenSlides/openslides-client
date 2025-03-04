@@ -5,8 +5,8 @@
             <!-- Title edit/save/cancle-->
             <div class="action-title">
                 <p class="subtitle-text" translate>Moderation note</p>
-                @if (canManageModerationNote) {
-                    <div class="buttons">
+                <div class="buttons">
+                    @if (canManageModerationNote) {
                         @if (isEditing) {
                             <button
                                 color="warn"
@@ -23,8 +23,7 @@
                             >
                                 <mat-icon>close</mat-icon>
                             </button>
-                        }
-                        @if (!isEditing) {
+                        } @else {
                             <button
                                 mat-icon-button
                                 matTooltip="{{ 'Edit moderation note' | translate }}"
@@ -33,8 +32,17 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                         }
-                    </div>
-                }
+                    }
+                    @if (showModerationNotesExport) {
+                        <button
+                            mat-icon-button
+                            matTooltip="{{ 'Export moderator note as PDF' | translate }}"
+                            (click)="onDownloadPDF()"
+                        >
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </button>
+                    }
+                </div>
             </div>
             @if (!isEditing) {
                 <div class="app-content underlined-links detail-view-appearance-container">

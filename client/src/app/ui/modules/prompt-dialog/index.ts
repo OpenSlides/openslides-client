@@ -1,3 +1,2 @@
-export * from './components';
-export * from './prompt-dialog.module';
+export * from './prompt-dialog.component';
 export * from './services';

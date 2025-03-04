@@ -96,7 +96,20 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {
-        return committee.meetings.sort((a, b) => b.end_time - a.end_time);
+        return committee.meetings.sort((a, b) => {
+            const end_time = b.end_time - a.end_time;
+            if (Number.isNaN(end_time)) {
+                if (b.end_time) {
+                    return b.end_time;
+                } else if (a.end_time) {
+                    return -a.end_time;
+                }
+                return a.name.localeCompare(b.name);
+            } else if (end_time === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return end_time;
+        });
     }
 
     public toggleForwardingList(): void {

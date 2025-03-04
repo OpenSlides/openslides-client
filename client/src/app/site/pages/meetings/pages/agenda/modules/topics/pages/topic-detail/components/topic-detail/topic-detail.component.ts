@@ -13,6 +13,7 @@ import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definit
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
+import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -89,6 +90,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public get previousTopic(): ViewTopic | null {
         return this._previousTopic;
+    }
+
+    public get sortedAttachments(): ViewMeetingMediafile[] {
+        return this.topic.attachment_meeting_mediafiles.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
     }
 
     private _nextTopic: ViewTopic | null = null;

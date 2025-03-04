@@ -93,6 +93,9 @@
                 <mat-label>{{ 'External ID' | translate }}</mat-label>
                 <input formControlName="external_id" matInput />
             </mat-form-field>
+            @if (isCreateView) {
+                <mat-checkbox [formControlName]="'set_as_template'">{{ 'Set as template' | translate }}</mat-checkbox>
+            }
         </mat-card-content>
     </mat-card>
 

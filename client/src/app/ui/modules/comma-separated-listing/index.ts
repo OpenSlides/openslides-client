@@ -1,1 +1,1 @@
-export * from './comma-separated-listing.module';
+export * from './comma-separated-listing.component';

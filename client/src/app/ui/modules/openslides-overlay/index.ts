@@ -1,3 +1,3 @@
 export * from './definitions';
-export * from './openslides-overlay.module';
+export * from './overlay.component';
 export * from './services/overlay.service';

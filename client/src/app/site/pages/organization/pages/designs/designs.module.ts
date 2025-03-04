@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ColorFormFieldModule } from 'src/app/ui/modules/color-form-field';
+import { ColorFormFieldComponent } from 'src/app/ui/modules/color-form-field';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 
@@ -24,7 +24,7 @@ const NG_MODULES = [
     MatMenuModule,
     MatTooltipModule
 ];
-const CUSTOM_MODULES = [OpenSlidesTranslationModule.forChild(), ColorFormFieldModule, ListModule, HeadBarModule];
+const CUSTOM_MODULES = [OpenSlidesTranslationModule.forChild(), ColorFormFieldComponent, ListModule, HeadBarModule];
 
 @NgModule({
     declarations: [],

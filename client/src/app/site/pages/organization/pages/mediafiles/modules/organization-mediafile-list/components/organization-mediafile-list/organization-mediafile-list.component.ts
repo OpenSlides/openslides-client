@@ -22,7 +22,7 @@ import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/me
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
+import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
 
 import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 

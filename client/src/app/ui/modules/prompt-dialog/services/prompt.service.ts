@@ -3,11 +3,10 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { PromptDialogComponent } from '../components/prompt-dialog/prompt-dialog.component';
-import { PromptDialogModule } from '../prompt-dialog.module';
+import { PromptDialogComponent } from '../prompt-dialog.component';
 
 @Injectable({
-    providedIn: PromptDialogModule
+    providedIn: PromptDialogComponent
 })
 export class PromptService {
     private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;

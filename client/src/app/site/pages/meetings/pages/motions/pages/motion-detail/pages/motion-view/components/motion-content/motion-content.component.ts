@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
@@ -87,6 +88,12 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public get hasAttachments(): boolean {
         return this.motion.hasAttachments();
+    }
+
+    public get sortedAttachments$(): Observable<ViewMeetingMediafile[]> {
+        return this.motion.attachment_meeting_mediafiles$.pipe(
+            map(files => files.sort((a, b) => a.getTitle().localeCompare(b.getTitle())))
+        );
     }
 
     /**

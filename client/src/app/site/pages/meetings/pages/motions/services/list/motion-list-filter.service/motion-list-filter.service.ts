@@ -140,6 +140,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         label: _(`Amendment`),
         options: [
             { condition: AmendmentType.Amendment, label: _(`Is amendment`) },
+            { condition: [AmendmentType.Parent, AmendmentType.Lead], label: _(`Is not an amendment`) },
             { condition: AmendmentType.Parent, label: _(`Has amendments`) },
             { condition: AmendmentType.Lead, label: _(`Is no amendment and has no amendments`) }
         ]

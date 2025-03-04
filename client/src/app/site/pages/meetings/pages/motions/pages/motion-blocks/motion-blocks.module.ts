@@ -9,7 +9,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { MotionBlockCreateDialogModule } from './components/motion-block-create-dialog/motion-block-create-dialog.module';
@@ -29,7 +29,7 @@ import { MotionBlockServiceModule } from './services/motion-block-service.module
         MotionBlockEditDialogModule,
         AgendaItemCommonServiceModule,
         MeetingsComponentCollectorModule,
-        IconContainerModule,
+        IconContainerComponent,
         HeadBarModule,
         MatMenuModule,
         MatIconModule,
