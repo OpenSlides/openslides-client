@@ -734,7 +734,18 @@ export class MotionPdfService {
                 margin: [0, 10, 0, 10]
             });
 
-            reason.push(this.htmlToPdfService.addPlainText(motion.reason));
+            // handling too long hyperlinks by forcing the text to break
+            let reasonHtml = this.linenumberingService.insertLineBreaksWithoutNumbers(
+                motion.reason,
+                this.meetingSettingsService.instant(`motions_line_length`) as number
+            );
+            reasonHtml = reasonHtml.replace(
+                /(<a[^>]*>)(.*?)<\/a>/g,
+                (_whole: string, link: string, innerText: string): string =>
+                    link + innerText.replace(/<br class="os-line-break">/g, `<br>`) + `</a>`
+            );
+
+            reason.push(this.htmlToPdfService.addPlainText(reasonHtml));
 
             return reason;
         } else {

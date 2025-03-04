@@ -33,4 +33,9 @@
         font-style: normal;
         font-weight: normal;
     }
+
+    a {
+        word-wrap: break-word;
+        overflow-wrap: anywhere !important;
+    }
 }
