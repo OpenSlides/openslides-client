@@ -10,6 +10,7 @@ export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list_minimal`;
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
+export const MEETING_EXTERNAL_IDS_SUBSCRIPTION = `committee_meeting_detail_meetings_external_id`;
 
 export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
@@ -120,5 +121,27 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
         ]
     },
     subscriptionName: MEETING_DETAIL_EDIT_SUBSCRIPTION,
+    hideWhenDestroyed: true
+});
+
+export const getCommitteeMeetingDetailExternalIdsSubscriptionConfig: SubscriptionConfigGenerator = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        fieldset: [],
+        follow: [
+            {
+                idField: `committee_ids`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `meeting_ids`,
+                        fieldset: [`external_id`]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: MEETING_EXTERNAL_IDS_SUBSCRIPTION,
     hideWhenDestroyed: true
 });
