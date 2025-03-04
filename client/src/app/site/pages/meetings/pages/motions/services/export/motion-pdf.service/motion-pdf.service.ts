@@ -740,9 +740,9 @@ export class MotionPdfService {
                 this.meetingSettingsService.instant(`motions_line_length`) as number
             );
             reasonHtml = reasonHtml.replace(
-                /<a[^>]*>(.*?)<\/a>/g,
-                (_whole: string, innerText: string): string =>
-                    `<a>` + innerText.replace(/<br class="os-line-break">/g, `<br>`) + `</a>`
+                /(<a[^>]*>)(.*?)<\/a>/g,
+                (_whole: string, link: string, innerText: string): string =>
+                    link + innerText.replace(/<br class="os-line-break">/g, `<br>`) + `</a>`
             );
 
             reason.push(this.htmlToPdfService.addPlainText(reasonHtml));
