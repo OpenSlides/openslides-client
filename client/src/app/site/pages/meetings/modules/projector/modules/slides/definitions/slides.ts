@@ -42,7 +42,7 @@ export const Slides: SlideManifest[] = [
         scrollable: true
     },
     {
-        path: `current_list_of_speakers`,
+        path: `current_los`,
         loadChildren: () =>
             import(`../components/list-of-speakers/modules/current-los-slide/current-los-slide.module`).then(
                 m => m.CurrentLosSlideModule
