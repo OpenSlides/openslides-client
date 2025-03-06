@@ -84,18 +84,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         format: ExportFileFormat.CSV,
         lnMode: [],
         crMode: [this.crMode.Original],
-        content: [`title`, `number`, `text`, `reason`],
-        metaInfo: [
-            `state`,
-            `recommendation`,
-            `category`,
-            `tags`,
-            `block`,
-            `polls`,
-            `referring_motions`,
-            `list_of_speakers`
-        ],
-        personrelated: [`submitters`, `supporters`, `editors`],
+        content: [`title`, `number`, `text`, `reason`, `sequential_number`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `list_of_speakers`],
+        personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
         pageLayout: [],
         headerFooter: [],
         comments: []
@@ -108,18 +99,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         format: ExportFileFormat.XLSX,
         lnMode: [],
         crMode: [],
-        content: [`title`, `number`],
-        metaInfo: [
-            `state`,
-            `recommendation`,
-            `category`,
-            `tags`,
-            `block`,
-            `polls`,
-            `referring_motions`,
-            `list_of_speakers`
-        ],
-        personrelated: [`submitters`, `supporters`, `editors`],
+        content: [`title`, `number`, `sequential_number`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `list_of_speakers`],
+        personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
         pageLayout: [],
         headerFooter: [],
         comments: []
@@ -252,7 +234,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
         this.isCSVExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.CSV;
         this.isXLSXExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.XLSX;
+    };
 
+    public animationDone(): void {
         if (this.isCSVExport) {
             this.dialogForm.patchValue(this.csvDefaults);
         } else if (this.isXLSXExport) {
@@ -260,8 +244,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         } else {
             this.dialogForm.patchValue(this.pdfDefaults);
         }
-        this.hasAvailableVariables();
-    };
+        if (!this.motions_models.includes(null)) {
+            this.hasAvailableVariables();
+        }
+    }
 
     /**
      * Creates the form with default values
@@ -447,7 +433,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             const amendments = this.amendmentRepo.getViewModelList();
             this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
 
-            // The timeout is needed for the repos to update their view model list subjects
             this.exportService.evaluateExportRequest(
                 exportInfo,
                 motions_models.map(m => this.motionRepo.getViewModel(m.id))

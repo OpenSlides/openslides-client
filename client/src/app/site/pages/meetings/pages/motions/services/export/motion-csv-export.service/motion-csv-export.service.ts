@@ -111,7 +111,7 @@ export class MotionCsvExportService {
                         };
                     case `editors`:
                         return {
-                            label: `Motion Editors`,
+                            label: `Motion editors`,
                             map: motion => motion.editors.join(`, `)
                         };
                     case `working_group_speakers`:

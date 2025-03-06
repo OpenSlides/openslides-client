@@ -12,6 +12,9 @@
         padding-left: 5px !important;
         padding-right: 60px !important;
         mat-chip-option {
+            width: fit-content !important;
+            height: fit-content !important;
+            min-height: var(--mdc-chip-container-height) !important;
             justify-content: space-between;
             padding-left: 1px;
             margin: 10px 30px 10px 5px !important;
@@ -24,6 +27,8 @@
                 background-color: $os-lightblue;
             }
             span.mdc-evolution-chip__cell {
+                overflow: hidden !important;
+                white-space: pre-wrap !important;
                 button {
                     padding-left: 5px !important;
                     padding-right: 5px !important;
@@ -33,7 +38,17 @@
                         height: 0px !important;
                         width: 0px !important;
                     }
+                    span.mat-mdc-chip-action-label,
+                    span.mdc-evolution-chip__action--primary,
+                    span.mdc-evolution-chip__cell--primary {
+                        overflow: hidden !important;
+                        white-space: pre-wrap !important;
+                        text-align: center;
+                    }
                 }
+            }
+            span.mat-mdc-chip-focus-overlay {
+                display: none;
             }
             &.mat-mdc-chip-disabled {
                 outline-color: var(--mat-chip-option-background-color);

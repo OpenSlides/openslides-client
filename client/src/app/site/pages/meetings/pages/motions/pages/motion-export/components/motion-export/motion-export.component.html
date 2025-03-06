@@ -10,7 +10,12 @@
 </os-head-bar>
 
 <div class="motion-export-card">
-    <mat-tab-group #tabGroup mat-stretch-tabs="false" (selectedTabChange)="tabChanged($event)">
+    <mat-tab-group
+        #tabGroup
+        mat-stretch-tabs="false"
+        (animationDone)="animationDone()"
+        (selectedTabChange)="tabChanged($event)"
+    >
         <mat-tab label="PDF">
             <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
         </mat-tab>
@@ -267,15 +272,17 @@
                     >
                         <span>{{ 'Referring motions' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option
-                        #pollsChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        value="polls"
-                        [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Voting result' | translate }}</span>
-                    </mat-chip-option>
+                    @if (!isCSVExport && !isXLSXExport) {
+                        <mat-chip-option
+                            #pollsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="polls"
+                            [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Voting result' | translate }}</span>
+                        </mat-chip-option>
+                    }
                     @if ((isCSVExport || isXLSXExport) && permission.listOfSpeakersCanSee) {
                         <mat-chip-option
                             #speakRequestsChipOption

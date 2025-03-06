@@ -119,6 +119,9 @@ export class MotionXlsxExportService {
                     case `working_group_speakers`:
                         propertyHeader = _(`Spokesperson`);
                         break;
+                    case `editors`:
+                        propertyHeader = _(`Motion editors`);
+                        break;
                     default:
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
                 }
