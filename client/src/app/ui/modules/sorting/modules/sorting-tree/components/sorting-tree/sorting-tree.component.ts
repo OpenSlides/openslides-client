@@ -929,7 +929,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
             // Set a new data source.
             this.dataSource = new ArrayDataSource(this.osTreeData);
         }
-        return movedNodes.length > 0 ? lastChildIndex : nextIndex + 1;
+        return movedNodes.length > 1 ? lastChildIndex : nextIndex + 1;
     }
 
     /**
