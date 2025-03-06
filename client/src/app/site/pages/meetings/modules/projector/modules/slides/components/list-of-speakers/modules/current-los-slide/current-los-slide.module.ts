@@ -9,4 +9,4 @@ import { CommonListOfSpeakersSlideComponent } from '../common-list-of-speakers-s
     imports: [CommonModule, CommonListOfSpeakersSlideModule],
     providers: [{ provide: SlideToken.token, useValue: CommonListOfSpeakersSlideComponent }]
 })
-export class CurrentListOfSpeakersSlideModule {}
+export class CurrentLosSlideModule {}
