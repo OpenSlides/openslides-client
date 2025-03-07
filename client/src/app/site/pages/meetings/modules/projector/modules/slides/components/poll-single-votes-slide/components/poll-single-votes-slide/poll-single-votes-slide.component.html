@@ -7,6 +7,19 @@
             }
         </ng-container>
     </div>
+    <div class="poll-bar-wrapper">
+        <div class="poll-bar">
+            @if (polldata?.options[0].yes) {
+                <div class="bg-yes" [ngStyle]="{ flex: polldata.options[0].yes + ' 0 auto' }"></div>
+            }
+            @if (polldata?.options[0].no) {
+                <div class="bg-no" [ngStyle]="{ flex: polldata.options[0].no + ' 0 auto' }"></div>
+            }
+            @if (polldata?.options[0].abstain) {
+                <div class="bg-abstain" [ngStyle]="{ flex: polldata.options[0].abstain + ' 0 auto' }"></div>
+            }
+        </div>
+    </div>
     @if (polldata) {
         <div class="poll-result-area">
             @if (!invalid && pollContentObjectType === PollContentObjectType.Motion) {
