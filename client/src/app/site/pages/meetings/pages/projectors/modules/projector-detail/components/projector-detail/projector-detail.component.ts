@@ -123,7 +123,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private projectionRepo: ProjectionControllerService,
         private countdownRepo: ProjectorCountdownControllerService,
         private messageRepo: ProjectorMessageControllerService,
-        private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentLosSlideService: CurrentListOfSpeakersSlideService,
         private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
         private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
@@ -266,15 +266,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     }
 
     public isClosProjected(overlay: boolean): boolean {
-        return this.currentListOfSpeakersSlideService.isProjectedOn(this.projector, overlay);
+        return this.currentLosSlideService.isProjectedOn(this.projector, overlay);
     }
 
     public toggleClos(overlay: boolean): void {
-        this.currentListOfSpeakersSlideService.toggleOn(this.projector, overlay);
+        this.currentLosSlideService.toggleOn(this.projector, overlay);
     }
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
-        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+        return this.currentLosSlideService.getProjectionBuildDescriptor(overlay);
     }
 
     public getCurrentStructureLevel(): ProjectionBuildDescriptor {

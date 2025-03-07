@@ -108,6 +108,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private entitledUsersSubscription: Subscription | null = null;
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
+    public delegationEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_delegations`);
 
     public countVoteAllowedAndPresent = 0;
     public countVoteAllowed = 0;
