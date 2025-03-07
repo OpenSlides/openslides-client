@@ -30,9 +30,13 @@
             </div>
 
             <mat-menu #formatMenu="matMenu">
-                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="headingMenu">Headings</button>
-                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="textAlignMenu">Align</button>
-                <button mat-menu-item tabindex="-1" translate [matMenuTriggerFor]="inlineMenu">Inline</button>
+                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="headingMenu">
+                    {{ 'Headings' | translate }}
+                </button>
+                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="textAlignMenu">
+                    {{ 'Align' | translate }}
+                </button>
+                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
             </mat-menu>
 
             <mat-menu #headingMenu="matMenu">
@@ -200,6 +204,7 @@
                 <button
                     class="more color-selection"
                     mat-ripple
+                    tabindex="-1"
                     type="button"
                     [ngClass]="{ focused: focusText }"
                     (click)="updateColorSets()"
@@ -238,6 +243,7 @@
                 <button
                     class="more color-selection"
                     mat-ripple
+                    tabindex="-1"
                     type="button"
                     [ngClass]="{ focused: focusBackground }"
                     (click)="updateColorSets()"
