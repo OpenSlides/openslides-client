@@ -508,7 +508,7 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_agenda_item_list_ids`,
         `default_projector_topic_ids`,
         `default_projector_list_of_speakers_ids`,
-        `default_projector_current_list_of_speakers_ids`,
+        `default_projector_current_los_ids`,
         `default_projector_motion_ids`,
         `default_projector_amendment_ids`,
         `default_projector_motion_block_ids`,
