@@ -37,7 +37,9 @@
         *osScrollingTableCell="'name'; value as name; row as workflow; rowContext as rowContext"
         class="cell-slot fill"
     >
-        <os-detail-view-navigator [model]="workflow"></os-detail-view-navigator>
+        @if (!isMultiSelect) {
+            <os-detail-view-navigator [model]="workflow"></os-detail-view-navigator>
+        }
         <div>{{ name }}</div>
     </div>
 
@@ -46,14 +48,16 @@
         *osScrollingTableCell="'delete'; row as workflow; config: { width: 40, position: END_POSITION }"
         class="cell-slot fill"
     >
-        <button
-            mat-icon-button
-            type="button"
-            matTooltip="{{ 'Delete' | translate }}"
-            (click)="onDeleteWorkflow(workflow)"
-        >
-            <mat-icon color="warn">delete</mat-icon>
-        </button>
+        @if (!isMultiSelect) {
+            <button
+                mat-icon-button
+                type="button"
+                matTooltip="{{ 'Delete' | translate }}"
+                (click)="onDeleteWorkflow(workflow)"
+            >
+                <mat-icon color="warn">delete</mat-icon>
+            </button>
+        }
     </div>
 </os-projectable-list>
 

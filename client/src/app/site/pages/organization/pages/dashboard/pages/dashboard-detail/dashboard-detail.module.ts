@@ -9,9 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { MeetingTimeModule } from 'src/app/ui/modules/meeting-time/meeting-time.module';
+import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 
-import { IconContainerModule } from '../../../../../../../ui/modules/icon-container/icon-container.module';
+import { IconContainerComponent } from '../../../../../../../ui/modules/icon-container';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module';
 
@@ -28,9 +28,9 @@ import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module'
         MatButtonModule,
         ScrollingModule,
         HeadBarModule,
-        MeetingTimeModule,
+        MeetingTimeComponent,
         OpenSlidesTranslationModule.forChild(),
-        IconContainerModule
+        IconContainerComponent
     ]
 })
 export class DashboardDetailModule {}

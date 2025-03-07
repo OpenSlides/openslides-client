@@ -270,6 +270,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }
+        if (this.isCreateView) {
+            rawForm[`set_as_template`] = [false];
+        }
 
         this.meetingForm = this.formBuilder.group(rawForm);
         this.onAfterCreateForm();
@@ -277,7 +280,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        if (!this.operator.isSuperAdmin && !this.isMeetingAdmin && !this.isCreateView) {
+        if (!this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
@@ -286,7 +289,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 }
             });
         }
-        if (this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
+        if (this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
@@ -347,7 +350,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private async doUpdateMeeting(): Promise<void> {
         const options =
-            this.operator.isSuperAdmin && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+            this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
                 ? {}
                 : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {
