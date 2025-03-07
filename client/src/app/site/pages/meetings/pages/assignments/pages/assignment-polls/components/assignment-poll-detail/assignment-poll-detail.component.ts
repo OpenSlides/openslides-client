@@ -40,6 +40,8 @@ export class AssignmentPollDetailComponent
 
     public displayVoteWeight: boolean;
 
+    public displayDelegation: boolean;
+
     public constructor(
         pollService: AssignmentPollService,
         private pollDialog: AssignmentPollDialogService,
@@ -47,6 +49,7 @@ export class AssignmentPollDetailComponent
     ) {
         super(pollService, pollPdfService);
         this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
+        this.subscriptions.push(this.delegationEnabled.subscribe(data => (this.displayDelegation = data)));
     }
 
     public openDialog(poll: ViewPoll): void {
