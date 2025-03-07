@@ -28,14 +28,15 @@
     &:hover .change-title:before {
         display: block;
     }
-
-    .title-change-indicator {
-        background-color: #0333ff;
-        position: absolute;
-        width: 4px;
-        height: 32px;
-        left: 10px;
-        top: 5px;
-        cursor: pointer;
+    & {
+        .title-change-indicator {
+            background-color: #0333ff;
+            position: absolute;
+            width: 4px;
+            height: 32px;
+            left: 10px;
+            top: 5px;
+            cursor: pointer;
+        }
     }
 }

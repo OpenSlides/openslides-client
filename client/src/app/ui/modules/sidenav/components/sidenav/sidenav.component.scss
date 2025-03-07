@@ -91,33 +91,35 @@ mat-sidenav-container {
         position: relative;
     }
 
-    .nav-toggle-button {
-        bottom: 0;
-        position: absolute;
-        transform: none;
-        width: 24px;
-        min-width: 24px;
-        height: 48px;
-        padding: 0 0 2px;
+    & {
+        .nav-toggle-button {
+            bottom: 0;
+            position: absolute;
+            transform: none;
+            width: 24px;
+            min-width: 24px;
+            height: 48px;
+            padding: 0 0 2px;
 
-        &.left {
-            left: 236px;
-            padding-left: 8px;
-            border-radius: 50px 0 0 50px;
-        }
+            &.left {
+                left: 236px;
+                padding-left: 8px;
+                border-radius: 50px 0 0 50px;
+            }
 
-        &.right {
-            left: 0;
-            padding-right: 8px;
-            border-radius: 0 50px 50px 0;
-        }
+            &.right {
+                left: 0;
+                padding-right: 8px;
+                border-radius: 0 50px 50px 0;
+            }
 
-        mat-icon {
-            $size: 18px;
-            height: $size;
-            width: $size;
-            font-size: $size;
-            margin: 0;
+            mat-icon {
+                $size: 18px;
+                height: $size;
+                width: $size;
+                font-size: $size;
+                margin: 0;
+            }
         }
     }
 }

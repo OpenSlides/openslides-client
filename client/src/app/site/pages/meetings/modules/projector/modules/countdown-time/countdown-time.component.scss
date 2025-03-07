@@ -39,57 +39,57 @@
             background: $color;
         }
     }
+    & {
+        .time-indicator-wrapper {
+            text-align: left;
+            &.only-time-indicator {
+                width: 100%;
+                text-align: right;
+                #timeIndicator {
+                    $size: 60px;
+                    width: $size;
+                    height: $size;
+                }
+            }
 
-    .time-indicator-wrapper {
-        text-align: left;
-        &.only-time-indicator {
-            width: 100%;
-            text-align: right;
             #timeIndicator {
-                $size: 60px;
+                $size: 50px;
                 width: $size;
                 height: $size;
+                display: inline-block;
+                background: green;
+                border-radius: 50%;
             }
         }
 
-        #timeIndicator {
-            $size: 50px;
-            width: $size;
-            height: $size;
-            display: inline-block;
-            background: green;
-            border-radius: 50%;
+        .countdown-wrapper {
+            min-width: 170px;
+            text-align: right !important;
+            position: relative;
+            height: 100%;
+
+            &:not(.only-countdown) {
+                margin-left: 10px;
+                $size: 60px;
+                font-size: $size;
+                line-height: $size;
+            }
+
+            &.only-countdown {
+                width: 100%;
+                min-width: auto;
+                line-height: 100%;
+                text-align: center;
+            }
+
+            #countdown {
+                white-space: nowrap;
+                font-family: $font-monospace;
+                font-weight: 800;
+                text-align: center;
+            }
         }
     }
-
-    .countdown-wrapper {
-        min-width: 170px;
-        text-align: right !important;
-        position: relative;
-        height: 100%;
-
-        &:not(.only-countdown) {
-            margin-left: 10px;
-            $size: 60px;
-            font-size: $size;
-            line-height: $size;
-        }
-
-        &.only-countdown {
-            width: 100%;
-            min-width: auto;
-            line-height: 100%;
-            text-align: center;
-        }
-
-        #countdown {
-            white-space: nowrap;
-            font-family: $font-monospace;
-            font-weight: 800;
-            text-align: center;
-        }
-    }
-
     &.stretch-to-fill-parent {
         .time-indicator-wrapper {
             width: 30%;

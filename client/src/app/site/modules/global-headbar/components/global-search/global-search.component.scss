@@ -6,14 +6,15 @@
     &::before {
         height: 0;
     }
-
-    .search-top-form {
-        display: flex;
-        .search-input-container {
-            flex-grow: 1;
-        }
-        .search-filter-toggle {
-            flex-shrink: 1;
+    & {
+        .search-top-form {
+            display: flex;
+            .search-input-container {
+                flex-grow: 1;
+            }
+            .search-filter-toggle {
+                flex-shrink: 1;
+            }
         }
     }
 }

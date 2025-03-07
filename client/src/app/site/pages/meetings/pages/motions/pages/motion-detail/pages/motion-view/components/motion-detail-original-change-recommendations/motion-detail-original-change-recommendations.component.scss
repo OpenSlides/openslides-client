@@ -37,8 +37,9 @@
             background-color: #777777;
         }
     }
-
-    .tooltip {
-        display: none;
+    & {
+        .tooltip {
+            display: none;
+        }
     }
 }

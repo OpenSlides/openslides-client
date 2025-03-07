@@ -7,8 +7,10 @@
     & li > p:last-of-type {
         margin-bottom: 0;
     }
-    p:after {
-        content: '';
-        display: inline-block;
+    & {
+      p:after {
+          content: '';
+          display: inline-block;
+      }
     }
 }

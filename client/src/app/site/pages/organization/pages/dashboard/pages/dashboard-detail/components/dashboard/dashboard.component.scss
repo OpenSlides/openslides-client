@@ -168,13 +168,15 @@ os-dashboard {
         &.no-meetings {
             height: fit-content;
         }
-
-        cdk-virtual-scroll-viewport {
-            height: 100%;
-        }
-
-        div.alternate {
-            background: rgba(0, 0, 0, 0.02);
+        & {
+            cdk-virtual-scroll-viewport {
+                height: 100%;
+            }
+            & {
+                div.alternate {
+                    background: rgba(0, 0, 0, 0.02);
+                }
+            }
         }
     }
 

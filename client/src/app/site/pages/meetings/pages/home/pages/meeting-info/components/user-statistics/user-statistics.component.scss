@@ -9,9 +9,11 @@
         border-bottom-width: 1px;
         border-bottom-style: solid;
     }
-    td,
-    th {
-        padding: 8px 8px 8px 24px;
-        text-align: left;
+    & {
+        td,
+        th {
+            padding: 8px 8px 8px 24px;
+            text-align: left;
+        }
     }
 }
