@@ -45,6 +45,9 @@ export class EntitledUsersTableComponent {
     @Input()
     public displayVoteWeight: boolean;
 
+    @Input()
+    public displayDelegation: boolean;
+
     public readonly permission = Permission;
 
     public filterPropsEntitledUsersTable = [
