@@ -70,6 +70,7 @@
                             </mat-tab>
                             <mat-tab label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="entitledUsersObservable"
                                     [isViewingThis]="isViewingEntitledUserslist"
@@ -83,6 +84,7 @@
                             </mat-tab>
                             <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="liveRegisterObservable"
                                 ></os-entitled-users-table>
