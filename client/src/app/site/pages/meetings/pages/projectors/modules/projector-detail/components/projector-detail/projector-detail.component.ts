@@ -109,6 +109,18 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return Math.floor(this.projector.height / 100);
     }
 
+    /** stores the decimal places that could not be scrolled
+     *  at once for the projector height */
+    public get summedOverflowSteps(): number {
+        return this._summedOverflowSteps;
+    }
+
+    public set summedOverflowSteps(value: number) {
+        this._summedOverflowSteps = value;
+    }
+
+    private _summedOverflowSteps: number;
+
     private _hasEnoughWiFiData: boolean;
 
     private _noWiFiData: boolean;
@@ -160,6 +172,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.projectorObservable = this._projectorIdSubject.pipe(
             switchMap(projectorId => this.repo.getViewModelObservable(projectorId))
         );
+        this.summedOverflowSteps = 0;
     }
 
     public onIdFound(id: Id | null): void {
@@ -367,5 +380,23 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 }
             })
         );
+    }
+
+    public scrollPDFPage(direction: ScrollScaleDirection): void {
+        if (this.projector.scroll <= 0) {
+            this.summedOverflowSteps = 0;
+        }
+        direction === ScrollScaleDirection.Up
+            ? (this.summedOverflowSteps += this.projector.height / 100 - Math.floor(this.projector.height / 100))
+            : (this.summedOverflowSteps -= this.projector.height / 100 - Math.floor(this.projector.height / 100));
+        if (this.summedOverflowSteps >= 0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps -= 1;
+        } else if (this.summedOverflowSteps <= -0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps += 1;
+        } else {
+            this.scroll(direction, this.projectorHeight);
+        }
     }
 }
