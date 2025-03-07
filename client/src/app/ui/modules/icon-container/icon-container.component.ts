@@ -99,11 +99,18 @@ export class IconContainerComponent {
     @Input()
     public noFill = false;
 
+    @Input()
+    public iconClass = ``;
+
     /**
      * Optional action for clicking on the icon.
      */
     @Output()
     public iconAction: EventEmitter<any> = new EventEmitter();
+
+    public get calculatedIconClass(): string {
+        return [this.iconAction ? `pointer` : ``, this.mirrored ? `mirrored` : ``, this.iconClass].join(` `).trim();
+    }
 
     /**
      * Function executed, when the icon is clicked.

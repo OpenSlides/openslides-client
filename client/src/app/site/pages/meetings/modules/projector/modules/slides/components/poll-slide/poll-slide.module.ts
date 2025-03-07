@@ -8,6 +8,7 @@ import { SlideToken } from '../../definitions';
 import { PollSlideComponent } from './components/poll-slide.component';
 
 @NgModule({
+    exports: [PollSlideComponent],
     imports: [CommonModule, MotionPollModule, AssignmentPollModule, TopicPollModule],
     declarations: [PollSlideComponent],
     providers: [{ provide: SlideToken.token, useValue: PollSlideComponent }]

@@ -10,7 +10,12 @@
     @if (polldata) {
         <div>
             @if (pollContentObjectType === PollContentObjectType.Motion) {
-                <os-motion-poll-detail-content iconSize="gigantic" [poll]="polldata"></os-motion-poll-detail-content>
+                <div class="motion-poll-slide">
+                    <os-motion-poll-detail-content
+                        iconSize="gigantic"
+                        [poll]="polldata"
+                    ></os-motion-poll-detail-content>
+                </div>
             }
             @if (pollContentObjectType === PollContentObjectType.Assignment) {
                 <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>

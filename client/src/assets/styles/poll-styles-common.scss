@@ -12,6 +12,18 @@
     color: $votes-abstain-color;
 }
 
+.bg-yes {
+    background-color: $votes-yes-color;
+}
+
+.bg-no {
+    background-color: $votes-no-color;
+}
+
+.bg-abstain {
+    background-color: $votes-abstain-color;
+}
+
 .voted-yes {
     color: $votes-yes-color;
     opacity: 1 !important;
