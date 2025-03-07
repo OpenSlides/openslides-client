@@ -1,18 +1,30 @@
-<os-head-bar [nav]="false" (mainEvent)="goBack()">
+<os-head-bar [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ user?.getFullName() }}</h2>
     </div>
+    <ng-container class="menu-slot">
+        @if (!waitingForResults && assignMeetingsForm.valid && canManage) {
+            <button mat-button (click)="assign()">
+                <span class="upper">{{ 'Add' | translate }}</span>
+            </button>
+        } @else {
+            <button disabled mat-button>
+                <span class="upper">{{ 'Add' | translate }}</span>
+            </button>
+        }
+    </ng-container>
 </os-head-bar>
 <mat-card class="os-card" style="padding-right: 30px">
     <mat-card-content>
         <div class="assign-meetings-element">
-            <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
+            <h2>{{ 'Add to meetings' | translate }}</h2>
             <div class="assign-meetings-subtext">
                 <p translate>
-                    Please select your target meetings and state the name of the group, which the user should be
-                    assigned to in each meeting.
+                    Please select your target meetings and enter the name of an existing group which should be assigned
+                    to the account in each meeting.
                 </p>
+                <p translate>Important: New groups are not created.</p>
                 <br />
                 <p>
                     <i>
@@ -30,27 +42,18 @@
                                 formControlName="meeting_ids"
                                 [getAdditionallySearchedValuesFn]="getMeetingAdditionallySearchedFn"
                                 [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
-                                [inputListValues]="meetingsObservable"
+                                [inputListValues]="meetings$"
                                 [multiple]="true"
                                 [showChips]="false"
                                 [showEntriesNumber]="8"
                             ></os-list-search-selector>
                         </mat-form-field>
                     </div>
-                    <div class="grid-child">
+                    <div class="long-child">
                         <mat-form-field class="form-element">
                             <mat-label>{{ 'Group name' | translate }}</mat-label>
                             <input formControlName="group_name" matInput />
                         </mat-form-field>
-                    </div>
-                    <div class="grid-child">
-                        <button
-                            mat-button
-                            [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage"
-                            (click)="assign()"
-                        >
-                            {{ 'Assign' | translate }}
-                        </button>
                     </div>
                 </div>
             </form>
@@ -73,37 +76,56 @@
             <!-- Display results -->
             <div class="assign-meetings-element">
                 <h2>{{ 'Results' | translate }}</h2>
-                <div class="assign-meetings-subtext">
-                    <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName }}'</span>
-                </div>
                 <table class="result-table">
-                    <tr>
-                        <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
-                        <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
-                        <th class="verticalSplit">
-                            {{ 'Group not found - account is already in meeting, nothing assigned' | translate }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="verticalSplit">
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
-                            ></ng-container>
-                        </td>
-                        <td class="verticalSplit">
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
-                            ></ng-container>
-                        </td>
-                        <td class="verticalSplit">
-                            <ng-container
-                                [ngTemplateOutlet]="tableData"
-                                [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
-                            ></ng-container>
-                        </td>
-                    </tr>
+                    @if ($any(resultsTableDataSubjects['succeeded'] | async).length) {
+                        <tr>
+                            <th><mat-icon class="result-success-icon">add_circle_outline</mat-icon></th>
+                            <th>{{ 'Account successfully added.' | translate }}</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'succeeded' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
+                    @if ($any(resultsTableDataSubjects['standard_group'] | async).length) {
+                        <tr>
+                            <th><mat-icon color="warn">warning_amber</mat-icon></th>
+                            <th>{{ 'Group not found. Account added to the group “Default”.' | translate }}</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'standard_group' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
+                    @if ($any(resultsTableDataSubjects['nothing'] | async).length) {
+                        <tr>
+                            <th>
+                                <mat-icon color="accent">info_outline</mat-icon>
+                            </th>
+                            <th>
+                                {{ 'Group not found. Account already belongs to another group.' | translate }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="verticalSplit">
+                                <ng-container
+                                    [ngTemplateOutlet]="tableData"
+                                    [ngTemplateOutletContext]="{ $implicit: 'nothing' }"
+                                ></ng-container>
+                            </td>
+                        </tr>
+                    }
                 </table>
             </div>
         </mat-card-content>
