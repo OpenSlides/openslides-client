@@ -1,19 +1,15 @@
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { getCommitteeMeetingDetailExternalIdsSubscriptionConfig } from '../../committees.subscription';
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
-import { MeetingCloneDialogComponent } from './components/meeting-clone-dialog/meeting-clone-dialog.component';
 
 @Component({
     selector: `os-committee-meeting-preview`,
@@ -81,9 +77,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         private meetingRepo: MeetingControllerService,
         private meetingService: MeetingService,
         private promptService: PromptService,
-        private dialog: MatDialog,
-        public operator: OperatorService,
-        private modelRequestService: ModelRequestService
+        public operator: OperatorService
     ) {}
 
     /**
@@ -130,23 +124,13 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async onDuplicate(): Promise<void> {
-        await this.modelRequestService.fetch(getCommitteeMeetingDetailExternalIdsSubscriptionConfig());
-        const dialogRef = this.dialog.open(MeetingCloneDialogComponent, {
-            width: `290px`,
-            data: {
-                content: this.title,
-                existingExternalIds: this.meetingRepo
-                    .getViewModelList()
-                    .map(view => view.external_id)
-                    .filter(external_id => !!external_id)
-            }
-        });
+        const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
+        const content = this.title;
 
-        dialogRef.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.meetingRepo.duplicate({ meeting_id: this.meeting.id, ...result }).resolve();
-            }
-        });
+        const confirmed = await this.promptService.open(title, content);
+        if (confirmed) {
+            await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
+        }
     }
 
     public async onDeleteMeeting(): Promise<void> {
