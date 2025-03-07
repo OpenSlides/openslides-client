@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -45,6 +47,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
+import { TabNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -97,6 +100,11 @@ const DEFAULT_COLOR_PALETE = [
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
     @ViewChild(`editorEl`) private editorEl: ElementRef;
 
+    @ViewChildren(`btn`)
+    public buttonElements!: QueryList<ElementRef>;
+
+    @ViewChild(`isDisabled`) public isDisabled: TabNavigationDirective;
+
     @Input()
     public customSettings: object = {};
 
@@ -105,6 +113,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
+
+    public focusText = false;
+    public focusBackground = false;
 
     public override contentForm!: UntypedFormControl;
 
@@ -420,6 +431,44 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             });
     }
 
+    public navigate(event: KeyboardEvent, currentIndex: number): void {
+        const key = event.key;
+        let newIndex = currentIndex;
+        const buttons = this.buttonElements.toArray();
+
+        switch (key) {
+            case `ArrowRight`:
+                if (currentIndex < this.buttonElements.length - 1) {
+                    newIndex++;
+                }
+                while (buttons[newIndex].nativeElement.disabled) {
+                    newIndex++;
+                }
+                break;
+            case `ArrowLeft`:
+                if (currentIndex > 0) {
+                    newIndex--;
+                }
+                while (buttons[newIndex].nativeElement.disabled) {
+                    newIndex--;
+                }
+                break;
+            default:
+                return;
+        }
+
+        const buttonToFocus = buttons[newIndex];
+
+        if (buttonToFocus) {
+            (buttonToFocus.nativeElement as HTMLElement).focus();
+        }
+
+        for (const button of buttons) {
+            (button.nativeElement as HTMLElement).setAttribute(`tabindex`, `-1`);
+        }
+        (buttonToFocus.nativeElement as HTMLElement).setAttribute(`tabindex`, `0`);
+    }
+
     protected createForm(): UntypedFormControl {
         return this.fb.control([``]);
     }
@@ -442,5 +491,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         return dom.body.innerHTML;
+    }
+
+    public setFocus(help?: boolean): void {
+        this.focusText = help;
+        if (help === undefined) {
+            this.focusBackground = help;
+        } else {
+            this.focusBackground = !help;
+        }
     }
 }
