@@ -111,15 +111,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     /** stores the decimal places that could not be scrolled
      *  at once for the projector height */
-    public get summedOverflowSteps(): number {
-        return this._summedOverflowSteps;
-    }
-
-    public set summedOverflowSteps(value: number) {
-        this._summedOverflowSteps = value;
-    }
-
-    private _summedOverflowSteps: number;
+    private summedOverflowSteps: number;
 
     private _hasEnoughWiFiData: boolean;
 
@@ -386,9 +378,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         if (this.projector.scroll <= 0) {
             this.summedOverflowSteps = 0;
         }
-        direction === ScrollScaleDirection.Up
-            ? (this.summedOverflowSteps += this.projector.height / 100 - Math.floor(this.projector.height / 100))
-            : (this.summedOverflowSteps -= this.projector.height / 100 - Math.floor(this.projector.height / 100));
+        this.summedOverflowSteps +=
+            ((this.projector.height % 100) / 100) * (direction === ScrollScaleDirection.Up ? 1 : -1);
         if (this.summedOverflowSteps >= 0.5) {
             this.scroll(direction, this.projectorHeight + 1);
             this.summedOverflowSteps -= 1;
