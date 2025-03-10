@@ -21,8 +21,16 @@
         </div>
         <div class="data-area">
             <div class="general-data">
-                <div>{{ 'Valid votes' | translate }}: {{ polldata.votesvalid }}</div>
-                <div>{{ 'Entitled users' | translate }}: {{ polldata.entitled_users_at_stop.length }}</div>
+                <div>
+                    {{ 'Valid votes' | translate }} {{ polldata.votesvalid }}
+                    {{ polldata.votesvalid | pollPercentBase: polldata }}
+                </div>
+                <div>
+                    {{ 'Entitled users' | translate }} {{ polldata.entitled_users_at_stop.length }}
+                    @if (polldata.onehundred_percent_base === 'entitled') {
+                        {{ polldata.entitled_users_at_stop.length | pollPercentBase: polldata }}
+                    }
+                </div>
             </div>
             <os-icon-container icon="check_circle" iconClass="yes" size="large">
                 <span class="yes">
