@@ -7,6 +7,8 @@
     background-color: #fcfcfc;
     border-radius: 5px;
     width: 100%;
+    margin-top: 5px;
+    line-height: 1;
 
     .poll-bar {
         width: 100%;
@@ -15,6 +17,24 @@
 
         div {
             height: 20px;
+            gap: 0 5px;
+        }
+    }
+
+    .data-area {
+        display: inline-flex;
+        width: 100%;
+        align-items: center;
+        gap: 0 10px;
+        line-height: 1.5;
+
+        .general-data {
+            flex: 1 0 auto;
+            font-size: 14px;
+            color: gray;
+        }
+        os-icon-container {
+            width: fit-content;
         }
     }
 }
