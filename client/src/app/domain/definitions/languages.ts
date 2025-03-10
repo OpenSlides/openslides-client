@@ -1,5 +1,6 @@
 export const availableTranslations = {
     en: `English`,
+    am: `Amharic`,
     de: `Deutsch`,
     cs: `Čeština`,
     fr: `Français`,
