@@ -21,6 +21,7 @@ import {
     Subscription
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -228,7 +229,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 motionSubscription.subscribe(motion => this.onMotionUpdated(motion))
             );
 
-            const motion = await firstValueFrom(motionSubscription);
+            let motion = await firstValueFrom(motionSubscription);
             if (lastMeetingId !== motion.meeting_id) {
                 this.isNavigatedFromAmendments();
                 this._sortedMotionsObservable = null;
@@ -239,6 +240,25 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 return;
             }
             this.onMotionLoaded();
+
+            motion = await firstValueFrom(motionSubscription);
+            if (
+                this.meetingSettingsService.instant(`motions_enable_origin_motion_display`) &&
+                this.operator.hasPerms(Permission.motionCanSeeOrigin) &&
+                this.meetingSettingsService.instant(`motions_origin_motion_toggle_default`) &&
+                motion.all_origin_ids
+            ) {
+                await this.autoupdateService.single(
+                    await this.modelRequestBuilder.build(
+                        getMotionOriginDetailSubscriptionConfig(...motion.all_origin_ids).modelRequest
+                    ),
+                    MOTION_ORIGIN_DETAIL_SUBSCRIPTION
+                );
+
+                for (const id of motion.all_origin_ids) {
+                    this.addOriginMotionTab(id);
+                }
+            }
         }
 
         this.hasLoaded$.next(true);
@@ -362,6 +382,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             MOTION_ORIGIN_DETAIL_SUBSCRIPTION
         );
 
+        this.addOriginMotionTab(id);
+    }
+
+    public hideOriginMotion(id: Id): void {
+        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
+        if (idx !== -1) {
+            this.originMotionsLoaded.splice(idx, 1);
+        }
+    }
+
+    private addOriginMotionTab(id: Id): void {
         const originMotion = this.repo.getViewModelUnsafe(id);
         if (!this.originMotionsLoaded.find(m => m.id === id)) {
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
@@ -377,13 +408,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             this.originMotionsChangeRecoMode[id] = ChangeRecoMode.Diff;
             this.originMotionsLineNumberingMode[id] =
                 originMotion.meeting?.motions_default_line_numbering || this.lineNumberingMode;
-        }
-    }
-
-    public hideOriginMotion(id: Id): void {
-        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
-        if (idx !== -1) {
-            this.originMotionsLoaded.splice(idx, 1);
         }
     }
 

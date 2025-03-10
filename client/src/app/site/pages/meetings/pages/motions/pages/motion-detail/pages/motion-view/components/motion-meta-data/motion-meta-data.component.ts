@@ -151,6 +151,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.meetingSettingsService.instant(`motions_enable_origin_motion_display`);
     }
 
+    public get originToggleDefault(): boolean {
+        return this.meetingSettingsService.instant(`motions_origin_motion_toggle_default`);
+    }
+
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
     private _forwardingAvailable = false;
