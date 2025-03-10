@@ -6,9 +6,11 @@
     padding: 10px;
     background-color: #fcfcfc;
     border-radius: 5px;
-    width: 100%;
+    width: calc(100% - 22px);
     margin-top: 5px;
     line-height: 1;
+    display: flex;
+    flex-direction: column;
 
     .poll-bar {
         width: 100%;
@@ -109,27 +111,25 @@
             border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
     }
+}
+.votes-area {
+    display: inline-flex;
+    gap: 0 5px;
+    width: 100%;
 
-    .votes-area {
-        display: inline-flex;
-        gap: 0 5px;
-        height: 100%;
+    .votes-column {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
 
-        .votes-column {
+        .vote-entry {
+            min-height: 29px;
             display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            height: 100%;
+            align-items: center;
+        }
 
-            .vote-entry {
-                min-height: 29px;
-                display: flex;
-                align-items: center;
-            }
-
-            :not(:last-child) {
-                border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-            }
+        :not(:last-child) {
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
         }
     }
 }

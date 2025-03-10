@@ -16,33 +16,11 @@ import {
 } from '../../../poll-slide/poll-slide-data';
 
 type VoteResult = `Y` | `N` | `A` | `X`;
-const CHART_AREA_WIDTH = 480;
-const CHART_AREA_HEIGHT = 300;
 const ENTRY_HEIGHT = 30;
 const TITLE_HEIGHT = 55;
+const POLL_BAR_HEIGHT = 91;
 const HEADER_FOOTER_HEIGHT = 125;
 const NO_HEADER_TOP_MARGIN = 40;
-const CHART_ROWS = Math.ceil((CHART_AREA_HEIGHT + 10) / ENTRY_HEIGHT);
-
-interface FormattedVotesArea {
-    left?: [string, VoteResult][][];
-    center?: [string, VoteResult][][];
-    right?: [string, VoteResult][][];
-}
-
-interface FormattedVotes {
-    top?: FormattedVotesArea;
-    center?: FormattedVotesArea;
-    bottom?: FormattedVotesArea;
-}
-
-interface UserVotesFormat {
-    columns: number;
-    bufferLeft: number;
-    bufferUp: number;
-    chartColumns: number;
-    bufferDown: number;
-}
 
 @Component({
     selector: `os-motion-poll-single-votes-slide`,
@@ -74,7 +52,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
     public columnStyle: { [key: string]: any } = {};
 
     public bufferUp: number;
-    public userVotesFormatted: FormattedVotes;
+    public userVotesFormatted: [string, VoteResult][][];
 
     private _maxColumns = 6;
     private _orderBy: keyof User = `last_name`;
@@ -179,121 +157,42 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
         if (!this.projector || !this._userVotes) {
             return;
         }
-        const format = this.getUserVotesFormat();
-        this.bufferUp = format.bufferUp;
-        this.calculateFormattedUserVotes(format);
-        let templateColumns = `${format.chartColumns}fr`;
-        if (format.bufferLeft) {
-            templateColumns = `${format.bufferLeft}fr ${templateColumns} ${format.bufferLeft}fr`;
-        }
+        const [columns, rows] = this.newGetUserVotesFormat();
+        this.newCalculateFormattedUserVotes(columns, rows);
+        `1fr `.repeat(columns).trim();
         this.gridStyle = {
-            [`grid-template-columns`]: templateColumns
+            [`grid-template-columns`]: `1fr `.repeat(columns).trim()
         };
         this.columnStyle = {
-            [`width`]: `${Math.floor(((this.projector?.width ?? 100) - 100) / format.columns - 5)}px`
+            [`width`]: `${Math.floor(((this.projector?.width ?? 100) - 100) / columns - 5)}px`
         };
         this.cd.markForCheck();
     }
 
-    private getUserVotesFormat(): UserVotesFormat {
+    private newGetUserVotesFormat(): [number, number] {
         const visibleHeight =
             this.projector.height -
             TITLE_HEIGHT -
+            POLL_BAR_HEIGHT -
             (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN);
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
-        const bufferUp = Math.max(Math.floor((visibleRows - CHART_ROWS) / 2), 0);
-        const width = this.projector.width - 100;
-        let [chartColumns, bufferLeft, maxVisibleEntries] = this.calculateEntryNumberForColumns(
-            this._maxColumns,
-            width,
-            visibleRows,
-            CHART_ROWS
-        );
-        let columns = this._maxColumns;
-        if (maxVisibleEntries > this._userVotes.length) {
-            for (let checkColumns = this._maxColumns - 1; checkColumns > 0; checkColumns--) {
-                const [newChartColumns, newBufferLeft, newMaxVisibleEntries] = this.calculateEntryNumberForColumns(
-                    checkColumns,
-                    width,
-                    visibleRows,
-                    CHART_ROWS
-                );
-                if (newMaxVisibleEntries <= this._userVotes.length) {
-                    columns = checkColumns + 1;
-                    break;
-                }
-                [chartColumns, bufferLeft, maxVisibleEntries] = [newChartColumns, newBufferLeft, newMaxVisibleEntries];
-            }
-        }
-        const overflow = this._userVotes.length - maxVisibleEntries;
-        let bufferDown = visibleRows - bufferUp - CHART_ROWS;
-        bufferDown = overflow <= 0 ? bufferDown : bufferDown + Math.ceil(overflow / columns);
-        return {
-            columns,
-            bufferLeft,
-            bufferUp,
-            chartColumns,
-            bufferDown
-        };
+        const columns = Math.min(Math.ceil(this._userVotes.length / visibleRows), this._maxColumns);
+        return [columns, Math.max(visibleRows, Math.ceil(this._userVotes.length / columns))];
     }
 
-    private calculateFormattedUserVotes(format: UserVotesFormat): void {
-        const { columns, bufferLeft, bufferUp, chartColumns, bufferDown } = format;
-        const votesFormatted: FormattedVotes = [`top`, `center`, `bottom`].mapToObject(key => ({
-            [key]: [`left`, `center`, `right`].mapToObject(innerKey => ({ [innerKey]: [] }))
-        }));
+    private newCalculateFormattedUserVotes(columns: number, rows: number): void {
         let nextIndex = 0;
+        const votesFormatted: [string, VoteResult][][] = [];
         for (let i = 0; i < columns; i++) {
-            const side: keyof FormattedVotesArea =
-                i < bufferLeft ? `left` : i >= bufferLeft + chartColumns ? `right` : `center`;
-            let [stop, untilIndex] = this.calcStopAndActualUntilIndex(nextIndex + bufferUp);
-            votesFormatted.top[side].push(this._userVotes.slice(nextIndex, untilIndex));
-            if (stop) break;
-            nextIndex = untilIndex;
-            if (i < bufferLeft || i >= bufferLeft + chartColumns) {
-                [stop, untilIndex] = this.calcStopAndActualUntilIndex(nextIndex + CHART_ROWS);
-                votesFormatted.center[side].push(this._userVotes.slice(nextIndex, untilIndex));
-                if (stop) break;
-                nextIndex = untilIndex;
-            }
-            [stop, untilIndex] = this.calcStopAndActualUntilIndex(nextIndex + bufferDown);
-            votesFormatted.bottom[side].push(this._userVotes.slice(nextIndex, untilIndex));
+            const [stop, untilIndex] = this.newCalcStopAndActualUntilIndex(nextIndex + rows);
+            votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));
             if (stop) break;
             nextIndex = untilIndex;
         }
-        this.userVotesFormatted = Object.entries(votesFormatted).mapToObject(
-            ([key, area]: [keyof FormattedVotes, FormattedVotesArea]) => {
-                if (Object.values(area).some(val => val.length)) {
-                    return { [key]: Object.entries(area).mapToObject(([k, v]) => (v.length ? { [k]: v } : {})) };
-                }
-                return {};
-            }
-        );
+        this.userVotesFormatted = votesFormatted;
     }
 
-    private calcStopAndActualUntilIndex(untilIndex: number): [boolean, number] {
+    private newCalcStopAndActualUntilIndex(untilIndex: number): [boolean, number] {
         return [untilIndex >= this._userVotes.length, Math.min(untilIndex, this._userVotes.length)];
-    }
-
-    /**
-     * Calculates the chart column format for a specific number of columns.
-     * @param maxColumns maximum intended number of columns
-     * @param width available width for the layout
-     * @param visibleRows amount of fully visible rows
-     * @param chartRows amount of rows needed to display the chart
-     * @returns a tuple with the number of necessary columns, the number of columns left of the chart and the number of entries that will fit the slide with these specifications. In that order.
-     */
-    private calculateEntryNumberForColumns(
-        maxColumns: number,
-        width: number,
-        visibleRows: number,
-        chartRows: number
-    ): [number, number, number] {
-        const spacePerColumn = Math.floor(width / maxColumns);
-        let chartColumns = Math.min(Math.ceil((CHART_AREA_WIDTH + 10) / spacePerColumn), maxColumns);
-        const bufferLeft = Math.floor((maxColumns - chartColumns) / 2);
-        chartColumns = maxColumns - bufferLeft * 2;
-        const maxVisibleEntries = chartColumns * (visibleRows - chartRows) + (maxColumns - chartColumns) * visibleRows;
-        return [chartColumns, bufferLeft, maxVisibleEntries];
     }
 }

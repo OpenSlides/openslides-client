@@ -55,66 +55,36 @@
     @if (polldata) {
         <div class="poll-result-area">
             @if (!invalid && pollContentObjectType === PollContentObjectType.Motion) {
-                <div class="content-grid" [ngStyle]="gridStyle">
-                    <div class="top-left">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.left }"
-                        ></ng-container>
-                    </div>
-                    <div class="top-center">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.center }"
-                        ></ng-container>
-                    </div>
-                    <div class="top-right">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.top?.right }"
-                        ></ng-container>
-                    </div>
-                    <div [ngClass]="{ 'center-left': true, 'border-top': bufferUp > 0 }">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center?.left }"
-                        ></ng-container>
-                    </div>
-                    <div class="center-area">
-                        <div class="center-content-wrapper">
-                            <div class="center-content">
-                                <os-motion-poll-detail-content
-                                    iconSize="medium"
-                                    [poll]="polldata"
-                                    [shouldShowEntitled]="true"
-                                ></os-motion-poll-detail-content>
-                            </div>
+                <div class="votes-area">
+                    @for (column of userVotesFormatted; track column) {
+                        <div class="votes-column" [ngStyle]="columnStyle">
+                            @for (user of column; track user[0]) {
+                                <div class="vote-entry">
+                                    @if (user[1] === 'Y') {
+                                        <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
+                                            {{ user[0] }}
+                                        </os-icon-container>
+                                    } @else if (user[1] === 'N') {
+                                        <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
+                                            {{ user[0] }}
+                                        </os-icon-container>
+                                    } @else if (user[1] === 'A') {
+                                        <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
+                                            {{ user[0] }}
+                                        </os-icon-container>
+                                    } @else {
+                                        <os-icon-container
+                                            icon="radio_button_unchecked"
+                                            iconClass="no-content"
+                                            [noWrap]="true"
+                                        >
+                                            {{ user[0] }}
+                                        </os-icon-container>
+                                    }
+                                </div>
+                            }
                         </div>
-                    </div>
-                    <div [ngClass]="{ 'center-right': true, 'border-top': bufferUp > 0 }">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.center?.right }"
-                        ></ng-container>
-                    </div>
-                    <div class="bottom-left border-top">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.left }"
-                        ></ng-container>
-                    </div>
-                    <div class="bottom-center">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.center }"
-                        ></ng-container>
-                    </div>
-                    <div class="bottom-right border-top">
-                        <ng-container
-                            [ngTemplateOutlet]="entries"
-                            [ngTemplateOutletContext]="{ entries: userVotesFormatted?.bottom?.right }"
-                        ></ng-container>
-                    </div>
+                    }
                 </div>
             } @else {
                 <i>Wrong poll type for this projection</i>
@@ -122,35 +92,3 @@
         </div>
     }
 }
-
-<ng-template #entries let-entries="entries">
-    @if (entries) {
-        <div class="votes-area">
-            @for (column of entries; track column) {
-                <div class="votes-column" [ngStyle]="columnStyle">
-                    @for (user of column; track user[0]) {
-                        <div class="vote-entry">
-                            @if (user[1] === 'Y') {
-                                <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
-                                    {{ user[0] }}
-                                </os-icon-container>
-                            } @else if (user[1] === 'N') {
-                                <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
-                                    {{ user[0] }}
-                                </os-icon-container>
-                            } @else if (user[1] === 'A') {
-                                <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
-                                    {{ user[0] }}
-                                </os-icon-container>
-                            } @else {
-                                <os-icon-container icon="radio_button_unchecked" iconClass="no-content" [noWrap]="true">
-                                    {{ user[0] }}
-                                </os-icon-container>
-                            }
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-    }
-</ng-template>
