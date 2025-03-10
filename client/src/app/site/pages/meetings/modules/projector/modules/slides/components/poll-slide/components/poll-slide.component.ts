@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollClassType, PollState } from 'src/app/domain/models/poll/poll-constants';
+import { Projector } from 'src/app/domain/models/projector/projector';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
+import { BaseScaleScrollSlideComponent } from '../../../base/base-scale-scroll-slide-component';
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { modifyAgendaItemNumber } from '../../../definitions';
 import { PollSlideData, PollSlideDataFields, SlidePollOption, SlidePollOptionFields } from '../poll-slide-data';
@@ -24,7 +27,10 @@ export enum PollContentObjectType {
     templateUrl: `./poll-slide.component.html`,
     styleUrls: [`./poll-slide.component.scss`]
 })
-export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
+export class PollSlideComponent
+    extends BaseSlideComponent<PollSlideData>
+    implements BaseScaleScrollSlideComponent<PollSlideData>
+{
     public PollState = PollState;
     public PollContentObjectType = PollContentObjectType;
 
@@ -35,9 +41,76 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
 
     public polldata!: PollData;
 
+    public override get projector(): ViewProjector {
+        return super.projector;
+    }
+
+    public override set projector(value: ViewProjector) {
+        const old = super.projector;
+        const isInit = !old !== !value;
+        super.projector = value;
+        if (
+            isInit ||
+            [`width`, `height`, `show_header_footer`].some((key: keyof Projector) => value[key] !== old[key])
+        ) {
+            this.onProjectorFormatChange(value);
+        }
+    }
+
+    public titleDivStyles: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'margin-top'?: string;
+    } = { [`margin-top`]: `50px` };
+
+    public textDivStyles: {
+        width?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'margin-top'?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'font-size'?: string;
+    } = {};
+
+    private _scroll: number = 0;
+
+    @Input()
+    public set scroll(scroll: number) {
+        this._scroll = scroll ?? 0;
+        scroll *= -100;
+        this.textDivStyles[`margin-top`] = `${scroll}px`;
+        this.onScroll();
+    }
+
+    public get scroll(): number {
+        return this._scroll;
+    }
+
+    private _scale: number = 0;
+
+    @Input()
+    public set scale(scale: number) {
+        this._scale = scale ?? 0;
+        this.onScale();
+    }
+
+    public get scale(): number {
+        return this._scale;
+    }
+
     public constructor(private collectionMapperService: CollectionMapperService) {
         super();
     }
+
+    protected onProjectorFormatChange(projector: ViewProjector): void {
+        if (projector.show_header_footer) {
+            this.titleDivStyles[`margin-top`] = `50px`;
+        } else {
+            this.titleDivStyles[`margin-top`] = `0`;
+        }
+    }
+
+    protected onScroll(): void {}
+
+    protected onScale(): void {}
 
     protected override setData(value: SlideData<PollSlideData>): void {
         super.setData(value);

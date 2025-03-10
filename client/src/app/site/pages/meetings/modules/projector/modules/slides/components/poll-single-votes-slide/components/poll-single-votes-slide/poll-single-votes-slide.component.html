@@ -1,5 +1,5 @@
 @if (data?.data && userVotesFormatted) {
-    <div class="slidetitle">
+    <div class="slidetitle" [ngStyle]="titleDivStyles">
         <ng-container>
             <h1 class="ellipsis-overflow">{{ title }}</h1>
             @if (subtitle) {
@@ -53,42 +53,46 @@
         </div>
     </div>
     @if (polldata) {
-        <div class="poll-result-area">
-            @if (!invalid && pollContentObjectType === PollContentObjectType.Motion) {
-                <div class="votes-area">
-                    @for (column of userVotesFormatted; track column) {
-                        <div class="votes-column" [ngStyle]="columnStyle">
-                            @for (user of column; track user[0]) {
-                                <div class="vote-entry">
-                                    @if (user[1] === 'Y') {
-                                        <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
-                                            {{ user[0] }}
-                                        </os-icon-container>
-                                    } @else if (user[1] === 'N') {
-                                        <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
-                                            {{ user[0] }}
-                                        </os-icon-container>
-                                    } @else if (user[1] === 'A') {
-                                        <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
-                                            {{ user[0] }}
-                                        </os-icon-container>
-                                    } @else {
-                                        <os-icon-container
-                                            icon="radio_button_unchecked"
-                                            iconClass="no-content"
-                                            [noWrap]="true"
-                                        >
-                                            {{ user[0] }}
-                                        </os-icon-container>
+        <div style="height: 100%; width: 100%; overflow-y: hidden">
+            <div [ngStyle]="textDivStyles">
+                <div class="poll-result-area">
+                    @if (!invalid && pollContentObjectType === PollContentObjectType.Motion) {
+                        <div class="votes-area">
+                            @for (column of userVotesFormatted; track column) {
+                                <div class="votes-column" [ngStyle]="columnStyle">
+                                    @for (user of column; track user[0]) {
+                                        <div class="vote-entry">
+                                            @if (user[1] === 'Y') {
+                                                <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
+                                                    {{ user[0] }}
+                                                </os-icon-container>
+                                            } @else if (user[1] === 'N') {
+                                                <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
+                                                    {{ user[0] }}
+                                                </os-icon-container>
+                                            } @else if (user[1] === 'A') {
+                                                <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
+                                                    {{ user[0] }}
+                                                </os-icon-container>
+                                            } @else {
+                                                <os-icon-container
+                                                    icon="radio_button_unchecked"
+                                                    iconClass="no-content"
+                                                    [noWrap]="true"
+                                                >
+                                                    {{ user[0] }}
+                                                </os-icon-container>
+                                            }
+                                        </div>
                                     }
                                 </div>
                             }
                         </div>
+                    } @else {
+                        <i>Wrong poll type for this projection</i>
                     }
                 </div>
-            } @else {
-                <i>Wrong poll type for this projection</i>
-            }
+            </div>
         </div>
     }
 }

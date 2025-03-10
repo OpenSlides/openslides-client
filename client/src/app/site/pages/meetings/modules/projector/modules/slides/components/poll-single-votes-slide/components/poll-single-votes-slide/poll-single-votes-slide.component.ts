@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Projector } from 'src/app/domain/models/projector/projector';
 import { User } from 'src/app/domain/models/users/user';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -30,22 +29,6 @@ const NO_HEADER_TOP_MARGIN = 40;
 })
 export class PollSingleVotesSlideComponent extends PollSlideComponent implements OnDestroy {
     public invalid = false;
-
-    public override set projector(value: ViewProjector) {
-        const old = super.projector;
-        const isInit = !old !== !value;
-        super.projector = value;
-        if (
-            isInit ||
-            [`width`, `height`, `show_header_footer`].some((key: keyof Projector) => value[key] !== old[key])
-        ) {
-            this.formatUserVotes();
-        }
-    }
-
-    public override get projector(): ViewProjector {
-        return super.projector;
-    }
 
     public gridStyle: { [key: string]: any } = {};
 
@@ -88,6 +71,21 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
 
     public ngOnDestroy(): void {
         this._meetingSettingsSubscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    protected override onProjectorFormatChange(projector: ViewProjector): void {
+        super.onProjectorFormatChange(projector);
+        this.formatUserVotes();
+    }
+
+    protected override onScroll(): void {
+        super.onScroll();
+        this.cd.markForCheck();
+    }
+
+    protected override onScale(): void {
+        super.onScale();
+        this.cd.markForCheck();
     }
 
     protected override setData(value: SlideData<PollSlideData>): void {
