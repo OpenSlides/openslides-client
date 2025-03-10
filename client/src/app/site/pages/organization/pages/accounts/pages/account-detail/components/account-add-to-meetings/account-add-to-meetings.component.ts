@@ -116,7 +116,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
         );
-        this.setMeetingsObservable();
+        this.meetings$ = this.meetingsSubject.pipe(filter(meetings => !!meetings.length));
     }
 
     public async assign(): Promise<void> {
@@ -165,9 +165,5 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     private updatePermissions(): void {
         this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users);
-    }
-
-    private setMeetingsObservable(): void {
-        this.meetings$ = this.meetingsSubject.pipe(filter(meetings => !!meetings.length));
     }
 }
