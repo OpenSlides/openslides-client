@@ -7,22 +7,20 @@ import { ParticipantDetailComponent } from './components/participant-detail/part
 import { ParticipantDetailEditComponent } from './components/participant-detail-edit/participant-detail-edit.component';
 import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
 
-const MANAGED_DETAIL_ROUTES = [`new`];
-
 const routes: Routes = [
     {
         path: ``,
         component: ParticipantDetailComponent,
         children: [
-            ...MANAGED_DETAIL_ROUTES.map(path => ({
-                path,
+            {
+                path: `new`,
                 loadChildren: () =>
                     import(`./pages/participant-detail-manage/participant-detail-manage.module`).then(
                         m => m.ParticipantDetailManageModule
                     ),
                 data: { meetingPermissions: [Permission.userCanUpdate] },
                 canLoad: [PermissionGuard]
-            })),
+            },
             {
                 path: `:id`,
                 component: ParticipantDetailViewComponent
