@@ -378,6 +378,19 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
+    public canView(origin: ViewMotion | ViewMeeting): boolean {
+        if (!this.displayOriginEnabled) {
+            return false;
+        }
+
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.sequential_number !== undefined;
+        }
+
+        return origin?.canAccess();
+    }
+
     private async updateSupportersSubject(): Promise<void> {
         this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }

@@ -345,7 +345,7 @@
                     <div>
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                         <mat-slide-toggle
-                            *osPerms="permission.motionCanSeeOrigin; and: displayOriginEnabled"
+                            *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
                             [aria-label]="'Load origin motion' | translate"
                             [checked]="originMotionStatus[origin.id]"
                             (change)="toggleOriginMotion($event, origin.id)"

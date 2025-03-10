@@ -200,7 +200,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             },
             {
                 idField: `origin_id`,
-                fieldset: [],
+                fieldset: [`sequential_number`],
                 follow: [{ idField: `meeting_id`, fieldset: [`name`] }]
             }
         ],
