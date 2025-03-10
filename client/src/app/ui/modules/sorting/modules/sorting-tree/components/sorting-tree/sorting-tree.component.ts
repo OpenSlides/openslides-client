@@ -574,15 +574,16 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * dropping)
      *
      * @param event MouseEvent.
-     * @param indx The index of the row clicked.
+     * @param clickIndx The index of the row clicked.
      */
-    public onItemClick(event: MouseEvent | Event, indx: number): void {
+    public onItemClick(event: MouseEvent | Event, clickIndx: number): void {
         if (event.type === `click` || (<KeyboardEvent>event).key === ` `) {
+            document.getSelection().removeAllRanges();
             event.preventDefault();
             if ((<MouseEvent>event).ctrlKey) {
-                const ind = this.multiSelectedIndex.findIndex(i => i === indx);
+                const ind = this.multiSelectedIndex.findIndex(i => i === clickIndx);
                 if (ind === -1) {
-                    this.multiSelectedIndex.push(indx);
+                    this.multiSelectedIndex.push(clickIndx);
                 } else {
                     this.multiSelectedIndex = this.multiSelectedIndex
                         .slice(0, ind)
@@ -590,7 +591,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                 }
             } else {
                 // deselect all when clicking on an non-selected item
-                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(indx)) {
+                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(clickIndx)) {
                     this.multiSelectedIndex = [];
                 }
             }
