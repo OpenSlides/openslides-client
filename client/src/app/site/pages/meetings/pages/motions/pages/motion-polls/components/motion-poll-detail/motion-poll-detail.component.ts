@@ -31,6 +31,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     public displayVoteWeight: boolean;
 
+    public displayDelegation: boolean;
+
     public constructor(
         protected override translate: TranslateService,
         pollService: MotionPollService,
@@ -39,6 +41,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     ) {
         super(pollService, pollPdfService);
         this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
+        this.subscriptions.push(this.delegationEnabled.subscribe(data => (this.displayDelegation = data)));
     }
 
     protected createVotesData(): ExtendedVoteData[] {

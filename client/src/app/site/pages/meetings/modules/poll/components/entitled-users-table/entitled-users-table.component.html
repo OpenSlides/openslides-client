@@ -25,11 +25,15 @@
                                     <div>{{ 'Vote weight' | translate }}: {{ entry.user.vote_weight() }}</div>
                                 }
                                 <!-- Delegation -->
-                                @if (entry.vote_delegated_to_user_id && !entry.delegation_user_merged_into_id) {
+                                @if (
+                                    displayDelegation &&
+                                    entry.vote_delegated_to_user_id &&
+                                    !entry.delegation_user_merged_into_id
+                                ) {
                                     <div>
                                         <span>
                                             ({{ 'represented by' | translate }}
-                                            {{ entry.vote_delegated_to.getShortName() }})
+                                            {{ entry.vote_delegated_to?.getShortName() }})
                                         </span>
                                     </div>
                                 }

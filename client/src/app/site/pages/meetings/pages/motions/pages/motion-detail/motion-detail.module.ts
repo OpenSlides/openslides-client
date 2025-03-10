@@ -24,11 +24,11 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardComponent } from 'src/app/ui/modules/action-card';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { DatepickerModule } from 'src/app/ui/modules/datepicker';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
@@ -90,7 +90,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
     ],
     imports: [
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         MotionDetailRoutingModule,
         MotionChangeRecommendationDialogModule,
         MotionPollModule,
@@ -104,7 +104,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         ChoiceDialogComponent,
         DirectivesModule,
         PipesModule,
-        IconContainerModule,
+        IconContainerComponent,
         SortingModule,
         SearchSelectorModule,
         EditorModule,

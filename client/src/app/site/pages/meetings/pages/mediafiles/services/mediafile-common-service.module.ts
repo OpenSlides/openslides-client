@@ -1,7 +1,4 @@
 import { NgModule } from '@angular/core';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
-@NgModule({
-    imports: [PromptDialogModule]
-})
+@NgModule({})
 export class MediafileCommonServiceModule {}

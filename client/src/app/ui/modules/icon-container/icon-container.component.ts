@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
     selector: `os-icon-container`,
     templateUrl: `./icon-container.component.html`,
-    styleUrls: [`./icon-container.component.scss`]
+    styleUrls: [`./icon-container.component.scss`],
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatTooltipModule]
 })
 export class IconContainerComponent {
     /**

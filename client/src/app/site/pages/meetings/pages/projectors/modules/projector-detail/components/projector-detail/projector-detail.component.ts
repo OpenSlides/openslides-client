@@ -77,6 +77,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return !!this.projector.nonStableCurrentProjections;
     }
 
+    public get isPdfProjection(): boolean {
+        return this.projector?.nonStableCurrentProjections?.some(
+            projection =>
+                projection.content_object_id.includes(`mediafile`) &&
+                typeof projection.content[`mimetype`] === `string` &&
+                projection.content[`mimetype`].endsWith(`/pdf`)
+        );
+    }
+
     public get currentProjectionIsLoS(): boolean {
         for (const projection of this.projector.nonStableCurrentProjections) {
             if (hasListOfSpeakers(projection.content_object)) {
@@ -95,6 +104,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public get noWiFiData(): boolean {
         return this._noWiFiData;
     }
+
+    public get projectorHeight(): number {
+        return Math.floor(this.projector.height / 100);
+    }
+
+    /** stores the decimal places that could not be scrolled
+     *  at once for the projector height */
+    private summedOverflowSteps: number;
 
     private _hasEnoughWiFiData: boolean;
 
@@ -147,6 +164,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.projectorObservable = this._projectorIdSubject.pipe(
             switchMap(projectorId => this.repo.getViewModelObservable(projectorId))
         );
+        this.summedOverflowSteps = 0;
     }
 
     public onIdFound(id: Id | null): void {
@@ -354,5 +372,22 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 }
             })
         );
+    }
+
+    public scrollPDFPage(direction: ScrollScaleDirection): void {
+        if (this.projector.scroll <= 0) {
+            this.summedOverflowSteps = 0;
+        }
+        this.summedOverflowSteps +=
+            ((this.projector.height % 100) / 100) * (direction === ScrollScaleDirection.Up ? 1 : -1);
+        if (this.summedOverflowSteps >= 0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps -= 1;
+        } else if (this.summedOverflowSteps <= -0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps += 1;
+        } else {
+            this.scroll(direction, this.projectorHeight);
+        }
     }
 }
