@@ -297,6 +297,6 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
      * Function to allow to edit the external_id
      */
     public get allowExternalId(): boolean {
-        return this.operator.isMeetingAdmin || this.operator.isSuperAdmin;
+        return this.operator.isMeetingAdmin || this.operator.canSkipPermissionCheck;
     }
 }

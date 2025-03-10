@@ -119,8 +119,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.canManage && this.isCallEnabled;
     }
 
-    public get isSuperadminNotInMeeting(): boolean {
-        return this.operator.isSuperAdmin && !this.operator.user.getMeetingUser();
+    public get isAdminNotInMeeting(): boolean {
+        return this.operator.canSkipPermissionCheck && !this.operator.user.getMeetingUser();
     }
 
     @Input()
@@ -271,7 +271,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public addMyself(): void {
-        if (this.isSuperadminNotInMeeting) {
+        if (this.isAdminNotInMeeting) {
             const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
             this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
         } else {
@@ -304,7 +304,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public async addPointOfOrder(): Promise<void> {
-        if (this.isSuperadminNotInMeeting) {
+        if (this.isAdminNotInMeeting) {
             const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
             this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
         } else {

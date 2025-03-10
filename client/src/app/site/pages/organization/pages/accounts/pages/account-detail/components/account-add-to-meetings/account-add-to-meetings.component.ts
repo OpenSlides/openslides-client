@@ -107,7 +107,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 .getViewModelListObservable()
                 .pipe(
                     map(meetings =>
-                        this.operator.isSuperAdmin
+                        this.operator.canSkipPermissionCheck
                             ? meetings.filter(meeting => !meeting.locked_from_inside)
                             : meetings.filter(
                                   meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
