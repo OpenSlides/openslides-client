@@ -1,5 +1,11 @@
 @import 'src/assets/styles/poll-styles-common.scss';
 
+.content-wrapper {
+    height: 100%;
+    width: 100%;
+    overflow-y: hidden;
+}
+
 .poll-bar-wrapper {
     border: 1px solid rgba(128, 128, 128, 0.2);
     box-shadow: 0 0 5px 2px rgba(128, 128, 128, 0.2);
@@ -54,6 +60,7 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        min-width: 0;
 
         .vote-entry {
             min-height: 29px;

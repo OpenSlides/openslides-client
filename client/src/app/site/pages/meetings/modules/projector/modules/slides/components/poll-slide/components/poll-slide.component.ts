@@ -67,8 +67,9 @@ export class PollSlideComponent
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'font-size'?: string;
-    } = {};
+        'transform-origin'?: string;
+        transform?: string;
+    } = { [`transform-origin`]: `0 0` };
 
     private _scroll: number = 0;
 
@@ -84,11 +85,15 @@ export class PollSlideComponent
         return this._scroll;
     }
 
+    protected _actualScale: number = 1;
     private _scale: number = 0;
 
     @Input()
     public set scale(scale: number) {
         this._scale = scale ?? 0;
+        this._actualScale = 1.05 ** this._scale;
+        this.textDivStyles[`transform`] = `scale(${this._actualScale})`;
+        this.textDivStyles[`width`] = `calc(100% / ${this._actualScale})`;
         this.onScale();
     }
 

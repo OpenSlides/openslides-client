@@ -85,7 +85,7 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
 
     protected override onScale(): void {
         super.onScale();
-        this.cd.markForCheck();
+        this.formatUserVotes();
     }
 
     protected override setData(value: SlideData<PollSlideData>): void {
@@ -169,10 +169,11 @@ export class PollSingleVotesSlideComponent extends PollSlideComponent implements
 
     private newGetUserVotesFormat(): [number, number] {
         const visibleHeight =
-            this.projector.height -
-            TITLE_HEIGHT -
-            POLL_BAR_HEIGHT -
-            (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN);
+            (this.projector.height -
+                TITLE_HEIGHT -
+                POLL_BAR_HEIGHT -
+                (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN)) /
+            this._actualScale;
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
         const columns = Math.min(Math.ceil(this._userVotes.length / visibleRows), this._maxColumns);
         return [columns, Math.max(visibleRows, Math.ceil(this._userVotes.length / columns))];

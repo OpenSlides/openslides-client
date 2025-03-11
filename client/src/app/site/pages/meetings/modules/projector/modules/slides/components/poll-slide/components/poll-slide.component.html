@@ -8,7 +8,7 @@
         </ng-container>
     </div>
     @if (polldata) {
-        <div style="height: 100%; width: 100%; overflow-y: hidden">
+        <div class="content-wrapper">
             <div [ngStyle]="textDivStyles">
                 @if (pollContentObjectType === PollContentObjectType.Motion) {
                     <div class="motion-poll-slide">
