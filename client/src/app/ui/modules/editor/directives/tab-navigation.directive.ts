@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
     selector: `[osTabNavigation]`,
     exportAs: `isDisabled`
 })
-export class TabNavigationDirective {
+export class EditorTabNavigationDirective {
     @Input()
     public buttonList: any;
 

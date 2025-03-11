@@ -47,7 +47,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
-import { TabNavigationDirective } from '../../directives/tab-navigation.directive';
+import { EditorTabNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -103,7 +103,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @ViewChildren(`btn`)
     public buttonElements!: QueryList<ElementRef>;
 
-    @ViewChild(`isDisabled`) public isDisabled: TabNavigationDirective;
+    @ViewChild(`isDisabled`) public isDisabled: EditorTabNavigationDirective;
 
     @Input()
     public customSettings: object = {};
@@ -429,44 +429,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     this.editor.commands.setContent(result.html, true);
                 }
             });
-    }
-
-    public navigate(event: KeyboardEvent, currentIndex: number): void {
-        const key = event.key;
-        let newIndex = currentIndex;
-        const buttons = this.buttonElements.toArray();
-
-        switch (key) {
-            case `ArrowRight`:
-                if (currentIndex < this.buttonElements.length - 1) {
-                    newIndex++;
-                }
-                while (buttons[newIndex].nativeElement.disabled) {
-                    newIndex++;
-                }
-                break;
-            case `ArrowLeft`:
-                if (currentIndex > 0) {
-                    newIndex--;
-                }
-                while (buttons[newIndex].nativeElement.disabled) {
-                    newIndex--;
-                }
-                break;
-            default:
-                return;
-        }
-
-        const buttonToFocus = buttons[newIndex];
-
-        if (buttonToFocus) {
-            (buttonToFocus.nativeElement as HTMLElement).focus();
-        }
-
-        for (const button of buttons) {
-            (button.nativeElement as HTMLElement).setAttribute(`tabindex`, `-1`);
-        }
-        (buttonToFocus.nativeElement as HTMLElement).setAttribute(`tabindex`, `0`);
     }
 
     protected createForm(): UntypedFormControl {
