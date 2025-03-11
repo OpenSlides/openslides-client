@@ -63,6 +63,7 @@ export interface PollSlideData {
     votesinvalid: number;
     votescast: number;
     global_option: SlidePollOption;
+    is_pseudoanonymized: boolean;
 }
 
 export const PollSlideDataFields: (keyof PollSlideData)[] = [`votesvalid`, `votesinvalid`, `votescast`];

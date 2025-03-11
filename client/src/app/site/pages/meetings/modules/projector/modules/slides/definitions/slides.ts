@@ -126,10 +126,7 @@ export const Slides: SlideManifest[] = [
     },
     {
         path: `poll_single_votes`,
-        loadChildren: () =>
-            import(`../components/poll-single-votes-slide/poll-single-votes-slide.module`).then(
-                m => m.PollSingleVotesSlideModule
-            ),
+        loadChildren: () => import(`../components/poll-slide/poll-slide.module`).then(m => m.PollSlideModule),
         verboseName: _(`Single votes`),
         scaleable: true,
         scrollable: true
