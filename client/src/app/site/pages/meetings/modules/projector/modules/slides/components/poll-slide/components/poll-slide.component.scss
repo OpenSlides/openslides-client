@@ -30,13 +30,13 @@
 }
 
 .poll-bar-wrapper {
-    border: 1px solid rgba(128, 128, 128, 0.2);
-    box-shadow: 0 0 5px 2px rgba(128, 128, 128, 0.2);
-    padding: 10px;
-    background-color: #fcfcfc;
-    border-radius: 5px;
-    width: calc(100% - 22px);
-    margin-top: 5px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    // box-shadow: 0 0 5px 2px rgba(128, 128, 128, 0.2);
+    padding: 7px 0;
+    // background-color: #fcfcfc;
+    // border-radius: 5px;
+    width: 100%;
+    margin-top: 7px;
     line-height: 1;
     display: flex;
     flex-direction: column;
@@ -44,11 +44,12 @@
     .poll-bar {
         width: 100%;
         display: inline-flex;
-        gap: 0 5px;
+        gap: 0 3px;
 
         div {
             height: 20px;
             gap: 0 5px;
+            box-shadow: 2px 4px 4px 0 rgba(128, 128, 128, 0.35);
         }
     }
 
@@ -58,6 +59,7 @@
         align-items: center;
         gap: 0 10px;
         line-height: 1.5;
+        margin-top: 5px;
 
         .general-data {
             flex: 1 0 auto;
@@ -66,6 +68,7 @@
         }
         os-icon-container {
             width: fit-content;
+            margin-right: -5px;
         }
     }
 }
