@@ -29,11 +29,12 @@
             width: auto;
             padding-left: 35px;
         }
-
-        .description {
-            font-weight: normal;
-            font-size: 18px;
-            padding-right: 6px;
+        & {
+            .description {
+                font-weight: normal;
+                font-size: 18px;
+                padding-right: 6px;
+            }
         }
     }
 }

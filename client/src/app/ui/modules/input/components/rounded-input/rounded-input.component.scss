@@ -11,16 +11,18 @@
         align-items: center;
         z-index: 1;
     }
-    div {
-        position: absolute;
-        &.input-prefix {
-            left: 8px;
-        }
-        &.input-suffix {
-            right: 8px;
-        }
-        &.input-suffix-clear {
-            right: 48px;
+    & {
+        div {
+            position: absolute;
+            &.input-prefix {
+                left: 8px;
+            }
+            &.input-suffix {
+                right: 8px;
+            }
+            &.input-suffix-clear {
+                right: 48px;
+            }
         }
     }
 
@@ -28,38 +30,40 @@
         padding: 8px 78px 8px 25px;
     }
 
-    .rounded-input {
-        outline: 0;
-        z-index: 0;
-        height: 24px;
-        width: 100%;
-        padding: 8px 39px;
-        border-radius: 32px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        transition: all 0.25s ease;
+    & {
+        .rounded-input {
+            outline: 0;
+            z-index: 0;
+            height: 24px;
+            width: 100%;
+            padding: 8px 39px;
+            border-radius: 32px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            transition: all 0.25s ease;
 
-        &.small {
-            height: 14px;
-            font-size: 14px;
-            width: 100px;
+            &.small {
+                height: 14px;
+                font-size: 14px;
+                width: 100px;
+            }
+
+            &.medium-border-radius {
+                border-radius: 16px;
+            }
+
+            &.small-border-radius {
+                border-radius: 4px;
+            }
+
+            &.children-bottom {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
         }
 
-        &.medium-border-radius {
-            border-radius: 16px;
+        mat-icon {
+            cursor: pointer;
         }
-
-        &.small-border-radius {
-            border-radius: 4px;
-        }
-
-        &.children-bottom {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-    }
-
-    mat-icon {
-        cursor: pointer;
     }
 }
