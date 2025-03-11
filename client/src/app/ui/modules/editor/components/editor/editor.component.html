@@ -30,20 +30,19 @@
             </div>
 
             <mat-menu #formatMenu="matMenu">
-                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="headingMenu">
+                <button mat-menu-item [matMenuTriggerFor]="headingMenu">
                     {{ 'Headings' | translate }}
                 </button>
-                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="textAlignMenu">
+                <button mat-menu-item [matMenuTriggerFor]="textAlignMenu">
                     {{ 'Align' | translate }}
                 </button>
-                <button mat-menu-item tabindex="-1" [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
+                <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
             </mat-menu>
 
             <mat-menu #headingMenu="matMenu">
                 @for (level of headingLevels; track level) {
                     <button
                         mat-menu-item
-                        tabindex="-1"
                         type="button"
                         [ngClass]="{ active: editor.isActive('heading', { level }) }"
                         (click)="editor.chain().focus().toggleHeading({ level }).run()"
@@ -61,7 +60,6 @@
             <mat-menu #textAlignMenu="matMenu">
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'left' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'left' }) }"
@@ -72,7 +70,6 @@
                 </button>
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'center' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'center' }) }"
@@ -83,7 +80,6 @@
                 </button>
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'right' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'right' }) }"
@@ -94,7 +90,6 @@
                 </button>
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [disabled]="editor.isActive({ textAlign: 'justify' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'justify' }) }"
@@ -108,7 +103,6 @@
             <mat-menu #inlineMenu="matMenu">
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [ngClass]="{ active: editor.isActive('subscript') }"
                     (click)="editor.chain().focus().toggleSubscript().run()"
@@ -119,7 +113,6 @@
 
                 <button
                     mat-menu-item
-                    tabindex="-1"
                     type="button"
                     [ngClass]="{ active: editor.isActive('superscript') }"
                     (click)="editor.chain().focus().toggleSuperscript().run()"
