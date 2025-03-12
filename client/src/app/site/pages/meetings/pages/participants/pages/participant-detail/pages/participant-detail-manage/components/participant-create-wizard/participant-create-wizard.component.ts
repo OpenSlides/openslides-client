@@ -280,8 +280,14 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 payload.gender_id = null;
             }
             if (this._accountId) {
+                const dirtyPayload = {};
+                for (const field in payload) {
+                    if (this.account[field] !== payload[field]) {
+                        dirtyPayload[field] = payload[field];
+                    }
+                }
                 this.repo
-                    .update(payload, {
+                    .update(dirtyPayload, {
                         ...payload,
                         id: this._accountId
                     })
