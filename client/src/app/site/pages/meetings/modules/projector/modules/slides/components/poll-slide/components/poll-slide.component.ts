@@ -196,7 +196,7 @@ export class PollSlideComponent
 
     protected override setData(value: SlideData<PollSlideData>): void {
         const poll = value.data;
-        if (value.type == `poll_single_votes` && poll && poll.options.length === 1) {
+        if (value.options[`single_votes`] == true && poll && poll.options.length === 1) {
             this._isSingleVotes = true;
             this._votes =
                 poll.options[0].votes?.mapToObject(vote => ({

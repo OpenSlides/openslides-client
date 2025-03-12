@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -62,14 +61,6 @@ export class MotionPollComponent extends BasePollComponent {
 
     public get isPublished(): boolean {
         return this.poll.state === PollState.Published;
-    }
-
-    public get typeChoices(): [string, string][] {
-        const typeChoices: [string, string][] = [[`poll`, _(`Standard`)]];
-        if (this.poll.type === `named`) {
-            typeChoices.push([`poll_single_votes`, _(`Single votes`)]);
-        }
-        return typeChoices;
     }
 
     public constructor(

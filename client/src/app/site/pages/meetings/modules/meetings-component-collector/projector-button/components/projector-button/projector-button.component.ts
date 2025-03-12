@@ -76,9 +76,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public useToggleDialog = false;
 
-    @Input()
-    public typeChoices: [string, string][];
-
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
@@ -91,7 +88,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (this.useToggleDialog) {
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                typeChoices: this.typeChoices,
                 projector: this.projector,
                 allowReferenceProjector: true
             });
@@ -104,7 +100,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                typeChoices: this.typeChoices,
                 allowReferenceProjector: this.allowReferenceProjector
             });
         }

@@ -25,18 +25,6 @@
                 }
             </div>
         }
-        @if (typeChoices && typeChoices.length > 1) {
-            <div>
-                <h3>{{ 'Which version?' | translate }}</h3>
-                <mat-radio-group name="type" [(ngModel)]="selectedTypeChoice">
-                    @for (entry of typeChoices; track entry[0]; let idx = $index) {
-                        <mat-radio-button [checked]="idx === 0" [value]="entry[0]">
-                            {{ entry[1] | translate }}
-                        </mat-radio-button>
-                    }
-                </mat-radio-group>
-            </div>
-        }
         @if (options && options.length) {
             <mat-divider></mat-divider>
         }
