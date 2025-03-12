@@ -53,6 +53,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     public title: string;
 
     @Input()
+    public disableEdit: boolean;
+
+    @Input()
     public useAdditionalInput: boolean;
 
     @Input()

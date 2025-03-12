@@ -1,3 +1,5 @@
+import { HasMeetingId } from 'src/app/domain/interfaces';
+
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseViewModel } from '../../site/base/base-view-model';
@@ -58,5 +60,13 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
         viewModel.getActiveMeetingId = (): number =>
             this.repositoryMeetingServiceCollector.activeMeetingIdService.meetingId;
         return viewModel;
+    }
+
+    protected filterForeignMeetingModelsFromList(list: V[]): V[] {
+        return list.filter(
+            m =>
+                !(<HasMeetingId>(<unknown>m)).meeting_id ||
+                (<HasMeetingId>(<unknown>m)).meeting_id === this.activeMeetingId
+        );
     }
 }

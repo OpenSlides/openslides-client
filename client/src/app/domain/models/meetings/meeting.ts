@@ -113,6 +113,8 @@ export class Settings {
     public motions_default_line_numbering!: LineNumberingMode;
     public motions_line_length!: number;
     public motions_reason_required!: boolean;
+    public motions_origin_motion_toggle_default!: boolean;
+    public motions_enable_origin_motion_display!: boolean;
     public motions_enable_text_on_projector!: boolean;
     public motions_enable_reason_on_projector!: boolean;
     public motions_enable_sidebox_on_projector!: boolean;

@@ -846,6 +846,22 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         validators: [Validators.min(1)]
                     }
                 ]
+            },
+            {
+                label: _(`Forwarding`),
+                settings: [
+                    {
+                        key: `motions_enable_origin_motion_display`,
+                        label: _(`Enable display of original forwarded motions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_origin_motion_toggle_default`,
+                        label: _(`Preload original motions`),
+                        type: `boolean`,
+                        disable: settings => !settings.motions_enable_origin_motion_display
+                    }
+                ]
             }
         ]
     },
