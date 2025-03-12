@@ -30,15 +30,6 @@ export interface ProjectionDialogConfig {
     allowReferenceProjector: boolean;
     projector?: ViewProjector;
 }
-export function isProjectionDialogConfig(obj: any): obj is ProjectionDialogConfig {
-    return (
-        obj &&
-        obj.descriptor !== undefined &&
-        isProjectionBuildDescriptor(obj.descriptor) &&
-        obj.allowReferenceProjector !== undefined &&
-        (!obj.projector || obj.projector instanceof ViewProjector)
-    );
-}
 
 @Component({
     selector: `os-projection-dialog`,
@@ -69,7 +60,6 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
     public allowReferenceProjector = true;
     public projectorSelectable = false;
-    public selectedTypeChoice: string;
     private currentProjectionOptions: { [key: string]: any } = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
@@ -90,10 +80,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
         const projector = !isProjectionBuildDescriptor(data) && data.projector;
         if (projector) {
-            const projections = this.projectorService.getMatchingProjectionsFromProjector(
-                this.getDescriptor(),
-                projector
-            );
+            const projections = this.projectorService.getMatchingProjectionsFromProjector(this.descriptor, projector);
 
             if (projections.length === 1) {
                 this.currentProjectionOptions = projections[0].options || {};
@@ -170,7 +157,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public isProjectedOn(projector: ViewProjector): boolean {
-        return this.projectorService.isProjectedOn(this.getDescriptor(), projector);
+        return this.projectorService.isProjectedOn(this.descriptor, projector);
     }
 
     public isDecisionOption(option: SlideOption): option is SlideDecisionOption {
@@ -184,7 +171,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onProject(): void {
         this.dialogRef.close({
             action: `project`,
-            resultDescriptor: this.getDescriptor(),
+            resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues,
             keepActiveProjections: !this.projectorSelectable
@@ -194,7 +181,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onAddToPreview(): void {
         this.dialogRef.close({
             action: `addToPreview`,
-            resultDescriptor: this.getDescriptor(),
+            resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
@@ -203,14 +190,10 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public onHide(): void {
         this.dialogRef.close({
             action: `hide`,
-            resultDescriptor: this.getDescriptor(),
+            resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues
         });
-    }
-
-    private getDescriptor(): ProjectionBuildDescriptor {
-        return this.descriptor;
     }
 
     public onCancel(): void {

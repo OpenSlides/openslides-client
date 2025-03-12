@@ -11,8 +11,6 @@ import {
     ProjectionBuildDescriptor
 } from 'src/app/site/pages/meetings/view-models';
 
-import { isProjectionDialogConfig } from '../../../projection-dialog/components/projection-dialog/projection-dialog.component';
-
 @Component({
     selector: `os-projector-button`,
     templateUrl: `./projector-button.component.html`,
@@ -32,7 +30,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
 
     @Input()
     public set object(obj: ProjectionBuildDescriptor | Projectable | null) {
-        if (isProjectable(obj) || isProjectionBuildDescriptor(obj) || isProjectionDialogConfig(obj)) {
+        if (isProjectable(obj) || isProjectionBuildDescriptor(obj)) {
             this._object = obj;
         } else {
             this._object = null;
@@ -167,16 +165,11 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         }
 
         if (this.projector) {
-            const projections = this.projectorService.getMatchingProjectionsFromProjector(
-                isProjectionDialogConfig(this.object) ? this.object.descriptor : this.object,
-                this.projector
-            );
+            const projections = this.projectorService.getMatchingProjectionsFromProjector(this.object, this.projector);
             this._isProjected = !!projections.length;
             this._projection = this._isProjected ? projections[0] : null;
         } else {
-            this._isProjected = this.projectorService.isProjected(
-                isProjectionDialogConfig(this.object) ? this.object.descriptor : this.object
-            );
+            this._isProjected = this.projectorService.isProjected(this.object);
             this._projection = null;
         }
     }
