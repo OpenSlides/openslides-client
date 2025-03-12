@@ -105,6 +105,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @ViewChild(`isDisabled`) public isDisabled: EditorTabNavigationDirective;
 
+    @ViewChild(`setTab`) public setTab: EditorTabNavigationDirective;
+
     @Input()
     public customSettings: object = {};
 

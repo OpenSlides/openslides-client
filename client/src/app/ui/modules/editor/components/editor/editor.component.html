@@ -4,13 +4,14 @@
             <div class="button-group">
                 <button
                     #btn
+                    #setTab="osTabNavigation"
                     class="text"
                     mat-ripple
                     osTabNavigation
-                    type="button"
                     [buttonList]="buttonElements"
                     [ngClass]="{ active: isGodButtonActive }"
                     (click)="godButtonAction()"
+                    (focus)="setTab.setTab()"
                 >
                     {{ godButtonText }}
                 </button>
@@ -20,8 +21,6 @@
                     class="more"
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matMenuTriggerFor]="formatMenu"
                 >
@@ -43,7 +42,6 @@
                 @for (level of headingLevels; track level) {
                     <button
                         mat-menu-item
-                        type="button"
                         [ngClass]="{ active: editor.isActive('heading', { level }) }"
                         (click)="editor.chain().focus().toggleHeading({ level }).run()"
                     >
@@ -60,7 +58,6 @@
             <mat-menu #textAlignMenu="matMenu">
                 <button
                     mat-menu-item
-                    type="button"
                     [disabled]="editor.isActive({ textAlign: 'left' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'left' }) }"
                     (click)="editor.chain().focus().setTextAlign('left').run()"
@@ -70,7 +67,6 @@
                 </button>
                 <button
                     mat-menu-item
-                    type="button"
                     [disabled]="editor.isActive({ textAlign: 'center' })"
                     [ngClass]="{ active: editor.isActive({ textAlign: 'center' }) }"
                     (click)="editor.chain().focus().setTextAlign('center').run()"
@@ -103,7 +99,6 @@
             <mat-menu #inlineMenu="matMenu">
                 <button
                     mat-menu-item
-                    type="button"
                     [ngClass]="{ active: editor.isActive('subscript') }"
                     (click)="editor.chain().focus().toggleSubscript().run()"
                 >
@@ -113,7 +108,6 @@
 
                 <button
                     mat-menu-item
-                    type="button"
                     [ngClass]="{ active: editor.isActive('superscript') }"
                     (click)="editor.chain().focus().toggleSuperscript().run()"
                 >
@@ -127,8 +121,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Bold' | translate"
                     [ngClass]="{ active: editor.isActive('bold') }"
@@ -140,8 +132,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Italic' | translate"
                     [ngClass]="{ active: editor.isActive('italic') }"
@@ -153,8 +143,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Underline' | translate"
                     [ngClass]="{ active: editor.isActive('underline') }"
@@ -166,8 +154,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Strikethrough' | translate"
                     [ngClass]="{ active: editor.isActive('strike') }"
@@ -182,8 +168,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Text color' | translate"
                     [ngClass]="{ active: editor.isActive('textStyle') }"
@@ -198,7 +182,6 @@
                     class="more color-selection"
                     mat-ripple
                     tabindex="-1"
-                    type="button"
                     [ngClass]="{ focused: focusText }"
                     (click)="updateColorSets()"
                 >
@@ -207,7 +190,6 @@
                         #btn
                         list="text-colors"
                         osTabNavigation
-                        tabindex="-1"
                         type="color"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Text color' | translate"
@@ -223,8 +205,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Background color' | translate"
                     [ngClass]="{ active: editor.isActive('highlight') }"
@@ -237,7 +217,6 @@
                     class="more color-selection"
                     mat-ripple
                     tabindex="-1"
-                    type="button"
                     [ngClass]="{ focused: focusBackground }"
                     (click)="updateColorSets()"
                 >
@@ -246,7 +225,6 @@
                         #btn
                         list="background-colors"
                         osTabNavigation
-                        tabindex="-1"
                         type="color"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Background color' | translate"
@@ -261,8 +239,6 @@
                 #btn
                 mat-ripple
                 osTabNavigation
-                tabindex="-1"
-                type="button"
                 [buttonList]="buttonElements"
                 [matTooltip]="'Clear formatting' | translate"
                 (click)="clearSelectedFormat()"
@@ -276,8 +252,6 @@
                     mat-ripple
                     matTooltipPosition="above"
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Bullet list' | translate"
                     [ngClass]="{ active: editor.isActive('bulletList') }"
@@ -290,8 +264,6 @@
                     mat-ripple
                     matTooltipPosition="above"
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Numbered list' | translate"
                     [ngClass]="{ active: editor.isActive('orderedList') }"
@@ -306,8 +278,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Insert/edit link' | translate"
                     [ngClass]="{ active: editor.isActive('link') }"
@@ -320,8 +290,6 @@
                     #btn
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Insert/edit image' | translate"
                     [ngClass]="{ active: editor.isActive('image') }"
@@ -334,11 +302,9 @@
             <div class="button-group">
                 <button
                     #btn
-                    #isDisabled="isDisabled"
+                    #isDisabled="osTabNavigation"
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [disabled]="!editor.can().undo()"
                     [matTooltip]="'Undo' | translate"
@@ -349,11 +315,9 @@
 
                 <button
                     #btn
-                    #isDisabled="isDisabled"
+                    #isDisabled="osTabNavigation"
                     mat-ripple
                     osTabNavigation
-                    tabindex="-1"
-                    type="button"
                     [buttonList]="buttonElements"
                     [disabled]="!editor.can().redo()"
                     [matTooltip]="'Redo' | translate"
@@ -367,8 +331,6 @@
                 #btn
                 mat-ripple
                 osTabNavigation
-                tabindex="-1"
-                type="button"
                 [buttonList]="buttonElements"
                 [matTooltip]="'Source code' | translate"
                 (click)="editCode()"

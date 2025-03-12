@@ -1,13 +1,10 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/core';
 
 @Directive({
     selector: `[osTabNavigation]`,
-    exportAs: `isDisabled`
+    exportAs: `osTabNavigation`
 })
 export class EditorTabNavigationDirective {
-    @Input()
-    public buttonList: any;
-
     @HostListener(`keydown`, [`$event`])
     private navigate(event: KeyboardEvent): void {
         const key = event.key;
@@ -24,6 +21,9 @@ export class EditorTabNavigationDirective {
                 }
                 while (buttons[newIndex].nativeElement.disabled) {
                     newIndex++;
+                    if (buttonIndex === this.buttonList.length - 1) {
+                        newIndex = 0;
+                    }
                 }
                 break;
             case `ArrowLeft`:
@@ -34,15 +34,18 @@ export class EditorTabNavigationDirective {
                 }
                 while (buttons[newIndex].nativeElement.disabled) {
                     newIndex--;
+                    if (buttonIndex === 0) {
+                        newIndex = this.buttonList.length - 1;
+                    }
                 }
                 break;
             default:
                 return;
         }
-        this.buttonToFocus = buttons[newIndex];
-        this.buttonToFocus.nativeElement.focus();
+        const buttonToFocus = buttons[newIndex];
+        buttonToFocus.nativeElement.focus();
         this.button.nativeElement.tabIndex = -1;
-        this.buttonToFocus.nativeElement.tabIndex = 0;
+        buttonToFocus.nativeElement.tabIndex = 0;
     }
 
     @Input()
@@ -57,14 +60,30 @@ export class EditorTabNavigationDirective {
         }
         while (buttons[newIndex].nativeElement.disabled) {
             newIndex--;
+            if (buttonIndex === 0) {
+                newIndex = this.buttonList.length - 1;
+            }
         }
-        this.buttonToFocus = buttons[newIndex];
-        this.buttonToFocus.nativeElement.focus();
+        const buttonToFocus = buttons[newIndex];
+        buttonToFocus.nativeElement.focus();
         this.button.nativeElement.tabIndex = -1;
-        this.buttonToFocus.nativeElement.tabIndex = 0;
+        buttonToFocus.nativeElement.tabIndex = 0;
     }
 
-    private buttonToFocus: ElementRef;
+    @Input()
+    public buttonList: QueryList<ElementRef>;
+
+    @Input()
+    public setTab(): void {
+        let firstButton: undefined | ElementRef;
+        this.buttonList.toArray().forEach(button => {
+            if (!firstButton) {
+                firstButton = button;
+            }
+            button.nativeElement.tabIndex = -1;
+        });
+        firstButton.nativeElement.tabIndex = 0;
+    }
 
     public constructor(private button: ElementRef) {}
 
