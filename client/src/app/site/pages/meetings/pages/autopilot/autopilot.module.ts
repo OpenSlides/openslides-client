@@ -22,8 +22,8 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { ProjectorButtonModule } from '../../modules/meetings-component-collector/projector-button/projector-button.module';
-import { CountdownTimeModule } from '../../modules/projector/modules/countdown-time/countdown-time.module';
-import { ProjectorModule } from '../../modules/projector/projector.module';
+import { CountdownTimeComponent } from '../../modules/projector/components/countdown-time/countdown-time.component';
+import { ProjectorComponent } from '../../modules/projector/components/projector/projector.component';
 import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
 import { AutopilotRoutingModule } from './autopilot-routing.module';
@@ -40,7 +40,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         AutopilotRoutingModule,
         InteractionServiceModule,
         FormsModule,
-        ProjectorModule,
+        ProjectorComponent,
         DirectivesModule,
         MatCardModule,
         MatCheckboxModule,
@@ -53,7 +53,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         MatBadgeModule,
         ListOfSpeakersContentModule,
         HeadBarModule,
-        CountdownTimeModule,
+        CountdownTimeComponent,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
