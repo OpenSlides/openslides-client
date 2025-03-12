@@ -329,11 +329,13 @@
 
             <button
                 #btn
+                #setTab="osTabNavigation"
                 mat-ripple
                 osTabNavigation
                 [buttonList]="buttonElements"
                 [matTooltip]="'Source code' | translate"
                 (click)="editCode()"
+                (focus)="setTab.setTab(true)"
             >
                 <mat-icon>code</mat-icon>
             </button>

@@ -74,10 +74,12 @@ export class EditorTabNavigationDirective {
     public buttonList: QueryList<ElementRef>;
 
     @Input()
-    public setTab(): void {
+    public setTab(end?: boolean): void {
         let firstButton: undefined | ElementRef;
         this.buttonList.toArray().forEach(button => {
-            if (!firstButton) {
+            if (end) {
+                firstButton = this.buttonList.toArray()[this.buttonList.length - 1];
+            } else if (!firstButton) {
                 firstButton = button;
             }
             button.nativeElement.tabIndex = -1;
