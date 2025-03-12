@@ -8,9 +8,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { CommitteeComponentsModule } from '../../../../modules/committee-components.module';
 import { CommitteeDetailViewRoutingModule } from './committee-detail-view-routing.module';
@@ -20,10 +19,9 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
     declarations: [CommitteeDetailViewComponent],
     imports: [
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         CommitteeComponentsModule,
         CommitteeDetailViewRoutingModule,
-        PromptDialogModule,
         DirectivesModule,
         HeadBarModule,
         OpenSlidesTranslationModule.forChild(),

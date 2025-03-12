@@ -11,23 +11,24 @@ import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
-import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
+import { ExpandableContentWrapperComponent } from 'src/app/ui/modules/expandable-content-wrapper';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantDetailComponent } from './components/participant-detail/participant-detail.component';
+import { ParticipantDetailEditComponent } from './components/participant-detail-edit/participant-detail-edit.component';
 import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
 import { ParticipantDetailRoutingModule } from './participant-detail-routing.module';
 
 @NgModule({
-    declarations: [ParticipantDetailComponent, ParticipantDetailViewComponent],
+    declarations: [ParticipantDetailComponent, ParticipantDetailViewComponent, ParticipantDetailEditComponent],
     imports: [
         CommonModule,
-        CommaSeparatedListingModule,
+        CommaSeparatedListingComponent,
         ParticipantDetailRoutingModule,
         ParticipantExportModule,
         RouterModule,
@@ -46,7 +47,7 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         ReactiveFormsModule,
         DirectivesModule,
         PipesModule,
-        ExpandableContentWrapperModule
+        ExpandableContentWrapperComponent
     ]
 })
 export class ParticipantDetailModule {}

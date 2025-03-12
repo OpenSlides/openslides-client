@@ -10,10 +10,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { ChipModule } from 'src/app/ui/modules/chip';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { ChipComponent } from 'src/app/ui/modules/chip';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
-import { MeetingTimeModule } from '../../../../../../ui/modules/meeting-time/meeting-time.module';
+import { MeetingTimeComponent } from '../../../../../../ui/modules/meeting-time/meeting-time.component';
 import { OpenSlidesTranslationModule } from '../../../../../modules/translations';
 import { CommitteeMeetingPreviewComponent } from './committee-meeting-preview/committee-meeting-preview.component';
 import { CommitteeMetaInfoComponent } from './committee-meta-info/committee-meta-info.component';
@@ -37,10 +37,10 @@ const DECLARATIONS = [CommitteeMetaInfoComponent, CommitteeMeetingPreviewCompone
         MatFormFieldModule,
         RouterModule,
         OpenSlidesTranslationModule.forChild(),
-        MeetingTimeModule,
+        MeetingTimeComponent,
         DirectivesModule,
-        ChipModule,
-        IconContainerModule
+        ChipComponent,
+        IconContainerComponent
     ]
 })
 export class CommitteeComponentsModule {}

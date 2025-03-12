@@ -145,6 +145,14 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     ]
                 };
             }
+        } else if (element.getAttribute(`class`) === `amendment-nr-n-icon`) {
+            const children = this.parseChildren(data.element, data.styles);
+            const newParagraph = {
+                columns: [],
+                margin: [0, 0]
+            };
+            newParagraph.columns = children;
+            return newParagraph;
         } else {
             return super.createSpanParagraph(data);
         }
@@ -250,12 +258,18 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     // Add a blank with the normal font size here, so in rare cases the text
                     // is rendered on the next page and the line number on the previous page.
                     text: ` `,
-                    decoration: ``
+                    decoration: ``,
+                    alignment: `left`
                 },
                 {
                     text: line.lineNumber,
                     color: `gray`,
-                    fontSize: 8
+                    fontSize: 8,
+                    font: `LineNumbering`,
+                    bold: false,
+                    italics: false,
+                    bolditalics: false,
+                    alignment: `left`
                 }
             ],
             marginBottom: line.marginBottom,

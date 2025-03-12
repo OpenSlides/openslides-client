@@ -77,6 +77,11 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return !!this.projector.nonStableCurrentProjections;
     }
 
+    public get isPdfProjection(): boolean {
+        // TODO: Implement
+        return false;
+    }
+
     public get currentProjectionIsLoS(): boolean {
         for (const projection of this.projector.nonStableCurrentProjections) {
             if (hasListOfSpeakers(projection.content_object)) {
@@ -96,6 +101,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return this._noWiFiData;
     }
 
+    public get projectorHeight(): number {
+        return Math.floor(this.projector.height / 100);
+    }
+
+    /** stores the decimal places that could not be scrolled
+     *  at once for the projector height */
+    private summedOverflowSteps: number;
+
     private _hasEnoughWiFiData: boolean;
 
     private _noWiFiData: boolean;
@@ -110,7 +123,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private projectionRepo: ProjectionControllerService,
         private countdownRepo: ProjectorCountdownControllerService,
         private messageRepo: ProjectorMessageControllerService,
-        private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private currentLosSlideService: CurrentListOfSpeakersSlideService,
         private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
         private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
@@ -147,6 +160,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.projectorObservable = this._projectorIdSubject.pipe(
             switchMap(projectorId => this.repo.getViewModelObservable(projectorId))
         );
+        this.summedOverflowSteps = 0;
     }
 
     public onIdFound(id: Id | null): void {
@@ -253,15 +267,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     }
 
     public isClosProjected(overlay: boolean): boolean {
-        return this.currentListOfSpeakersSlideService.isProjectedOn(this.projector, overlay);
+        return this.currentLosSlideService.isProjectedOn(this.projector, overlay);
     }
 
     public toggleClos(overlay: boolean): void {
-        this.currentListOfSpeakersSlideService.toggleOn(this.projector, overlay);
+        this.currentLosSlideService.toggleOn(this.projector, overlay);
     }
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
-        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+        return this.currentLosSlideService.getProjectionBuildDescriptor(overlay);
     }
 
     public getCurrentStructureLevel(): ProjectionBuildDescriptor {
@@ -354,5 +368,22 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 }
             })
         );
+    }
+
+    public scrollPDFPage(direction: ScrollScaleDirection): void {
+        if (this.projector.scroll <= 0) {
+            this.summedOverflowSteps = 0;
+        }
+        this.summedOverflowSteps +=
+            ((this.projector.height % 100) / 100) * (direction === ScrollScaleDirection.Up ? 1 : -1);
+        if (this.summedOverflowSteps >= 0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps -= 1;
+        } else if (this.summedOverflowSteps <= -0.5) {
+            this.scroll(direction, this.projectorHeight + 1);
+            this.summedOverflowSteps += 1;
+        } else {
+            this.scroll(direction, this.projectorHeight);
+        }
     }
 }

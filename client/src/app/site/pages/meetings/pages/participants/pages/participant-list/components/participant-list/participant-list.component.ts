@@ -533,7 +533,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                             const other = user.id === leftUser.id ? response.rightUser : leftUser;
                             return {
                                 group_ids: other.group_ids(),
-                                number: other.number()
+                                number: other.number() ?? ``
                             };
                         },
                         leftUser,
@@ -680,5 +680,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public ariaLabel(user: ViewUser): string {
         return this.translate.instant(`Navigate to participant page from `) + user.short_name;
+    }
+
+    public goToEditUser(userId: number): void {
+        this.router.navigate([userId, `edit`], { relativeTo: this.route });
     }
 }

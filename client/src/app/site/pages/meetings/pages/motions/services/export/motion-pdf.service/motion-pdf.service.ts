@@ -555,11 +555,11 @@ export class MotionPdfService {
                     {
                         columns: [
                             {
-                                text: columnLineNumbers.join(`\n`),
+                                stack: columnLineNumbers,
                                 width: `auto`
                             },
                             {
-                                text: columnChangeType.join(`\n`),
+                                stack: columnChangeType,
                                 width: `auto`
                             }
                         ],
@@ -688,7 +688,7 @@ export class MotionPdfService {
                     changedTitle +
                     `</span><br>`;
             }
-            const formattedText = this.motionFormatService.formatMotion({
+            let formattedText = this.motionFormatService.formatMotion({
                 targetMotion: motion,
                 crMode,
                 changes: textChanges,
@@ -696,11 +696,24 @@ export class MotionPdfService {
                 firstLine: motion.firstLine,
                 showAllChanges: showAllChanges
             });
+            formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF
             htmlText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
         return this.htmlToPdfService.convertHtml({ htmlText, lnMode, lineHeight });
+    }
+
+    private createWarningIcon(text: string): string {
+        return text.replace(
+            /<mat-icon class="margin-[right|left]+-[\d]*">warning<\/mat-icon><span class="amendment-nr">([\s\S]*?)<\/span>/gi,
+            (_match: string, ammName: string): string => {
+                return (
+                    `<svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>` +
+                    ammName
+                );
+            }
+        );
     }
 
     /**
@@ -721,7 +734,18 @@ export class MotionPdfService {
                 margin: [0, 10, 0, 10]
             });
 
-            reason.push(this.htmlToPdfService.addPlainText(motion.reason));
+            // handling too long hyperlinks by forcing the text to break
+            let reasonHtml = this.linenumberingService.insertLineBreaksWithoutNumbers(
+                motion.reason,
+                this.meetingSettingsService.instant(`motions_line_length`) as number
+            );
+            reasonHtml = reasonHtml.replace(
+                /(<a[^>]*>)(.*?)<\/a>/g,
+                (_whole: string, link: string, innerText: string): string =>
+                    link + innerText.replace(/<br class="os-line-break">/g, `<br>`) + `</a>`
+            );
+
+            reason.push(this.htmlToPdfService.addPlainText(reasonHtml));
 
             return reason;
         } else {

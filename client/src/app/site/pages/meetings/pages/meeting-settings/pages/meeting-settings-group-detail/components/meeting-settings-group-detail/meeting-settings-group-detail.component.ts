@@ -128,14 +128,6 @@ export class MeetingSettingsGroupDetailComponent
         this.cd.detach();
         try {
             const data = deepCopy(this.changedSettings);
-            for (const field of this.settingsFields) {
-                if (field.disabled) {
-                    const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
-                    for (const key of keys) {
-                        delete data[key];
-                    }
-                }
-            }
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
                     data[key] = data[key].map((val: unknown) =>
@@ -188,10 +180,9 @@ export class MeetingSettingsGroupDetailComponent
      * This resets all values to their defaults.
      */
     public async resetAll(): Promise<void> {
-        const title = this.translate.instant(
-            `Are you sure you want to reset all options to default settings? All changes of this settings group will be lost!`
-        );
-        if (await this.promptDialog.open(title)) {
+        const title = this.translate.instant(`Are you sure you want to reset all options to default settings?`);
+        const content = this.translate.instant(`All changes of this settings group will be lost!`);
+        if (await this.promptDialog.open(title, content)) {
             for (const settingsField of this.settingsFields) {
                 if (!SKIPPED_SETTINGS.includes(settingsField.setting.key.toString())) {
                     settingsField.onResetButton();
