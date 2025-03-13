@@ -96,7 +96,7 @@ export class PollSlideComponent
         this._scroll = scroll ?? 0;
         scroll *= -25;
         this.textDivStyles[`margin-top`] = `${scroll}px`;
-        this.onScroll();
+        this.cd.markForCheck();
     }
 
     public get scroll(): number {
@@ -112,7 +112,7 @@ export class PollSlideComponent
         this._actualScale = 1.05 ** this._scale;
         this.textDivStyles[`transform`] = `scale(${this._actualScale})`;
         this.textDivStyles[`width`] = `calc(100% / ${this._actualScale})`;
-        this.onScale();
+        this.formatUserVotes();
     }
 
     public get scale(): number {
@@ -186,14 +186,6 @@ export class PollSlideComponent
         this.formatUserVotes();
     }
 
-    protected onScroll(): void {
-        this.cd.markForCheck();
-    }
-
-    protected onScale(): void {
-        this.formatUserVotes();
-    }
-
     protected override setData(value: SlideData<PollSlideData>): void {
         const poll = value.data;
         if (value.options[`single_votes`] == true && poll && poll.options.length === 1) {
@@ -209,6 +201,7 @@ export class PollSlideComponent
             this.calculateUserVotes();
             this._invalidSingleVotesData = false;
         } else {
+            this._isSingleVotes = false;
             this._invalidSingleVotesData = true;
         }
 

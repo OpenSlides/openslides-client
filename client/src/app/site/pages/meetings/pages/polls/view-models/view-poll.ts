@@ -137,7 +137,7 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.type === `named` && !this.is_pseudoanonymized
+            this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
                 ? [
                       {
                           key: `single_votes`,
