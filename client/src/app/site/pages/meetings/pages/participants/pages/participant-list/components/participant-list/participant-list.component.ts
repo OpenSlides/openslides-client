@@ -683,6 +683,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public goToEditUser(userId: number): void {
-        this.router.navigate([userId], { relativeTo: this.route, queryParams: { view: `edit` } });
+        this.router.navigate([userId, `edit`], { relativeTo: this.route });
     }
 }

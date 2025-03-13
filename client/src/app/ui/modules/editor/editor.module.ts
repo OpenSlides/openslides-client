@@ -16,13 +16,15 @@ import { EditorEmbedDialogComponent } from './components/editor-embed-dialog/edi
 import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
 import { EditorImageDialogComponent } from './components/editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent } from './components/editor-link-dialog/editor-link-dialog.component';
+import { EditorTabNavigationDirective } from './directives/tab-navigation.directive';
 
 const DECLARATIONS = [
     EditorComponent,
     EditorImageDialogComponent,
     EditorEmbedDialogComponent,
     EditorLinkDialogComponent,
-    EditorHtmlDialogComponent
+    EditorHtmlDialogComponent,
+    EditorTabNavigationDirective
 ];
 
 @NgModule({
