@@ -238,10 +238,11 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private updatePollMethod(method: PollMethod): void {
+        this.contentForm.removeControl(`votes_amount`);
         if (method === `Y` || method === `N`) {
             this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
-        } else {
-            this.contentForm.removeControl(`votes_amount`);
+        } else if (method === `YNA`) {
+            this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl(this.pollOptionAmount));
         }
         if (method === `N`) {
             this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
@@ -290,7 +291,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
-        return (selectedPollMethod === `Y` || selectedPollMethod === `N`) && (!data || !data.state || data.isCreated);
+        return (
+            (selectedPollMethod === `Y` || selectedPollMethod === `N` || selectedPollMethod === `YNA`) &&
+            (!data || !data.state || data.isCreated)
+        );
     }
 
     public showMaxVotesPerOption(data: any): boolean {
@@ -427,6 +431,17 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 ]);
             }
 
+            if (pollMethod === FormPollMethod.YNA) {
+                this.pollValues.push([
+                    this.pollService.getVerboseNameForKey(`max_votes_amount`),
+                    data[`max_votes_amount`]
+                ]);
+                this.pollValues.push([
+                    this.pollService.getVerboseNameForKey(`min_votes_amount`),
+                    data[`min_votes_amount`]
+                ]);
+            }
+
             if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_per_option`),
@@ -467,10 +482,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         });
     }
 
-    private getVotesAmountControl(): UntypedFormGroup {
+    private getVotesAmountControl(maxVotes?: number): UntypedFormGroup {
         return this.fb.group(
             {
-                max_votes_amount: [1, [Validators.required, Validators.min(1)]],
+                max_votes_amount: [maxVotes ?? 1, [Validators.required, Validators.min(1)]],
                 min_votes_amount: [1, [Validators.required, Validators.min(1)]],
                 max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
             },
