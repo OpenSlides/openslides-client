@@ -7,6 +7,7 @@ import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
+
 @Injectable({ providedIn: ProjectorDetailServiceModule })
 export class ProjectionControllerService extends BaseMeetingControllerService<ViewProjection, Projection> {
     public constructor(

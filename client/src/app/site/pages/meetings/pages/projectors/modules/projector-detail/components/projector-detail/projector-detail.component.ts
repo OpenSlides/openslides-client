@@ -43,6 +43,7 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
 })
 export class ProjectorDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewProjector.COLLECTION;
+
     /**
      * The projector to show.
      */
