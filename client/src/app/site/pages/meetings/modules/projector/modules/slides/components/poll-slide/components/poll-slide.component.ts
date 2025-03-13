@@ -59,6 +59,10 @@ export class PollSlideComponent
 
     public polldata!: PollData;
 
+    public get showContent(): boolean {
+        return this.data.data.state === PollState.Published;
+    }
+
     public override get projector(): ViewProjector {
         return super.projector;
     }
