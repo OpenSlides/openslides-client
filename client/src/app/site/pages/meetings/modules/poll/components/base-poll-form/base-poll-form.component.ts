@@ -150,6 +150,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.contentForm.get(`pollmethod`);
     }
 
+    private get isPollMethodYNA(): boolean {
+        return (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YNA;
+    }
+
     public get pollMethod(): FormPollMethod {
         return this.pollMethodControl.value as FormPollMethod;
     }
@@ -239,10 +243,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private updatePollMethod(method: PollMethod): void {
         this.contentForm.removeControl(`votes_amount`);
-        if (method === `Y` || method === `N`) {
+        if (method === `Y` || method === `N` || method === `YNA`) {
             this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
-        } else if (method === `YNA`) {
-            this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl(this.pollOptionAmount));
         }
         if (method === `N`) {
             this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
@@ -482,10 +484,11 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         });
     }
 
-    private getVotesAmountControl(maxVotes?: number): UntypedFormGroup {
+    private getVotesAmountControl(): UntypedFormGroup {
+        const maxVotesPreselect = this.isPollMethodYNA ? this.pollOptionAmount : 1;
         return this.fb.group(
             {
-                max_votes_amount: [maxVotes ?? 1, [Validators.required, Validators.min(1)]],
+                max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
                 min_votes_amount: [1, [Validators.required, Validators.min(1)]],
                 max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
             },
