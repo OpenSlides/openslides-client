@@ -2,9 +2,10 @@
 
 .motion-export-wrapper {
     margin-right: 72px !important;
+    margin-top: 0px !important;
     .toggle-group-head {
         margin-bottom: 0px;
-        margin-top: 30px;
+        margin-top: 10px;
     }
 
     mat-chip-listbox {
@@ -17,7 +18,7 @@
             min-height: var(--mdc-chip-container-height) !important;
             justify-content: space-between;
             padding-left: 1px;
-            margin: 10px 30px 10px 5px !important;
+            margin: 10px 20px 10px 5px !important;
             background-color: var(--mat-tree-container-background-color) !important;
             outline-style: solid;
             outline-width: 1px;
@@ -65,7 +66,7 @@
 .motion-export-card {
     width: 90%;
     height: 90%;
-    margin-top: 20px !important;
+    margin-top: 10px !important;
     margin-bottom: 20px !important;
     margin-left: 72px !important;
     font-size: 1rem;

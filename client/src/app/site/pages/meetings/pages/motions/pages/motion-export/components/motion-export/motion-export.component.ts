@@ -265,10 +265,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
-        const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
-        lnDefaultMode === this.lnMode.Inside
-            ? this.dialogForm.get(`lnMode`).setValue(this.lnMode.Outside)
-            : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
         return;
     }
 
@@ -297,7 +293,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             );
             this.changeStateOfChipOption(this.spokespersonChip, true, `working_group_speakers`);
         }
-        //this.filterFormControlAvailableValues(`metaInfo`, `referring_motions`, this.referringMotionsChip);
         this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
         this.filterFormControlAvailableValues(`personrelated`, `working_group_speakers`, this.spokespersonChip);
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
@@ -318,6 +313,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
         }
+        const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
+        lnDefaultMode === this.lnMode.Inside
+            ? this.dialogForm.get(`lnMode`).setValue(this.lnMode.Outside)
+            : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
         return;
     }
 
@@ -438,5 +437,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 motions_models.map(m => this.motionRepo.getViewModel(m.id))
             );
         }
+        this.router.navigate([`..`], { relativeTo: this.route });
+    }
+
+    public cancelExport(): void {
+        this.router.navigate([`..`], { relativeTo: this.route });
     }
 }

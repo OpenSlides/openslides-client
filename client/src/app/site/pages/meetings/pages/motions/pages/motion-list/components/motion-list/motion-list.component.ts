@@ -19,7 +19,6 @@ import { MotionPermissionService } from '../../../../services/common/motion-perm
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { ViewMotion } from '../../../../view-models';
-import { MotionExportDialogService } from '../../../motion-export/services/motion-export-dialog.service';
 import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
 
 /**
@@ -134,7 +133,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public motionRepo: MotionControllerService,
         public amendmentController: AmendmentControllerService,
         public motionService: MotionForwardDialogService,
-        public motionExportDialogService: MotionExportDialogService,
         public multiselectService: MotionMultiselectService,
         public perms: MotionPermissionService,
         public vp: ViewPortService,

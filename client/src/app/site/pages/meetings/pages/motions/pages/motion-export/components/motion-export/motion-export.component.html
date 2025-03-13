@@ -1,12 +1,7 @@
-<os-head-bar [goBack]="true" [nav]="false">
+<os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportMotions()">
     <div class="title-slot">
         <h2>{{ 'Export ' + motionsNr + ' Motions' | translate }}</h2>
     </div>
-    <ng-container class="menu-slot">
-        <button mat-button (click)="exportMotions()">
-            <span class="upper">{{ 'Export' | translate }}</span>
-        </button>
-    </ng-container>
 </os-head-bar>
 
 <div class="motion-export-card">
