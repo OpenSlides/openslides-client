@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -45,6 +47,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
+import { EditorTabNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -97,6 +100,13 @@ const DEFAULT_COLOR_PALETE = [
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
     @ViewChild(`editorEl`) private editorEl: ElementRef;
 
+    @ViewChildren(`btn`)
+    public buttonElements!: QueryList<ElementRef>;
+
+    @ViewChild(`isDisabled`) public isDisabled: EditorTabNavigationDirective;
+
+    @ViewChild(`setTab`) public setTab: EditorTabNavigationDirective;
+
     @Input()
     public customSettings: object = {};
 
@@ -105,6 +115,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
+
+    public focusText = false;
+    public focusBackground = false;
 
     public override contentForm!: UntypedFormControl;
 
@@ -442,5 +455,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         return dom.body.innerHTML;
+    }
+
+    public setFocus(help?: boolean): void {
+        this.focusText = help;
+        if (help === undefined) {
+            this.focusBackground = help;
+        } else {
+            this.focusBackground = !help;
+        }
     }
 }
