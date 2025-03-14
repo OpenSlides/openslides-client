@@ -25,12 +25,12 @@ export class AmendmentListPdfService {
      * @param amendment
      * @return rendered PDF text
      */
-    private renderDiffLines(amendment: ViewMotion): object {
+    private renderDiffLines(amendment: ViewMotion): Content[] {
         if (amendment.affectedAmendmentLines?.length) {
             const linesHtml = amendment.affectedAmendmentLines.map(line => line.text).join(`<br />[...]<br />`);
             return this.htmlToPdfService.convertHtml({ htmlText: linesHtml });
         }
-        return {};
+        return [];
     }
 
     /**
