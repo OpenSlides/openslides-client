@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
@@ -78,8 +77,7 @@ export class AutoupdateService {
         private viewmodelStoreUpdate: ViewModelStoreUpdateService,
         private communication: AutoupdateCommunicationService,
         private bannerService: BannerService,
-        private visibilityService: WindowVisibilityService,
-        private store: StorageService
+        private visibilityService: WindowVisibilityService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
@@ -96,14 +94,6 @@ export class AutoupdateService {
         });
         this.communication.listenShouldReconnect().subscribe(() => {
             this.pauseUntilVisible();
-        });
-
-        this.visibilityService.hiddenFor(AU_PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
-            this.store.get(`clientSettings`).then((settings: any) => {
-                if (!settings || !settings?.disablePauseAuConnections) {
-                    this.pauseUntilVisible();
-                }
-            });
         });
 
         window.addEventListener(`unload`, () => {
