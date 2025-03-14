@@ -489,7 +489,9 @@ export abstract class BasePollPdfService {
         const pollTableBody: any[] = [
             [
                 {
-                    text: this.translate.instant(poll.isListPoll ? `Option` : `Candidate`),
+                    text: this.translate.instant(
+                        poll.isListPoll ? `Option` : poll.isMotionPoll ? `Voting options` : `Candidate`
+                    ),
                     style: `tableHeader`
                 },
                 ...template.value.map(value => {
