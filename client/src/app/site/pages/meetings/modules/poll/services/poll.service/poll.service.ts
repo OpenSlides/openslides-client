@@ -275,12 +275,12 @@ export abstract class PollService {
         const keys: VotingResult[] = [
             {
                 vote: YES_KEY,
-                icon: `thumb_up`,
+                icon: `check_circle`,
                 showPercent: true
             },
             {
                 vote: NO_KEY,
-                icon: `thumb_down`,
+                icon: `cancel`,
                 showPercent: true
             }
         ];
@@ -288,7 +288,7 @@ export abstract class PollService {
         if (poll.pollmethod !== PollMethod.YN) {
             keys.push({
                 vote: ABSTAIN_KEY,
-                icon: `trip_origin`,
+                icon: `circle`,
                 showPercent: this.showAbstainPercent(poll)
             });
         }

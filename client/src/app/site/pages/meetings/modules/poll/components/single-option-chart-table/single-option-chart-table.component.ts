@@ -61,13 +61,16 @@ export class SingleOptionChartTableComponent {
     }
 
     @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
+    public iconSize: 'medium' | 'large' | 'gigantic' = `large`;
 
     @Input()
     public shouldShowEntitled = false;
 
     @Input()
     public shouldShowEntitledPresent = false;
+
+    @Input()
+    public title: string = ``;
 
     public get chartData(): ChartData {
         return this._chartData;
