@@ -79,6 +79,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this._data;
     }
 
+    /**
+     * The flag to allow min/max votes on YNA poll method
+     */
+    @Input()
+    public allowToSetMinMaxOnYNA = false;
+
     public isCreatedList: boolean;
 
     public get isList(): boolean {
@@ -243,7 +249,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private updatePollMethod(method: PollMethod): void {
         this.contentForm.removeControl(`votes_amount`);
-        if (method === `Y` || method === `N` || method === `YNA`) {
+        if (method === `Y` || method === `N` || (method === `YNA` && this.allowToSetMinMaxOnYNA)) {
             this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
         }
         if (method === `N`) {
@@ -294,7 +300,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return (
-            (selectedPollMethod === `Y` || selectedPollMethod === `N` || selectedPollMethod === `YNA`) &&
+            (selectedPollMethod === `Y` ||
+                selectedPollMethod === `N` ||
+                (selectedPollMethod === `YNA` && this.allowToSetMinMaxOnYNA)) &&
             (!data || !data.state || data.isCreated)
         );
     }
@@ -433,7 +441,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 ]);
             }
 
-            if (pollMethod === FormPollMethod.YNA) {
+            if (pollMethod === FormPollMethod.YNA && this.allowToSetMinMaxOnYNA) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_amount`),
                     data[`max_votes_amount`]
@@ -485,7 +493,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private getVotesAmountControl(): UntypedFormGroup {
-        const maxVotesPreselect = this.isPollMethodYNA ? this.pollOptionAmount : 1;
+        const maxVotesPreselect = this.isPollMethodYNA && this.allowToSetMinMaxOnYNA ? this.pollOptionAmount : 1;
         return this.fb.group(
             {
                 max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
