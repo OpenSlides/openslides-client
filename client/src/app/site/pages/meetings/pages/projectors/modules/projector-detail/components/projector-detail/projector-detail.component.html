@@ -112,8 +112,8 @@
                                     mat-icon-button
                                     type="button"
                                     [disabled]="projector.scroll <= 4"
-                                    matTooltip="{{ 'Scroll up (by approximate projector height)' | translate }}"
-                                    (click)="scrollPDFPage(scrollScaleDirection.Down)"
+                                    matTooltip="{{ 'Scroll up (by pdf page height)' | translate }}"
+                                    (click)="scrollPdf(scrollScaleDirection.Down)"
                                 >
                                     <mat-icon>keyboard_double_arrow_up</mat-icon>
                                 </button>
@@ -161,8 +161,8 @@
                                 <button
                                     mat-icon-button
                                     type="button"
-                                    matTooltip="{{ 'Scroll down (by approximate projector height)' | translate }}"
-                                    (click)="scrollPDFPage(scrollScaleDirection.Up)"
+                                    matTooltip="{{ 'Scroll down (by pdf page height)' | translate }}"
+                                    (click)="scrollPdf(scrollScaleDirection.Up)"
                                 >
                                     <mat-icon>keyboard_double_arrow_down</mat-icon>
                                 </button>

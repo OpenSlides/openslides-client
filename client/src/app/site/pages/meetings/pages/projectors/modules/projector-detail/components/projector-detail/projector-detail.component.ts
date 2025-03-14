@@ -417,21 +417,4 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             })
         );
     }
-
-    public scrollPDFPage(direction: ScrollScaleDirection): void {
-        if (this.projector.scroll <= 0) {
-            this.summedOverflowSteps = 0;
-        }
-        this.summedOverflowSteps +=
-            ((this.projector.height % 100) / 100) * (direction === ScrollScaleDirection.Up ? 1 : -1);
-        if (this.summedOverflowSteps >= 0.5) {
-            this.scroll(direction, this.projectorHeight + 1);
-            this.summedOverflowSteps -= 1;
-        } else if (this.summedOverflowSteps <= -0.5) {
-            this.scroll(direction, this.projectorHeight + 1);
-            this.summedOverflowSteps += 1;
-        } else {
-            this.scroll(direction, this.projectorHeight);
-        }
-    }
 }
