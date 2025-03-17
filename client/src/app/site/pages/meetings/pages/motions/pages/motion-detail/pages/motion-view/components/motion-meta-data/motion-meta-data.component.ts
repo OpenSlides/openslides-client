@@ -59,6 +59,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
+    public originToggleDefault$ = this.meetingSettingsService.get(`motions_origin_motion_toggle_default`);
+    public displayOriginEnabled$ = this.meetingSettingsService.get(`motions_enable_origin_motion_display`);
+
 
     /**
      * @returns the current recommendation label (with extension)
@@ -147,23 +150,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public get displayOriginEnabled(): boolean {
-        return this.meetingSettingsService.instant(`motions_enable_origin_motion_display`);
-    }
-
-    public get originToggleDefault(): boolean {
-        return this.meetingSettingsService.instant(`motions_origin_motion_toggle_default`);
-    }
-
     public loadForwardingCommittees: () => Promise<Selectable[]>;
-
-    private _forwardingAvailable = false;
 
     public get supportersObservable(): Observable<ViewUser[]> {
         return this._supportersSubject;
     }
 
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
+
+    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -383,10 +378,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public canView(origin: ViewMotion | ViewMeeting): boolean {
-        if (!this.displayOriginEnabled) {
-            return false;
-        }
-
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
             return motion.sequential_number !== undefined;
