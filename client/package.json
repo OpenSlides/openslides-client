@@ -97,7 +97,7 @@
     "qrcode": "^1.5.4",
     "rxjs": "^7.8.2",
     "tinycolor2": "1.6.0",
-    "video.js": "^8.21.0",
+    "video.js": "^8.22.0",
     "zone.js": "^0.14.10"
   },
   "devDependencies": {
