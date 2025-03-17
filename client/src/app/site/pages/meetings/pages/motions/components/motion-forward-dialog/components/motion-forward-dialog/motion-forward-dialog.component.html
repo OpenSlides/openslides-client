@@ -15,6 +15,12 @@
                 }
             </span>
         </div>
+    } @else {
+        <div class="state">
+            {{ data.motion.length }} {{ 'motions' | translate }}
+            <span>&middot;</span>
+            {{ numAmendments }} {{ 'amendments' | translate }}
+        </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
         <!-- Label in front-->

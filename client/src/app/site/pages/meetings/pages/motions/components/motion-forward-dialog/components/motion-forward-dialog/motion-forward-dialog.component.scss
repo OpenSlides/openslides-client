@@ -27,11 +27,11 @@
 .data-preview {
     &:before {
         display: inline;
-        content: "(";
+        content: '(';
     }
     &:after {
         display: inline;
-        content: ")";
+        content: ')';
     }
     & > * {
         display: inline-block;
