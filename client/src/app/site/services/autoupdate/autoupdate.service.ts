@@ -96,6 +96,10 @@ export class AutoupdateService {
             this.pauseUntilVisible();
         });
 
+        this.visibilityService.hiddenFor(AU_PAUSE_ON_INACTIVITY_TIMEOUT).subscribe(() => {
+            this.pauseUntilVisible();
+        });
+
         window.addEventListener(`unload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
                 const streamId = Number(id);
