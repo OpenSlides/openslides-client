@@ -13,6 +13,7 @@ export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
 export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
 export const MOTION_BLOCK_SUBSCRIPTION = `motion_block_list`;
 export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
+export const MOTION_ORIGIN_DETAIL_SUBSCRIPTION = `motion_origin_detail`;
 export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
 export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
 export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
@@ -196,6 +197,11 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                         fieldset: `participantList`
                     }
                 ]
+            },
+            {
+                idField: `origin_id`,
+                fieldset: [`sequential_number`],
+                follow: [{ idField: `meeting_id`, fieldset: [`name`] }]
             }
         ],
         fieldset: [
@@ -207,11 +213,104 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `origin_meeting_id`,
             `derived_motion_ids`,
             `identical_motion_ids`,
-            `amendment_ids`,
             `amendment_paragraphs`
         ]
     },
     subscriptionName: MOTION_DETAIL_SUBSCRIPTION
+});
+
+export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        ids,
+        viewModelCtor: ViewMotion,
+        follow: [
+            {
+                idField: `submitter_ids`,
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        follow: [
+                            {
+                                idField: `user_id`,
+                                fieldset: `participantList`
+                            }
+                        ],
+                        fieldset: `participantListMinimal`
+                    }
+                ]
+            },
+            {
+                idField: `state_id`,
+                fieldset: [
+                    `name`,
+                    `css_class`,
+                    `meeting_id`,
+                    `show_state_extension_field`,
+                    `show_recommendation_extension_field`,
+                    `recommendation_label`
+                ]
+            },
+            {
+                idField: `poll_ids`,
+                ...pollModelRequest
+            },
+            {
+                idField: `amendment_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+                    { idField: `state_id`, fieldset: FULL_FIELDSET },
+                    {
+                        idField: `submitter_ids`,
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        fieldset: `participantList`
+                                    }
+                                ],
+                                fieldset: `participantListMinimal`
+                            }
+                        ]
+                    }
+                ]
+            },
+            { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+            { idField: `category_id`, fieldset: [`name`, `parent_id`, `meeting_id`] },
+            { idField: `block_id`, fieldset: [`title`, `meeting_id`] },
+            { idField: `recommendation_id`, fieldset: [`name`, `meeting_id`, `recommendation_label`] },
+            {
+                idField: `meeting_id`,
+                fieldset: [
+                    `name`,
+                    `motions_line_length`,
+                    `motions_default_line_numbering`,
+                    `motions_recommendations_by`
+                ]
+            },
+            { idField: `state_extension_reference_ids`, fieldset: [`number`, `title`, `meeting_id`] },
+            { idField: `recommendation_extension_reference_ids`, fieldset: [`number`, `title`, `meeting_id`] }
+        ],
+        fieldset: [
+            `state_extension`,
+            `recommendation_extension`,
+            `additional_submitter`,
+            `workflow_timestamp`,
+            `reason`,
+            `number`,
+            `title`,
+            `text`,
+            `modified_final_version`,
+            `all_origin_ids`,
+            `origin_meeting_id`,
+            `derived_motion_ids`,
+            `identical_motion_ids`,
+            `amendment_paragraphs`
+        ]
+    },
+    subscriptionName: MOTION_ORIGIN_DETAIL_SUBSCRIPTION
 });
 
 export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({

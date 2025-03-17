@@ -74,9 +74,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public motion!: ViewMotion;
 
     private _changes: ViewUnifiedChange[] = [];
+
     @Input()
     public set changes(changes: ViewUnifiedChange[]) {
-        this._changes = changes;
+        this._changes = changes || [];
         this.updateAllTextChangingObjects();
     }
 
@@ -110,6 +111,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public lineRange: LineRange | null = null;
+
+    @Input()
+    public noEditMode = false;
 
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
@@ -444,19 +448,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             .catch(this.raiseError);
     }
 
-    /**
-     * Scrolls to the native element specified by [scrollToChange]
-     */
-    private scrollToChangeElement(change: ViewUnifiedChange): void {
-        const element = <HTMLElement>this.el.nativeElement;
-        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
-        const containerElement = document.querySelector(`mat-sidenav-content`);
-        containerElement!.scrollTo({
-            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
-            behavior: `smooth`
-        });
-    }
-
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {
         $event.preventDefault();
         $event.stopPropagation();
@@ -478,5 +469,18 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
+    }
+
+    /**
+     * Scrolls to the native element specified by [scrollToChange]
+     */
+    private scrollToChangeElement(change: ViewUnifiedChange): void {
+        const element = <HTMLElement>this.el.nativeElement;
+        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
+        const containerElement = document.querySelector(`mat-sidenav-content`);
+        containerElement!.scrollTo({
+            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
+            behavior: `smooth`
+        });
     }
 }
