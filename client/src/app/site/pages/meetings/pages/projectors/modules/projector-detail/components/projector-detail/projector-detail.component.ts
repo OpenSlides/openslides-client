@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
+import * as pdfjs from 'pdfjs-dist';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -85,6 +86,14 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 projection.content[`mimetype`].endsWith(`/pdf`)
         );
     }
+
+    public get projectorScroll(): number {
+        return this.isPdfProjection ? Math.floor(this.projector.scroll / 100) : this.projector.scroll;
+    }
+
+    public pdfStep: number;
+    private pdfPage: number;
+    private loadedPdf = false;
 
     public get currentProjectionIsLoS(): boolean {
         for (const projection of this.projector.nonStableCurrentProjections) {
@@ -227,7 +236,18 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      * @param step (optional) The amount of steps to make.
      */
     public scroll(direction: ScrollScaleDirection, step = 1): void {
-        this.repo.scroll(this.projector, direction, step);
+        if (direction === ScrollScaleDirection.Reset) {
+            this.pdfPage = 0;
+        }
+        this.isPdfProjection
+            ? this.repo.scroll(this.projector, direction, step * 100)
+            : this.repo.scroll(this.projector, direction, step);
+    }
+
+    public scrollPdf(direction: ScrollScaleDirection): void {
+        direction === ScrollScaleDirection.Up ? (this.pdfPage += 1) : (this.pdfPage -= 1);
+        const totalSteps = this.calcPdfStep(this.pdfPage);
+        this.repo.scroll(this.projector, direction, Math.abs(totalSteps - this.projector.scroll));
     }
 
     /**
@@ -362,6 +382,30 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         });
     }
 
+    public calcPdfStep(pageAmount: number): number {
+        return Math.round(this.pdfStep * pageAmount);
+    }
+
+    public loadPDFSizes(): void {
+        if (this.isPdfProjection && !this.loadedPdf) {
+            for (const projection of this.projector.nonStableCurrentProjections) {
+                pdfjs
+                    .getDocument(projection.content_object.getDetailStateUrl())
+                    .promise.then(pdf => pdf.getPage(1))
+                    .then(page => {
+                        const pageWidth = page.view[2];
+                        const pageHeight = page.view[3];
+                        const scale_factor = this.projector.width / pageWidth;
+                        this.pdfStep = pageHeight * scale_factor + 10;
+                        this.projector.scroll === 0
+                            ? (this.pdfPage = 0)
+                            : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
+                        this.loadedPdf = true;
+                    });
+            }
+        }
+    }
+
     private setupSubscription(): void {
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._projectorId!).subscribe(projector => {
@@ -372,22 +416,5 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 }
             })
         );
-    }
-
-    public scrollPDFPage(direction: ScrollScaleDirection): void {
-        if (this.projector.scroll <= 0) {
-            this.summedOverflowSteps = 0;
-        }
-        this.summedOverflowSteps +=
-            ((this.projector.height % 100) / 100) * (direction === ScrollScaleDirection.Up ? 1 : -1);
-        if (this.summedOverflowSteps >= 0.5) {
-            this.scroll(direction, this.projectorHeight + 1);
-            this.summedOverflowSteps -= 1;
-        } else if (this.summedOverflowSteps <= -0.5) {
-            this.scroll(direction, this.projectorHeight + 1);
-            this.summedOverflowSteps += 1;
-        } else {
-            this.scroll(direction, this.projectorHeight);
-        }
     }
 }
