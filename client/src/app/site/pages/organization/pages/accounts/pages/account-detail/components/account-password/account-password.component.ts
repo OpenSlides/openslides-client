@@ -99,6 +99,6 @@ export class AccountPasswordComponent extends BaseComponent implements OnInit, A
 
     private updatePermissions(): void {
         this.isOwnPage = this.userId === this.operator.operatorId;
-        this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users);
+        this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isAnyManager;
     }
 }
