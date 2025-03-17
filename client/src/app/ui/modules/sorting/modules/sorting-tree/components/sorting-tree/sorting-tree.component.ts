@@ -38,6 +38,13 @@ interface DragEvent {
     currentPosition: { x: number; y: number };
 }
 
+interface MoveNode<T> {
+    node: FlatNode<T>;
+    previousIndex: number;
+    nextIndex: number;
+    nextLevel: number;
+}
+
 /**
  * Class to hold the moved steps and the direction in horizontal and vertical way.
  */
@@ -245,6 +252,18 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
 
         for (let i = nodeIndex - 1; i >= 0; --i) {
             if (this.osTreeData[i].level === node.level - 1) {
+                return this.osTreeData[i];
+            }
+        }
+
+        return null;
+    }
+
+    public getMultiselectPreviousNode(node: FlatNode<T>): FlatNode<T> | null {
+        const nodeIndex = this.osTreeData.indexOf(node);
+
+        for (let i = nodeIndex - 1; i >= 0; --i) {
+            if (!this.multiSelectedIndex.includes(this.osTreeData[i].id)) {
                 return this.osTreeData[i];
             }
         }
@@ -574,24 +593,24 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * dropping)
      *
      * @param event MouseEvent.
-     * @param clickIndx The index of the row clicked.
+     * @param clickIndex The index of the row clicked.
      */
-    public onItemClick(event: MouseEvent | Event, clickIndx: number): void {
+    public onItemClick(event: MouseEvent | Event, clickIndex: number): void {
         if (event.type === `click` || (<KeyboardEvent>event).key === ` `) {
             document.getSelection().removeAllRanges();
             event.preventDefault();
             if ((<MouseEvent>event).ctrlKey) {
-                const ind = this.multiSelectedIndex.findIndex(i => i === clickIndx);
-                if (ind === -1) {
-                    this.multiSelectedIndex.push(clickIndx);
+                const index = this.multiSelectedIndex.findIndex(i => i === clickIndex);
+                if (index === -1) {
+                    this.multiSelectedIndex.push(clickIndex);
                 } else {
                     this.multiSelectedIndex = this.multiSelectedIndex
-                        .slice(0, ind)
-                        .concat(this.multiSelectedIndex.slice(ind + 1));
+                        .slice(0, index)
+                        .concat(this.multiSelectedIndex.slice(index + 1));
                 }
             } else {
                 // deselect all when clicking on an non-selected item
-                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(clickIndx)) {
+                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(clickIndex)) {
                     this.multiSelectedIndex = [];
                 }
             }
@@ -627,14 +646,9 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
 
         this.madeChanges(true);
         if (this.multiSelectedIndex.length > 0) {
-            let nextPosition = this.nextPosition;
-            for (const nodeId of this.multiSelectedIndex) {
-                node = this.osTreeData.filter(item => item.id === nodeId)[0];
-                nextPosition = this.moveItemToTree(node, node.position!, nextPosition, this.placeholderLevel);
-            }
-            this.multiSelectedIndex = [];
+            this.moveMultiItemsToTree(node);
         } else {
-            this.nextPosition = this.moveItemToTree(node, node.position!, this.nextPosition, this.placeholderLevel);
+            this.moveItemToTree(node, node.position!, this.nextPosition, this.placeholderLevel);
         }
     }
 
@@ -782,6 +796,50 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     }
 
     /**
+     * Function to handle movement of multiple selected nodes
+     * @param node Clicked node to drag
+     */
+    private moveMultiItemsToTree(node: FlatNode<T>): void {
+        // dict for not selected subnodes
+        const nonSelectedSubNodes: MoveNode<T>[] = [];
+
+        let nextPosition = this.nextPosition;
+        for (const nodeId of this.multiSelectedIndex) {
+            node = this.osTreeData.filter(item => item.id === nodeId)[0];
+            const direction = node.position < this.nextPosition ? 0 : 1;
+
+            // If there are subnodes taht are not selected, move them to a previous parent
+            const subNodes = this.getAllSubNodes(node)?.filter(
+                n => !this.multiSelectedIndex.includes(n.id) && n !== node
+            );
+            const previousNode = subNodes.length > 0 ? this.getMultiselectPreviousNode(subNodes[0]) : null;
+            if (previousNode) {
+                let previousPos = previousNode.position;
+                let previousLevel = previousNode.level;
+                for (const sub of subNodes) {
+                    nonSelectedSubNodes.push({
+                        node: sub,
+                        previousIndex: sub.position!,
+                        nextIndex: previousPos + 1,
+                        nextLevel: previousLevel >= sub.level ? sub.level : previousLevel + 1
+                    });
+                    previousPos += 1;
+                    previousLevel = previousLevel >= sub.level ? sub.level : previousLevel + 1;
+                }
+                for (const moveNode of nonSelectedSubNodes) {
+                    this.moveItemToTree(moveNode.node, moveNode.previousIndex, moveNode.nextIndex, moveNode.nextLevel);
+                }
+            }
+
+            // Update node information and move to goal
+            node = this.osTreeData.filter(item => item.id === nodeId)[0];
+            this.moveItemToTree(node, node.position, nextPosition, this.placeholderLevel);
+            nextPosition += direction;
+        }
+        this.multiSelectedIndex = [];
+    }
+
+    /**
      * Function to re-sort the tree, when a node was dropped.
      *
      * @param node The corresponding node.
@@ -790,7 +848,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * @param nextLevel The next level the node should have.
      * @param verticalMove The direction of the movement in the vertical way.
      */
-    private moveItemToTree(node: FlatNode<T>, previousIndex: number, nextIndex: number, nextLevel: number): number {
+    private moveItemToTree(node: FlatNode<T>, previousIndex: number, nextIndex: number, nextLevel: number): void {
         let verticalMove: string;
         if (previousIndex < nextIndex) {
             verticalMove = Direction.DOWNWARDS;
@@ -930,7 +988,6 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
             // Set a new data source.
             this.dataSource = new ArrayDataSource(this.osTreeData);
         }
-        return movedNodes.length > 1 ? lastChildIndex : nextIndex + 1;
     }
 
     /**
