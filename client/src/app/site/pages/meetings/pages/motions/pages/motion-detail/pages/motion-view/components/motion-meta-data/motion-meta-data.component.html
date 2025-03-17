@@ -348,6 +348,7 @@
                             *osPerms="permission.motionCanSeeOrigin; and: canView(origin); and: !originToggleDefault"
                             [aria-label]="'Load origin motion' | translate"
                             [checked]="originMotionStatus[origin.id]"
+                            [matTooltip]="'Activate backtracking' | translate"
                             (change)="toggleOriginMotion($event, origin.id)"
                         ></mat-slide-toggle>
                     </div>
