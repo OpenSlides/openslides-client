@@ -134,15 +134,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return this.account ?? this.createUserForm.value;
     }
 
-    public get flicker(): Observable<boolean> {
-        return this.flickerSubject;
-    }
-
     public get isVoteWeightError(): boolean {
         return this.personalInfoFormValue.vote_weight < 0.000001;
     }
-
-    public flickerSubject = new BehaviorSubject<boolean>(false);
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
@@ -247,7 +241,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public async onAccountSelected(account: Partial<User>): Promise<void> {
         this.detailView?.enableSelfUpdate(false);
-        this.flickerSubject.next(true);
         const shouldReset = !!this.detailView;
         this.createUserForm.patchValue(account, { emitEvent: false });
         this._accountId = account.id || null;
@@ -259,7 +252,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         if (this.account) {
             this.detailView.personalInfoForm.patchValue(this.account);
         }
-        this.flickerSubject.next(false);
     }
 
     public getSaveAction(): () => Promise<void> {
