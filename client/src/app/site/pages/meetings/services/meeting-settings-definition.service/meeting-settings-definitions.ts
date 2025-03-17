@@ -859,6 +859,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_origin_motion_toggle_default`,
                         label: _(`Preload original motions`),
                         type: `boolean`,
+                        hide: true,
                         disable: settings => !settings.motions_enable_origin_motion_display
                     }
                 ]

@@ -62,7 +62,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public originToggleDefault$ = this.meetingSettingsService.get(`motions_origin_motion_toggle_default`);
     public displayOriginEnabled$ = this.meetingSettingsService.get(`motions_enable_origin_motion_display`);
 
-
     /**
      * @returns the current recommendation label (with extension)
      */
