@@ -112,7 +112,7 @@
                                     mat-icon-button
                                     type="button"
                                     [disabled]="projector.scroll <= 4"
-                                    matTooltip="{{ 'Scroll up (by pdf page height)' | translate }}"
+                                    matTooltip="{{ 'Previous page' | translate }}"
                                     (click)="scrollPdf(scrollScaleDirection.Down)"
                                 >
                                     <mat-icon>keyboard_double_arrow_up</mat-icon>
@@ -161,7 +161,7 @@
                                 <button
                                     mat-icon-button
                                     type="button"
-                                    matTooltip="{{ 'Scroll down (by pdf page height)' | translate }}"
+                                    matTooltip="{{ 'Next page' | translate }}"
                                     (click)="scrollPdf(scrollScaleDirection.Up)"
                                 >
                                     <mat-icon>keyboard_double_arrow_down</mat-icon>
