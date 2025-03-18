@@ -354,7 +354,11 @@ export abstract class BasePollPdfService {
 
         pollResultPdfContent = [title];
 
-        const resultsTable = this.pollService.generateTableData(poll);
+        let resultsTable = undefined
+
+        if (poll.isFinished || poll.isPublished) {
+            resultsTable = this.pollService.generateTableData(poll);
+        }
 
         if (poll.isListPoll) {
             const listOption = poll.options[0];
@@ -490,7 +494,7 @@ export abstract class BasePollPdfService {
             [
                 {
                     text: this.translate.instant(
-                        poll.isListPoll ? `Option` : poll.isMotionPoll ? `Voting options` : `Candidate`
+                        poll.isListPoll ? ` ` : poll.isMotionPoll ? ` ` : `Candidate`
                     ),
                     style: `tableHeader`
                 },

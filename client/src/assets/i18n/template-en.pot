@@ -5,6 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: app/src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service.ts
+msgid " "
+msgstr ""
+
 msgid "\"0\" means an unlimited number of active accounts"
 msgstr ""
 
@@ -112,7 +116,8 @@ msgstr ""
 msgid "Account admin"
 msgstr ""
 
-msgid "Account successfully assigned"
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
+msgid "Account successfully added."
 msgstr ""
 
 msgid "Accounts"
@@ -132,6 +137,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/pages/account-import/services/account-import.service/account-import.service.ts
 msgid "Accounts with warnings: affected cells will be skipped"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component.ts
+msgid "Action not possible. You have to be part of the meeting."
 msgstr ""
 
 msgid "Activate"
@@ -271,9 +280,6 @@ msgstr ""
 msgid "Administrators"
 msgstr ""
 
-msgid "After verifiy the preview click on \"import\" please (see top right)."
-msgstr ""
-
 msgid "After verifying the preview click on \"import\" please (see top right)."
 msgstr ""
 
@@ -302,6 +308,10 @@ msgstr ""
 msgid "All casted ballots"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/meeting-settings/pages/meeting-settings-group-detail/components/meeting-settings-group-detail/meeting-settings-group-detail.component.ts
+msgid "All changes of this settings group will be lost!"
+msgstr ""
+
 msgid "All entitled users"
 msgstr ""
 
@@ -312,10 +322,6 @@ msgid "All meetings"
 msgstr ""
 
 msgid "All other fields are optional and may be empty."
-msgstr ""
-
-#: /app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/definitions/index.ts
-msgid "All present entitled users"
 msgstr ""
 
 #: /app/src/app/gateways/repositories/meeting-repository.service.ts
@@ -648,11 +654,6 @@ msgstr ""
 msgid "Are you sure you want to reset all options to default settings?"
 msgstr ""
 
-msgid ""
-"Are you sure you want to reset all options to default settings? All changes "
-"of this settings group will be lost!"
-msgstr ""
-
 msgid "Are you sure you want to reset all passwords to the default ones?"
 msgstr ""
 
@@ -695,9 +696,6 @@ msgid "Ask, default no"
 msgstr ""
 
 msgid "Ask, default yes"
-msgstr ""
-
-msgid "Assign"
 msgstr ""
 
 msgid "At least"
@@ -1199,6 +1197,10 @@ msgid "Candidate removed"
 msgstr ""
 
 msgid "Candidates"
+msgstr ""
+
+#: app/src/app/gateways/error-mapping/error-map-utils.ts
+msgid "Cannot create meeting without administrator."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
@@ -2193,6 +2195,10 @@ msgstr ""
 msgid "Export comment"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/moderation-note/moderation-note.component.html
+msgid "Export moderator note as PDF"
+msgstr ""
+
 msgid "Export motions"
 msgstr ""
 
@@ -2400,10 +2406,12 @@ msgstr ""
 msgid "Group name"
 msgstr ""
 
-msgid "Group not found - account is already in meeting, nothing assigned"
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
+msgid "Group not found. Account added to the group “Default”."
 msgstr ""
 
-msgid "Group not found - assigned to default group"
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
+msgid "Group not found. Account already belongs to another group."
 msgstr ""
 
 msgid "Groups"
@@ -2586,7 +2594,8 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-msgid "If deactivated it is displayed below the title"
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "If deactivated it is displayed below the title."
 msgstr ""
 
 msgid ""
@@ -2632,6 +2641,10 @@ msgid "Import topics"
 msgstr ""
 
 msgid "Import workflows"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
+msgid "Important: New groups are not created."
 msgstr ""
 
 msgid "In motion list, motion detail and PDF."
@@ -2797,6 +2810,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Is not active"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
+msgid "Is not an amendment"
 msgstr ""
 
 msgid "Is not archived"
@@ -3040,7 +3057,12 @@ msgstr ""
 msgid "Maximum amount of votes per option"
 msgstr ""
 
-msgid "Maximum number of columns on motion block slide"
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Maximum number of columns in motion block projection"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Maximum number of columns in single votes projection"
 msgstr ""
 
 msgid "Media access is denied"
@@ -3137,6 +3159,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/moderation-note/moderation-note.component.html
 msgid "Moderation note"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/services/moderation-note-pdf.service/moderation-note-pdf.service.ts
+msgid "Moderation-Note"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
@@ -3408,6 +3434,10 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Next page"
+msgstr ""
+
 msgid "Next states"
 msgstr ""
 
@@ -3435,6 +3465,10 @@ msgid "No committee admin"
 msgstr ""
 
 msgid "No data"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/pages/assignment-polls/components/assignment-poll-detail/assignment-poll-detail.component.html
+msgid "No data available"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-filter/participant-list-filter.service.ts
@@ -3481,6 +3515,10 @@ msgid "No personal note"
 msgstr ""
 
 msgid "No results found"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll-detail-content/assignment-poll-detail-content.component.html
+msgid "No results yet"
 msgstr ""
 
 msgid "No results yet."
@@ -3637,6 +3675,10 @@ msgid "One email was send sucessfully."
 msgstr ""
 
 msgid "Only for internal notes."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Only for nominal votes."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-switch-dialog/participant-switch-dialog.component.html
@@ -3967,9 +4009,10 @@ msgstr ""
 msgid "Please select the directory:"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
 msgid ""
-"Please select your target meetings and state the name of the group, which "
-"the user should be assigned to in each meeting."
+"Please select your target meetings and enter the name of an existing group "
+"which should be assigned to the account in each meeting."
 msgstr ""
 
 msgid "Please update your browser or contact your system administration."
@@ -4012,10 +4055,18 @@ msgstr ""
 msgid "Present"
 msgstr ""
 
+#: app/src/app/domain/models/poll/poll-constants.ts
+msgid "Present entitled users"
+msgstr ""
+
 msgid "Preview"
 msgstr ""
 
 msgid "Previous"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/components/projector-detail/projector-detail.component.html
+msgid "Previous page"
 msgstr ""
 
 msgid "Previous slides"
@@ -4473,6 +4524,10 @@ msgstr ""
 msgid "Set as reference projector"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-meeting/components/meeting-edit/meeting-edit.component.html
+msgid "Set as template"
+msgstr ""
+
 msgid "Set category"
 msgstr ""
 
@@ -4559,9 +4614,6 @@ msgstr ""
 msgid "Short form for amendments"
 msgstr ""
 
-msgid "Show all"
-msgstr ""
-
 msgid "Show all changes"
 msgstr ""
 
@@ -4589,13 +4641,7 @@ msgstr ""
 msgid "Show conference room"
 msgstr ""
 
-msgid "Show correct entries only"
-msgstr ""
-
 msgid "Show entire motion text"
-msgstr ""
-
-msgid "Show errors only"
 msgstr ""
 
 msgid "Show full text"
@@ -4723,6 +4769,10 @@ msgid "Sort motions"
 msgstr ""
 
 msgid "Sort motions by"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Sort participant names on single votes projection by"
 msgstr ""
 
 msgid "Sort workflow"
@@ -5044,9 +5094,6 @@ msgid "The users %user% have no email, so the invitation emails could not be sen
 msgstr ""
 
 msgid "There are not enough options."
-msgstr ""
-
-msgid "There are some columns that do not match the template"
 msgstr ""
 
 msgid "There is an error in your vote."
@@ -5583,6 +5630,10 @@ msgstr ""
 msgid "Which version?"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/polls/view-models/view-poll.ts
+msgid "Which visualization?"
+msgstr ""
+
 msgid "Wifi"
 msgstr ""
 
@@ -5878,9 +5929,6 @@ msgid "emails"
 msgstr ""
 
 msgid "ended"
-msgstr ""
-
-msgid "entries will be ommitted."
 msgstr ""
 
 msgid "example"
