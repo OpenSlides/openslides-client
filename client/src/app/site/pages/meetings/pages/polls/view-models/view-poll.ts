@@ -141,7 +141,7 @@ export class ViewPoll<C extends PollContentObject = any>
                 ? [
                       {
                           key: `single_votes`,
-                          displayName: _(`Which version?`),
+                          displayName: _(`Which visualization?`),
                           default: false,
                           choices
                       }
