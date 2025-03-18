@@ -5,10 +5,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app/src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service.ts
-msgid " "
-msgstr ""
-
 msgid "\"0\" means an unlimited number of active accounts"
 msgstr ""
 

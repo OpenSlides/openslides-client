@@ -832,17 +832,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             first_name: _(`Given name`),
                             last_name: _(`Surname`)
                         },
-                        helpText: _(
-                            `Only for nominal votes.`
-                        )
+                        helpText: _(`Only for nominal votes.`)
                     },
                     {
                         key: `motion_poll_projection_max_columns`,
                         label: _(`Maximum number of columns in single votes projection`),
                         type: `integer`,
-                        helpText: _(
-                            `Only for nominal votes.`
-                        )
+                        helpText: _(`Only for nominal votes.`)
                     }
                 ]
             },
