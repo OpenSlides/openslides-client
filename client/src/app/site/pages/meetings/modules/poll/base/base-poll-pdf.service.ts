@@ -354,7 +354,7 @@ export abstract class BasePollPdfService {
 
         pollResultPdfContent = [title];
 
-        let resultsTable = undefined
+        let resultsTable = undefined;
 
         if (poll.isFinished || poll.isPublished) {
             resultsTable = this.pollService.generateTableData(poll);
