@@ -169,6 +169,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
                 `<br><br>` +
                 content;
 
+            // TODO: Implement usage specific dialog
             const confirmed = await this.promptService.open(title, content);
             if (confirmed) {
                 await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });

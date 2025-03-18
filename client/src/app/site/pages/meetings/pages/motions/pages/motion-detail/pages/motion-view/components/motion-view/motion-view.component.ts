@@ -279,6 +279,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     .map(amendment => (amendment.number ? amendment.number : amendment.title))
                     .join(`, `);
         }
+        // TODO: Implement usage specific dialog
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);

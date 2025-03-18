@@ -78,6 +78,7 @@ export class MediafileCommonService {
             content = content + `<br>` + file.meeting_mediafiles.map(mm => mm.meeting?.name).join(`, `);
         }
 
+        // TODO: Implement usage specific dialog
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(file);
             if (file.is_directory) {
