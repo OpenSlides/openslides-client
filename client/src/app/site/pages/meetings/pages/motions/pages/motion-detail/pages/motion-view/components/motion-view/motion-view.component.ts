@@ -7,6 +7,7 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RoutesRecognized } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -45,7 +46,6 @@ import { MotionListFilterService } from '../../../../../../services/list/motion-
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
 import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
-import { MatDialog } from '@angular/material/dialog';
 import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
 
 @Component({

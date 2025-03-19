@@ -8,10 +8,10 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingIdService } from '../../../services/active-meeting-id.service';
+import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 import { MediafileControllerService } from './mediafile-controller.service';
-import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
 
 @Injectable({ providedIn: MediafileCommonServiceModule })
 export class MediafileCommonService {
