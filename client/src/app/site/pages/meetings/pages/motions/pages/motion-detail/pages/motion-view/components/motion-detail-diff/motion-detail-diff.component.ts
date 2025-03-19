@@ -6,8 +6,10 @@ import {
     EventEmitter,
     Input,
     Output,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -69,6 +71,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * Get the {@link getRecommendationTypeName}-Function from Utils
      */
     public getRecommendationTypeName = getRecommendationTypeName;
+
+    @ViewChild(MatMenuTrigger)
+    private changeRecommendationMenu: MatMenuTrigger;
 
     @Input()
     public motion!: ViewMotion;
@@ -404,6 +409,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
+        this.changeRecommendationMenu.closeMenu();
 
         const data: MotionContentChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,
@@ -421,6 +427,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editTitleChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
+        this.changeRecommendationMenu.closeMenu();
 
         const data: MotionTitleChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,

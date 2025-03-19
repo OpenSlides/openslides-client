@@ -37,6 +37,6 @@ export class FileExportService {
         const zip = new JSZip();
         await createContentFn(zip);
         const archive = await zip.generateAsync({ type: `blob` });
-        saveAs(archive, `${filename}.zip`);
+        saveAs(archive, `${filename.replace(`/`, `:`)}.zip`);
     }
 }

@@ -29,8 +29,10 @@
             text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
         }
 
-        a.mat-mdc-button-base {
-            text-decoration: inherit;
+        & {
+           a.mat-mdc-button-base {
+                text-decoration: inherit;
+           }
         }
     }
 

@@ -104,19 +104,20 @@
             display: none;
         }
     }
+    & {
+        .os-split-before {
+            margin-top: 0;
+            padding-top: 0;
+        }
 
-    .os-split-before {
-        margin-top: 0;
-        padding-top: 0;
-    }
+        .os-split-after {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
 
-    .os-split-after {
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-
-    li.os-split-before {
-        list-style: none;
+        li.os-split-before {
+            list-style: none;
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 <mat-dialog-content>
     <os-assignment-poll-form
         #pollForm
+        [allowToSetMinMaxOnYNA]="true"
         [data]="pollData"
         [percentBases]="AssignmentPollPercentBaseVerbose"
         [pollClassType]="pollClassType.Assignment"
