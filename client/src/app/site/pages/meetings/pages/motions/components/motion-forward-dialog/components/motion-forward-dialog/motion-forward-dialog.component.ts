@@ -36,6 +36,10 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalNumber = true;
     public useOriginalVersion = true;
 
+    public get numAmendments(): number {
+        return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
+    }
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(

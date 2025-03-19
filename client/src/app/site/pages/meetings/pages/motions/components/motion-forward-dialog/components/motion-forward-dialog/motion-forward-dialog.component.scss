@@ -16,6 +16,24 @@
     align-items: flex-start;
 }
 
-.state-margin {
-    margin-bottom: 4px;
+.state {
+    padding-left: 6px;
+
+    .state-name {
+        font-weight: bold;
+    }
+}
+
+.data-preview {
+    &:before {
+        display: inline;
+        content: '(';
+    }
+    &:after {
+        display: inline;
+        content: ')';
+    }
+    & > * {
+        display: inline-block;
+    }
 }
