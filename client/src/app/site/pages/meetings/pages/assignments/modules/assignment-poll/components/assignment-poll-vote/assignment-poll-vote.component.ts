@@ -74,7 +74,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 `: ${this.getVotesCount(user)}/${this.poll.max_votes_amount}<br>` +
                 content;
         }
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.openSafe(title, content);
         if (confirmed) {
             await super.submitVote(user, value);
         }
