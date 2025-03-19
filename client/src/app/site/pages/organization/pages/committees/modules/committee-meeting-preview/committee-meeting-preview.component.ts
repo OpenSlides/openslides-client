@@ -162,14 +162,10 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
             const title = this.translate.instant(
                 `Do you really want to make available this meeting as a public template?`
             );
-            content =
-                this.translate.instant(
-                    `Meeting templates and the data they contain are publicly viewable by all committee administrators.`
-                ) +
-                `<br><br>` +
-                content;
+            content = this.translate.instant(
+                `Meeting templates and the data they contain are publicly viewable by all committee administrators.`
+            );
 
-            // TODO: Implement usage specific dialog
             const confirmed = await this.promptService.open(title, content);
             if (confirmed) {
                 await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });
