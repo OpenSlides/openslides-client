@@ -142,7 +142,11 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a *osOmlPerms="OML.can_manage_users" mat-menu-item [routerLink]="[member.id, 'meetings']">
+        <a
+            *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+            mat-menu-item
+            [routerLink]="[member.id, 'meetings']"
+        >
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
