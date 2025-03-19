@@ -6,7 +6,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 interface PromptDialogData {
     title: string;
-    content: string;
+    content?: string;
+    contentHtml?: string;
     confirm?: string;
     decline?: string;
     deletion?: boolean;
