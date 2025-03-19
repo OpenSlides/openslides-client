@@ -36,7 +36,7 @@ export class PromptService {
     }
 
     /**
-     * Opens the dialog. Returns true, if the user accepts.
+     * Opens the dialog with html content. Returns true, if the user accepts.
      * @param title The title to display in the dialog
      * @param content The content in the dialog
      */
