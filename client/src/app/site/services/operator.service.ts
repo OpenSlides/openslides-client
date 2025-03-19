@@ -99,7 +99,7 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
 
-    private get isCommitteeManager(): boolean {
+    public get isCommitteeManager(): boolean {
         return !!(this.user?.committee_management_ids || []).length;
     }
 

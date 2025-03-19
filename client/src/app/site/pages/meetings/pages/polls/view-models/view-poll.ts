@@ -21,6 +21,9 @@ import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/sit
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
+import { MeetingSettingsService } from '../../../services/meeting-settings.service';
+import { SlideOptions } from '../../../view-models/slide-options';
+
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
     implements DetailNavigable, PollData
@@ -126,11 +129,30 @@ export class ViewPoll<C extends PollContentObject = any>
         return this.content_object;
     }
 
-    public getSlide(): ProjectionBuildDescriptor {
+    public override getProjectionBuildDescriptor(
+        _meetingSettingsService?: MeetingSettingsService
+    ): ProjectionBuildDescriptor {
+        const choices = [
+            { value: false, displayName: `Standard` },
+            { value: true, displayName: `Single votes` }
+        ];
+        const slideOptions: SlideOptions =
+            this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
+                ? [
+                      {
+                          key: `single_votes`,
+                          displayName: _(`Which visualization?`),
+                          default: false,
+                          choices
+                      }
+                  ]
+                : [];
         return {
-            content_object_id: this.content_object_id,
+            content_object_id: this.fqid,
             projectionDefault: PROJECTIONDEFAULT.poll,
-            getDialogTitle: this.getTitle
+            type: `poll`,
+            getDialogTitle: this.getTitle,
+            slideOptions
         };
     }
 

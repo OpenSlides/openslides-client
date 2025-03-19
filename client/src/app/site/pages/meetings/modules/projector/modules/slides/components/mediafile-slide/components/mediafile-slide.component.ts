@@ -61,7 +61,7 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
 
     private updatePdfScroll(): void {
         this.pdfViewer.pdfViewerContainer.nativeElement.scroll({
-            top: this.scroll
+            top: this.scroll / 100
         });
     }
 }

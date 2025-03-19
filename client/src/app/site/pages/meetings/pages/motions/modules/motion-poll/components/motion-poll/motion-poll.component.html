@@ -134,8 +134,9 @@
     </button>
     <os-projector-button
         *osPerms="permission.projectorCanManage"
+        [allowReferenceProjector]="true"
         [menuItem]="true"
-        [object]="poll"
+        [object]="poll.getProjectionBuildDescriptor()"
     ></os-projector-button>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>

@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ComponentRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { SlideData } from '../../../../pages/projectors/definitions';
@@ -72,6 +81,8 @@ export class SlideContainerComponent {
     }
 
     private _projector!: ViewProjector;
+
+    @Output() public loadedSlidesEvent = new EventEmitter<void>();
 
     /**
      * Variable, if the projector header is enabled.
@@ -216,6 +227,9 @@ export class SlideContainerComponent {
         if (this.slideRef && this.slideRef.instance) {
             this.slideRef.instance.data = this.slideData;
             this.slideRef.changeDetectorRef.detectChanges();
+            if (this.slideData.collection.endsWith(`mediafile`)) {
+                this.loadedSlidesEvent.emit();
+            }
         }
     }
 

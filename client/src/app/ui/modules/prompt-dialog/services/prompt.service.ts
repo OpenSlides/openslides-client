@@ -35,6 +35,25 @@ export class PromptService {
         return firstValueFrom(this.dialogRef.afterClosed());
     }
 
+    /**
+     * Opens the dialog with html content. Returns true, if the user accepts.
+     * @param title The title to display in the dialog
+     * @param content The content in the dialog
+     */
+    public async openSafe(
+        title: string,
+        content = ``,
+        confirm?: string,
+        decline?: string,
+        deletion?: boolean
+    ): Promise<any> {
+        this.dialogRef = this.dialog.open(PromptDialogComponent, {
+            width: `290px`,
+            data: { title, contentHtml: content, confirm, decline, deletion }
+        });
+        return firstValueFrom(this.dialogRef.afterClosed());
+    }
+
     public close(): void {
         this.dialogRef!.close();
     }
