@@ -45,6 +45,8 @@ import { MotionListFilterService } from '../../../../../../services/list/motion-
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDetailViewService } from '../../../../services/motion-detail-view.service';
 import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
 
 @Component({
     selector: `os-motion-view`,
@@ -147,6 +149,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private amendmentFilterService: AmendmentListFilterService,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private cd: ChangeDetectorRef,
+        private dialog: MatDialog,
         private pdfExport: MotionPdfExportService,
         private originUrlService: MotionDetailViewOriginUrlService,
         private motionDetailService: MotionDetailViewService
@@ -265,22 +268,12 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        let title = this.translate.instant(`Are you sure you want to delete this motion? `);
-        let content = this.motion.getTitle();
-        if (this.motion.amendments.length) {
-            title = this.translate.instant(
-                `Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?`
-            );
-            content =
-                `<i>${this.translate.instant(`Motion`)} ${this.motion.getTitle()}</i><br>` +
-                `${this.translate.instant(`Deleting this motion will also delete the amendments.`)}<br>` +
-                `${this.translate.instant(`List of amendments: `)}<br>` +
-                this.motion.amendments
-                    .map(amendment => (amendment.number ? amendment.number : amendment.title))
-                    .join(`, `);
-        }
-        // TODO: Implement usage specific dialog
-        if (await this.promptService.open(title, content)) {
+        const dialogRef = this.dialog.open(MotionDeleteDialogComponent, {
+            width: `290px`,
+            data: { motion: this.motion }
+        });
+
+        if (await firstValueFrom(dialogRef.afterClosed())) {
             await this.repo.delete(this.motion);
             this.router.navigate([this.activeMeetingId, `motions`]);
         }
