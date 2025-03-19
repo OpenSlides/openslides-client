@@ -11,6 +11,7 @@ import { ActiveMeetingIdService } from '../../../services/active-meeting-id.serv
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 import { MediafileControllerService } from './mediafile-controller.service';
+import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
 
 @Injectable({ providedIn: MediafileCommonServiceModule })
 export class MediafileCommonService {
@@ -67,19 +68,12 @@ export class MediafileCommonService {
         file: ViewMediafile,
         changeDirectoryFn: (directoryId: number) => void
     ): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this file?`);
-        let content = file.getTitle();
-        if (file.isPublishedOrganizationWide) {
-            content = content + `<br>` + this.translate.instant(`This file will also be deleted from all meetings.`);
-        }
+        const dialogRef = this.dialog.open(MediafileDeleteDialogComponent, {
+            width: `290px`,
+            data: { file }
+        });
 
-        if (file.meeting_mediafiles?.length) {
-            content = content + `<br>` + this.translate.instant(`File is used in:`);
-            content = content + `<br>` + file.meeting_mediafiles.map(mm => mm.meeting?.name).join(`, `);
-        }
-
-        // TODO: Implement usage specific dialog
-        if (await this.promptService.open(title, content)) {
+        if (await firstValueFrom(dialogRef.afterClosed())) {
             await this.repo.delete(file);
             if (file.is_directory) {
                 changeDirectoryFn(file.parent_id);
