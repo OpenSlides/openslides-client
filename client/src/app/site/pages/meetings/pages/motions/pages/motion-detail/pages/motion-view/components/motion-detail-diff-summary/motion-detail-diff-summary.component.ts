@@ -77,6 +77,11 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
 
+    public canAccess(origin: ViewMotion): boolean {
+        const motion = origin as ViewMotion;
+        return motion.sequential_number && motion.meeting?.id === this.activeMeetingId;
+    }
+
     /**
      * Scrolls to the native element specified by [scrollToChange]
      */

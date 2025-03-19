@@ -42,6 +42,9 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         return this._changeRecoMode;
     }
 
+    @Input()
+    public showAllAmendments: boolean;
+
     @Output()
     public createChangeRecommendation = new EventEmitter<LineRange>();
 
