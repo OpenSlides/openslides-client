@@ -2100,7 +2100,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 ) +
                 ` ` +
                 this.translate.instant(
@@ -2180,7 +2180,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 );
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
