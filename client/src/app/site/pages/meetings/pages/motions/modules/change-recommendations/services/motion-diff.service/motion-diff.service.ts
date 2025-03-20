@@ -2092,7 +2092,7 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
@@ -2172,17 +2172,11 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+            return ``;
         }
 
         let html: string;
