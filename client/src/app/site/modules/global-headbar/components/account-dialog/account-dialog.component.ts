@@ -114,6 +114,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
             this.repo.getViewModelObservable(this.operator.operatorId!).subscribe(user => (this._self = user)),
             this.operator.operatorUpdated.subscribe(() => this.updateIsUserInScope())
         );
+        this.updateIsUserInScope();
     }
 
     /**
