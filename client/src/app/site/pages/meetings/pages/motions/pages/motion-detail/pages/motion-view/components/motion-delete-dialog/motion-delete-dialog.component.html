@@ -1,0 +1,38 @@
+@if (data) {
+    <div>
+        <h2 mat-dialog-title>
+            @if (data.motion.amendments.length) {
+                {{
+                    'Warning: Amendments exist for this motion. Are you sure you want to delete this motion regardless?'
+                        | translate
+                }}
+            } @else {
+                {{ 'Are you sure you want to delete this motion?' | translate }}
+            }
+        </h2>
+        <mat-dialog-content>
+            @if (data.motion.amendments.length) {
+                <div class="section">
+                    <i>{{ 'Motion' | translate }} {{ data.motion.getTitle() }}</i>
+                </div>
+                <div class="section">
+                    {{ 'Deleting this motion will also delete the amendments.' | translate }}
+                </div>
+                <div class="section">
+                    {{ 'List of amendments: ' | translate }}
+                    {{ deletedAmendments }}
+                </div>
+            } @else {
+                {{ data.motion.getTitle() }}
+            }
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button class="delete" color="warn" mat-button [mat-dialog-close]="true">
+                {{ 'Delete' | translate }}
+            </button>
+            <button mat-button [mat-dialog-close]="false">
+                {{ 'Cancel' | translate }}
+            </button>
+        </mat-dialog-actions>
+    </div>
+}
