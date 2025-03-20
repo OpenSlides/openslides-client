@@ -70,7 +70,7 @@ export class ViewModelStoreUpdateService {
                 changedModels[collection].parentId
             );
             const modelIds = (parentModel && parentModel[changedModels[collection].parentField]) || [];
-            const ids = modelIds.difference(changedModels[collection].ids);
+            const ids = Array.isArray(modelIds) ? modelIds.difference(changedModels[collection].ids) : [modelIds];
             _deletedModels[collection] = (_deletedModels[collection] || []).concat(ids);
         }
 

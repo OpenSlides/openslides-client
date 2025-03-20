@@ -9,3 +9,31 @@
     height: 33vh;
     overflow-y: auto;
 }
+
+.motion-forward-radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.state {
+    padding-left: 6px;
+
+    .state-name {
+        font-weight: bold;
+    }
+}
+
+.data-preview {
+    &:before {
+        display: inline;
+        content: '(';
+    }
+    &:after {
+        display: inline;
+        content: ')';
+    }
+    & > * {
+        display: inline-block;
+    }
+}

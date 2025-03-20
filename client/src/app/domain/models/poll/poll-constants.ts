@@ -168,7 +168,7 @@ export const PollPercentBaseVerbose = {
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),
-    entitled_present: _(`All present entitled users`),
+    entitled_present: _(`Present entitled users`),
     disabled: _(`Disabled (no percents)`)
 };
 

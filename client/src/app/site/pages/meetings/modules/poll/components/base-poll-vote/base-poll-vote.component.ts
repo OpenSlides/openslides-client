@@ -468,6 +468,13 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 }
 
                 const votes = votedFor[this.poll.id] || [];
+                if (
+                    ((!this.poll.has_voted_user_ids && votes.length > 0) ||
+                        votes.filter(m => this.poll.has_voted_user_ids?.includes(m)).length > 0) &&
+                    this.poll.hasVoted
+                ) {
+                    return;
+                }
                 if (this.user) {
                     this.alreadyVoted[this.user.id] = votes.includes(this.user.id);
                     if (this.delegations) {

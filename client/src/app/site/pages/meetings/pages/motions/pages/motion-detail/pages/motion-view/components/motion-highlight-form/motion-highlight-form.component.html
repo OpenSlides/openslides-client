@@ -59,7 +59,7 @@
         }
 
         <!-- Final edit buttons -->
-        <ng-container *osPerms="permission.motionCanManage">
+        <ng-container *osPerms="permission.motionCanManage; and: !noEdit">
             <!-- create final version -->
             @if (showCreateFinalVersionButton) {
                 <button
@@ -153,7 +153,7 @@
                     </button>
                 }
                 <div
-                    *osPerms="permission.motionCanManage"
+                    *osPerms="permission.motionCanManage; and: !noEdit"
                     aria-disabled="true"
                     id="lineNumberItem"
                     mat-list-item
