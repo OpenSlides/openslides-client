@@ -717,7 +717,7 @@ export class MotionDiffService {
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
-        if (node.nodeName === `OS-LINEBREAK`) {
+        if (node.nodeName === `OS-LINEBREAK` || node.nodeName === `#document-fragment`) {
             return ``;
         }
 
@@ -852,7 +852,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -914,23 +914,23 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
-
-        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-            if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
-                found = true;
-                fromChildTraceRel.shift();
-                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-            } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
-                found = false;
-                toChildTraceRel.shift();
-                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-            } else if (found === true) {
-                htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+        if (ancestor !== null) {
+            for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+                if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+                    found = true;
+                    fromChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+                    found = false;
+                    toChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                } else if (found === true) {
+                    htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+                }
             }
         }
-
         currNode = ancestor;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
                 const currElement = <Element>currNode;
                 const fakeOl = currElement.cloneNode(false) as any;
