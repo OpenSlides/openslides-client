@@ -43,6 +43,7 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
+import { Attrs } from '@tiptap/pm/model';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
@@ -173,6 +174,43 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public ngAfterViewInit(): void {
+        const CustomListItem = ListItem.extend({
+            content: `paragraph* block*`,
+            parseHTML() {
+                return [
+                    {
+                        tag: `li`,
+                        getAttrs: (): Attrs | false | null => {
+                            return {};
+                        }
+                    }
+                ];
+            },
+            renderHTML({ node, HTMLAttributes }) {
+                const attributes = { ...HTMLAttributes };
+                const isValid = node.children.length === 1 && node.children[0].type.name === `bulletList`;
+                if (isValid) {
+                    attributes[`class`] = `hidden-li`;
+                }
+                return [`li`, attributes, 0];
+            }
+        });
+        const CustomBulletList = BulletList.extend({
+            content: `listItem+ paragraph*`,
+            parseHTML() {
+                return [
+                    {
+                        tag: `ul`,
+                        getAttrs: (): Attrs | false | null => {
+                            return {};
+                        }
+                    }
+                ];
+            },
+            renderHTML({ HTMLAttributes }) {
+                return [`ul`, HTMLAttributes, 0];
+            }
+        });
         const editorConfig = {
             element: this.editorEl.nativeElement,
             extensions: [
@@ -181,13 +219,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 // Nodes
                 Document,
                 Blockquote,
-                BulletList,
+                CustomBulletList,
+                CustomListItem,
                 HardBreak,
                 Heading,
                 ImageResize.configure({
                     inline: true
                 }),
-                ListItem,
                 OrderedList,
                 Paragraph,
                 Text,

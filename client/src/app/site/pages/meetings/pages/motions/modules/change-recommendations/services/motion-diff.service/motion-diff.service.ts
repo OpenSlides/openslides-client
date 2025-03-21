@@ -1427,10 +1427,27 @@ export class MotionDiffService {
             (_found: string, del: string, br: string, ins: string): string => del + ins + br
         );
 
+        // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
+        // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
+        // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([\s\S]*?)(<\/P><P>|<UL><LI>)<\/del>(<[span|SPAN][^>]+>[&nbsp;| ]<\/[span|SPAN]+>)(<del> <\/del>)?<ins>([\s\S]*?)\2<\/ins>/gi,
+            (
+                _found: string,
+                delText: string,
+                paragraph: string,
+                span: string,
+                _emptyDel: string,
+                insText: string
+            ): string => {
+                return (delText ? `<del>` + delText + `</del>` : ``) + `<ins>` + insText + `<\/ins>` + paragraph + span;
+            }
+        );
+
         // If only a few characters of a word have changed, don't display this as a replacement of the whole word,
         // but only of these specific characters
         diffUnnormalized = diffUnnormalized.replace(
-            /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
+            /<del>([a-zA-Z0-9,_-]* ?)<\/del><ins>([a-zA-Z0-9,_-]* ?)<\/ins>/gi,
             (_found: string, oldText: string, newText: string): string => {
                 let foundDiff = false;
                 let commonStart = ``;
@@ -1476,16 +1493,6 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
             (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
-        );
-
-        // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
-        // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
-        // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
-        diffUnnormalized = diffUnnormalized.replace(
-            /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)(<del> <\/del>)?<ins>([\s\S]*?)\1<\/ins>/gi,
-            (_found: string, paragraph: string, span: string, _emptyDel: string, insText: string): string => {
-                return `<ins>` + insText + `<\/ins>` + paragraph + span;
-            }
         );
 
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
@@ -1745,6 +1752,8 @@ export class MotionDiffService {
             (_whole: string, ending: string, _e1: string, _e2: string, insertedLis: string, _e3: string) =>
                 insertedLis + ending
         );
+
+        diffUnnormalized = diffUnnormalized.replace(/<ins><\/ins>/gi, ``).replace(/<del><\/del>/gi, ``);
 
         // <UL><LI><UL><LI><UL><LI><del>Ebene 4</LI></UL></LI></UL></LI></UL></del><ins>Ebene 5</LI></UL></LI></UL></LI></UL></ins>
         // => <UL><LI><UL><LI><UL><LI><del>Ebene 4</del><ins>Ebene 5</ins></LI></UL></LI></UL></LI></UL>
