@@ -198,9 +198,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             }
 
             for (const line of lines) {
-                if (line.lineNumber) {
-                    listCol.columns[0].stack.push(this.getLineNumberObject(line));
-                }
+                listCol.columns[0].stack.push(this.getLineNumberObject(line));
             }
 
             list[nodeName] = cleanedChildren;
