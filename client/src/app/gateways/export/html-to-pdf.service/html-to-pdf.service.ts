@@ -49,17 +49,7 @@ export class HtmlToPdfService {
     protected readonly H_MARGIN_TOP = 10.0;
 
     // Load either specific meeting styles or default html style
-    public headingStyles: any = MEETING_PDF_EXPORT_HEADING_STYLES
-        ? MEETING_PDF_EXPORT_HEADING_STYLES
-        : {
-              // should be the same for most HTML code
-              h1: [`font-size:14`, `font-weight:bold`],
-              h2: [`font-size:12`, `font-weight:bold`],
-              h3: [`font-size:10`, `font-weight:bold`],
-              h4: [`font-size:10`, `font-style:italic`],
-              h5: [`font-size:10`],
-              h6: [`font-size:10`]
-          };
+    public headingStyles: any = MEETING_PDF_EXPORT_HEADING_STYLES;
 
     public defaultStyles: any = {
         // should be the same for most HTML code

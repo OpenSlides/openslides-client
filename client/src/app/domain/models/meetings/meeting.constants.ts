@@ -32,10 +32,10 @@ export type ViewMeetingDefaultProjectorsKey = `default_projectors_${Projectionde
 
 export const MEETING_PDF_EXPORT_HEADING_STYLES = {
     // specified heading styles for OpenSlides
-    h1: [`font-size:18`, `font-weight:bold`, `line-height:1.2`],
-    h2: [`font-size:15`, `font-weight:bold`, `line-height:1.2`],
+    h1: [`font-size:18`, `font-weight:bold`],
+    h2: [`font-size:15`, `font-weight:bold`],
     h3: [`font-size:11`, `font-weight:bold`],
     h4: [`font-size:10`, `font-weight:bold`],
-    h5: [`font-size:10`, `font-style:italic`, `font-weight:bold`],
-    h6: [`font-size:10`, `line-height:2.5`]
+    h5: [`font-size:10`, `font-style:italic`],
+    h6: [`font-size:10`]
 };
