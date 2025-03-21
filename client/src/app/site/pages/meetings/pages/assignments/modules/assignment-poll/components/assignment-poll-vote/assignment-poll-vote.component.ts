@@ -89,7 +89,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.voteRequestData[user.id].value = {};
         }
 
-        if (this.poll.isMethodY || this.poll.isMethodN) {
+        if (!this.poll.isListPoll) {
             const maxVotesAmount = this.poll.max_votes_amount;
             const tmpVoteRequest = this.poll.options
                 .map(option => option.id)
