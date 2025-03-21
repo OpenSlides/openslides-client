@@ -723,35 +723,37 @@ export class MotionDiffService {
 
         let html = ``;
         let found = false;
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === fromChildTrace[0]) {
-                found = true;
-                const childElement = <Element>node.childNodes[i];
-                const remainingTrace = fromChildTrace;
-                remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
-                    html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
-                }
-            } else if (found) {
-                if (node.childNodes[i].nodeType === TEXT_NODE) {
-                    html += node.childNodes[i].nodeValue;
-                } else {
+        if (fromChildTrace.length > 0) {
+            for (let i = 0; i < node.childNodes.length; i++) {
+                if (node.childNodes[i] === fromChildTrace[0]) {
+                    found = true;
                     const childElement = <Element>node.childNodes[i];
-                    if (
-                        !stripLineNumbers ||
-                        (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
-                            !this.lineNumberingService.isOsLineBreakNode(childElement))
-                    ) {
-                        html += this.serializeDom(childElement, stripLineNumbers);
+                    const remainingTrace = fromChildTrace;
+                    remainingTrace.shift();
+                    if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                        html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
+                    }
+                } else if (found) {
+                    if (node.childNodes[i].nodeType === TEXT_NODE) {
+                        html += node.childNodes[i].nodeValue;
+                    } else {
+                        const childElement = <Element>node.childNodes[i];
+                        if (
+                            !stripLineNumbers ||
+                            (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
+                                !this.lineNumberingService.isOsLineBreakNode(childElement))
+                        ) {
+                            html += this.serializeDom(childElement, stripLineNumbers);
+                        }
                     }
                 }
             }
-        }
-        if (!found) {
-            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
-        }
-        if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-            html += `</` + node.nodeName + `>`;
+            if (!found) {
+                throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+            }
+            if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
+                html += `</` + node.nodeName + `>`;
+            }
         }
         return html;
     }
@@ -852,7 +854,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -914,23 +916,23 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
-
-        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-            if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
-                found = true;
-                fromChildTraceRel.shift();
-                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-            } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
-                found = false;
-                toChildTraceRel.shift();
-                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-            } else if (found === true) {
-                htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+        if (ancestor !== null) {
+            for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+                if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+                    found = true;
+                    fromChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+                    found = false;
+                    toChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                } else if (found === true) {
+                    htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+                }
             }
         }
-
         currNode = ancestor;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
                 const currElement = <Element>currNode;
                 const fakeOl = currElement.cloneNode(false) as any;
@@ -2092,7 +2094,7 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
@@ -2100,7 +2102,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 ) +
                 ` ` +
                 this.translate.instant(
@@ -2172,17 +2174,11 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+            return ``;
         }
 
         let html: string;
