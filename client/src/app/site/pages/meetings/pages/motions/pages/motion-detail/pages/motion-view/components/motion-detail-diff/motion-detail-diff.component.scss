@@ -62,6 +62,10 @@
                 content: ':';
             }
         }
+
+        .motion-text-diff ul > li.hidden-li {
+            display: contents;
+        }
     }
 }
 
