@@ -156,11 +156,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.contentForm.get(`pollmethod`);
     }
 
-    private get isPollMethodYN_A(): boolean {
-        return (
-            (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YNA ||
-            (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YN
-        );
+    private get isPollMethodYNA(): boolean {
+        return (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YNA;
+    }
+
+    private get isPollMethodYN(): boolean {
+        return (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YN;
     }
 
     public get pollMethod(): FormPollMethod {
@@ -494,7 +495,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private getVotesAmountControl(): UntypedFormGroup {
-        const maxVotesPreselect = this.isPollMethodYN_A && this.allowToSetMinMax ? this.pollOptionAmount : 1;
+        const maxVotesPreselect =
+            (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax ? this.pollOptionAmount : 1;
         return this.fb.group(
             {
                 max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
