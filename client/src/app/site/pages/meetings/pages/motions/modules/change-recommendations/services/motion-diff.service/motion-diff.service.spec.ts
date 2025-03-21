@@ -927,6 +927,36 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         }));
 
+        it(`handles inserted listitems within nested lists`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                // Hint: Start of list item on second level of list (e.g. in change recommendations)
+                const before =
+                        `<ul><li>` +
+                        `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Zweite Ebene` +
+                        `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Dritte Ebene` +
+                        `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Vierte Ebene</li>` +
+                        `</ul></li></ul></li></ul></li></ul>`,
+                    after =
+                        `<ul><li>` +
+                        `<ul><li>Zweite Ebene` +
+                        `</li><li>Neue Zwischenebene` +
+                        `<ul><li>Dritte Ebene` +
+                        `<ul><li>Vierte Ebene</li></ul>` +
+                        `</li></ul></li></ul></li></ul>`,
+                    expected =
+                        `<ul><li>` +
+                        `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Zweite Ebene` +
+                        `</li><li><ins>Neue Zwischenebene</ins>` +
+                        `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Dritte Ebene` +
+                        `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Vierte Ebene</li>` +
+                        `</ul></li></ul></li></ul></li></ul>`;
+
+                const diff = service.diff(before, after);
+                expect(diff).toBe(expected);
+            }
+        ));
+
         it(`handles replaced text at the end of nested lists`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {

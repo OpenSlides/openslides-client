@@ -1395,6 +1395,7 @@ export class MotionDiffService {
         // Performing the actual diff
         const str = this.diffString(htmlOld, htmlNew);
         let diffUnnormalized = str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
+        diffUnnormalized = diffUnnormalized.replace(/<li class="hidden-li">/gi, `<LI>`);
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
