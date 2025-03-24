@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
-import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
-import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service';
 import { ExportFileFormat } from '../../../services/export/definitions';
 import { InfoToExport } from '../../../services/export/definitions';
 import { MotionExportInfo } from '../../../services/export/motion-export.service';
@@ -24,12 +21,7 @@ export class MotionExportDialogService {
         this._motions = value;
     }
 
-    public constructor(
-        private modelRequestService: ModelRequestService,
-        private amendmentRepo: AmendmentControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
-        public formBuilder: UntypedFormBuilder
-    ) {}
+    public constructor(public formBuilder: UntypedFormBuilder) {}
 
     // Transform form of motion export to MotionExportInfo for further processing
     public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {

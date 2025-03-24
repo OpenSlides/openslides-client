@@ -12,7 +12,6 @@ import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionFormatService } from '../../common/motion-format.service';
 import { getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../definitions';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionCsvExport {
     number?: string;
@@ -53,7 +52,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
 ];
 
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionCsvExportService {
     public crMode = ChangeRecoMode;

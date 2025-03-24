@@ -13,7 +13,7 @@ import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 import { MotionMultiselectModule } from '../../components/motion-multiselect/motion-multiselect.module';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
-import { MotionExportModule } from '../motion-export/motion-export.module';
+import { MotionExportComponent } from '../motion-export/components/motion-export/motion-export.component';
 import { AmendmentsRoutingModule } from './amendments-routing.module';
 import { AmendmentListComponent } from './components/amendment-list/amendment-list.component';
 import { AmendmentListMainComponent } from './components/amendment-list-main/amendment-list-main.component';
@@ -29,7 +29,7 @@ import { AmendmentListMainComponent } from './components/amendment-list-main/ame
         MotionMultiselectModule,
         MotionsListServiceModule,
         MotionsExportModule,
-        MotionExportModule,
+        MotionExportComponent,
         MeetingsComponentCollectorModule,
         MatMenuModule,
         MatIconModule,

@@ -1,7 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatChipOption } from '@angular/material/chips';
-import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipOption, MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -10,9 +16,12 @@ import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/dom
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
@@ -22,10 +31,25 @@ import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../
 import { MotionExportService } from '../../../../services/export/motion-export.service';
 import { MotionExportDialogService } from '../../services/motion-export-dialog.service';
 @Component({
+    standalone: true,
     selector: `os-motion-export`,
     templateUrl: `./motion-export.component.html`,
     styleUrls: [`./motion-export.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonToggleModule,
+        MatBadgeModule,
+        MatButtonModule,
+        MatCardModule,
+        MatChipsModule,
+        MatIconModule,
+        MatTabsModule,
+        DirectivesModule,
+        HeadBarModule,
+        OpenSlidesTranslationModule
+    ]
 })
 export class MotionExportComponent extends BaseComponent implements AfterViewInit {
     private readonly route = inject(ActivatedRoute);

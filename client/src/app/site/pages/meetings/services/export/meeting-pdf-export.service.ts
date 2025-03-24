@@ -13,8 +13,6 @@ import { mmToPoints } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { MeetingExportModule } from './meeting-export.module';
-
 interface MeetingDownloadLandscapeConfig {
     docDefinition: Content;
     filename: string;
@@ -26,7 +24,7 @@ interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
 }
 
 @Injectable({
-    providedIn: MeetingExportModule
+    providedIn: `root`
 })
 export class MeetingPdfExportService {
     private get fontSize(): number | null {

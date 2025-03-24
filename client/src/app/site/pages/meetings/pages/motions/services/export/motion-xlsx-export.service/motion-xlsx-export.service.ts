@@ -12,7 +12,6 @@ import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-sp
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionXlsxExportConfig {
     motions: ViewMotion[];
@@ -24,7 +23,7 @@ interface MotionXlsxExportConfig {
  * Service to export motion elements to XLSX
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionXlsxExportService {
     /**
