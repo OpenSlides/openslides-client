@@ -87,7 +87,7 @@
             (click)="keepOpen ? matSelect.open() : null"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
-            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }" />
         </mat-option>
     </cdk-virtual-scroll-viewport>
 
@@ -95,15 +95,13 @@
     @if (multiple) {
         @if (selectedItems.length) {
             <mat-option class="selected-options-hidden" disabled [value]="selectedItems[0].id">
-                <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
+                <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }" />
             </mat-option>
         }
     } @else {
         @if (contentForm.value) {
             <mat-option class="selected-options-hidden" disabled [value]="contentForm.value">
-                <ng-container
-                    *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
-                ></ng-container>
+                <ng-container *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }" />
             </mat-option>
         }
     }

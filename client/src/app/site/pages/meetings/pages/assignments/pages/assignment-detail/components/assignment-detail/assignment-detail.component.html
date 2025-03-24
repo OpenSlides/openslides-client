@@ -35,9 +35,9 @@
                         <span>{{ 'PDF' | translate }}</span>
                     </button>
                     <!-- List of speakers -->
-                    <os-speaker-button [menuItem]="true" [object]="assignment"></os-speaker-button>
+                    <os-speaker-button [menuItem]="true" [object]="assignment" />
                     <!-- Project -->
-                    <os-projector-button [menuItem]="true" [object]="assignment"></os-projector-button>
+                    <os-projector-button [menuItem]="true" [object]="assignment" />
                     <!-- Add/remove to/from agenda -->
                     <div *osPerms="permission.agendaItemCanManage">
                         @if (assignment && !assignment.agenda_item_id) {
@@ -112,7 +112,7 @@
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 @if (!isEditing && assignment.getTitle) {
-                    <os-projectable-title [model]="assignment"></os-projectable-title>
+                    <os-projectable-title [model]="assignment" />
                 }
                 @if (assignment) {
                     <div>

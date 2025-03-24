@@ -321,11 +321,7 @@
 }
 
 <!-- Workflow timestamp -->
-<os-motion-manage-timestamp
-    field="workflow_timestamp"
-    [motion]="motion"
-    title="{{ 'Submission date' | translate }}"
-></os-motion-manage-timestamp>
+<os-motion-manage-timestamp field="workflow_timestamp" [motion]="motion" title="{{ 'Submission date' | translate }}" />
 
 <!-- Created timestamp -->
 @if (motion?.created && perms.isAllowed('change_metadata', motion)) {
@@ -387,7 +383,7 @@
 }
 
 <!-- motion polls -->
-<os-motion-manage-polls [hideAdd]="true" [motion]="motion"></os-motion-manage-polls>
+<os-motion-manage-polls [hideAdd]="true" [motion]="motion" />
 
 <ng-template #meetingLink let-motion="motion">
     »

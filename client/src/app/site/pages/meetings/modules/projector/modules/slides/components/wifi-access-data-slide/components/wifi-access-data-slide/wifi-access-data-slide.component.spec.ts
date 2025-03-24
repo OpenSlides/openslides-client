@@ -32,7 +32,7 @@ class MockQrCodeComponent {
 
 @Component({
     template: `
-        <os-wifi-access-data-slide [data]="slideData"></os-wifi-access-data-slide>
+        <os-wifi-access-data-slide [data]="slideData" />
     `,
     standalone: false
 })

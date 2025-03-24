@@ -311,18 +311,22 @@ export abstract class BaseSearchSelectorComponent
         this.openedChange.emit(event);
         if (event) {
             // Ensure that the main panel doesn't ever scroll away from the top
-            const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
-            const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
+            const panelElement = this.matSelect.panel?.nativeElement as HTMLElement;
+            const inputRect = this.inputDiv?.nativeElement.getBoundingClientRect();
             const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
-            document.documentElement.style.setProperty(
-                `--os-search-selector-panel-height`,
-                `${cdkRect.bottom - inputRect.top}px`
-            );
-            panelElement.addEventListener(`scroll`, () => {
-                if (panelElement.scrollTop !== 0) {
-                    panelElement.scrollTo({ top: 0 });
-                }
-            });
+            if (inputRect) {
+                document.documentElement.style.setProperty(
+                    `--os-search-selector-panel-height`,
+                    `${cdkRect.bottom - inputRect.top}px`
+                );
+            }
+            if (panelElement) {
+                panelElement.addEventListener(`scroll`, () => {
+                    if (panelElement.scrollTop !== 0) {
+                        panelElement.scrollTo({ top: 0 });
+                    }
+                });
+            }
 
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();

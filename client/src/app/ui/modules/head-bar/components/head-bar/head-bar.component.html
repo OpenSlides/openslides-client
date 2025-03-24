@@ -43,7 +43,7 @@
         @if (!multiSelectMode) {
             <div class="spacer"></div>
         } @else {
-            <ng-content select=".central-info-slot"></ng-content>
+            <ng-content select=".central-info-slot" />
         }
         <div class="spacer"></div>
 
@@ -106,6 +106,6 @@
     }
 
     <mat-menu #customNavMenu="matMenu">
-        <ng-content select=".custom-menu-slot"></ng-content>
+        <ng-content select=".custom-menu-slot" />
     </mat-menu>
 </ng-template>

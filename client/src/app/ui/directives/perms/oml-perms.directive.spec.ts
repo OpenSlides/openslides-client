@@ -21,7 +21,7 @@ type TestConditionalType = {
         <div *osOmlPerms="permission; and: conditionals.and" id="and"></div>
         <div *osOmlPerms="permission; complement: conditionals.complement" id="complement"></div>
         <div *osOmlPerms="permission; allowCommitteeAdmin: true" id="committee"></div>
-        <ng-container *osOmlPerms="permission; then thenTemplate; else elseTemplate"></ng-container>
+        <ng-container *osOmlPerms="permission; then thenTemplate; else elseTemplate" />
         <ng-template #thenTemplate>
             <div id="then"></div>
         </ng-template>

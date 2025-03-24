@@ -333,7 +333,7 @@
             <!-- Call controls -->
             @if (enableCallControls) {
                 <ng-container [ngTemplateOutlet]="callControls">
-                    <mat-divider></mat-divider>
+                    <mat-divider />
                 </ng-container>
             }
             <!-- Structure levels -->
@@ -368,7 +368,7 @@
                 enableCallControls ||
                 enableStructureLevelsMenu()
             ) {
-                <mat-divider></mat-divider>
+                <mat-divider />
             }
             <!-- remove speaker from list -->
             <button mat-menu-item (click)="removeSpeaker()">
@@ -385,7 +385,7 @@
         <mat-icon>add_call</mat-icon>
         <span>{{ 'Invite to conference room' | translate }}</span>
     </button>
-    <ng-container></ng-container>
+    <ng-container />
 </ng-template>
 
 <ng-template #speechType>

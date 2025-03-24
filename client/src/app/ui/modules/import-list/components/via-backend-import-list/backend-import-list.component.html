@@ -6,20 +6,20 @@
                 @for (tab of importListFirstTabs; track tab) {
                     <mat-tab>
                         <ng-template matTabLabel>{{ tab.label }}</ng-template>
-                        <ng-container *ngTemplateOutlet="tab.templateRef"></ng-container>
+                        <ng-container *ngTemplateOutlet="tab.templateRef" />
                     </mat-tab>
                 }
                 <!-- CSV import tab -->
                 <mat-tab label="{{ 'CSV import' | translate }}">
                     <ng-template matTabContent>
-                        <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
+                        <ng-container *ngTemplateOutlet="defaultTabContent" />
                     </ng-template>
                 </mat-tab>
                 <!-- Tabs after CSV import tab -->
                 @for (tab of importListLastTabs; track tab) {
                     <mat-tab>
                         <ng-template matTabLabel>{{ tab.label }}</ng-template>
-                        <ng-container *ngTemplateOutlet="tab.templateRef"></ng-container>
+                        <ng-container *ngTemplateOutlet="tab.templateRef" />
                     </mat-tab>
                 }
             </mat-tab-group>
@@ -365,7 +365,7 @@
         <ng-container
             [ngTemplateOutlet]="nonObjectEntryTemplate"
             [ngTemplateOutletContext]="{ entry: entry, type: getHeader(def).type }"
-        ></ng-container>
+        />
     }
 </ng-template>
 
@@ -383,7 +383,7 @@
         {{ entry }}
     }
     @if (type === 'boolean') {
-        <mat-checkbox disabled [checked]="entry"></mat-checkbox>
+        <mat-checkbox disabled [checked]="entry" />
     }
     &nbsp;
 </ng-template>
@@ -458,7 +458,7 @@
         </button>
     </div>
     <mat-dialog-content>
-        <ng-container *ngTemplateOutlet="previewList"></ng-container>
+        <ng-container *ngTemplateOutlet="previewList" />
     </mat-dialog-content>
 </ng-template>
 

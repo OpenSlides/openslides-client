@@ -32,7 +32,7 @@ class MockMeetingSettingsService {
     template: `
         <div *osMeetingSetting="setting" id="normal"></div>
         <div *osMeetingSetting="setting; and: and" id="and"></div>
-        <ng-container *osMeetingSetting="setting; then thenTemplate; else elseTemplate"></ng-container>
+        <ng-container *osMeetingSetting="setting; then thenTemplate; else elseTemplate" />
         <ng-template #thenTemplate>
             <div id="then"></div>
         </ng-template>

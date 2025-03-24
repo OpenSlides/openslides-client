@@ -16,7 +16,7 @@
             </os-projectable-title>
         }
         @if (explicitTitleContent) {
-            <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
+            <ng-container *ngTemplateOutlet="explicitTitleContent" />
         }
 
         <!-- List of finished speakers -->
@@ -43,7 +43,7 @@
 
         <!-- horizontal separation line -->
         @if (finishedSpeakers && finishedSpeakers.length) {
-            <mat-divider></mat-divider>
+            <mat-divider />
         }
         @if (finishedSpeakers && finishedSpeakers.length) {
             <div class="spacer-bottom-40"></div>
