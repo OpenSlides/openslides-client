@@ -1,5 +1,5 @@
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { NgModule, inject, provideAppInitializer } from '@angular/core';
+import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -47,9 +47,9 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
     providers: [
         WaitForActionDialogService,
         provideAppInitializer(() => {
-        const initializerFn = (AppLoaderFactory)(inject(AppLoadService));
-        return initializerFn();
-      }),
+            const initializerFn = AppLoaderFactory(inject(AppLoadService));
+            return initializerFn();
+        }),
         httpInterceptorProviders,
         provideHttpClient(withInterceptorsFromDi()),
         provideTranslateService({

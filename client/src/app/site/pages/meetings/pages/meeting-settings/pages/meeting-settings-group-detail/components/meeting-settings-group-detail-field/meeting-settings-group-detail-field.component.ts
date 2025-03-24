@@ -45,8 +45,7 @@ export interface SettingsFieldUpdate {
     templateUrl: `./meeting-settings-group-detail-field.component.html`,
     styleUrls: [`./meeting-settings-group-detail-field.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None // to style the date and time pickers
-    ,
+    encapsulation: ViewEncapsulation.None, // to style the date and time pickers
     standalone: false
 })
 export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent implements OnInit, OnDestroy {
