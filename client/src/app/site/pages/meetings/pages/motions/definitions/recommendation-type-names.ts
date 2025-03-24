@@ -1,6 +1,6 @@
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 
-import { ViewMotionChangeRecommendation } from '../modules';
+import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../modules';
 
 /**
  * Gets the name of the modification type
@@ -8,8 +8,8 @@ import { ViewMotionChangeRecommendation } from '../modules';
  * @param change
  * @returns the name of a recommendation type
  */
-export function getRecommendationTypeName(change: ViewMotionChangeRecommendation): string {
-    switch (change.type) {
+export function getRecommendationTypeName(change: ViewMotionChangeRecommendation | ViewUnifiedChange): string {
+    switch (change.getModificationType()) {
         case ModificationType.TYPE_REPLACEMENT:
             return `Replacement`;
         case ModificationType.TYPE_INSERTION:
@@ -17,6 +17,6 @@ export function getRecommendationTypeName(change: ViewMotionChangeRecommendation
         case ModificationType.TYPE_DELETION:
             return `Deletion`;
         default:
-            return change.other_description;
+            return (<ViewMotionChangeRecommendation>change).other_description || ``;
     }
 }
