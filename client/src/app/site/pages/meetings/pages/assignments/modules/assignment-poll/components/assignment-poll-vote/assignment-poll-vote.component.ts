@@ -142,11 +142,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 );
                 delete (this.voteRequestData[user.id] as any).value[optionId];
             }
-
-            // if a user filled out every option, try to send
-            if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
-                this.submitVote(user);
-            }
         }
     }
 
