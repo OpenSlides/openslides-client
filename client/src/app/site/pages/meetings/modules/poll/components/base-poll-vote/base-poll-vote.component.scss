@@ -1,5 +1,5 @@
-@import 'src/assets/styles/poll-colors.scss';
-@import 'src/assets/styles/poll-styles-common.scss';
+@use 'src/assets/styles/poll-colors.scss';
+@use 'src/assets/styles/poll-styles-common.scss';
 
 %vote-grid-base {
     display: grid;
@@ -243,7 +243,7 @@
     }
 
     .vote-submitted {
-        color: $votes-yes-color;
+        color: poll-colors.$votes-yes-color;
         font-size: 200%;
         overflow: visible;
     }

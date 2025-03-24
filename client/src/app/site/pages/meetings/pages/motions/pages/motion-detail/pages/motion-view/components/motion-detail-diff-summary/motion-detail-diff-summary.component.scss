@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .change-recommendation-summary {
     border-radius: 3px;
@@ -36,5 +36,5 @@
 }
 
 .mat-mdc-icon-button.smaller-icon-button {
-    @include custom-size-button(24px, 14px);
+    @include button.custom-size-button(24px, 14px);
 }
