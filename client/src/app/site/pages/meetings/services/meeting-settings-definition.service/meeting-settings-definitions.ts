@@ -33,9 +33,7 @@ export type SettingsType =
     | 'groups'
     | 'daterange';
 
-export interface ChoicesMap {
-    [name: string]: string | number;
-}
+export type ChoicesMap = Record<string, string | number>;
 
 /**
  * Need for settings that depend on models. The collection is resolved via the

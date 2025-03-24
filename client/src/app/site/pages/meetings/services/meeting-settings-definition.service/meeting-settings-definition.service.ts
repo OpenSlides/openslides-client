@@ -14,9 +14,7 @@ export class MeetingSettingsDefinitionService {
         return meetingSettings;
     }
 
-    public get settingsDefaults(): {
-        [key: string]: any;
-    } {
+    public get settingsDefaults(): Record<string, any> {
         return meetingSettingsDefaults;
     }
 

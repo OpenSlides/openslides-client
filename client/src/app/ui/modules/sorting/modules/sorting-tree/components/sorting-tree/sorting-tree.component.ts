@@ -76,7 +76,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Source for the tree
      */
-    public dataSource: ArrayDataSource<FlatNode<T>> = new ArrayDataSource(this.osTreeData);
+    public dataSource = new ArrayDataSource<FlatNode<T>>(this.osTreeData);
 
     /**
      * Number to calculate the next position the node is moved
@@ -551,7 +551,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      */
     public startsDrag(event: CdkDragStart): void {
         this.removeSubscription();
-        const draggedNode = <FlatNode<T>>event.source.data;
+        const draggedNode = event.source.data as FlatNode<T>;
         this.placeholderLevel = draggedNode.level;
         this.nextNode = {
             ...draggedNode,

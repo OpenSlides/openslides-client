@@ -34,7 +34,7 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
         super.ngOnInit();
     }
 
-    protected override updatePollValues(data: { [key: string]: any }, additionalPollValues?: string[]): void {
+    protected override updatePollValues(data: Record<string, any>, additionalPollValues?: string[]): void {
         let values = [];
         if (additionalPollValues) {
             values = additionalPollValues;

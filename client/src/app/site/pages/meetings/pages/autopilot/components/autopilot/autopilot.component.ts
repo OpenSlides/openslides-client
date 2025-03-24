@@ -107,9 +107,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
-    public disabledContentElements: { [key: string]: boolean } = {};
+    public disabledContentElements: Record<string, boolean> = {};
 
-    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public showRightCol = new BehaviorSubject<boolean>(false);
 
     private _currentProjection: ViewProjection | null = null;
 

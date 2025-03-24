@@ -16,9 +16,7 @@ import {
 
 import { ProjectableListService } from '../../services/projectable-list.service';
 
-export interface CssClassDefinition {
-    [key: string]: boolean;
-}
+export type CssClassDefinition = Record<string, boolean>;
 
 /**
  * List of projectable view models

@@ -59,13 +59,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * The different methods for this poll.
      */
     @Input()
-    public pollMethods: { [key: string]: string };
+    public pollMethods: Record<string, string>;
 
     /**
      * The different percent bases for this poll.
      */
     @Input()
-    public percentBases: { [key: string]: string };
+    public percentBases: Record<string, string>;
 
     public alternativePercentBases = PollPercentBaseVerbose;
 
@@ -91,7 +91,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethod === FormPollMethod.LIST_YNA || this.isCreatedList;
     }
 
-    public get filteredPollMethods(): { [key: string]: string } {
+    public get filteredPollMethods(): Record<string, string> {
         if (!this.isCreatedList || !this.pollMethods) {
             return this.pollMethods;
         }
@@ -123,7 +123,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     /**
      * the filtered `percentBases`.
      */
-    public validPercentBases: { [key: string]: string };
+    public validPercentBases: Record<string, string>;
 
     /**
      * An twodimensional array to handle constant values for this poll.
@@ -398,7 +398,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      *
      * @param data Passing the properties of the poll.
      */
-    protected updatePollValues(data: { [key: string]: any }, additionalPollValues?: PollPropertyVerboseKey[]): void {
+    protected updatePollValues(data: Record<string, any>, additionalPollValues?: PollPropertyVerboseKey[]): void {
         if (this.data) {
             const pollMethod: FormPollMethod = data[`pollmethod`];
             const pollType: PollType = data[`type`];
@@ -462,7 +462,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
-        return (formControl: AbstractControl): { [key: string]: any } | null => {
+        return (formControl: AbstractControl): Record<string, any> | null => {
             if (!this.pollOptionAmount || this.isList) {
                 return null;
             }

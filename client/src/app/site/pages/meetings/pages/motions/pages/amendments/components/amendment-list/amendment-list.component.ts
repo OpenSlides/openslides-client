@@ -58,7 +58,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     public filterProps = [`submitters`, `additional_submitter`, `title`, `number`];
 
-    private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
+    private _amendmentDiffLinesMap: Record<number, string> = {};
 
     public constructor(
         protected override translate: TranslateService,

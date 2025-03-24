@@ -173,7 +173,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout(<any>this.clickTimeout);
+            clearTimeout((this.clickTimeout as any));
         }
 
         if (this.clickCounter === 4) {
@@ -185,9 +185,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             }
             this.dialog.open(ChessDialogComponent, config);
         } else {
-            this.clickTimeout = <any>setTimeout(() => {
+            this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;
-            }, 200);
+            }, 200) as any;
         }
     }
 

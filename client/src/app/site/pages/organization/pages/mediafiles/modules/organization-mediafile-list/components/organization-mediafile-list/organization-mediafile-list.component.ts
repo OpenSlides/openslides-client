@@ -88,7 +88,7 @@ export class OrganizationMediafileListComponent
     public directoryChain: ViewMediafile[] = [];
 
     public directoryObservable: Observable<ViewMediafile[]>;
-    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
+    private directorySubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public constructor(
         protected override translate: TranslateService,

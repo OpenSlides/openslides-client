@@ -175,7 +175,7 @@ export class GlobalSearchComponent implements OnDestroy {
         return submitterNames;
     }
 
-    public getTextSnippet(input: string | { [key: number]: string }): string {
+    public getTextSnippet(input: string | Record<number, string>): string {
         let text: string;
         if (typeof input !== `string`) {
             try {

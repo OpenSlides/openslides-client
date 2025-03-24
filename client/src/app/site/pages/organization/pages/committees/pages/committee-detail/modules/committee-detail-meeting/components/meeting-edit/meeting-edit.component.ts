@@ -104,7 +104,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      * The operating user received from the OperatorService
      */
     private operatingUser: ViewUser | null = null;
-    private _committee_users_set: Set<Id> = new Set();
+    private _committee_users_set = new Set<Id>();
 
     private get daterangeControl(): AbstractControl {
         return this.meetingForm?.get(`daterange`);
@@ -250,7 +250,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
-        const rawForm: { [key: string]: any } = {
+        const rawForm: Record<string, any> = {
             name: [``, Validators.required],
             location: [``],
             daterange: [

@@ -278,7 +278,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const doc = parser.parseFromString(this.value, `text/html`);
             const elements = doc.getElementsByTagName(`*`);
             for (let i = 0; i < elements.length; i++) {
-                const el = <HTMLElement>elements[i];
+                const el = elements[i] as HTMLElement;
                 if (el.style.color) {
                     this.textColorSet.add(tinycolor(el.style.color).toHexString());
                 }
@@ -303,14 +303,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public updateFontColor(e: Event): void {
-        const val = (<any>e.target)?.value;
+        const val = (e.target as any)?.value;
         if (val) {
             this.editor.chain().focus().setColor(val).run();
         }
     }
 
     public updateHighlightColor(e: Event): void {
-        const val = (<any>e.target)?.value;
+        const val = (e.target as any)?.value;
         if (val) {
             this.editor.chain().focus().setHighlight({ color: val }).run();
         }

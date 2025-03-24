@@ -6,7 +6,7 @@ import { ParagraphToChoose } from '../../../../../../services/common/motion-line
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 
 interface ParagraphBasedAmendmentContent {
-    amendment_paragraphs: { [paragraph_number: number]: any };
+    amendment_paragraphs: Record<number, any>;
     selected_paragraphs: ParagraphToChoose[];
     broken_paragraphs: string[];
 }

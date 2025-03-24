@@ -47,8 +47,8 @@
             <mat-form-field [formGroup]="extensionFieldForm">
                 <mat-label>{{ list.label ?? '' | translate }}</mat-label>
                 <os-list-search-selector
-                    [disableOptionWhenFn]="getIsDisabled(i)"
                     formControlName="{{ 'list' + i + '' }}"
+                    [disableOptionWhenFn]="getIsDisabled(i)"
                     [inputListValues]="list.observable"
                     [keepOpen]="list.keepOpen"
                     [wider]="list.wider"

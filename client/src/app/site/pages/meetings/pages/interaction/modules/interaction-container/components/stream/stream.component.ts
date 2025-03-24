@@ -41,10 +41,10 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
     }
 
     @Output()
-    public streamTitle: EventEmitter<string> = new EventEmitter();
+    public streamTitle = new EventEmitter<string>();
 
     @Output()
-    public streamSubtitle: EventEmitter<string> = new EventEmitter();
+    public streamSubtitle = new EventEmitter<string>();
 
     public constructor(
         protected override translate: TranslateService,

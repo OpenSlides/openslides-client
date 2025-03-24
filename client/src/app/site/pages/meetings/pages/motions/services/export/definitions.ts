@@ -80,6 +80,6 @@ export function getVerboseNameOfMotionProperty(propertyName: keyof ViewMotion): 
     return motionHeadersAndVerboseNames[propertyName];
 }
 
-export function getMotionExportHeadersAndVerboseNames(): { [key: string]: string } {
+export function getMotionExportHeadersAndVerboseNames(): Record<string, string> {
     return motionExpectedHeaders.mapToObject(item => ({ [item]: getVerboseNameOfMotionProperty(item) }));
 }

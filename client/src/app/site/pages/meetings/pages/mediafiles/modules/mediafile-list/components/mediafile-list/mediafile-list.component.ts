@@ -106,7 +106,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public directoryObservable: Observable<ViewMediafile[]>;
-    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
+    private directorySubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public constructor(
         protected override translate: TranslateService,

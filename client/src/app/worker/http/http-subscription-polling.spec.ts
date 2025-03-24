@@ -84,8 +84,8 @@ describe(`http subscription polling`, () => {
         subscr.start();
         await expectAsync(receivedError).toBeResolved();
         expectAsync(receivedData).toBePending();
-        expect((<ErrorDescription>await receivedError)?.type).toEqual(ErrorType.CLIENT);
-        expect((<ErrorDescription>await receivedError)?.error?.type).toEqual(`mock-error`);
+        expect((await receivedError as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect((await receivedError as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -95,8 +95,8 @@ describe(`http subscription polling`, () => {
         const subscr = getHttpSubscriptionPollingInstance(`/error400-expected-format`, (d: any) => resolver(d));
         subscr.start();
         await expectAsync(receivedData).toBeResolved();
-        expect((<ErrorDescription>await receivedData)?.type).toEqual(ErrorType.CLIENT);
-        expect((<ErrorDescription>await receivedData)?.error?.type).toEqual(`mock-error`);
+        expect((await receivedData as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect((await receivedData as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -144,7 +144,7 @@ describe(`http subscription polling`, () => {
             const subscr = getHttpSubscriptionPollingInstance(`/error502`, (d: any) => resolver(d));
             subscr.start();
             const data = await receivedData;
-            expect((<ErrorDescription>data)?.type).toEqual(ErrorType.SERVER);
+            expect((data as ErrorDescription)?.type).toEqual(ErrorType.SERVER);
             expect(subscr.active).toBeFalsy();
             await subscr.stop();
         });
@@ -155,7 +155,7 @@ describe(`http subscription polling`, () => {
             const subscr = getHttpSubscriptionPollingInstance(`/error400-expected-format`, (d: any) => resolver(d));
             subscr.start();
             const data = await receivedData;
-            expect((<ErrorDescription>data)?.type).toEqual(ErrorType.CLIENT);
+            expect((data as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
             expect(subscr.active).toBeFalsy();
             await subscr.stop();
         });

@@ -264,8 +264,7 @@ export function djb2hash(str: string): string {
     let char: number;
     for (let i = 0; i < str.length; i++) {
         char = str.charCodeAt(i);
-        // tslint:disable-next-line:no-bitwise
-        hash = (hash << 5) + hash + char;
+               hash = (hash << 5) + hash + char;
     }
     return hash.toString();
 }
@@ -288,7 +287,7 @@ export function joinTypedArrays<
         | Uint32Array
         | Float32Array
         | Float64Array
->(type: { new (len: number): T }, a: T, b: T): T {
+>(type: new (len: number) => T, a: T, b: T): T {
     const res = new type(a.length + b.length);
     res.set(a);
     res.set(b, a.length);
@@ -475,10 +474,10 @@ export function partitionModelsForUpdate<T extends Identifiable>(
 export type ObjectReplaceKeysConfig = [string, string][];
 
 export function replaceObjectKeys(
-    object: { [key: string]: any },
+    object: Record<string, any>,
     config: ObjectReplaceKeysConfig,
     reverse?: boolean
-): { [key: string]: any } {
+): Record<string, any> {
     if (reverse) {
         return replaceObjectKeys(
             object,
@@ -486,7 +485,7 @@ export function replaceObjectKeys(
         );
     }
     const map = new Map<string, string>(config);
-    const result: { [key: string]: any } = {};
+    const result: Record<string, any> = {};
     for (const key of Object.keys(object)) {
         const newKey = map.get(key) ?? key;
         result[newKey] = object[key];

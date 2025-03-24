@@ -118,7 +118,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public validEvent = new EventEmitter<boolean>();
 
     @Output()
-    public errorEvent = new EventEmitter<{ [name: string]: boolean } | null>();
+    public errorEvent = new EventEmitter<Record<string, boolean> | null>();
 
     @Output()
     public submitEvent = new EventEmitter<void>();
@@ -298,7 +298,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
     }
 
-    private getCreateFormControlsConfig(): { [key: string]: any } {
+    private getCreateFormControlsConfig(): Record<string, any> {
         return {
             username: [``, this.isNewUser ? [this.noSpaceValidator()] : [Validators.required, this.noSpaceValidator()]],
             pronoun: [``, Validators.maxLength(32)],
@@ -342,7 +342,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         };
     }
 
-    private getChangedValues(formData: { [key: string]: any }): { [key: string]: any } {
+    private getChangedValues(formData: Record<string, any>): Record<string, any> {
         const data = this.useAdditionalEditTemplate
             ? formData
             : Object.keys(formData).mapToObject(key =>

@@ -66,7 +66,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     public optionsWarning = _(`There should be at least 2 options.`);
 
     public newOptions: TextOptionSelectable[] = [];
-    public optionsSubject: BehaviorSubject<TextOptionSelectable[]> = new BehaviorSubject(this.newOptions);
+    public optionsSubject = new BehaviorSubject<TextOptionSelectable[]>(this.newOptions);
     public optionInput = ``;
 
     public readonly globalValues = [`global_yes`, `global_no`, `global_abstain`];

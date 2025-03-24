@@ -26,8 +26,8 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.committeesSubject;
     }
 
-    public readonly checkboxStateMap: { [id: string]: boolean } = {};
-    public selectedMeetings: Set<Id> = new Set();
+    public readonly checkboxStateMap: Record<string, boolean> = {};
+    public selectedMeetings = new Set<Id>();
 
     public get activeMeetingCommitteeName(): string {
         return this.activeMeeting.meeting?.committee?.name;

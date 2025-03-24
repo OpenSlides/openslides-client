@@ -129,7 +129,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     private _projectorId: Id | null = null;
 
-    private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
+    private _projectorIdSubject = new BehaviorSubject<number>(null);
 
     public constructor(
         protected override translate: TranslateService,

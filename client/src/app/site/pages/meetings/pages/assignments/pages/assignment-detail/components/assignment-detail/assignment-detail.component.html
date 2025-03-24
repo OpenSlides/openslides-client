@@ -207,8 +207,8 @@
                             @if (hasPerms('addOthers')) {
                                 <div class="search-new-speaker-form">
                                     <os-participant-search-selector
-                                        [nonSelectableUserIds]="candidateUserIds"
                                         placeholder="{{ 'Select participant' | translate }}"
+                                        [nonSelectableUserIds]="candidateUserIds"
                                         (userSelected)="addCandidate($event)"
                                     ></os-participant-search-selector>
                                 </div>

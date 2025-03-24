@@ -38,7 +38,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
      * Output for an error handler
      */
     @Output()
-    public errorHandler: EventEmitter<string> = new EventEmitter();
+    public errorHandler = new EventEmitter<string>();
 
     public readonly permission = Permission;
 

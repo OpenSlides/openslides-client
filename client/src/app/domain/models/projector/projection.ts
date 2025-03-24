@@ -3,16 +3,14 @@ import { HasCollection } from '../../interfaces/has-collection';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
 
-type ProjectionContent = HasCollection & { [key: string]: any };
+type ProjectionContent = HasCollection & Record<string, any>;
 
 export class Projection extends BaseModel<Projection> {
     public static COLLECTION = `projection`;
 
     public stable!: boolean;
     public type!: string;
-    public options!: {
-        [key: string]: any;
-    };
+    public options!: Record<string, any>;
 
     public weight!: number;
 

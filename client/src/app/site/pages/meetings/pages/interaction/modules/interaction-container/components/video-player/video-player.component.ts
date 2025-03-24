@@ -103,7 +103,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     private mimeType!: MimeType;
 
     @Output()
-    private started: EventEmitter<void> = new EventEmitter();
+    private started = new EventEmitter<void>();
 
     public get usingYouTube(): boolean {
         return this.playerType === Player.youtube;

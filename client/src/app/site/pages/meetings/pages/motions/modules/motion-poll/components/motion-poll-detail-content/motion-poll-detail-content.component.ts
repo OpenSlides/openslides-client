@@ -46,10 +46,10 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     @Input()
-    public title: string = ``;
+    public title = ``;
 
     @Input()
-    public shouldShowEntitled: boolean = false;
+    public shouldShowEntitled = false;
 
     @Input()
     public iconSize: 'medium' | 'large' | 'gigantic' = `large`;

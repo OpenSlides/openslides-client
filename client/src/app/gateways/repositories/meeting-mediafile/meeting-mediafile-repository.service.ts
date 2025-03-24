@@ -11,7 +11,7 @@ import { RepositoryServiceCollectorService } from '../repository-service-collect
     providedIn: `root`
 })
 export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetingMediafile, MeetingMediafile> {
-    private mediafileMap: Map<Id, Map<Id, Id>> = new Map();
+    private mediafileMap = new Map<Id, Map<Id, Id>>();
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,

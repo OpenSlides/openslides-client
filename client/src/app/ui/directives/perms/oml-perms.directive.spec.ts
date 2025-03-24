@@ -8,11 +8,11 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { OmlPermsDirective } from './oml-perms.directive';
 import { BasePermsTestComponent } from './perms.directive.spec';
 
-type TestConditionalType = {
+interface TestConditionalType {
     and: boolean;
     or: boolean;
     complement: boolean;
-};
+}
 
 @Component({
     template: `

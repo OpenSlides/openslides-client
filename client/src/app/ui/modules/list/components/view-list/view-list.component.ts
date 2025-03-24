@@ -129,7 +129,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      * Closing them will cause the callback function to be called.
      */
     @Input()
-    public fakeFilters: Observable<{ [key: string]: () => void }> = null;
+    public fakeFilters: Observable<Record<string, () => void>> = null;
 
     @Input()
     public set totalCount(value: number | Observable<number>) {

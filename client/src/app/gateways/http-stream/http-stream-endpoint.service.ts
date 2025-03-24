@@ -8,7 +8,7 @@ import { EndpointConfiguration } from './endpoint-configuration';
     providedIn: `root`
 })
 export class HttpStreamEndpointService {
-    private endpointConfigurations: { [endpoint: string]: EndpointConfiguration } = {};
+    private endpointConfigurations: Record<string, EndpointConfiguration> = {};
 
     public constructor(private http: HttpService) {}
 

@@ -34,10 +34,10 @@
                 <div>
                     <button
                         mat-icon-button
-                        matTooltipPosition="left"
                         matTooltip="{{
                             ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
                         }}"
+                        matTooltipPosition="left"
                         (click)="toggleDarkMode($event)"
                     >
                         <mat-icon>

@@ -56,7 +56,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Holds the current value fo all permissions for all groups.
      */
-    public currentPermissions: { [id: number]: { [perm: string]: boolean } } = {};
+    public currentPermissions: Record<number, Record<string, boolean>> = {};
 
     @ViewChild(`groupForm`, { static: true })
     public groupForm: UntypedFormGroup | null = null;

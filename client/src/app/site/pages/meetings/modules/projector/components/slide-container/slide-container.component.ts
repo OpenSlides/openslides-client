@@ -16,7 +16,7 @@ import { BaseSlideComponent } from '../../modules/slides/base/base-slide-compone
 import { SlideManagerService } from '../../modules/slides/services/slide-manager.service';
 
 function hasError(obj: object): obj is { error: string } {
-    return (<{ error: string }>obj)?.error !== undefined;
+    return (obj as { error: string })?.error !== undefined;
 }
 
 @Component({

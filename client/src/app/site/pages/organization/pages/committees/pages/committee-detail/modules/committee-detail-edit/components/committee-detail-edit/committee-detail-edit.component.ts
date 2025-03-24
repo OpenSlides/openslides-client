@@ -150,7 +150,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public onForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
         if (committee.id === this.committeeId) {
             const formControlName = `receive_forwardings_from_committee_ids`;
-            const previousValue: Set<Id> = new Set(this.committeeForm.get(formControlName)!.value || []);
+            const previousValue = new Set<Id>(this.committeeForm.get(formControlName)!.value || []);
             const fn = selected ? `add` : `delete`;
             previousValue[fn](committee.id);
             this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });

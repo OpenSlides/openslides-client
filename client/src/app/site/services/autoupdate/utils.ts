@@ -3,17 +3,9 @@ import {
     fqfieldFromCollectionIdField
 } from '../../../infrastructure/utils/transform-functions';
 
-export interface ModelData {
-    [collection: string]: {
-        [id: number]: {
-            [field: string]: any;
-        };
-    };
-}
+export type ModelData = Record<string, Record<number, Record<string, any>>>;
 
-export interface AutoupdateModelData {
-    [fqfield: string]: any;
-}
+export type AutoupdateModelData = Record<string, any>;
 
 export function modelDataToAutoupdateFormat(models: ModelData): AutoupdateModelData {
     const data: AutoupdateModelData = {};

@@ -15,9 +15,7 @@ interface DtoPropertyDescription extends DtoPropertyOptions {
     dataType: DataType;
 }
 
-interface DtoClassDescription {
-    [propertyName: string]: DtoPropertyDescription;
-}
+type DtoClassDescription = Record<string, DtoPropertyDescription>;
 
 function getSanitizedDate(propertyName: string, description: DtoPropertyDescription, date: any): any {
     if (description.isRequired && !date) {
@@ -43,7 +41,7 @@ function getSanitizedDate(propertyName: string, description: DtoPropertyDescript
 }
 
 class DtoContainer {
-    private static dtoMap: { [className: string]: DtoClassDescription } = {};
+    private static dtoMap: Record<string, DtoClassDescription> = {};
 
     public static addPropertyDescriptionFor(className: string, description: DtoPropertyDescription): void {
         const dtoClassDescription = this.getClassDescriptionFor(className);

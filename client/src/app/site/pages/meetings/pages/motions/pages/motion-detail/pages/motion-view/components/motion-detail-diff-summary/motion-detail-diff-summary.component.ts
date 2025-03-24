@@ -91,7 +91,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
             return;
         }
 
-        const element = <HTMLElement>this.elContainer;
+        const element = this.elContainer as HTMLElement;
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
         target.scrollIntoView({ behavior: `smooth`, block: `center` });
     }

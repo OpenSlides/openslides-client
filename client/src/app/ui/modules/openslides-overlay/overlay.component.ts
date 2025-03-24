@@ -69,7 +69,7 @@ export class OverlayComponent {
     public attachComponent<C>(component: Type<C>): C {
         const componentRef = this._viewContainer.createComponent(component);
         const instance = componentRef.instance;
-        const domElement = (<EmbeddedViewRef<any>>componentRef.hostView).rootNodes[0] as HTMLElement;
+        const domElement = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
         this.hostElement.appendChild(domElement);
         return instance;
     }

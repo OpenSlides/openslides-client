@@ -122,7 +122,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     private readonly _aspectRatioRe = RegExp(`[1-9]+[0-9]*:[1-9]+[0-9]*`);
 
-    private _defaultProjectors: { [key: string]: number[] } = {};
+    private _defaultProjectors: Record<string, number[]> = {};
 
     public constructor(
         formBuilder: UntypedFormBuilder,
@@ -317,7 +317,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         return contentFormData;
     }
 
-    private getProjectionDefaultsPayload(projectiondefaultKeys: string[]): { [key: string]: any } {
+    private getProjectionDefaultsPayload(projectiondefaultKeys: string[]): Record<string, any> {
         const payload = {};
         // All defaults that are set to true should be set to the current projectors id
         for (let i = 0; i < projectiondefaultKeys.length; i++) {

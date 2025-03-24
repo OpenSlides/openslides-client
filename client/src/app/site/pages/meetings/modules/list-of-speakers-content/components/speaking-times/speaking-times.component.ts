@@ -38,7 +38,7 @@ export class SpeakingTimesComponent implements OnDestroy {
      */
     public readonly permission = Permission;
 
-    private subscriptions: Map<Id, Subscription> = new Map();
+    private subscriptions = new Map<Id, Subscription>();
 
     @ViewChild(`totalTimeDialog`, { static: true })
     private totalTimeDialog: TemplateRef<string> | null = null;
@@ -50,7 +50,7 @@ export class SpeakingTimesComponent implements OnDestroy {
     public totalTimeForm: UntypedFormGroup;
     public addTimeControl: UntypedFormControl;
     public currentEntry: any = null;
-    public structureLevels: Map<Id, any> = new Map();
+    public structureLevels = new Map<Id, any>();
 
     // if some speaker has spoken.
     public hasSpokenFlag = false;

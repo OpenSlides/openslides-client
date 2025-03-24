@@ -29,7 +29,7 @@ export class PaperDirective implements OnInit {
     @Input()
     public osPaperRaise: boolean | Depth = false;
 
-    private depthMap: { [key in Depth]: string } = {
+    private depthMap: Record<Depth, string> = {
         [DEPTH_0]: DEPTH_0_VALUE,
         [DEPTH_1]: DEPTH_1_VALUE,
         [DEPTH_2]: DEPTH_2_VALUE,

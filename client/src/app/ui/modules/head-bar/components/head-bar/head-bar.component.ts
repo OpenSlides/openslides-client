@@ -277,7 +277,7 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
         } else if (this.routingState.customOrigin && this.routingState.customOrigin !== this.router.url) {
             this.router.navigate([this.routingState.customOrigin], { relativeTo: this.route });
         } else {
-            const relativeToRoute = !!this.route.snapshot.url.length ? this.route : this.route.parent;
+            const relativeToRoute = this.route.snapshot.url.length ? this.route : this.route.parent;
             this.router.navigate([this.prevUrl], { relativeTo: relativeToRoute });
         }
     }

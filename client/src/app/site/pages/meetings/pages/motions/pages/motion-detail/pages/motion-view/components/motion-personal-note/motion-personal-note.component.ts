@@ -48,7 +48,7 @@ export class MotionPersonalNoteComponent extends BaseMotionDetailActionCardCompo
      * Saves the personal note. If it does not exists, it will be created.
      */
     public async savePersonalNote(): Promise<void> {
-        const contentObject: any = !!this.personalNote ? { getPersonalNote: () => this.personalNote } : this.motion;
+        const contentObject: any = this.personalNote ? { getPersonalNote: () => this.personalNote } : this.motion;
         await this.repo.setPersonalNote({ note: this.getTextFromForm() }, contentObject);
         await this.leaveEditMode();
     }

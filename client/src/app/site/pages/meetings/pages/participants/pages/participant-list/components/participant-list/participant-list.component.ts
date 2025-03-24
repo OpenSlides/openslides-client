@@ -117,7 +117,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public get totalEligibleVoteWeights(): number[] {
-        const voters: { [key: number]: number } = {};
+        const voters: Record<number, number> = {};
         const checkGroups = this.filterService.activeFilters
             .filter(flt => flt.property === `canVoteForGroups`)
             .flatMap(flt =>
@@ -155,7 +155,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public sumOfDelegatedVoteWeight(user: ViewUser): number {
-        let voteWeights: number = 0;
+        let voteWeights = 0;
         user.vote_delegations_from().forEach(user => (voteWeights += user.vote_weight()));
 
         return voteWeights;
@@ -538,7 +538,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                             };
                         },
                         leftUser,
-                        <ViewUser>response.rightUser
+                        (response.rightUser as ViewUser)
                     )
                     .resolve(false);
                 this.matSnackBar.open(

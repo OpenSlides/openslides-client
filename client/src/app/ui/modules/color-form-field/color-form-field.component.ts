@@ -89,7 +89,7 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
         if (this.isEmpty) {
             if (value === this.defaultDisplayColor.value) {
                 value = ``;
-            } else if (!!value) {
+            } else if (value) {
                 this.isEmpty = false;
             }
         }

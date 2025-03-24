@@ -63,7 +63,7 @@ export class VotingBannerService {
         });
     }
 
-    private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }): void {
+    private updateBanner(polls: ViewPoll[], voted: Record<Id, Id[]>): void {
         if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
             const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(

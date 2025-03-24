@@ -260,7 +260,7 @@ export abstract class BaseSearchSelectorComponent
     private _snapshotValue: Selectable[] | Selectable | null = null;
     private _isFirstUpdate = true;
 
-    private _selectableItemsIdMap: { [id: number]: Selectable } = {};
+    private _selectableItemsIdMap: Record<number, Selectable> = {};
     private _selectableItemsList: Selectable[] = [];
 
     private get currentSearchValue(): string {

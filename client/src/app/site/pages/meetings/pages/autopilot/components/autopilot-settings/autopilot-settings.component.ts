@@ -24,7 +24,7 @@ export class AutopilotSettingsComponent extends BaseMeetingComponent implements 
         { key: `speaking-times`, description: _(`Speaking times`) }
     ];
 
-    public disabledAutopilotContentElements: { [key: string]: boolean } = {};
+    public disabledAutopilotContentElements: Record<string, boolean> = {};
 
     public constructor(
         private dialogRef: MatDialogRef<AutopilotSettingsComponent>,

@@ -43,7 +43,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public menuItem = false;
 
     @Output()
-    public changeEvent: EventEmitter<void> = new EventEmitter();
+    public changeEvent = new EventEmitter<void>();
 
     private _projector: ViewProjector | null = null;
 

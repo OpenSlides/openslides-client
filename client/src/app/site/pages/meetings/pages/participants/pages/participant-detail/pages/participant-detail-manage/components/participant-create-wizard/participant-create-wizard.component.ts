@@ -102,7 +102,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public isFormValid = false;
 
     public personalInfoFormValue: any = {};
-    public formErrors: { [name: string]: boolean } | null = null;
+    public formErrors: Record<string, boolean> | null = null;
     public groupsObservable: Observable<ViewGroup[]> | null = null;
 
     /**

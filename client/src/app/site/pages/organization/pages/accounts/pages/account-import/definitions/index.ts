@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
 import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 
-export const accountHeadersAndVerboseNames: { [key in keyof User | 'gender']?: any } = {
+export const accountHeadersAndVerboseNames: Partial<Record<keyof User | 'gender', any>> = {
     ...userHeadersAndVerboseNames,
     default_vote_weight: _(`Vote weight`)
 };

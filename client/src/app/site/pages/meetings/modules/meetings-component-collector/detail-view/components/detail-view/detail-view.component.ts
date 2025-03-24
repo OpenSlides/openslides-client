@@ -48,7 +48,7 @@ export class DetailViewComponent implements OnInit {
     private _id!: Id;
     private _sequential_number!: number;
 
-    private _subscriptionMap: { [name: string]: Subscription } = {};
+    private _subscriptionMap: Record<string, Subscription> = {};
 
     public constructor(
         private sequentialNumberMappingService: SequentialNumberMappingService,

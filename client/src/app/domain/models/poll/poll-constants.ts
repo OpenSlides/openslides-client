@@ -37,7 +37,7 @@ export enum PollColor {
  * Colors for chart color generation
  * Keys are freely invented and not in sync with html color names
  */
-export const pollChartColors: Map<string, string> = new Map([
+export const pollChartColors = new Map<string, string>([
     [`green1`, `#5fbfa2`],
     [`red1`, `#f94144`],
     [`blue1`, `#317796`],
@@ -50,7 +50,7 @@ export const pollChartColors: Map<string, string> = new Map([
     [`yellow1`, `#eca809`]
 ]);
 
-export const pollChartGreys: Map<string, string> = new Map([
+export const pollChartGreys = new Map<string, string>([
     [`grey1`, `#969696`],
     [`grey2`, `#b0b0b0`],
     [`grey3`, `#c2c2c2`],

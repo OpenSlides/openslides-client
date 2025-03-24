@@ -55,7 +55,7 @@ export class ChoiceDialogComponent {
         }
     }
 
-    private readonly _selectedItems: { [id: Id]: Selectable } = {};
+    private readonly _selectedItems: Record<Id, Selectable> = {};
 
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,

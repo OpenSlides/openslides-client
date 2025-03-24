@@ -135,7 +135,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public onSubmit(): void {
         const payload: any = this.orgaSettingsForm!.value;
         if (this.operator.isSuperAdmin) {
-            payload.saml_attr_mapping = !!payload.saml_attr_mapping
+            payload.saml_attr_mapping = payload.saml_attr_mapping
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
                 : null;
         }

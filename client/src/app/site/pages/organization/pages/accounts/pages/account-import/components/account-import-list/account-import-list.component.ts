@@ -18,7 +18,7 @@ export class AccountImportListComponent extends BaseViaBackendImportListComponen
 
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
-        label: (<any>accountHeadersAndVerboseNames)[header],
+        label: (accountHeadersAndVerboseNames as any)[header],
         isTableColumn: true
     }));
 

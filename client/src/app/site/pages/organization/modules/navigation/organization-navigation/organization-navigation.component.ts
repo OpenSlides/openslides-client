@@ -89,7 +89,7 @@ export class OrganizationNavigationComponent {
         }
     }
 
-    public getCustomStyleForEntry(entry: OrgaMenuEntry): { [key: string]: any } {
+    public getCustomStyleForEntry(entry: OrgaMenuEntry): Record<string, any> {
         return getCustomStyleForEntry(entry);
     }
 

@@ -59,7 +59,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     /**
      * Datasources for `categories`. Holds all motions for one category.
      */
-    public readonly dataSources: { [id: number]: MatTableDataSource<ViewMotion> } = {};
+    public readonly dataSources: Record<number, MatTableDataSource<ViewMotion>> = {};
 
     /**
      * helper for permission checks

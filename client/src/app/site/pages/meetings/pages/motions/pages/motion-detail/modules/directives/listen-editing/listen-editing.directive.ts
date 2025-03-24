@@ -159,7 +159,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
         return this.notifyService
             .getMessageObservable<EditNotification>(this.EDIT_NOTIFICATION_NAME)
             .subscribe(message => {
-                const content = <EditNotification>message.message;
+                const content = message.message as EditNotification;
                 const isSameFqid = !!this.baseModel.fqid && content.baseModelFqid === this.baseModel.fqid;
                 if (this.operator.operatorId !== content.senderId && isSameFqid) {
                     let warning = ``;

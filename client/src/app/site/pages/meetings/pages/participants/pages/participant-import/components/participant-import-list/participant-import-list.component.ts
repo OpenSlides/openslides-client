@@ -17,7 +17,7 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListMeet
 
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
-        label: (<any>participantHeadersAndVerboseNames)[header],
+        label: (participantHeadersAndVerboseNames as any)[header],
         isTableColumn: true
     }));
 

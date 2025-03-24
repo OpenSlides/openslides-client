@@ -8,7 +8,7 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { MeetingSettingDirective } from './meeting-setting.directive';
 
 class MockMeetingSettingsService {
-    private settingSubjects: { [key: string]: BehaviorSubject<any> } = {};
+    private settingSubjects: Record<string, BehaviorSubject<any>> = {};
 
     public get<T extends keyof Settings>(key: T): Observable<Settings[T]> {
         if (!this.settingSubjects[key]) {

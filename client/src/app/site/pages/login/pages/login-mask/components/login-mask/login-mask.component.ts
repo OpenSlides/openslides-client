@@ -215,7 +215,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     }
 
     private checkForUnsecureConnection(): void {
-        const protocol = (<any>performance.getEntriesByType(`navigation`)[0]).nextHopProtocol;
+        const protocol = (performance.getEntriesByType(`navigation`)[0] as any).nextHopProtocol;
         if (location.protocol === `http:`) {
             this.raiseWarning(this.translate.instant(HTTP_WARNING));
         } else if (protocol && protocol !== `h2` && protocol !== `h3`) {

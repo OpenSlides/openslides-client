@@ -243,7 +243,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             return `calc(100vh - ${distTop}px)`;
         }
 
-        return Math.min(this.rowHeight * this._dataSource.getValue().length, (<any>window).innerHeight - 150) + `px`;
+        return Math.min(this.rowHeight * this._dataSource.getValue().length, (window as any).innerHeight - 150) + `px`;
     }
 
     private buildDataTable(): void {

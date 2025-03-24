@@ -96,7 +96,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
      * Closing them will cause the callback function to be called.
      */
     @Input()
-    public set fakeFilters(value: { [key: string]: () => void } | Observable<{ [key: string]: () => void }>) {
+    public set fakeFilters(value: Record<string, () => void> | Observable<Record<string, () => void>>) {
         if (!value) {
             return;
         }
@@ -108,12 +108,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         }
     }
 
-    public get fakeFilters(): { [key: string]: () => void } {
+    public get fakeFilters(): Record<string, () => void> {
         return this._fakeFilters;
     }
 
     private _fakeFilterSubscription: Subscription;
-    private _fakeFilters: { [key: string]: () => void } = {};
+    private _fakeFilters: Record<string, () => void> = {};
 
     /**
      * EventEmitter to emit the next search-value.
@@ -169,7 +169,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     public get filterAmount(): number {
         if (this.filterService) {
             const filterCount = this.filterService.filterCount;
-            return !!filterCount ? filterCount : 0;
+            return filterCount ? filterCount : 0;
         }
         return 0;
     }

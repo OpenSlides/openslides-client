@@ -17,6 +17,6 @@ export function getRecommendationTypeName(change: ViewMotionChangeRecommendation
         case ModificationType.TYPE_DELETION:
             return `Deletion`;
         default:
-            return (<ViewMotionChangeRecommendation>change).other_description || ``;
+            return (change as ViewMotionChangeRecommendation).other_description || ``;
     }
 }

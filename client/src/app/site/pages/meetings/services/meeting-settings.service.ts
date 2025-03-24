@@ -13,7 +13,7 @@ export class MeetingSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
-    private settingSubjects: { [key: string]: BehaviorSubject<any> } = {};
+    private settingSubjects: Record<string, BehaviorSubject<any>> = {};
 
     /**
      * Listen for changes of setting variables.

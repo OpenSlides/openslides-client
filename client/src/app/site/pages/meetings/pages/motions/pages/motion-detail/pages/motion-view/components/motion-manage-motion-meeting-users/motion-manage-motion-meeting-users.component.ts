@@ -19,9 +19,7 @@ import { MotionPermissionService } from '../../../../../../services/common/motio
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };
 
-interface IdMap {
-    [user_id: number]: number;
-}
+type IdMap = Record<number, number>;
 
 @Component({
     selector: `os-motion-manage-motion-meeting-users`,
@@ -325,7 +323,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
         const searchId = +this.secondSelectorFormControl.value;
         const foundEntry = this.secondSelectorValues.find(entry => entry.id === searchId);
-        return !!foundEntry ? foundEntry.getTitle() : ``;
+        return foundEntry ? foundEntry.getTitle() : ``;
     }
 
     private changeSecondSelector(): void {

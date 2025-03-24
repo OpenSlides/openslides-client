@@ -240,9 +240,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
-    private _headers: {
-        [property: string]: { default?: ImportListHeaderDefinition; preview?: BackendImportHeader };
-    } = {};
+    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
     public constructor(
         private dialog: MatDialog,

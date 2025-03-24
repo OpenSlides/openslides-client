@@ -39,7 +39,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public PollPropertyVerbose = PollPropertyVerbose;
 
     public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
-    public get AssignmentPollPercentBaseVerbose(): { [key: string]: string } {
+    public get AssignmentPollPercentBaseVerbose(): Record<string, string> {
         return this.pollData.isListPoll ? PollPercentBaseVerbose : AssignmentPollPercentBaseVerbose;
     }
 

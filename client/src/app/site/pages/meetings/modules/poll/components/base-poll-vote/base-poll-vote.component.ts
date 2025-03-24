@@ -59,7 +59,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     protected displayed_in_autopilot = true;
 
     public PollType = PollType;
-    public formControlMap: { [optionId: number]: UntypedFormControl } = {};
+    public formControlMap: Record<number, UntypedFormControl> = {};
 
     public get minVotes(): number {
         return this.poll.min_votes_amount;
@@ -135,16 +135,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     protected voteRequestData: IdentifiedVotingData = {};
 
-    protected alreadyVoted: { [userId: number]: boolean } = {};
+    protected alreadyVoted: Record<number, boolean> = {};
 
-    protected deliveringVote: { [userId: number]: boolean } = {};
+    protected deliveringVote: Record<number, boolean> = {};
 
     protected user!: ViewUser;
 
     private _isReady = false;
     private _poll!: ViewPoll<C>;
-    private _delegationsMap: { [userId: number]: ViewUser } = {};
-    private _canVoteForSubjectMap: { [userId: number]: BehaviorSubject<boolean> } = {};
+    private _delegationsMap: Record<number, ViewUser> = {};
+    private _canVoteForSubjectMap: Record<number, BehaviorSubject<boolean>> = {};
 
     private voteRepo = inject(VoteControllerService);
 
@@ -412,7 +412,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         optionId: number,
         vote: number,
         user: ViewUser = this.user
-    ): { [option_id: number]: number } {
+    ): Record<number, number> {
         const maxVotesAmount = this.poll.max_votes_amount;
         const maxVotesPerOption = this.poll.max_votes_per_option;
         return this.poll.options

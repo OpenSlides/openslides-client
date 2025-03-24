@@ -17,7 +17,7 @@ export class CustomIconComponent {
     @Input()
     public sizeInPx = 24;
 
-    public get style(): { [ley: string]: any } {
+    public get style(): Record<string, any> {
         return {
             height: `${this.sizeInPx}px`,
             width: `${this.sizeInPx}px`

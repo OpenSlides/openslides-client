@@ -403,12 +403,12 @@
                 class="flex-vertical-center"
             >
                 @if (row.state === 'error') {
-                    <mat-icon class="red-warning-text" matTooltipPosition="right" matTooltip="{{ getRowTooltip(row) }}">
+                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
                         {{ getActionIcon(row) }}
                     </mat-icon>
                 }
                 @if (row.state !== 'error' && row.messages.length) {
-                    <mat-icon class="warn" matTooltipPosition="right" matTooltip="{{ getWarningRowTooltip(row) }}">
+                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
                         warning
                     </mat-icon>
                 }
@@ -418,7 +418,7 @@
                 class="flex-vertical-center"
             >
                 @if (row.state !== 'error') {
-                    <mat-icon matTooltipPosition="right" matTooltip="{{ getRowTooltip(row) }}">
+                    <mat-icon matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
                         {{ getActionIcon(row) }}
                     </mat-icon>
                 }
@@ -453,7 +453,7 @@
 <ng-template #fullscreenDialog>
     <div class="action-title" mat-dialog-title>
         <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
-        <button mat-icon-button [mat-dialog-close]="null" matTooltip="{{ 'Exit fullscreen' | translate }}">
+        <button mat-icon-button matTooltip="{{ 'Exit fullscreen' | translate }}" [mat-dialog-close]="null">
             <mat-icon>close</mat-icon>
         </button>
     </div>

@@ -51,7 +51,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Output()
     public setShowAllAmendments = new EventEmitter<boolean>();
 
-    public originMotionStatus: { [key: number]: boolean } = {};
+    public originMotionStatus: Record<number, boolean> = {};
 
     /**
      * Determine if the name of supporters are visible

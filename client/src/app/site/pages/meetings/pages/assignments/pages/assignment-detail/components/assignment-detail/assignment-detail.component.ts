@@ -294,7 +294,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param assignment
      */
     private patchForm(assignment: ViewAssignment): void {
-        const contentPatch: { [key: string]: any } = {};
+        const contentPatch: Record<string, any> = {};
         Object.keys(this.assignmentForm.controls).forEach(control => {
             contentPatch[control] = assignment[control as keyof ViewAssignment];
         });

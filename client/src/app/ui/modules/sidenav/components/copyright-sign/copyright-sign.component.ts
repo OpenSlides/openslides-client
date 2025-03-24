@@ -20,16 +20,16 @@ export class CopyrightSignComponent {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout(<any>this.clickTimeout);
+            clearTimeout((this.clickTimeout as any));
         }
 
         if (this.clickCounter === 5) {
             this.clickCounter = 0;
             this.dialog.open();
         } else {
-            this.clickTimeout = <any>setTimeout(() => {
+            this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;
-            }, 200);
+            }, 200) as any;
         }
     }
 }

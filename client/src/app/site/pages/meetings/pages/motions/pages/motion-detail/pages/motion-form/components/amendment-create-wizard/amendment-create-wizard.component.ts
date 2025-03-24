@@ -72,7 +72,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     @ViewChild(`matStepper`, { read: MatStepper }) public stepper: MatStepper;
 
-    public canSave: boolean = false;
+    public canSave = false;
 
     private _parentMotionId: Id | null = null;
 

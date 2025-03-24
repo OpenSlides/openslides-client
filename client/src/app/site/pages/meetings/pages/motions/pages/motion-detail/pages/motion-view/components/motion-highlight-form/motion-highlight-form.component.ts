@@ -39,7 +39,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     public changeRecoMode: ChangeRecoMode;
 
     @Input()
-    public hasChangingObjects: boolean = false;
+    public hasChangingObjects = false;
 
     @Output()
     public updateLnMode = new EventEmitter<LineNumberingMode>();
@@ -79,7 +79,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     /**
      * The change recommendations to amendments to this motion
      */
-    public amendmentChangeRecos: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
+    public amendmentChangeRecos: Record<string, ViewMotionChangeRecommendation[]> = {};
 
     public verboseChangeRecoMode = verboseChangeRecoMode;
 

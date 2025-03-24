@@ -22,7 +22,7 @@ export interface CsvColumnDefinitionProperty<T> {
  * @returns true, if the object is a property definition. This is also asserted for TypeScript.
  */
 export function isPropertyDefinition<T>(obj: any): obj is CsvColumnDefinitionProperty<T> {
-    return (<CsvColumnDefinitionProperty<T>>obj).property !== undefined;
+    return (obj as CsvColumnDefinitionProperty<T>).property !== undefined;
 }
 
 /**
@@ -42,7 +42,7 @@ export interface CsvColumnDefinitionMap<T> {
  * @returns true, if the objct is a map definition. This is also asserted for TypeScript.
  */
 export function isMapDefinition<T>(obj: any): obj is CsvColumnDefinitionMap<T> {
-    const columnDefinitionMap = <CsvColumnDefinitionMap<T>>obj;
+    const columnDefinitionMap = obj as CsvColumnDefinitionMap<T>;
     return columnDefinitionMap.map !== undefined && columnDefinitionMap.label !== undefined;
 }
 

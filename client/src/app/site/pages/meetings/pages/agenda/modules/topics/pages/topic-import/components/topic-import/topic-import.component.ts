@@ -27,7 +27,7 @@ export class TopicImportComponent extends BaseViaBackendImportListMeetingCompone
 
     public columns: ImportListHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
         property: header,
-        label: (<any>topicHeadersAndVerboseNames)[header],
+        label: (topicHeadersAndVerboseNames as any)[header],
         isTableColumn: true,
         isRequired: header === `title`,
         flexible: [`title`, `text`, `agenda_comment`].includes(header)

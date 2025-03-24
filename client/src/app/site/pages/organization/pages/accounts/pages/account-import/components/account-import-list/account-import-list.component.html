@@ -14,11 +14,11 @@
 </os-head-bar>
 
 <os-backend-import-list
-    modelName="Account"
     additionalInfo="{{
         'Existing accounts can be reused or updated by using: <ul><li>Membership number <i>(recommended)</i><li>Username<li>Email address AND first name AND last name'
             | translate
     }}"
+    modelName="Account"
     [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"

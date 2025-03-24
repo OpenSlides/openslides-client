@@ -61,7 +61,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
     public allowReferenceProjector = true;
     public projectorSelectable = false;
-    private currentProjectionOptions: { [key: string]: any } = {};
+    private currentProjectionOptions: Record<string, any> = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 

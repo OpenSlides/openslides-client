@@ -53,7 +53,7 @@ export class ThemeService {
      *
      * Set by the ColorService.
      */
-    public readonly currentGeneralColorsSubject: BehaviorSubject<Partial<ThemeGeneralColors>> = new BehaviorSubject({});
+    public readonly currentGeneralColorsSubject = new BehaviorSubject<Partial<ThemeGeneralColors>>({});
 
     private readonly _isDarkModeSubject = new BehaviorSubject<boolean>(false);
 

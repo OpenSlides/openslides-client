@@ -99,7 +99,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         this.mainMenuService.toggleMenuSubject.subscribe(() => this.toggleSideNav());
     }
 
-    public getCustomStyleForEntry(entry: MainMenuEntry): { [key: string]: any } {
+    public getCustomStyleForEntry(entry: MainMenuEntry): Record<string, any> {
         return getCustomStyleForEntry(entry);
     }
 

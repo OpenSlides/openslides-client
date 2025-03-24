@@ -5,8 +5,8 @@
 <form class="edit-form">
     <mat-dialog-content>
         <os-participant-search-selector
-            [nonSelectableUserIds]="nonAvailableUserIds"
             placeholder="{{ 'Select speaker' | translate }}"
+            [nonSelectableUserIds]="nonAvailableUserIds"
             (userSelected)="setCurrentUser($event)"
         ></os-participant-search-selector>
     </mat-dialog-content>

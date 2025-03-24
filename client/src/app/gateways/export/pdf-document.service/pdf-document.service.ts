@@ -128,17 +128,11 @@ interface PdfDocumentFooterConfig {
     pageNumberPosition?: DocumentPosition;
 }
 
-export interface PdfVirtualFileSystem {
-    [url: string]: string;
-}
+export type PdfVirtualFileSystem = Record<string, string>;
 
 export interface PdfImageDescription {
-    images?: {
-        [url: string]: string;
-    };
-    svgs?: {
-        [url: string]: string;
-    };
+    images?: Record<string, string>;
+    svgs?: Record<string, string>;
 }
 
 export interface PdfFontDescription {
@@ -308,7 +302,7 @@ export class PdfDocumentService {
      */
     private imageUrls: string[] = [];
 
-    private headerLogos: { [place: string]: HeaderLogos | null } = {};
+    private headerLogos: Record<string, HeaderLogos | null> = {};
 
     private pdfWorker: Worker | null = null;
 

@@ -73,13 +73,13 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
         for (const field of fields) {
             const idsToWatch = (motion[field] || []) as Ids;
             if (!this._watchingMap[field]) {
-                (<any>this._watchingMap)[field] = [];
+                (this._watchingMap as any)[field] = [];
             }
-            const difference = idsToWatch.difference((<any>this._watchingMap)[field]);
+            const difference = idsToWatch.difference((this._watchingMap as any)[field]);
             if (difference.length > 0) {
                 const nextIds = Array.from(new Set(this._watchingMap[field]?.concat(idsToWatch)));
                 ids.push(...nextIds);
-                (<any>this._watchingMap)[field] = nextIds;
+                (this._watchingMap as any)[field] = nextIds;
             }
         }
         if (ids.length) {

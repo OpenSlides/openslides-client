@@ -92,7 +92,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         this.meetingSettingsService
             .get(`motions_show_sequential_number`)
             .subscribe(show => (this.showSequential = show));
-        (<any>window).comp = this;
+        (window as any).comp = this;
     }
 
     public onIdFound(id: Id | null): void {
