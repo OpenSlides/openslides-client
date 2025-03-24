@@ -27,7 +27,8 @@ interface IdMap {
     selector: `os-motion-manage-motion-meeting-users`,
     templateUrl: `./motion-manage-motion-meeting-users.component.html`,
     styleUrls: [`./motion-manage-motion-meeting-users.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUserViewModel<M>, M extends BaseModel>
     extends BaseUiComponent

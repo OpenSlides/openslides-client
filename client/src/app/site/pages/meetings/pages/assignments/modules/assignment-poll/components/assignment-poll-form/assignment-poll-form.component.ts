@@ -11,7 +11,8 @@ import { ViewAssignment } from '../../../../view-models';
     templateUrl: `../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.html`,
     styleUrls: [`../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: AssignmentPollFormComponent }],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AssignmentPollFormComponent extends BasePollFormComponent implements OnInit {
     public get hideSelects(): PollFormHideSelectsData {

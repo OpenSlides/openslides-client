@@ -12,7 +12,8 @@ import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/
 @Component({
     selector: `os-meeting-import`,
     templateUrl: `./meeting-import.component.html`,
-    styleUrls: [`./meeting-import.component.scss`]
+    styleUrls: [`./meeting-import.component.scss`],
+    standalone: false
 })
 export class MeetingImportComponent extends BaseComponent implements OnInit {
     private _committeeId: Id | null = null;

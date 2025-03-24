@@ -9,7 +9,6 @@ import { DirectivesModule } from '../../directives';
     templateUrl: `./expandable-content-wrapper.component.html`,
     styleUrls: [`./expandable-content-wrapper.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [CommonModule, DirectivesModule, OpenSlidesTranslationModule]
 })
 export class ExpandableContentWrapperComponent {

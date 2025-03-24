@@ -27,7 +27,8 @@ const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
     selector: `os-amendment-list`,
     templateUrl: `./amendment-list.component.html`,
     styleUrls: [`./amendment-list.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     @ViewChild(ProjectableListComponent)

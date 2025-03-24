@@ -22,7 +22,8 @@ import { FilterListService, SearchService, SortListService } from '../../definit
     templateUrl: `./view-list.component.html`,
     styleUrls: [`./view-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ViewListComponent<V extends Identifiable> implements OnInit, OnDestroy {
     @ViewChild(ScrollingTableComponent, { static: true })

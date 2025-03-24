@@ -22,7 +22,8 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
 @Component({
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
-    styleUrls: [`./autopilot.component.scss`]
+    styleUrls: [`./autopilot.component.scss`],
+    standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers | null = null;

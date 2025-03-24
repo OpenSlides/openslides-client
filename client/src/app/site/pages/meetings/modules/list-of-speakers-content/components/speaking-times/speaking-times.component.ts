@@ -29,7 +29,8 @@ import { ProjectionBuildDescriptor } from '../../../../view-models';
     selector: `os-speaking-times`,
     templateUrl: `./speaking-times.component.html`,
     styleUrls: [`./speaking-times.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeakingTimesComponent implements OnDestroy {
     /**

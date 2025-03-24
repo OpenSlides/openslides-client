@@ -25,7 +25,8 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
 @Component({
     selector: `os-committee-detail-edit`,
     templateUrl: `./committee-detail-edit.component.html`,
-    styleUrls: [`./committee-detail-edit.component.scss`]
+    styleUrls: [`./committee-detail-edit.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {
     private committeeId: number | null = null;

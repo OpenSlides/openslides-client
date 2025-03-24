@@ -62,7 +62,8 @@ import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-dele
     templateUrl: `./motion-view.component.html`,
     styleUrls: [`./motion-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionViewComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public readonly collection = ViewMotion.COLLECTION;

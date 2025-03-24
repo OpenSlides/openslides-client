@@ -7,7 +7,8 @@ import { Mutex } from 'src/app/infrastructure/utils/promises';
 @Component({
     selector: `os-sorting-list`,
     templateUrl: `./sorting-list.component.html`,
-    styleUrls: [`./sorting-list.component.scss`]
+    styleUrls: [`./sorting-list.component.scss`],
+    standalone: false
 })
 export class SortingListComponent<T extends Selectable = Selectable> implements OnDestroy {
     /**

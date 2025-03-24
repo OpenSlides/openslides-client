@@ -74,7 +74,6 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
     templateUrl: `./file-list.component.html`,
     styleUrls: [`./file-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         CommonModule,
         RouterModule,

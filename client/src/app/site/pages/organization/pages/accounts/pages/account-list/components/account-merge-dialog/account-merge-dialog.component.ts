@@ -9,7 +9,8 @@ export type AccountMergeDialogAnswer = number | null;
     selector: `os-account-merge-dialog`,
     templateUrl: `./account-merge-dialog.component.html`,
     styleUrls: [`./account-merge-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AccountMergeDialogComponent {
     public constructor(

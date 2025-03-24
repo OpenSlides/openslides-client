@@ -23,7 +23,8 @@ import { AssignmentPollService, UnknownUserLabel } from '../../services/assignme
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
-    styleUrls: [`./assignment-poll-dialog.component.scss`]
+    styleUrls: [`./assignment-poll-dialog.component.scss`],
+    standalone: false
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public unknownUserLabel = UnknownUserLabel;

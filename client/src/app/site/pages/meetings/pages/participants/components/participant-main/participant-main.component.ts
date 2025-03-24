@@ -12,7 +12,8 @@ import { getStructureLevelListSubscriptionConfig } from '../../participants.subs
 @Component({
     selector: `os-participant-main`,
     templateUrl: `./participant-main.component.html`,
-    styleUrls: [`./participant-main.component.scss`]
+    styleUrls: [`./participant-main.component.scss`],
+    standalone: false
 })
 export class ParticipantMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

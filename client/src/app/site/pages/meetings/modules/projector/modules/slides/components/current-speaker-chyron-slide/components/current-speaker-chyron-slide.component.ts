@@ -6,7 +6,8 @@ import { CurrentSpeakerChyronSlideData } from '../current-speaker-chyron-slide-d
 @Component({
     selector: `os-current-speaker-chyron-speakers-slide`,
     templateUrl: `./current-speaker-chyron-slide.component.html`,
-    styleUrls: [`./current-speaker-chyron-slide.component.scss`]
+    styleUrls: [`./current-speaker-chyron-slide.component.scss`],
+    standalone: false
 })
 export class CurrentSpeakerChyronSlideComponent extends BaseSlideComponent<CurrentSpeakerChyronSlideData> {
     public getSpeaker(): string[] {

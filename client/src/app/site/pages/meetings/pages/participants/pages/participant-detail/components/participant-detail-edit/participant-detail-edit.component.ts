@@ -33,7 +33,8 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     selector: `os-participant-detail-edit`,
     templateUrl: `./participant-detail-edit.component.html`,
     styleUrls: [`./participant-detail-edit.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParticipantDetailEditComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(UserDetailViewComponent)

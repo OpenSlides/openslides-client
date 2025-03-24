@@ -29,7 +29,8 @@ const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
     selector: `os-account-list`,
     templateUrl: `./account-list.component.html`,
     styleUrls: [`./account-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public meeting: Observable<ViewMeeting> = null;

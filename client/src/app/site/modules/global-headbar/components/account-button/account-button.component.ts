@@ -25,7 +25,8 @@ import { AccountDialogComponent } from '../account-dialog/account-dialog.compone
 @Component({
     selector: `os-account-button`,
     templateUrl: `./account-button.component.html`,
-    styleUrls: [`./account-button.component.scss`]
+    styleUrls: [`./account-button.component.scss`],
+    standalone: false
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public readonly translations = availableTranslations;

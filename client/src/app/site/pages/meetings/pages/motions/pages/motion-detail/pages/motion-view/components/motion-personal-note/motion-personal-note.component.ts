@@ -14,7 +14,8 @@ const SUBSCRIPTION_NAME = `personal_note_subscription`;
     selector: `os-motion-personal-note`,
     templateUrl: `./motion-personal-note.component.html`,
     styleUrls: [`./motion-personal-note.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionPersonalNoteComponent extends BaseMotionDetailActionCardComponent {
     public get personalNoteObservable(): Observable<PersonalNote | null> {

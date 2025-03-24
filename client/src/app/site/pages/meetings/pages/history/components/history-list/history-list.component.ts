@@ -36,7 +36,8 @@ const HISTORY_SUBSCRIPTION_PREFIX = `history`;
 @Component({
     selector: `os-history-list`,
     templateUrl: `./history-list.component.html`,
-    styleUrls: [`./history-list.component.scss`]
+    styleUrls: [`./history-list.component.scss`],
+    standalone: false
 })
 export class HistoryListComponent extends BaseMeetingComponent implements OnInit {
     /**

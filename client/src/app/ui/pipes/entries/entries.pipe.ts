@@ -6,7 +6,8 @@ interface IterableMap<K, V> {
 }
 
 @Pipe({
-    name: `entries`
+    name: `entries`,
+    standalone: false
 })
 export class EntriesPipe implements PipeTransform {
     private differ!: KeyValueDiffer<any, any>;

@@ -30,7 +30,8 @@ const connectingTitle = _(`connecting ...`);
     selector: `os-call`,
     templateUrl: `./call.component.html`,
     styleUrls: [`./call.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CallComponent extends BaseMeetingComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output()

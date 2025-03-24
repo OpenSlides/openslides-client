@@ -74,7 +74,8 @@ type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [k
     templateUrl: `./motion-form.component.html`,
     styleUrls: [`./motion-form.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionFormComponent extends BaseMeetingComponent implements OnInit {
     public readonly collection = ViewMotion.COLLECTION;

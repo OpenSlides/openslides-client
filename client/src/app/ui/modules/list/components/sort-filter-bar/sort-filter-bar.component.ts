@@ -44,7 +44,8 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     templateUrl: `./sort-filter-bar.component.html`,
     styleUrls: [`./sort-filter-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy, OnInit {
     @ViewChild(`searchField`, { static: true })

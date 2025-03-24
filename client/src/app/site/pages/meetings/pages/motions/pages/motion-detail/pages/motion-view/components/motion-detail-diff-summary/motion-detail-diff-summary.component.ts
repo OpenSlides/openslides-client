@@ -25,7 +25,8 @@ import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-m
     templateUrl: `./motion-detail-diff-summary.component.html`,
     styleUrls: [`./motion-detail-diff-summary.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent implements AfterViewInit {
     /**

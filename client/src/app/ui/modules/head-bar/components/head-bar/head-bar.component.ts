@@ -70,7 +70,8 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     selector: `os-head-bar`,
     templateUrl: `./head-bar.component.html`,
     styleUrls: [`./head-bar.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class HeadBarComponent implements OnInit, AfterViewInit {
     /**

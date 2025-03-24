@@ -10,7 +10,8 @@ import { AutopilotService } from '../../services/autopilot.service';
     selector: `os-autopilot-settings`,
     templateUrl: `./autopilot-settings.component.html`,
     styleUrls: [`./autopilot-settings.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutopilotSettingsComponent extends BaseMeetingComponent implements OnInit {
     public readonly autopilotContentElements: { key: string; description: string }[] = [

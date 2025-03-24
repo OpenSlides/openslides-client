@@ -55,7 +55,8 @@ import { MotionControllerService } from '../../../../../../services/common/motio
     selector: `os-motion-detail-original-change-recommendations`,
     templateUrl: `./motion-detail-original-change-recommendations.component.html`,
     styleUrls: [`./motion-detail-original-change-recommendations.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit /* , OnChanges */ {
     @Output()

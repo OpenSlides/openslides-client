@@ -39,7 +39,8 @@ export class TextOptionSelectable implements Selectable {
 @Component({
     selector: `os-topic-poll-dialog`,
     templateUrl: `./topic-poll-dialog.component.html`,
-    styleUrls: [`./topic-poll-dialog.component.scss`]
+    styleUrls: [`./topic-poll-dialog.component.scss`],
+    standalone: false
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     @ViewChild(`scrollframe`, { static: false }) public scrollFrame: ElementRef;

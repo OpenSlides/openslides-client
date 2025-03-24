@@ -28,7 +28,8 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     selector: `os-participant-detail-view`,
     templateUrl: `./participant-detail-view.component.html`,
     styleUrls: [`./participant-detail-view.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);

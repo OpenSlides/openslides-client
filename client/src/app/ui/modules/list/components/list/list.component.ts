@@ -8,7 +8,8 @@ import { BaseListComponent } from '../../base/base-list.component';
     selector: `os-list`,
     templateUrl: `./list.component.html`,
     styleUrls: [`./list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListComponent<V extends Identifiable> extends BaseListComponent<V> {
     @Input()

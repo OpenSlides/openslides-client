@@ -39,7 +39,8 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
 @Component({
     selector: `os-projector-detail`,
     templateUrl: `./projector-detail.component.html`,
-    styleUrls: [`./projector-detail.component.scss`]
+    styleUrls: [`./projector-detail.component.scss`],
+    standalone: false
 })
 export class ProjectorDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewProjector.COLLECTION;

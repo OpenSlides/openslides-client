@@ -13,7 +13,8 @@ interface OrgaMenuEntry extends BaseMenuEntry<OML> {
 @Component({
     selector: `os-organization-navigation`,
     templateUrl: `./organization-navigation.component.html`,
-    styleUrls: [`./organization-navigation.component.scss`]
+    styleUrls: [`./organization-navigation.component.scss`],
+    standalone: false
 })
 export class OrganizationNavigationComponent {
     public CML = CML;

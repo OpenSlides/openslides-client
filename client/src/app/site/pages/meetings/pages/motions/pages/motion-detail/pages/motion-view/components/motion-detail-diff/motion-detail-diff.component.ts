@@ -64,7 +64,8 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
     templateUrl: `./motion-detail-diff.component.html`,
     styleUrls: [`./motion-detail-diff.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailDiffComponent extends BaseMeetingComponent implements AfterViewInit {
     /**

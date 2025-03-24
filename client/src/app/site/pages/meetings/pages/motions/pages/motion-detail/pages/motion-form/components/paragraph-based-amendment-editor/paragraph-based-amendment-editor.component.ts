@@ -17,7 +17,8 @@ const CONTENT_FORM_SUBSCRIPTION_NAME = `contentForm`;
     selector: `os-paragraph-based-amendment-editor`,
     templateUrl: `./paragraph-based-amendment-editor.component.html`,
     styleUrls: [`./paragraph-based-amendment-editor.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParagraphBasedAmendmentEditorComponent extends BaseMotionDetailChildComponent {
     @Output()

@@ -30,7 +30,8 @@ import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles
     selector: `os-organization-mediafile-list`,
     templateUrl: `./organization-mediafile-list.component.html`,
     styleUrls: [`./organization-mediafile-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OrganizationMediafileListComponent
     extends BaseListViewComponent<ViewMediafile>

@@ -21,7 +21,8 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
 @Component({
     selector: `os-category-detail`,
     templateUrl: `./category-detail.component.html`,
-    styleUrls: [`./category-detail.component.scss`]
+    styleUrls: [`./category-detail.component.scss`],
+    standalone: false
 })
 export class CategoryDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewMotionCategory.COLLECTION;

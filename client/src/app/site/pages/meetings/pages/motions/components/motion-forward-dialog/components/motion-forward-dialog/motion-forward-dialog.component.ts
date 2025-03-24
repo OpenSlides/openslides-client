@@ -18,7 +18,8 @@ export interface MotionForwardDialogReturnData {
 @Component({
     selector: `os-motion-forward-dialog`,
     templateUrl: `./motion-forward-dialog.component.html`,
-    styleUrls: [`./motion-forward-dialog.component.scss`]
+    styleUrls: [`./motion-forward-dialog.component.scss`],
+    standalone: false
 })
 export class MotionForwardDialogComponent implements OnInit {
     public get committeesObservable(): Observable<GetForwardingMeetingsPresenter[]> {

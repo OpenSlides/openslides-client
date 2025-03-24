@@ -40,7 +40,8 @@ type ParticipationTableMeetingDataRow = {
 @Component({
     selector: `os-account-detail`,
     templateUrl: `./account-detail.component.html`,
-    styleUrls: [`./account-detail.component.scss`]
+    styleUrls: [`./account-detail.component.scss`],
+    standalone: false
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {

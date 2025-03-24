@@ -38,7 +38,8 @@ const AGENDA_ITEM_LIST_STORAGE_INDEX = `agenda_item_list`;
 @Component({
     selector: `os-agenda-item-list`,
     templateUrl: `./agenda-item-list.component.html`,
-    styleUrls: [`./agenda-item-list.component.scss`]
+    styleUrls: [`./agenda-item-list.component.scss`],
+    standalone: false
 })
 export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAgendaItem> implements OnInit {
     public readonly AGENDA_TYPE_PUBLIC = AgendaItemType.COMMON;

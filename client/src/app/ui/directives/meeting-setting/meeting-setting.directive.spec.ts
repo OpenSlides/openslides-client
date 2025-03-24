@@ -39,7 +39,8 @@ class MockMeetingSettingsService {
         <ng-template #elseTemplate>
             <div id="else"></div>
         </ng-template>
-    `
+    `,
+    standalone: false
 })
 class TestComponent {
     public and = true;

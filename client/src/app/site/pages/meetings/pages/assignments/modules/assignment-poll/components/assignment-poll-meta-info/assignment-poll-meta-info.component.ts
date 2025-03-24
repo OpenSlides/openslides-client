@@ -9,7 +9,8 @@ import { AssignmentPollMethodVerbose } from '../../definitions';
 @Component({
     selector: `os-assignment-poll-meta-info`,
     templateUrl: `./assignment-poll-meta-info.component.html`,
-    styleUrls: [`./assignment-poll-meta-info.component.scss`]
+    styleUrls: [`./assignment-poll-meta-info.component.scss`],
+    standalone: false
 })
 export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComponent {
     public pollPropertyVerbose = PollPropertyVerbose;

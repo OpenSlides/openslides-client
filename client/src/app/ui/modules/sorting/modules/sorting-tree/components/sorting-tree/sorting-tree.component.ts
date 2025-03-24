@@ -50,7 +50,8 @@ class Movement {
 @Component({
     selector: `os-sorting-tree`,
     templateUrl: `./sorting-tree.component.html`,
-    styleUrls: [`./sorting-tree.component.scss`]
+    styleUrls: [`./sorting-tree.component.scss`],
+    standalone: false
 })
 export class SortingTreeComponent<T extends Identifiable & Displayable> implements OnDestroy {
     /**

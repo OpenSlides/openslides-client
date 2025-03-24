@@ -5,7 +5,8 @@ import { EasterEggContentPlatformService } from '../../modules/easter-egg/servic
 @Component({
     selector: `os-copyright-sign`,
     templateUrl: `./copyright-sign.component.html`,
-    styleUrls: [`./copyright-sign.component.scss`]
+    styleUrls: [`./copyright-sign.component.scss`],
+    standalone: false
 })
 export class CopyrightSignComponent {
     private clickTimeout: number | null = null;

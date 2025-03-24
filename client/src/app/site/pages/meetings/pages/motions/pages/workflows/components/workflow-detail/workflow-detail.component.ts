@@ -68,7 +68,8 @@ interface RestrictionShape {
 @Component({
     selector: `os-workflow-detail`,
     templateUrl: `./workflow-detail.component.html`,
-    styleUrls: [`./workflow-detail.component.scss`]
+    styleUrls: [`./workflow-detail.component.scss`],
+    standalone: false
 })
 export class WorkflowDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;

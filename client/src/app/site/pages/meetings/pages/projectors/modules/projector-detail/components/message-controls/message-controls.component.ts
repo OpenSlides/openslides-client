@@ -10,7 +10,8 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
 @Component({
     selector: `os-message-controls`,
     templateUrl: `./message-controls.component.html`,
-    styleUrls: [`./message-controls.component.scss`]
+    styleUrls: [`./message-controls.component.scss`],
+    standalone: false
 })
 export class MessageControlsComponent {
     /**

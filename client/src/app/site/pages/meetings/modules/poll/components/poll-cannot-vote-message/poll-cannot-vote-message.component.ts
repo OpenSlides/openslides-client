@@ -11,7 +11,8 @@ import { VotingService } from '../../services/voting.service';
     selector: `os-poll-cannot-vote-message`,
     templateUrl: `./poll-cannot-vote-message.component.html`,
     styleUrls: [`./poll-cannot-vote-message.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
     @Input()

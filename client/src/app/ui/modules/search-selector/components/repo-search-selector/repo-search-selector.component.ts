@@ -15,7 +15,8 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     templateUrl: `../base-search-selector/base-search-selector.component.html`,
     styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./repo-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: RepoSearchSelectorComponent }],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {
     @Input()

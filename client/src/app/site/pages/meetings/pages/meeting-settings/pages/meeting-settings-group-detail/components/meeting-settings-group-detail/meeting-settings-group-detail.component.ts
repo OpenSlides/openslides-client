@@ -33,7 +33,8 @@ import {
 @Component({
     selector: `os-meeting-settings-group-detail`,
     templateUrl: `./meeting-settings-group-detail.component.html`,
-    styleUrls: [`./meeting-settings-group-detail.component.scss`]
+    styleUrls: [`./meeting-settings-group-detail.component.scss`],
+    standalone: false
 })
 export class MeetingSettingsGroupDetailComponent
     extends BaseMeetingComponent

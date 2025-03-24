@@ -32,7 +32,8 @@ import { OneOfValidator } from '../../validators';
 @Component({
     selector: `os-user-detail-view`,
     templateUrl: `./user-detail-view.component.html`,
-    styleUrls: [`./user-detail-view.component.scss`]
+    styleUrls: [`./user-detail-view.component.scss`],
+    standalone: false
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     /**

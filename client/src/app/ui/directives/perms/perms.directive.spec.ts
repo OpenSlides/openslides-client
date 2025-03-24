@@ -37,7 +37,8 @@ export class BasePermsTestComponent<ComponentDataType extends object> {
             "
             id="delegation"
         ></div>
-    `
+    `,
+    standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public readonly permission = Permission.listOfSpeakersCanSee;

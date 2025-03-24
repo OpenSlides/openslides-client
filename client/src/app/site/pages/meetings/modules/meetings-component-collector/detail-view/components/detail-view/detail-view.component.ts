@@ -21,7 +21,8 @@ const ROUTE_SUBSCRIPTION_NAME = `routeSubscription`;
     selector: `os-detail-view`,
     templateUrl: `./detail-view.component.html`,
     styleUrls: [`./detail-view.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DetailViewComponent implements OnInit {
     @Input()

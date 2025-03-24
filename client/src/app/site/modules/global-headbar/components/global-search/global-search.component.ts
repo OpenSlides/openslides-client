@@ -14,7 +14,8 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
     selector: `os-global-search`,
     templateUrl: `./global-search.component.html`,
     styleUrls: [`./global-search.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GlobalSearchComponent implements OnDestroy {
     private static _searchTerm = ``;

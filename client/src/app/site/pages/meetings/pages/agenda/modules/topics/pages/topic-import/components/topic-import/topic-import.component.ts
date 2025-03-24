@@ -14,7 +14,8 @@ const TEXT_IMPORT_TAB_INDEX = 0;
 @Component({
     selector: `os-topic-import`,
     templateUrl: `./topic-import.component.html`,
-    styleUrls: [`./topic-import.component.scss`]
+    styleUrls: [`./topic-import.component.scss`],
+    standalone: false
 })
 export class TopicImportComponent extends BaseViaBackendImportListMeetingComponent {
     /**

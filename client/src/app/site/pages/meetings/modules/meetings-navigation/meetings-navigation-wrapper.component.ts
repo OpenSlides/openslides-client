@@ -41,8 +41,7 @@ import { LoadFontService } from '../../services/load-font.service';
         MatIconModule,
         MatBadgeModule,
         RouterModule
-    ],
-    standalone: true
+    ]
 })
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {
     /**

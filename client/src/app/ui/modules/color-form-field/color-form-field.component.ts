@@ -16,7 +16,6 @@ import { BaseFormControlComponent } from '../../base/base-form-control';
     templateUrl: `./color-form-field.component.html`,
     styleUrls: [`./color-form-field.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => ColorFormFieldComponent) }],
-    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,

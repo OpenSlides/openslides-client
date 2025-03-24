@@ -13,7 +13,8 @@ import { ViewMotion } from '../../../../../../view-models';
     selector: `os-motion-manage-timestamp`,
     templateUrl: `./motion-manage-timestamp.component.html`,
     styleUrls: [`./motion-manage-timestamp.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionManageTimestampComponent extends BaseUiComponent implements OnInit {
     public get motion(): ViewMotion {

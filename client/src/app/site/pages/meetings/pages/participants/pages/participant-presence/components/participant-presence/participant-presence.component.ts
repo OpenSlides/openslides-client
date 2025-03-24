@@ -7,7 +7,8 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 @Component({
     selector: `os-participant-presence`,
     templateUrl: `./participant-presence.component.html`,
-    styleUrls: [`./participant-presence.component.scss`]
+    styleUrls: [`./participant-presence.component.scss`],
+    standalone: false
 })
 export class ParticipantPresenceComponent implements OnInit {
     /**

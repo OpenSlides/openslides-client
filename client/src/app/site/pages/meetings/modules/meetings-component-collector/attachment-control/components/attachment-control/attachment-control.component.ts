@@ -30,7 +30,8 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
     templateUrl: `./attachment-control.component.html`,
     styleUrls: [`./attachment-control.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AttachmentControlComponent), multi: true }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AttachmentControlComponent extends BaseFormControlComponent<ViewMediafile[]> implements OnInit, OnDestroy {
     /**

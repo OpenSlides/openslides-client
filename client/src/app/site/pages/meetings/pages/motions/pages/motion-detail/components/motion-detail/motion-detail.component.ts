@@ -15,7 +15,8 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
 @Component({
     selector: `os-motion-detail`,
     templateUrl: `./motion-detail.component.html`,
-    styleUrls: [`./motion-detail.component.scss`]
+    styleUrls: [`./motion-detail.component.scss`],
+    standalone: false
 })
 export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     private _currentMotionId: Id | null = null;

@@ -19,7 +19,8 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     selector: `os-motion-highlight-form`,
     templateUrl: `./motion-highlight-form.component.html`,
     styleUrls: [`./motion-highlight-form.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;

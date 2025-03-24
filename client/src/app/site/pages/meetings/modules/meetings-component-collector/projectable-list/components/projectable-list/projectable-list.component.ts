@@ -28,7 +28,8 @@ export interface CssClassDefinition {
     templateUrl: `./projectable-list.component.html`,
     styleUrls: [`./projectable-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: ListComponent, useExisting: ProjectableListComponent }]
+    providers: [{ provide: ListComponent, useExisting: ProjectableListComponent }],
+    standalone: false
 })
 export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableViewModel> extends BaseListComponent<V> {
     public readonly END_POSITION = END_POSITION;

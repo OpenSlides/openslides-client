@@ -34,7 +34,8 @@ interface DataSourceProvider<T> {
     selector: `os-scrolling-table`,
     templateUrl: `./scrolling-table.component.html`,
     styleUrls: [`./scrolling-table.component.scss`],
-    providers: [{ provide: SCROLLING_TABLE, useExisting: ScrollingTableComponent }]
+    providers: [{ provide: SCROLLING_TABLE, useExisting: ScrollingTableComponent }],
+    standalone: false
 })
 export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     extends BaseUiComponent

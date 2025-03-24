@@ -40,7 +40,8 @@ interface ProjectorEditDialogConfig {
     templateUrl: `./projector-edit-dialog.component.html`,
     styleUrls: [`./projector-edit-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectorEditDialogComponent extends BaseUiComponent implements OnInit {
     /**

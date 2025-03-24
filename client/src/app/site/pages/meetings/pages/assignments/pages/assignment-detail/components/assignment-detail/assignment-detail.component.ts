@@ -33,7 +33,8 @@ import { AssignmentCandidateControllerService } from '../../services/assignment-
 @Component({
     selector: `os-assignment-detail`,
     templateUrl: `./assignment-detail.component.html`,
-    styleUrls: [`./assignment-detail.component.scss`]
+    styleUrls: [`./assignment-detail.component.scss`],
+    standalone: false
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {
     public readonly COLLECTION = Assignment.COLLECTION;

@@ -48,7 +48,8 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
     selector: `os-participant-list`,
     templateUrl: `./participant-list.component.html`,
     styleUrls: [`./participant-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewUser> implements OnInit {
     /**

@@ -43,7 +43,8 @@ const NO_HEADER_TOP_MARGIN = 40;
     selector: `os-poll-slide`,
     templateUrl: `./poll-slide.component.html`,
     styleUrls: [`./poll-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PollSlideComponent
     extends BaseSlideComponent<PollSlideData>

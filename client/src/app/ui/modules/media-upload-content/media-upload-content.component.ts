@@ -28,7 +28,6 @@ export interface UploadSuccessEvent {
     selector: `os-media-upload-content`,
     templateUrl: `./media-upload-content.component.html`,
     styleUrls: [`./media-upload-content.component.scss`],
-    standalone: true,
     imports: [
         CommonModule,
         FormsModule,

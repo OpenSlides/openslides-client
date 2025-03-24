@@ -23,7 +23,8 @@ import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/servic
 @Component({
     selector: `os-motion-block-detail`,
     templateUrl: `./motion-block-detail.component.html`,
-    styleUrls: [`./motion-block-detail.component.scss`]
+    styleUrls: [`./motion-block-detail.component.scss`],
+    standalone: false
 })
 export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly COLLECTION = MotionBlock.COLLECTION;

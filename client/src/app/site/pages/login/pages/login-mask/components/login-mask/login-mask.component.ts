@@ -34,7 +34,8 @@ interface LoginValues {
     selector: `os-login-mask`,
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
-    animations: [fadeInAnim]
+    animations: [fadeInAnim],
+    standalone: false
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public meeting: Meeting;

@@ -95,7 +95,8 @@ const DEFAULT_COLOR_PALETE = [
     selector: `os-editor`,
     templateUrl: `./editor.component.html`,
     styleUrls: [`./editor.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }],
+    standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
     @ViewChild(`editorEl`) private editorEl: ElementRef;

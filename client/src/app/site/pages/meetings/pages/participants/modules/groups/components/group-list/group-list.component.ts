@@ -19,7 +19,8 @@ import { GroupControllerService } from '../../services';
 @Component({
     selector: `os-group-list`,
     templateUrl: `./group-list.component.html`,
-    styleUrls: [`./group-list.component.scss`]
+    styleUrls: [`./group-list.component.scss`],
+    standalone: false
 })
 export class GroupListComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
     /**

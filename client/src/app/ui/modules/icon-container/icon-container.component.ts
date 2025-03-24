@@ -7,7 +7,6 @@ import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
     selector: `os-icon-container`,
     templateUrl: `./icon-container.component.html`,
     styleUrls: [`./icon-container.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatIconModule, MatTooltipModule]
 })
 export class IconContainerComponent {

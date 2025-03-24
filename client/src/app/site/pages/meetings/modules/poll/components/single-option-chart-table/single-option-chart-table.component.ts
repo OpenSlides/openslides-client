@@ -8,7 +8,8 @@ import { ChartData } from '../chart/chart.component';
 @Component({
     selector: `os-single-option-chart-table`,
     templateUrl: `./single-option-chart-table.component.html`,
-    styleUrls: [`./single-option-chart-table.component.scss`]
+    styleUrls: [`./single-option-chart-table.component.scss`],
+    standalone: false
 })
 export class SingleOptionChartTableComponent {
     private _poll: PollData;

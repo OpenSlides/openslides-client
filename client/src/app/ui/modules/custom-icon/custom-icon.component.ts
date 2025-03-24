@@ -8,7 +8,6 @@ import { CustomIcon } from './definitions';
     templateUrl: `./custom-icon.component.html`,
     styleUrls: [`./custom-icon.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [CommonModule]
 })
 export class CustomIconComponent {

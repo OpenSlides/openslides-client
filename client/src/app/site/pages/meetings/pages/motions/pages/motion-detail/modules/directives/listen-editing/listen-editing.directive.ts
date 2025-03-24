@@ -67,7 +67,8 @@ interface EditObject {
 }
 
 @Directive({
-    selector: `[osListenEditing]`
+    selector: `[osListenEditing]`,
+    standalone: false
 })
 export class ListenEditingDirective extends BaseComponent implements OnDestroy {
     @Input()

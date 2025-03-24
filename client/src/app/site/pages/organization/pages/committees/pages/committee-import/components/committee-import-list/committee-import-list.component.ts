@@ -9,7 +9,8 @@ import { CommitteeImportService } from '../../services/committee-import.service/
 @Component({
     selector: `os-committee-import-list`,
     templateUrl: `./committee-import-list.component.html`,
-    styleUrls: [`./committee-import-list.component.scss`]
+    styleUrls: [`./committee-import-list.component.scss`],
+    standalone: false
 })
 export class CommitteeImportListComponent extends BaseViaBackendImportListComponent {
     public possibleFields = Object.keys(committeeHeadersAndVerboseNames);

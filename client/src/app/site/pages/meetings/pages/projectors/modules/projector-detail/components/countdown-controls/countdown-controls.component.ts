@@ -13,7 +13,8 @@ import { ProjectorCountdownControllerService } from '../../services/projector-co
 @Component({
     selector: `os-countdown-controls`,
     templateUrl: `./countdown-controls.component.html`,
-    styleUrls: [`./countdown-controls.component.scss`]
+    styleUrls: [`./countdown-controls.component.scss`],
+    standalone: false
 })
 export class CountdownControlsComponent {
     /**

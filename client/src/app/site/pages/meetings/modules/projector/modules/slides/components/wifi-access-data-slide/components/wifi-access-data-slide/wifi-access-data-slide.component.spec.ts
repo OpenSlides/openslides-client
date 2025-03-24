@@ -6,7 +6,8 @@ import { WifiAccessDataSlideComponent } from './wifi-access-data-slide.component
 
 @Pipe({
     name: `translate`,
-    pure: false
+    pure: false,
+    standalone: false
 })
 class MockTranslatePipe implements PipeTransform {
     public transform(text: string): string {
@@ -18,7 +19,8 @@ class MockTranslatePipe implements PipeTransform {
     selector: `os-qr-code`,
     template: `
         {{ text }}
-    `
+    `,
+    standalone: false
 })
 class MockQrCodeComponent {
     @Input()
@@ -31,7 +33,8 @@ class MockQrCodeComponent {
 @Component({
     template: `
         <os-wifi-access-data-slide [data]="slideData"></os-wifi-access-data-slide>
-    `
+    `,
+    standalone: false
 })
 class TestComponent {
     public get slideData(): SlideData<any> {

@@ -8,7 +8,8 @@ import { BannerDefinition, BannerService } from '../../services/banner.service';
 @Component({
     selector: `os-banner`,
     templateUrl: `./banner.component.html`,
-    styleUrls: [`./banner.component.scss`]
+    styleUrls: [`./banner.component.scss`],
+    standalone: false
 })
 export class BannerComponent implements OnDestroy {
     public readonly activeBanners: Observable<BannerDefinition[]>;

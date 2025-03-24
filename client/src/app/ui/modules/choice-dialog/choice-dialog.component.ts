@@ -15,7 +15,6 @@ import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
     templateUrl: `./choice-dialog.component.html`,
     styleUrls: [`./choice-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         CommonModule,
         MatDialogModule,

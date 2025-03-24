@@ -19,7 +19,8 @@ import { StreamService } from '../../../../services/stream.service';
     selector: `os-stream`,
     templateUrl: `./stream.component.html`,
     styleUrls: [`./stream.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StreamComponent extends BaseMeetingComponent implements AfterViewInit, OnDestroy {
     private streamRunning = false;

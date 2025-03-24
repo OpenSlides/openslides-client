@@ -30,7 +30,8 @@ import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pd
 @Component({
     selector: `os-topic-detail`,
     templateUrl: `./topic-detail.component.html`,
-    styleUrls: [`./topic-detail.component.scss`]
+    styleUrls: [`./topic-detail.component.scss`],
+    standalone: false
 })
 export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewTopic.COLLECTION;

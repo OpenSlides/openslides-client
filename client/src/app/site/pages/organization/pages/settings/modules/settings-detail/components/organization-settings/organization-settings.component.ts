@@ -15,7 +15,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     selector: `os-organization-settings`,
     templateUrl: `./organization-settings.component.html`,
     styleUrls: [`./organization-settings.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);

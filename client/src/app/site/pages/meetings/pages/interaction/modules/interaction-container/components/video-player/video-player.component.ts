@@ -38,7 +38,8 @@ enum Player {
         `../../../../../../../../../../../node_modules/video.js/dist/video-js.css`
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     @ViewChild(`vjs`, { static: false })

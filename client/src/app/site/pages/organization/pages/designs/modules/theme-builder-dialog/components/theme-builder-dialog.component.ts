@@ -16,7 +16,8 @@ type ThemeBuilderDialogData = {
 @Component({
     selector: `os-theme-builder-dialog`,
     templateUrl: `./theme-builder-dialog.component.html`,
-    styleUrls: [`./theme-builder-dialog.component.scss`]
+    styleUrls: [`./theme-builder-dialog.component.scss`],
+    standalone: false
 })
 export class ThemeBuilderDialogComponent extends BaseUiComponent implements AfterViewInit {
     public paletteBuilderForm: UntypedFormGroup | null = null;

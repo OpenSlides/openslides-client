@@ -22,7 +22,8 @@ function hasError(obj: object): obj is { error: string } {
 @Component({
     selector: `os-slide-container`,
     templateUrl: `./slide-container.component.html`,
-    styleUrls: [`./slide-container.component.scss`]
+    styleUrls: [`./slide-container.component.scss`],
+    standalone: false
 })
 export class SlideContainerComponent {
     private previousSlideName: string | undefined;

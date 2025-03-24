@@ -19,7 +19,8 @@ export type Depth = typeof DEPTH_0 | typeof DEPTH_1 | typeof DEPTH_2 | typeof DE
  * Attaches to its container element a box shadow depending on the choosed depth.
  */
 @Directive({
-    selector: `[osPaper]`
+    selector: `[osPaper]`,
+    standalone: false
 })
 export class PaperDirective implements OnInit {
     @Input()

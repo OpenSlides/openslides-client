@@ -14,7 +14,8 @@ import {
 @Component({
     selector: `os-projector-button`,
     templateUrl: `./projector-button.component.html`,
-    styleUrls: [`./projector-button.component.scss`]
+    styleUrls: [`./projector-button.component.scss`],
+    standalone: false
 })
 export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public readonly permission = Permission;

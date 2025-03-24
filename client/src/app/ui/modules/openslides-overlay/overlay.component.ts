@@ -18,7 +18,6 @@ import { OverlayPosition } from './definitions';
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
     styleUrls: [`./overlay.component.scss`],
-    standalone: true,
     imports: [CommonModule]
 })
 export class OverlayComponent {

@@ -12,7 +12,8 @@ const MAX_COLUMNS = 3;
     selector: `os-current-structure-level-list-slide`,
     templateUrl: `./current-structure-level-list-slide.component.html`,
     styleUrls: [`./current-structure-level-list-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<CurrentStructureLevelListSlideData> {
     /**
