@@ -268,7 +268,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
             }
         }
 
-        return null;
+        return this.osTreeData[0];
     }
 
     /**
@@ -804,18 +804,24 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         const nonSelectedSubNodes: MoveNode<T>[] = [];
 
         let nextPosition = this.nextPosition;
+
         for (const nodeId of this.multiSelectedIndex) {
             node = this.osTreeData.filter(item => item.id === nodeId)[0];
             const direction = node.position < this.nextPosition ? 0 : 1;
 
-            // If there are subnodes taht are not selected, move them to a previous parent
+            // If there are subnodes that are not selected, move them to a previous parent
             const subNodes = this.getAllSubNodes(node)?.filter(
                 n => !this.multiSelectedIndex.includes(n.id) && n !== node
             );
+
+            const selectedNodeSubnodes = this.getAllSubNodes(node)?.filter(
+                n => this.multiSelectedIndex.includes(n.id) && n !== node
+            );
+
             const previousNode = subNodes.length > 0 ? this.getMultiselectPreviousNode(subNodes[0]) : null;
             if (previousNode) {
-                let previousPos = previousNode.position;
-                let previousLevel = previousNode.level;
+                let previousPos = !this.multiSelectedIndex.includes(previousNode.id) ? previousNode.position : -1;
+                let previousLevel = !this.multiSelectedIndex.includes(previousNode.id) ? previousNode.level : -1;
                 for (const sub of subNodes) {
                     nonSelectedSubNodes.push({
                         node: sub,
@@ -829,6 +835,11 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                 for (const moveNode of nonSelectedSubNodes) {
                     this.moveItemToTree(moveNode.node, moveNode.previousIndex, moveNode.nextIndex, moveNode.nextLevel);
                 }
+            }
+
+            // Set selected child nodes on same level as parent node to not be moved as child
+            for (const moveNode of selectedNodeSubnodes) {
+                this.moveItemToTree(moveNode, moveNode.position, moveNode.position, node.level);
             }
 
             // Update node information and move to goal
