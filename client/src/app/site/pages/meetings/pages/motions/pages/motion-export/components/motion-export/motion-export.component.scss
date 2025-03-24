@@ -1,4 +1,4 @@
-@import 'src/assets/styles/colors.scss';
+@use 'src/assets/styles/colors';
 
 .motion-export-wrapper {
     margin-right: 72px !important;
@@ -25,7 +25,7 @@
             outline-color: var(--mat-chip-option-background-color);
             span.mat-badge-content {
                 font-size: 18px;
-                background-color: $os-lightblue;
+                background-color: colors.$os-lightblue;
             }
             span.mdc-evolution-chip__cell {
                 overflow: hidden !important;
