@@ -32,7 +32,8 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
         additionalFields: [`committee_ids`, `organization_tag_ids`],
         follow: [
             { idField: `mediafile_ids`, fieldset: `organizationDetail` },
-            { idField: `theme_id`, fieldset: DEFAULT_FIELDSET }
+            { idField: `theme_id`, fieldset: DEFAULT_FIELDSET },
+            { idField: `gender_ids`, fieldset: [`name`] }
         ]
     },
     subscriptionName: ORGANIZATION_SUBSCRIPTION
