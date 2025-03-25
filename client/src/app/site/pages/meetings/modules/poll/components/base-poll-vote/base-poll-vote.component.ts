@@ -107,7 +107,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     public voteActions: VoteOption[] = [];
 
     public get showAvailableVotes(): boolean {
-        return (this.poll.isMethodY || this.poll.isMethodN) && this.poll.max_votes_amount > 1;
+        return !this.poll.isListPoll && this.poll.max_votes_amount > 1;
     }
 
     /**
