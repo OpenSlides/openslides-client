@@ -253,10 +253,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private updatePollMethod(method: PollMethod): void {
         this.contentForm.removeControl(`votes_amount`);
-        if (method === `Y` || method === `N` || ((method === `YNA` || method === `YN`) && this.allowToSetMinMax)) {
+        if (
+            method === PollMethod.Y ||
+            method === PollMethod.N ||
+            ((method === PollMethod.YNA || method === PollMethod.YN) && this.allowToSetMinMax)
+        ) {
             this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
         }
-        if (method === `N`) {
+        if (method === PollMethod.N) {
             this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
         }
     }
@@ -283,7 +287,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     private checkPollBackend(): void {
         const pollType = this.data.content_object?.collection as PollClassType;
         if (!this.data.backend) {
-            if (pollType !== `topic`) {
+            if (pollType !== PollClassType.Topic) {
                 this.data.backend = this.meetingSettingsService.instant(`${pollType}_poll_default_backend`);
             } else {
                 this.data.backend = this.meetingSettingsService.instant(`poll_default_backend`);
@@ -304,14 +308,15 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return (
-            (selectedPollMethod === `Y` || (selectedPollMethod !== `yna` && this.allowToSetMinMax)) &&
+            (selectedPollMethod === FormPollMethod.Y ||
+                (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
             (!data || !data.state || data.isCreated)
         );
     }
 
     public showMaxVotesPerOption(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
-        return selectedPollMethod === `Y` && (!data || !data.state || data.isCreated);
+        return selectedPollMethod === FormPollMethod.Y && (!data || !data.state || data.isCreated);
     }
 
     /**
@@ -554,7 +559,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             if (pollMethod.includes(FormPollMethod.N)) {
                 this.disableGlobalVoteControls(`No`);
             }
-            if (pollMethod.includes(`A`)) {
+            if (pollMethod.includes(FormPollMethod.YNA)) {
                 this.disableGlobalVoteControls(`Abstain`);
             }
         }
