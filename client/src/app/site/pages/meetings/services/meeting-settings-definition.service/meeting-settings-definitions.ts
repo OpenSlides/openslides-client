@@ -870,7 +870,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_enable_origin_motion_display`,
                         label: _(`Allow backtracking of forwarded motions`),
                         type: `boolean`,
-                        helpText: _(`Requires permission to see origin motions`),
+                        helpText: _(`Requires permission to see origin motions`)
                     },
                     {
                         key: `motions_origin_motion_toggle_default`,

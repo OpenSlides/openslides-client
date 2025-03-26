@@ -45,24 +45,34 @@
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
                             <mat-radio-button [value]="true">
-                                {{ 'Original version with all changes' | translate }}<br>
-                                @if (data.motion.length === 1 && (data.motion[0].amendment_ids?.length > 0 || data.motion[0].change_recommendation_ids?.length > 0)) {
+                                {{ 'Original version with all changes' | translate }}
+                                <br />
+                                @if (
+                                    data.motion.length === 1 &&
+                                    (data.motion[0].amendment_ids?.length > 0 ||
+                                        data.motion[0].change_recommendation_ids?.length > 0)
+                                ) {
                                     <span class="data-preview">
                                         <span>
-                                            @if (data.motion[0].amendment_ids?.length == 1) {
+                                            @if (data.motion[0].amendment_ids?.length === 1) {
                                                 {{ data.motion[0].amendment_ids.length }} {{ 'amendment' | translate }}
                                             }
                                             @if (data.motion[0].amendment_ids?.length > 1) {
                                                 {{ data.motion[0].amendment_ids.length }} {{ 'amendments' | translate }}
                                             }
-                                            @if (data.motion[0].amendment_ids?.length > 0 && data.motion[0].change_recommendation_ids?.length > 0) {
+                                            @if (
+                                                data.motion[0].amendment_ids?.length > 0 &&
+                                                data.motion[0].change_recommendation_ids?.length > 0
+                                            ) {
                                                 {{ 'and' | translate }}
                                             }
-                                            @if (data.motion[0].change_recommendation_ids?.length == 1) {
-                                                {{ data.motion[0].change_recommendation_ids.length }} {{ 'change recommendation' | translate }}
+                                            @if (data.motion[0].change_recommendation_ids?.length === 1) {
+                                                {{ data.motion[0].change_recommendation_ids.length }}
+                                                {{ 'change recommendation' | translate }}
                                             }
                                             @if (data.motion[0].change_recommendation_ids?.length > 1) {
-                                                {{ data.motion[0].change_recommendation_ids.length }} {{ 'change recommendations' | translate }}
+                                                {{ data.motion[0].change_recommendation_ids.length }}
+                                                {{ 'change recommendations' | translate }}
                                             }
                                         </span>
                                     </span>
