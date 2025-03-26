@@ -99,6 +99,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     }
 
     @Input()
+    public isAccountSelfUpdate = false;
+
+    @Input()
     public patchFormValueFn: (controlName: string, user?: ViewUser) => any | null = () => {};
 
     @Input()
