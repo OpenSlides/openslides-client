@@ -29,11 +29,12 @@ describe(`ServerTimeService`, () => {
 
         service = TestBed.inject(ServerTimeService);
         spyOn(console, `error`);
+        fetchMock.mockGlobal();
     });
 
     afterEach(() => {
         jasmine.clock().uninstall();
-        fetchMock.reset();
+        fetchMock.hardReset();
     });
 
     it(`should correctly call server_time`, async () => {
@@ -69,18 +70,19 @@ describe(`ServerTimeService`, () => {
             headers: {
                 Date: `invalid`
             }
+        }, {
+            name: `time.txt`
         });
 
         jasmine.clock().tick(300);
         const updatedPromise = firstValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)));
-        fetchMock.get(
-            `/assets/time.txt`,
+        fetchMock.modifyRoute(
+            `time.txt`,
             {
                 headers: {
                     Date: new Date().toUTCString()
                 }
-            },
-            { overwriteRoutes: true }
+            }
         );
         await expectAsync(updatedPromise).toBeResolved();
         expect(console.error).toHaveBeenCalled();

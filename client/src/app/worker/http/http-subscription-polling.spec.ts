@@ -29,8 +29,9 @@ function getResponseBody(data = ``, hash = `0`) {
 describe(`http subscription polling`, () => {
     beforeEach(() => {
         jasmine.clock().install();
-        fetchMock.mock(`end:/instant-forever?longpolling=1`, getResponseBody(`instant-forever`));
-        fetchMock.mock(`end:/error400-expected-format?longpolling=1`, {
+        fetchMock.mockGlobal();
+        fetchMock.route(`end:/instant-forever?longpolling=1`, getResponseBody(`instant-forever`));
+        fetchMock.route(`end:/error400-expected-format?longpolling=1`, {
             status: 400,
             headers: { 'Content-Type': `application/json` },
             body: JSON.stringify({
@@ -40,13 +41,13 @@ describe(`http subscription polling`, () => {
     });
 
     afterEach(() => {
-        fetchMock.reset();
+        fetchMock.hardReset();
         jasmine.clock().uninstall();
     });
 
     it(`initializes inactive`, () => {
         expect(getHttpSubscriptionPollingInstance().active).toBeFalse();
-        expect(fetchMock.called(`/once-instant?longpolling=1`)).toBeFalse();
+        expect(fetchMock.callHistory.called(`/once-instant?longpolling=1`)).toBeFalse();
     });
 
     it(`receives data once`, async () => {
@@ -102,15 +103,17 @@ describe(`http subscription polling`, () => {
 
     describe(`stopping`, () => {
         it(`stop while waiting for data`, async () => {
-            fetchMock.mock(`end:/once-instant?longpolling=1`, getResponseBody(`once-instant`));
+            fetchMock.route(`end:/once-instant?longpolling=1`, getResponseBody(`once-instant`), {
+                name: `once-instant-longpolling`
+            });
             let resolver: CallableFunction;
             const receivedData = new Promise(resolve => (resolver = resolve));
             const subscr = getHttpSubscriptionPollingInstance(`/once-instant`, () => resolver());
             const start = subscr.start();
             await receivedData;
-            fetchMock.mock(`end:/once-instant?longpolling=1`, getResponseBody(`once-instant`), {
+            fetchMock.modifyRoute(`once-instant-longpolling`, {
                 delay: 10000,
-                overwriteRoutes: true
+                response: getResponseBody(`once-instant`)
             });
             jasmine.clock().tick(POLLING_INTERVAL + 600);
             await subscr.stop();
@@ -135,7 +138,7 @@ describe(`http subscription polling`, () => {
         });
 
         it(`stops on server error`, async () => {
-            fetchMock.mock(`end:/error502?longpolling=1`, {
+            fetchMock.route(`end:/error502?longpolling=1`, {
                 status: 502,
                 body: `Bad gateway`
             });
@@ -161,7 +164,7 @@ describe(`http subscription polling`, () => {
         });
 
         it(`stops on fetch error`, async () => {
-            fetchMock.mock(`end:/throws`, {
+            fetchMock.route(`end:/throws`, {
                 status: 502,
                 body: `Bad gateway`,
                 throws: new Error(`fetch error`)
