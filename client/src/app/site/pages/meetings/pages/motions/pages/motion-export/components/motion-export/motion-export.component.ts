@@ -14,7 +14,6 @@ import { Observable, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
@@ -184,6 +183,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     @ViewChild(`addBreaksChip`)
     public addBreaksChip!: MatChipOption;
 
+    @ViewChild(`supportersChip`)
+    public supportersChip!: MatChipOption;
+
+    @ViewChild(`textChip`)
+    public textChip!: MatChipOption;
+
     public isCSVExport = false;
     public isXLSXExport = false;
 
@@ -215,7 +220,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         public motionExportDialogService: MotionExportDialogService,
         private motionRepo: MotionRepositoryService,
         private exportService: MotionExportService,
-        private store: StorageService,
         private amendmentRepo: AmendmentControllerService,
         private motionLineNumbering: MotionLineNumberingService
     ) {
@@ -289,12 +293,22 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
+        this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
+            if (!value) {
+                this.deselectOption(`content`, `text`);
+                this.changeStateOfChipOption(this.textChip, true, `text`);
+            } else {
+                this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                this.changeStateOfChipOption(this.textChip, false, `text`);
+            }
+        });
         return;
     }
 
     // Function to determine whioch options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
     public hasAvailableVariables(): void {
+        // Check for meetingSettings if options should be visible
         this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `sequential_number`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
         if (!this.meetingSettingsService.instant(`motions_show_referring_motions`)) {
@@ -309,6 +323,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.filterFormControlDefaults(`metaInfo`, `motions_recommendations_by`, `recommendation`);
             this.changeStateOfChipOption(this.recommendationChipOption, true, `recommendation`);
         }
+        if (this.meetingSettingsService.instant(`motions_supporters_min_amount`) === 0) {
+            this.filterFormControlDefaults(`personrelated`, `motions_supporters_min_amount`, `supporters`);
+            this.changeStateOfChipOption(this.supportersChip, true, `supporters`);
+        }
         if (!this.meetingSettingsService.instant(`motions_enable_working_group_speaker`)) {
             this.filterFormControlDefaults(
                 `personrelated`,
@@ -317,6 +335,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             );
             this.changeStateOfChipOption(this.spokespersonChip, true, `working_group_speakers`);
         }
+
+        // Check for available information in selected motions, else disable option
         this.filterFormControlAvailableValues(`personrelated`, `editors`, this.editorsChipOption);
         this.filterFormControlAvailableValues(`personrelated`, `working_group_speakers`, this.spokespersonChip);
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
@@ -337,10 +357,17 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
         }
+
         const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
         lnDefaultMode === this.lnMode.Inside
             ? this.dialogForm.get(`lnMode`).setValue(this.lnMode.Outside)
             : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
+
+        let crDefaultMode = this.meetingSettingsService!.instant(`motions_recommendation_text_mode`);
+        if (this.isCSVExport && [this.crMode.Diff, this.crMode.Changed].includes(crDefaultMode)) {
+            crDefaultMode = this.crMode.Original;
+        }
+        this.dialogForm.get(`crMode`).setValue(crDefaultMode === `agreed` ? this.crMode.ModifiedFinal : crDefaultMode);
         return;
     }
 
@@ -390,15 +417,19 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
     }
 
-    public disablePageLayoutOption(): void {
+    public deselectPageLayoutOption(): void {
         if (this.continuousTextChipOption.selected) {
             this.deselectOption(`pageLayout`, `toc`);
             this.deselectOption(`pageLayout`, `addBreaks`);
-            this.changeStateOfChipOption(this.addBreaksChip, true, `addBreaks`);
-            this.changeStateOfChipOption(this.tableOfContentChip, true, `toc`);
-        } else {
-            this.changeStateOfChipOption(this.addBreaksChip, false, `addBreaks`);
-            this.changeStateOfChipOption(this.tableOfContentChip, false, `toc`);
+        }
+        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
+            this.deselectOption(`pageLayout`, `continuousText`);
+        }
+    }
+
+    public deselectContinuousTextOption(): void {
+        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
+            this.deselectOption(`pageLayout`, `continuousText`);
         }
     }
 
