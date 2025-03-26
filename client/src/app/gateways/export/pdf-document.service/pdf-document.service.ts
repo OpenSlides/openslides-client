@@ -322,39 +322,36 @@ export class PdfDocumentService {
     }
 
     private async updateHeader(places: any): Promise<void> {
-        return new Promise(async resolve => {
-            for (const place of places) {
-                const url = this.mediaManageService.getLogoUrl(place);
-                if (url) {
-                    const fetchResult = await fetch(url);
-                    const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
-                    if (svg) {
-                        const text = await fetchResult.text();
+        for (const place of places) {
+            const url = this.mediaManageService.getLogoUrl(place);
+            if (url) {
+                const fetchResult = await fetch(url);
+                const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
+                if (svg) {
+                    const text = await fetchResult.text();
 
-                        if (text.length >= 1) {
-                            const start = text.indexOf(`<svg`);
-                            const restText = text.slice(start + 5);
-                            const viewBox = this.getViewBox(text);
-                            const svgText = [`<svg `, viewBox, restText].join(``);
-                            this.headerLogos[place] = {
-                                place: place,
-                                isSVG: true,
-                                content: svgText
-                            };
-                        }
-                    } else {
+                    if (text.length >= 1) {
+                        const start = text.indexOf(`<svg`);
+                        const restText = text.slice(start + 5);
+                        const viewBox = this.getViewBox(text);
+                        const svgText = [`<svg `, viewBox, restText].join(``);
                         this.headerLogos[place] = {
                             place: place,
-                            isSVG: false,
-                            content: url
+                            isSVG: true,
+                            content: svgText
                         };
                     }
                 } else {
-                    this.headerLogos[place] = null;
+                    this.headerLogos[place] = {
+                        place: place,
+                        isSVG: false,
+                        content: url
+                    };
                 }
+            } else {
+                this.headerLogos[place] = null;
             }
-            resolve();
-        });
+        }
     }
 
     private getViewBox(text: string): string {

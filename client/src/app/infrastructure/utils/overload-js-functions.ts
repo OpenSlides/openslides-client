@@ -130,7 +130,7 @@ function overloadArrayFunctions(): void {
             return this.reduce((aggr: U, item: T, index: number) => {
                 const res = f(item, index);
                 for (const key in res) {
-                    if (res.hasOwnProperty(key)) {
+                    if (Object.prototype.hasOwnProperty.call(res, key)) {
                         aggr[key] = res[key];
                     }
                 }

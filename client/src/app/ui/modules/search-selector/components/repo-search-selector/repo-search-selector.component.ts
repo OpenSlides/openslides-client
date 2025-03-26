@@ -39,9 +39,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     @Input()
     public sortService: SortListService<any> | undefined;
 
-    public get controlType(): string {
-        return `repo-search-selector`;
-    }
+    public readonly controlType = `repo-search-selector`;
 
     private _repo!: ViewModelListProvider<any>;
 

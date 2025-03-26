@@ -41,7 +41,7 @@ export class HttpStreamEndpointService {
         try {
             const response = await this.http.get<{ healthy: boolean }>(endpoint.healthUrl);
             return !!response.healthy;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }

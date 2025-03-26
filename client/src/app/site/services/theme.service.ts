@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { PollColor } from 'src/app/domain/models/poll';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
@@ -107,7 +106,7 @@ export class ThemeService {
         if ([`yes`, `no`, `abstain`].includes(key)) {
             return this.currentGeneralColorsSubject.value[key] ?? GENERAL_DEFAULT_COLORS[key];
         }
-        return PollColor[key];
+        return `#e2e2e2`;
     }
 
     /**

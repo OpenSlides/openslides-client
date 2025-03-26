@@ -488,13 +488,13 @@ export class MotionDiffService {
         const findIns = /<ins>([\s\S]*?)<\/ins>/gi;
         let found: RegExpExecArray;
         let inner: string;
-        while (found = findDel.exec(html)) {
+        while ((found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
-        while (found = findIns.exec(html)) {
+        while ((found = findIns.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
@@ -553,7 +553,7 @@ export class MotionDiffService {
         let found: RegExpExecArray;
         let returnStr = diffStr;
 
-        while (found = findDelGroupFinder.exec(diffStr)) {
+        while ((found = findDelGroupFinder.exec(diffStr))) {
             const del = found[0];
             const split = returnStr.split(del);
 
@@ -1347,9 +1347,12 @@ export class MotionDiffService {
                 htmlOldEl.content.querySelector(`.os-line-number`)
             ) {
                 const ln = htmlNewEl.content.querySelector(`.os-line-number`);
-                htmlNewEl.content.children[0].childNodes.length > 0
-                    ? htmlNewEl.content.children[0].childNodes[0].before(ln)
-                    : htmlNewEl.content.children[0].before(ln);
+                if (htmlNewEl.content.children[0].childNodes.length > 0) {
+                    htmlNewEl.content.children[0].childNodes[0].before(ln);
+                } else {
+                    htmlNewEl.content.children[0].before(ln);
+                }
+
                 htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;

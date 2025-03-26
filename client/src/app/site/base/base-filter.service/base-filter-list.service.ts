@@ -519,7 +519,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 filter =>
                     // Interfaces do not exist at runtime. Manually check if the
                     // Required information of the interface are present
-                    filter.hasOwnProperty(`options`) && filter.hasOwnProperty(`property`) && !!filter.property
+                    Object.prototype.hasOwnProperty.call(filter, `options`) && Object.prototype.hasOwnProperty.call(filter, `property`) && !!filter.property
             );
         } else {
             return false;

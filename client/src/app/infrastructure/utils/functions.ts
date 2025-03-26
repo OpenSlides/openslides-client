@@ -5,7 +5,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Decimal, Id } from '../../domain/definitions/key-types';
 
 export function toBase64(data: File | Blob): Promise<string> {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (): void => {
             const resultStr: string = reader.result as string;

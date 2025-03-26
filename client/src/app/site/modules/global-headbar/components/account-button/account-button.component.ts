@@ -54,10 +54,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
     }
 
-    public get isOnProfilePage(): boolean {
-        return true;
-    }
-
     public get hasActiveMeeting(): boolean {
         return this.activeMeetingId !== null;
     }

@@ -115,6 +115,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
      */
     public globalVoteActions: VoteOption[] = [];
 
+    // eslint-disable-next-line @typescript-eslint/class-literal-property-style
     public get pollHint(): string {
         return null;
     }
@@ -377,7 +378,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     protected isErrorInVoteEntry(): boolean {
         for (const key in this.formControlMap) {
-            if (this.formControlMap.hasOwnProperty(key) && this.formControlMap[key].invalid) {
+            if (Object.prototype.hasOwnProperty.call(this.formControlMap, key) && this.formControlMap[key].invalid) {
                 return true;
             }
         }
@@ -433,7 +434,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     private enableInputs(): void {
         for (const key in this.formControlMap) {
-            if (this.formControlMap.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(this.formControlMap, key)) {
                 this.formControlMap[key].enable();
             }
         }
@@ -441,7 +442,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     private disableAndResetInputs(): void {
         for (const key in this.formControlMap) {
-            if (this.formControlMap.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(this.formControlMap, key)) {
                 this.formControlMap[key].setValue(0);
                 this.formControlMap[key].disable();
             }

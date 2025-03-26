@@ -52,6 +52,7 @@ module.exports = tseslint.config({
         "@typescript-eslint/no-unused-vars": ["error", {
             argsIgnorePattern: "^_",
             varsIgnorePattern: "^_",
+            caughtErrors: "none", // TODO: Remove
             caughtErrorsIgnorePattern: "^_",
             destructuredArrayIgnorePattern: "^_",
         }],
@@ -78,6 +79,15 @@ module.exports = tseslint.config({
         "@typescript-eslint/explicit-member-accessibility": ["error"],
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "@typescript-eslint/ban-ts-comment": ["error"],
+
+        "@typescript-eslint/no-empty-object-type": ["warn"],
+        "@typescript-eslint/prefer-for-of": ["warn"],
+        "no-async-promise-executor": ["warn"],
+        "no-case-declarations": ["warn"],
+        "no-useless-escape": ["warn"],
+        // TODO: Disable - empty catch should contain at least an description comment
+        "no-empty": ["error", { "allowEmptyCatch": true }],
+
         "jsdoc/require-example": ["off"],
         "jsdoc/newline-after-description": ["off"],
         "jsdoc/no-types": ["off"],

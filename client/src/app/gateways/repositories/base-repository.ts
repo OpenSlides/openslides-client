@@ -743,16 +743,12 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
-        try {
-            const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
-            if (results) {
-                if (results.length !== 1) {
-                    throw new Error(`The action service did not respond with exactly one response for the request.`);
-                }
-                return results[0];
+        const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
+        if (results) {
+            if (results.length !== 1) {
+                throw new Error(`The action service did not respond with exactly one response for the request.`);
             }
-        } catch (e) {
-            throw e;
+            return results[0];
         }
     }
 
@@ -763,11 +759,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
-        try {
-            return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
     }
 
     /**
@@ -776,10 +768,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionsToBackend(actions: ActionRequest[], handle_separately = false): Promise<any> {
-        try {
-            return await this.actions.sendRequests(actions, handle_separately);
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.sendRequests(actions, handle_separately);
     }
 }

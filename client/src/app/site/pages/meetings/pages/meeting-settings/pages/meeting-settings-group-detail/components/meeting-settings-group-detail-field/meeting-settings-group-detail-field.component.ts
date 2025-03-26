@@ -262,9 +262,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                     this._comparedForm ||
                     (JSON.stringify(form.value) !== JSON.stringify(this._firstValue) && this.setting.type !== `groups`)
                 ) {
-                    this.setting.type === `ranking`
-                        ? this.onChange(this.form.controls[`value`].value)
-                        : this.onChange(form.value);
+                    this.onChange(this.setting.type === `ranking` ? this.form.controls[`value`].value : form.value);
                 }
             });
     }

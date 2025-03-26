@@ -60,9 +60,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
         return !this.contentForm.value.length;
     }
 
-    public get controlType(): string {
-        return `attachment-control`;
-    }
+    public readonly controlType = `attachment-control`;
 
     public formGroup!: UntypedFormGroup;
 

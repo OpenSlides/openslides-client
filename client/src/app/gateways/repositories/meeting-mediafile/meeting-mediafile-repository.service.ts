@@ -37,7 +37,9 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
             if (viewModel.mediafile_id && viewModel.meeting_id) {
                 try {
                     this.mediafileMap.get(viewModel.meeting_id).set(viewModel.meeting_id, id);
-                } catch (e) {}
+                } catch (_e) {
+                    // meeting was not loaded
+                }
             }
         }
         super.deleteModels(ids);

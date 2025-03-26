@@ -27,12 +27,6 @@ export enum PollClassType {
     Topic = `topic`
 }
 
-export enum PollColor {
-    votesvalid = `#e2e2e2`,
-    votesinvalid = `#e2e2e2`,
-    votescast = `#e2e2e2`
-}
-
 /**
  * Colors for chart color generation
  * Keys are freely invented and not in sync with html color names
