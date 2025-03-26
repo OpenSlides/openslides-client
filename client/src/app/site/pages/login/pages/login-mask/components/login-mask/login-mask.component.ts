@@ -201,14 +201,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
     }
 
-    public toggleLoginAreaExpansion(): void {
-        this.loginAreaExpanded = !this.loginAreaExpanded;
-    }
-
-    public setLoginAreaExpansion(expanded: boolean): void {
-        this.loginAreaExpanded = expanded;
-    }
-
     private formatLoginInputValues(info: LoginValues): LoginValues {
         const newName = info.username.trim();
         return { username: newName, password: info.password };
