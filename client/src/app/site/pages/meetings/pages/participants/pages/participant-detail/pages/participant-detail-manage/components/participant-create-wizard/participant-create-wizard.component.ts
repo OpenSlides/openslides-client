@@ -227,6 +227,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onChooseAccount(reverse = false): Promise<void> {
+        if (this._accountId) {
+            for (const item of Object.keys(this.createUserForm.controls)) {
+                if (!this.createUserForm.value[item]) {
+                    this.createUserForm.get(item).setValue(``);
+                }
+            }
+        }
         const result = await this.presenter.callForUsers({
             permissionRelatedId: this.activeMeetingId!,
             users: [this.createUserForm.value]
@@ -246,7 +253,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         this._accountId = account.id || null;
         this._stepper.next();
         await this.checkScope();
-        if (shouldReset || this._isUserInScope) {
+        if ((shouldReset || this._isUserInScope) && !this.account) {
             this.detailView.resetEditMode();
         }
         if (this.account) {
@@ -349,7 +356,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     private checkSelectedGroupsCanManage(): boolean {
-        return (this.detailView.personalInfoForm.get(`group_ids`).value ?? [])
+        const group_ids =
+            this.detailView.personalInfoForm.get(`group_ids`).value?.length > 0
+                ? this.detailView.personalInfoForm.get(`group_ids`).value
+                : [];
+        return group_ids
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
     }
