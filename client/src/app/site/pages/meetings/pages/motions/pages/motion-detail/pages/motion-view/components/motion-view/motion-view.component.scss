@@ -108,6 +108,10 @@ span {
     }
 }
 
+.motion-tab-content {
+    padding: 2px 2px 0;
+}
+
 .desktop-view {
     .desktop-left {
         width: 30%;
@@ -130,10 +134,28 @@ span {
     }
 }
 
+.mat-mdc-card.original-motion-card {
+    display: flex !important;
+    border-color: #ff9001;
+    border-width: 2px;
+}
+
+.origin-motion-meta-data-container {
+    border-radius: 3px;
+    padding: 0.5em;
+    margin-bottom: 1em;
+}
+
 .mobile-view {
     .os-card {
         padding: 27px;
         max-width: 100%;
+    }
+
+    .mat-mdc-tab-header + .mat-mdc-tab-body-wrapper {
+        .os-card {
+            margin-top: 0 !important;
+        }
     }
 }
 

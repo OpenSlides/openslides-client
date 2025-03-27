@@ -862,6 +862,24 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         validators: [Validators.min(1)]
                     }
                 ]
+            },
+            {
+                label: _(`Forwarding`),
+                settings: [
+                    {
+                        key: `motions_enable_origin_motion_display`,
+                        label: _(`Allow backtracking of forwarded motions`),
+                        type: `boolean`,
+                        helpText: _(`Requires permission to see origin motions`)
+                    },
+                    {
+                        key: `motions_origin_motion_toggle_default`,
+                        label: _(`Preload original motions`),
+                        type: `boolean`,
+                        hide: true,
+                        disable: settings => !settings.motions_enable_origin_motion_display
+                    }
+                ]
             }
         ]
     },

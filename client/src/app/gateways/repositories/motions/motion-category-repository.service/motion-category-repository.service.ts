@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
 import { Action } from 'src/app/gateways/actions';
@@ -16,6 +17,14 @@ import { MotionCategoryAction } from './motion-category.action';
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionCategory);
+    }
+
+    public override getViewModelList(): ViewMotionCategory[] {
+        return this.filterForeignMeetingModelsFromList(super.getViewModelList());
+    }
+
+    public override getViewModelListObservable(): Observable<ViewMotionCategory[]> {
+        return super.getViewModelListObservable().pipe(map(cat => this.filterForeignMeetingModelsFromList(cat)));
     }
 
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {

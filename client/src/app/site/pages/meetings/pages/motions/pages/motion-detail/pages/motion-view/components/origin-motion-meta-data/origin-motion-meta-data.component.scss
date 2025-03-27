@@ -1,0 +1,28 @@
+:host {
+    font-size: 14px;
+}
+
+div.remove-top-margin {
+    margin-top: -1.33em;
+}
+
+div.origin-view {
+    display: inline-block;
+}
+
+span.referencelist {
+    display: inline-block;
+}
+
+.origin-motion-header {
+    .expand-button {
+        margin-bottom: 16px;
+    }
+}
+
+.metadata-detail {
+    display: none;
+    &.active {
+        display: block;
+    }
+}
