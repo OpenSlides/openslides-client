@@ -135,6 +135,7 @@ span {
 }
 
 .mat-mdc-card.original-motion-card {
+    display: flex !important;
     border-color: #ff9001;
     border-width: 2px;
 }
