@@ -13,7 +13,8 @@ import {
 @Component({
     selector: `os-topic-detail-main`,
     templateUrl: `./topic-detail-main.component.html`,
-    styleUrls: [`./topic-detail-main.component.scss`]
+    styleUrls: [`./topic-detail-main.component.scss`],
+    standalone: false
 })
 export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
     private _currentTopicId: Id | null = null;

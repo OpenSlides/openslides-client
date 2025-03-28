@@ -15,7 +15,8 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
     selector: `os-motion-content`,
     templateUrl: `./motion-content.component.html`,
     styleUrls: [`./motion-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly ChangeRecoMode = ChangeRecoMode;

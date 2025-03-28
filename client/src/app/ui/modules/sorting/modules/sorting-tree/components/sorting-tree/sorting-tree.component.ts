@@ -57,7 +57,8 @@ class Movement {
 @Component({
     selector: `os-sorting-tree`,
     templateUrl: `./sorting-tree.component.html`,
-    styleUrls: [`./sorting-tree.component.scss`]
+    styleUrls: [`./sorting-tree.component.scss`],
+    standalone: false
 })
 export class SortingTreeComponent<T extends Identifiable & Displayable> implements OnDestroy {
     /**
@@ -82,7 +83,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Source for the tree
      */
-    public dataSource: ArrayDataSource<FlatNode<T>> = new ArrayDataSource(this.osTreeData);
+    public dataSource = new ArrayDataSource<FlatNode<T>>(this.osTreeData);
 
     /**
      * Number to calculate the next position the node is moved
@@ -578,7 +579,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
             this.multiSelectedIndex = [];
         }
         this.removeSubscription();
-        const draggedNode = <FlatNode<T>>event.source.data;
+        const draggedNode = event.source.data as FlatNode<T>;
         this.placeholderLevel = draggedNode.level;
         this.nextNode = {
             ...draggedNode,
@@ -596,10 +597,10 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * @param clickIndex The index of the row clicked.
      */
     public onItemClick(event: MouseEvent | Event, clickIndex: number): void {
-        if (event.type === `click` || (<KeyboardEvent>event).key === ` `) {
+        if (event.type === `click` || (event as KeyboardEvent).key === ` `) {
             document.getSelection().removeAllRanges();
             event.preventDefault();
-            if ((<MouseEvent>event).ctrlKey) {
+            if ((event as MouseEvent).ctrlKey) {
                 const index = this.multiSelectedIndex.findIndex(i => i === clickIndex);
                 if (index === -1) {
                     this.multiSelectedIndex.push(clickIndex);

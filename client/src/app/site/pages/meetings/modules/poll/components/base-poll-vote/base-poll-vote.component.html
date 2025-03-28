@@ -1,7 +1,7 @@
 @if (poll && isReady) {
     <!-- own voting -->
     @if (isUserPresent) {
-        <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
+        <ng-container [ngTemplateOutlet]="votingArea" />
     } @else {
         <div class="text-center">
             {{ 'You have to be present to vote.' | translate }}
@@ -311,12 +311,12 @@
                                     <mat-form-field appearance="outline" class="vote-input">
                                         <input
                                             matInput
+                                            max="{{ poll.max_votes_per_option }}"
                                             min="0"
                                             required
                                             type="number"
                                             value="0"
                                             [formControl]="getFormControl(option.id)"
-                                            max="{{ poll.max_votes_per_option }}"
                                             (change)="saveMultipleVotes(option.id, $event, delegation)"
                                         />
                                         <mat-error>
@@ -385,10 +385,7 @@
             </div>
             <!-- Submit Vote -->
             @if (!settings.hideSendNow) {
-                <ng-container
-                    [ngTemplateOutlet]="sendNow"
-                    [ngTemplateOutletContext]="{ delegation: delegation }"
-                ></ng-container>
+                <ng-container [ngTemplateOutlet]="sendNow" [ngTemplateOutletContext]="{ delegation: delegation }" />
             }
         }
         <os-poll-cannot-vote-message
@@ -397,7 +394,7 @@
             [hasDelegations]="!delegations.length"
             [isDeliveringVote]="isDeliveringVote(delegation)"
             [poll]="poll"
-        ></os-poll-cannot-vote-message>
+        />
     }
 </ng-template>
 

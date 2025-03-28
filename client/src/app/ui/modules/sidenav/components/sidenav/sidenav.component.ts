@@ -8,7 +8,8 @@ import { SidenavMainContentDirective } from '../../directives/sidenav-main-conte
 @Component({
     selector: `os-sidenav`,
     templateUrl: `./sidenav.component.html`,
-    styleUrls: [`./sidenav.component.scss`]
+    styleUrls: [`./sidenav.component.scss`],
+    standalone: false
 })
 export class SidenavComponent {
     @ContentChild(SidenavMainContentDirective, { read: TemplateRef, static: true })

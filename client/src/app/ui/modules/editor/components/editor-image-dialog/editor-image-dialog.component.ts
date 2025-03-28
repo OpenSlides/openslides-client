@@ -19,7 +19,8 @@ export interface EditorImageDialogOutput {
 @Component({
     selector: `os-editor-image-dialog`,
     templateUrl: `./editor-image-dialog.component.html`,
-    styleUrls: [`editor-image-dialog.component.scss`]
+    styleUrls: [`editor-image-dialog.component.scss`],
+    standalone: false
 })
 export class EditorImageDialogComponent {
     public image: EditorImageData;

@@ -9,7 +9,6 @@ import { Color, ColorService } from 'src/app/site/services/color.service';
     selector: `os-chip`,
     templateUrl: `./chip.component.html`,
     styleUrls: [`./chip.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatChipsModule, MatRippleModule]
 })
 export class ChipComponent {

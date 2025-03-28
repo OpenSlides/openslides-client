@@ -88,7 +88,7 @@ export class HttpSubscriptionSSE extends HttpSubscription {
         this.abortCtrl = undefined;
     }
 
-    private getHeaders(): { [name: string]: any } {
+    private getHeaders(): Record<string, any> {
         const headers: any = {
             'Content-Type': `application/json`,
             'ngsw-bypass': true

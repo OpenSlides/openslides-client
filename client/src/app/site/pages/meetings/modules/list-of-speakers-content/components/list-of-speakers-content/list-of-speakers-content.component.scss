@@ -1,5 +1,5 @@
-@import 'src/assets/styles/variables.scss';
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .los-title {
     display: block;
@@ -50,7 +50,7 @@
 .current-speaker {
     margin: 10px 25px 0 25px;
 
-    @include phone {
+    @include variables.phone {
         margin: 10px 0 0 0;
     }
 
@@ -58,7 +58,7 @@
     border-radius: 4px;
     .speaker-start {
         .mat-mdc-icon-button.speaker-control-button {
-            @include custom-size-button(46px, 42px);
+            @include button.custom-size-button(46px, 42px);
         }
     }
 
@@ -76,7 +76,7 @@
 }
 
 .desktop-speaker-indent {
-    @include desktop {
+    @include variables.desktop {
         padding: 0 0.75em 0 calc(0.75em + 38px);
     }
 }
@@ -90,7 +90,7 @@
 .interposed-questions {
     padding: 10px 25px 0 25px;
 
-    @include phone {
+    @include variables.phone {
         padding: 10px 0 0 0;
     }
 }
@@ -139,7 +139,7 @@ os-sorting-list .line {
 .add-self-buttons {
     margin: 10px 20px;
 
-    @include phone {
+    @include variables.phone {
         padding: 10px 0;
         margin: 10px 0 0 0;
     }
@@ -155,7 +155,7 @@ os-sorting-list .line {
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
 
-    @include phone {
+    @include variables.phone {
         padding: 15px 0 0 0;
     }
 

@@ -33,7 +33,7 @@ export interface SMAction {
 /**
  * The statemachine. Mapps events in states to actions.
  */
-export type StateMachine = { [state in State]?: { [event in StateEvent]?: SMAction } };
+export type StateMachine = Partial<Record<State, Partial<Record<StateEvent, SMAction>>>>;
 
 /**
  * A base class for two-player game dialogs, implementing all relevant functionality to synchronize
@@ -229,11 +229,11 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
 
     protected setTimeout(): void {
         if (this.waitTimout) {
-            clearTimeout(<any>this.waitTimout);
+            clearTimeout((this.waitTimout as any));
         }
-        this.waitTimout = <any>setTimeout(() => {
+        this.waitTimout = setTimeout(() => {
             this.handleEvent(`waitTimeout`);
-        }, 5000);
+        }, 5000) as any;
     }
 
     /**

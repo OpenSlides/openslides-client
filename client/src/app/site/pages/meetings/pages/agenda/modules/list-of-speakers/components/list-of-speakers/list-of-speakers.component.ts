@@ -19,7 +19,8 @@ import { ViewListOfSpeakers } from '../../view-models';
 @Component({
     selector: `os-list-of-speakers`,
     templateUrl: `./list-of-speakers.component.html`,
-    styleUrls: [`./list-of-speakers.component.scss`]
+    styleUrls: [`./list-of-speakers.component.scss`],
+    standalone: false
 })
 export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     /**

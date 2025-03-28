@@ -13,7 +13,8 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 @Component({
     selector: `os-account-password`,
     templateUrl: `./account-password.component.html`,
-    styleUrls: [`./account-password.component.scss`]
+    styleUrls: [`./account-password.component.scss`],
+    standalone: false
 })
 export class AccountPasswordComponent extends BaseComponent implements OnInit, AfterViewInit {
     public isValid = false;

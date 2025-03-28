@@ -34,10 +34,10 @@
                 <div>
                     <button
                         mat-icon-button
-                        matTooltipPosition="left"
                         matTooltip="{{
                             ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
                         }}"
+                        matTooltipPosition="left"
                         (click)="toggleDarkMode($event)"
                     >
                         <mat-icon>
@@ -61,7 +61,7 @@
                 </div>
             }
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider />
 
         <!-- select language -->
         <button #languageTrigger mat-menu-item [matMenuTriggerFor]="languageMenu">
@@ -91,7 +91,7 @@
             </div>
         }
 
-        <mat-divider></mat-divider>
+        <mat-divider />
 
         <a class="small-text" mat-menu-item routerLink="info" routerLinkActive="active">
             <mat-icon>info</mat-icon>

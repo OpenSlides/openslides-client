@@ -8,7 +8,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 @Component({
     selector: `os-privacy-policy-content`,
     templateUrl: `./privacy-policy-content.component.html`,
-    styleUrls: [`./privacy-policy-content.component.scss`]
+    styleUrls: [`./privacy-policy-content.component.scss`],
+    standalone: false
 })
 export class PrivacyPolicyContentComponent extends BaseUiComponent implements OnInit {
     public readonly OML = OML;

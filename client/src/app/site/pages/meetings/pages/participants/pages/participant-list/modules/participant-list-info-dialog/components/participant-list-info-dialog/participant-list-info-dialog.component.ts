@@ -21,7 +21,8 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
 @Component({
     selector: `os-participant-list-info-dialog`,
     templateUrl: `./participant-list-info-dialog.component.html`,
-    styleUrls: [`./participant-list-info-dialog.component.scss`]
+    styleUrls: [`./participant-list-info-dialog.component.scss`],
+    standalone: false
 })
 export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly genders = GENDERS;

@@ -6,7 +6,8 @@ import { getAccountDetailSubscriptionConfig } from '../../../../accounts.subscri
 @Component({
     selector: `os-account-detail-main`,
     templateUrl: `./account-detail-main.component.html`,
-    styleUrls: [`./account-detail-main.component.scss`]
+    styleUrls: [`./account-detail-main.component.scss`],
+    standalone: false
 })
 export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any, oldParams: any): void {

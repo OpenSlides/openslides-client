@@ -1,3 +1,1 @@
-export interface Mapable<T> {
-    [index: string | number]: T;
-}
+export type Mapable<T> = Record<string | number, T>;

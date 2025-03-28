@@ -41,7 +41,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     /**
      * Othe models keys that the current sort option depends upon
      */
-    public get currentForeignSortBaseKeys(): { [collection: string]: string[] } {
+    public get currentForeignSortBaseKeys(): Record<string, string[]> {
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );

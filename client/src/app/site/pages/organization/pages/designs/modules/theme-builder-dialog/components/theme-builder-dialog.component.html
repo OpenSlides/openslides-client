@@ -20,8 +20,8 @@
                     <div>
                         <div>
                             <os-color-form-field
-                                [formControlName]="createFormControlName(palette, '500')"
                                 title="{{ title | translate }}"
+                                [formControlName]="createFormControlName(palette, '500')"
                                 (resetted)="resetField(palette)"
                             ></os-color-form-field>
                         </div>
@@ -45,8 +45,8 @@
                     <div>
                         <os-color-form-field
                             formControlName="headbar"
-                            [defaultDisplayColor]="getDefaultColor('headbar')"
                             title="{{ 'Global headbar color' | translate }}"
+                            [defaultDisplayColor]="getDefaultColor('headbar')"
                             (resetted)="resetField('headbar')"
                         ></os-color-form-field>
                     </div>
@@ -59,9 +59,9 @@
                     <div>
                         <div>
                             <os-color-form-field
+                                title="{{ title | translate }}"
                                 [defaultDisplayColor]="getDefaultColor(place)"
                                 [formControlName]="place"
-                                title="{{ title | translate }}"
                                 (resetted)="resetField(place)"
                             ></os-color-form-field>
                         </div>

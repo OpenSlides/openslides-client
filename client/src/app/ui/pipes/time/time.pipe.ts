@@ -3,7 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
     name: `time`,
-    pure: false
+    pure: false,
+    standalone: false
 })
 export class TimePipe implements PipeTransform {
     public constructor(private translate: TranslateService) {}

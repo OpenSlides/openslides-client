@@ -5,9 +5,9 @@
     <div class="search-top-form">
         <div class="search-input-container">
             <os-rounded-input
+                placeholder="{{ 'Search' | translate }}"
                 [autofocus]="true"
                 [hasSubmit]="true"
-                placeholder="{{ 'Search' | translate }}"
                 [(ngModel)]="searchTerm"
                 (clickSubmit)="searchChange()"
                 (inputCleared)="searchCleared()"

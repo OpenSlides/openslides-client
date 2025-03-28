@@ -9,14 +9,15 @@ import { CommitteeImportService } from '../../services/committee-import.service/
 @Component({
     selector: `os-committee-import-list`,
     templateUrl: `./committee-import-list.component.html`,
-    styleUrls: [`./committee-import-list.component.scss`]
+    styleUrls: [`./committee-import-list.component.scss`],
+    standalone: false
 })
 export class CommitteeImportListComponent extends BaseViaBackendImportListComponent {
     public possibleFields = Object.keys(committeeHeadersAndVerboseNames);
 
     public columns: ImportListHeaderDefinition[] = Object.keys(committeeHeadersAndVerboseNames).map(header => ({
         property: header,
-        label: (<any>committeeHeadersAndVerboseNames)[header],
+        label: (committeeHeadersAndVerboseNames as any)[header],
         isTableColumn: true,
         type: [`meeting_start_time`, `meeting_end_time`].includes(header) ? `date` : `string`,
         is_object: [

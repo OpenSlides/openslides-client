@@ -116,14 +116,14 @@ const fakeSettings: SettingsGroup[] = [
     }
 ];
 
-const fakeSettingsMap: { [key: string]: SettingsInput } = fakeSettings
+const fakeSettingsMap: Record<string, SettingsInput> = fakeSettings
     .flatMap(group => group.subgroups.flatMap(subgroup => subgroup.settings))
     .filter(setting => !!setting)
     .mapToObject((setting: SettingsInput) =>
         (Array.isArray(setting.key) ? setting.key : [setting.key]).mapToObject(key => ({ [key]: setting }))
     );
 
-const fakeSettingsDefaults: { [key: string]: any } = {
+const fakeSettingsDefaults: Record<string, any> = {
     ...[`one`, `two`, `four`, `five`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
     bool: true,
     ...[`a`, `b`, `c`, `d`].mapToObject(letter => ({ [letter]: letter })),
@@ -135,7 +135,7 @@ const fakeSettingsDefaults: { [key: string]: any } = {
     dynamic: `s`
 };
 
-const fakeBrokenSettingsDefaults: { [key: string]: any } = {
+const fakeBrokenSettingsDefaults: Record<string, any> = {
     ...[`one`, `two`, `four`, `five`].mapToObject(letter => ({ [letter]: letter })),
     bool: `not a bool`,
     ...[`a`, `b`, `c`, `d`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
@@ -147,7 +147,7 @@ const fakeBrokenSettingsDefaults: { [key: string]: any } = {
     dynamic: 4
 };
 
-const typeToDefault: { [type in SettingsType]: any } = {
+const typeToDefault: Record<SettingsType, any> = {
     integer: 0,
     boolean: false,
     groups: [],

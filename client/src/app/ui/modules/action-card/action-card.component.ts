@@ -11,7 +11,6 @@ import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper
     styleUrls: [`./action-card.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [CommonModule, MatCardModule, DirectivesModule, ExpandableContentWrapperComponent]
 })
 export class ActionCardComponent {

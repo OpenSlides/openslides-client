@@ -4,9 +4,9 @@
     </div>
 </os-head-bar>
 
-<os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)"></os-legal-notice-content>
+<os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)" />
 
-<os-info-actions></os-info-actions>
+<os-info-actions />
 
 @if (isManager) {
     <mat-card class="os-card">
@@ -20,4 +20,4 @@
     </mat-card>
 }
 
-<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
+<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)" />

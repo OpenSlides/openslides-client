@@ -33,7 +33,8 @@ import { AssignmentCandidateControllerService } from '../../services/assignment-
 @Component({
     selector: `os-assignment-detail`,
     templateUrl: `./assignment-detail.component.html`,
-    styleUrls: [`./assignment-detail.component.scss`]
+    styleUrls: [`./assignment-detail.component.scss`],
+    standalone: false
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {
     public readonly COLLECTION = Assignment.COLLECTION;
@@ -293,7 +294,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param assignment
      */
     private patchForm(assignment: ViewAssignment): void {
-        const contentPatch: { [key: string]: any } = {};
+        const contentPatch: Record<string, any> = {};
         Object.keys(this.assignmentForm.controls).forEach(control => {
             contentPatch[control] = assignment[control as keyof ViewAssignment];
         });

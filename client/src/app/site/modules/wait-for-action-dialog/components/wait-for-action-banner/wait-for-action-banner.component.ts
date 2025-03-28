@@ -9,7 +9,8 @@ import { WaitForActionDialogService } from '../../services';
     selector: `os-wait-for-action-banner`,
     templateUrl: `./wait-for-action-banner.component.html`,
     styleUrls: [`./wait-for-action-banner.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WaitForActionBannerComponent extends BaseUiComponent {
     public get currentTitle(): string {

@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 
 export class SubscriptionMap {
-    private _subscriptions: { [key: string]: Subscription } = {};
+    private _subscriptions: Record<string, Subscription> = {};
 
     public updateSubscription(name: string, subscription: Subscription): void {
         if (this._subscriptions[name]) {

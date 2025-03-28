@@ -59,7 +59,7 @@
         <mat-menu #motionExtraMenu="matMenu">
             @if (hasLoaded) {
                 <!-- List of speakers -->
-                <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
+                <os-speaker-button [menuItem]="true" [object]="motion" />
                 <!-- PDF -->
                 <button mat-menu-item (click)="downloadPdf()">
                     <mat-icon>picture_as_pdf</mat-icon>
@@ -71,13 +71,9 @@
                         permission.agendaItemCanManage,
                         permission.meetingCanSeeHistory
                     ]"
-                ></mat-divider>
+                />
                 <!-- Project -->
-                <os-projector-button
-                    *osPerms="permission.projectorCanManage"
-                    [menuItem]="true"
-                    [object]="motion"
-                ></os-projector-button>
+                <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="motion" />
                 <!-- Add/remove to/from agenda -->
                 <div *osPerms="permission.agendaItemCanManage">
                     @if (motion) {
@@ -111,7 +107,7 @@
                     </div>
                 }
                 @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
-                    <mat-divider></mat-divider>
+                    <mat-divider />
                     <!-- Edit-->
                     @if (perms.isAllowed('update', motion)) {
                         <button mat-menu-item [routerLink]="['edit']">
@@ -243,7 +239,7 @@
             }
         </mat-tab-group>
     } @else {
-        <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
+        <ng-container *ngTemplateOutlet="motionContentTemplate" />
     }
 </ng-template>
 
@@ -258,7 +254,7 @@
                 [motion]="motion"
                 (updateCrMode)="changeRecoMode = $event"
                 (updateLnMode)="lineNumberingMode = $event"
-            ></os-motion-highlight-form>
+            />
 
             <os-motion-content
                 #content
@@ -268,7 +264,7 @@
                 [showAllAmendments]="showAllAmendments"
                 [unifiedChanges]="unifiedChanges$"
                 (updateCrMode)="changeRecoMode = $event"
-            ></os-motion-content>
+            />
         </mat-card-content>
     </mat-card>
 </ng-template>

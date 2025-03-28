@@ -1,8 +1,8 @@
-@import 'src/assets/styles/mixins/button.scss';
-@import 'src/assets/styles/themes/typography.scss';
+@use 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/themes/typography.scss';
 
 * {
-    font-family: $font-family;
+    font-family: typography.$font-family;
 }
 
 body {
@@ -41,7 +41,7 @@ h4 {
     margin-bottom: 5px;
 
     .mat-mdc-icon-button {
-        @include custom-size-button(20px, 14px);
+        @include button.custom-size-button(20px, 14px);
     }
 }
 

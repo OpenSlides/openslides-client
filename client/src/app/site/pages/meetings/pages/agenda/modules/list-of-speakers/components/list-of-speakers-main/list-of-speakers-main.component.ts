@@ -9,7 +9,8 @@ import { getListOfSpeakersDetailSubscriptionConfig } from '../../../../agenda.su
 @Component({
     selector: `os-list-of-speakers-main`,
     templateUrl: `./list-of-speakers-main.component.html`,
-    styleUrls: [`./list-of-speakers-main.component.scss`]
+    styleUrls: [`./list-of-speakers-main.component.scss`],
+    standalone: false
 })
 export class ListOfSpeakersMainComponent extends BaseModelRequestHandlerComponent {
     private _currentLOSId: Id | null = null;

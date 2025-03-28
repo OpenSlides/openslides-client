@@ -15,7 +15,7 @@
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="viewTemplate" />
         </mat-card-content>
     </mat-card>
 </os-detail-view>
@@ -34,9 +34,9 @@
                 {{ poll.stateVerbose | translate }}
             </span>
         </div>
-        <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
+        <os-motion-poll-detail-content [poll]="poll" />
         @if (poll.isStarted) {
-            <os-poll-progress [poll]="poll"></os-poll-progress>
+            <os-poll-progress [poll]="poll" />
             <div *osPerms="permission.motionCanManagePolls" class="poll-content">
                 <div class="user-subtitle">
                     {{ 'Present entitled users' | translate }}:
@@ -50,7 +50,7 @@
         }
         <!-- Named table: only show if votes are present -->
         @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.type === 'named') {
-            <os-poll-filted-votes-chart [poll]="poll"></os-poll-filted-votes-chart>
+            <os-poll-filted-votes-chart [poll]="poll" />
         }
 
         @if (showResults && poll.stateHasVotes && poll.isEVoting) {
@@ -71,7 +71,7 @@
                         [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="entitledUsersObservable"
                         [isViewingThis]="isViewingEntitledUserslist"
-                    ></os-entitled-users-table>
+                    />
                 </mat-tab>
             </mat-tab-group>
         } @else if (poll.isEVoting && poll.isStarted) {
@@ -86,21 +86,17 @@
                         [displayDelegation]="displayDelegation"
                         [displayVoteWeight]="displayVoteWeight"
                         [entitledUsersObservable]="liveRegisterObservable"
-                    ></os-entitled-users-table>
+                    />
                 </mat-tab>
             </mat-tab-group>
         }
     }
-    <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+    <os-motion-poll-meta-information [poll]="poll" />
 </ng-template>
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <os-projector-button
-        *osPerms="permission.projectorCanManage"
-        [menuItem]="true"
-        [object]="poll"
-    ></os-projector-button>
+    <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="poll" />
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="openDialog()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
@@ -120,7 +116,7 @@
         <span>{{ 'Export' | translate }}</span>
     </button>
 
-    <mat-divider></mat-divider>
+    <mat-divider />
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>

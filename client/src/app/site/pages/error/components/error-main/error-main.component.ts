@@ -7,7 +7,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 @Component({
     selector: `os-error-main`,
     templateUrl: `./error-main.component.html`,
-    styleUrls: [`./error-main.component.scss`]
+    styleUrls: [`./error-main.component.scss`],
+    standalone: false
 })
 export class ErrorMainComponent implements OnInit {
     public error: string;

@@ -29,7 +29,8 @@ const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
     selector: `os-account-list`,
     templateUrl: `./account-list.component.html`,
     styleUrls: [`./account-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public meeting: Observable<ViewMeeting> = null;
@@ -42,7 +43,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
-    public get fakeFilters(): Observable<{ [key: string]: () => void }> {
+    public get fakeFilters(): Observable<Record<string, () => void>> {
         if (this.meeting) {
             return this.meeting.pipe(
                 map(meeting => {

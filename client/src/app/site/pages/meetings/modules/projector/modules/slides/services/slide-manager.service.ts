@@ -6,7 +6,7 @@ import { SlidesModule } from '../slides.module';
 
 @Injectable({ providedIn: SlidesModule })
 export class SlideManagerService {
-    private loadedSlides: { [name: string]: SlideManifest } = {};
+    private loadedSlides: Record<string, SlideManifest> = {};
 
     public constructor(
         @Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[],

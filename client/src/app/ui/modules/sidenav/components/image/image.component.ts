@@ -4,7 +4,8 @@ import { HttpService } from 'src/app/gateways/http.service';
 @Component({
     selector: `os-image`,
     templateUrl: `./image.component.html`,
-    styleUrls: [`./image.component.scss`]
+    styleUrls: [`./image.component.scss`],
+    standalone: false
 })
 export class ImageComponent {
     @Input()

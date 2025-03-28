@@ -62,7 +62,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantListUpdateSubscription: Subscription;
 
-    private _participantIdMapSubject = new BehaviorSubject<{ [id: number]: ViewUser }>({});
+    private _participantIdMapSubject = new BehaviorSubject<Record<number, ViewUser>>({});
 
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
@@ -200,7 +200,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.repo.setPasswordSelf(user, oldPassword, newPassword);
     }
 
-    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public jsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.repo.participantJsonUpload(payload);
     }
 

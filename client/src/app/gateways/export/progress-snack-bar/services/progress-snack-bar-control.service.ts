@@ -11,17 +11,17 @@ export class ProgressSnackBarControlService {
     /**
      * Subject to get text to display
      */
-    private _messageSubject: Subject<string> = new Subject();
+    private _messageSubject = new Subject<string>();
 
     /**
      * Subject to get the chosen progress mode
      */
-    private _progressModeSubject: Subject<ProgressBarMode> = new Subject();
+    private _progressModeSubject = new Subject<ProgressBarMode>();
 
     /**
      * Subject to get the progress amount
      */
-    private _amountSubject: Subject<number> = new Subject();
+    private _amountSubject = new Subject<number>();
 
     /**
      * Get the progress information as observable

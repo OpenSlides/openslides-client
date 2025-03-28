@@ -45,7 +45,8 @@ export interface SettingsFieldUpdate {
     templateUrl: `./meeting-settings-group-detail-field.component.html`,
     styleUrls: [`./meeting-settings-group-detail-field.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None // to style the date and time pickers
+    encapsulation: ViewEncapsulation.None, // to style the date and time pickers
+    standalone: false
 })
 export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
@@ -261,9 +262,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                     this._comparedForm ||
                     (JSON.stringify(form.value) !== JSON.stringify(this._firstValue) && this.setting.type !== `groups`)
                 ) {
-                    this.setting.type === `ranking`
-                        ? this.onChange(this.form.controls[`value`].value)
-                        : this.onChange(form.value);
+                    this.onChange(this.setting.type === `ranking` ? this.form.controls[`value`].value : form.value);
                 }
             });
     }

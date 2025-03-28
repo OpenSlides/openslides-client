@@ -4,9 +4,9 @@
             @if ((isJoined | async) && (showCallDialog | async) === false) {
                 <!-- show dialog -->
                 <button
+                    @fadeIn
                     class="action-bar-shadow background-default"
                     mat-mini-fab
-                    @fadeIn
                     matTooltip="{{ 'Show conference room' | translate }}"
                     (click)="maximizeCallDialog()"
                 >
@@ -45,9 +45,9 @@
         <!-- Call support button -->
         @if (showHelpDesk | async) {
             <button
+                @fadeIn
                 class="action-bar-shadow background-default"
                 mat-mini-fab
-                @fadeIn
                 matTooltip="{{ 'Help desk' | translate }}"
                 (click)="enterSupportRoom()"
             >
@@ -57,13 +57,13 @@
         <!-- applause button -->
         @if (showApplause | async) {
             <button
+                @fadeIn
                 class="action-bar-shadow background-default"
                 mat-mini-fab
-                @fadeIn
+                matTooltip="{{ 'Give applause' | translate }}"
                 [disabled]="sendsApplause | async"
                 [matBadge]="applauseLevel | async"
                 [matBadgeHidden]="(showApplauseLevel | async) === false"
-                matTooltip="{{ 'Give applause' | translate }}"
                 (click)="sendApplause()"
             >
                 <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>

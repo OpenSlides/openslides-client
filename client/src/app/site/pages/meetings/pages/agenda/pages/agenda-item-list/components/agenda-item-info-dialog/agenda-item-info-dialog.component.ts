@@ -15,7 +15,8 @@ import { ViewAgendaItem } from '../../../../view-models';
 @Component({
     selector: `os-agenda-item-info-dialog`,
     templateUrl: `./agenda-item-info-dialog.component.html`,
-    styleUrls: [`./agenda-item-info-dialog.component.scss`]
+    styleUrls: [`./agenda-item-info-dialog.component.scss`],
+    standalone: false
 })
 export class AgendaItemInfoDialogComponent implements OnInit {
     /**

@@ -17,7 +17,8 @@ interface ChessDialogConfig {
     selector: `os-chess-dialog`,
     templateUrl: `./chess-dialog.component.html`,
     styleUrls: [`./chess-dialog.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ChessDialogComponent extends BaseGameDialogComponent implements OnInit {
     protected prefix = `chess`;

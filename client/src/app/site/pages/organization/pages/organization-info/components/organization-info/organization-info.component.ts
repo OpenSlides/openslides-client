@@ -7,7 +7,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 @Component({
     selector: `os-organization-info`,
     templateUrl: `./organization-info.component.html`,
-    styleUrls: [`./organization-info.component.scss`]
+    styleUrls: [`./organization-info.component.scss`],
+    standalone: false
 })
 export class OrganizationInfoComponent extends BaseComponent implements OnInit {
     public get isManager(): boolean {

@@ -15,7 +15,8 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
     selector: `os-poll-progress`,
     templateUrl: `./poll-progress.component.html`,
     styleUrls: [`./poll-progress.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PollProgressComponent extends BaseUiComponent implements OnInit {
     @Input()

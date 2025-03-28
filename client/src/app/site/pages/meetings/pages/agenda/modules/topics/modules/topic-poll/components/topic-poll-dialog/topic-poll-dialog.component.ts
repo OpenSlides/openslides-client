@@ -39,7 +39,8 @@ export class TextOptionSelectable implements Selectable {
 @Component({
     selector: `os-topic-poll-dialog`,
     templateUrl: `./topic-poll-dialog.component.html`,
-    styleUrls: [`./topic-poll-dialog.component.scss`]
+    styleUrls: [`./topic-poll-dialog.component.scss`],
+    standalone: false
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     @ViewChild(`scrollframe`, { static: false }) public scrollFrame: ElementRef;
@@ -65,7 +66,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     public optionsWarning = _(`There should be at least 2 options.`);
 
     public newOptions: TextOptionSelectable[] = [];
-    public optionsSubject: BehaviorSubject<TextOptionSelectable[]> = new BehaviorSubject(this.newOptions);
+    public optionsSubject = new BehaviorSubject<TextOptionSelectable[]>(this.newOptions);
     public optionInput = ``;
 
     public readonly globalValues = [`global_yes`, `global_no`, `global_abstain`];

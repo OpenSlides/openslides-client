@@ -62,7 +62,8 @@ import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-dele
     templateUrl: `./motion-view.component.html`,
     styleUrls: [`./motion-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionViewComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public readonly collection = ViewMotion.COLLECTION;
@@ -79,14 +80,14 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this._motion;
     }
 
-    public hasChangeRecommendations: boolean = false;
-    public unifiedChanges$: BehaviorSubject<ViewUnifiedChange[]> = new BehaviorSubject([]);
+    public hasChangeRecommendations = false;
+    public unifiedChanges$ = new BehaviorSubject<ViewUnifiedChange[]>([]);
 
-    public originMotionTabSelected: number = 0;
+    public originMotionTabSelected = 0;
     public originMotionsLoaded: ViewMotion[] = [];
-    public originMotionsChangeRecoMode: { [key: Id]: ChangeRecoMode } = {};
-    public originMotionsLineNumberingMode: { [key: Id]: LineNumberingMode } = {};
-    public originUnifiedChanges: { [key: Id]: ViewUnifiedChange[] } = {};
+    public originMotionsChangeRecoMode: Record<Id, ChangeRecoMode> = {};
+    public originMotionsLineNumberingMode: Record<Id, LineNumberingMode> = {};
+    public originUnifiedChanges: Record<Id, ViewUnifiedChange[]> = {};
 
     private get unifiedChanges(): ViewUnifiedChange[] {
         return this.unifiedChanges$.value;
@@ -505,7 +506,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     private isNavigatedFromAmendments(): void {
         const previousUrl = this.originUrlService.getPreviousUrl();
-        if (!!previousUrl) {
+        if (previousUrl) {
             if (previousUrl.endsWith(`amendments`)) {
                 this._navigatedFromAmendmentList = true;
             } else if (previousUrl.endsWith(`motions`)) {
@@ -527,7 +528,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         }
 
         for (let i = indexOfCurrent + step; 0 <= i && i <= this._sortedMotions.length - 1; i += step) {
-            if (!!this._sortedMotions[i].hasLeadMotion) {
+            if (this._sortedMotions[i].hasLeadMotion) {
                 return this._sortedMotions[i];
             }
         }

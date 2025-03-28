@@ -10,7 +10,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 @Component({
     selector: `os-legal-notice-content`,
     templateUrl: `./legal-notice-content.component.html`,
-    styleUrls: [`./legal-notice-content.component.scss`]
+    styleUrls: [`./legal-notice-content.component.scss`],
+    standalone: false
 })
 export class LegalNoticeContentComponent extends BaseUiComponent implements OnInit {
     public readonly OML = OML;

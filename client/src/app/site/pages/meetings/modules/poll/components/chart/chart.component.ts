@@ -22,7 +22,8 @@ type Label = SingleLineLabel | MultiLineLabel;
 @Component({
     selector: `os-chart`,
     templateUrl: `./chart.component.html`,
-    styleUrls: [`./chart.component.scss`]
+    styleUrls: [`./chart.component.scss`],
+    standalone: false
 })
 export class ChartComponent {
     /**

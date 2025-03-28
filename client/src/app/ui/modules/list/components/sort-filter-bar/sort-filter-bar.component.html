@@ -117,8 +117,8 @@
             <os-rounded-input
                 #searchField
                 iconName="manage_search"
-                [fullWidth]="false"
                 placeholder="{{ 'Search' | translate }}"
+                [fullWidth]="false"
                 [size]="'small'"
                 [(ngModel)]="searchFieldInput"
                 (clickIcon)="toggleSearchEdit()"
@@ -143,11 +143,7 @@
         }
     </div>
     @if (filterService) {
-        <os-filter-menu
-            [service]="filterService"
-            [showSpacer]="showSpacer"
-            (dismissed)="this.filterMenu.close()"
-        ></os-filter-menu>
+        <os-filter-menu [service]="filterService" [showSpacer]="showSpacer" (dismissed)="this.filterMenu.close()" />
     }
 </mat-drawer>
 
@@ -160,7 +156,7 @@
                 <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
                 <small class="subtitle">({{ 'Default' | translate }})</small>
             </button>
-            <mat-divider></mat-divider>
+            <mat-divider />
         }
         @for (option of sortOptionsWithoutDefault; track option) {
             <button mat-menu-item (click)="sortOption = option">

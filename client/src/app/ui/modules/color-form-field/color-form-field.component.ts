@@ -16,7 +16,6 @@ import { BaseFormControlComponent } from '../../base/base-form-control';
     templateUrl: `./color-form-field.component.html`,
     styleUrls: [`./color-form-field.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => ColorFormFieldComponent) }],
-    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -90,7 +89,7 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
         if (this.isEmpty) {
             if (value === this.defaultDisplayColor.value) {
                 value = ``;
-            } else if (!!value) {
+            } else if (value) {
                 this.isEmpty = false;
             }
         }

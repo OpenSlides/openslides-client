@@ -7,6 +7,7 @@ import { ProjectorMessageSlideData } from '../../projector-message-slide-data';
     selector: `os-projector-message-slide`,
     templateUrl: `./projector-message-slide.component.html`,
     styleUrls: [`./projector-message-slide.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ProjectorMessageSlideComponent extends BaseSlideComponent<ProjectorMessageSlideData> {}

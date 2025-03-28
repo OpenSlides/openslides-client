@@ -2,9 +2,7 @@ import { Id } from '../definitions/key-types';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor;
 
-export interface Fields {
-    [field: string]: FieldDescriptor | null;
-}
+export type Fields = Record<string, FieldDescriptor | null>;
 
 export interface HasFields {
     fields: Fields;

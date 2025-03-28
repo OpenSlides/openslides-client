@@ -20,7 +20,8 @@ interface VoteAmount {
     selector: `os-poll-filted-votes-chart`,
     templateUrl: `./poll-filtered-votes-chart.component.html`,
     styleUrls: [`./poll-filtered-votes-chart.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PollFilteredVotesChartComponent extends BaseUiComponent implements OnInit {
     @Input()

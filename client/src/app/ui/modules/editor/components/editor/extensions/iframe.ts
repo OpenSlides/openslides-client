@@ -2,9 +2,7 @@ import { mergeAttributes, Node } from '@tiptap/core';
 
 export interface IframeOptions {
     inline: boolean;
-    HTMLAttributes: {
-        [key: string]: any;
-    };
+    HTMLAttributes: Record<string, any>;
 }
 
 declare module '@tiptap/core' {

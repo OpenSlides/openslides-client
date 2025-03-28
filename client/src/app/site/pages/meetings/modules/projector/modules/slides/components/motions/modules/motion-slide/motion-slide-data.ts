@@ -37,7 +37,7 @@ export interface AmendmentData {
     id: number;
     title: string;
     number: string;
-    amendment_paragraphs: { [paragraphNumber: string]: string };
+    amendment_paragraphs: Record<string, string>;
     change_recommendations: ChangeRecommendationData[];
     merge_amendment_into_final: MergeAmendment;
     merge_amendment_into_diff: MergeAmendment;
@@ -53,7 +53,7 @@ export interface MotionSlideData extends MotionFormattingRepresentation {
     reason: string;
     submitters: string[];
     additional_submitter: string;
-    amendment_paragraphs: { [paragraphNumber: string]: string };
+    amendment_paragraphs: Record<string, string>;
     lead_motion: LeadMotionData;
     change_recommendations: ChangeRecommendationData[];
     amendments: AmendmentData[];

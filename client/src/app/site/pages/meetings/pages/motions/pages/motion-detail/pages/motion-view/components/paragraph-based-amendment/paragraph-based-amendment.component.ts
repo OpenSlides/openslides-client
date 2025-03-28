@@ -12,7 +12,8 @@ import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-det
     selector: `os-paragraph-based-amendment`,
     templateUrl: `./paragraph-based-amendment.component.html`,
     styleUrls: [`./paragraph-based-amendment.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;

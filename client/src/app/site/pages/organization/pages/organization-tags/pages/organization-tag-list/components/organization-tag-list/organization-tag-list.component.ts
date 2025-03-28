@@ -13,7 +13,8 @@ import { ViewOrganizationTag } from '../../../../view-models';
 @Component({
     selector: `os-organization-tag-list`,
     templateUrl: `./organization-tag-list.component.html`,
-    styleUrls: [`./organization-tag-list.component.scss`]
+    styleUrls: [`./organization-tag-list.component.scss`],
+    standalone: false
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {
     public constructor(

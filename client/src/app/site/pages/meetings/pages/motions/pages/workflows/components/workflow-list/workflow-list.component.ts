@@ -14,7 +14,8 @@ const WORKFLOW_LIST_STORAGE_INDEX = `workflows`;
 @Component({
     selector: `os-workflow-list`,
     templateUrl: `./workflow-list.component.html`,
-    styleUrls: [`./workflow-list.component.scss`]
+    styleUrls: [`./workflow-list.component.scss`],
+    standalone: false
 })
 export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMotionWorkflow> implements OnInit {
     /**

@@ -1,3 +1,5 @@
+@use 'src/assets/styles/media-queries.scss';
+
 .heading-container {
     padding: 0 16px;
 }
@@ -15,8 +17,6 @@
 .os-grid.no-space {
     padding: 0;
 }
-
-@import 'src/assets/styles/media-queries.scss';
 
 $sm: sm;
 $xs: xs;
@@ -65,7 +65,7 @@ $lg: lg;
     }
 }
 
-@include set-breakpoint-lower(xs) {
+@include media-queries.set-breakpoint-lower(xs) {
     @for $i from 1 through 4 {
         .os-tile--xs-#{$i} {
             @include calc-width($xs, $i, true);
@@ -76,7 +76,7 @@ $lg: lg;
     }
 }
 
-@include set-breakpoint-between(xs, sm) {
+@include media-queries.set-breakpoint-between(xs, sm) {
     @for $i from 1 through 8 {
         .os-tile--sm-#{$i} {
             @include calc-width($sm, $i, true);
@@ -87,7 +87,7 @@ $lg: lg;
     }
 }
 
-@include set-breakpoint-between(sm, lg) {
+@include media-queries.set-breakpoint-between(sm, lg) {
     @for $i from 1 through 12 {
         .os-tile--md-#{$i} {
             @include calc-width($md, $i, true);
@@ -98,7 +98,7 @@ $lg: lg;
     }
 }
 
-@include set-breakpoint-upper(lg) {
+@include media-queries.set-breakpoint-upper(lg) {
     @for $i from 1 through 16 {
         .os-tile--lg-#{$i} {
             @include calc-width($lg, $i, true);

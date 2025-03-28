@@ -15,7 +15,6 @@ import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
     templateUrl: `./choice-dialog.component.html`,
     styleUrls: [`./choice-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         CommonModule,
         MatDialogModule,
@@ -56,7 +55,7 @@ export class ChoiceDialogComponent {
         }
     }
 
-    private readonly _selectedItems: { [id: Id]: Selectable } = {};
+    private readonly _selectedItems: Record<Id, Selectable> = {};
 
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,

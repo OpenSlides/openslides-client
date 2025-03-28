@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .meta-text-block {
     padding: 0px;
@@ -6,7 +6,7 @@
     min-width: 200px;
 
     .mat-mdc-icon-button {
-        @include custom-size-button(34px, 18px);
+        @include button.custom-size-button(34px, 18px);
     }
     .mat-mdc-card-header {
         font-size: 16px;

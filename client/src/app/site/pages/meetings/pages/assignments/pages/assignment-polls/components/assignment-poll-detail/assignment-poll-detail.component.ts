@@ -22,7 +22,8 @@ import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/se
     templateUrl: `./assignment-poll-detail.component.html`,
     styleUrls: [`./assignment-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AssignmentPollDetailComponent
     extends BasePollDetailComponent<ViewAssignment, AssignmentPollService>

@@ -12,7 +12,8 @@ const INFO_SUBSCRIPTION = `meeting_info`;
 @Component({
     selector: `os-meeting-info`,
     templateUrl: `./meeting-info.component.html`,
-    styleUrls: [`./meeting-info.component.scss`]
+    styleUrls: [`./meeting-info.component.scss`],
+    standalone: false
 })
 export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {
     public get canSeeStatistics(): boolean {

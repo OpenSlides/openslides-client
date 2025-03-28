@@ -74,7 +74,8 @@ type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [k
     templateUrl: `./motion-form.component.html`,
     styleUrls: [`./motion-form.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionFormComponent extends BaseMeetingComponent implements OnInit {
     public readonly collection = ViewMotion.COLLECTION;
@@ -143,7 +144,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     }
 
     public set paragraphBasedAmendmentContent(content: {
-        amendment_paragraphs: { [paragraph_number: number]: UnsafeHtml };
+        amendment_paragraphs: Record<number, UnsafeHtml>;
     }) {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
@@ -168,7 +169,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         }
         const searchId = +this.committeeControl.value;
         const foundEntry = this.committeeValues.find(entry => entry.id === searchId);
-        return !!foundEntry ? foundEntry.getTitle() : ``;
+        return foundEntry ? foundEntry.getTitle() : ``;
     }
 
     private titleFieldUpdateSubscription: Subscription;
@@ -369,7 +370,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             );
         }
 
-        const contentPatch: { [key: string]: any } = {};
+        const contentPatch: Record<string, any> = {};
         Object.keys(this.contentForm.controls).forEach(ctrl => {
             if (this.isExisting || this.motion[ctrl]) {
                 contentPatch[ctrl] = this.motion[ctrl];

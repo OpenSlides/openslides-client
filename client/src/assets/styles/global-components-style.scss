@@ -91,7 +91,7 @@
     }
 
     .outline-border-bottom {
-        border-bottom: 1px solid $os-outline;
+        border-bottom: 1px solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
     }
 
     /* motion list/detail view */
@@ -119,7 +119,6 @@
     }
 
     .subtitle {
-        @extend .subtitle-nocolor;
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 

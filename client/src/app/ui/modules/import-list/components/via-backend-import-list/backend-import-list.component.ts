@@ -51,7 +51,8 @@ export enum BackendImportPhase {
     selector: `os-backend-import-list`,
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
@@ -239,9 +240,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
-    private _headers: {
-        [property: string]: { default?: ImportListHeaderDefinition; preview?: BackendImportHeader };
-    } = {};
+    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
     public constructor(
         private dialog: MatDialog,

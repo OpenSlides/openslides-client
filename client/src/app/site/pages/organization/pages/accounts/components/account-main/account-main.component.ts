@@ -37,7 +37,8 @@ const accountListSubsciptionContent = {
 @Component({
     selector: `os-account-main`,
     templateUrl: `./account-main.component.html`,
-    styleUrls: [`./account-main.component.scss`]
+    styleUrls: [`./account-main.component.scss`],
+    standalone: false
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     protected operator: OperatorService = inject(OperatorService);

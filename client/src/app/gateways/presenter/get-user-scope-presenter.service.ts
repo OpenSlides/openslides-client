@@ -17,9 +17,7 @@ interface GetUserScopeIdentifiedScope {
     committee_ids: number[];
 }
 
-export interface GetUserScopePresenterResult {
-    [user_id: Id]: GetUserScopeIdentifiedScope;
-}
+export type GetUserScopePresenterResult = Record<Id, GetUserScopeIdentifiedScope>;
 
 @Injectable({
     providedIn: `root`

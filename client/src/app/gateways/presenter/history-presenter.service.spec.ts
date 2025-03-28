@@ -224,7 +224,7 @@ function compareHistoryPositions(
         compare.information?.join(`#`) !==
             (isDeprecatedFormat
                 ? (to.information as string[])
-                : (to.information as { [fqid: string]: string[] })[fqid]
+                : (to.information as Record<string, string[]>)[fqid]
             )?.join(`#`)
     );
 }

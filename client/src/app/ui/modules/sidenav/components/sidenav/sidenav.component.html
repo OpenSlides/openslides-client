@@ -8,12 +8,12 @@
 >
     @if (isMobile) {
         <mat-sidenav #sideNav class="side-panel" disableClose="!isMobile" [mode]="'over'" [opened]="!isMobile">
-            <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
+            <ng-container *ngTemplateOutlet="sideNavContent" />
         </mat-sidenav>
     }
     <mat-sidenav-content>
         @if (!isOpen) {
-            <ng-container [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
+            <ng-container [ngTemplateOutlet]="sideNavToggleButton" />
         }
         <div class="main-content-wrapper">
             @if (!isMobile && isOpen) {

@@ -29,7 +29,7 @@ function initAll(broadcast: (s: string, a: string, c?: any) => void): void {
     initControlMessageHandler(broadcast);
 }
 
-if ((<any>self).Window && self instanceof (<any>self).Window) {
+if ((self as any).Window && self instanceof (self as any).Window) {
     function broadcast(sender: string, action: string, content?: any): void {
         self.postMessage({ sender, action, content });
     }
@@ -46,7 +46,7 @@ if ((<any>self).Window && self instanceof (<any>self).Window) {
 
     initAll(broadcast);
 
-    (<any>self).addEventListener(`connect`, (e: any) => {
+    (self as any).addEventListener(`connect`, (e: any) => {
         const port: MessagePort = e.ports[0];
 
         registerMessageListener(port);

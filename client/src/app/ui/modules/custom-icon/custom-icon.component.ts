@@ -8,7 +8,6 @@ import { CustomIcon } from './definitions';
     templateUrl: `./custom-icon.component.html`,
     styleUrls: [`./custom-icon.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [CommonModule]
 })
 export class CustomIconComponent {
@@ -18,7 +17,7 @@ export class CustomIconComponent {
     @Input()
     public sizeInPx = 24;
 
-    public get style(): { [ley: string]: any } {
+    public get style(): Record<string, any> {
         return {
             height: `${this.sizeInPx}px`,
             width: `${this.sizeInPx}px`

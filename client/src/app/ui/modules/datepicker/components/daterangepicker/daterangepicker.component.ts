@@ -11,7 +11,8 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
     styleUrls: [`./daterangepicker.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: DatepickerComponent }],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DaterangepickerComponent extends BaseDatepickerComponent {
     public get empty(): boolean {

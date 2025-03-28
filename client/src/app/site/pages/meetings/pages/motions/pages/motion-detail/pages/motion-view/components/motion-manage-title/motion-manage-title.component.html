@@ -25,9 +25,9 @@
                 append
                 class="primary-accent-by-theme"
                 mat-icon-button
+                matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 matTooltipPosition="right"
                 [hidden]="publicAccess"
-                matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 (click)="setFavorite(!isFavorite)"
             >
                 <mat-icon>{{ isFavorite ? 'star' : 'star_border' }}</mat-icon>

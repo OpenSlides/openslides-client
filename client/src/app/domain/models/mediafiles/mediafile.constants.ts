@@ -24,7 +24,7 @@ export const FontDisplayNames = {
     projector_h2: _(`Projector h2`)
 };
 export type FontPlace = keyof typeof FontDisplayNames;
-export const FontDefaults: { [place in FontPlace]: string } = {
+export const FontDefaults: Record<FontPlace, string> = {
     regular: `/assets/fonts/fira-sans-latin-400.woff`,
     italic: `/assets/fonts/fira-sans-latin-400italic.woff`,
     bold: `/assets/fonts/fira-sans-latin-500.woff`,

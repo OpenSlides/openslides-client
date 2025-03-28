@@ -15,7 +15,7 @@ const autoupdatePool = new AutoupdateStreamPool({
     method: `post`
 } as AutoupdateSetEndpointParams);
 
-const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
+const subscriptionQueues: Record<string, AutoupdateSubscription[]> = {
     required: [],
     requiredMeeting: [],
     sequentialnumbermapping: [],
@@ -36,7 +36,7 @@ function registerDebugCommands(): void {
     }
 
     debugCommandsRegistered = true;
-    (<any>self).printAutoupdateState = function (): void {
+    (self as any).printAutoupdateState = function (): void {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
         console.group(`Streams`);
@@ -66,7 +66,7 @@ function registerDebugCommands(): void {
         console.groupEnd();
     };
 
-    (<any>self).disableAutoupdateCompression = function (): void {
+    (self as any).disableAutoupdateCompression = function (): void {
         autoupdatePool.disableCompression();
     };
 }

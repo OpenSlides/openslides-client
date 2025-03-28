@@ -16,7 +16,8 @@ const CATEGORY_LIST_STORAGE_INDEX = `category_list`;
 @Component({
     selector: `os-category-list`,
     templateUrl: `./category-list.component.html`,
-    styleUrls: [`./category-list.component.scss`]
+    styleUrls: [`./category-list.component.scss`],
+    standalone: false
 })
 export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMotionCategory> implements OnInit {
     @ViewChild(`newCategoryDialog`, { static: true })

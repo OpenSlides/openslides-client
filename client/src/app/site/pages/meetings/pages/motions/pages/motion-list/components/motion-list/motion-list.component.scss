@@ -1,6 +1,6 @@
-@import 'src/assets/styles/tables.scss';
-@import 'src/assets/styles/variables.scss';
-@import 'src/app/site/pages/meetings/pages/motions/styles/motion-list-styles.scss';
+@use 'src/assets/styles/tables.scss';
+@use 'src/assets/styles/variables.scss';
+@use 'src/app/site/pages/meetings/pages/motions/styles/motion-list-styles.scss';
 
 // Determine the distance between the top edge to the start of the table content
 $text-margin-top: 10px;
@@ -86,7 +86,7 @@ os-grid-layout {
             margin-bottom: 0;
             overflow: hidden;
 
-            @include desktop {
+            @include variables.desktop {
                 font-size: calc(10px + 0.5vmax);
             }
 

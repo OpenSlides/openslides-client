@@ -2,7 +2,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { environment } from 'src/environments/environment';
 
 export class WorkerHttpAuth {
-    private static subscriptions: Map<string, (token: string, newUserId?: Id) => void> = new Map();
+    private static subscriptions = new Map<string, (token: string, newUserId?: Id) => void>();
     private static workerHttpAuth: WorkerHttpAuth | null = null;
 
     public static subscribe(id: string, callback: (token: string, newUserId?: Id) => void): void {

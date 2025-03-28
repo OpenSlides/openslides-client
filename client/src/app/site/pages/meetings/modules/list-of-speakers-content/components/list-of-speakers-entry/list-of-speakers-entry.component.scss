@@ -1,5 +1,5 @@
-@import 'src/assets/styles/variables.scss';
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .single-speaker-line {
     display: flex;
@@ -91,13 +91,13 @@
     display: flex;
 
     .mat-mdc-icon-button.speaker-control-button {
-        @include custom-size-button(46px, 36px);
+        @include button.custom-size-button(46px, 36px);
         &.small-play-icon {
-            @include custom-size-button(46px, 22px);
+            @include button.custom-size-button(46px, 22px);
         }
     }
 }
 
 .mat-mdc-icon-button.speaker-stop-button {
-    @include custom-size-button(40px, 32px);
+    @include button.custom-size-button(40px, 32px);
 }

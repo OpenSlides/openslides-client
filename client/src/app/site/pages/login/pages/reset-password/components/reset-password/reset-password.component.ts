@@ -8,7 +8,8 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 @Component({
     selector: `os-reset-password`,
     templateUrl: `./reset-password.component.html`,
-    styleUrls: [`./reset-password.component.scss`]
+    styleUrls: [`./reset-password.component.scss`],
+    standalone: false
 })
 export class ResetPasswordComponent extends BaseComponent implements OnInit {
     /**

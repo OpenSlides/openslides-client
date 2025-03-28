@@ -2,7 +2,7 @@
 
 import { _ } from '@ngx-translate/core';
 
-export const meetingSettingsDefaults: { [key: string]: any } = {
+export const meetingSettingsDefaults: Record<string, any> = {
     name: `Meeting title`,
     enable_anonymous: false,
     export_csv_separator: `;`,

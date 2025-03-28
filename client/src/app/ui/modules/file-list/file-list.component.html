@@ -182,7 +182,7 @@
 <mat-menu #singleMediafileMenu="matMenu">
     <ng-template let-mediafile="mediafile" matMenuContent>
         <!-- Space for custom content -->
-        <ng-container *ngTemplateOutlet="fileMenuTemplate; context: { mediafile: mediafile }"></ng-container>
+        <ng-container *ngTemplateOutlet="fileMenuTemplate; context: { mediafile: mediafile }" />
 
         @if (canEdit) {
             <div>
@@ -260,10 +260,10 @@
             <mat-label>{{ 'Upload to' | translate }}</mat-label>
             <os-list-search-selector
                 formControlName="directory_id"
+                noneTitle="{{ 'Base folder' | translate }}"
                 [includeNone]="true"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
-                noneTitle="{{ 'Base folder' | translate }}"
-            ></os-list-search-selector>
+            />
         </mat-form-field>
 
         @if (movingFromPublicFolder && !movingToPublicFolder) {

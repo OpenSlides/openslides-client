@@ -6,9 +6,7 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { ViewChatMessage } from '../view-models';
 import { ChatMessageControllerService } from './chat-message-controller.service';
 
-export interface NotificationAmountEvent {
-    [chatGroupId: number]: BehaviorSubject<number>;
-}
+export type NotificationAmountEvent = Record<number, BehaviorSubject<number>>;
 
 function isLastSeenTimestampEvent(toCheck: unknown): toCheck is LastSeenTimestampEvent {
     if (!toCheck || typeof toCheck !== `object`) {
@@ -20,9 +18,7 @@ function isLastSeenTimestampEvent(toCheck: unknown): toCheck is LastSeenTimestam
     });
 }
 
-interface LastSeenTimestampEvent {
-    [chatGroupId: number]: Date;
-}
+type LastSeenTimestampEvent = Record<number, Date>;
 
 const STORAGE_KEY = `os4-chat-notifications`;
 
@@ -110,7 +106,7 @@ export class ChatNotificationService {
     }
 
     private doChatMessageUpdate(): void {
-        const notificationsPerChatGroup: { [chatGroupId: number]: number } = {};
+        const notificationsPerChatGroup: Record<number, number> = {};
         for (const chatMessage of this._chatMessages) {
             const lastSeenTimestamp = this._chatGroupLastSeenObject[chatMessage.chat_group_id];
             if (

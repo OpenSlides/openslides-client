@@ -32,7 +32,8 @@ const MAX_CHECKBOX_WIDTH = 290; // Maximum width of a checkbox (in px).
     templateUrl: `./filter-menu.component.html`,
     styleUrls: [`./filter-menu.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     /**

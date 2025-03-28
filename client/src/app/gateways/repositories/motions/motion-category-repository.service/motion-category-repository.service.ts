@@ -36,7 +36,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         const payload = {
             id: viewModel.id,
             name: update.name,
-            prefix: !!update.prefix ? update.prefix : null // "" -> null
+            prefix: update.prefix ? update.prefix : null // "" -> null
         };
         return this.sendActionToBackend(MotionCategoryAction.UPDATE, payload);
     }

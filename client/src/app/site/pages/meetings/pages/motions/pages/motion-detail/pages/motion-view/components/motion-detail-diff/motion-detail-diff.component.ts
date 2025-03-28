@@ -64,7 +64,8 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
     templateUrl: `./motion-detail-diff.component.html`,
     styleUrls: [`./motion-detail-diff.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailDiffComponent extends BaseMeetingComponent implements AfterViewInit {
     /**
@@ -482,7 +483,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * Scrolls to the native element specified by [scrollToChange]
      */
     private scrollToChangeElement(change: ViewUnifiedChange): void {
-        const element = <HTMLElement>this.el.nativeElement;
+        const element = this.el.nativeElement as HTMLElement;
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
         const containerElement = document.querySelector(`mat-sidenav-content`);
         containerElement!.scrollTo({

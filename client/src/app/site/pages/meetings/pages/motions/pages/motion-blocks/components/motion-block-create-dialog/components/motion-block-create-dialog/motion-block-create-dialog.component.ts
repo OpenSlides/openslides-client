@@ -6,7 +6,8 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 @Component({
     selector: `os-motion-block-create-dialog`,
     templateUrl: `./motion-block-create-dialog.component.html`,
-    styleUrls: [`./motion-block-create-dialog.component.scss`]
+    styleUrls: [`./motion-block-create-dialog.component.scss`],
+    standalone: false
 })
 export class MotionBlockCreateDialogComponent {
     public readonly createBlockForm: UntypedFormGroup;

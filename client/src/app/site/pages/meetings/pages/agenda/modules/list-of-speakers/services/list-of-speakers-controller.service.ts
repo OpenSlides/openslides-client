@@ -67,7 +67,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         const parliamentMode = this.meetingSettings.instant(`list_of_speakers_default_structure_level_time`);
         for (const los of this.getViewModelList()) {
             for (const speaker of los.finishedSpeakers) {
-                if (!!parliamentMode) {
+                if (parliamentMode) {
                     const structureLevelOrNull = speaker.structure_level_list_of_speakers?.structure_level;
                     this.putIntoMapForAggregation(structureLevelOrNull, speaker, mapForAggregation);
                 } else {
@@ -89,7 +89,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         mapForAggregation: Map<Id, SpeakingTimeStructureLevelObject>
     ): void {
         let structureLevelId = -1;
-        if (!!structureLevel) {
+        if (structureLevel) {
             structureLevelId = structureLevel.id;
         }
         if (mapForAggregation.has(structureLevelId)) {

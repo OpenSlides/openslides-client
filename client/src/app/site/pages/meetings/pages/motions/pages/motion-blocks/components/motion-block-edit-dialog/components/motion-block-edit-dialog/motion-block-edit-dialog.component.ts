@@ -6,7 +6,8 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 @Component({
     selector: `os-motion-block-edit-dialog`,
     templateUrl: `./motion-block-edit-dialog.component.html`,
-    styleUrls: [`./motion-block-edit-dialog.component.scss`]
+    styleUrls: [`./motion-block-edit-dialog.component.scss`],
+    standalone: false
 })
 export class MotionBlockEditDialogComponent {
     public readonly blockEditForm: UntypedFormGroup;

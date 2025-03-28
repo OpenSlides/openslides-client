@@ -6,7 +6,8 @@ import { WaitForActionDialogService } from '../../services/wait-for-action-dialo
 @Component({
     selector: `os-stopped-waiting-for-action-dialog`,
     templateUrl: `./stopped-waiting-for-action-dialog.component.html`,
-    styleUrls: [`./stopped-waiting-for-action-dialog.component.scss`]
+    styleUrls: [`./stopped-waiting-for-action-dialog.component.scss`],
+    standalone: false
 })
 export class StoppedWaitingForActionDialogComponent extends BaseUiComponent {
     public get showSnapshots(): boolean {

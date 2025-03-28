@@ -11,7 +11,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 @Component({
     selector: `os-start`,
     templateUrl: `./start.component.html`,
-    styleUrls: [`./start.component.scss`]
+    styleUrls: [`./start.component.scss`],
+    standalone: false
 })
 export class StartComponent extends BaseMeetingComponent implements OnInit {
     /**

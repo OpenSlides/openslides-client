@@ -16,7 +16,8 @@ import { ChatGroupControllerService, ChatNotificationService } from '../../../..
     templateUrl: `./chat-group-list.component.html`,
     styleUrls: [`./chat-group-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ChatGroupListComponent extends BaseMeetingComponent {
     public get chatGroupsObservable(): Observable<ViewChatGroup[]> {

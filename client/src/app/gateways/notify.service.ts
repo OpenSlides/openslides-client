@@ -99,9 +99,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
     /**
      * Subjects for specific messages.
      */
-    private messageSubjects: {
-        [name: string]: Subject<NotifyResponse<any>>;
-    } = {};
+    private messageSubjects: Record<string, Subject<NotifyResponse<any>>> = {};
 
     private channelId = ``;
 

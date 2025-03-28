@@ -33,7 +33,7 @@ export class ActionWorkerWatchService {
 
     private _waitingForDeletion: number[] = [];
 
-    private _confirmationToWaitTimestamps: { [id: number]: number } = {};
+    private _confirmationToWaitTimestamps: Record<number, number> = {};
 
     public constructor(
         private actionWorkerRepo: ActionWorkerRepositoryService,

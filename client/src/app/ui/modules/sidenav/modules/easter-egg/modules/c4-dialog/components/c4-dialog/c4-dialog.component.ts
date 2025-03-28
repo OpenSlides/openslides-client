@@ -24,7 +24,8 @@ enum BoardStatus {
 @Component({
     selector: `os-c4-dialog`,
     templateUrl: `./c4-dialog.component.html`,
-    styleUrls: [`./c4-dialog.component.scss`]
+    styleUrls: [`./c4-dialog.component.scss`],
+    standalone: false
 })
 export class C4DialogComponent extends BaseGameDialogComponent implements OnInit {
     protected prefix = `c4`;

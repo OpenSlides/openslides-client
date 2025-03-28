@@ -12,7 +12,8 @@ interface EasterEggModuleDescription {
 @Component({
     selector: `os-easter-egg-content-platform-dialog`,
     templateUrl: `./easter-egg-content-platform-dialog.component.html`,
-    styleUrls: [`./easter-egg-content-platform-dialog.component.scss`]
+    styleUrls: [`./easter-egg-content-platform-dialog.component.scss`],
+    standalone: false
 })
 export class EasterEggContentPlatformDialogComponent {
     public readonly choosableModules: EasterEggModuleDescription[] = [C4DialogModule, ChessDialogModule];

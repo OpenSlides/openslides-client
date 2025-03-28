@@ -44,8 +44,8 @@ export interface ParagraphToChoose {
     providedIn: `root`
 })
 export class MotionLineNumberingService {
-    private amendmentChangeRecoMap: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
-    private amendmentChangeRecoSubscriptionMap: { [amendmentId: string]: Subscription } = {};
+    private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
+    private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
     public constructor(
         private changeRecoRepo: MotionChangeRecommendationControllerService,

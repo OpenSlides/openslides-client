@@ -3,7 +3,7 @@ import { ProjectiondefaultValue } from '../../../../domain/models/projector/proj
 import { SlideOptions } from './slide-options';
 
 export function isProjectionBuildDescriptor(obj: any): obj is ProjectionBuildDescriptor {
-    const descriptor = <ProjectionBuildDescriptor>obj;
+    const descriptor = obj as ProjectionBuildDescriptor;
     return !!descriptor && descriptor.content_object_id !== undefined && descriptor.getDialogTitle !== undefined;
 }
 

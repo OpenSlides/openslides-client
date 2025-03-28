@@ -9,7 +9,7 @@
 </button>
 
 @if (canUpdate) {
-    <mat-divider></mat-divider>
+    <mat-divider />
     <!-- <ng-container *ngIf="implicitContent">
   <ng-container *ngTemplateOutlet="implicitContent"></ng-container>
   <mat-divider></mat-divider>
@@ -18,7 +18,7 @@
         <ng-content></ng-content>
     </div>
     @if (ref.children.length) {
-        <mat-divider></mat-divider>
+        <mat-divider />
     }
     <button mat-menu-item [disabled]="!selectedUsers.length" (click)="sendInvitationEmailSelected()">
         <mat-icon>mail</mat-icon>
@@ -41,7 +41,7 @@
         <span>{{ 'Generate new passwords' | translate }}</span>
     </button>
     @if (canManage) {
-        <mat-divider></mat-divider>
+        <mat-divider />
         <button class="red-warning-text" mat-menu-item [disabled]="!selectedUsers.length" (click)="deleteSelected()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>

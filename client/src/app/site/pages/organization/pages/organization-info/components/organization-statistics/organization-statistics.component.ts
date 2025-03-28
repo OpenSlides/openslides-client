@@ -9,7 +9,8 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 @Component({
     selector: `os-organization-statistics`,
     templateUrl: `./organization-statistics.component.html`,
-    styleUrls: [`./organization-statistics.component.scss`]
+    styleUrls: [`./organization-statistics.component.scss`],
+    standalone: false
 })
 export class OrganizationStatisticsComponent extends BaseComponent implements OnInit {
     public activeMeetingsText = _(`Active meetings`);

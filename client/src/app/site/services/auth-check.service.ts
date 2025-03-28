@@ -126,7 +126,7 @@ export class AuthCheckService {
     ): Promise<boolean> {
         await this.operator.ready;
         let result = true;
-        if (!!cmlPerm) {
+        if (cmlPerm) {
             const toCheck = Array.isArray(cmlPerm) ? cmlPerm : [cmlPerm];
             if (toCheck.includes(CML.can_manage) && this.operator.isAnyCommitteeAdmin()) {
                 return true;

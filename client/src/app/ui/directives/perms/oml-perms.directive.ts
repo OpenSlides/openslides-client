@@ -4,7 +4,8 @@ import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: `[osOmlPerms]`
+    selector: `[osOmlPerms]`,
+    standalone: false
 })
 export class OmlPermsDirective extends BasePermsDirective<OML> {
     private _checkCML = false;

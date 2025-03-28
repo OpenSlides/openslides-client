@@ -6,11 +6,12 @@ interface IterableMap<K, V> {
 }
 
 @Pipe({
-    name: `entries`
+    name: `entries`,
+    standalone: false
 })
 export class EntriesPipe implements PipeTransform {
     private differ!: KeyValueDiffer<any, any>;
-    private keyValues: Array<KeyValue<any, any>> = [];
+    private keyValues: KeyValue<any, any>[] = [];
     private compareFn: (a: KeyValue<any, any>, b: KeyValue<any, any>) => number = DefaultCompareFn;
 
     public constructor(private readonly differs: KeyValueDiffers) {}
@@ -18,7 +19,7 @@ export class EntriesPipe implements PipeTransform {
     public transform<K, V>(
         instance: IterableMap<K, V> | any,
         compareFn?: (a: KeyValue<K, V>, b: KeyValue<K, V>) => number
-    ): Array<KeyValue<K, V>> {
+    ): KeyValue<K, V>[] {
         if (!this.differ) {
             this.differ = this.differs.find(instance).create();
         }

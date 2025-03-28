@@ -43,7 +43,8 @@ import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/s
     templateUrl: `./list-of-speakers-content.component.html`,
     styleUrls: [`./list-of-speakers-content.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListOfSpeakersContentComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     private _destroyed = new EventEmitter<boolean>();

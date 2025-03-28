@@ -8,7 +8,8 @@ import { getCommitteeMeetingDetailSubscriptionConfig } from '../../../../../../c
 @Component({
     selector: `os-committee-detail-meeting-main`,
     templateUrl: `./committee-detail-meeting-main.component.html`,
-    styleUrls: [`./committee-detail-meeting-main.component.scss`]
+    styleUrls: [`./committee-detail-meeting-main.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: Id | null): void {

@@ -18,7 +18,8 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 @Component({
     selector: `os-comment-section-list`,
     templateUrl: `./comment-section-list.component.html`,
-    styleUrls: [`./comment-section-list.component.scss`]
+    styleUrls: [`./comment-section-list.component.scss`],
+    standalone: false
 })
 export class CommentSectionListComponent extends BaseComponent implements OnInit {
     @ViewChild(`motionCommentDialog`, { static: true })

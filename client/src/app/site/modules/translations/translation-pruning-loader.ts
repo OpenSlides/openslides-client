@@ -45,7 +45,7 @@ export class PruningTranslationLoader implements TranslateLoader {
     }
 
     private parse(content: string, t1337: boolean): any {
-        const translations: { [key: string]: string } = {};
+        const translations: Record<string, string> = {};
 
         const po = pofile.parse(content);
         for (const item of po.items) {
@@ -58,7 +58,7 @@ export class PruningTranslationLoader implements TranslateLoader {
         return translations;
     }
 
-    private dict1337: { [char: string]: string } = {
+    private dict1337: Record<string, string> = {
         a: `4`,
         b: `8`,
         c: `(`,

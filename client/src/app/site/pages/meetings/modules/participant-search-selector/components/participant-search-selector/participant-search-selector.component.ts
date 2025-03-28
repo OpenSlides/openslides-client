@@ -20,7 +20,8 @@ import { UserSelectionData } from '../..';
 @Component({
     selector: `os-participant-search-selector`,
     templateUrl: `./participant-search-selector.component.html`,
-    styleUrls: [`./participant-search-selector.component.scss`]
+    styleUrls: [`./participant-search-selector.component.scss`],
+    standalone: false
 })
 export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit, OnDestroy {
     private _filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);

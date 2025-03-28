@@ -21,7 +21,8 @@ const ROUTE_SUBSCRIPTION_NAME = `routeSubscription`;
     selector: `os-detail-view`,
     templateUrl: `./detail-view.component.html`,
     styleUrls: [`./detail-view.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DetailViewComponent implements OnInit {
     @Input()
@@ -47,7 +48,7 @@ export class DetailViewComponent implements OnInit {
     private _id!: Id;
     private _sequential_number!: number;
 
-    private _subscriptionMap: { [name: string]: Subscription } = {};
+    private _subscriptionMap: Record<string, Subscription> = {};
 
     public constructor(
         private sequentialNumberMappingService: SequentialNumberMappingService,

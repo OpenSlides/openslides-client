@@ -20,9 +20,7 @@ interface ConferenceJoinedResult {
     formattedDisplayName: string;
 }
 
-export interface ConferenceMemberCollection {
-    [key: number]: ConferenceMember;
-}
+export type ConferenceMemberCollection = Record<number, ConferenceMember>;
 export interface ConferenceMember {
     name: string;
     focus?: boolean;
@@ -138,7 +136,7 @@ export class RtcService {
     private jitsiMeetUrlSubject = new Subject<string>();
     public jitsiMeetUrl = this.jitsiMeetUrlSubject as Observable<string>;
 
-    private members: { [id: string]: any } = {};
+    private members: Record<string, any> = {};
     private memberSubject = new BehaviorSubject<ConferenceMemberCollection>(this.members);
     public memberObservableObservable = this.memberSubject as Observable<ConferenceMemberCollection>;
 

@@ -175,7 +175,7 @@ export class MotionXlsxExportService {
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
                         case `working_group_speakers`:
-                            return (motionProp as Array<ViewMotionWorkingGroupSpeaker>)
+                            return (motionProp as ViewMotionWorkingGroupSpeaker[])
                                 .sort((a, b) => a.weight - b.weight)
                                 .join(`, `);
                         default:

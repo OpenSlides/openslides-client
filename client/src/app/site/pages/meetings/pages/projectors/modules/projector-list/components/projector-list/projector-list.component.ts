@@ -26,7 +26,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     templateUrl: `./projector-list.component.html`,
     styleUrls: [`./projector-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ProjectorListComponent extends BaseMeetingComponent implements OnInit, OnDestroy, AfterViewInit {
     /**

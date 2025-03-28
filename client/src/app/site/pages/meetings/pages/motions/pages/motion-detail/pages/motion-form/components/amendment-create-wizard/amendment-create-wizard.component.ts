@@ -23,7 +23,8 @@ import {
     selector: `os-amendment-create-wizard`,
     templateUrl: `./amendment-create-wizard.component.html`,
     styleUrls: [`./amendment-create-wizard.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AmendmentCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewMotion.COLLECTION;
@@ -71,7 +72,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     @ViewChild(`matStepper`, { read: MatStepper }) public stepper: MatStepper;
 
-    public canSave: boolean = false;
+    public canSave = false;
 
     private _parentMotionId: Id | null = null;
 

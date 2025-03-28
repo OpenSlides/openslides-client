@@ -5,7 +5,7 @@ import { CsvImportStatus } from './import-utils';
 export class ImportModel<ToCreate> implements Identifiable {
     public readonly id: number;
 
-    public readonly afterImportFields: { [field: string]: any };
+    public readonly afterImportFields: Record<string, any>;
 
     public set newEntry(model: ToCreate) {
         this.model = model;

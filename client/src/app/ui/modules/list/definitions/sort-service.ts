@@ -20,7 +20,7 @@ export interface OsSortOption<T> {
     label?: string;
     sortFn?: (itemA: T, itemB: T, ascending: boolean, intl?: Intl.Collator) => number;
     baseKeys?: (keyof T)[];
-    foreignBaseKeys?: { [collection: string]: string[] };
+    foreignBaseKeys?: Record<string, string[]>;
 }
 
 export interface SortService<V> {
@@ -33,7 +33,7 @@ export interface SortListService<V> extends SortService<V> {
     readonly defaultOption: OsSortOption<V> | undefined;
     readonly hasSortOptionSelected: boolean;
     readonly currentSortBaseKeys: OsSortProperty<V>[];
-    readonly currentForeignSortBaseKeys: { [collection: string]: string[] };
+    readonly currentForeignSortBaseKeys: Record<string, string[]>;
     readonly hasLoaded: Deferred<boolean>;
     readonly sortingUpdatedObservable: Observable<OsSortingDefinition<V>>;
     readonly repositorySortingKey: string;

@@ -9,7 +9,8 @@ import { ChatGroupDialogData } from '../../services/chat-group-dialog.service';
 @Component({
     selector: `os-chat-group-dialog`,
     templateUrl: `./chat-group-dialog.component.html`,
-    styleUrls: [`./chat-group-dialog.component.scss`]
+    styleUrls: [`./chat-group-dialog.component.scss`],
+    standalone: false
 })
 export class ChatGroupDialogComponent implements OnInit {
     public get isCreateView(): boolean {

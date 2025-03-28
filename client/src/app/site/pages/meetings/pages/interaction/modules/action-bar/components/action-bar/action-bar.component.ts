@@ -15,7 +15,8 @@ import { RtcService } from '../../../../services/rtc.service';
     templateUrl: `./action-bar.component.html`,
     styleUrls: [`./action-bar.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [fadeInAnim, fadeInOutAnim]
+    animations: [fadeInAnim, fadeInOutAnim],
+    standalone: false
 })
 export class ActionBarComponent extends BaseMeetingComponent {
     public canEnterTooltip = _(`Enter conference room`);

@@ -16,7 +16,8 @@ import { particleConfig, particleOptions } from './particle-options';
     selector: `os-applause-particle-display`,
     templateUrl: `./applause-particle-display.component.html`,
     styleUrls: [`./applause-particle-display.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ApplauseParticleDisplayComponent extends BaseMeetingComponent implements OnInit {
     public options = particleOptions;

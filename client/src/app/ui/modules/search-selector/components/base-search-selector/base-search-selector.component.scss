@@ -1,6 +1,6 @@
-@import 'src/assets/styles/media-queries.scss';
+@use 'src/assets/styles/media-queries.scss';
 
-@include set-breakpoint-upper(sm) {
+@include media-queries.set-breakpoint-upper(sm) {
     .os-search-selector-wider {
         min-width: calc(200% + 32px) !important;
     }

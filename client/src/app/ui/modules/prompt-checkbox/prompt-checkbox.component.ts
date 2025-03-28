@@ -11,7 +11,6 @@ import { PromptService } from '../prompt-dialog';
     providers: [
         { provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: `noop` } as MatCheckboxDefaultOptions }
     ],
-    standalone: true,
     imports: [CommonModule, MatCheckboxModule]
 })
 export class PromptCheckboxComponent {

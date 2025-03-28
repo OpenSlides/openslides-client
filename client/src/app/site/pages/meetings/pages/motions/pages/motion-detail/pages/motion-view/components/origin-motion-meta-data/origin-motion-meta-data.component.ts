@@ -23,7 +23,8 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     selector: `os-origin-motion-meta-data`,
     templateUrl: `./origin-motion-meta-data.component.html`,
     styleUrls: [`./origin-motion-meta-data.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public categories$: Observable<ViewMotionCategory[]> = this.categoryRepo.getViewModelListObservable();

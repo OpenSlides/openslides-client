@@ -46,8 +46,12 @@
                                 "output": "/pdfjs/"
                             }
                         ],
-                        "styles": ["src/styles.scss"],
-                        "scripts": ["src/assets/jitsi/external_api.js"],
+                        "styles": [
+                            "src/styles.scss"
+                        ],
+                        "scripts": [
+                            "src/assets/jitsi/external_api.js"
+                        ],
                         "webWorkerTsConfig": "tsconfig.worker.json",
                         "serviceWorker": "ngsw-config.json",
                         "browser": "src/main.ts",
@@ -118,8 +122,14 @@
                         "tsConfig": "tsconfig.spec.json",
                         "karmaConfig": "karma.conf.js",
                         "inlineStyleLanguage": "scss",
-                        "assets": ["src/favicon.ico", "src/assets", "src/manifest.webmanifest"],
-                        "styles": ["src/styles.scss"],
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/manifest.webmanifest"
+                        ],
+                        "styles": [
+                            "src/styles.scss"
+                        ],
                         "scripts": [],
                         "webWorkerTsConfig": "tsconfig.worker.json",
                         "sourceMap": false
@@ -128,7 +138,10 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                        "lintFilePatterns": [
+                            "src/**/*.ts",
+                            "src/**/*.html"
+                        ]
                     }
                 }
             }
@@ -141,7 +154,7 @@
             "environment": "all"
         },
         "schematicCollections": [
-          "@angular-eslint/schematics"
+            "@angular-eslint/schematics"
         ],
         "analytics": false
     }

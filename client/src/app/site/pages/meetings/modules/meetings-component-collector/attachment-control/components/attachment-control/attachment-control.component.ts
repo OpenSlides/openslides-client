@@ -30,14 +30,15 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
     templateUrl: `./attachment-control.component.html`,
     styleUrls: [`./attachment-control.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AttachmentControlComponent), multi: true }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AttachmentControlComponent extends BaseFormControlComponent<ViewMediafile[]> implements OnInit, OnDestroy {
     /**
      * Output for an error handler
      */
     @Output()
-    public errorHandler: EventEmitter<string> = new EventEmitter();
+    public errorHandler = new EventEmitter<string>();
 
     public readonly permission = Permission;
 
@@ -59,9 +60,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
         return !this.contentForm.value.length;
     }
 
-    public get controlType(): string {
-        return `attachment-control`;
-    }
+    public readonly controlType = `attachment-control`;
 
     public formGroup!: UntypedFormGroup;
 

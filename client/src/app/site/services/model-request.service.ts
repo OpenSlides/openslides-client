@@ -27,7 +27,7 @@ export const SUBSCRIPTION_SUFFIX = `:subscription`;
     providedIn: `root`
 })
 export class ModelRequestService {
-    private _modelSubscriptionMap: Map<string, ModelSubscriptionMapEntry> = new Map();
+    private _modelSubscriptionMap = new Map<string, ModelSubscriptionMapEntry>();
 
     public constructor(
         private autoupdateService: AutoupdateService,

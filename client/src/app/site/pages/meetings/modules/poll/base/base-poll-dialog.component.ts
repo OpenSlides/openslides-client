@@ -228,7 +228,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                 if (undo) {
                     result[key] = voteData[key] === VOTE_UNDOCUMENTED ? null : voteData[key];
                 } else {
-                    result[key] = !!voteData[key] ? voteData[key] : VOTE_UNDOCUMENTED;
+                    result[key] = voteData[key] ? voteData[key] : VOTE_UNDOCUMENTED;
                 }
             }
         }
@@ -293,7 +293,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     /**
      * Create a form group for each option with the user id as key
      */
-    private createOptionsForVoteForm(): { [key: string]: any } {
+    private createOptionsForVoteForm(): Record<string, any> {
         const isListPoll = this.pollForm.getValues().pollmethod === FormPollMethod.LIST_YNA;
         if (this.optionTypeText === false && !isListPoll) {
             //with content_object_id

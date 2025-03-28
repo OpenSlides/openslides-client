@@ -7,7 +7,8 @@ import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 @Component({
     selector: `os-chat-group-detail-message-form`,
     templateUrl: `./chat-group-detail-message-form.component.html`,
-    styleUrls: [`./chat-group-detail-message-form.component.scss`]
+    styleUrls: [`./chat-group-detail-message-form.component.scss`],
+    standalone: false
 })
 export class ChatGroupDetailMessageFormComponent {
     public readonly CHAT_MESSAGE_MAX_LENGTH = CHAT_MESSAGE_MAX_LENGTH;

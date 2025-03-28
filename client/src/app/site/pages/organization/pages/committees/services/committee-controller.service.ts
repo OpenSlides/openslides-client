@@ -42,7 +42,7 @@ export class CommitteeControllerService extends BaseController<ViewCommittee, Co
         return this.repo.delete(...committees);
     }
 
-    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public jsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.repo.committeeJsonUpload(payload);
     }
 

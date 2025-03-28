@@ -7,7 +7,8 @@ import { WifiAccessDataSlideData } from '../../wifi-access-data-slide-data';
 @Component({
     selector: `os-wifi-access-data-slide`,
     templateUrl: `./wifi-access-data-slide.component.html`,
-    styleUrls: [`./wifi-access-data-slide.component.scss`]
+    styleUrls: [`./wifi-access-data-slide.component.scss`],
+    standalone: false
 })
 export class WifiAccessDataSlideComponent extends BaseSlideComponent<WifiAccessDataSlideData> {
     public get ssid(): string {

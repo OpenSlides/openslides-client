@@ -8,7 +8,8 @@ import { getProjectorListSubscriptionConfig } from '../../projectors.subscriptio
 @Component({
     selector: `os-projector-main`,
     templateUrl: `./projector-main.component.html`,
-    styleUrls: [`./projector-main.component.scss`]
+    styleUrls: [`./projector-main.component.scss`],
+    standalone: false
 })
 export class ProjectorMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

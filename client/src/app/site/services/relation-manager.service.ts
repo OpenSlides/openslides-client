@@ -29,9 +29,7 @@ export function ensureIdField(relation: Partial<Relation>): string {
     providedIn: `root`
 })
 export class RelationManagerService {
-    private relationsByCollection: {
-        [collection: string]: Relation[];
-    } = {};
+    private relationsByCollection: Record<string, Relation[]> = {};
 
     public constructor(
         private viewModelStoreService: ViewModelStoreService,
@@ -119,7 +117,7 @@ export class RelationManagerService {
                     .join(`, `)}`
             );
         }
-        const otherModelIds: { [collection: string]: string[] } = {};
+        const otherModelIds: Record<string, string[]> = {};
         if (relation.many) {
             (model[relation.ownIdField as keyof BaseModel] as unknown as string[])
                 .map(data => collectionIdFromFqid(data))

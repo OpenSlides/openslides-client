@@ -28,7 +28,8 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     selector: `os-participant-detail-view`,
     templateUrl: `./participant-detail-view.component.html`,
     styleUrls: [`./participant-detail-view.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
@@ -74,7 +75,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return userOML ? this.operator.hasOrganizationPermissions(userOML as OML) : true;
     }
 
-    private _disableExpandControl: boolean = false;
+    private _disableExpandControl = false;
 
     public get disableExpandControl(): boolean {
         return this._disableExpandControl;
@@ -86,7 +87,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
     public isFormValid = false;
     public personalInfoFormValue: any = {};
-    public formErrors: { [name: string]: boolean } | null = null;
+    public formErrors: Record<string, boolean> | null = null;
 
     /**
      * if this is the own page

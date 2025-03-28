@@ -19,7 +19,8 @@ const MEETING_LIST_STORAGE_INDEX = `meeting_list`;
     selector: `os-meeting-list`,
     templateUrl: `./meeting-list.component.html`,
     styleUrls: [`./meeting-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
     public restrictedColumns: ColumnRestriction<OML>[] = [

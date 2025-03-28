@@ -15,13 +15,13 @@ export type WaitForActionReasonKeys = keyof typeof waitForActionReason;
 
 export type WaitForActionReason = (typeof waitForActionReason)[WaitForActionReasonKeys];
 
-export const titleVerbose: { [key: number]: string } = {
+export const titleVerbose: Record<number, string> = {
     [waitForActionReason.notWritten]: _(`The process will be started. Please wait!`),
     [waitForActionReason.slow]: _(`The process is still running. Please wait!`),
     [waitForActionReason.inactive]: _(`The process may have stopped running.`)
 };
 
-export const multiActionVerbose: { [key: number]: { wait: string; stop: string } } = {
+export const multiActionVerbose: Record<number, { wait: string; stop: string }> = {
     [waitForActionReason.notWritten]: {
         wait: `Await all unwritten actions`,
         stop: `Stop all unwritten actions`

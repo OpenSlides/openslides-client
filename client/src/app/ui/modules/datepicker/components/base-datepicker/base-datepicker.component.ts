@@ -24,6 +24,8 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     @Input()
     public showUpdateSuccessIcon = false;
 
+    public override readonly errorState = false;
+
     public onContainerClick(_event: MouseEvent): void {}
 
     public onKeyPressed(event: KeyboardEvent): void {

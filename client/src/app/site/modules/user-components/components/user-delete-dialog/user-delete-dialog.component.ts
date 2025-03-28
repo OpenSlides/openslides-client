@@ -17,7 +17,8 @@ interface UserDeleteDialogConfig {
     selector: `os-user-delete-dialog`,
     templateUrl: `./user-delete-dialog.component.html`,
     styleUrls: [`./user-delete-dialog.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class UserDeleteDialogComponent implements OnInit {
     public get isOneUser(): boolean {

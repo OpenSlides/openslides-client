@@ -17,7 +17,8 @@ import { ViewCommittee } from '../../../../../../view-models/view-committee';
 @Component({
     selector: `os-committee-detail-view`,
     templateUrl: `./committee-detail-view.component.html`,
-    styleUrls: [`./committee-detail-view.component.scss`]
+    styleUrls: [`./committee-detail-view.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent {
     public readonly OML = OML;

@@ -18,7 +18,8 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
 @Component({
     selector: `os-motion-call-list`,
     templateUrl: `./motion-call-list.component.html`,
-    styleUrls: [`./motion-call-list.component.scss`]
+    styleUrls: [`./motion-call-list.component.scss`],
+    standalone: false
 })
 export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotion> implements OnInit {
     /**

@@ -9,14 +9,14 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { CmlPermsDirective } from './cml-perms.directive';
 import { BasePermsTestComponent } from './perms.directive.spec';
 
-type TestConditionalType = {
+interface TestConditionalType {
     and: boolean;
     or: boolean;
     complement: boolean;
     id: number;
     nonAdmin: boolean;
     orOML: OML | undefined;
-};
+}
 
 @Component({
     template: `
@@ -28,16 +28,15 @@ type TestConditionalType = {
             id="complement"
         ></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; orOML: conditionals.orOML" id="oml"></div>
-        <ng-container
-            *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate"
-        ></ng-container>
+        <ng-container *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate" />
         <ng-template #thenTemplate>
             <div id="then"></div>
         </ng-template>
         <ng-template #elseTemplate>
             <div id="else"></div>
         </ng-template>
-    `
+    `,
+    standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public permission = CML.can_manage;

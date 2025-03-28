@@ -14,7 +14,6 @@ interface MotionDeleteDialogData {
     selector: `os-motion-delete-dialog`,
     templateUrl: `./motion-delete-dialog.component.html`,
     styleUrls: [`./motion-delete-dialog.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class MotionDeleteDialogComponent {

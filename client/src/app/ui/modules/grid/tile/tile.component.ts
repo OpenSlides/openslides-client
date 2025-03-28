@@ -5,7 +5,8 @@ import { GridTileClickEvent, GridTileDimension } from '../definitions';
 @Component({
     selector: `os-tile`,
     templateUrl: `./tile.component.html`,
-    styleUrls: [`./tile.component.scss`]
+    styleUrls: [`./tile.component.scss`],
+    standalone: false
 })
 export class TileComponent implements OnInit {
     public get classes(): string {

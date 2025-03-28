@@ -8,7 +8,8 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 @Component({
     selector: `os-comment-section-sort`,
     templateUrl: `./comment-section-sort.component.html`,
-    styleUrls: [`./comment-section-sort.component.scss`]
+    styleUrls: [`./comment-section-sort.component.scss`],
+    standalone: false
 })
 export class CommentSectionSortComponent extends BaseComponent implements OnInit {
     /**

@@ -23,8 +23,8 @@ export interface ImportService<M extends Identifiable> {
     readonly summary: ImportServicePreview;
     readonly importingStepsObservable: Observable<ImportStep[]>;
     readonly leftReceivedHeaders: string[];
-    readonly leftExpectedHeaders: { [key: string]: string };
-    readonly headerValues: { [key: string]: string };
+    readonly leftExpectedHeaders: Record<string, string>;
+    readonly headerValues: Record<string, string>;
 
     columnSeparator: string;
     textSeparator: string;
@@ -38,7 +38,7 @@ export interface ImportService<M extends Identifiable> {
     getNewEntriesObservable(): Observable<ImportModel<M>[]>;
     onSelectFile(event: any): void;
     doImport(): Promise<void>;
-    setNewHeaderValue(headerDefinition: { [headerKey: string]: string }): void;
+    setNewHeaderValue(headerDefinition: Record<string, string>): void;
     downloadCsvExample(): void;
 }
 

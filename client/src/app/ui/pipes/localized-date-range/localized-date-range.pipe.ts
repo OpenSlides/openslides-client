@@ -4,7 +4,8 @@ import { DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
 
 @Pipe({
     name: `localizedDateRange`,
-    pure: false
+    pure: false,
+    standalone: false
 })
 export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform {
     public override transform(value: any, dateFormat = `PPp`): any {

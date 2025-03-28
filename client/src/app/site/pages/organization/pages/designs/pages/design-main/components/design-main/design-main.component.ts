@@ -6,7 +6,8 @@ import { getDesignListSubscriptionConfig } from '../../../../designs.subscriptio
 @Component({
     selector: `os-design-main`,
     templateUrl: `./design-main.component.html`,
-    styleUrls: [`./design-main.component.scss`]
+    styleUrls: [`./design-main.component.scss`],
+    standalone: false
 })
 export class DesignMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void {

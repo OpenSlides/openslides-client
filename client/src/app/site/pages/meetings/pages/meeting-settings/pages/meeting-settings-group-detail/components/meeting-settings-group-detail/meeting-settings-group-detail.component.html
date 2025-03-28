@@ -12,8 +12,8 @@
     <ng-container class="menu-slot">
         <button
             mat-button
-            [disabled]="!hasChanges() || hasErrors()"
             matTooltip="{{ 'Save all changes' | translate }}"
+            [disabled]="!hasChanges() || hasErrors()"
             (click)="saveAll()"
         >
             <strong class="upper">{{ 'Save' | translate }}</strong>

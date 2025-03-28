@@ -20,7 +20,7 @@ export class CommitteeImportService extends BaseBackendImportService {
 
     public override requiredHeaderLength = 1;
 
-    public override readonly verboseSummaryTitles: { [title: string]: string } = {
+    public override readonly verboseSummaryTitles: Record<string, string> = {
         total: _(`Total committees`),
         created: _(`Committees created`),
         updated: _(`Committees updated`),
@@ -51,7 +51,7 @@ export class CommitteeImportService extends BaseBackendImportService {
         return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
-    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
+    protected async jsonUpload(payload: Record<string, any>): Promise<void | BackendImportRawPreview[]> {
         return await this.repo.jsonUpload(payload).resolve();
     }
 }

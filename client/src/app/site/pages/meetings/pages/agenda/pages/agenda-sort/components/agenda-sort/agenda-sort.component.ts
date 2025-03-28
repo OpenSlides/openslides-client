@@ -15,7 +15,8 @@ import { AgendaItemControllerService } from '../../../../services/agenda-item-co
 @Component({
     selector: `os-agenda-sort`,
     templateUrl: `./agenda-sort.component.html`,
-    styleUrls: [`./agenda-sort.component.scss`]
+    styleUrls: [`./agenda-sort.component.scss`],
+    standalone: false
 })
 export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaItem> implements OnInit {
     /**

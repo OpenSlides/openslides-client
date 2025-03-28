@@ -1,80 +1,80 @@
-@import './font-variables.scss';
+@use 'font-variables.scss';
 
 /** Regular */
 @font-face {
-    font-family: $font;
+    font-family: font-variables.$font;
     font-style: normal;
     font-display: swap;
-    font-weight: $font-weight-regular;
-    src: $font-regular;
+    font-weight: font-variables.$font-weight-regular;
+    src: font-variables.$font-regular;
 }
 
 /** Italic */
 @font-face {
-    font-family: $font;
+    font-family: font-variables.$font;
     font-style: italic;
     font-display: swap;
-    font-weight: $font-weight-italic;
-    src: $font-italic;
+    font-weight: font-variables.$font-weight-italic;
+    src: font-variables.$font-italic;
 }
 
 /** Medium */
 @font-face {
-    font-family: $font;
+    font-family: font-variables.$font;
     font-style: normal;
     font-display: swap;
-    font-weight: $font-weight-medium;
-    src: $font-medium;
+    font-weight: font-variables.$font-weight-medium;
+    src: font-variables.$font-medium;
 }
 
 /** Medium Italic */
 @font-face {
-    font-family: $font;
+    font-family: font-variables.$font;
     font-style: italic;
     font-display: swap;
-    font-weight: $font-weight-medium-italic;
-    src: $font-medium-italic;
+    font-weight: font-variables.$font-weight-medium-italic;
+    src: font-variables.$font-medium-italic;
 }
 
 /** Condensed Regular */
 @font-face {
-    font-family: $font-condensed;
+    font-family: font-variables.$font-condensed;
     font-style: normal;
     font-display: swap;
-    font-weight: $font-weight-condensed-regular;
-    src: $font-condensed-regular;
+    font-weight: font-variables.$font-weight-condensed-regular;
+    src: font-variables.$font-condensed-regular;
 }
 
 /** Countown */
 @font-face {
-    font-family: $font-monospace;
+    font-family: font-variables.$font-monospace;
     font-style: normal;
     font-display: swap;
-    font-weight: $font-weight-monospace;
-    src: $font-monospace-src;
+    font-weight: font-variables.$font-weight-monospace;
+    src: font-variables.$font-monospace-src;
 }
 
 /** Chyron Name */
 @font-face {
-    font-family: $font-chyronname;
+    font-family: font-variables.$font-chyronname;
     font-style: normal;
     font-display: swap;
-    font-weight: $font-weight-chyronname;
-    src: $font-chyronname-src;
+    font-weight: font-variables.$font-weight-chyronname;
+    src: font-variables.$font-chyronname-src;
 }
 
 /** projectorH1 */
 @font-face {
-    font-family: $font-projectorH1;
+    font-family: font-variables.$font-projectorH1;
     font-style: normal;
     font-display: swap;
-    src: $font-projectorH1-src;
+    src: font-variables.$font-projectorH1-src;
 }
 
 /** projectorH2 */
 @font-face {
-    font-family: $font-projectorH2;
+    font-family: font-variables.$font-projectorH2;
     font-style: normal;
     font-display: swap;
-    src: $font-projectorH2-src;
+    src: font-variables.$font-projectorH2-src;
 }

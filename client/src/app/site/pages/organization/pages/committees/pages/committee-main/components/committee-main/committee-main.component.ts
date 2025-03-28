@@ -7,7 +7,8 @@ import { getCommitteeListSubscriptionConfig } from '../../../../committees.subsc
 @Component({
     selector: `os-committee-main`,
     templateUrl: `./committee-main.component.html`,
-    styleUrls: [`./committee-main.component.scss`]
+    styleUrls: [`./committee-main.component.scss`],
+    standalone: false
 })
 export class CommitteeMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void {

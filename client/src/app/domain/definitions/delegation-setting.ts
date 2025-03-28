@@ -7,7 +7,7 @@ export type DelegationSetting = Extract<
     | `users_forbid_delegator_as_supporter`
 >;
 
-export const delegationSettings: { [key: string]: DelegationSetting } = {
+export const delegationSettings: Record<string, DelegationSetting> = {
     ForbidLoS: `users_forbid_delegator_in_list_of_speakers`,
     ForbidSubmitter: `users_forbid_delegator_as_submitter`,
     ForbidSupporter: `users_forbid_delegator_as_supporter`

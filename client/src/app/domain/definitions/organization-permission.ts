@@ -18,13 +18,13 @@ export enum OML {
     can_manage_users = `can_manage_users`
 }
 
-export const omlNameMapping: { [permission: string]: number } = {
+export const omlNameMapping: Record<string, number> = {
     superadmin: 3,
     can_manage_organization: 2,
     can_manage_users: 1
 };
 
-export const cmlNameMapping: { [permission: string]: number } = {
+export const cmlNameMapping: Record<string, number> = {
     can_manage: 1
 };
 

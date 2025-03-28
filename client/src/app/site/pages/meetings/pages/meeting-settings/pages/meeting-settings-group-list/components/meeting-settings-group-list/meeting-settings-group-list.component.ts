@@ -12,7 +12,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 @Component({
     selector: `os-meeting-settings-group-list`,
     templateUrl: `./meeting-settings-group-list.component.html`,
-    styleUrls: [`./meeting-settings-group-list.component.scss`]
+    styleUrls: [`./meeting-settings-group-list.component.scss`],
+    standalone: false
 })
 export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
     public groups: SettingsGroup[] = [];

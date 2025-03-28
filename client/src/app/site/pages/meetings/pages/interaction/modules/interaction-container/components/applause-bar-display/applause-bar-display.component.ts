@@ -11,7 +11,8 @@ import { ApplauseService } from '../../../../services/applause.service';
     styleUrls: [`./applause-bar-display.component.scss`],
     animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
     public percent = 0;

@@ -23,17 +23,17 @@ export class CurrentListOfSpeakersService {
      * This map holds the current (number or null) los-id for the the projector.
      * It is used to check, if the reference has changed (this clos id changed for one projector).
      */
-    private currentListOfSpeakersIds: { [projectorId: number]: number | null } = {};
+    private currentListOfSpeakersIds: Record<number, number | null> = {};
 
     /**
      * Active subscriptions for the clos of each projector.
      */
-    private currentListOfSpeakersSubscriptions: { [projectorId: number]: Subscription | null } = {};
+    private currentListOfSpeakersSubscriptions: Record<number, Subscription | null> = {};
 
     /**
      * All subjects for all clos of each projector.
      */
-    private currentListOfSpeakers: { [projectorId: number]: BehaviorSubject<ViewListOfSpeakers | null> } = {};
+    private currentListOfSpeakers: Record<number, BehaviorSubject<ViewListOfSpeakers | null>> = {};
 
     private currentListOfSpeakerSubject = new BehaviorSubject<ViewListOfSpeakers | null>(null);
 

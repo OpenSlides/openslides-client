@@ -18,9 +18,7 @@ export class CollectionMapperService implements CollectionMapper {
     /**
      * Maps collection strings to mapping entries
      */
-    private readonly _collectionMapping: {
-        [collection: string]: CollectionMappedTypes<any, any>;
-    } = {};
+    private readonly _collectionMapping: Record<string, CollectionMappedTypes<any, any>> = {};
 
     private readonly _repositoriesSubject = new BehaviorSubject<BaseRepository<BaseViewModel, BaseModel>[]>([]);
 

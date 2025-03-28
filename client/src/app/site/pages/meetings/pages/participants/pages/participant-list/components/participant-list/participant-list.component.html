@@ -149,8 +149,8 @@
             @if (user.vote_delegated_to() && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltipPosition="left"
                     matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
+                    matTooltipPosition="left"
                 >
                     <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
                 </div>
@@ -158,8 +158,8 @@
             @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltipPosition="left"
                     matTooltip="{{ 'Voting right received from (principals)' | translate }}"
+                    matTooltipPosition="left"
                 >
                     <os-icon-container icon="work" [noWrap]="true">
                         <span>{{ user.vote_delegations_from().length }}:</span>
@@ -177,8 +177,8 @@
             @if (user.isLastEmailSent && canSeeSensitiveData) {
                 <mat-icon
                     inline
-                    matTooltipPosition="above"
                     matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                    matTooltipPosition="above"
                 >
                     mail
                 </mat-icon>

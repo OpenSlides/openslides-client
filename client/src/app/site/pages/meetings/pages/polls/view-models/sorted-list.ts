@@ -19,6 +19,6 @@ export function isSortedList(obj: any): obj is SortedList {
         !!obj &&
         Array.isArray(obj.entries) &&
         typeof obj.getTitle === `function` &&
-        (obj.entries as Array<any>).every(entry => isSortedListEntry(entry))
+        (obj.entries as any[]).every(entry => isSortedListEntry(entry))
     );
 }

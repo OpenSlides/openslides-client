@@ -5,9 +5,7 @@ import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 import { ChangedModels } from './view-model-store-update.service';
 
-interface CollectionIds {
-    [collection: string]: number[];
-}
+type CollectionIds = Record<string, number[]>;
 
 /**
  * Helper class for collecting data during the update phase of the DataStore.

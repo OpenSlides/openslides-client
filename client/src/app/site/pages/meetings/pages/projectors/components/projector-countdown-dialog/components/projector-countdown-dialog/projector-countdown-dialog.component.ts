@@ -10,7 +10,8 @@ import { CountdownDialogData } from '../../definitions';
 @Component({
     selector: `os-projector-countdown-dialog`,
     templateUrl: `./projector-countdown-dialog.component.html`,
-    styleUrls: [`./projector-countdown-dialog.component.scss`]
+    styleUrls: [`./projector-countdown-dialog.component.scss`],
+    standalone: false
 })
 export class ProjectorCountdownDialogComponent implements OnInit {
     /**

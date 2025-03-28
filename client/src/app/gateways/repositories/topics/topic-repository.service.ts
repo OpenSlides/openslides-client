@@ -43,7 +43,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         return this.sendBulkActionToBackend(TopicAction.DELETE, payload);
     }
 
-    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public jsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.createAction<BackendImportRawPreview>(TopicAction.JSON_UPLOAD, payload);
     }
 

@@ -32,7 +32,7 @@ enum UrlTarget {
 export class OpenSlidesRouterService {
     private preLoginRedirectUrl: UrlTree;
 
-    public get currentParamMap(): Observable<{ [paramName: string]: any }> {
+    public get currentParamMap(): Observable<Record<string, any>> {
         return this._currentParamMap;
     }
 
@@ -49,7 +49,7 @@ export class OpenSlidesRouterService {
     }
 
     private readonly _nextUrlTargetSubject = new Subject<UrlTarget>();
-    private readonly _currentParamMap = new BehaviorSubject<{ [paramName: string]: any }>({});
+    private readonly _currentParamMap = new BehaviorSubject<Record<string, any>>({});
 
     private _currentUrl: string | null = null;
     private _currentMeetingId: Id | null = null;
@@ -208,13 +208,13 @@ export class OpenSlidesRouterService {
         return true;
     }
 
-    private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): { [paramName: string]: any } {
-        const paramMap: { [paramName: string]: any } = {};
+    private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): Record<string, any> {
+        const paramMap: Record<string, any> = {};
         this._toParamMap(rootSnapshot, paramMap);
         return paramMap;
     }
 
-    private _toParamMap(currentRoute: ActivatedRouteSnapshot, paramMap: { [paramName: string]: any }): void {
+    private _toParamMap(currentRoute: ActivatedRouteSnapshot, paramMap: Record<string, any>): void {
         for (const [key, value] of Object.entries(currentRoute.queryParams ?? {})) {
             paramMap[key] = value;
         }

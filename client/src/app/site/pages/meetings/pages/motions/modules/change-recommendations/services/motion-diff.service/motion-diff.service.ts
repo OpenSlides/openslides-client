@@ -156,7 +156,7 @@ export class MotionDiffService {
         let maxLineNumber = 0;
 
         lineNumbers.forEach((insertBefore: Node) => {
-            const lineNumberElement = <Element>insertBefore;
+            const lineNumberElement = insertBefore as Element;
             while (
                 insertBefore.parentNode?.nodeType !== DOCUMENT_FRAGMENT_NODE &&
                 DomHelpers.isFirstNonemptyChild(insertBefore.parentNode!, insertBefore)
@@ -488,13 +488,13 @@ export class MotionDiffService {
         const findIns = /<ins>([\s\S]*?)<\/ins>/gi;
         let found: RegExpExecArray;
         let inner: string;
-        while (!!(found = findDel.exec(html))) {
+        while ((found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
-        while (!!(found = findIns.exec(html))) {
+        while ((found = findIns.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
@@ -532,7 +532,7 @@ export class MotionDiffService {
         }
         for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                this.removeColorStyles(<Element>node.childNodes[i]);
+                this.removeColorStyles((node.childNodes[i] as Element));
             }
         }
     }
@@ -553,7 +553,7 @@ export class MotionDiffService {
         let found: RegExpExecArray;
         let returnStr = diffStr;
 
-        while (!!(found = findDelGroupFinder.exec(diffStr))) {
+        while ((found = findDelGroupFinder.exec(diffStr))) {
             const del = found[0];
             const split = returnStr.split(del);
 
@@ -604,7 +604,7 @@ export class MotionDiffService {
             return ``;
         }
         if (node.nodeName === `BR`) {
-            const element = <Element>node;
+            const element = node as Element;
             let br = `<BR`;
             for (let i = 0; i < element.attributes.length; i++) {
                 const attr = element.attributes[i];
@@ -676,7 +676,7 @@ export class MotionDiffService {
         for (let i = 0; i < node.childNodes.length && !found; i++) {
             if (node.childNodes[i] === toChildTrace[0]) {
                 found = true;
-                const childElement = <Element>node.childNodes[i];
+                const childElement = node.childNodes[i] as Element;
                 const remainingTrace = toChildTrace;
                 remainingTrace.shift();
                 if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
@@ -685,7 +685,7 @@ export class MotionDiffService {
             } else if (node.childNodes[i].nodeType === TEXT_NODE) {
                 html += node.childNodes[i].nodeValue;
             } else {
-                const childElement = <Element>node.childNodes[i];
+                const childElement = node.childNodes[i] as Element;
                 if (
                     !stripLineNumbers ||
                     (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
@@ -726,7 +726,7 @@ export class MotionDiffService {
         for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i] === fromChildTrace[0]) {
                 found = true;
-                const childElement = <Element>node.childNodes[i];
+                const childElement = node.childNodes[i] as Element;
                 const remainingTrace = fromChildTrace;
                 remainingTrace.shift();
                 if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
@@ -736,7 +736,7 @@ export class MotionDiffService {
                 if (node.childNodes[i].nodeType === TEXT_NODE) {
                     html += node.childNodes[i].nodeValue;
                 } else {
-                    const childElement = <Element>node.childNodes[i];
+                    const childElement = node.childNodes[i] as Element;
                     if (
                         !stripLineNumbers ||
                         (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
@@ -806,7 +806,7 @@ export class MotionDiffService {
         let toLineNumber: number;
         if (toLine === null) {
             const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
-            const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
+            const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
             toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
         } else {
             toLineNumber = toLine + 1;
@@ -860,7 +860,7 @@ export class MotionDiffService {
                 DomHelpers.addCSSClass(currNode.parentNode, `os-split-after`);
             }
             if (currNode.parentNode.nodeName === `OL`) {
-                const parentElement = <Element>currNode.parentNode;
+                const parentElement = currNode.parentNode as Element;
                 const fakeOl = parentElement.cloneNode(false) as any;
                 const offset = parentElement.getAttribute(`start`)
                     ? parseInt(parentElement.getAttribute(`start`) as string, 10) - 1
@@ -868,7 +868,7 @@ export class MotionDiffService {
                 fakeOl.setAttribute(
                     `start`,
                     (
-                        <number>DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) + offset
+                        (DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) as number) + offset
                     ).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
@@ -887,7 +887,7 @@ export class MotionDiffService {
                     isSplit = true;
                 }
                 if (fromChildTraceRel[i].nodeName === `OL`) {
-                    const element = <Element>fromChildTraceRel[i];
+                    const element = fromChildTraceRel[i] as Element;
                     const fakeOl = element.cloneNode(false) as any;
                     const offset = element.getAttribute(`start`)
                         ? parseInt(element.getAttribute(`start`) as string, 10) - 1
@@ -895,7 +895,7 @@ export class MotionDiffService {
                     fakeOl.setAttribute(
                         `start`,
                         (
-                            offset + <number>DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element)
+                            offset + (DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element) as number)
                         ).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
@@ -932,14 +932,14 @@ export class MotionDiffService {
         currNode = ancestor;
         while (currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
-                const currElement = <Element>currNode;
+                const currElement = currNode as Element;
                 const fakeOl = currElement.cloneNode(false) as any;
                 const offset = currElement.getAttribute(`start`)
                     ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<any>DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) + offset).toString()
+                    ((DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
                 );
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
@@ -1019,7 +1019,7 @@ export class MotionDiffService {
                     lastChild.nodeValue += ` `;
                 }
             } else {
-                this.insertDanglingSpace(<Element>lastChild);
+                this.insertDanglingSpace((lastChild as Element));
             }
         }
     }
@@ -1347,9 +1347,12 @@ export class MotionDiffService {
                 htmlOldEl.content.querySelector(`.os-line-number`)
             ) {
                 const ln = htmlNewEl.content.querySelector(`.os-line-number`);
-                htmlNewEl.content.children[0].childNodes.length > 0
-                    ? htmlNewEl.content.children[0].childNodes[0].before(ln)
-                    : htmlNewEl.content.children[0].before(ln);
+                if (htmlNewEl.content.children[0].childNodes.length > 0) {
+                    htmlNewEl.content.children[0].childNodes[0].before(ln);
+                } else {
+                    htmlNewEl.content.children[0].before(ln);
+                }
+
                 htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;

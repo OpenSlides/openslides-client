@@ -8,7 +8,8 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 @Component({
     selector: `os-info-actions`,
     templateUrl: `./info-actions.component.html`,
-    styleUrls: [`./info-actions.component.scss`]
+    styleUrls: [`./info-actions.component.scss`],
+    standalone: false
 })
 export class InfoActionsComponent extends BaseComponent {
     public constructor(

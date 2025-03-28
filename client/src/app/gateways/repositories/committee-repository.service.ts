@@ -98,7 +98,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
     }
 
-    public committeeJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public committeeJsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.createAction<BackendImportRawPreview>(CommitteeAction.JSON_UPLOAD, payload);
     }
 

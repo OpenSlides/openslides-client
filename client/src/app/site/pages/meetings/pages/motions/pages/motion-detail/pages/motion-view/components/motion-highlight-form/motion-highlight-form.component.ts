@@ -19,7 +19,8 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     selector: `os-motion-highlight-form`,
     templateUrl: `./motion-highlight-form.component.html`,
     styleUrls: [`./motion-highlight-form.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;
@@ -38,7 +39,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     public changeRecoMode: ChangeRecoMode;
 
     @Input()
-    public hasChangingObjects: boolean = false;
+    public hasChangingObjects = false;
 
     @Output()
     public updateLnMode = new EventEmitter<LineNumberingMode>();
@@ -78,7 +79,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     /**
      * The change recommendations to amendments to this motion
      */
-    public amendmentChangeRecos: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
+    public amendmentChangeRecos: Record<string, ViewMotionChangeRecommendation[]> = {};
 
     public verboseChangeRecoMode = verboseChangeRecoMode;
 

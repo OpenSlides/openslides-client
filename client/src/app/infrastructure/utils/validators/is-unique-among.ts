@@ -6,7 +6,7 @@ export function isUniqueAmong<T>(
     isEqualFn: (a: T, b: T) => boolean = (a, b): boolean => a === b,
     ignoredValues: T[] = []
 ): ValidatorFn {
-    return (formControl: AbstractControl): { [key: string]: any } | null => {
+    return (formControl: AbstractControl): Record<string, any> | null => {
         const a = formControl.value as T;
         if (ignoredValues.includes(a)) {
             return null;

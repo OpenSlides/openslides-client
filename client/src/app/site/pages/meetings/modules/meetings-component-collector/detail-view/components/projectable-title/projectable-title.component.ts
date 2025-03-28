@@ -8,7 +8,8 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
     templateUrl: `./projectable-title.component.html`,
     styleUrls: [`./projectable-title.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectableTitleComponent {
     @Input()

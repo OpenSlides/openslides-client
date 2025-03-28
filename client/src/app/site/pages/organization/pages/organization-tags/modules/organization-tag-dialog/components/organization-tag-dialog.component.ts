@@ -8,7 +8,8 @@ import { OrganizationTagDialogData } from '../services/organization-tag-dialog.s
 @Component({
     selector: `os-organization-tag-dialog`,
     templateUrl: `./organization-tag-dialog.component.html`,
-    styleUrls: [`./organization-tag-dialog.component.scss`]
+    styleUrls: [`./organization-tag-dialog.component.scss`],
+    standalone: false
 })
 export class OrganizationTagDialogComponent extends BaseUiComponent implements OnInit {
     public get isCreateView(): boolean {

@@ -17,7 +17,8 @@ import { ViewTopic } from '../../../../view-models';
     selector: `os-topic-poll-vote`,
     templateUrl: `../../../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
     public override readonly settings: PollVoteViewSettings = {

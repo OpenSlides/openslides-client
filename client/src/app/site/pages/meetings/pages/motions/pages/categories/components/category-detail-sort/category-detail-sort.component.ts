@@ -21,7 +21,8 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
 @Component({
     selector: `os-category-detail-sort`,
     templateUrl: `./category-detail-sort.component.html`,
-    styleUrls: [`./category-detail-sort.component.scss`]
+    styleUrls: [`./category-detail-sort.component.scss`],
+    standalone: false
 })
 export class CategoryDetailSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {
     public readonly COLLECTION = ViewMotionCategory.COLLECTION;

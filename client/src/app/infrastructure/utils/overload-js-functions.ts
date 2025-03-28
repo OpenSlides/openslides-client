@@ -35,7 +35,7 @@ declare global {
          */
         tap(callbackFn: (self: T[]) => void): T[];
         naturalSort(currentLang: string, compareBy?: KeysMatching<T, string>[]): T[];
-        mapToObject<V = any>(f: (item: T, index: number) => { [key: string]: V }): { [key: string]: V };
+        mapToObject<V = any>(f: (item: T, index: number) => Record<string, V>): Record<string, V>;
         /**
          * TODO: Remove this, when ES2022 is the target for our tsconfig
          *
@@ -126,11 +126,11 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, `mapToObject`, {
-        value<T, U extends { [key: string]: V }, V = any>(f: (item: T, index: number) => U): U {
+        value<T, U extends Record<string, V>, V = any>(f: (item: T, index: number) => U): U {
             return this.reduce((aggr: U, item: T, index: number) => {
                 const res = f(item, index);
                 for (const key in res) {
-                    if (res.hasOwnProperty(key)) {
+                    if (Object.prototype.hasOwnProperty.call(res, key)) {
                         aggr[key] = res[key];
                     }
                 }
@@ -210,7 +210,7 @@ function overloadSetFunctions(): void {
     });
     Object.defineProperty(Set.prototype, `difference`, {
         value<T>(other: Set<T>): Set<T> {
-            const difference: Set<T> = new Set(this);
+            const difference = new Set<T>(this);
             for (const elem of other) {
                 difference.delete(elem);
             }

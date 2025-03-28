@@ -17,7 +17,8 @@ export const MotionPollMethodsVerbose = {
 @Component({
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
-    styleUrls: [`./motion-poll-dialog.component.scss`]
+    styleUrls: [`./motion-poll-dialog.component.scss`],
+    standalone: false
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     public PercentBaseVerbose = PollPercentBaseVerbose;

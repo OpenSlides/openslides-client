@@ -20,7 +20,8 @@ export interface ExtendedVoteData extends BaseVoteData {
     templateUrl: `./motion-poll-detail.component.html`,
     styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotion, MotionPollService> {
     public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`, `vote_verbose_translated`];

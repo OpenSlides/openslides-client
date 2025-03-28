@@ -28,7 +28,8 @@ enum MenuItems {
 @Component({
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
-    styleUrls: [`./account-dialog.component.scss`]
+    styleUrls: [`./account-dialog.component.scss`],
+    standalone: false
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`changePasswordComponent`, { static: false })

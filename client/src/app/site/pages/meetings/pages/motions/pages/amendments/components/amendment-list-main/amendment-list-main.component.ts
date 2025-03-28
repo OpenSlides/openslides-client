@@ -8,7 +8,8 @@ import { getAmendmentListSubscriptionConfig } from '../../../../motions.subscrip
 @Component({
     selector: `os-motion-main`,
     templateUrl: `./amendment-list-main.component.html`,
-    styleUrls: [`./amendment-list-main.component.scss`]
+    styleUrls: [`./amendment-list-main.component.scss`],
+    standalone: false
 })
 export class AmendmentListMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

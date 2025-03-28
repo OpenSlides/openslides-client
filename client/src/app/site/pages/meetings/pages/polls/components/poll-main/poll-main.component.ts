@@ -8,7 +8,8 @@ import { getPollListSubscriptionConfig } from '../../polls.subscription';
 @Component({
     selector: `os-poll-main`,
     templateUrl: `./poll-main.component.html`,
-    styleUrls: [`./poll-main.component.scss`]
+    styleUrls: [`./poll-main.component.scss`],
+    standalone: false
 })
 export class PollMainComponent extends BaseMeetingModelRequestHandler {
     protected override getSubscriptions(id: Id): SubscriptionConfig<any>[] {

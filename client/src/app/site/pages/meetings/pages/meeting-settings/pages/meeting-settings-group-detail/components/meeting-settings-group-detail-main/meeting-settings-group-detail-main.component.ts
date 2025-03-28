@@ -8,7 +8,8 @@ const MOTIONS_SETTINGS_GROUP = `motions`;
 @Component({
     selector: `os-meeting-settings-group-detail-main`,
     templateUrl: `./meeting-settings-group-detail-main.component.html`,
-    styleUrls: [`./meeting-settings-group-detail-main.component.scss`]
+    styleUrls: [`./meeting-settings-group-detail-main.component.scss`],
+    standalone: false
 })
 export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any, oldParams: any): void {

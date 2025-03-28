@@ -56,9 +56,7 @@ interface DescriptorResponse<T extends FieldDescriptor> {
     collectionsToExclusiveListUpdate: Collection[];
 }
 
-export interface Fieldsets<M extends BaseModel> {
-    [name: string]: (keyof M)[];
-}
+export type Fieldsets<M extends BaseModel> = Record<string, (keyof M)[]>;
 
 class UnknownRelationError extends Error {}
 class UnknownFieldsetError extends Error {}
@@ -80,9 +78,7 @@ export const ROUTING_FIELDSET = `routing`;
     providedIn: `root`
 })
 export class ModelRequestBuilderService {
-    private fieldsets: {
-        [collection: string]: Fieldsets<any>;
-    } = {};
+    private fieldsets: Record<string, Fieldsets<any>> = {};
 
     private loaded = new Deferred();
 

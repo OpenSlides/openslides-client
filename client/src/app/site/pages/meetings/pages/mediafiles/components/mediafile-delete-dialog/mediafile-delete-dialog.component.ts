@@ -14,7 +14,6 @@ interface MediafileDeleteDialogData {
     selector: `os-mediafile-delete-dialog`,
     templateUrl: `./mediafile-delete-dialog.component.html`,
     styleUrls: [`./mediafile-delete-dialog.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class MediafileDeleteDialogComponent {

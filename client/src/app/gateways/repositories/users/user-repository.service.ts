@@ -47,12 +47,12 @@ export interface ShortNameInformation extends NameInformation {
 }
 
 export type UserPatchFn =
-    | { [key in keyof User & MeetingUser]?: any }
-    | ((user: ViewUser) => { [key in keyof User & MeetingUser]?: any });
+    | Partial<Record<keyof User & MeetingUser, any>>
+    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>);
 export type ExtendedUserPatchFn =
     | UserPatchFn
-    | { [key in keyof User & MeetingUser]?: any }[]
-    | ((user: ViewUser) => { [key in keyof User & MeetingUser]?: any }[]);
+    | Partial<Record<keyof User & MeetingUser, any>>[]
+    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
 
 export type EmailSentResultType = 'user_error' | 'settings_error' | 'configuration_error' | 'other_error';
 
@@ -518,7 +518,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.SET_PRESENT, payload);
     }
 
-    public accountJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public accountJsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.createAction<BackendImportRawPreview>(UserAction.ACCOUNT_JSON_UPLOAD, payload);
     }
 
@@ -526,7 +526,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction<BackendImportRawPreview | void>(UserAction.ACCOUNT_IMPORT, payload);
     }
 
-    public participantJsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public participantJsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.createAction<BackendImportRawPreview>(UserAction.PARTICIPANT_JSON_UPLOAD, payload);
     }
 
@@ -538,7 +538,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.MERGE_TOGETHER, payload);
     }
 
-    private sanitizePayload(payload: any, create: boolean = false): any {
+    private sanitizePayload(payload: any, create = false): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field, create))) {
             if (typeof temp[key] === `string` && !temp[key].trim().length) {

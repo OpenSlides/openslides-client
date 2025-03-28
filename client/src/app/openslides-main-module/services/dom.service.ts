@@ -29,7 +29,7 @@ export class BodyPortal {
         this._viewContainer.clear();
         this.showPane();
         const componentRef = this.createComponentRef(componentType, data);
-        const domElement = (<EmbeddedViewRef<any>>componentRef.hostView).rootNodes[0] as HTMLElement;
+        const domElement = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
         this._root.appendChild(domElement);
         componentRef.hostView.detectChanges();
         this._componentRef = componentRef;
@@ -79,7 +79,7 @@ export class DomService {
     }
 
     public setViewContainer(container: ViewContainerRef): void {
-        if (!!this._viewContainer) {
+        if (this._viewContainer) {
             throw new Error(`Only one view container should be attached!`);
         }
         this._viewContainer = container;
@@ -100,7 +100,7 @@ export class DomService {
         this._viewContainer.clear();
         this.showPane();
         const componentRef = this.createComponentRef(componentType, data);
-        const domElement = (<EmbeddedViewRef<any>>componentRef.hostView).rootNodes[0] as HTMLElement;
+        const domElement = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
         this._pane.appendChild(domElement);
         componentRef.hostView.detectChanges();
         return componentRef;

@@ -16,7 +16,8 @@ import { RtcService } from '../../../../services/rtc.service';
     selector: `os-call-dialog`,
     templateUrl: `./call-dialog.component.html`,
     styleUrls: [`./call-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CallDialogComponent implements AfterViewInit {
     @ViewChild(`jitsi`)

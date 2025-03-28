@@ -4,7 +4,8 @@ import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ScrollingTableCellDirective } from './scrolling-table-cell.directive';
 
 @Directive({
-    selector: `[osScrollingTableCellLabel]`
+    selector: `[osScrollingTableCellLabel]`,
+    standalone: false
 })
 export class ScrollingTableCellLabelDirective extends CdkPortal {
     public constructor(

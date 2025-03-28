@@ -16,23 +16,24 @@ describe(`shared worker auth singleton`, () => {
     beforeEach(() => {
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
+        fetchMock.mockGlobal();
         WorkerHttpAuth.reset();
     });
 
     afterEach(() => {
         jasmine.clock().uninstall();
-        fetchMock.reset();
+        fetchMock.hardReset();
         WorkerHttpAuth.unsubscribe(`test`);
     });
 
     it(`receives token`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
                 authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
             },
             body: AUTH_BODY
-        });
+        })
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
@@ -40,7 +41,7 @@ describe(`shared worker auth singleton`, () => {
     });
 
     it(`reads user from token`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
                 authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
@@ -54,64 +55,64 @@ describe(`shared worker auth singleton`, () => {
     });
 
     it(`updates token`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
                 authentication: `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
             },
             body: AUTH_BODY
+        }, {
+            name: `who-am-i`,
         });
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
         await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
-        fetchMock.mock(
-            `end:/${environment.authUrlPrefix}/who-am-i/`,
-            {
+        fetchMock.modifyRoute(`who-am-i`, {
+            response: {
                 headers: {
                     'Content-Type': `application/json`,
                     authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
                 },
                 body: AUTH_BODY
-            },
-            { overwriteRoutes: true }
-        );
+            }
+        });
         jasmine.clock().tick(60 * 1000);
         await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(1);
         await expectAsync(WorkerHttpAuth.updating()).toBeResolvedTo(true);
     });
 
     it(`stop updating token`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
                 authentication: `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
             },
             body: AUTH_BODY
+        }, {
+            name: `who-am-i`,
         });
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
         await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
         WorkerHttpAuth.stopRefresh();
-        fetchMock.mock(
-            `end:/${environment.authUrlPrefix}/who-am-i/`,
-            {
+        fetchMock.modifyRoute(`who-am-i`, {
+            response: {
                 headers: {
                     'Content-Type': `application/json`,
                     authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
                 },
-                body: AUTH_BODY
-            },
-            { overwriteRoutes: true }
-        );
+                body: JSON.parse(AUTH_BODY)
+            }
+        });
         jasmine.clock().tick(60 * 1000);
         await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
         await expectAsync(WorkerHttpAuth.updating()).toBeResolvedTo(false);
     });
 
     it(`is unauthenticated`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`
             },
@@ -125,7 +126,7 @@ describe(`shared worker auth singleton`, () => {
     });
 
     it(`used invalid token`, async () => {
-        fetchMock.mock(`end:/${environment.authUrlPrefix}/who-am-i/`, {
+        fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             status: 401,
             headers: {
                 'Content-Type': `application/json`

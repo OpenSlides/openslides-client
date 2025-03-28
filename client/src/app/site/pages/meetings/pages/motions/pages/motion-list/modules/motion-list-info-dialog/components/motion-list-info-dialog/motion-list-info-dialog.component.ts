@@ -20,7 +20,8 @@ import { MotionListInfoDialogConfig } from '../../definitions';
 @Component({
     selector: `os-motion-list-info-dialog`,
     templateUrl: `./motion-list-info-dialog.component.html`,
-    styleUrls: [`./motion-list-info-dialog.component.scss`]
+    styleUrls: [`./motion-list-info-dialog.component.scss`],
+    standalone: false
 })
 export class MotionListInfoDialogComponent {
     public readonly infoDialog: MotionListInfoDialogConfig;

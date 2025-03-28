@@ -18,7 +18,7 @@
     <span>{{ 'Close list of speakers' | translate }}</span>
 </button>
 
-<mat-divider></mat-divider>
+<mat-divider />
 
 <button
     mat-menu-item
@@ -94,14 +94,14 @@
     <span>{{ 'Set submitters' | translate }} ...</span>
 </button>
 
-<ng-content></ng-content>
+<ng-content />
 
 <ng-container *osPerms="permission.motionCanManage">
     <button mat-menu-item [disabled]="!selectedMotions.length" (click)="openExportDialog()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Export selected motions' | translate }} ...</span>
     </button>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <button
         class="red-warning-text"
         mat-menu-item

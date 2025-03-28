@@ -21,7 +21,7 @@
                 [multiple]="true"
                 [sortFn]="false"
                 [(ngModel)]="infoDialog.vote_delegations_from_ids"
-            ></os-list-search-selector>
+            />
         </mat-form-field>
 
         <mat-form-field>
@@ -32,7 +32,7 @@
                 [multiple]="false"
                 [sortFn]="false"
                 [(ngModel)]="infoDialog.vote_delegated_to_id"
-            ></os-list-search-selector>
+            />
         </mat-form-field>
     }
     <mat-form-field>
@@ -43,7 +43,7 @@
             [inputListValues]="structureLevelObservable"
             [multiple]="true"
             [(ngModel)]="infoDialog.structure_level_ids"
-        ></os-list-search-selector>
+        />
     </mat-form-field>
     <mat-form-field>
         <mat-label>{{ 'Participant number' | translate }}</mat-label>

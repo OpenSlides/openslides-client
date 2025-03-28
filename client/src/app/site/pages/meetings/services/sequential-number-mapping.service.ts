@@ -18,9 +18,7 @@ import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
-const SEQUENTIAL_NUMBER_ID_FIELDS: {
-    [collection: string]: (keyof ViewMeeting)[];
-} = {
+const SEQUENTIAL_NUMBER_ID_FIELDS: Record<string, (keyof ViewMeeting)[]> = {
     [ViewAssignment.COLLECTION]: [`assignment_ids`],
     [ListOfSpeakers.COLLECTION]: [`list_of_speakers_ids`],
     [ViewMotion.COLLECTION]: [`motion_ids`],
@@ -49,9 +47,7 @@ export class SequentialNumberMappingService {
         return this.activeMeeting.meetingId!;
     }
 
-    private _mapSequentialNumberId: {
-        [collection: string]: { [meeting_id_sequential_number: string]: number };
-    } = {};
+    private _mapSequentialNumberId: Record<string, Record<string, number>> = {};
 
     private _subscriptions: Subscription[] = [];
     private _repositories: BaseMeetingRelatedRepository<any, any>[] = [];

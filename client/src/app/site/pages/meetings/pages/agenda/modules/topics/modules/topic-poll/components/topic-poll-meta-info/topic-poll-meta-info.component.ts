@@ -8,7 +8,8 @@ import { TopicPollMethodVerbose } from '../../definitions';
 @Component({
     selector: `os-topic-poll-meta-info`,
     templateUrl: `./topic-poll-meta-info.component.html`,
-    styleUrls: [`./topic-poll-meta-info.component.scss`]
+    styleUrls: [`./topic-poll-meta-info.component.scss`],
+    standalone: false
 })
 export class TopicPollMetaInfoComponent extends BasePollMetaInformationComponent {
     @Input()

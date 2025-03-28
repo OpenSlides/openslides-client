@@ -10,7 +10,7 @@ import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/mee
 import { ViewGroup } from '../view-models';
 
 export class MeetingGroupsObject {
-    public readonly groups: { [groupName: string]: ViewGroup };
+    public readonly groups: Record<string, ViewGroup>;
     public readonly defaultGroup!: ViewGroup;
     public readonly adminGroup!: ViewGroup;
 

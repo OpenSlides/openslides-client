@@ -8,7 +8,7 @@ import { CustomTranslationService } from './custom-translation.service';
  */
 export class CustomTranslationParser extends TranslateDefaultParser {
     private static ctSubscription: Subscription;
-    private static ct: { [key: string]: string } = {};
+    private static ct: Record<string, string> = {};
 
     public constructor(private ctService: CustomTranslationService) {
         super();

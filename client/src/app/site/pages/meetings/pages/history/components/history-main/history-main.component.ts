@@ -9,7 +9,8 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../participants/p
 @Component({
     selector: `os-history-main`,
     templateUrl: `./history-main.component.html`,
-    styleUrls: [`./history-main.component.scss`]
+    styleUrls: [`./history-main.component.scss`],
+    standalone: false
 })
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(_params: any, id: Id | null): void {

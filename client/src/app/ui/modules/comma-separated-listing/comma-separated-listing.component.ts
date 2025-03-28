@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } 
     templateUrl: `./comma-separated-listing.component.html`,
     styleUrls: [`./comma-separated-listing.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [CommonModule]
 })
 export class CommaSeparatedListingComponent<T = unknown> {

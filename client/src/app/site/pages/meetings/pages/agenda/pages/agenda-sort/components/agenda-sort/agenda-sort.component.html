@@ -30,7 +30,7 @@
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 @for (option of filterOptions; track option) {
                     <mat-list-option [selected]="option.state" [value]="option.id">
-                        <mat-icon matListItemIcon matTooltipPosition="left" matTooltip="{{ option.label | translate }}">
+                        <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                             {{ getIcon(option.id) }}
                         </mat-icon>
                         <div matListItemTitle>

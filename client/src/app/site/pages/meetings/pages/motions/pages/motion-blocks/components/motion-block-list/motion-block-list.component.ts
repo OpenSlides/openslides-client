@@ -18,7 +18,8 @@ const MOTION_BLOCK_LIST_STORAGE_INDEX = `motion_blocks`;
     selector: `os-motion-block-list`,
     templateUrl: `./motion-block-list.component.html`,
     styleUrls: [`./motion-block-list.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewMotionBlock> implements OnInit {
     /**

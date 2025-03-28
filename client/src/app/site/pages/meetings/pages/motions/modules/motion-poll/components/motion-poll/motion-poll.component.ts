@@ -14,7 +14,8 @@ import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/mot
 @Component({
     selector: `os-motion-poll`,
     templateUrl: `./motion-poll.component.html`,
-    styleUrls: [`./motion-poll.component.scss`]
+    styleUrls: [`./motion-poll.component.scss`],
+    standalone: false
 })
 export class MotionPollComponent extends BasePollComponent {
     @Input()

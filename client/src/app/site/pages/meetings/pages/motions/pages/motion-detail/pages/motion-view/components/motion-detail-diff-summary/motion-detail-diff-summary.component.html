@@ -37,7 +37,7 @@
                             @if (change.isRejected() && !isAmendment(change)) {
                                 –
                                 <span>{{ 'Rejected' | translate }}</span>
-                            } @else if (change.stateName) {
+                            } @else if (isAmendment(change) && change.stateName) {
                                 –
                                 {{ change.stateName }}
                             }

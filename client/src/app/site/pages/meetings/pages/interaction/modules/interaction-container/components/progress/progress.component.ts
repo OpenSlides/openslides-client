@@ -4,7 +4,8 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
     selector: `os-progress`,
     templateUrl: `./progress.component.html`,
     styleUrls: [`./progress.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ProgressComponent {
     @Input()

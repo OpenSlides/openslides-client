@@ -5,7 +5,8 @@ import { BrowserRecommendation, BrowserSupportService } from '../../../../servic
 @Component({
     selector: `os-unsupported-browser`,
     templateUrl: `./unsupported-browser.component.html`,
-    styleUrls: [`./unsupported-browser.component.scss`]
+    styleUrls: [`./unsupported-browser.component.scss`],
+    standalone: false
 })
 export class UnsupportedBrowserComponent implements OnInit {
     public supported = false;

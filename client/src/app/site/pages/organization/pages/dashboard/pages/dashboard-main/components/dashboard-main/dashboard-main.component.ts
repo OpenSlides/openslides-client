@@ -6,7 +6,8 @@ import { getDashboardMeetingListSubscriptionConfig } from '../../../../dashboard
 @Component({
     selector: `os-dashboard-main`,
     templateUrl: `./dashboard-main.component.html`,
-    styleUrls: [`./dashboard-main.component.scss`]
+    styleUrls: [`./dashboard-main.component.scss`],
+    standalone: false
 })
 export class DashboardMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void {

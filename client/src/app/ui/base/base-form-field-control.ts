@@ -96,9 +96,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public stateChanges = new Subject<void>();
 
-    public get errorState(): boolean {
-        return false;
-    }
+    public abstract readonly errorState: boolean;
 
     public focused = false;
 

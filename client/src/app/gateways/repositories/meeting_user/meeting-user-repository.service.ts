@@ -18,7 +18,7 @@ export type MeetingUserPatchFn =
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
     public override readonly resetOnMeetingChange = false;
 
-    private meetingUserIdMap: Map<Id, Map<Id, Id>> = new Map();
+    private meetingUserIdMap = new Map<Id, Map<Id, Id>>();
 
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MeetingUser);

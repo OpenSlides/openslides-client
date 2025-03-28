@@ -18,7 +18,8 @@ import { UnknownUserLabel } from '../../services/assignment-poll.service';
     selector: `os-assignment-poll-vote`,
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
     styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> {
     public unknownUserLabel = UnknownUserLabel;

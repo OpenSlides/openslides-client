@@ -17,7 +17,6 @@ interface PromptDialogData {
     selector: `os-prompt-dialog`,
     templateUrl: `./prompt-dialog.component.html`,
     styleUrls: [`./prompt-dialog.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class PromptDialogComponent {

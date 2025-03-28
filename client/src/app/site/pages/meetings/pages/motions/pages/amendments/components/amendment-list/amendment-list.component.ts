@@ -27,7 +27,8 @@ const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
     selector: `os-amendment-list`,
     templateUrl: `./amendment-list.component.html`,
     styleUrls: [`./amendment-list.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     @ViewChild(ProjectableListComponent)
@@ -57,7 +58,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     public filterProps = [`submitters`, `additional_submitter`, `title`, `number`];
 
-    private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
+    private _amendmentDiffLinesMap: Record<number, string> = {};
 
     public constructor(
         protected override translate: TranslateService,

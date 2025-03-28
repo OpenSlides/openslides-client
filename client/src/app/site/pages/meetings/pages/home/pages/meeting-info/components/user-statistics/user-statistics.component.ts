@@ -18,7 +18,8 @@ interface IdentifiedSpeakingTimeStructureLevelObject extends Identifiable, Speak
     templateUrl: `./user-statistics.component.html`,
     styleUrls: [`./user-statistics.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserStatisticsComponent extends BaseComponent implements OnInit {
     public finishedSpeakers = this.speakerRepo.finishedSpeakersObservable();

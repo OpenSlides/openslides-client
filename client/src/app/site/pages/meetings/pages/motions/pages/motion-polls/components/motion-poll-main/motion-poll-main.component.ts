@@ -9,7 +9,8 @@ import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subs
 @Component({
     selector: `os-motion-poll-main`,
     templateUrl: `./motion-poll-main.component.html`,
-    styleUrls: [`./motion-poll-main.component.scss`]
+    styleUrls: [`./motion-poll-main.component.scss`],
+    standalone: false
 })
 export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {
     public constructor(private sequentialNumberMappingService: SequentialNumberMappingService) {

@@ -36,7 +36,8 @@ const HISTORY_SUBSCRIPTION_PREFIX = `history`;
 @Component({
     selector: `os-history-list`,
     templateUrl: `./history-list.component.html`,
-    styleUrls: [`./history-list.component.scss`]
+    styleUrls: [`./history-list.component.scss`],
+    standalone: false
 })
 export class HistoryListComponent extends BaseMeetingComponent implements OnInit {
     /**
@@ -72,7 +73,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         }
     }
 
-    public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
+    public get modelsRepoMap(): Record<Collection, BaseRepository<BaseViewModel, BaseModel>> {
         // add repos to this array to extend the selection for history models
         const historyRepos: any[] = [this.motionRepo, this.assignmentRepo];
         if (this.operator.isOrgaManager) {
@@ -275,7 +276,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     private updateModelRequest(): void {
-        const modelRequests: { [collection: Collection]: Id[] } = {};
+        const modelRequests: Record<Collection, Id[]> = {};
         this.dataSource.data.forEach(position => {
             position.information.forEach(information => {
                 if (isFqid(information)) {
@@ -310,7 +311,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      * @param keyTarget: a filter string. Matching is case-insensitive
      */
     public applySearch(keyTarget: EventTarget): void {
-        this.dataSource.filter = (<HTMLInputElement>keyTarget).value;
+        this.dataSource.filter = (keyTarget as HTMLInputElement).value;
     }
 
     public resetListValues(event: boolean): void {

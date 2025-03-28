@@ -5,12 +5,8 @@ import { CollectionMapperService } from 'src/app/site/services/collection-mapper
 import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-update-manager.service';
 
-interface DeletedModels {
-    [collection: string]: number[];
-}
-export interface ChangedModels {
-    [collection: string]: BaseModel[];
-}
+type DeletedModels = Record<string, number[]>;
+export type ChangedModels = Record<string, BaseModel[]>;
 
 interface UpdatePatch {
     /**
@@ -20,26 +16,18 @@ interface UpdatePatch {
     /**
      * Changed collections. The service will iterate over every collection and check if ids are removed.
      */
-    changedModels: {
-        [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
-    };
+    changedModels: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }>;
     /**
      * Changed collections. The service will iterate over every collection and check if ids are removed.
      */
-    changedFullListModels: {
-        [collection: string]: Ids;
-    };
+    changedFullListModels: Record<string, Ids>;
     /**
      * Definitely deleted models.
      */
-    deletedModels: { [collection: string]: Ids };
+    deletedModels: Record<string, Ids>;
 }
 
-interface ModelPatch {
-    [collection: string]: {
-        [id: number]: BaseModelTemplate;
-    };
-}
+type ModelPatch = Record<string, Record<number, BaseModelTemplate>>;
 
 @Injectable({
     providedIn: `root`

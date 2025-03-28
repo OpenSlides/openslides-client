@@ -5,7 +5,8 @@ import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organizatio
 @Component({
     selector: `os-orga-meetings-main`,
     templateUrl: `./orga-meetings-main.component.html`,
-    styleUrls: [`./orga-meetings-main.component.scss`]
+    styleUrls: [`./orga-meetings-main.component.scss`],
+    standalone: false
 })
 export class OrgaMeetingsMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void {

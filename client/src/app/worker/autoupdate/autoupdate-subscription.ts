@@ -169,7 +169,7 @@ export class AutoupdateSubscription {
                 }
             }
 
-            return checkFieldsExisting((<HasFields>relation).fields, (<HasFields>existingRelation).fields);
+            return checkFieldsExisting((relation as HasFields).fields, (existingRelation as HasFields).fields);
         };
 
         const checkFieldsExisting = (fields: Fields, existingFields: Fields): boolean => {

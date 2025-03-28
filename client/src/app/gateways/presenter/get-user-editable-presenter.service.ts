@@ -9,13 +9,9 @@ interface GetUserEditablePresenterPayload {
     fields: string[];
 }
 
-interface GetUserEditableIdentifiedScope {
-    [field: string]: [boolean, string?];
-}
+type GetUserEditableIdentifiedScope = Record<string, [boolean, string?]>;
 
-export interface GetUserEditablePresenterResult {
-    [user_id: Id]: GetUserEditableIdentifiedScope;
-}
+export type GetUserEditablePresenterResult = Record<Id, GetUserEditableIdentifiedScope>;
 
 @Injectable({
     providedIn: `root`

@@ -21,10 +21,10 @@
                 <button
                     class="delete-button"
                     mat-icon-button
+                    matTooltip="{{ 'Cancel' | translate }}"
                     matTooltipPosition="left"
                     type="button"
                     [disabled]="disabled"
-                    matTooltip="{{ 'Cancel' | translate }}"
                     (click)="onRemoveAllocation(i)"
                 >
                     <mat-icon>close</mat-icon>

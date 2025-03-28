@@ -74,7 +74,6 @@ const SUBSCRIPTION_NAME = `file_list_subscription`;
     templateUrl: `./file-list.component.html`,
     styleUrls: [`./file-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         CommonModule,
         RouterModule,
@@ -223,8 +222,8 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     public fileEditForm!: UntypedFormGroup;
     public moveForm!: UntypedFormGroup;
 
-    public movingToPublicFolder: boolean = false;
-    public movingFromPublicFolder: boolean = false;
+    public movingToPublicFolder = false;
+    public movingFromPublicFolder = false;
 
     public directory: ViewMediafile | null = null;
 

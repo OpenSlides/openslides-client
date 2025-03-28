@@ -8,7 +8,8 @@ import { ChipComponent } from './chip.component';
 @Component({
     template: `
         <os-chip color="color-class">Or not to be</os-chip>
-    `
+    `,
+    standalone: false
 })
 class TestComponent {}
 

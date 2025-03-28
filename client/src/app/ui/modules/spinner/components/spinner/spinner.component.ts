@@ -7,7 +7,8 @@ import { _ } from '@ngx-translate/core';
 @Component({
     selector: `os-spinner`,
     templateUrl: `./spinner.component.html`,
-    styleUrls: [`./spinner.component.scss`]
+    styleUrls: [`./spinner.component.scss`],
+    standalone: false
 })
 export class SpinnerComponent {
     @Input()

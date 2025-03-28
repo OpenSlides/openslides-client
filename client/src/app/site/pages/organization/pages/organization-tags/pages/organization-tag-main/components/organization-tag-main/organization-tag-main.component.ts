@@ -9,7 +9,8 @@ import { getOrganizationTagListSubscriptionConfig } from '../../../../organizati
 @Component({
     selector: `os-organization-tag-main`,
     templateUrl: `./organization-tag-main.component.html`,
-    styleUrls: [`./organization-tag-main.component.scss`]
+    styleUrls: [`./organization-tag-main.component.scss`],
+    standalone: false
 })
 export class OrganizationTagMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void | ModelRequestConfig[] {

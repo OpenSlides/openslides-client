@@ -8,7 +8,7 @@ import { EndpointConfiguration } from './endpoint-configuration';
     providedIn: `root`
 })
 export class HttpStreamEndpointService {
-    private endpointConfigurations: { [endpoint: string]: EndpointConfiguration } = {};
+    private endpointConfigurations: Record<string, EndpointConfiguration> = {};
 
     public constructor(private http: HttpService) {}
 
@@ -41,7 +41,7 @@ export class HttpStreamEndpointService {
         try {
             const response = await this.http.get<{ healthy: boolean }>(endpoint.healthUrl);
             return !!response.healthy;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }

@@ -15,7 +15,8 @@ export interface EditorLinkDialogOutput {
 @Component({
     selector: `os-editor-link-dialog`,
     templateUrl: `./editor-link-dialog.component.html`,
-    styleUrls: [`editor-link-dialog.component.scss`]
+    styleUrls: [`editor-link-dialog.component.scss`],
+    standalone: false
 })
 export class EditorLinkDialogComponent {
     public isUpdate: boolean;

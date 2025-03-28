@@ -23,9 +23,7 @@ export class Settings {
 
     public welcome_title!: string;
     public welcome_text!: string;
-    public custom_translations!: {
-        [original: string]: string;
-    };
+    public custom_translations!: Record<string, string>;
 
     public point_of_order_category_ids!: Ids;
 

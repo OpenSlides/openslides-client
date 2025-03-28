@@ -13,7 +13,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 @Component({
     selector: `os-participant-password`,
     templateUrl: `./participant-password.component.html`,
-    styleUrls: [`./participant-password.component.scss`]
+    styleUrls: [`./participant-password.component.scss`],
+    standalone: false
 })
 export class ParticipantPasswordComponent extends BaseMeetingComponent implements OnInit {
     public isValid = false;

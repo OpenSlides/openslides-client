@@ -7,7 +7,7 @@ import { CreateUserNameInformation } from 'src/app/site/services/user-controller
 import { BaseBeforeImportHandler } from '../base-before-import-handler';
 import { BeforeFindAction, CsvMapping, ImportResolveInformation } from '../import-utils';
 
-export type UserNameMap = { [username: string]: Partial<User>[] };
+export type UserNameMap = Record<string, Partial<User>[]>;
 
 export interface UserSearchService {
     getDuplicates(users: Partial<User>[]): Promise<UserNameMap>;
@@ -29,7 +29,7 @@ interface UserImportConfig<Model> {
 }
 
 class UserImportHelperSharedContext {
-    private static _modelsToCreateMap: { [username: string]: CsvMapping<User> } = {};
+    private static _modelsToCreateMap: Record<string, CsvMapping<User>> = {};
     private static _existingUsersMap: UserNameMap = {};
 
     public static addExistingUsers(map: UserNameMap): void {

@@ -9,7 +9,6 @@ import { DirectivesModule } from '../../directives';
     templateUrl: `./expandable-content-wrapper.component.html`,
     styleUrls: [`./expandable-content-wrapper.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [CommonModule, DirectivesModule, OpenSlidesTranslationModule]
 })
 export class ExpandableContentWrapperComponent {
@@ -67,11 +66,11 @@ export class ExpandableContentWrapperComponent {
     /**
      * Boolean to see, if the content is currently expanded.
      */
-    public isExpanded: boolean = false;
+    public isExpanded = false;
 
-    public _isCollapsed: boolean = false;
+    public _isCollapsed = false;
 
-    public _biggerHeight: boolean = false;
+    public _biggerHeight = false;
 
     public constructor(private cd: ChangeDetectorRef) {
         this.isCollapsed = false;

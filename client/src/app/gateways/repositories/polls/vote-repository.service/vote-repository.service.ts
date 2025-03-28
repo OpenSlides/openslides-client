@@ -16,9 +16,7 @@ const HAS_VOTED_URL = `${VOTE_URL}/voted`;
  * keys are poll ids,
  * the arrays contain the ids of the users that have voted for the corresponding polls
  */
-export interface HasVotedResponse {
-    [key: string]: Id[];
-}
+export type HasVotedResponse = Record<string, Id[]>;
 
 interface PollSubscription {
     poll: ViewPoll;
@@ -35,7 +33,7 @@ export interface VotePayload {
     providedIn: `root`
 })
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
-    private _subscribedPolls: Map<Id, PollSubscription> = new Map();
+    private _subscribedPolls = new Map<Id, PollSubscription>();
 
     // Interval for workaround until long polling implemented
     private _fetchVotablePollsInterval = null;

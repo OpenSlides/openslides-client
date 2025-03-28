@@ -9,7 +9,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     selector: `os-speaker-button`,
     templateUrl: `./speaker-button.component.html`,
     styleUrls: [`./speaker-button.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeakerButtonComponent implements OnDestroy {
     @Input()

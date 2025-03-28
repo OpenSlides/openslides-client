@@ -5,5 +5,5 @@ export interface PollDialogResult {
     votesvalid?: string;
     votesinvalid?: string;
     votescast?: string;
-    options: { [key: string]: { Y?: string; N?: string; A?: string } };
+    options: Record<string, { Y?: string; N?: string; A?: string }>;
 }

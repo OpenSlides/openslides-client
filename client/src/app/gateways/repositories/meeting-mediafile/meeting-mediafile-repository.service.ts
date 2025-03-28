@@ -11,7 +11,7 @@ import { RepositoryServiceCollectorService } from '../repository-service-collect
     providedIn: `root`
 })
 export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetingMediafile, MeetingMediafile> {
-    private mediafileMap: Map<Id, Map<Id, Id>> = new Map();
+    private mediafileMap = new Map<Id, Map<Id, Id>>();
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
@@ -37,7 +37,9 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
             if (viewModel.mediafile_id && viewModel.meeting_id) {
                 try {
                     this.mediafileMap.get(viewModel.meeting_id).set(viewModel.meeting_id, id);
-                } catch (e) {}
+                } catch (_e) {
+                    // meeting was not loaded
+                }
             }
         }
         super.deleteModels(ids);

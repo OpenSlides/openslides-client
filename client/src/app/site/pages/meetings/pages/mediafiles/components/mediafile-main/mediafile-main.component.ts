@@ -8,7 +8,8 @@ import { getMediafilesSubscriptionConfig } from '../../mediafiles.subscription';
 @Component({
     selector: `os-mediafile-main`,
     templateUrl: `./mediafile-main.component.html`,
-    styleUrls: [`./mediafile-main.component.scss`]
+    styleUrls: [`./mediafile-main.component.scss`],
+    standalone: false
 })
 export class MediafileMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

@@ -18,7 +18,8 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
 @Component({
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
-    styleUrls: [`./poll-collection.component.scss`]
+    styleUrls: [`./poll-collection.component.scss`],
+    standalone: false
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];
@@ -144,7 +145,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         const lastPublished = this.getLastfinshedPoll(this.currentProjection!);
         if (lastPublished !== this.lastPublishedPoll) {
             if (
-                (<BaseViewModel>this.currentProjection)?.collection === `meeting` &&
+                (this.currentProjection as BaseViewModel)?.collection === `meeting` &&
                 lastPublished &&
                 lastPublished.id !== this.currentSubscribed
             ) {

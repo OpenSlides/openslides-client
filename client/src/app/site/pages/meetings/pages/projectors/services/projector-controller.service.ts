@@ -162,7 +162,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         );
     }
 
-    private async updateProjectordefaults(defaultKeys: { [key: string]: number[] }): Promise<void> {
+    private async updateProjectordefaults(defaultKeys: Record<string, number[]>): Promise<void> {
         if (Object.keys(defaultKeys).length) {
             await this.meetingRepo
                 .update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) })
@@ -171,7 +171,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return;
     }
 
-    private formatDefaultProjectors(defaultKeys: { [key: string]: number[] }): { [key: string]: number[] } {
+    private formatDefaultProjectors(defaultKeys: Record<string, number[]>): Record<string, number[]> {
         let defaults = {};
         for (const key of PROJECTIONDEFAULTS) {
             defaults = {

@@ -97,7 +97,7 @@ export class HttpSubscriptionPolling extends HttpSubscription {
         }
     }
 
-    private getHeaders(): { [name: string]: any } {
+    private getHeaders(): Record<string, any> {
         const headers: any = {
             'ngsw-bypass': true
         };

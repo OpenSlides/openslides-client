@@ -9,7 +9,8 @@ import { GlobalSearchComponent } from '../global-search/global-search.component'
 @Component({
     selector: `os-global-headbar`,
     templateUrl: `./global-headbar.component.html`,
-    styleUrls: [`./global-headbar.component.scss`]
+    styleUrls: [`./global-headbar.component.scss`],
+    standalone: false
 })
 export class GlobalHeadbarComponent {
     public isSearchEnabled = true;

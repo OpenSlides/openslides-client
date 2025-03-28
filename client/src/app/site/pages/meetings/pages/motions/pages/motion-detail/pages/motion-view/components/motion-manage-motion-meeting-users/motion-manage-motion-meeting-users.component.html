@@ -38,8 +38,8 @@
                     <span>
                         <button
                             mat-icon-button
-                            type="button"
                             matTooltip="{{ 'Remove' | translate }}"
+                            type="button"
                             (click)="onRemove(user)"
                         >
                             <mat-icon>close</mat-icon>
@@ -50,8 +50,8 @@
         </os-sorting-list>
         <div class="text-field-container">
             <os-participant-search-selector
-                [nonSelectableUserIds]="editUserIds"
                 placeholder="{{ 'Select participant' | translate }}"
+                [nonSelectableUserIds]="editUserIds"
                 (userSelected)="addUser($event)"
             ></os-participant-search-selector>
         </div>

@@ -24,8 +24,8 @@ export function controlMessageHandler(ctx: any, e: any): void {
                 ctx.postMessage({ sender: `control`, action: `terminate-rejected` });
             } else {
                 broadcast(`control`, `terminating`);
-                if (!((<any>self).Window && self instanceof (<any>self).Window)) {
-                    (<any>self).close();
+                if (!((self as any).Window && self instanceof (self as any).Window)) {
+                    (self as any).close();
                 }
             }
             break;
