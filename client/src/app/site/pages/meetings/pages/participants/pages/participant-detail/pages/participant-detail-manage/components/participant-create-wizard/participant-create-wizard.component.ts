@@ -356,10 +356,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     private checkSelectedGroupsCanManage(): boolean {
-        const group_ids =
-            this.detailView.personalInfoForm.get(`group_ids`).value?.length > 0
-                ? this.detailView.personalInfoForm.get(`group_ids`).value
-                : [];
+        const group_ids = this.detailView.personalInfoForm.get(`group_ids`).value ?? [];
         return group_ids
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
