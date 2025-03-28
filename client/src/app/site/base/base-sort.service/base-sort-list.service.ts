@@ -62,7 +62,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @returns wether current the sorting is ascending or descending
      */
     public get ascending(): boolean {
-        return this.sortDefinition!.sortAscending;
+        return this.sortDefinition?.sortAscending;
     }
 
     public get hasSortOptionSelected(): boolean {

@@ -93,6 +93,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
+    public get validSupporters(): string {
+        return `(` + this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length + `)`;
+    }
+
     /**
      * Custom recommender as set in the settings
      */
@@ -431,5 +435,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    public checkValidSupporter(supporter: ViewUser): boolean {
+        return (
+            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            !(
+                supporter.getMeetingUser().vote_delegated_to &&
+                this.meetingSettingsService.instant(`users_forbid_delegator_as_supporter`)
+            )
+        );
     }
 }
