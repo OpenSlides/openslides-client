@@ -28,12 +28,15 @@
     &:before {
         display: inline;
         content: '(';
+        font-weight: 500;
     }
     &:after {
         display: inline;
         content: ')';
+        font-weight: 500;
     }
     & > * {
         display: inline-block;
+        font-weight: 500;
     }
 }

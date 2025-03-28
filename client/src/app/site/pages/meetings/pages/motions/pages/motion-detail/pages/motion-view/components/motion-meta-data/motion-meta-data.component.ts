@@ -59,8 +59,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
-    public originToggleDefault$ = this.meetingSettingsService.get(`motions_origin_motion_toggle_default`);
-    public displayOriginEnabled$ = this.meetingSettingsService.get(`motions_enable_origin_motion_display`);
+    public originToggleDefault$ = this.meetingSettingsService
+        .get(`motions_origin_motion_toggle_default`)
+        .pipe(map(v => !!v));
+
+    public displayOriginEnabled$ = this.meetingSettingsService
+        .get(`motions_enable_origin_motion_display`)
+        .pipe(map(v => !!v));
 
     /**
      * @returns the current recommendation label (with extension)
