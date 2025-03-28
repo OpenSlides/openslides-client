@@ -1,6 +1,6 @@
 {
   "name": "openslides4-client",
-  "version": "4.1.x-dev",
+  "version": "4.2.x-dev",
   "repository": {
     "type": "git",
     "url": "git://github.com:OpenSlides/openslides-client.git"
@@ -21,10 +21,6 @@
     "test-live": "npm run test -- --watch=true --browsers=Chromium",
     "lint": "ng lint",
     "lint-write": "ng lint --fix",
-    "e2e": "ng e2e",
-    "licenses": "node cli/crawler.js",
-    "doc-serve": "./node_modules/.bin/compodoc -c .compodocrc.json -s -o -r",
-    "doc-build": "./node_modules/.bin/compodoc -c .compodocrc.json",
     "extract": "ngx-translate-extract -i ./src -o ./src/assets/i18n/template-en.pot --clean --sort --format pot",
     "cleanup": "npm run prettify-write && npm run lint-write",
     "prettify-check": "prettier --list-different \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
@@ -135,7 +131,6 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "npm-license-crawler": "^0.2.1",
     "prettier": "^3.5.3",
     "ts-dedent": "^2.2.0",
     "ts-morph": "^25.0.1",
