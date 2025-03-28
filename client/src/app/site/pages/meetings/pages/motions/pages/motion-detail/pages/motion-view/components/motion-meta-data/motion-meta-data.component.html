@@ -344,7 +344,11 @@
                 @for (origin of originMotions; track origin.id; let last = $last) {
                     <div>
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        @if ((displayOriginEnabled$ | async) && (originToggleDefault$ | async) === false) {
+                        @if (
+                            (displayOriginEnabled$ | async) &&
+                            (originToggleDefault$ | async) === false &&
+                            !motion.isAmendment()
+                        ) {
                             <mat-slide-toggle
                                 *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
                                 [aria-label]="'Activate backtracking' | translate"
