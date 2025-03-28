@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { ExportServiceModule } from '../export-service.module';
-
 const IMAGE_USABLE_FOR_PDF_MIMETYPES = [`image/png`, `image/jpeg`];
 
 /**
@@ -9,7 +7,7 @@ const IMAGE_USABLE_FOR_PDF_MIMETYPES = [`image/png`, `image/jpeg`];
  * so that they can be loaded into the virtual file system before PDF creation.
  */
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class PdfImagesService {
     private imageUrls: string[] = [];

@@ -4,10 +4,8 @@ import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
-import { MotionPollServiceModule } from '../motion-poll-service.module';
-
 @Injectable({
-    providedIn: MotionPollServiceModule
+    providedIn: `root`
 })
 export class MotionPollControllerService {
     public constructor(private repo: PollRepositoryService) {}

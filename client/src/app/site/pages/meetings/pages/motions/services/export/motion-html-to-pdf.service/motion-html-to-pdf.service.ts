@@ -7,8 +7,6 @@ import {
     HtmlToPdfService
 } from 'src/app/gateways/export/html-to-pdf.service';
 
-import { MotionsExportModule } from '../motions-export.module';
-
 /**
  * Shape of line number objects
  */
@@ -30,7 +28,7 @@ interface HtmlToPdfConfig {
 }
 
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionHtmlToPdfService extends HtmlToPdfService {
     /**

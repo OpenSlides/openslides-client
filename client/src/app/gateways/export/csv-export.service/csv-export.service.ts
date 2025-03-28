@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../../site/base/base-view-model';
-import { ExportServiceModule } from '../export-service.module';
 import { FileExportService } from '../file-export.service/file-export.service';
 import {
     CsvColumnsDefinition,
@@ -15,7 +14,7 @@ import {
 } from './csv-export-utils';
 
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class CsvExportService {
     private exporter = inject(FileExportService);

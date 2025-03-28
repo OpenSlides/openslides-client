@@ -12,7 +12,6 @@ import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-sp
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionXlsxExportConfig {
     motions: ViewMotion[];
@@ -24,7 +23,7 @@ interface MotionXlsxExportConfig {
  * Service to export motion elements to XLSX
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionXlsxExportService {
     /**
@@ -81,11 +80,9 @@ export class MotionXlsxExportService {
      */
     public exportMotionList({ motions, infoToExport = [], commentIds }: MotionXlsxExportConfig): void {
         const workbook = new Workbook();
-        const properties: string[] = infoToExport.includes(`speakers`)
-            ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
-            : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
-        if (infoToExport.includes(`working_group_speakers`)) {
-            properties.push(`working_group_speakers`);
+        const properties: string[] = sortMotionPropertyList([`number`, `title`].concat(infoToExport));
+        if (infoToExport.includes(`referring_motions`)) {
+            properties.push(`referring_motions`);
         }
 
         const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
@@ -115,11 +112,14 @@ export class MotionXlsxExportService {
                     case `block`:
                         propertyHeader = _(`Motion block`);
                         break;
-                    case `speakers`:
+                    case `list_of_speakers`:
                         propertyHeader = _(`Open requests to speak`);
                         break;
                     case `working_group_speakers`:
                         propertyHeader = _(`Spokesperson`);
+                        break;
+                    case `editors`:
+                        propertyHeader = _(`Motion editors`);
                         break;
                     default:
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
@@ -158,18 +158,16 @@ export class MotionXlsxExportService {
             data.push(
                 ...properties.map(property => {
                     const motionProp = motion[property as keyof ViewMotion];
-                    if (property === `submitters`) {
-                        return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
-                    }
-                    if (property === `speakers`) {
-                        return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
-                            ? motion.list_of_speakers.waitingSpeakerAmount
-                            : ``;
-                    }
-                    if (!motionProp) {
+                    if (!motionProp && property !== `referring_motions`) {
                         return ``;
                     }
                     switch (property) {
+                        case `submitters`:
+                            return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
+                        case `list_of_speakers`:
+                            return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
+                                ? motion.list_of_speakers.waitingSpeakerAmount
+                                : ``;
                         case `state`:
                             return this.motionService.getExtendedStateLabel(motion);
                         case `recommendation`:
@@ -177,6 +175,11 @@ export class MotionXlsxExportService {
                         case `working_group_speakers`:
                             return (motionProp as Array<ViewMotionWorkingGroupSpeaker>)
                                 .sort((a, b) => a.weight - b.weight)
+                                .join(`, `);
+                        case `referring_motions`:
+                            return motion.referenced_in_motion_recommendation_extensions
+                                .naturalSort(this.translate.currentLang, [`number`, `title`])
+                                .map(motion => motion.getNumberOrTitle())
                                 .join(`, `);
                         default:
                             return motionProp.toString();

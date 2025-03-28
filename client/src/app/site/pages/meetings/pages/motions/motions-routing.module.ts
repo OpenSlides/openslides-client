@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
 
 import { MotionMainComponent } from './components/motion-main/motion-main.component';
+import { MotionExportComponent } from './pages/motion-export/components/motion-export/motion-export.component';
 
 const routes: Routes = [
     {
@@ -44,6 +45,11 @@ const routes: Routes = [
                 path: `tags`,
                 loadChildren: () => import(`./pages/tags/tags.module`).then(m => m.TagsModule),
                 data: { meetingPermissions: [Permission.tagCanManage] }
+            },
+            {
+                path: `motion-export`,
+                component: MotionExportComponent,
+                data: { meetingPermissions: [Permission.motionCanSee] }
             },
             {
                 path: `polls`,

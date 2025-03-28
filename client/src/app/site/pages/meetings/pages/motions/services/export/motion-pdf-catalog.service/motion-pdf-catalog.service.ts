@@ -11,7 +11,6 @@ import { MotionCategoryControllerService } from '../../../modules/categories/ser
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionPdfService } from '../motion-pdf.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 /**
  * Service to export a list of motions.
@@ -22,7 +21,7 @@ import { MotionsExportModule } from '../motions-export.module';
  * ```
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionPdfCatalogService {
     public constructor(
