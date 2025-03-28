@@ -35,17 +35,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
         return this._motion!;
     }
 
-    /**
-     * Whether to show all amendments in the text, not only the ones with the apropriate state
-     */
-    public get showAllAmendments(): boolean {
-        return this.viewService.currentShowAllAmendmentsState;
-    }
-
-    public get showAllAmendments$(): Observable<boolean> {
-        return this.viewService.showAllAmendmentsStateSubject;
-    }
-
     ///////////////////////////////////////////////
     /////// Repos & services
     ///////////////////////////////////////////////
@@ -113,6 +102,5 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     private destroy(): void {
         this.cleanSubscriptions();
-        this.viewService.showAllAmendmentsStateSubject.next(false);
     }
 }

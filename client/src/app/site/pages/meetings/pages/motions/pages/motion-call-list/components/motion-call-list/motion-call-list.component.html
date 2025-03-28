@@ -22,7 +22,7 @@
         <div class="current-filters">
             <div>
                 <button mat-button (click)="resetFilters()">
-                    <mat-icon inline>cancel</mat-icon>
+                    <mat-icon>close</mat-icon>
                     <span>{{ 'Clear all filters' | translate }}</span>
                 </button>
             </div>
@@ -33,7 +33,7 @@
             <div>
                 <button mat-button [matMenuTriggerFor]="catFilterMenu">
                     <span
-                        class="upper"
+                        class="upper badge-space"
                         matBadgeColor="accent"
                         [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         [matBadgeOverlap]="false"
@@ -47,7 +47,7 @@
             <div>
                 <button mat-button [matMenuTriggerFor]="tagFilterMenu">
                     <span
-                        class="upper"
+                        class="upper badge-space"
                         matBadgeColor="accent"
                         [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         [matBadgeOverlap]="false"

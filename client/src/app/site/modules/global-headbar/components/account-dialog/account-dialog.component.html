@@ -29,9 +29,6 @@
                 @case (menuItemsRef.CHANGE_PASSWORD) {
                     <ng-container [ngTemplateOutlet]="changePasswordView"></ng-container>
                 }
-                @case (menuItemsRef.CLIENT_SETTINGS) {
-                    <ng-container [ngTemplateOutlet]="clientSettingsView"></ng-container>
-                }
             }
         </div>
     </div>
@@ -45,6 +42,7 @@
         </button>
     </div>
     <os-user-detail-view
+        [isAccountSelfUpdate]="true"
         [isAllowedFn]="isAllowedFn"
         [isEditing]="isEditing"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
@@ -89,20 +87,6 @@
     ></os-password-form>
     <div>
         <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
-            {{ 'Save' | translate }}
-        </button>
-    </div>
-</ng-template>
-
-<ng-template #clientSettingsView>
-    <h2>{{ 'Settings' | translate }}</h2>
-    <form [formGroup]="clientSettingsForm">
-        <mat-checkbox formControlName="disablePauseAuConnections">
-            {{ 'Disable connection closing on inactivity' | translate }}
-        </mat-checkbox>
-    </form>
-    <div>
-        <button mat-button [disabled]="!clientSettingsForm.dirty" (click)="saveClientSettings()">
             {{ 'Save' | translate }}
         </button>
     </div>

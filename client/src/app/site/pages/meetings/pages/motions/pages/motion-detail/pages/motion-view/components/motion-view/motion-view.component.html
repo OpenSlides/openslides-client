@@ -102,12 +102,14 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
-                    <button mat-menu-item (click)="forwardMotionToMeetings()">
-                        <mat-icon>forward</mat-icon>
-                        <span>{{ 'Forward' | translate }}</span>
-                    </button>
-                </div>
+                @if (!motion.isAmendment()) {
+                    <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
+                        <button mat-menu-item (click)="forwardMotionToMeetings()">
+                            <mat-icon>forward</mat-icon>
+                            <span>{{ 'Forward' | translate }}</span>
+                        </button>
+                    </div>
+                }
                 @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
                     <mat-divider></mat-divider>
                     <!-- Edit-->
@@ -149,11 +151,7 @@
                     <!-- Meta info -->
                     <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
                     <!-- Content -->
-                    <mat-card class="os-card">
-                        <mat-card-content>
-                            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                        </mat-card-content>
-                    </mat-card>
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                     <!-- Comments -->
                     <os-motion-comments [motion]="motion"></os-motion-comments>
                     <!-- Personal note -->
@@ -173,11 +171,7 @@
                     </div>
                     <div class="desktop-right">
                         <!-- Content -->
-                        <mat-card class="os-card">
-                            <mat-card-content>
-                                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                            </mat-card-content>
-                        </mat-card>
+                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                     </div>
                 </div>
             }
@@ -197,27 +191,84 @@
 
 <ng-template #metaInfoTemplate>
     <div>
-        <os-motion-meta-data [changeRecoMode]="changeRecoMode" [motion]="motion"></os-motion-meta-data>
+        <os-motion-meta-data
+            [activeOriginMotions]="originMotionsLoaded"
+            [changeRecoMode]="changeRecoMode"
+            [motion]="motion"
+            (disableOriginMotion)="hideOriginMotion($event)"
+            (enableOriginMotion)="displayOriginMotion($event)"
+            (setShowAllAmendments)="showAllAmendments = $event"
+        ></os-motion-meta-data>
     </div>
 </ng-template>
 
 <ng-template #contentTemplate>
-    <os-motion-highlight-form
-        #highlightForm
-        [changeRecoMode]="changeRecoMode"
-        [hasChangingObjects]="!!(unifiedChanges$ | async)?.length"
-        [lineNumberingMode]="lineNumberingMode"
-        [motion]="motion"
-        (updateCrMode)="changeRecoMode = $event"
-        (updateLnMode)="lineNumberingMode = $event"
-    ></os-motion-highlight-form>
+    @if (originMotionsLoaded.length) {
+        <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" [(selectedIndex)]="originMotionTabSelected">
+            <mat-tab [label]="motion?.meeting?.name">
+                <div class="motion-tab-content">
+                    <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
+                </div>
+            </mat-tab>
+            @for (originMotion of originMotionsLoaded; track originMotion.id) {
+                <mat-tab [label]="originMotion?.meeting?.name">
+                    <div class="motion-tab-content">
+                        <mat-card class="os-card original-motion-card">
+                            <mat-card-content>
+                                <os-origin-motion-meta-data [motion]="originMotion"></os-origin-motion-meta-data>
 
-    <os-motion-content
-        #content
-        [changeRecoMode]="changeRecoMode"
-        [lineNumberingMode]="lineNumberingMode"
-        [motion]="motion"
-        [unifiedChanges]="unifiedChanges$"
-        (updateCrMode)="changeRecoMode = $event"
-    ></os-motion-content>
+                                <os-motion-highlight-form
+                                    #highlightForm
+                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                    [hasChangingObjects]="!!originUnifiedChanges[originMotion.id]?.length"
+                                    [motion]="originMotion"
+                                    [noEdit]="true"
+                                    (updateCrMode)="originMotionsChangeRecoMode[originMotion.id] = $event"
+                                    (updateLnMode)="originMotionsLineNumberingMode[originMotion.id] = $event"
+                                ></os-motion-highlight-form>
+
+                                <os-motion-content
+                                    #content
+                                    [changeRecoMode]="originMotionsChangeRecoMode[originMotion.id]"
+                                    [lineNumberingMode]="originMotionsLineNumberingMode[originMotion.id]"
+                                    [motion]="originMotion"
+                                    [noEditMode]="true"
+                                    [showAllAmendments]="true"
+                                    [unifiedChanges]="originUnifiedChanges[originMotion.id]"
+                                ></os-motion-content>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </mat-tab>
+            }
+        </mat-tab-group>
+    } @else {
+        <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
+    }
+</ng-template>
+
+<ng-template #motionContentTemplate>
+    <mat-card class="os-card">
+        <mat-card-content>
+            <os-motion-highlight-form
+                #highlightForm
+                [changeRecoMode]="changeRecoMode"
+                [hasChangingObjects]="!!(unifiedChanges$ | async)?.length"
+                [lineNumberingMode]="lineNumberingMode"
+                [motion]="motion"
+                (updateCrMode)="changeRecoMode = $event"
+                (updateLnMode)="lineNumberingMode = $event"
+            ></os-motion-highlight-form>
+
+            <os-motion-content
+                #content
+                [changeRecoMode]="changeRecoMode"
+                [lineNumberingMode]="lineNumberingMode"
+                [motion]="motion"
+                [showAllAmendments]="showAllAmendments"
+                [unifiedChanges]="unifiedChanges$"
+                (updateCrMode)="changeRecoMode = $event"
+            ></os-motion-content>
+        </mat-card-content>
+    </mat-card>
 </ng-template>

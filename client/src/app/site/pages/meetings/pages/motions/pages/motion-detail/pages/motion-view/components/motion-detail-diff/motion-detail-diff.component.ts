@@ -6,8 +6,10 @@ import {
     EventEmitter,
     Input,
     Output,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -70,13 +72,17 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      */
     public getRecommendationTypeName = getRecommendationTypeName;
 
+    @ViewChild(MatMenuTrigger)
+    private changeRecommendationMenu: MatMenuTrigger;
+
     @Input()
     public motion!: ViewMotion;
 
     private _changes: ViewUnifiedChange[] = [];
+
     @Input()
     public set changes(changes: ViewUnifiedChange[]) {
-        this._changes = changes;
+        this._changes = changes || [];
         this.updateAllTextChangingObjects();
     }
 
@@ -110,6 +116,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public lineRange: LineRange | null = null;
+
+    @Input()
+    public noEditMode = false;
 
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
@@ -404,6 +413,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
+        this.changeRecommendationMenu.closeMenu();
 
         const data: MotionContentChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,
@@ -421,6 +431,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editTitleChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
+        this.changeRecommendationMenu.closeMenu();
 
         const data: MotionTitleChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,
@@ -444,19 +455,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             .catch(this.raiseError);
     }
 
-    /**
-     * Scrolls to the native element specified by [scrollToChange]
-     */
-    private scrollToChangeElement(change: ViewUnifiedChange): void {
-        const element = <HTMLElement>this.el.nativeElement;
-        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
-        const containerElement = document.querySelector(`mat-sidenav-content`);
-        containerElement!.scrollTo({
-            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
-            behavior: `smooth`
-        });
-    }
-
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {
         $event.preventDefault();
         $event.stopPropagation();
@@ -478,5 +476,18 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
+    }
+
+    /**
+     * Scrolls to the native element specified by [scrollToChange]
+     */
+    private scrollToChangeElement(change: ViewUnifiedChange): void {
+        const element = <HTMLElement>this.el.nativeElement;
+        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
+        const containerElement = document.querySelector(`mat-sidenav-content`);
+        containerElement!.scrollTo({
+            top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
+            behavior: `smooth`
+        });
     }
 }

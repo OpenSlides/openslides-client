@@ -4,10 +4,12 @@
     outline: none;
 }
 
-.result-wrapper {
-    cursor: pointer;
-    display: grid;
-    grid-gap: 2em;
+.result-wrapper-wrapper {
     margin: 2em 25px;
+}
+
+.result-wrapper {
+    display: grid;
+    grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }

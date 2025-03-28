@@ -74,7 +74,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 `: ${this.getVotesCount(user)}/${this.poll.max_votes_amount}<br>` +
                 content;
         }
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.openSafe(title, content);
         if (confirmed) {
             await super.submitVote(user, value);
         }
@@ -130,10 +130,17 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             } else {
                 (this.voteRequestData[user.id] as any).value[optionId] = vote;
             }
-
-            // if a user filled out every option, try to send
-            if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
-                this.submitVote(user);
+            const maxVotesAmount = this.poll.max_votes_amount;
+            const countedVotes = Object.keys(this.voteRequestData[user.id].value).length;
+            if (countedVotes <= maxVotesAmount) {
+                if (this.getVotesCount(user) === maxVotesAmount) {
+                    this.submitVote(user);
+                }
+            } else {
+                this.raiseError(
+                    this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
+                );
+                delete (this.voteRequestData[user.id] as any).value[optionId];
             }
         }
     }

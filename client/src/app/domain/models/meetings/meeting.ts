@@ -113,6 +113,8 @@ export class Settings {
     public motions_default_line_numbering!: LineNumberingMode;
     public motions_line_length!: number;
     public motions_reason_required!: boolean;
+    public motions_origin_motion_toggle_default!: boolean;
+    public motions_enable_origin_motion_display!: boolean;
     public motions_enable_text_on_projector!: boolean;
     public motions_enable_reason_on_projector!: boolean;
     public motions_enable_sidebox_on_projector!: boolean;
@@ -149,6 +151,8 @@ export class Settings {
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
     public motion_poll_default_method!: PollMethod;
+    public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
+    public motion_poll_projection_max_columns!: number;
 
     // Users
     public users_enable_presence_view!: boolean;
@@ -209,7 +213,7 @@ export class Settings {
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = `meeting`;
-    public static ACCESSIBILITY_FIELD: keyof Meeting = `projector_countdown_default_time`;
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `language`;
 
     public imported_at!: number;
 
@@ -404,6 +408,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
+        `motion_poll_projection_name_order_first`,
+        `motion_poll_projection_max_columns`,
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
         `meeting_user_ids`,
@@ -508,7 +514,7 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_agenda_item_list_ids`,
         `default_projector_topic_ids`,
         `default_projector_list_of_speakers_ids`,
-        `default_projector_current_list_of_speakers_ids`,
+        `default_projector_current_los_ids`,
         `default_projector_motion_ids`,
         `default_projector_amendment_ids`,
         `default_projector_motion_block_ids`,

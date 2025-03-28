@@ -99,6 +99,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     }
 
     @Input()
+    public isAccountSelfUpdate = false;
+
+    @Input()
     public patchFormValueFn: (controlName: string, user?: ViewUser) => any | null = () => {};
 
     @Input()
@@ -276,15 +279,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private updateFormControlsAccessibility(fn: (controlName: string) => boolean): void {
         const formControlNames = Object.keys(this.personalInfoForm.controls);
 
-        // Enable all controls.
         formControlNames.forEach(formControlName => {
-            setTimeout(() => this.personalInfoForm.get(formControlName)!.enable(), 1000);
-        });
-
-        // Disable not permitted controls
-        formControlNames.forEach(formControlName => {
-            if (!fn(formControlName)) {
-                setTimeout(() => this.personalInfoForm.get(formControlName)!.disable(), 1000);
+            if (fn(formControlName)) {
+                this.personalInfoForm.get(formControlName).enable();
+            } else {
+                this.personalInfoForm.get(formControlName).disable();
             }
         });
     }

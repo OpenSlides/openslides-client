@@ -43,11 +43,11 @@
                         <os-poll-progress [poll]="poll"></os-poll-progress>
                         <div *osPerms="permission.pollCanManage" class="poll-content">
                             <div class="user-subtitle">
-                                {{ 'Present people allowed to vote:' | translate }}
+                                {{ 'Present entitled users' | translate }}:
                                 {{ countVoteAllowedAndPresent }}
                             </div>
                             <div class="user-subtitle">
-                                {{ 'All people allowed to vote:' | translate }}
+                                {{ 'All entitled users' | translate }}:
                                 {{ countVoteAllowed }}
                             </div>
                         </div>
@@ -70,6 +70,7 @@
                             </mat-tab>
                             <mat-tab label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="entitledUsersObservable"
                                     [isViewingThis]="isViewingEntitledUserslist"
@@ -83,6 +84,7 @@
                             </mat-tab>
                             <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="liveRegisterObservable"
                                 ></os-entitled-users-table>

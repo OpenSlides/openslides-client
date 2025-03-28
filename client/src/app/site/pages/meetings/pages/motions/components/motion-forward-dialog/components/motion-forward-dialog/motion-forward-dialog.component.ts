@@ -2,11 +2,18 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 import { ViewMotion } from '../../../../view-models';
+
+export interface MotionForwardDialogReturnData {
+    meetingIds: Ids;
+    useOriginalSubmitter: boolean;
+    useOriginalNumber: boolean;
+    useOriginalVersion: boolean;
+}
 
 @Component({
     selector: `os-motion-forward-dialog`,
@@ -25,12 +32,20 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.activeMeeting.meeting?.committee?.name;
     }
 
+    public useOriginalSubmitter = true;
+    public useOriginalNumber = true;
+    public useOriginalVersion = true;
+
+    public get numAmendments(): number {
+        return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
+    }
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: { motion: ViewMotion[]; forwardingMeetings: GetForwardingMeetingsPresenter[] },
-        private dialogRef: MatDialogRef<MotionForwardDialogComponent, Id[]>,
+        private dialogRef: MatDialogRef<MotionForwardDialogComponent, MotionForwardDialogReturnData>,
         private activeMeeting: ActiveMeetingService
     ) {}
 
@@ -41,7 +56,12 @@ export class MotionForwardDialogComponent implements OnInit {
     }
 
     public onSaveClicked(): void {
-        this.dialogRef.close(Array.from(this.selectedMeetings));
+        this.dialogRef.close({
+            meetingIds: Array.from(this.selectedMeetings),
+            useOriginalSubmitter: this.useOriginalSubmitter,
+            useOriginalNumber: this.useOriginalNumber,
+            useOriginalVersion: this.useOriginalVersion
+        });
     }
 
     public onChangeCheckbox({ source, checked }: MatCheckboxChange): void {
@@ -58,6 +78,10 @@ export class MotionForwardDialogComponent implements OnInit {
             return this.data.motion[0].derived_motions?.map(motion => motion.meeting_id).includes(+meeting.id) ?? false;
         }
         return false;
+    }
+
+    public showActiveMeetingName(): string {
+        return this.activeMeeting?.meeting?.name;
     }
 
     private initStateMap(): void {

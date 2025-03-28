@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Content, ContentColumns } from 'pdfmake/interfaces';
+import { MEETING_PDF_EXPORT_HEADING_STYLES } from 'src/app/domain/models/meetings/meeting.constants';
 
 export interface ChildNodeParagraphPayload {
     child: Element;
@@ -46,22 +47,16 @@ export class HtmlToPdfService {
      */
     protected readonly H_MARGIN_TOP = 10.0;
 
-    /**
-     * Conversion of HTML tags into pdfmake directives
-     */
-    private elementStyles: any = {
+    // Load either specific meeting styles or default html style
+    public headingStyles: any = MEETING_PDF_EXPORT_HEADING_STYLES;
+
+    public defaultStyles: any = {
         // should be the same for most HTML code
         b: [`font-weight:bold`],
         strong: [`font-weight:bold`],
         u: [`text-decoration:underline`],
         em: [`font-style:italic`],
         i: [`font-style:italic`],
-        h1: [`font-size:14`, `font-weight:bold`],
-        h2: [`font-size:12`, `font-weight:bold`],
-        h3: [`font-size:10`, `font-weight:bold`],
-        h4: [`font-size:10`, `font-style:italic`],
-        h5: [`font-size:10`],
-        h6: [`font-size:10`],
         a: [`color:blue`, `text-decoration:underline`],
         strike: [`text-decoration:line-through`],
         s: [`text-decoration:line-through`],
@@ -69,6 +64,11 @@ export class HtmlToPdfService {
         del: [`color:red`, `text-decoration:line-through`],
         ins: [`color:green`, `text-decoration:underline`]
     };
+
+    /**
+     * Conversion of HTML tags into pdfmake directives
+     */
+    public elementStyles: any = { ...this.defaultStyles, ...this.headingStyles };
 
     /**
      * Treatment of required CSS-Classes

@@ -51,6 +51,7 @@
                     [scale]="projector!.scale"
                     [scroll]="projector!.scroll"
                     [slideData]="slide"
+                    (loadedSlidesEvent)="loadedSlidesEvent.emit()"
                 ></os-slide-container>
             </div>
         }

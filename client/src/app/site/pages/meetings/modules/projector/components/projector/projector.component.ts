@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -48,6 +48,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
      */
     @ViewChild(`container`, { static: true })
     private containerElement: ElementRef | null = null;
+
+    @Output() public loadedSlidesEvent = new EventEmitter<void>();
 
     /**
      * The css class assigned to this projector.

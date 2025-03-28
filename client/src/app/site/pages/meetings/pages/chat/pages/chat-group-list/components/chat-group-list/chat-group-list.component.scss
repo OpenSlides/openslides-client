@@ -7,9 +7,10 @@
     &.fit-height {
         height: fit-content;
     }
-
-    .cdk-virtual-scroll-content-wrapper {
-        width: 50%;
+    & {
+        .cdk-virtual-scroll-content-wrapper {
+            width: 50%;
+        }
     }
 }
 
