@@ -95,6 +95,10 @@
                 }
             }
 
+            ul > li.hidden-li {
+                display: contents;
+            }
+
             @include detail-view-appearance;
         }
         &:focus-within {
