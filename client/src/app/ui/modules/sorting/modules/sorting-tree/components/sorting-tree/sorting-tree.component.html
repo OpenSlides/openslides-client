@@ -14,13 +14,18 @@
         [style.padding-left]="node.level * 40 + 'px'"
         (cdkDragDropped)="onDrop(node)"
         (cdkDragMoved)="moveItem($event)"
-        (cdkDragStarted)="startsDrag($event)"
+        (cdkDragStarted)="startsDrag($event, node)"
+        (click)="onItemClick($event, node.id)"
+        (keyup)="onItemClick($event, node)"
         (mousedown)="mouseDown($event)"
         (mouseup)="mouseUp()"
         (touchend)="mouseUp()"
         (touchstart)="touchStart($event)"
     >
-        <div class="sorting-tree-node-container backgroundColorLight background-default">
+        <div
+            class="sorting-tree-node-container backgroundColorLight background-default"
+            [ngClass]="isSelectedRow(node.id) ? 'backgroundSelected' : 'backgroundColorLight'"
+        >
             <span cdkDragHandle class="flex-center">
                 <mat-icon>drag_indicator</mat-icon>
             </span>
