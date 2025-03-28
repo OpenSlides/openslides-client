@@ -383,6 +383,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             return PROJECTIONDEFAULT.motion;
         }
     }
+
+    public override canAccess(): boolean {
+        return !!this.sequential_number;
+    }
 }
 
 interface IMotionRelations extends HasPolls<ViewMotion> {
