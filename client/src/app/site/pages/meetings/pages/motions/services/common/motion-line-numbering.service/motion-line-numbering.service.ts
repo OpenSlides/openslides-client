@@ -195,7 +195,7 @@ export class MotionLineNumberingService {
             if (baseParagraphs[paraNo] === undefined) {
                 console.log(`applyChangesToAmendment`, baseParagraphs, paraNo);
                 const msg =
-                    `Inconsistent data. An amendment is probably referring to a non-existant line number. ` +
+                    `Inconsistent data. An amendment is probably referring to a nonexistent line number. ` +
                     `You can back up its content when editing it and delete it afterwards.`;
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
@@ -272,7 +272,7 @@ export class MotionLineNumberingService {
                 if (baseParagraphs[paraNo] === undefined) {
                     console.log(`getAmendmentParagraphLines`, baseParagraphs, paraNo);
                     throw new Error(
-                        `Inconsistent data. An amendment is probably referring to a non-existent line number.`
+                        `Inconsistent data. An amendment is probably referring to a nonexistent line number.`
                     );
                 } else if (newText !== null) {
                     return this.diffService.getAmendmentParagraphsLines(
@@ -350,7 +350,7 @@ export class MotionLineNumberingService {
                 if (baseParagraphs[paragraphNumber] === undefined) {
                     console.log(`getAmendmentAmendedParagraph`, baseParagraphs, paragraphNumber);
                     console.error(
-                        `Inconsistent data. An amendment is probably referring to a non-existent line number.`
+                        `Inconsistent data. An amendment is probably referring to a nonexistent line number.`
                     );
                     return null;
                 }
@@ -395,7 +395,7 @@ export class MotionLineNumberingService {
 
         return baseParagraphs.map((origText: string, paraNo: number): string => {
             if (origText === undefined) {
-                throw new Error(`Inconsistent data. An amendment is probably referring to a non-existent line number.`);
+                throw new Error(`Inconsistent data. An amendment is probably referring to a nonexistent line number.`);
             }
 
             const newText = amendment.amendment_paragraph_text(paraNo);
