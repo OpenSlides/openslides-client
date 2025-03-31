@@ -18,19 +18,15 @@ run-cleanup-standalone: | build-dev
 run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
-run-tests: | build-dev
-	docker run -t openslides-client-dev npm run lint
-	docker run -t openslides-client-dev npm run prettify-check
-	docker run -t openslides-client-dev npm run test-silently
-	docker run -t openslides-client-dev npm run build-debug
+run-tests: run-check-linting run-check-prettifying run-karma-tests | build-dev
 
 run-karma-tests: | build-dev
 	docker run -t openslides-client-dev /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
 
-run-check-linting:
+run-check-linting: | build-dev
 	docker run -t openslides-client-dev npm run lint
 
-run-check-prettifying:
+run-check-prettifying: | build-dev
 	docker run -t openslides-client-dev npm run prettify-check
 
 run-playwright:

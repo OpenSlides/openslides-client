@@ -1,8 +1,8 @@
-@import 'src/assets/styles/media-queries.scss';
+@use 'src/assets/styles/media-queries.scss';
 
 .banner {
     &.larger-on-mobile {
-        @include set-breakpoint-lower(sm) {
+        @include media-queries.set-breakpoint-lower(sm) {
             min-height: 40px;
         }
     }

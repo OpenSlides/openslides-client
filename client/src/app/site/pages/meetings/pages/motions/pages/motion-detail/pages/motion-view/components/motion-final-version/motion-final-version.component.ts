@@ -13,7 +13,8 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     templateUrl: `./motion-final-version.component.html`,
     styleUrls: [`./motion-final-version.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
     @Input()

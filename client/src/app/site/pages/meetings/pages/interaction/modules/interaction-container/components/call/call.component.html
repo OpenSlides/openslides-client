@@ -1,4 +1,4 @@
-<os-call-dialog [ngClass]="{ hide: (isJitsiDialogOpen | async) === false }"></os-call-dialog>
+<os-call-dialog [ngClass]="{ hide: (isJitsiDialogOpen | async) === false }" />
 
 <div class="jitsi-list">
     <!-- Jitsi content window -->
@@ -61,8 +61,8 @@
                     <button
                         color="accent"
                         mat-mini-fab
-                        [disabled]="(canEnterCall | async) === false || isConnecting"
                         matTooltip="{{ 'Enter conference room' | translate }}"
+                        [disabled]="(canEnterCall | async) === false || isConnecting"
                         (click)="callRoom()"
                     >
                         <mat-icon>call</mat-icon>

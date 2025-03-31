@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 
 import { Permission } from './permission';
 
-export type PermissionsMap = { [key in Permission]?: Permission[] };
+export type PermissionsMap = Partial<Record<Permission, Permission[]>>;
 
 export interface DisplayPermission {
     display_name: string;

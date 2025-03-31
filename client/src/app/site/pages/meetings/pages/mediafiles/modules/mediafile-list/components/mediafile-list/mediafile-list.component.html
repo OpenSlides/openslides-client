@@ -52,7 +52,7 @@
     (directoryChanged)="changeDirectory($event.directoryId)"
     (saved)="onSaveFile($event.update)"
     (selected)="onSelect($event.files)"
-></os-file-list>
+/>
 
 <!-- Visibility as button -->
 <ng-template #breadcrumbManageTemplate>
@@ -115,7 +115,7 @@
     </div>
 
     @if (mediafile.isProjectable()) {
-        <os-projector-button [menuItem]="true" [object]="mediafile"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="mediafile" />
     }
 </ng-template>
 

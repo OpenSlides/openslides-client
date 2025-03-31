@@ -9,7 +9,8 @@ import { UpdateService } from '../../../site-wrapper/services/update.service';
 @Component({
     selector: `os-global-spinner`,
     templateUrl: `./global-spinner.component.html`,
-    styleUrls: [`./global-spinner.component.scss`]
+    styleUrls: [`./global-spinner.component.scss`],
+    standalone: false
 })
 export class GlobalSpinnerComponent extends SpinnerComponent {
     @Input()

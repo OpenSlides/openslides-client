@@ -15,10 +15,8 @@ export interface GlobalSearchEntry {
 export interface GlobalSearchResponseEntry {
     content: any;
     score: number;
-    matched_by: { [field: string]: string[] };
+    matched_by: Record<string, string[]>;
     matched_by_fqids: string[];
 }
 
-export interface GlobalSearchResponse {
-    [fqid: string]: GlobalSearchResponseEntry;
-}
+export type GlobalSearchResponse = Record<string, GlobalSearchResponseEntry>;

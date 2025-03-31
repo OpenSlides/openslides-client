@@ -9,7 +9,8 @@ import { MediafileSlideData } from '../mediafile-slide-data';
 @Component({
     selector: `os-mediafile-slide`,
     templateUrl: `./mediafile-slide.component.html`,
-    styleUrls: [`./mediafile-slide.component.scss`]
+    styleUrls: [`./mediafile-slide.component.scss`],
+    standalone: false
 })
 export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideData> {
     @ViewChild(PdfViewerComponent)

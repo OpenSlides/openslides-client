@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .editor {
     .editor-menu {
@@ -95,7 +95,7 @@
                 }
             }
 
-            @include detail-view-appearance;
+            @include detail-view-appearance.detail-view-appearance;
         }
         &:focus-within {
             border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color);

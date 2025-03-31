@@ -28,7 +28,8 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     selector: `os-motion-meta-data`,
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public categories$: Observable<ViewMotionCategory[]> = this.categoryRepo.getViewModelListObservable();
@@ -50,7 +51,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Output()
     public setShowAllAmendments = new EventEmitter<boolean>();
 
-    public originMotionStatus: { [key: number]: boolean } = {};
+    public originMotionStatus: Record<number, boolean> = {};
 
     /**
      * Determine if the name of supporters are visible

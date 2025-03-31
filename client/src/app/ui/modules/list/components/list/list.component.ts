@@ -8,7 +8,8 @@ import { BaseListComponent } from '../../base/base-list.component';
     selector: `os-list`,
     templateUrl: `./list.component.html`,
     styleUrls: [`./list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListComponent<V extends Identifiable> extends BaseListComponent<V> {
     @Input()
@@ -19,7 +20,7 @@ export class ListComponent<V extends Identifiable> extends BaseListComponent<V> 
      * Closing them will cause the callback function to be called.
      */
     @Input()
-    public fakeFilters: Observable<{ [key: string]: () => void }> = null;
+    public fakeFilters: Observable<Record<string, () => void>> = null;
 
     @Input()
     public totalCount: number | Observable<number>;

@@ -21,8 +21,8 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
-    public subscribeVoted(...viewPolls: ViewPoll[]): Observable<{ [key: Id]: Id[] }> {
-        return new Observable<{ [key: Id]: Id[] }>(subscriber => {
+    public subscribeVoted(...viewPolls: ViewPoll[]): Observable<Record<Id, Id[]>> {
+        return new Observable<Record<Id, Id[]>>(subscriber => {
             const current = {};
             for (const poll of viewPolls) {
                 const subscription = !this.operator.isAnonymousLoggedIn

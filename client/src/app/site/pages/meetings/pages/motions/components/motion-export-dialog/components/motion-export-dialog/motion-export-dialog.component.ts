@@ -23,7 +23,8 @@ import { MotionExportInfo } from '../../../../services/export/motion-export.serv
     selector: `os-motion-export-dialog`,
     templateUrl: `./motion-export-dialog.component.html`,
     styleUrls: [`./motion-export-dialog.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionExportDialogComponent extends BaseUiComponent implements OnInit {
     /**

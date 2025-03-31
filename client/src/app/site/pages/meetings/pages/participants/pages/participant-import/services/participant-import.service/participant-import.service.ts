@@ -32,7 +32,7 @@ export class ParticipantImportService extends BaseBackendImportService {
         member_number: `The member number already exists in this meeting`
     };
 
-    public override readonly verboseSummaryTitles: { [title: string]: string } = {
+    public override readonly verboseSummaryTitles: Record<string, string> = {
         total: _(`Total participants`),
         created: _(`Participants created`),
         updated: _(`Participants updated`),
@@ -70,7 +70,7 @@ export class ParticipantImportService extends BaseBackendImportService {
         return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
-    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
+    protected async jsonUpload(payload: Record<string, any>): Promise<void | BackendImportRawPreview[]> {
         return await this.repo.jsonUpload(payload).resolve();
     }
 }

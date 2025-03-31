@@ -6,7 +6,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 const SUBSCRIPTION_NAME = `settingsSubscription`;
 
 @Directive({
-    selector: `[osMeetingSetting]`
+    selector: `[osMeetingSetting]`,
+    standalone: false
 })
 export class MeetingSettingDirective extends BaseUiComponent {
     @Input()

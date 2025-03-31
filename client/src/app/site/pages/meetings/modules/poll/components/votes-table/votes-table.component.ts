@@ -12,7 +12,8 @@ import { VotesFilterService } from '../../services/votes-filter.service';
     templateUrl: `./votes-table.component.html`,
     styleUrls: [`./votes-table.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class VotesTableComponent {
     private _isViewingThis = true;

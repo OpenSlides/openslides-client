@@ -39,7 +39,8 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
 @Component({
     selector: `os-projector-detail`,
     templateUrl: `./projector-detail.component.html`,
-    styleUrls: [`./projector-detail.component.scss`]
+    styleUrls: [`./projector-detail.component.scss`],
+    standalone: false
 })
 export class ProjectorDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewProjector.COLLECTION;
@@ -128,7 +129,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     private _projectorId: Id | null = null;
 
-    private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
+    private _projectorIdSubject = new BehaviorSubject<number>(null);
 
     public constructor(
         protected override translate: TranslateService,
@@ -239,13 +240,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         if (direction === ScrollScaleDirection.Reset) {
             this.pdfPage = 0;
         }
-        this.isPdfProjection
-            ? this.repo.scroll(this.projector, direction, step * 100)
-            : this.repo.scroll(this.projector, direction, step);
+        if (this.isPdfProjection) {
+            this.repo.scroll(this.projector, direction, step * 100)
+        } else {
+            this.repo.scroll(this.projector, direction, step);
+        }
     }
 
     public scrollPdf(direction: ScrollScaleDirection): void {
-        direction === ScrollScaleDirection.Up ? (this.pdfPage += 1) : (this.pdfPage -= 1);
+        this.pdfPage += direction === ScrollScaleDirection.Up ? 1 : -1;
         const totalSteps = this.calcPdfStep(this.pdfPage);
         this.repo.scroll(this.projector, direction, Math.abs(totalSteps - this.projector.scroll));
     }
@@ -397,9 +400,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                         const pageHeight = page.view[3];
                         const scale_factor = this.projector.width / pageWidth;
                         this.pdfStep = pageHeight * scale_factor + 10;
-                        this.projector.scroll === 0
-                            ? (this.pdfPage = 0)
-                            : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
+                        this.pdfPage = this.projector.scroll === 0 ? 0 : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
                         this.loadedPdf = true;
                     });
             }

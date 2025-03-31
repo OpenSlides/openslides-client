@@ -19,7 +19,8 @@ import { StreamService } from '../../../../services/stream.service';
     selector: `os-stream`,
     templateUrl: `./stream.component.html`,
     styleUrls: [`./stream.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StreamComponent extends BaseMeetingComponent implements AfterViewInit, OnDestroy {
     private streamRunning = false;
@@ -40,10 +41,10 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
     }
 
     @Output()
-    public streamTitle: EventEmitter<string> = new EventEmitter();
+    public streamTitle = new EventEmitter<string>();
 
     @Output()
-    public streamSubtitle: EventEmitter<string> = new EventEmitter();
+    public streamSubtitle = new EventEmitter<string>();
 
     public constructor(
         protected override translate: TranslateService,

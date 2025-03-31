@@ -1,7 +1,7 @@
-@import 'src/assets/styles/media-queries.scss';
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/media-queries.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
-@include set-breakpoint-upper(xs) {
+@include media-queries.set-breakpoint-upper(xs) {
     .form100 {
         width: 100%;
     }
@@ -43,7 +43,7 @@ os-user-detail-view h2 {
 }
 
 :host ::ng-deep .detail-view {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }
 
 .padding-left-12 {

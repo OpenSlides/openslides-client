@@ -148,7 +148,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
         const streamHandle = stream.start(force);
         if (
             !force &&
-            (<any>self).useLongpolling === undefined &&
+            (self as any).useLongpolling === undefined &&
             !!stream.subscriptions.find(v => v.description === `organization_detail:subscription`)
         ) {
             await this.streamStartRace(stream, streamHandle);
@@ -187,7 +187,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
         clearTimeout(streamStartTimeout);
         singleReqStream?.abort();
 
-        (<any>self).useLongpolling = singleWin;
+        (self as any).useLongpolling = singleWin;
         if (singleWin) {
             this.sendToAll(`set-connection-mode`, `longpolling`);
             for (const stream of this.streams) {

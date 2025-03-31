@@ -12,7 +12,8 @@ import { MotionCategoryControllerService } from '../../../../modules/categories/
 @Component({
     selector: `os-category-list-sort`,
     templateUrl: `./category-list-sort.component.html`,
-    styleUrls: [`./category-list-sort.component.scss`]
+    styleUrls: [`./category-list-sort.component.scss`],
+    standalone: false
 })
 export class CategoryListSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {
     /**

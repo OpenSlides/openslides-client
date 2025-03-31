@@ -25,7 +25,8 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
 @Component({
     selector: `os-committee-detail-edit`,
     templateUrl: `./committee-detail-edit.component.html`,
-    styleUrls: [`./committee-detail-edit.component.scss`]
+    styleUrls: [`./committee-detail-edit.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {
     private committeeId: number | null = null;
@@ -149,7 +150,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public onForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
         if (committee.id === this.committeeId) {
             const formControlName = `receive_forwardings_from_committee_ids`;
-            const previousValue: Set<Id> = new Set(this.committeeForm.get(formControlName)!.value || []);
+            const previousValue = new Set<Id>(this.committeeForm.get(formControlName)!.value || []);
             const fn = selected ? `add` : `delete`;
             previousValue[fn](committee.id);
             this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });

@@ -7,7 +7,6 @@ import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
     selector: `os-qr-code`,
     templateUrl: `./qr-code.component.html`,
     styleUrls: [`./qr-code.component.scss`],
-    standalone: true,
     imports: [CommonModule]
 })
 export class QrCodeComponent implements AfterViewInit {

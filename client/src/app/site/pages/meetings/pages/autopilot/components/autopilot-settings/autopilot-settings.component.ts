@@ -10,7 +10,8 @@ import { AutopilotService } from '../../services/autopilot.service';
     selector: `os-autopilot-settings`,
     templateUrl: `./autopilot-settings.component.html`,
     styleUrls: [`./autopilot-settings.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutopilotSettingsComponent extends BaseMeetingComponent implements OnInit {
     public readonly autopilotContentElements: { key: string; description: string }[] = [
@@ -23,7 +24,7 @@ export class AutopilotSettingsComponent extends BaseMeetingComponent implements 
         { key: `speaking-times`, description: _(`Speaking times`) }
     ];
 
-    public disabledAutopilotContentElements: { [key: string]: boolean } = {};
+    public disabledAutopilotContentElements: Record<string, boolean> = {};
 
     public constructor(
         private dialogRef: MatDialogRef<AutopilotSettingsComponent>,
