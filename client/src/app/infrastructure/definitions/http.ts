@@ -14,14 +14,10 @@ export interface HttpOptions {
     body?: any;
     headers?:
         | HttpHeaders
-        | {
-              [header: string]: string | string[];
-          };
+        | Record<string, string | string[]>;
     params?:
         | HttpParams
-        | {
-              [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-          };
+        | Record<string, string | number | boolean | readonly (string | number | boolean)[]>;
     observe?: 'body' | 'events' | 'response';
     reportProgress?: boolean;
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
@@ -33,9 +29,7 @@ type QueryParamValue = string | number | boolean;
 /**
  * A key value mapping for params, that should be appended to the url on a new connection.
  */
-export interface QueryParams {
-    [key: string]: QueryParamValue;
-}
+export type QueryParams = Record<string, QueryParamValue>;
 
 /**
  * Formats query params for the url.

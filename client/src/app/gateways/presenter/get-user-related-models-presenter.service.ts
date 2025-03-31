@@ -26,9 +26,7 @@ export interface GetUserRelatedModelsCommittee {
     cml: CML | ``;
 }
 
-export interface GetUserRelatedModelsPresenterResult {
-    [user_id: number]: GetUserRelatedModelsUser;
-}
+export type GetUserRelatedModelsPresenterResult = Record<number, GetUserRelatedModelsUser>;
 
 @Injectable({
     providedIn: `root`

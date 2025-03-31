@@ -8,7 +8,8 @@ import { getAssignmentSubscriptionConfig } from '../../assignments.subscription'
 @Component({
     selector: `os-assignment-main`,
     templateUrl: `./assignment-main.component.html`,
-    styleUrls: [`./assignment-main.component.scss`]
+    styleUrls: [`./assignment-main.component.scss`],
+    standalone: false
 })
 export class AssignmentMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

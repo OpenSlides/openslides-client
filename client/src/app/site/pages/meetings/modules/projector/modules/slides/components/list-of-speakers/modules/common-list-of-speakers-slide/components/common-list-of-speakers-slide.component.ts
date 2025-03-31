@@ -11,7 +11,8 @@ import { CommonListOfSpeakersSlideData, SlideSpeaker } from '../common-list-of-s
 @Component({
     selector: `os-common-list-of-speakers-slide`,
     templateUrl: `./common-list-of-speakers-slide.component.html`,
-    styleUrls: [`./common-list-of-speakers-slide.component.scss`]
+    styleUrls: [`./common-list-of-speakers-slide.component.scss`],
+    standalone: false
 })
 export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData> {
     public SpeechState = SpeechState;

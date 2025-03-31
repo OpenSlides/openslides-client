@@ -4,7 +4,7 @@
         <mat-icon>close</mat-icon>
     </button>
 </h2>
-<mat-divider></mat-divider>
+<mat-divider />
 <mat-dialog-content class="account-dialog-container">
     <div class="account-dialog-menu-items">
         <mat-nav-list>
@@ -16,7 +16,7 @@
             }
         </mat-nav-list>
     </div>
-    <mat-divider [vertical]="true"></mat-divider>
+    <mat-divider [vertical]="true" />
     <div class="account-dialog-content">
         <div class="content-wrapper" tabindex="-1" (keydown)="onKeyDown($event)">
             @switch (activeMenuItem) {
@@ -42,6 +42,7 @@
         </button>
     </div>
     <os-user-detail-view
+        [isAccountSelfUpdate]="true"
         [isAllowedFn]="isAllowedFn"
         [isEditing]="isEditing"
         [shouldEnableFormControlFn]="shouldEnableFormControlFn"
@@ -49,7 +50,7 @@
         [user]="self"
         (changeEvent)="userPersonalForm = $event"
         (validEvent)="isUserFormValid = $event"
-    ></os-user-detail-view>
+    />
     @if (isEditing) {
         <div class="margin-bottom-16">
             <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
@@ -83,7 +84,7 @@
         #changePasswordComponent
         (changeEvent)="userPasswordForm = $event"
         (validEvent)="isUserPasswordValid = $event"
-    ></os-password-form>
+    />
     <div>
         <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
             {{ 'Save' | translate }}

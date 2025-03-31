@@ -15,7 +15,8 @@ import { MeetingService } from '../services/meeting.service';
     selector: `os-committee-meeting-preview`,
     templateUrl: `./committee-meeting-preview.component.html`,
     styleUrls: [`./committee-meeting-preview.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     @Input() public meeting!: ViewMeeting;

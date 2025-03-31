@@ -9,7 +9,8 @@ import { PasswordForm } from '../../definitions';
 @Component({
     selector: `os-user-password-form`,
     templateUrl: `./user-password-form.component.html`,
-    styleUrls: [`./user-password-form.component.scss`]
+    styleUrls: [`./user-password-form.component.scss`],
+    standalone: false
 })
 export class UserPasswordFormComponent implements OnInit, OnDestroy {
     @Input()

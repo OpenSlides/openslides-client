@@ -42,7 +42,8 @@ interface TileCategoryInformation {
 @Component({
     selector: `os-motion-list`,
     templateUrl: `./motion-list.component.html`,
-    styleUrls: [`./motion-list.component.scss`]
+    styleUrls: [`./motion-list.component.scss`],
+    standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly gridBlockType = GridBlockTileType;

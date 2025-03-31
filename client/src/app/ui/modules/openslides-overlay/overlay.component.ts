@@ -18,7 +18,6 @@ import { OverlayPosition } from './definitions';
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
     styleUrls: [`./overlay.component.scss`],
-    standalone: true,
     imports: [CommonModule]
 })
 export class OverlayComponent {
@@ -70,7 +69,7 @@ export class OverlayComponent {
     public attachComponent<C>(component: Type<C>): C {
         const componentRef = this._viewContainer.createComponent(component);
         const instance = componentRef.instance;
-        const domElement = (<EmbeddedViewRef<any>>componentRef.hostView).rootNodes[0] as HTMLElement;
+        const domElement = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
         this.hostElement.appendChild(domElement);
         return instance;
     }

@@ -7,9 +7,9 @@
                     <button
                         class="speaker-control-button"
                         mat-icon-button
+                        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                         matTooltipPosition="above"
                         [color]="speakerIndex === 0 ? 'accent' : null"
-                        matTooltip="{{ (speaker.pause_time ? 'Resume speech' : 'Begin speech') | translate }}"
                         [ngClass]="{
                             'small-play-icon': (speakerIndex > 0 || speakerIndex !== 0) && !speaker.isCurrentSpeaker
                         }"
@@ -25,8 +25,8 @@
                     <button
                         class="speaker-control-button"
                         mat-icon-button
-                        matTooltipPosition="above"
                         matTooltip="{{ 'Pause speech' | translate }}"
+                        matTooltipPosition="above"
                         (click)="onPauseButton()"
                     >
                         <mat-icon>pause_circle_outline</mat-icon>
@@ -121,8 +121,8 @@
                         @if (showStructureLevels()) {
                             <button
                                 mat-icon-button
-                                [matMenuTriggerFor]="structureLevelsMenu"
                                 matTooltip="{{ 'Structure level' | translate }}"
+                                [matMenuTriggerFor]="structureLevelsMenu"
                             >
                                 <mat-icon>flag</mat-icon>
                             </button>
@@ -199,8 +199,8 @@
                 <button
                     class="speaker-stop-button"
                     mat-icon-button
-                    matTooltipPosition="above"
                     matTooltip="{{ 'End speech' | translate }}"
+                    matTooltipPosition="above"
                     (click)="onStopButton()"
                 >
                     <mat-icon>stop_circle</mat-icon>
@@ -238,8 +238,8 @@
                 @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
                     <button
                         mat-icon-button
-                        matTooltipPosition="left"
                         matTooltip="{{ 'Select speaker' | translate }}"
+                        matTooltipPosition="left"
                         (click)="updateSpeakerMeetingUser()"
                     >
                         <mat-icon>person_add</mat-icon>
@@ -250,8 +250,8 @@
                 <button
                     *osPerms="permission.listOfSpeakersCanManage"
                     mat-icon-button
-                    matTooltipPosition="left"
                     matTooltip="{{ 'Remove' | translate }}"
+                    matTooltipPosition="left"
                     (click)="removeSpeaker()"
                 >
                     <mat-icon>close</mat-icon>
@@ -333,7 +333,7 @@
             <!-- Call controls -->
             @if (enableCallControls) {
                 <ng-container [ngTemplateOutlet]="callControls">
-                    <mat-divider></mat-divider>
+                    <mat-divider />
                 </ng-container>
             }
             <!-- Structure levels -->
@@ -368,7 +368,7 @@
                 enableCallControls ||
                 enableStructureLevelsMenu()
             ) {
-                <mat-divider></mat-divider>
+                <mat-divider />
             }
             <!-- remove speaker from list -->
             <button mat-menu-item (click)="removeSpeaker()">
@@ -385,7 +385,7 @@
         <mat-icon>add_call</mat-icon>
         <span>{{ 'Invite to conference room' | translate }}</span>
     </button>
-    <ng-container></ng-container>
+    <ng-container />
 </ng-template>
 
 <ng-template #speechType>
@@ -449,7 +449,7 @@
     ) {
         <span>
             @if (speaker.point_of_order) {
-                <mat-icon class="inline-icon-text-align" inline color="{{ !!showcolor ? 'warn' : null }}">
+                <mat-icon class="inline-icon-text-align" color="{{ !!showcolor ? 'warn' : null }}" inline>
                     warning
                 </mat-icon>
             }

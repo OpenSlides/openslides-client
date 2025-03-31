@@ -4,8 +4,6 @@ export interface SlideData<T = { error?: string }> {
     data: T;
     stable: boolean;
     type: string;
-    options: {
-        [key: string]: any;
-    };
+    options: Record<string, any>;
     error?: string;
 }

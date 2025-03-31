@@ -5,9 +5,7 @@ import { LineRange } from '../definitions';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../modules';
 import { ViewMotion } from './view-motion';
 
-export interface ViewMotionAmendedParagraphs {
-    [index: number]: ViewMotionAmendedParagraph;
-}
+export type ViewMotionAmendedParagraphs = Record<number, ViewMotionAmendedParagraph>;
 
 /**
  * This represents the Unified Diff part of an amendments.

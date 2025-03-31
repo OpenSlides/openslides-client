@@ -34,7 +34,8 @@ export interface ProjectionDialogConfig {
 @Component({
     selector: `os-projection-dialog`,
     templateUrl: `./projection-dialog.component.html`,
-    styleUrls: [`./projection-dialog.component.scss`]
+    styleUrls: [`./projection-dialog.component.scss`],
+    standalone: false
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public projectors: ViewProjector[] = [];
@@ -60,7 +61,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
     public allowReferenceProjector = true;
     public projectorSelectable = false;
-    private currentProjectionOptions: { [key: string]: any } = {};
+    private currentProjectionOptions: Record<string, any> = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 

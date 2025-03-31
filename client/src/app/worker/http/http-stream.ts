@@ -170,7 +170,7 @@ export abstract class HttpStream {
 
     private updateSubscription(): void {
         if (
-            (<any>self).useLongpolling &&
+            (self as any).useLongpolling &&
             this.supportLongpolling &&
             this.connectionMode === `SSE` &&
             (!this._queryParams.has(`single`) || this._queryParams.get(`single`) !== `1`)

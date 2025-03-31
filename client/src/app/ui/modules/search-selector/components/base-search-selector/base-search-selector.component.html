@@ -27,8 +27,8 @@
             <input
                 class="background-card"
                 osAutofocus
-                [formControl]="searchValueForm"
                 placeholder="{{ 'Search' | translate }}"
+                [formControl]="searchValueForm"
                 (keydown)="onSearchKeydown($event)"
             />
         </div>
@@ -87,26 +87,28 @@
             (click)="keepOpen ? matSelect.open() : null"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
-            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }" />
         </mat-option>
     </cdk-virtual-scroll-viewport>
 
     <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
-    @if (multiple) {
-        @if (selectedItems.length) {
-            <mat-option class="selected-options-hidden" disabled [value]="selectedItems[0].id">
-                <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
-            </mat-option>
+    <div class="selected-options-hidden">
+        @if (multiple) {
+            @if (selectedItems.length) {
+                <mat-option disabled [value]="selectedItems[0].id">
+                    <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }" />
+                </mat-option>
+            }
+        } @else {
+            @if (contentForm.value) {
+                <mat-option disabled [value]="contentForm.value">
+                    <ng-container
+                        *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
+                    />
+                </mat-option>
+            }
         }
-    } @else {
-        @if (contentForm.value) {
-            <mat-option class="selected-options-hidden" disabled [value]="contentForm.value">
-                <ng-container
-                    *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
-                ></ng-container>
-            </mat-option>
-        }
-    }
+    </div>
 </mat-select>
 
 <ng-template #optionContent let-item="item">

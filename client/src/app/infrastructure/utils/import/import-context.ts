@@ -37,7 +37,7 @@ export class ImportContext<ToImport> {
         return this._importStepPhaseSubject;
     }
 
-    private _data: { [key: string]: any } = {};
+    private _data: Record<string, any> = {};
 
     private readonly _modelsToCreateSubject = new BehaviorSubject<ToImport[]>([]);
     private readonly _modelsImportedSubject = new BehaviorSubject<ToImport[]>([]);

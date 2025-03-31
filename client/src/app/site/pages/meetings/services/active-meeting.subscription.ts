@@ -36,9 +36,13 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField,
                     fieldset: [`mediafile_id`]
                 })),
-                { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
+                {
+                    idField: `chat_group_ids`,
+                    fieldset: FULL_FIELDSET
+                },
                 {
                     idField: `chat_message_ids`,
+                    fieldset: FULL_FIELDSET,
                     follow: [
                         {
                             idField: `meeting_user_id`,

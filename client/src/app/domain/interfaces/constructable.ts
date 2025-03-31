@@ -11,4 +11,4 @@ export interface ModelConstructor<M> extends Constructable<M> {
     getUpdatedData(update: Partial<M>): M;
 }
 
-export interface ViewModelConstructor<V> extends ModelConstructor<V> {}
+export type ViewModelConstructor<V> = ModelConstructor<V>

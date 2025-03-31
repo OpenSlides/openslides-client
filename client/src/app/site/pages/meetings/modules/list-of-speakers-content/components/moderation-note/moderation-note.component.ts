@@ -27,7 +27,8 @@ import { ModerationNotePdfService } from '../../services/moderation-note-pdf.ser
     styleUrls: [`./moderation-note.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ModerationNotePdfService]
+    providers: [ModerationNotePdfService],
+    standalone: false
 })
 export class ModerationNoteComponent extends BaseMeetingComponent implements OnInit {
     public isEditing = false;

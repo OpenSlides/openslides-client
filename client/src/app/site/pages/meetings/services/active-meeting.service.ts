@@ -65,7 +65,7 @@ export class ActiveMeetingService {
     }
 
     public async ensureActiveMeetingIsAvailable(): Promise<ViewMeeting | null> {
-        if (!!this.meetingId) {
+        if (this.meetingId) {
             return await firstValueFrom(
                 this.meetingObservable.pipe(first(meeting => !!meeting && !!meeting.group_ids))
             );
@@ -74,7 +74,7 @@ export class ActiveMeetingService {
     }
 
     private async setupModelSubscription(): Promise<void> {
-        if (!!this.meetingId) {
+        if (this.meetingId) {
             await this.refreshAutoupdateSubscription();
             this.refreshRepoSubscription();
             this.modelRequestService.subscriptionGotData(ACTIVE_MEETING_SUBSCRIPTION).then(data => {

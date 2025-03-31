@@ -8,11 +8,11 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { PermsDirective } from './perms.directive';
 
-type TestConditionalType = {
+interface TestConditionalType {
     and: boolean;
     or: boolean;
     complement: boolean;
-};
+}
 
 export class BasePermsTestComponent<ComponentDataType extends object> {
     public constructor(public conditionals: ComponentDataType) {}
@@ -37,7 +37,8 @@ export class BasePermsTestComponent<ComponentDataType extends object> {
             "
             id="delegation"
         ></div>
-    `
+    `,
+    standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public readonly permission = Permission.listOfSpeakersCanSee;

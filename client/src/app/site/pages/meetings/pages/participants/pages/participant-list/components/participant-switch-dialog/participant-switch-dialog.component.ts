@@ -12,7 +12,8 @@ interface ParticipantSwitchDialogConfig {
 @Component({
     selector: `os-participant-switch-dialog`,
     templateUrl: `./participant-switch-dialog.component.html`,
-    styleUrls: [`./participant-switch-dialog.component.scss`]
+    styleUrls: [`./participant-switch-dialog.component.scss`],
+    standalone: false
 })
 export class ParticipantSwitchDialogComponent {
     public left: ViewUser;

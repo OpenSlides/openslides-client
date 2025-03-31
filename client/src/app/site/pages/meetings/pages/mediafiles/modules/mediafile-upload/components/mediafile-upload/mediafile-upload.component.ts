@@ -11,7 +11,8 @@ import { MediafileCommonService } from '../../../../services/mediafile-common.se
 @Component({
     selector: `os-mediafile-upload`,
     templateUrl: `./mediafile-upload.component.html`,
-    styleUrls: [`./mediafile-upload.component.scss`]
+    styleUrls: [`./mediafile-upload.component.scss`],
+    standalone: false
 })
 export class MediafileUploadComponent extends OrganizationMediafileUploadComponent implements OnInit {
     public availableGroups: Observable<ViewGroup[]> | null = null;

@@ -5,7 +5,8 @@ import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: `[osCmlPerms]`
+    selector: `[osCmlPerms]`,
+    standalone: false
 })
 export class CmlPermsDirective extends BasePermsDirective<CML> {
     @Input()

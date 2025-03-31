@@ -22,7 +22,8 @@ import { FilterListService, SearchService, SortListService } from '../../definit
     templateUrl: `./view-list.component.html`,
     styleUrls: [`./view-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ViewListComponent<V extends Identifiable> implements OnInit, OnDestroy {
     @ViewChild(ScrollingTableComponent, { static: true })
@@ -128,7 +129,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      * Closing them will cause the callback function to be called.
      */
     @Input()
-    public fakeFilters: Observable<{ [key: string]: () => void }> = null;
+    public fakeFilters: Observable<Record<string, () => void>> = null;
 
     @Input()
     public set totalCount(value: number | Observable<number>) {
