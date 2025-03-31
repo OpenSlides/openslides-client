@@ -310,9 +310,14 @@ export abstract class BaseSearchSelectorComponent
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
+            if (!this.matSelect.panel) {
+                setTimeout(() => this.onOpenChanged(this.matSelect.panelOpen), 100)
+                return;
+            }
+
             // Ensure that the main panel doesn't ever scroll away from the top
-            const panelElement = this.matSelect.panel?.nativeElement as HTMLElement;
-            const inputRect = this.inputDiv?.nativeElement.getBoundingClientRect();
+            const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
+            const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
             const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
             if (inputRect) {
                 document.documentElement.style.setProperty(
