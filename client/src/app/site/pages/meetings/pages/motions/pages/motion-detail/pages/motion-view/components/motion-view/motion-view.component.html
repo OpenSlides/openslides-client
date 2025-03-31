@@ -102,12 +102,14 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
-                    <button mat-menu-item (click)="forwardMotionToMeetings()">
-                        <mat-icon>forward</mat-icon>
-                        <span>{{ 'Forward' | translate }}</span>
-                    </button>
-                </div>
+                @if (!motion.isAmendment()) {
+                    <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
+                        <button mat-menu-item (click)="forwardMotionToMeetings()">
+                            <mat-icon>forward</mat-icon>
+                            <span>{{ 'Forward' | translate }}</span>
+                        </button>
+                    </div>
+                }
                 @if (perms.isAllowed('update', motion) || perms.isAllowed('manage')) {
                     <mat-divider></mat-divider>
                     <!-- Edit-->
