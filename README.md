@@ -128,5 +128,4 @@ Grep the code for `| translate` and `this.translate` to find examples.
 
 # Used software
 
-The software used can be found in `client/package.json`. To get a list of the dependencies licenses you can use 
-[license-report](https://www.npmjs.com/package/license-report).
+The software used and its licenses can be found in `client/package.json` and `client/package-lock.json`.
