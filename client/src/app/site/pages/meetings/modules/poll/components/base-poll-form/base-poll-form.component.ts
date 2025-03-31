@@ -500,22 +500,29 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private getVotesAmountControl(): UntypedFormGroup {
-        const maxVotesPreselect =
-            (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax ? this.pollOptionAmount : 1;
-        return this.fb.group(
-            {
-                max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
-                min_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
-            },
-            {
-                validators: [
-                    isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
-                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
-                ]
-            }
-        );
+        const useMaxVotesPreselect = (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax;
+        const maxVotesPreselect = useMaxVotesPreselect ? this.pollOptionAmount : 1;
+        const config = {
+            max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
+            min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+            max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
+        };
+        if (
+            useMaxVotesPreselect &&
+            !this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)
+        ) {
+            config.max_votes_amount = [
+                maxVotesPreselect,
+                [Validators.required, Validators.min(1), Validators.max(maxVotesPreselect)]
+            ];
+        }
+        return this.fb.group(config, {
+            validators: [
+                isNumberRange(`min_votes_amount`, `max_votes_amount`),
+                this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
+            ]
+        });
     }
 
     private enableGlobalVoteControls(): void {
@@ -585,6 +592,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 return this.translate.instant(`Min votes cannot be greater than max votes.`);
             case `rangeErrorMaxPerOption`:
                 return this.translate.instant(`Max votes per option cannot be greater than max votes.`);
+            case `max`:
+                return this.translate.instant(`Max votes cannot be greater than options.`);
             default:
                 return ``;
         }
