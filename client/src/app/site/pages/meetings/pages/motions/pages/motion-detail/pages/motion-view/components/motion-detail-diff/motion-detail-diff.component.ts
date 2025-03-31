@@ -217,12 +217,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             lineLength: this.lineLength,
             firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
-        const elements = document.querySelectorAll(`ul>li`);
-        elements.forEach(element => {
-            if (element.firstChild.nodeName == `UL` && !element.classList.contains(`hidden-li`)) {
-                element.classList.add(`hidden-li`);
-            }
-        });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }
 

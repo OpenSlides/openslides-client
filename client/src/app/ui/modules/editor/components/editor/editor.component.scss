@@ -95,8 +95,8 @@
                 }
             }
 
-            ul > li.hidden-li {
-                display: contents;
+            ul:has(> li:only-child > ul:only-child) > li {
+                    display:contents;
             }
 
             @include detail-view-appearance;

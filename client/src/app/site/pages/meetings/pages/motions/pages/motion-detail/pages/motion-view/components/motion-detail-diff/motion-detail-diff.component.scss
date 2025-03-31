@@ -48,8 +48,10 @@
             }
         }
 
-        .motion-text-diff ul > li.hidden-li {
-            display: contents;
+        @supports selector(:has(*)) {
+            .motion-text-diff ul:has(> li:first-child:only-child > ul) > li:first-child {
+                display:contents;
+            }
         }
     }
 }

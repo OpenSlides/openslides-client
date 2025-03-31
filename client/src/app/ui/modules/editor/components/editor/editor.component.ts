@@ -186,13 +186,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     }
                 ];
             },
-            renderHTML({ node, HTMLAttributes }) {
-                const attributes = { ...HTMLAttributes };
-                const isValid = node.children.length === 1 && node.children[0].type.name === `bulletList`;
-                if (isValid) {
-                    attributes[`class`] = `hidden-li`;
-                }
-                return [`li`, attributes, 0];
+            renderHTML({ HTMLAttributes }) {
+                return [`li`, HTMLAttributes, 0];
             }
         });
         const CustomBulletList = BulletList.extend({

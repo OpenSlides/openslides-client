@@ -83,14 +83,9 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
     }
 
     protected override async createChangeRecommendation(): Promise<void> {
-        this.cleanupBulletListStyles();
         await this.repo.create(
             { ...this.changeReco, ...this.contentForm.value, internal: !this.contentForm.value.public },
             this.data.firstLine
         );
-    }
-
-    private cleanupBulletListStyles(): void {
-        this.contentForm.value.text = this.contentForm.value.text.replace(/\sclass="hidden-li"/gm, ``);
     }
 }
