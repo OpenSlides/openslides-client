@@ -24,7 +24,8 @@ const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 @Component({
     selector: `os-root`,
     templateUrl: `./openslides-main.component.html`,
-    styleUrls: [`./openslides-main.component.scss`]
+    styleUrls: [`./openslides-main.component.scss`],
+    standalone: false
 })
 export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();

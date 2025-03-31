@@ -3,12 +3,10 @@ export type VoteValue = 'Y' | 'N' | 'A';
 /**
  * A mapping of an id -> VotingData
  */
-export interface IdentifiedVotingData {
-    [id: number]: VotingData;
-}
+export type IdentifiedVotingData = Record<number, VotingData>;
 
 export interface VotingData {
-    value: { [option_id: number]: number } | VoteValue;
+    value: Record<number, number> | VoteValue;
 }
 
 export const VoteValueVerbose = {

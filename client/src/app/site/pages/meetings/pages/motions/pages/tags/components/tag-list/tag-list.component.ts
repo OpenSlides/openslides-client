@@ -14,7 +14,8 @@ import { TagControllerService } from '../../../../modules/tags/services';
 @Component({
     selector: `os-tag-list`,
     templateUrl: `./tag-list.component.html`,
-    styleUrls: [`./tag-list.component.scss`]
+    styleUrls: [`./tag-list.component.scss`],
+    standalone: false
 })
 export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> implements OnInit {
     @ViewChild(`tagDialog`, { static: true })

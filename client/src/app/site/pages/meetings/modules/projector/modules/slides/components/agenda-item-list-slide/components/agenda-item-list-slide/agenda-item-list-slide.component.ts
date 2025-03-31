@@ -10,7 +10,8 @@ import { AgendaItemListSlideData, SlideItem } from '../../agenda-item-list-slide
 @Component({
     selector: `os-agenda-item-list-slide`,
     templateUrl: `./agenda-item-list-slide.component.html`,
-    styleUrls: [`./agenda-item-list-slide.component.scss`]
+    styleUrls: [`./agenda-item-list-slide.component.scss`],
+    standalone: false
 })
 export class AgendaItemListSlideComponent extends BaseSlideComponent<AgendaItemListSlideData> {
     public constructor(private collectionMapperService: CollectionMapperService) {

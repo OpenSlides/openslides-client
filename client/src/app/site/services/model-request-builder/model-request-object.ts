@@ -5,10 +5,10 @@ import { BaseSimplifiedModelRequest } from './model-request-builder.service';
 
 export class ModelRequestObject {
     public readonly ids: Id[];
-    private readonly _collectionsToFullListUpdate: Set<Collection> = new Set();
-    private readonly _collectionRelationsToFullListUpdate: { [collection: string]: Collection } = {};
-    private readonly _collectionsToExclusiveListUpdate: Set<Collection> = new Set();
-    private readonly _collectionRelationsToExclusiveListUpdate: { [collection: string]: Collection } = {};
+    private readonly _collectionsToFullListUpdate = new Set<Collection>();
+    private readonly _collectionRelationsToFullListUpdate: Record<string, Collection> = {};
+    private readonly _collectionsToExclusiveListUpdate = new Set<Collection>();
+    private readonly _collectionRelationsToExclusiveListUpdate: Record<string, Collection> = {};
 
     public constructor(
         public readonly collection: Collection,

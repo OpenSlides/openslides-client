@@ -8,7 +8,8 @@ import { ProjectionControllerService } from '../../services/projection-controlle
 @Component({
     selector: `os-presentation-controls`,
     templateUrl: `./presentation-controls.component.html`,
-    styleUrls: [`./presentation-controls.component.scss`]
+    styleUrls: [`./presentation-controls.component.scss`],
+    standalone: false
 })
 export class PresentationControlsComponent {
     @Input()

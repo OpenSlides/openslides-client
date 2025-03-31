@@ -16,7 +16,8 @@ type ThemeBuilderDialogData = {
 @Component({
     selector: `os-theme-builder-dialog`,
     templateUrl: `./theme-builder-dialog.component.html`,
-    styleUrls: [`./theme-builder-dialog.component.scss`]
+    styleUrls: [`./theme-builder-dialog.component.scss`],
+    standalone: false
 })
 export class ThemeBuilderDialogComponent extends BaseUiComponent implements AfterViewInit {
     public paletteBuilderForm: UntypedFormGroup | null = null;
@@ -25,7 +26,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     private _themePalettes: ThemePalette[] = [`primary`, `accent`, `warn`];
     private _generalColorNames: string[] = [`yes`, `no`, `abstain`, `headbar`];
 
-    private _currentPalettes: { [formControlName: string]: string } = {};
+    private _currentPalettes: Record<string, string> = {};
 
     private get primaryControl(): AbstractControl {
         return this.paletteBuilderForm.get(this.createFormControlName(`primary`, `500`));
@@ -79,7 +80,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     }
 
     public onConfirm(): void {
-        const values = this.paletteBuilderForm!.value as { [key: string]: any };
+        const values = this.paletteBuilderForm!.value as Record<string, any>;
         const newValues = {};
         for (const key of Object.keys(values)) {
             newValues[key] = values[key] || (this.data && this.data[key] ? null : undefined);
@@ -105,7 +106,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     }
 
     private createForm(): UntypedFormGroup {
-        const formGroup: { [paletteKey: string]: any[] } = {
+        const formGroup: Record<string, any[]> = {
             name: [``, Validators.required]
         };
         for (const paletteName of this._themePalettes) {
@@ -120,7 +121,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     }
 
     // Combine createForm with createFormUpdate
-    private createFormUpdate(paletteName: ThemePalette, hex?: string): { [formControlName: string]: string } {
+    private createFormUpdate(paletteName: ThemePalette, hex?: string): Record<string, string> {
         const nextColor = hex || this.themeService.getDefaultColorByPalette(paletteName);
         const palette = this.colorService.generateColorPaletteByHex(nextColor);
         const updateForm: any = {};

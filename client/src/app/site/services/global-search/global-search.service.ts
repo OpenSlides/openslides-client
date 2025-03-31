@@ -135,7 +135,7 @@ export class GlobalSearchService {
         const collection = collectionFromFqid(fqid);
         const result = results[fqid];
         if (collection === `tag` && results[fqid].content?.tagged_ids) {
-            for (const taggedFqid of results[fqid].content?.tagged_ids) {
+            for (const taggedFqid of results[fqid].content.tagged_ids) {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
 
                 this.updateMatchedByFqids(fqid, taggedFqid, results);

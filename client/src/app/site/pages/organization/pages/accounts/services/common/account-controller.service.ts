@@ -22,7 +22,7 @@ import { AccountCommonServiceModule } from './account-common-service.module';
     providedIn: AccountCommonServiceModule
 })
 export class AccountControllerService extends BaseController<ViewUser, User> {
-    private _committee_users_set: Set<Id> = new Set();
+    private _committee_users_set = new Set<Id>();
 
     public constructor(
         controllerServiceCollector: ControllerServiceCollectorService,
@@ -119,7 +119,7 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         return answer as boolean;
     }
 
-    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+    public jsonUpload(payload: Record<string, any>): Action<BackendImportRawPreview> {
         return this.repo.accountJsonUpload(payload);
     }
 

@@ -12,7 +12,8 @@ const SUBSCRIPTION_NAME = `tableData`;
     selector: `os-topic-poll-detail-content`,
     templateUrl: `./topic-poll-detail-content.component.html`,
     styleUrls: [`./topic-poll-detail-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TopicPollDetailContentComponent extends BaseUiComponent {
     private _poll: PollData;

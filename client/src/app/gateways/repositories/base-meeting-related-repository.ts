@@ -65,8 +65,8 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
     protected filterForeignMeetingModelsFromList(list: V[]): V[] {
         return list.filter(
             m =>
-                !(<HasMeetingId>(<unknown>m)).meeting_id ||
-                (<HasMeetingId>(<unknown>m)).meeting_id === this.activeMeetingId
+                !((m as unknown) as HasMeetingId).meeting_id ||
+                ((m as unknown) as HasMeetingId).meeting_id === this.activeMeetingId
         );
     }
 }

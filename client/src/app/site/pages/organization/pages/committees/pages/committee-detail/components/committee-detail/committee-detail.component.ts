@@ -6,7 +6,8 @@ import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.sub
 @Component({
     selector: `os-committee-detail`,
     templateUrl: `./committee-detail.component.html`,
-    styleUrls: [`./committee-detail.component.scss`]
+    styleUrls: [`./committee-detail.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any, oldParams: any): void {

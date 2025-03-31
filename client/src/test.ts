@@ -10,7 +10,7 @@ import { overloadJsFunctions } from './app/infrastructure/utils/overload-js-func
 overloadJsFunctions();
 
 if (!window.process) {
-    window.process = <any>{};
+    window.process = {} as any;
 }
 
 if (!window.requestAnimationFrame) {

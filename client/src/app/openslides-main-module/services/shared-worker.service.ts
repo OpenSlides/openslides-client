@@ -37,13 +37,13 @@ const SHARED_WORKER_HEALTH_RETRIES = 2;
     providedIn: `root`
 })
 export class SharedWorkerService {
-    public messages: Subject<WorkerResponse> = new Subject();
+    public messages = new Subject<WorkerResponse>();
 
     public get restartObservable(): Observable<void> {
         return this.restartSubject;
     }
 
-    private restartSubject: Subject<void> = new Subject();
+    private restartSubject = new Subject<void>();
     private conn: MessagePort | Window;
     private broadcastChannel = new BroadcastChannel(SW_BROADCAST_CHANNEL_NAME);
     private ready = false;
@@ -250,7 +250,7 @@ export class SharedWorkerService {
                 await this.waitForMessage(
                     SHARED_WORKER_READY_TIMEOUT_TERMINATE,
                     (data: any) => data === `ready`,
-                    () => (<MessagePort>this.conn).start()
+                    () => (this.conn as MessagePort).start()
                 );
             } catch (_) {
                 readyFailed = true;
@@ -289,7 +289,7 @@ export class SharedWorkerService {
             : merge(fromEvent(this.conn, `message`), fromEvent(this.broadcastChannel, `message`));
         const promise = firstValueFrom(
             eventListener.pipe(
-                first(e => isMessage((<any>e)?.data)),
+                first(e => isMessage((e as any)?.data)),
                 timeout({ first: timeoutDuration, with: () => of(false) })
             )
         );
@@ -302,6 +302,6 @@ export class SharedWorkerService {
             throw new Error(`Timeout while waiting for message.`);
         }
 
-        return <MessageEvent>await promise;
+        return await promise as MessageEvent;
     }
 }

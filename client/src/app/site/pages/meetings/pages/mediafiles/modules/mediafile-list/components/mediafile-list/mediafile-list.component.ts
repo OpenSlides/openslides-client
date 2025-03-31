@@ -30,7 +30,8 @@ import { MediafileListGroupService } from '../../services/mediafile-list-group.s
 @Component({
     selector: `os-mediafile-list`,
     templateUrl: `./mediafile-list.component.html`,
-    styleUrls: [`./mediafile-list.component.scss`]
+    styleUrls: [`./mediafile-list.component.scss`],
+    standalone: false
 })
 export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
@@ -105,7 +106,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public directoryObservable: Observable<ViewMediafile[]>;
-    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
+    private directorySubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public constructor(
         protected override translate: TranslateService,

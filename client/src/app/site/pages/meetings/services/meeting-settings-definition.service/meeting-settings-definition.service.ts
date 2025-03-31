@@ -14,9 +14,7 @@ export class MeetingSettingsDefinitionService {
         return meetingSettings;
     }
 
-    public get settingsDefaults(): {
-        [key: string]: any;
-    } {
+    public get settingsDefaults(): Record<string, any> {
         return meetingSettingsDefaults;
     }
 
@@ -79,7 +77,7 @@ export class MeetingSettingsDefinitionService {
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
         }
-        if (setting.type === `choice` && setting.choices && !setting.choices.hasOwnProperty(defaultValue)) {
+        if (setting.type === `choice` && setting.choices && !Object.prototype.hasOwnProperty.call(setting.choices, defaultValue)) {
             throw new Error(
                 `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
             );

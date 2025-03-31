@@ -11,7 +11,8 @@ import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/medi
     selector: `os-organization-mediafile-upload`,
     templateUrl: `./organization-mediafile-upload.component.html`,
     styleUrls: [`./organization-mediafile-upload.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OrganizationMediafileUploadComponent implements OnInit {
     /**

@@ -34,7 +34,8 @@ import { ChatMessageControllerService } from '../../../../services/chat-message-
     selector: `os-chat-group-detail`,
     templateUrl: `./chat-group-detail.component.html`,
     styleUrls: [`./chat-group-detail.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChatGroupDetailComponent extends BaseMeetingComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(CdkVirtualScrollViewport)

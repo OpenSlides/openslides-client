@@ -8,7 +8,8 @@ import { MotionWorkflowControllerService } from '../../../../modules/workflows/s
 @Component({
     selector: `os-workflow-import`,
     templateUrl: `./workflow-import.component.html`,
-    styleUrls: [`./workflow-import.component.scss`]
+    styleUrls: [`./workflow-import.component.scss`],
+    standalone: false
 })
 export class WorkflowImportComponent {
     public constructor(

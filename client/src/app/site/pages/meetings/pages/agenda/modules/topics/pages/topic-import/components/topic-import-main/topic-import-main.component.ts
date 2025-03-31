@@ -8,7 +8,8 @@ import { getAgendaListSubscriptionConfig } from '../../../../../../agenda.subscr
 @Component({
     selector: `os-topic-import-main`,
     templateUrl: `./topic-import-main.component.html`,
-    styleUrls: [`./topic-import-main.component.scss`]
+    styleUrls: [`./topic-import-main.component.scss`],
+    standalone: false
 })
 export class TopicImportMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

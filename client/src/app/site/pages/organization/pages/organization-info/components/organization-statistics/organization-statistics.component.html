@@ -24,6 +24,6 @@
         <div>{{ label | translate }}: {{ current }}</div>
     }
     @if (max) {
-        <mat-progress-bar mode="determinate" [value]="(current / max) * 100"></mat-progress-bar>
+        <mat-progress-bar mode="determinate" [value]="(current / max) * 100" />
     }
 </ng-template>

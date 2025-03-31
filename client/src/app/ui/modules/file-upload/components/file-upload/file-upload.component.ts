@@ -26,7 +26,8 @@ let uniqueCounter = 0;
 @Component({
     selector: `os-file-upload`,
     templateUrl: `./file-upload.component.html`,
-    styleUrls: [`./file-upload.component.scss`]
+    styleUrls: [`./file-upload.component.scss`],
+    standalone: false
 })
 export class FileUploadComponent {
     /**

@@ -11,7 +11,8 @@ import { PointOfOrderData } from '../../services/point-of-order-dialog.service';
 @Component({
     selector: `os-point-of-order-dialog`,
     templateUrl: `./point-of-order-dialog.component.html`,
-    styleUrls: [`./point-of-order-dialog.component.scss`]
+    styleUrls: [`./point-of-order-dialog.component.scss`],
+    standalone: false
 })
 export class PointOfOrderDialogComponent {
     public editForm: UntypedFormGroup;

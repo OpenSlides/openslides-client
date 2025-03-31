@@ -480,7 +480,7 @@ describe(`MotionDiffService`, () => {
 <LI>Punkt 4.3</LI>\
 </OL></LI></OL>`;
                 const out = service.replaceLinesMergeNodeArrays([node1.childNodes[0]], [node2.childNodes[0]]);
-                const outHtml = nodesToHtml([<Element>out[0]]);
+                const outHtml = nodesToHtml([(out[0] as Element)]);
                 expect(outHtml).toBe(
                     `<ol><li><ol><li>Punkt 4.1</li><li>Punkt 4.2</li><li>Punkt 4.3</li></ol></li></ol>`
                 );

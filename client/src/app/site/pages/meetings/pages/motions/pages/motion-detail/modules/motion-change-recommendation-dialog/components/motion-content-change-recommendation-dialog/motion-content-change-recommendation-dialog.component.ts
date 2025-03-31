@@ -39,7 +39,8 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
 @Component({
     selector: `os-motion-content-change-recommendation-dialog`,
     templateUrl: `./motion-content-change-recommendation-dialog.component.html`,
-    styleUrls: [`./motion-content-change-recommendation-dialog.component.scss`]
+    styleUrls: [`./motion-content-change-recommendation-dialog.component.scss`],
+    standalone: false
 })
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {
     /**

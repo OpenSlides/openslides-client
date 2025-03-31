@@ -1,7 +1,7 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 :host ::ng-deep .underlined-links {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }
 
 .diff-box {

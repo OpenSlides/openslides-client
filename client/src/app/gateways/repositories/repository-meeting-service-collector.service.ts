@@ -40,7 +40,7 @@ export class RepositoryMeetingServiceCollectorService {
         return this.repositoryServiceCollector.relationManager;
     }
 
-    public get collectionToKeyUpdatesObservableMap(): { [collection: string]: BehaviorSubject<string[]> } {
+    public get collectionToKeyUpdatesObservableMap(): Record<string, BehaviorSubject<string[]>> {
         return this.repositoryServiceCollector.collectionToKeyUpdatesObservableMap;
     }
 

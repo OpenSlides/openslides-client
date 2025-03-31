@@ -26,7 +26,8 @@ const MAX_COLUMNS = 3;
     selector: `os-motion-block-slide`,
     templateUrl: `./motion-block-slide.component.html`,
     styleUrls: [`./motion-block-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBlockSlideData> {
     /**
