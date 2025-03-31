@@ -93,8 +93,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
-    public get validSupporters(): string {
-        return `(` + this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length + `)`;
+    public get validSupporters(): number {
+        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
     }
 
     /**

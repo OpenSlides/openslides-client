@@ -41,15 +41,16 @@
         <!-- show supporters (TODO: open in dialog) -->
         @if (motion.hasSupporters()) {
             <button mat-button type="button" (click)="openSupportersDialog()">
-                {{ motion.supporters.length }}
-                <span class="red-warning-text">{{ validSupporters }}</span>
-                {{ 'supporters' | translate }}
+                {{ motion.supporters.length }}{{ ' supporters' | translate }}
             </button>
+            @if (validSupporters > 0) {
+                <span class="warn">{{ 'of which ' + validSupporters + ' are not permissable' | translate }}</span>
+            }
             @if (showSupporters) {
                 <p class="supporters">
                     <os-comma-separated-listing [list]="supportersObservable | async">
                         <ng-template let-supporter>
-                            <span [class.red-warning-text]="!checkValidSupporter(supporter)">
+                            <span [class.warn]="!checkValidSupporter(supporter)">
                                 {{ supporter.full_name }}
                             </span>
                         </ng-template>
