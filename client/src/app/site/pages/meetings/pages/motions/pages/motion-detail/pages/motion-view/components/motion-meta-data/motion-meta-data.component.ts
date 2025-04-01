@@ -165,6 +165,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._supportersSubject;
     }
 
+    public get canManage(): boolean {
+        return this.operator.hasPerms(Permission.userCanManage);
+    }
+
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     private _forwardingAvailable = false;
