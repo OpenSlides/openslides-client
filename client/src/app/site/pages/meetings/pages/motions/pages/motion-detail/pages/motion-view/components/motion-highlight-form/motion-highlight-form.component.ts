@@ -229,6 +229,11 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         this.isEditingFinalVersion = false;
     }
 
+    public applyModifiedFinalVersion(): void {
+        this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.APPLY);
+        this.isEditingFinalVersion = true;
+    }
+
     public editModifiedFinalVersion(): void {
         this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.EDIT);
         this.isEditingFinalVersion = true;

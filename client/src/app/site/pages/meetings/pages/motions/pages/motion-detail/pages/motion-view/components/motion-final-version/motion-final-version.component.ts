@@ -49,6 +49,9 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
             case ModifiedFinalVersionAction.SAVE:
                 this.saveModifiedFinalVersion();
                 break;
+            case ModifiedFinalVersionAction.APPLY:
+                this.applyModifiedFinalVersion();
+                break;
         }
         this.cd.markForCheck();
     }
@@ -65,6 +68,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     private async saveModifiedFinalVersion(): Promise<void> {
         await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.leaveEditMode();
+    }
+
+    private async applyModifiedFinalVersion(): Promise<void> {
+        await this.repo.update(this.contentForm.value, this.motion).resolve();
+        this.isEditMode = true;
     }
 
     private createForm(): UntypedFormGroup {
