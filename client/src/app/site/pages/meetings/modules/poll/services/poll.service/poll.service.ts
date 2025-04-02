@@ -133,7 +133,7 @@ export abstract class PollService {
                 }
 
                 // 0 is a valid number in this case
-                if (!!resultInPercent) {
+                if (resultInPercent) {
                     resultLabel += ` (${resultInPercent})`;
                 }
                 return resultLabel;

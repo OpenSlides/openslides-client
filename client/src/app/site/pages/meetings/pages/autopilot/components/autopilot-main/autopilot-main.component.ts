@@ -16,7 +16,8 @@ import {
 @Component({
     selector: `os-autopilot-main`,
     templateUrl: `./autopilot-main.component.html`,
-    styleUrls: [`./autopilot-main.component.scss`]
+    styleUrls: [`./autopilot-main.component.scss`],
+    standalone: false
 })
 export class AutopilotMainComponent extends BaseMeetingModelRequestHandler {
     private currentSubscriptions: Id[] = [];

@@ -35,7 +35,7 @@ export interface BaseMenuEntry<P = any> {
     customHeight?: string;
 }
 
-export function getCustomStyleForEntry(entry: BaseMenuEntry): { [key: string]: any } {
+export function getCustomStyleForEntry(entry: BaseMenuEntry): Record<string, any> {
     if (entry.customHeight) {
         return { minHeight: entry.customHeight, height: entry.customHeight, lineHeight: entry.customHeight };
     }

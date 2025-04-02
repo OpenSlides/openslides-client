@@ -2,37 +2,38 @@
 @use '@angular/material' as mat;
 
 /** angular material theming */
-@import './assets/styles/theme-styles.scss';
+@use "sass:meta";
+@use 'assets/styles/theme-styles.scss';
 
 /** Useful default classes */
-@import 'assets/styles/default-classes.scss';
+@use 'assets/styles/default-classes.scss';
 
 /** fonts */
-@import 'assets/styles/fonts.scss';
+@use 'assets/styles/fonts.scss';
 @import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 /** Load projector specific SCSS values */
-@import 'assets/styles/projector.scss';
+@include meta.load-css('assets/styles/projector.scss');
 
 /** Load global scss variables and device mixing */
-@import 'assets/styles/variables.scss';
+@include meta.load-css('assets/styles/variables.scss');
 
-@import 'assets/styles/tables.scss';
+@include meta.load-css('assets/styles/tables.scss');
 
 :root {
     --global-headbar-height: 28px;
     --view-headbar-height: 50px;
 }
 
-@import 'assets/styles/utils.scss';
+@include meta.load-css('assets/styles/utils.scss');
 
-@import 'assets/styles/reset.scss';
-@import 'assets/styles/typography.scss';
-@import 'assets/styles/colors.scss';
-@import 'assets/styles/components.scss';
-@import 'assets/styles/material/icon.scss';
-@import 'assets/styles/pbl.scss';
-@import 'assets/styles/tiptap.scss';
+@include meta.load-css('assets/styles/reset.scss');
+@include meta.load-css('assets/styles/typography.scss');
+@include meta.load-css('assets/styles/colors.scss');
+@include meta.load-css('assets/styles/components.scss');
+@include meta.load-css('assets/styles/material/icon.scss');
+@include meta.load-css('assets/styles/pbl.scss');
+@include meta.load-css('assets/styles/tiptap.scss');
 
 /**
 * Must be cleaned up

@@ -1,5 +1,5 @@
-@import 'src/assets/styles/poll-colors.scss';
-@import 'src/assets/styles/poll-styles-common.scss';
+@use 'src/assets/styles/poll-colors.scss';
+@use 'src/assets/styles/poll-styles-common.scss';
 
 .poll-link-wrapper {
     outline: none;

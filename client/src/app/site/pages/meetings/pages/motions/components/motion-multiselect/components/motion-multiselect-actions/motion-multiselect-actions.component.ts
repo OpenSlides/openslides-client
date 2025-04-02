@@ -17,7 +17,8 @@ import { MotionMultiselectService } from '../../services/motion-multiselect.serv
 @Component({
     selector: `os-motion-multiselect-actions`,
     templateUrl: `./motion-multiselect-actions.component.html`,
-    styleUrls: [`./motion-multiselect-actions.component.scss`]
+    styleUrls: [`./motion-multiselect-actions.component.scss`],
+    standalone: false
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {
     public readonly permission = Permission;

@@ -113,9 +113,7 @@ function getUpdatedActionWorkerData(
 
 class MockWaitForActionDialogService {
     public closingPromptOpenFor: (Partial<ActionWorker> & { closed: number })[] = [];
-    public currentDialogs = new BehaviorSubject<{
-        [workerId: number]: { reason: WaitForActionReason; data: WaitForActionData };
-    }>({});
+    public currentDialogs = new BehaviorSubject<Record<number, { reason: WaitForActionReason; data: WaitForActionData }>>({});
 
     public constructor() {}
 
@@ -137,7 +135,7 @@ class MockWaitForActionDialogService {
 }
 
 class MockModelRequestService {
-    public currentSubscriptions = new BehaviorSubject<{ [subscriptionName: string]: SubscriptionConfig<any> }>({});
+    public currentSubscriptions = new BehaviorSubject<Record<string, SubscriptionConfig<any>>>({});
 
     public constructor() {}
 

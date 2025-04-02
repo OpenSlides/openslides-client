@@ -11,9 +11,7 @@ export interface ModelConstructor<T extends BaseModel<T>> {
     new (...args: any[]): T;
 }
 
-export interface BaseModelTemplate {
-    [key: string]: any;
-}
+export type BaseModelTemplate = Record<string, any>;
 
 /**
  * Abstract parent class to set rules and functions for all models.

@@ -18,7 +18,8 @@ interface RoutingData {
 @Component({
     selector: `os-site-wrapper`,
     templateUrl: `./site-wrapper.component.html`,
-    styleUrls: [`./site-wrapper.component.scss`]
+    styleUrls: [`./site-wrapper.component.scss`],
+    standalone: false
 })
 export class SiteWrapperComponent implements OnInit, OnDestroy {
     @ViewChild(`updateNotificationTemplate`, { static: true })

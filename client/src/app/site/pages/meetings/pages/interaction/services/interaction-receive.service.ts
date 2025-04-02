@@ -90,7 +90,7 @@ export class InteractionReceiveService {
     ) {}
 
     public startListening(lazyServices: InteractionReceiveSetupServices): void {
-        if (!!this._inviteSubscription) {
+        if (this._inviteSubscription) {
             return;
         }
         this._lazyServices = lazyServices;

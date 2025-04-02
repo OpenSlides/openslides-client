@@ -39,7 +39,7 @@
             [scrollToChange]="scrollToChange"
             [showAllAmendments]="showAllAmendments$ | async"
             (createChangeRecommendation)="createChangeRecommendation($event)"
-        ></os-motion-detail-diff>
+        />
     }
 } @else {
     <!-- Paragraph-based amendments -->
@@ -52,7 +52,7 @@
         [showAllAmendments]="showAllAmendments$ | async"
         (createChangeRecommendation)="createChangeRecommendation($event)"
         (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-    ></os-paragraph-based-amendment>
+    />
 }
 
 <div class="motion-content">

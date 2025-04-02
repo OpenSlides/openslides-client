@@ -23,7 +23,8 @@ import { AccountSortService } from '../../../../pages/accounts/pages/account-lis
         `./account-search-selector.component.scss`,
         `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.scss`
     ],
-    providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }]
+    providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }],
+    standalone: false
 })
 export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {
     @Input()

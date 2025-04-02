@@ -192,7 +192,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public isCSVExport = false;
     public isXLSXExport = false;
 
-    public motionsNr: number = 0;
+    public motionsNr = 0;
 
     public motions: number[];
     private motions_models: ViewMotion[];
@@ -359,9 +359,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
 
         const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
-        lnDefaultMode === this.lnMode.Inside
-            ? this.dialogForm.get(`lnMode`).setValue(this.lnMode.Outside)
-            : this.dialogForm.get(`lnMode`).setValue(lnDefaultMode);
+        this.dialogForm.get(`lnMode`).setValue(lnDefaultMode === this.lnMode.Inside ? this.lnMode.Outside : lnDefaultMode);
 
         let crDefaultMode = this.meetingSettingsService!.instant(`motions_recommendation_text_mode`);
         if (this.isCSVExport && [this.crMode.Diff, this.crMode.Changed].includes(crDefaultMode)) {

@@ -1,20 +1,22 @@
 /** Imports the material-design-theming */
 @use '@angular/material' as mat;
-@include mat.core();
 
-// __<<ngM2ThemingMigrationEscapedComment1>>__
-@import 'themes/default-light.scss';
-@import 'themes/default-dark.scss';
-@import 'themes/var-overwrites.scss';
+@use 'themes/default-light.scss' as light;
+@use 'themes/default-dark.scss' as dark;
 
 /** Global component style definition */
-@import 'global-components-style.scss';
+@use 'global-components-style.scss';
+@use 'themes/var-overwrites.scss';
 
-@include mat.all-component-themes($openslides-light-theme);
+@include mat.elevation-classes();
+@include mat.app-background();
+
+
+@include mat.all-component-themes(light.$openslides-light-theme);
 
 .openslides-light-theme {
-    @include os-component-themes($openslides-light-theme);
-    @include os-var-overwrites();
+    @include global-components-style.os-component-themes(light.$openslides-light-theme);
+    @include var-overwrites.os-var-overwrites();
 
     --mat-menu-item-icon-color: rgba(0, 0, 0, 0.54);
     --mat-table-header-headline-color: rgba(0, 0, 0, 0.55);
@@ -22,9 +24,9 @@
 }
 
 .openslides-dark-theme {
-    @include mat.all-component-colors($openslides-dark-theme);
-    @include os-component-themes($openslides-dark-theme);
-    @include os-var-overwrites();
+    @include mat.all-component-colors(dark.$openslides-dark-theme);
+    @include global-components-style.os-component-themes(dark.$openslides-dark-theme);
+    @include var-overwrites.os-var-overwrites();
 
     --mat-table-header-headline-color: rgba(255, 255, 255, 0.70);
     --mat-chip-option-background-color: grey;

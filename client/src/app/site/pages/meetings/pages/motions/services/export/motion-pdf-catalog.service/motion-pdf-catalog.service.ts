@@ -139,7 +139,7 @@ export class MotionPdfCatalogService {
                                 [
                                     {
                                         text: category.nameWithParentAbove,
-                                        style: !!category.parent ? `tocSubcategoryTitle` : `tocCategoryTitle`
+                                        style: category.parent ? `tocSubcategoryTitle` : `tocCategoryTitle`
                                     }
                                 ]
                             ]

@@ -144,7 +144,7 @@ export class MotionFormatService {
         const titleChange = this.getUnifiedChanges(motion, lineLength).find((obj: ViewUnifiedChange) =>
             obj.isTitleChange()
         )!;
-        const crMode = !!motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
+        const crMode = motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
 
         if (titleChange) {
             return this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
@@ -159,7 +159,7 @@ export class MotionFormatService {
      */
     private getFinalMotionText(motion: ViewMotion, lineLength: number): string {
         const changes: ViewUnifiedChange[] = this.getUnifiedChanges(motion, lineLength);
-        const crMode = !!motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
+        const crMode = motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
         return this.formatMotion({ targetMotion: motion, crMode, changes, lineLength, firstLine: motion.firstLine });
     }
 

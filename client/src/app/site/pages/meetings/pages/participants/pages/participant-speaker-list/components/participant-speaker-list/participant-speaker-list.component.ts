@@ -20,7 +20,8 @@ const SPEAKERS_LIST_STORAGE_INDEX = `speakers`;
     selector: `os-participant-speaker-list`,
     templateUrl: `./participant-speaker-list.component.html`,
     styleUrls: [`./participant-speaker-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParticipantSpeakerListComponent extends BaseMeetingListViewComponent<ViewSpeaker> implements OnInit {
     public readonly SpeechState = SpeechState;

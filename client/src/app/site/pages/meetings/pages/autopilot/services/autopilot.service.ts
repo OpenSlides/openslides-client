@@ -4,14 +4,14 @@ import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({ providedIn: `root` })
 export class AutopilotService {
-    private disabledContentElementsSubject = new BehaviorSubject<{ [key: string]: boolean }>({});
+    private disabledContentElementsSubject = new BehaviorSubject<Record<string, boolean>>({});
 
-    public get disabledContentElements(): Observable<{ [key: string]: boolean }> {
+    public get disabledContentElements(): Observable<Record<string, boolean>> {
         return this.disabledContentElementsSubject;
     }
 
     public constructor(private storage: StorageService) {
-        this.storage.get<{ [key: string]: boolean }>(`autopilot-disabled`).then(keys => {
+        this.storage.get<Record<string, boolean>>(`autopilot-disabled`).then(keys => {
             this.disabledContentElementsSubject.next(keys || {});
         });
     }

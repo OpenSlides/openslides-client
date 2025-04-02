@@ -1,7 +1,8 @@
 import { Directive, Input, TemplateRef } from '@angular/core';
 
 @Directive({
-    selector: `[osImportListLastTab]`
+    selector: `[osImportListLastTab]`,
+    standalone: false
 })
 export class ImportListLastTabDirective {
     @Input()

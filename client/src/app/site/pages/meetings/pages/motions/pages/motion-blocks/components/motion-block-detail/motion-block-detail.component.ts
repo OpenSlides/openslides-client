@@ -23,7 +23,8 @@ import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/servic
 @Component({
     selector: `os-motion-block-detail`,
     templateUrl: `./motion-block-detail.component.html`,
-    styleUrls: [`./motion-block-detail.component.scss`]
+    styleUrls: [`./motion-block-detail.component.scss`],
+    standalone: false
 })
 export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly COLLECTION = MotionBlock.COLLECTION;
@@ -91,7 +92,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         this.meetingSettingsService
             .get(`motions_show_sequential_number`)
             .subscribe(show => (this.showSequential = show));
-        (<any>window).comp = this;
+        (window as any).comp = this;
     }
 
     public onIdFound(id: Id | null): void {

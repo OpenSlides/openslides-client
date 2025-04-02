@@ -6,7 +6,8 @@ import { getParticipantDetailSubscription } from '../../../../participants.subsc
 @Component({
     selector: `os-participant-detail`,
     templateUrl: `./participant-detail.component.html`,
-    styleUrls: [`./participant-detail.component.scss`]
+    styleUrls: [`./participant-detail.component.scss`],
+    standalone: false
 })
 export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(params?: any): void {

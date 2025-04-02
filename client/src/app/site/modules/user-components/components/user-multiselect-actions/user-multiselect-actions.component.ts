@@ -10,7 +10,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     selector: `os-user-multiselect-actions`,
     templateUrl: `./user-multiselect-actions.component.html`,
     styleUrls: [`./user-multiselect-actions.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserMultiselectActionsComponent extends BaseComponent {
     @ViewChild(TemplateRef, { static: true })

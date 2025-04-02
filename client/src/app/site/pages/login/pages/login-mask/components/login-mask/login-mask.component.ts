@@ -34,7 +34,8 @@ interface LoginValues {
     selector: `os-login-mask`,
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
-    animations: [fadeInAnim]
+    animations: [fadeInAnim],
+    standalone: false
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public meeting: Meeting;
@@ -200,21 +201,13 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
     }
 
-    public toggleLoginAreaExpansion(): void {
-        this.loginAreaExpanded = !this.loginAreaExpanded;
-    }
-
-    public setLoginAreaExpansion(expanded: boolean): void {
-        this.loginAreaExpanded = expanded;
-    }
-
     private formatLoginInputValues(info: LoginValues): LoginValues {
         const newName = info.username.trim();
         return { username: newName, password: info.password };
     }
 
     private checkForUnsecureConnection(): void {
-        const protocol = (<any>performance.getEntriesByType(`navigation`)[0]).nextHopProtocol;
+        const protocol = (performance.getEntriesByType(`navigation`)[0] as any).nextHopProtocol;
         if (location.protocol === `http:`) {
             this.raiseWarning(this.translate.instant(HTTP_WARNING));
         } else if (protocol && protocol !== `h2` && protocol !== `h3`) {

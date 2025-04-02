@@ -1,3 +1,5 @@
+@use "font-variables";
+
 #projector {
     * {
         font-family: customProjectorFont;
@@ -14,7 +16,7 @@
     .slidetitle > h1,
      h1.projector_h1 {
          &, * {
-             font-family: $font-projectorH1;
+             font-family: font-variables.$font-projectorH1;
          }
      }
 
@@ -26,7 +28,7 @@
     .slidetitle > h2,
     h2.projector_h2 {
         &, * {
-            font-family: $font-projectorH2;
+            font-family: font-variables.$font-projectorH2;
         }
     }
 

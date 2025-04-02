@@ -76,7 +76,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
-        const variables: { [key: string]: any } = this.activeMeetingId
+        const variables: Record<string, any> = this.activeMeetingId
             ? { access_group_ids: partialMediafile.access_group_ids }
             : { token: partialMediafile.token };
         const payload = {
@@ -93,7 +93,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public async createDirectory(
         partialMediafile: Partial<Mediafile> & { access_group_ids: Id[] }
     ): Promise<Identifiable> {
-        const variables: { [key: string]: any } = this.activeMeetingId
+        const variables: Record<string, any> = this.activeMeetingId
             ? { access_group_ids: partialMediafile.access_group_ids }
             : {};
         const payload = {
@@ -106,7 +106,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public async update(update: any, viewMediafile: Identifiable): Promise<void> {
-        const variables: { [key: string]: any } = this.activeMeetingId
+        const variables: Record<string, any> = this.activeMeetingId
             ? { access_group_ids: update.access_group_ids }
             : { token: update.token };
         const payload = {

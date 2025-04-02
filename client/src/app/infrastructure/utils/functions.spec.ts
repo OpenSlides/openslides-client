@@ -586,11 +586,11 @@ describe(`utils: functions`, () => {
     });
 
     describe(`partitionModelsForUpdate function`, () => {
-        type TestModel = Identifiable & { [key: string]: any };
-        type PartitionModelsForUpdateTestPayload<T extends Identifiable> = {
+        type TestModel = Identifiable & Record<string, any>;
+        interface PartitionModelsForUpdateTestPayload<T extends Identifiable> {
             test: { newValues: (T | Omit<T, `id`>)[]; originals: T[] };
             expect: ListUpdateData<T>;
-        };
+        }
         const data: ({ title: string } & PartitionModelsForUpdateTestPayload<TestModel>)[] = [
             {
                 title: `models that should create`,

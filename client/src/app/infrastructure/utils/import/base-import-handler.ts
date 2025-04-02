@@ -44,7 +44,7 @@ export abstract class BaseImportHandler<MainModel = any, SideModel = any> implem
         return this._fixedChunkSize ?? this._chunkSize;
     }
 
-    protected readonly importContext: ImportContext<MainModel> = new ImportContext();
+    protected readonly importContext = new ImportContext<MainModel>();
 
     private readonly _chunkSize = 100;
     private readonly _fixedChunkSize: number;

@@ -280,7 +280,7 @@ export class HtmlToPdfService {
     protected createHyperlinkParagraph(data: CreateSpecificParagraphPayload): any {
         let newParagraph = this.createFormattedParagraph(data);
 
-        const href = (<HTMLAnchorElement>data.element).href;
+        const href = (data.element as HTMLAnchorElement).href;
         if (href) {
             newParagraph = this.addPropertyToTexts(newParagraph, `link`, href);
         }
@@ -339,10 +339,10 @@ export class HtmlToPdfService {
         // Fixes nested lists being placed inside `text` elements
         if (
             children.length === 1 &&
-            (<any>children[0])?.text?.length &&
-            (<any>children[0])?.text.find((el: any) => !!el.ul)
+            (children[0] as any)?.text?.length &&
+            (children[0] as any)?.text.find((el: any) => !!el.ul)
         ) {
-            children = [{ stack: (<any>children[0]).text }];
+            children = [{ stack: (children[0] as any).text }];
         }
 
         // keep the numbers of the ol list

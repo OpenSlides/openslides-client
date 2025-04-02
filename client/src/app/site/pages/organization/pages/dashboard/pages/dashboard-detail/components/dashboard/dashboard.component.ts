@@ -14,7 +14,8 @@ import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subsc
     selector: `os-dashboard`,
     templateUrl: `./dashboard.component.html`,
     styleUrls: [`./dashboard.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DashboardComponent extends BaseComponent {
     public get noMeetingsToShow(): boolean {

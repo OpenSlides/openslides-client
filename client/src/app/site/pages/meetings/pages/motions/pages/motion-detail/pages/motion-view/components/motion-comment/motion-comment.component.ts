@@ -13,7 +13,8 @@ import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-deta
     selector: `os-motion-comment`,
     templateUrl: `./motion-comment.component.html`,
     styleUrls: [`./motion-comment.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionCommentComponent extends BaseMotionDetailActionCardComponent {
     @Input()

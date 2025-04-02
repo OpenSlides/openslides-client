@@ -16,7 +16,7 @@ import { toBase64 } from '../infrastructure/utils/functions';
 import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';
 
-type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
+type HttpHeadersObj = HttpHeaders | Record<string, string | string[]>;
 
 const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
 
@@ -91,7 +91,7 @@ export class HttpService {
             return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
-                if (!!error.error.message) {
+                if (error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
                         data,
                         url: error.url

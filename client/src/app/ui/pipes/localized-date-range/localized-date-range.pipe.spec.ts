@@ -27,13 +27,11 @@ function getLocale(lang: string) {
     }
 }
 
-const testData: {
-    [testCase: string]: {
+const testData: Record<string, {
         title: string;
         range: { start: Date; end: Date };
-        expect: { [lang: string]: { [dateFormat: string]: string } };
-    };
-} = {
+        expect: Record<string, Record<string, string>>;
+    }> = {
     sameYear: {
         title: `test with same year`,
         range: { start: new Date(`January 18, 1995 03:24:00`), end: new Date(`December 17, 1995 03:24:00`) },

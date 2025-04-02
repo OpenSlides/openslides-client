@@ -16,7 +16,8 @@ import { getMotionWorkflowDetailSubscriptionConfig } from '../../../../motions.s
 @Component({
     selector: `os-workflow-detail-sort`,
     templateUrl: `./workflow-detail-sort.component.html`,
-    styleUrls: [`./workflow-detail-sort.component.scss`]
+    styleUrls: [`./workflow-detail-sort.component.scss`],
+    standalone: false
 })
 export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponent {
     public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;
