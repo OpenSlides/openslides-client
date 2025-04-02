@@ -182,14 +182,39 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 // Nodes
                 Document,
                 Blockquote,
-                BulletList,
+                BulletList.extend({
+                    content() {
+                        return `${this.options.itemTypeName}+ paragraph*`
+                    },
+                    addAttributes() {
+                        return {
+                            class: {}
+                        }
+                    }
+                }),
                 HardBreak,
                 Heading,
                 ImageResize.configure({
                     inline: true
                 }),
-                ListItem,
-                OrderedList,
+                ListItem.extend({
+                    content: `paragraph* block*`,
+                    addAttributes() {
+                        return {
+                            class: {}
+                        }
+                    }
+                }),
+                OrderedList.extend({
+                    content() {
+                        return `${this.options.itemTypeName}+ paragraph*`
+                    },
+                    addAttributes() {
+                        return {
+                            class: {}
+                        }
+                    }
+                }),
                 Paragraph,
                 Text,
                 Table,
