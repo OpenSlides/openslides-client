@@ -221,6 +221,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
+            if (this.allowToSetMinMax) {
+                this.updatePollMethod(PollMethod.Y);
+            }
         }
 
         this.subscriptions.push(
@@ -500,20 +503,20 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private getVotesAmountControl(): UntypedFormGroup {
-        const useMaxVotesPreselect = (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax;
-        const maxVotesPreselect = useMaxVotesPreselect ? this.pollOptionAmount : 1;
+        const maxVotesPreselect =
+            (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax ? this.pollOptionAmount : 1;
         const config = {
             max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
             min_votes_amount: [1, [Validators.required, Validators.min(1)]],
             max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
         };
         if (
-            useMaxVotesPreselect &&
+            this.allowToSetMinMax &&
             !this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)
         ) {
             config.max_votes_amount = [
                 maxVotesPreselect,
-                [Validators.required, Validators.min(1), Validators.max(maxVotesPreselect)]
+                [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
             ];
         }
         return this.fb.group(config, {
