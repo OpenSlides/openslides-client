@@ -7,7 +7,8 @@ import { AutofocusDirective } from './autofocus.directive';
 @Component({
     template: `
         <input id="box" osAutofocus value="cyan" />
-    `
+    `,
+    standalone: false
 })
 class TestComponent {}
 

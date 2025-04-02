@@ -4,7 +4,8 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 @Component({
     selector: `os-login-wrapper`,
     templateUrl: `./login-wrapper.component.html`,
-    styleUrls: [`./login-wrapper.component.scss`]
+    styleUrls: [`./login-wrapper.component.scss`],
+    standalone: false
 })
 export class LoginWrapperComponent extends BaseComponent implements OnInit {
     /**

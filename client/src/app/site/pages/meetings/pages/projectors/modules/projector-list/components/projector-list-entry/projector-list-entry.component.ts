@@ -16,7 +16,8 @@ import { ProjectorEditDialogService } from '../../../../components/projector-edi
     selector: `os-projector-list-entry`,
     templateUrl: `./projector-list-entry.component.html`,
     styleUrls: [`./projector-list-entry.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ProjectorListEntryComponent {
     public readonly permission = Permission;

@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .smaller-badge-text {
     .mat-badge-content {
@@ -41,6 +41,6 @@
     display: flex;
     align-items: center;
     .mat-mdc-icon-button {
-        @include custom-size-button(40px, 24px);
+        @include button.custom-size-button(40px, 24px);
     }
 }

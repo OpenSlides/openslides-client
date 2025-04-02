@@ -19,7 +19,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
     selector: `os-account-add-to-meetings`,
     templateUrl: `./account-add-to-meetings.component.html`,
     styleUrls: [`./account-add-to-meetings.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit {
     public user: ViewUser | null = null;

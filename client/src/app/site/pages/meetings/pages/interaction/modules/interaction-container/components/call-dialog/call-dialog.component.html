@@ -8,10 +8,10 @@
                         *osPerms="permission.listOfSpeakersCanManage"
                         color="primary"
                         mat-icon-button
+                        matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
                         target="_blank"
                         type="button"
                         [href]="jitsiMeetUrl | async"
-                        matTooltip="{{ 'Open Jitsi in new tab' | translate }}"
                         (click)="hangUp()"
                     >
                         <mat-icon>open_in_new</mat-icon>
@@ -21,8 +21,8 @@
                     <button
                         color="primary"
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Minimize' | translate }}"
+                        type="button"
                         (click)="hideDialog()"
                     >
                         <mat-icon>minimize</mat-icon>
@@ -42,8 +42,8 @@
                     <button
                         color="primary"
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Exit conference room' | translate }}"
+                        type="button"
                         (click)="hangUp()"
                     >
                         <mat-icon>close</mat-icon>

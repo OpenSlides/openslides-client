@@ -13,7 +13,8 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
 @Component({
     selector: `os-poll-list`,
     templateUrl: `./poll-list.component.html`,
-    styleUrls: [`./poll-list.component.scss`]
+    styleUrls: [`./poll-list.component.scss`],
+    standalone: false
 })
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
     public filterProps = [`title`, `state`];

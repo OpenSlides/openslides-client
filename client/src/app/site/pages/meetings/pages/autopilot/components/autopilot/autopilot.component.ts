@@ -22,7 +22,8 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
 @Component({
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
-    styleUrls: [`./autopilot.component.scss`]
+    styleUrls: [`./autopilot.component.scss`],
+    standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers | null = null;
@@ -106,9 +107,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
-    public disabledContentElements: { [key: string]: boolean } = {};
+    public disabledContentElements: Record<string, boolean> = {};
 
-    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public showRightCol = new BehaviorSubject<boolean>(false);
 
     private _currentProjection: ViewProjection | null = null;
 

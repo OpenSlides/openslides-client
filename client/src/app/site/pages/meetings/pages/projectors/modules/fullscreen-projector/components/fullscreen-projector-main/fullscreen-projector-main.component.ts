@@ -9,7 +9,8 @@ import { ViewProjector } from '../../../../view-models';
 @Component({
     selector: `os-fullscreen-projector-main`,
     templateUrl: `./fullscreen-projector-main.component.html`,
-    styleUrls: [`./fullscreen-projector-main.component.scss`]
+    styleUrls: [`./fullscreen-projector-main.component.scss`],
+    standalone: false
 })
 export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerComponent {
     public constructor(private sequentialNumberMappingService: SequentialNumberMappingService) {

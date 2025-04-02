@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .create-poll-button {
     display: flex;
@@ -10,5 +10,5 @@
 }
 
 :host ::ng-deep .detail-view {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }

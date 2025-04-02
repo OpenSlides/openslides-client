@@ -14,7 +14,8 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
 @Component({
     selector: `os-agenda-content-object-form`,
     templateUrl: `./agenda-content-object-form.component.html`,
-    styleUrls: [`./agenda-content-object-form.component.scss`]
+    styleUrls: [`./agenda-content-object-form.component.scss`],
+    standalone: false
 })
 export class AgendaContentObjectFormComponent
     extends BaseMeetingModelRequestHandler

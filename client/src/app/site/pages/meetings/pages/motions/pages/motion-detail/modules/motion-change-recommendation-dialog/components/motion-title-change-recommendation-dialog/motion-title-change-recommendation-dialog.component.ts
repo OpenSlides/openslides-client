@@ -32,7 +32,8 @@ export interface MotionTitleChangeRecommendationDialogComponentData extends Base
     selector: `os-motion-title-change-recommendation-dialog`,
     templateUrl: `./motion-title-change-recommendation-dialog.component.html`,
     styleUrls: [`./motion-title-change-recommendation-dialog.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionTitleChangeRecommendationDialogComponentData> {
     /**

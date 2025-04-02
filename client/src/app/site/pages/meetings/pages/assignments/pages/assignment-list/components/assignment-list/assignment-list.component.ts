@@ -19,7 +19,8 @@ const ASSIGNMENT_LIST_STORAGE_INDEX = `assignment_list`;
     selector: `os-assignment-list`,
     templateUrl: `./assignment-list.component.html`,
     styleUrls: [`./assignment-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAssignment> implements OnInit {
     /**

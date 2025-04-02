@@ -10,7 +10,8 @@ import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subs
 @Component({
     selector: `os-assignment-poll-main`,
     templateUrl: `./assignment-poll-main.component.html`,
-    styleUrls: [`./assignment-poll-main.component.scss`]
+    styleUrls: [`./assignment-poll-main.component.scss`],
+    standalone: false
 })
 export class AssignmentPollMainComponent extends BaseModelRequestHandlerComponent {
     public constructor(private sequentialNumberMappingService: SequentialNumberMappingService) {

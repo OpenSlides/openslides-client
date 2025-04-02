@@ -38,7 +38,8 @@ enum Player {
         `../../../../../../../../../../../node_modules/video.js/dist/video-js.css`
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     @ViewChild(`vjs`, { static: false })
@@ -102,7 +103,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     private mimeType!: MimeType;
 
     @Output()
-    private started: EventEmitter<void> = new EventEmitter();
+    private started = new EventEmitter<void>();
 
     public get usingYouTube(): boolean {
         return this.playerType === Player.youtube;

@@ -63,7 +63,7 @@ export class WaitForActionDialogService {
     private _dialog: MatDialogRef<StoppedWaitingForActionDialogComponent>;
     private _closingSubscription: Subscription;
 
-    private _snapshots: BehaviorSubject<(Partial<ActionWorker> & { closed: number })[]> = new BehaviorSubject([]);
+    private _snapshots = new BehaviorSubject<(Partial<ActionWorker> & { closed: number })[]>([]);
 
     public constructor(
         private injector: Injector,

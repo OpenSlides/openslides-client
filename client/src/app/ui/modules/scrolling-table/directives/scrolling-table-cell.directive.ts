@@ -8,7 +8,8 @@ import { ScrollingTableCellDefinition } from './scrolling-table-cell-definition'
 import { ScrollingTableCellPosition } from './scrolling-table-cell-position';
 
 @Directive({
-    selector: `[osScrollingTableCell]`
+    selector: `[osScrollingTableCell]`,
+    standalone: false
 })
 export class ScrollingTableCellDirective implements OnInit, OnDestroy, ScrollingTableCellDefinition {
     @Input()

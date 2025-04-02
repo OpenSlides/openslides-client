@@ -9,7 +9,8 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 @Component({
     selector: `os-reset-password-confirm`,
     templateUrl: `./reset-password-confirm.component.html`,
-    styleUrls: [`./reset-password-confirm.component.scss`]
+    styleUrls: [`./reset-password-confirm.component.scss`],
+    standalone: false
 })
 export class ResetPasswordConfirmComponent extends BaseComponent implements OnInit {
     /**

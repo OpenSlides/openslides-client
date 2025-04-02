@@ -9,7 +9,8 @@ import {
     templateUrl: `../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.html`,
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: TopicPollFormComponent }],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class TopicPollFormComponent extends BasePollFormComponent {
     public get hideSelects(): PollFormHideSelectsData {

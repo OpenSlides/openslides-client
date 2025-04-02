@@ -5,7 +5,8 @@ import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.co
 @Component({
     selector: `os-chip-select`,
     templateUrl: `./chip-select.component.html`,
-    styleUrls: [`./chip-select.component.scss`]
+    styleUrls: [`./chip-select.component.scss`],
+    standalone: false
 })
 export class ChipSelectComponent implements AfterContentInit {
     public constructor() {}

@@ -30,7 +30,8 @@ import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pd
 @Component({
     selector: `os-topic-detail`,
     templateUrl: `./topic-detail.component.html`,
-    styleUrls: [`./topic-detail.component.scss`]
+    styleUrls: [`./topic-detail.component.scss`],
+    standalone: false
 })
 export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewTopic.COLLECTION;
@@ -258,13 +259,11 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         }
     }
 
-    public get prevUrl(): any {
-        return `../..`;
-    }
+    public readonly prevUrl = `../..`;
 
     public getNavDisplay(topic: ViewTopic | null): string | number {
         if (!!topic && !this.vp.isMobile) {
-            return !!topic.agenda_item?.item_number ? topic.agenda_item.item_number : ``;
+            return topic.agenda_item?.item_number ? topic.agenda_item.item_number : ``;
         }
         return ``;
     }

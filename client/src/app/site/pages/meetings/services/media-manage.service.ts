@@ -25,8 +25,8 @@ export class MediaManageService {
 
     public allFontPlaces = FONT_PLACES;
 
-    private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};
-    private readonly fontUrlSubjects: { [place in FontPlace]?: BehaviorSubject<string> } = {};
+    private readonly logoUrlSubjects: Partial<Record<LogoPlace, BehaviorSubject<string | null>>> = {};
+    private readonly fontUrlSubjects: Partial<Record<FontPlace, BehaviorSubject<string>>> = {};
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,
@@ -92,8 +92,8 @@ export class MediaManageService {
 
     public getPlacesDisplayNames(mediafile: ViewMeetingMediafile): string[] {
         let uses: string[] = [];
-        uses = uses.concat(mediafile.getLogoPlaces().map(place => (<any>LogoDisplayNames)[place]));
-        uses = uses.concat(mediafile.getFontPlaces().map(place => (<any>FontDisplayNames)[place]));
+        uses = uses.concat(mediafile.getLogoPlaces().map(place => (LogoDisplayNames as any)[place]));
+        uses = uses.concat(mediafile.getFontPlaces().map(place => (FontDisplayNames as any)[place]));
         return uses;
     }
 

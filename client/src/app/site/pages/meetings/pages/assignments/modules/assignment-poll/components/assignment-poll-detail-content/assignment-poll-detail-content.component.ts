@@ -21,7 +21,8 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
 @Component({
     selector: `os-assignment-poll-detail-content`,
     templateUrl: `./assignment-poll-detail-content.component.html`,
-    styleUrls: [`./assignment-poll-detail-content.component.scss`]
+    styleUrls: [`./assignment-poll-detail-content.component.scss`],
+    standalone: false
 })
 export class AssignmentPollDetailContentComponent implements OnInit {
     private _poll: PollData;

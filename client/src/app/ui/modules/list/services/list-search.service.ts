@@ -12,7 +12,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private _sourceObservable: Observable<V[]> | null = null;
     private _sourceSubscription: Subscription | null = null;
     private _currentSearchFilter = ``;
-    private _filterPropsMap: { [filterProps: string]: string[] } = {};
+    private _filterPropsMap: Record<string, string[]> = {};
 
     private readonly _outputSubject = new BehaviorSubject<V[]>([]);
 
