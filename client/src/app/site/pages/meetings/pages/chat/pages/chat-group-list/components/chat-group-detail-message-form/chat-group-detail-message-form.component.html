@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="chat-form-field full-width" (keydown)="onKeyDown($event)">
     @if (currentMessage) {
         <div class="chat-form-field-prefix flex-vertical-center" matPrefix>
-            {{ 'Edit' | translate }}
+            <span>{{ 'Edit' | translate }}</span>
             <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
                 <mat-icon>close</mat-icon>
             </button>
