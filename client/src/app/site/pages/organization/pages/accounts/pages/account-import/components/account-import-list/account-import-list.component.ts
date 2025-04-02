@@ -10,14 +10,15 @@ import { AccountImportService } from '../../services/account-import.service/acco
 @Component({
     selector: `os-account-import-list`,
     templateUrl: `./account-import-list.component.html`,
-    styleUrls: [`./account-import-list.component.scss`]
+    styleUrls: [`./account-import-list.component.scss`],
+    standalone: false
 })
 export class AccountImportListComponent extends BaseViaBackendImportListComponent {
     public possibleFields = accountColumns;
 
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
-        label: (<any>accountHeadersAndVerboseNames)[header],
+        label: (accountHeadersAndVerboseNames as any)[header],
         isTableColumn: true
     }));
 

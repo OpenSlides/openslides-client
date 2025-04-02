@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/variables.scss';
 
 form {
     overflow: hidden;
@@ -7,7 +7,7 @@ form {
 .settings-grid {
     display: grid;
 
-    @include desktop {
+    @include variables.desktop {
         grid-template-columns: 40% 60%;
     }
 

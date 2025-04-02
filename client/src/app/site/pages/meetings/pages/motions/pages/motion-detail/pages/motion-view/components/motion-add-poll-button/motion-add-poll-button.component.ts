@@ -11,7 +11,8 @@ import { MotionPollDialogService } from '../../../../../../modules/motion-poll/s
     selector: `os-motion-add-poll-button`,
     templateUrl: `./motion-add-poll-button.component.html`,
     styleUrls: [`./motion-add-poll-button.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionAddPollButtonComponent {
     @Input()

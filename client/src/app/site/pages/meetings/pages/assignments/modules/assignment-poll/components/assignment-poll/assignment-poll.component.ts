@@ -13,7 +13,8 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
 @Component({
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
-    styleUrls: [`./assignment-poll.component.scss`]
+    styleUrls: [`./assignment-poll.component.scss`],
+    standalone: false
 })
 export class AssignmentPollComponent extends BasePollComponent implements OnInit {
     @Input()

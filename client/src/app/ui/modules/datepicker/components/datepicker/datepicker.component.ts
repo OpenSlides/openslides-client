@@ -10,7 +10,8 @@ import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.comp
     styleUrls: [`./datepicker.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: DatepickerComponent }],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DatepickerComponent extends BaseDatepickerComponent {
     public get empty(): boolean {

@@ -20,19 +20,16 @@ export interface BackendImportHeader {
 
 export type BackendImportEntry = null | boolean | number | string | BackendImportEntryObject;
 
-export type BackendImportEntryObject = {
+export interface BackendImportEntryObject {
     value: boolean | number | string;
     info: BackendImportState;
     type: `boolean` | `number` | `string` | `date`;
-};
+}
 
 export interface BackendImportRow {
     state: BackendImportState;
     messages: string[];
-    data: {
-        // property name and type must match an entry in the given `headers`
-        [property: string]: BackendImportEntry | BackendImportEntry[]; // if is_list is set in corresponding header column, we need here also a list
-    };
+    data: Record<string, BackendImportEntry | BackendImportEntry[]>;
 }
 
 export type BackendImportIdentifiedRow = BackendImportRow & Identifiable;

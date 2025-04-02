@@ -25,7 +25,8 @@ import { AccountDialogComponent } from '../account-dialog/account-dialog.compone
 @Component({
     selector: `os-account-button`,
     templateUrl: `./account-button.component.html`,
-    styleUrls: [`./account-button.component.scss`]
+    styleUrls: [`./account-button.component.scss`],
+    standalone: false
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public readonly translations = availableTranslations;
@@ -51,10 +52,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public get isAllowedSelfSetPresent(): boolean {
         return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
-    }
-
-    public get isOnProfilePage(): boolean {
-        return true;
     }
 
     public get hasActiveMeeting(): boolean {
@@ -172,7 +169,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout(<any>this.clickTimeout);
+            clearTimeout((this.clickTimeout as any));
         }
 
         if (this.clickCounter === 4) {
@@ -184,9 +181,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             }
             this.dialog.open(ChessDialogComponent, config);
         } else {
-            this.clickTimeout = <any>setTimeout(() => {
+            this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;
-            }, 200);
+            }, 200) as any;
         }
     }
 

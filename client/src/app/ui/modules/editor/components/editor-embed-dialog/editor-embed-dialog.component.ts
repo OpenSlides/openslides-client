@@ -18,7 +18,8 @@ export interface EditorEmbedDialogOutput {
 @Component({
     selector: `os-editor-image-dialog`,
     templateUrl: `./editor-embed-dialog.component.html`,
-    styleUrls: [`editor-embed-dialog.component.scss`]
+    styleUrls: [`editor-embed-dialog.component.scss`],
+    standalone: false
 })
 export class EditorEmbedDialogComponent {
     public embed: EditorEmbedData;

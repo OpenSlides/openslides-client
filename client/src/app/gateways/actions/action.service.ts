@@ -14,7 +14,7 @@ let uniqueFnId = 0;
     providedIn: `root`
 })
 export class ActionService {
-    private readonly _beforeActionFnMap: { [index: number]: ActionFn } = {};
+    private readonly _beforeActionFnMap: Record<number, ActionFn> = {};
 
     public constructor(private http: HttpService) {}
 

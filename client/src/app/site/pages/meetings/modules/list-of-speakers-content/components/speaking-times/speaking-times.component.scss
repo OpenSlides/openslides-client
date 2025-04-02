@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/variables.scss';
 
 .structure-level-list {
     $auto-sizing: auto-fill;
@@ -13,7 +13,7 @@
         $auto-sizing: auto-fit;
     }
 
-    @include phone {
+    @include variables.phone {
         $column-min-width: 159px;
         padding: 0;
         margin-right: -20px;
@@ -27,7 +27,7 @@
         justify-content: end;
         width: min(222px, 100%);
 
-        @include phone {
+        @include variables.phone {
             width: min(186px, 100%);
         }
 

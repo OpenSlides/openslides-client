@@ -10,7 +10,8 @@ import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen
 @Component({
     selector: `os-fullscreen-projector-detail`,
     templateUrl: `./fullscreen-projector-detail.component.html`,
-    styleUrls: [`./fullscreen-projector-detail.component.scss`]
+    styleUrls: [`./fullscreen-projector-detail.component.scss`],
+    standalone: false
 })
 export class FullscreenProjectorDetailComponent implements OnInit {
     private _projectorId: Id | null = null;

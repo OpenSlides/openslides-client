@@ -1,5 +1,5 @@
-@import 'src/assets/styles/variables.scss';
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 .centered-text {
     text-align: center;
 }
@@ -8,5 +8,5 @@
     border-bottom: 1px solid !important;
 }
 .detail-view-appearance-container {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }

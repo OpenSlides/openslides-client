@@ -77,12 +77,12 @@
             <!-- Results -->
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                    <os-poll-progress [poll]="poll" />
                 }
                 @if (poll.canBeVotedFor()) {
-                    <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll"></os-motion-poll-vote>
+                    <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll" />
                 }
-                <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
+                <os-motion-poll-meta-information [poll]="poll" />
             } @else {
                 <span [ngClass]="{ 'poll-link-wrapper': isSameMeeting }">
                     <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
@@ -102,9 +102,9 @@
 
 <ng-template #viewTemplate>
     @if (isSameMeeting) {
-        <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
+        <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()" />
     } @else {
-        <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
+        <os-motion-poll-detail-content [poll]="poll" />
     }
 </ng-template>
 
@@ -137,7 +137,7 @@
         [allowReferenceProjector]="true"
         [menuItem]="true"
         [object]="poll.getProjectionBuildDescriptor()"
-    ></os-projector-button>
+    />
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>

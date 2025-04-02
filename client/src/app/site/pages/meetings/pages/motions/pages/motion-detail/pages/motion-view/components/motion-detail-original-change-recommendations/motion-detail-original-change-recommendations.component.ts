@@ -55,7 +55,8 @@ import { MotionControllerService } from '../../../../../../services/common/motio
     selector: `os-motion-detail-original-change-recommendations`,
     templateUrl: `./motion-detail-original-change-recommendations.component.html`,
     styleUrls: [`./motion-detail-original-change-recommendations.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit /* , OnChanges */ {
     @Output()
@@ -153,18 +154,18 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * and the hover-event next to the line numbers
      */
     public ngOnInit(): void {
-        const nativeElement = <Element>this.el.nativeElement;
-        this.element = <Element>nativeElement.querySelector(`.text`);
+        const nativeElement = this.el.nativeElement as Element;
+        this.element = nativeElement.querySelector(`.text`) as Element;
 
         this.renderer.listen(this.el.nativeElement, `click`, (ev: MouseEvent) => {
-            const element = <Element>ev.target;
+            const element = ev.target as Element;
             if (element.classList.contains(`os-line-number`) && element.classList.contains(`selectable`)) {
                 this.clickedLineNumber(parseInt(element.getAttribute(`data-line-number`)!, 10));
             }
         });
 
         this.renderer.listen(this.el.nativeElement, `mouseover`, (ev: MouseEvent) => {
-            const element = <Element>ev.target;
+            const element = ev.target as Element;
             if (element.classList.contains(`os-line-number`) && element.classList.contains(`selectable`)) {
                 this.hoverLineNumber(parseInt(element.getAttribute(`data-line-number`)!, 10));
             }
@@ -191,9 +192,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * @param reco
      */
     public calcRecoTop(reco: ViewUnifiedChange): string {
-        const from = <HTMLElement>(
-            this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10))
-        );
+        const from = this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10)) as HTMLElement;
         return (from?.offsetTop.toString() || `0`) + `px`;
     }
 
@@ -202,12 +201,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * @param reco
      */
     public calcRecoHeight(reco: ViewUnifiedChange): string {
-        const from = <HTMLElement>(
-            this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10))
-        );
-        const to = <HTMLElement>(
-            this.element.querySelector(`.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10))
-        );
+        const from = this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10)) as HTMLElement;
+        const to = this.element.querySelector(`.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10)) as HTMLElement;
         if (to) {
             return (to.offsetTop - from.offsetTop).toString() + `px`;
         } else {

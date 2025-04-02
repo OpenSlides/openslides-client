@@ -13,7 +13,8 @@ import { ViewGender } from '../../../../view-models/view-gender';
     selector: `os-gender-list`,
     templateUrl: `./gender-list.component.html`,
     styleUrl: `./gender-list.component.scss`,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GenderListComponent extends BaseListViewComponent<ViewGender> {
     @ViewChild(`genderDialog`, { static: true })

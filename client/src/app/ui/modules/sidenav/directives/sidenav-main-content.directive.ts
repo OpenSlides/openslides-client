@@ -1,6 +1,7 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-    selector: `[osSidenavMainContent]`
+    selector: `[osSidenavMainContent]`,
+    standalone: false
 })
 export class SidenavMainContentDirective {}

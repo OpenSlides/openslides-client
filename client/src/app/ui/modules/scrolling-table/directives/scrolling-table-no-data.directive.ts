@@ -4,7 +4,8 @@ import { Directive, OnInit, TemplateRef, ViewContainerRef } from '@angular/core'
 import { ScrollingTableManageService } from '../services';
 
 @Directive({
-    selector: `[osScrollingTableNoData]`
+    selector: `[osScrollingTableNoData]`,
+    standalone: false
 })
 export class ScrollingTableNoDataDirective extends CdkPortal implements OnInit {
     public constructor(

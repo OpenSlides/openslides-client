@@ -136,8 +136,8 @@
             <button
                 color="warn"
                 mat-icon-button
-                type="button"
                 matTooltip="{{ 'Remove from motion block' | translate }}"
+                type="button"
                 (click)="onRemoveMotionButton(motion)"
             >
                 <mat-icon>close</mat-icon>
@@ -165,8 +165,8 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template let-motion="motion" matMenuContent>
-        <os-projector-button [menuItem]="true" [object]="motion"></os-projector-button>
-        <os-speaker-button [menuItem]="true" [object]="motion"></os-speaker-button>
+        <os-projector-button [menuItem]="true" [object]="motion" />
+        <os-speaker-button [menuItem]="true" [object]="motion" />
         <button
             *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
             class="red-warning-text"
@@ -195,10 +195,10 @@
         </div>
     }
 
-    <os-speaker-button [menuItem]="true" [object]="block"></os-speaker-button>
+    <os-speaker-button [menuItem]="true" [object]="block" />
 
     @if (block) {
-        <os-projector-button [menuItem]="true" [object]="block"></os-projector-button>
+        <os-projector-button [menuItem]="true" [object]="block" />
     }
 
     <div *osPerms="permission.agendaItemCanManage">

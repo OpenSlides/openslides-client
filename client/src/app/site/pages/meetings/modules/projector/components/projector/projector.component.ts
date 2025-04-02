@@ -22,7 +22,8 @@ import { Dimension, SlideData } from '../../../../pages/projectors/definitions';
 @Component({
     selector: `os-projector`,
     templateUrl: `./projector.component.html`,
-    styleUrls: [`./projector.component.scss`]
+    styleUrls: [`./projector.component.scss`],
+    standalone: false
 })
 export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     private readonly projectorSubject = new BehaviorSubject<ViewProjector | null>(null);

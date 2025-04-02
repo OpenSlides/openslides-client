@@ -17,7 +17,8 @@ export enum CountdownState {
     selector: `os-countdown-time`,
     templateUrl: `./countdown-time.component.html`,
     styleUrls: [`./countdown-time.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CountdownTimeComponent implements OnDestroy {
     /**

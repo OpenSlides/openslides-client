@@ -1,6 +1,6 @@
-@import 'src/assets/styles/media-queries.scss';
+@use 'src/assets/styles/media-queries.scss';
 
-@include set-breakpoint-upper(xs) {
+@include media-queries.set-breakpoint-upper(xs) {
     .form100 {
         width: 100%;
     }

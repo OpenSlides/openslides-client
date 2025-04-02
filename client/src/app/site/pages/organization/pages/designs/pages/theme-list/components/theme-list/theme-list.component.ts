@@ -13,7 +13,8 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
 @Component({
     selector: `os-theme-list`,
     templateUrl: `./theme-list.component.html`,
-    styleUrls: [`./theme-list.component.scss`]
+    styleUrls: [`./theme-list.component.scss`],
+    standalone: false
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public constructor(

@@ -7,7 +7,8 @@ import { CurrentSpeakingStructureLevelSlideData } from '../current-speaking-stru
 @Component({
     selector: `os-current-speaking-structure-level-speakers-slide`,
     templateUrl: `./current-speaking-structure-level-slide.component.html`,
-    styleUrls: [`./current-speaking-structure-level-slide.component.scss`]
+    styleUrls: [`./current-speaking-structure-level-slide.component.scss`],
+    standalone: false
 })
 export class CurrentSpeakingStructureLevelSlideComponent extends BaseSlideComponent<CurrentSpeakingStructureLevelSlideData> {
     public SpeechState = SpeechState;

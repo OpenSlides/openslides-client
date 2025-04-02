@@ -9,7 +9,8 @@ const DEFAULT_LOGO_DARK_THEME = `/assets/img/openslides-logo-dark.svg`;
 @Component({
     selector: `os-logo`,
     templateUrl: `./logo.component.html`,
-    styleUrls: [`./logo.component.scss`]
+    styleUrls: [`./logo.component.scss`],
+    standalone: false
 })
 export class LogoComponent extends BaseUiComponent implements OnInit {
     /**

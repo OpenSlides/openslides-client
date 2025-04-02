@@ -12,7 +12,8 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./list-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: ListSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
     /**

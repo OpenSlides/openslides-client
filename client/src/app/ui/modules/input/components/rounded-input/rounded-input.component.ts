@@ -13,7 +13,8 @@ export type Size = 'small' | 'medium' | 'large';
     selector: `os-rounded-input`,
     templateUrl: `./rounded-input.component.html`,
     styleUrls: [`./rounded-input.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }],
+    standalone: false
 })
 export class RoundedInputComponent extends BaseFormControlComponent<string> implements OnInit {
     /**
