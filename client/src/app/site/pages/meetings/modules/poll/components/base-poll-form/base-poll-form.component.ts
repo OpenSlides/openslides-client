@@ -510,10 +510,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             min_votes_amount: [1, [Validators.required, Validators.min(1)]],
             max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
         };
-        if (
-            this.allowToSetMinMax &&
-            !this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)
-        ) {
+        if (this.allowToSetMinMax) {
             config.max_votes_amount = [
                 maxVotesPreselect,
                 [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
