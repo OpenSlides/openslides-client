@@ -117,9 +117,6 @@ export class MotionPdfExportService {
         const metadata = {
             title: filename
         };
-        console.log(`ddocdefinition`, docDefinition);
-        console.log(`metadata`, metadata);
-        console.log(`filename`, filename);
         this.pdfDocumentService.downloadLandscape({ docDefinition, filename, metadata });
     }
 }

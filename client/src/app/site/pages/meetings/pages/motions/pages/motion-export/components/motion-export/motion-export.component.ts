@@ -26,9 +26,8 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
-import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
-import { MotionExportService } from '../../../../services/export/motion-export.service';
-import { MotionExportDialogService } from '../../services/motion-export-dialog.service';
+import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
+import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
 @Component({
     standalone: true,
     selector: `os-motion-export`,
@@ -217,7 +216,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public constructor(
         public formBuilder: UntypedFormBuilder,
         public commentRepo: MotionCommentSectionControllerService,
-        public motionExportDialogService: MotionExportDialogService,
         private motionRepo: MotionRepositoryService,
         private exportService: MotionExportService,
         private amendmentRepo: AmendmentControllerService,
@@ -465,6 +463,59 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
     }
 
+    // Transform form of motion export to MotionExportInfo for further processing
+        public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {
+            const exportInfo = {};
+
+            exportInfo[`format`] = dialogForm.value[`format`] as ExportFileFormat;
+            exportInfo[`crMode`] = dialogForm.get(`crMode`).value as ChangeRecoMode;
+            exportInfo[`lnMode`] = dialogForm.get(`lnMode`).value as LineNumberingMode;
+            exportInfo[`comments`] = dialogForm.get(`comments`).value;
+            exportInfo[`content`] = dialogForm.get(`content`).value.filter(obj => !obj.includes(`id`));
+
+            let intersection = [
+                `submitters`,
+                `supporters`,
+                `state`,
+                `recommendation`,
+                `category`,
+                `block`,
+                `tags`,
+                `polls`,
+                `list_of_speakers`,
+                `sequential_number`,
+                `referring_motions`,
+                `allcomments`,
+                `editors`,
+                `working_group_speakers`
+            ].filter(
+                element =>
+                    dialogForm.get(`metaInfo`).value?.includes(element) ||
+                    dialogForm.get(`content`).value?.includes(element) ||
+                    dialogForm.get(`personrelated`).value?.includes(element)
+            );
+            exportInfo[`metaInfo`] = intersection as InfoToExport[];
+
+            intersection = [
+                `toc`,
+                `header`,
+                `page`,
+                `date`,
+                `attachments`,
+                `addBreaks`,
+                `continuousText`,
+                `onlyChangedLines`
+            ].filter(
+                element =>
+                    dialogForm.get(`pageLayout`).value?.includes(element) ||
+                    dialogForm.get(`headerFooter`).value?.includes(element) ||
+                    dialogForm.get(`content`).value?.includes(element)
+            );
+            exportInfo[`pdfOptions`] = intersection;
+
+            return exportInfo;
+        }
+
     public async exportMotions(): Promise<void> {
         this.repoSub.unsubscribe();
         this.exportForm = this.formBuilder.group({
@@ -477,7 +528,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
-        this.exportForm.patchValue(this.motionExportDialogService.dialogToExportForm(this.dialogForm));
+        this.exportForm.patchValue(this.dialogToExportForm(this.dialogForm));
         const exportInfo = this.exportForm.value;
 
         if (exportInfo) {

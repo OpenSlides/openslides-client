@@ -10,7 +10,6 @@ import { SortListService } from 'src/app/ui/modules/list';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
-import { MotionExportDialogService } from '../../../../pages/motion-export/services/motion-export-dialog.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 
@@ -67,7 +66,6 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
         private tagRepo: TagControllerService,
         private meetingSettingsService: MeetingSettingsService,
         private _sortService: MotionListSortService,
-        public motionExportDialogService: MotionExportDialogService,
         private route: ActivatedRoute
     ) {
         super();
