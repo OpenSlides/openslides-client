@@ -343,6 +343,12 @@ export const RELATIONS: Relation[] = [
         AField: `forward_to_committees`,
         BField: `receive_forwardings_from_committees`
     }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewUser,
+        OField: `native_users`,
+        MField: `home_committee`
+    }),
     // ########## Meetings
     ...makeO2O({
         AViewModel: ViewMeeting,

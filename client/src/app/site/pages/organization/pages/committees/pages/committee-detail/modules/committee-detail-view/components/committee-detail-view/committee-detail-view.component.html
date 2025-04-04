@@ -126,6 +126,16 @@
                     }
                 </os-committee-meta-info>
             }
+            <!-- Number of native users -->
+            @if (canManageCommittee) {
+                <os-committee-meta-info icon="supervisor_account" title="{{ 'Accounts' | translate }}">
+                    @if (committee.native_user_ids) {
+                        <span>
+                            {{ committee.native_user_ids.length }}
+                        </span>
+                    }
+                </os-committee-meta-info>
+            }
         </mat-card-content>
     </mat-card>
     <!-- Meetings -->

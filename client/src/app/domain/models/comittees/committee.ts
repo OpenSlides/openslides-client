@@ -18,6 +18,7 @@ export class Committee extends BaseModel<Committee> {
     public organization_id!: Id; // organization/committee_ids;
     public organization_tag_ids!: Id[]; // (committee/organization_tag_ids)[];
     public manager_ids!: Id[]; // (user/committe_management_ids)[]
+    public native_user_ids!: Id[];
 
     public constructor(input?: any) {
         super(Committee.COLLECTION, input);
@@ -35,6 +36,7 @@ export class Committee extends BaseModel<Committee> {
         `forward_to_committee_ids`,
         `receive_forwardings_from_committee_ids`,
         `organization_tag_ids`,
-        `organization_id`
+        `organization_id`,
+        `native_user_ids`
     ];
 }
