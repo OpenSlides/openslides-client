@@ -42,6 +42,21 @@
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
+            <!-- Home Committee -->
+            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
+                <mat-form-field class="form100 force-min-with">
+                    <mat-label>{{ 'Home committee' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="home_committee_id"
+                        [multiple]="false"
+                        [repo]="committeeController"
+                        [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetFnHomeCommittee()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+            </div>
             <!-- Administration roles (at organization level) -->
             <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
                 <mat-form-field class="form100 force-min-with">
@@ -96,6 +111,14 @@
             <div>
                 <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
                 <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
+            </div>
+        }
+        @if (user.home_committee_id) {
+            <div>
+                <h4>{{ 'Home Committee' | translate }}</h4>
+                <a [routerLink]="'/committees/' + user.home_committee_id">
+                    {{ getHomeCommitteeName(user.home_committee_id) }}
+                </a>
             </div>
         }
         <!-- Default vote weight -->
