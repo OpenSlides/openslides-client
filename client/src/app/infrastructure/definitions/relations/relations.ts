@@ -286,6 +286,12 @@ export const RELATIONS: Relation[] = [
         MField: `gender`,
         OField: `users`
     }),
+    ...makeM2O({
+        MViewModel: ViewUser,
+        OViewModel: ViewCommittee,
+        MField: `home_committee`,
+        OField: `users`
+    }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
     {

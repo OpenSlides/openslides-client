@@ -70,7 +70,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public readonly additionalFormControls = {
         default_vote_weight: [``, Validators.min(0.000001)],
         organization_management_level: [],
-        committee_management_ids: []
+        committee_management_ids: [],
+        home_committee_id: []
     };
 
     public isFormValid = false;
@@ -144,6 +145,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return () => (this.user ? this.user.committee_management_ids : []);
     }
 
+    public getTransformSetFnHomeCommittee(): (value?: string[]) => Id {
+        return () => (this.user ? this.user.home_committee_id : null);
+    }
+
     public getTransformPropagateFn(): (value?: Id[]) => any {
         return value => value;
     }
@@ -210,6 +215,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             this.committeeController.getViewModel(committeeId)
         );
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
+    }
+
+    public getHomeCommitteeName(committeeId: Id): string {
+        return this.committeeController.getViewModel(committeeId).name;
     }
 
     public getCellClass(isCommitteeRow: boolean, isLastColumnOfCommitte: boolean, isLastLine: boolean): string {
@@ -297,6 +306,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                         super.setTitle(title);
                         this.user = user;
                         this.generateParticipationTableData();
+                        console.log(`user`, this.user);
                     }
                 })
             );

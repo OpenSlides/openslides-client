@@ -384,6 +384,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
+    home_committee: ViewCommittee;
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
