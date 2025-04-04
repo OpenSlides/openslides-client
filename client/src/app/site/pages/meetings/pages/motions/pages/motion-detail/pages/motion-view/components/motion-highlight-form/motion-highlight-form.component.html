@@ -83,6 +83,16 @@
                         <mat-icon>edit</mat-icon>
                     </button>
                 } @else {
+                    <!-- apply final version -->
+                    <button
+                        mat-icon-button
+                        matTooltip="{{ 'Apply editorial final version' | translate }}"
+                        type="button"
+                        (click)="applyModifiedFinalVersion()"
+                    >
+                        <mat-icon>save</mat-icon>
+                    </button>
+
                     <!-- save final version -->
                     <button
                         mat-icon-button

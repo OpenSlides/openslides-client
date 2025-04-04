@@ -6,7 +6,8 @@ import { MotionDetailServiceModule } from '../motion-detail-service.module';
 export enum ModifiedFinalVersionAction {
     CANCEL = `cancel`,
     EDIT = `edit`,
-    SAVE = `save`
+    SAVE = `save`,
+    APPLY = `apply`
 }
 
 @Injectable({
