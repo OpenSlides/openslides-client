@@ -82,6 +82,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useBottomMargin = true;
+
+    @Input()
     public useAdditionalEditTemplate = true;
 
     @Input()
