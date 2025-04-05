@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 
 const PollValues: any = {
@@ -21,6 +21,9 @@ const PollValues: any = {
 @Pipe({
     name: `pollKeyVerbose`,
     standalone: false
+})
+@Injectable({
+    providedIn: `root`
 })
 export class PollKeyVerbosePipe implements PipeTransform {
     public transform(value: string): string {

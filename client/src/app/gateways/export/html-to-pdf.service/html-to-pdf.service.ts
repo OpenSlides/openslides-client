@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Content, ContentColumns } from 'pdfmake/interfaces';
 import { MEETING_PDF_EXPORT_HEADING_STYLES } from 'src/app/domain/models/meetings/meeting.constants';
-import { ExportServiceModule } from 'src/app/gateways/export';
 
 export interface ChildNodeParagraphPayload {
     child: Element;
@@ -30,7 +29,7 @@ export interface CreateSpecificParagraphPayload {
  * ```
  */
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class HtmlToPdfService {
     /**

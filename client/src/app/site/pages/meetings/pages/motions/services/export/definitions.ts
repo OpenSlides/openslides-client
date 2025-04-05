@@ -11,7 +11,7 @@ export type InfoToExport =
     | 'block'
     | 'tags'
     | 'polls'
-    | 'speakers'
+    | 'list_of_speakers'
     | 'id'
     | 'sequential_number'
     | 'referring_motions'
@@ -35,12 +35,15 @@ const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     number: `Number`,
     submitters: `Submitters`,
     supporters: `Supporters`,
+    editors: `Motion Editors`,
+    working_group_speakers: `Spokesperson`,
     title: `Title`,
     text: `Text`,
     reason: `Reason`,
     category: `Category`,
     tags: `Tags`,
     block: `Motion block`,
+    list_of_speakers: `Speakers`,
     recommendation: `Recommendation`,
     state: `State`,
     sequential_number: `Sequential number`

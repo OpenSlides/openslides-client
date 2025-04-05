@@ -21,7 +21,6 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
-import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 export interface TableDataEntryCreationInput {
     poll: PollData;
@@ -34,7 +33,7 @@ export interface TableDataEntryCreationInput {
  * Service class for motion polls.
  */
 @Injectable({
-    providedIn: MotionPollServiceModule
+    providedIn: `root`
 })
 export class MotionPollService extends PollService {
     public defaultPercentBase!: PollPercentBase;
