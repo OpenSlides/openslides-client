@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -37,6 +38,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////// Bridge to the dedicated repo
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public override getViewModelList(): ViewMotion[] {
+        return super.getViewModelList().filter(m => !!m.sequential_number);
+    }
+
+    public override getViewModelListObservable(): Observable<ViewMotion[]> {
+        return super.getViewModelListObservable().pipe(map(list => list.filter(m => !!m.sequential_number)));
+    }
 
     public create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
         return this.repo.create(...motions);
