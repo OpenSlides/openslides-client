@@ -313,7 +313,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return (
             (selectedPollMethod === FormPollMethod.Y ||
                 (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
-            (!data || !data.state || data.isCreated)
+                (!data || !data.state || data.isCreated)
         );
     }
 

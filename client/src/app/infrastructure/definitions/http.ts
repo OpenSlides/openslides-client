@@ -1,6 +1,6 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
-export type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
+export type ResponseType = `arraybuffer` | `blob` | `json` | `text`;
 
 export enum HttpMethod {
     GET = `get`,
@@ -18,9 +18,9 @@ export interface HttpOptions {
     params?:
         | HttpParams
         | Record<string, string | number | boolean | readonly (string | number | boolean)[]>;
-    observe?: 'body' | 'events' | 'response';
+    observe?: `body` | `events` | `response`;
     reportProgress?: boolean;
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+    responseType?: `arraybuffer` | `blob` | `json` | `text`;
     withCredentials?: boolean;
 }
 

@@ -1,4 +1,4 @@
-export type VoteValue = 'Y' | 'N' | 'A';
+export type VoteValue = `Y` | `N` | `A`;
 
 /**
  * A mapping of an id -> VotingData

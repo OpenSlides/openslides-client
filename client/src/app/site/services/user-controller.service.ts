@@ -25,7 +25,7 @@ import { ControllerServiceCollectorService } from './controller-service-collecto
  * type for determining the user name from a string during import.
  * See {@link parseUserString} for implementations
  */
-type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
+type StringNamingSchema = `lastCommaFirst` | `firstSpaceLast`;
 
 export interface CreateUserNameInformation {
     username: string;
@@ -49,7 +49,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     }
 
     ///////////////////
-    /////////////////// TODO: Remove, because participants and accounts have their dedicated "controller"
+    /// //////////////// TODO: Remove, because participants and accounts have their dedicated "controller"
 
     public create(...payload: any[]): Promise<Identifiable[]> {
         return this.repo.create(...payload);

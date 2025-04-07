@@ -38,7 +38,7 @@ export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
     private openResolvers = new Map<string, ((value: number | PromiseLike<number>) => void)[]>();
     private endpointName: string;
-    private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
+    private autoupdateEndpointStatus: `healthy` | `unhealthy` = `healthy`;
     private unhealtyTimeout: any;
     private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();

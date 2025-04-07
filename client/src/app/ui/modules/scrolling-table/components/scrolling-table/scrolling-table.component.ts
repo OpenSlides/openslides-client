@@ -39,8 +39,7 @@ interface DataSourceProvider<T> {
 })
 export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     extends BaseUiComponent
-    implements AfterViewInit, OnDestroy, OnInit
-{
+    implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild(CdkVirtualScrollViewport)
     public scrollViewport: CdkVirtualScrollViewport | undefined;
 

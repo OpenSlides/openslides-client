@@ -49,7 +49,7 @@ function getValidStream(req: NormalizedRequestOptions, interval: number, resolve
 describe(`http subscription polling`, () => {
     beforeEach(() => {
         fetchMock.mockGlobal();
-        fetchMock.route(`end:/does-not-resolve`, (args) => getValidStream(args.options, 100));
+        fetchMock.route(`end:/does-not-resolve`, args => getValidStream(args.options, 100));
         fetchMock.route(`end:/error400-expected-format`, {
             status: 400,
             headers: { 'Content-Type': `application/json` },
@@ -110,7 +110,7 @@ describe(`http subscription polling`, () => {
 
     describe(`stopping`, () => {
         it(`stop after resolve`, async () => {
-            fetchMock.route(`end:/resolves`, (args) => getValidStream(args.options, 100, 2));
+            fetchMock.route(`end:/resolves`, args => getValidStream(args.options, 100, 2));
 
             let resolver: CallableFunction;
             const receivedData = new Promise(resolve => (resolver = resolve));
