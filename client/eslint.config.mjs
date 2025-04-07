@@ -1,20 +1,28 @@
 // @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
-const prettier = require("eslint-plugin-prettier/recommended");
-const simpleImportSort = require("eslint-plugin-simple-import-sort");
-const unusedImports = require("eslint-plugin-unused-imports");
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import angular from "angular-eslint";
+import prettier from "eslint-plugin-prettier/recommended";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import unusedImports from "eslint-plugin-unused-imports";
+import stylistic from "@stylistic/eslint-plugin";
 
-module.exports = tseslint.config({
+export default tseslint.config({
     files: ["**/*.ts"],
     extends: [
         eslint.configs.recommended,
+        stylistic.configs.customize({
+            indent: 4,
+            quotes: 'backtick',
+            semi: true,
+            commaDangle: 'never'
+        }),
         ...tseslint.configs.recommended,
         ...tseslint.configs.stylistic,
-        ...angular.configs.tsRecommended,
+        ...angular.configs.tsRecommended
     ],
     plugins: {
+        "@stylistic": stylistic,
         "simple-import-sort": simpleImportSort,
         "unused-imports": unusedImports,
     },
@@ -45,9 +53,9 @@ module.exports = tseslint.config({
             format: ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
         }],
 
-        // "@stylistic/ts/quotes": ["error", "backtick", {
-            // avoidEscape: false,
-        // }],
+        "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "@stylistic/arrow-parens": ["error", "as-needed"],
+        "@stylistic/operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" } }],
 
         "@typescript-eslint/no-unused-vars": ["error", {
             argsIgnorePattern: "^_",

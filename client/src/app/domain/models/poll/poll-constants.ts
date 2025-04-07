@@ -17,9 +17,9 @@ export const PollBackendDurationChoices = {
     [PollBackendDurationType.LONG]: _(`long running`)
 };
 
-export type PollMethodYNA = 'Y' | 'N' | 'A';
-export type PollMethodYN = 'Y' | 'N';
-export type GlobalVote = 'Y' | 'A' | 'N';
+export type PollMethodYNA = `Y` | `N` | `A`;
+export type PollMethodYN = `Y` | `N`;
+export type GlobalVote = `Y` | `A` | `N`;
 
 export enum PollClassType {
     Motion = `motion`,
@@ -169,19 +169,19 @@ export const PollPercentBaseVerbose = {
 export type PollPercentBaseVerboseKey = keyof typeof PollPercentBaseVerbose;
 
 export type GlobalOptionKey = `global_yes` | `global_no` | `global_abstain`;
-export type VoteKey = 'votesvalid' | 'votesinvalid' | 'votescast';
+export type VoteKey = `votesvalid` | `votesinvalid` | `votescast`;
 
 /**
  * The possible keys of a poll object that represent numbers.
  * TODO Should be 'key of MotionPoll|AssinmentPoll if type of key is number'
  */
-export type CalculablePollKey = VoteKey | 'yes' | 'no' | 'abstain';
+export type CalculablePollKey = VoteKey | `yes` | `no` | `abstain`;
 
 /**
  * TODO: may be obsolete if the server switches to lower case only
  * (lower case variants are already in CalculablePollKey)
  */
-export type PollVoteValue = 'Yes' | 'No' | 'Abstain' | 'Votes';
+export type PollVoteValue = `Yes` | `No` | `Abstain` | `Votes`;
 
 export const VoteValuesVerbose = {
     Y: `Yes`,
@@ -195,7 +195,7 @@ export const VoteValuesVerbose = {
 export interface PollTableData {
     votingOption: string;
     votingOptionSubtitle?: string;
-    votingOptions?: { title: string; subtitle: string }[]; //only if class === `list`
+    votingOptions?: { title: string; subtitle: string }[]; // only if class === `list`
     class?: string;
     value: VotingResult[];
 }

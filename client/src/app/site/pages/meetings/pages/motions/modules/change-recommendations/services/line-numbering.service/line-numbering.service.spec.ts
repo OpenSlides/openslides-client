@@ -194,15 +194,15 @@ describe(`LineNumberingService`, () => {
             });
             expect(outHtml).toBe(
                 noMarkup(1) +
-                    `<span>Lorem ` +
-                    brMarkup(2) +
-                    `ipsum ` +
-                    brMarkup(3) +
-                    `dolor` +
-                    brMarkup(4) +
-                    `sit ` +
-                    brMarkup(5) +
-                    `amet</span>`
+                `<span>Lorem ` +
+                brMarkup(2) +
+                `ipsum ` +
+                brMarkup(3) +
+                `dolor` +
+                brMarkup(4) +
+                `sit ` +
+                brMarkup(5) +
+                `amet</span>`
             );
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -217,15 +217,15 @@ describe(`LineNumberingService`, () => {
             });
             expect(outHtml).toBe(
                 noMarkup(1) +
-                    `<span>Lorem ` +
-                    brMarkup(2) +
-                    `<strong>ipsum ` +
-                    brMarkup(3) +
-                    `dolor` +
-                    brMarkup(4) +
-                    `sit</strong> ` +
-                    brMarkup(5) +
-                    `amet</span>`
+                `<span>Lorem ` +
+                brMarkup(2) +
+                `<strong>ipsum ` +
+                brMarkup(3) +
+                `dolor` +
+                brMarkup(4) +
+                `sit</strong> ` +
+                brMarkup(5) +
+                `amet</span>`
             );
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -252,12 +252,12 @@ describe(`LineNumberingService`, () => {
             });
             expect(outHtml).toBe(
                 `<p>` +
-                    noMarkup(1) +
-                    `leo Testelefantgeweih Buchstabenwut als Achzehnzahlunginer. Hierbei <del>darf</del><ins>setzen</ins> bist der Deifi <del>das ` +
-                    brMarkup(2) +
-                    `</del><ins>Dor Reh Wachtel da </ins>Subjunktivier <del>als Derftige Aal</del><ins>san</ins> Orthopädische<del>, der Arbeitsnachweisdiskus Bass der Tastatur </del>` +
-                    brMarkup(3) +
-                    `<del>Weiter schreiben wie Tasse Wasser als</del><ins> dienen</ins>.</p>`
+                noMarkup(1) +
+                `leo Testelefantgeweih Buchstabenwut als Achzehnzahlunginer. Hierbei <del>darf</del><ins>setzen</ins> bist der Deifi <del>das ` +
+                brMarkup(2) +
+                `</del><ins>Dor Reh Wachtel da </ins>Subjunktivier <del>als Derftige Aal</del><ins>san</ins> Orthopädische<del>, der Arbeitsnachweisdiskus Bass der Tastatur </del>` +
+                brMarkup(3) +
+                `<del>Weiter schreiben wie Tasse Wasser als</del><ins> dienen</ins>.</p>`
             );
         }));
 
@@ -270,10 +270,10 @@ describe(`LineNumberingService`, () => {
             });
             expect(outHtml).toBe(
                 `<p>` +
-                    noMarkup(1) +
-                    `et accusam et justo duo dolores et ea <span style="color: #ff0000;"><strike>rebum </strike></span><span style="color: #006400;">Inserted Text</span>. Stet clita kasd ` +
-                    brMarkup(2) +
-                    `gubergren,</p>`
+                noMarkup(1) +
+                `et accusam et justo duo dolores et ea <span style="color: #ff0000;"><strike>rebum </strike></span><span style="color: #006400;">Inserted Text</span>. Stet clita kasd ` +
+                brMarkup(2) +
+                `gubergren,</p>`
             );
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -317,16 +317,16 @@ describe(`LineNumberingService`, () => {
                 });
                 expect(outHtml).toBe(
                     `<div>` +
-                        noMarkup(1) +
-                        `Test ` +
-                        brMarkup(2) +
-                        `<span>Test1` +
-                        brMarkup(3) +
-                        `234</span>56` +
-                        brMarkup(4) +
-                        `78 ` +
-                        brMarkup(5) +
-                        `Test</div>`
+                    noMarkup(1) +
+                    `Test ` +
+                    brMarkup(2) +
+                    `<span>Test1` +
+                    brMarkup(3) +
+                    `234</span>56` +
+                    brMarkup(4) +
+                    `78 ` +
+                    brMarkup(5) +
+                    `Test</div>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -342,14 +342,14 @@ describe(`LineNumberingService`, () => {
             });
             expect(outHtml).toBe(
                 `<div>` +
-                    noMarkup(1) +
-                    `Te<div>` +
-                    noMarkup(2) +
-                    `Te ` +
-                    brMarkup(3) +
-                    `Test</div>` +
-                    noMarkup(4) +
-                    `Test</div>`
+                noMarkup(1) +
+                `Te<div>` +
+                noMarkup(2) +
+                `Te ` +
+                brMarkup(3) +
+                `Test</div>` +
+                noMarkup(4) +
+                `Test</div>`
             );
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -521,12 +521,12 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
                 expect(outHtml).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie ` +
-                        brMarkup(2) +
-                        `<strong>consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan ` +
-                        brMarkup(3) +
-                        `et iusto odio</strong>.</p>`
+                    noMarkup(1) +
+                    `Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie ` +
+                    brMarkup(2) +
+                    `<strong>consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan ` +
+                    brMarkup(3) +
+                    `et iusto odio</strong>.</p>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -540,12 +540,12 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
                 expect(outHtml).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `<span>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie ` +
-                        brMarkup(2) +
-                        `<strong>consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan ` +
-                        brMarkup(3) +
-                        `et iusto odio</strong>.</span></p>`
+                    noMarkup(1) +
+                    `<span>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie ` +
+                    brMarkup(2) +
+                    `<strong>consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan ` +
+                    brMarkup(3) +
+                    `et iusto odio</strong>.</span></p>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -624,10 +624,10 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
                 expect(outHtml).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ` +
-                        brMarkup(2) +
-                        `sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur<ins>dsfsdf23</ins></p>`
+                    noMarkup(1) +
+                    `et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ` +
+                    brMarkup(2) +
+                    `sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur<ins>dsfsdf23</ins></p>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -641,10 +641,10 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
                 expect(outHtml).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `<ins>lauthals </ins>'liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf!' Und ` +
-                        brMarkup(2) +
-                        `noch etwas mehr Text bis zur nächsten Zeile</p>`
+                    noMarkup(1) +
+                    `<ins>lauthals </ins>'liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf!' Und ` +
+                    brMarkup(2) +
+                    `noch etwas mehr Text bis zur nächsten Zeile</p>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -664,8 +664,8 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineBreaksWithoutNumbers(inHtml, 20, true);
                 expect(outHtml).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `012345 <ins>78 01 <br class="os-line-break">34567</ins>890123456789012<br class="os-line-break">3456789</p>`
+                    noMarkup(1) +
+                    `012345 <ins>78 01 <br class="os-line-break">34567</ins>890123456789012<br class="os-line-break">3456789</p>`
                 );
             }
         ));
@@ -681,14 +681,14 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineBreaksWithoutNumbers(inHtml, 5);
                 expect(outHtml).toBe(
                     `<div>Test ` +
-                        plainBr +
-                        `<span>Test1` +
-                        plainBr +
-                        `234</span>56` +
-                        plainBr +
-                        `78 ` +
-                        plainBr +
-                        `Test</div>`
+                    plainBr +
+                    `<span>Test1` +
+                    plainBr +
+                    `234</span>56` +
+                    plainBr +
+                    `78 ` +
+                    plainBr +
+                    `Test</div>`
                 );
                 expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
@@ -730,10 +730,10 @@ describe(`LineNumberingService`, () => {
                 const outHtml = service.insertLineBreaksWithoutNumbers(inHtml, 80, true);
                 expect(outHtml).toBe(
                     `<p>et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ` +
-                        plainBr +
-                        `sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur` +
-                        plainBr +
-                        `<ins>dsfsdf23</ins></p>`
+                    plainBr +
+                    `sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur` +
+                    plainBr +
+                    `<ins>dsfsdf23</ins></p>`
                 );
                 expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
             }
@@ -774,15 +774,15 @@ describe(`LineNumberingService`, () => {
             const highlighted = service.highlightLine(inHtml, 2);
             expect(highlighted).toBe(
                 noMarkup(1) +
-                    `<span>Lorem ` +
-                    brMarkup(2) +
-                    `<span class="highlight">ipsum </span>` +
-                    brMarkup(3) +
-                    `dolor` +
-                    brMarkup(4) +
-                    `sit ` +
-                    brMarkup(5) +
-                    `amet</span>`
+                `<span>Lorem ` +
+                brMarkup(2) +
+                `<span class="highlight">ipsum </span>` +
+                brMarkup(3) +
+                `dolor` +
+                brMarkup(4) +
+                `sit ` +
+                brMarkup(5) +
+                `amet</span>`
             );
         }));
 
@@ -797,13 +797,13 @@ describe(`LineNumberingService`, () => {
                 });
                 expect(highlighted).toBe(
                     noMarkup(1) +
-                        `<span>Lorem ipsum <strong>dolorsit ` +
-                        brMarkup(2) +
-                        `<span class="highlight">amet Lorem</span></strong><em><span class="highlight"> ipsum </span>` +
-                        brMarkup(3) +
-                        `dolorsit amet</em> Lorem ` +
-                        brMarkup(4) +
-                        `ipsum dolorsit amet</span>`
+                    `<span>Lorem ipsum <strong>dolorsit ` +
+                    brMarkup(2) +
+                    `<span class="highlight">amet Lorem</span></strong><em><span class="highlight"> ipsum </span>` +
+                    brMarkup(3) +
+                    `dolorsit amet</em> Lorem ` +
+                    brMarkup(4) +
+                    `ipsum dolorsit amet</span>`
                 );
             }
         ));
@@ -817,15 +817,15 @@ describe(`LineNumberingService`, () => {
             const highlighted = service.highlightLine(inHtml, 5);
             expect(highlighted).toBe(
                 noMarkup(1) +
-                    `<span>Lorem ` +
-                    brMarkup(2) +
-                    `ipsum ` +
-                    brMarkup(3) +
-                    `dolor` +
-                    brMarkup(4) +
-                    `sit ` +
-                    brMarkup(5) +
-                    `<span class="highlight">amet</span></span>`
+                `<span>Lorem ` +
+                brMarkup(2) +
+                `ipsum ` +
+                brMarkup(3) +
+                `dolor` +
+                brMarkup(4) +
+                `sit ` +
+                brMarkup(5) +
+                `<span class="highlight">amet</span></span>`
             );
         }));
 
@@ -838,15 +838,15 @@ describe(`LineNumberingService`, () => {
             const highlighted = service.highlightLine(inHtml, 1);
             expect(highlighted).toBe(
                 noMarkup(1) +
-                    `<span><span class="highlight">Lorem </span>` +
-                    brMarkup(2) +
-                    `ipsum ` +
-                    brMarkup(3) +
-                    `dolor` +
-                    brMarkup(4) +
-                    `sit ` +
-                    brMarkup(5) +
-                    `amet</span>`
+                `<span><span class="highlight">Lorem </span>` +
+                brMarkup(2) +
+                `ipsum ` +
+                brMarkup(3) +
+                `dolor` +
+                brMarkup(4) +
+                `sit ` +
+                brMarkup(5) +
+                `amet</span>`
             );
         }));
 
@@ -861,15 +861,15 @@ describe(`LineNumberingService`, () => {
                 const highlighted = service.highlightLine(inHtml, 8);
                 expect(highlighted).toBe(
                     noMarkup(1) +
-                        `<span>Lorem ` +
-                        brMarkup(2) +
-                        `ipsum ` +
-                        brMarkup(3) +
-                        `dolor` +
-                        brMarkup(4) +
-                        `sit ` +
-                        brMarkup(5) +
-                        `amet</span>`
+                    `<span>Lorem ` +
+                    brMarkup(2) +
+                    `ipsum ` +
+                    brMarkup(3) +
+                    `dolor` +
+                    brMarkup(4) +
+                    `sit ` +
+                    brMarkup(5) +
+                    `amet</span>`
                 );
             }
         ));
@@ -908,13 +908,13 @@ describe(`LineNumberingService`, () => {
             const stripped = service.splitInlineElementsAtLineBreaks(inHtml);
             expect(stripped).toBe(
                 `<ul><li><p>` +
-                    noMarkup(1) +
-                    `<span class="test"><strong>Line 1</strong></span>` +
-                    brMarkup(2) +
-                    `<span class="test"><strong><em>Line 2</em></strong></span>` +
-                    brMarkup(3) +
-                    `<span class="test"><strong><em>Line 3</em></strong></span>` +
-                    `</p></li></ul>`
+                noMarkup(1) +
+                `<span class="test"><strong>Line 1</strong></span>` +
+                brMarkup(2) +
+                `<span class="test"><strong><em>Line 2</em></strong></span>` +
+                brMarkup(3) +
+                `<span class="test"><strong><em>Line 3</em></strong></span>` +
+                `</p></li></ul>`
             );
         }));
     });

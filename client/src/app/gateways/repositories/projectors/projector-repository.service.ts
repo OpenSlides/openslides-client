@@ -102,7 +102,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
     private async controlView(
         projector: Identifiable,
         direction: ScrollScaleDirection,
-        field: 'scale' | 'scroll',
+        field: `scale` | `scroll`,
         step: number
     ): Promise<void> {
         const payload: any = {
