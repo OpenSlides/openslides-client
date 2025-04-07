@@ -18,7 +18,7 @@ export class ICCStream extends HttpStream {
 
     public override async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+    ): Promise<{ stopReason: `error` | `aborted` | `resolved` | `in-use` | string; error?: any }> {
         if (!this.users) {
             return { stopReason: `unused` };
         }

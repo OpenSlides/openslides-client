@@ -39,7 +39,7 @@ export class MeetingCsvExportForBackendService extends CsvExportForBackendServic
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
-            encoding?: 'utf-8' | 'iso-8859-15';
+            encoding?: `utf-8` | `iso-8859-15`;
         } = {}
     ): void {
         super.export(models, columns, filename, { lineSeparator, columnSeparator, encoding });

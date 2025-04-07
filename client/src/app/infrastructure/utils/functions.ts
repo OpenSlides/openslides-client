@@ -242,7 +242,7 @@ export function escapeRegExp(str: string): string {
 export function splitStringKeepSeperator(
     str: string,
     by: string,
-    position?: 'prepend' | 'append' | 'between' | string
+    position?: `prepend` | `append` | `between` | string
 ): string[] {
     if (position === `prepend`) {
         return str.split(new RegExp(`(?=${escapeRegExp(by)})`, `g`));
@@ -264,7 +264,7 @@ export function djb2hash(str: string): string {
     let char: number;
     for (let i = 0; i < str.length; i++) {
         char = str.charCodeAt(i);
-               hash = (hash << 5) + hash + char;
+        hash = (hash << 5) + hash + char;
     }
     return hash.toString();
 }
@@ -278,15 +278,15 @@ export function djb2hash(str: string): string {
  */
 export function joinTypedArrays<
     T extends
-        | Int8Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int16Array
-        | Uint16Array
-        | Int32Array
-        | Uint32Array
-        | Float32Array
-        | Float64Array
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array
 >(type: new (len: number) => T, a: T, b: T): T {
     const res = new type(a.length + b.length);
     res.set(a);
@@ -305,15 +305,15 @@ export function joinTypedArrays<
  */
 export function splitTypedArray<
     T extends
-        | Int8Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int16Array
-        | Uint16Array
-        | Int32Array
-        | Uint32Array
-        | Float32Array
-        | Float64Array
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array
 >(seperator: any, arr: T): T[] {
     const res: T[] = [];
     let start = 0;

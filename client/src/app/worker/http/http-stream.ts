@@ -20,7 +20,7 @@ export abstract class HttpStream {
     private _queryParams: URLSearchParams;
 
     protected readonly supportLongpolling: boolean = false;
-    protected connectionMode: 'SSE' | 'LONGPOLLING' = `SSE`;
+    protected connectionMode: `SSE` | `LONGPOLLING` = `SSE`;
     protected subscription: HttpSubscription;
 
     public get active(): boolean {
@@ -75,7 +75,7 @@ export abstract class HttpStream {
      */
     public async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+    ): Promise<{ stopReason: `error` | `aborted` | `resolved` | `in-use` | string; error?: any }> {
         if (this.subscription.active && !force) {
             return { stopReason: `in-use` };
         } else if (this.subscription.active && force) {
