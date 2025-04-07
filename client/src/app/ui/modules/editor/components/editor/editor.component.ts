@@ -62,6 +62,7 @@ import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
+import { OsSplit } from './extensions/os-split';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -186,11 +187,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     content() {
                         return `${this.options.itemTypeName}+ paragraph*`
                     },
-                    addAttributes() {
-                        return {
-                            class: {}
-                        }
-                    }
                 }),
                 HardBreak,
                 Heading,
@@ -198,22 +194,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                     inline: true
                 }),
                 ListItem.extend({
-                    content: `paragraph* block*`,
-                    addAttributes() {
-                        return {
-                            class: {}
-                        }
-                    }
+                    content() {
+                        return `paragraph* block*`;
+                    },
                 }),
                 OrderedList.extend({
                     content() {
                         return `${this.options.itemTypeName}+ paragraph*`
                     },
-                    addAttributes() {
-                        return {
-                            class: {}
-                        }
-                    }
                 }),
                 Paragraph,
                 Text,
@@ -243,6 +231,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
                 }),
+                OsSplit,
                 Extension.create({
                     name: `angular-component-ext`,
                     onCreate: () => {
