@@ -44,6 +44,9 @@
                 @if (rowName === 'motion_version') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
+                            <mat-radio-button [value]="false">
+                                {{ 'Final version' | translate }}
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'Original version with all changes' | translate }}
                                 <br />
@@ -78,14 +81,19 @@
                                     </span>
                                 }
                             </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'Final version' | translate }}
-                            </mat-radio-button>
                         </mat-radio-group>
                     </span>
                 } @else if (rowName === 'submitter') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
+                            <mat-radio-button [value]="false">
+                                {{ 'committee name' | translate }}
+                                @if (activeMeetingCommitteeName) {
+                                    <span class="data-preview">
+                                        <span>{{ activeMeetingCommitteeName }}</span>
+                                    </span>
+                                }
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'original submitter' | translate }}
                                 @if (data.motion.length === 1 && data.motion[0].submitterNames.length > 0) {
@@ -102,19 +110,14 @@
                                     </span>
                                 }
                             </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'committee name' | translate }}
-                                @if (activeMeetingCommitteeName) {
-                                    <span class="data-preview">
-                                        <span>{{ activeMeetingCommitteeName }}</span>
-                                    </span>
-                                }
-                            </mat-radio-button>
                         </mat-radio-group>
                     </span>
                 } @else if (rowName === 'identifier') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
+                            <mat-radio-button [value]="false">
+                                {{ 'without identifier' | translate }}
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'original identifier' | translate }}
                                 @if (data.motion.length === 1) {
@@ -122,9 +125,6 @@
                                         <span>{{ data.motion[0].number }}</span>
                                     </span>
                                 }
-                            </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'without identifier' | translate }}
                             </mat-radio-button>
                         </mat-radio-group>
                     </span>
