@@ -40,8 +40,8 @@ export class ParticipantPdfExportService {
      */
     public exportAccessDocuments(...participants: ViewUser[]): void {
         const doc: Content[] = [];
-        participants.forEach(participant => {
-            doc.push(this.userPdfService.userAccessToDocDef(participant));
+        participants.forEach((participant, idx, arr) => {
+            doc.push(this.userPdfService.userAccessToDocDef(participant, idx!==arr.length -1));
         });
         const filename = this.getPdfFilenameForAccessDocuments(participants);
         const metadata = {
