@@ -8,7 +8,6 @@ import { PipesModule } from '../../pipes';
     selector: `os-meeting-time`,
     templateUrl: `./meeting-time.component.html`,
     styleUrls: [`./meeting-time.component.scss`],
-    standalone: true,
     imports: [CommonModule, PipesModule]
 })
 export class MeetingTimeComponent {

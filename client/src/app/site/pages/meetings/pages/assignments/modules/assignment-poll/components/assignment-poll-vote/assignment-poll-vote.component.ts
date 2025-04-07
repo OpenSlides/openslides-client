@@ -18,7 +18,8 @@ import { UnknownUserLabel } from '../../services/assignment-poll.service';
     selector: `os-assignment-poll-vote`,
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
     styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> {
     public unknownUserLabel = UnknownUserLabel;
@@ -141,11 +142,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                     this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
                 );
                 delete (this.voteRequestData[user.id] as any).value[optionId];
-            }
-
-            // if a user filled out every option, try to send
-            if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
-                this.submitVote(user);
             }
         }
     }

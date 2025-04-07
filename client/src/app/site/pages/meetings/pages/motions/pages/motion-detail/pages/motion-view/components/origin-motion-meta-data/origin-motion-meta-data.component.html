@@ -23,15 +23,15 @@
             <div class="remove-top-margin">
                 <os-motion-manage-motion-meeting-users
                     additionalInputField="additional_submitter"
-                    field="submitters"
                     additionalInputLabel="{{ 'Extension' | translate }}"
+                    field="submitters"
+                    secondSelectorLabel="{{ 'Committees' | translate }}"
+                    title="{{ 'Submitters' | translate }}"
                     [additionalInputValue]="motion.additional_submitter"
                     [disableEdit]="true"
                     [loadSecondSelectorValues]="loadForwardingCommittees"
                     [motion]="motion"
                     [repo]="motionSubmitterRepo"
-                    secondSelectorLabel="{{ 'Committees' | translate }}"
-                    title="{{ 'Submitters' | translate }}"
                     [useAdditionalInput]="true"
                 ></os-motion-manage-motion-meeting-users>
             </div>
@@ -42,13 +42,13 @@
     @if (motion.state$ | async; as motionState) {
         <div>
             <os-motion-extension-field
+                extensionLabel="{{ 'Extension' | translate }}"
+                title="{{ 'State' | translate }}"
                 [canBeEdited]="false"
                 [chipValue]="stateLabel | translate"
                 [classes]="motion.stateCssColor"
-                extensionLabel="{{ 'Extension' | translate }}"
                 [hasExtension]="!!motionState && motionState.show_state_extension_field"
                 [inputValue]="motion.state_extension"
-                title="{{ 'State' | translate }}"
             ></os-motion-extension-field>
         </div>
     }
@@ -57,9 +57,9 @@
     @if (isRecommendationEnabled) {
         <div>
             <os-motion-extension-field
+                extensionLabel="{{ 'Extension' | translate }}"
                 [canBeEdited]="false"
                 [chipValue]="recommendationLabel | translate"
-                extensionLabel="{{ 'Extension' | translate }}"
                 [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
                 [inputValue]="motion?.recommendation_extension"
                 [internal]="motion?.state?.is_internal"

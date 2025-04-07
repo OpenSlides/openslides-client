@@ -21,18 +21,14 @@ interface DeletedInformation {
  *
  * Part of {@link DataStoreService}
  */
-interface ModelCollection<T extends BaseModel<T> = any> {
-    [id: number]: T;
-}
+type ModelCollection<T extends BaseModel<T> = any> = Record<number, T>;
 
 /**
  * The actual storage that stores collections, accessible by strings.
  *
  * {@link DataStoreService}
  */
-interface ModelStorage {
-    [collection: string]: ModelCollection;
-}
+type ModelStorage = Record<string, ModelCollection>;
 
 @Injectable({
     providedIn: `root`
@@ -44,7 +40,7 @@ export class DataStoreService {
      * Subjects for changed elements (notified, even if there is a current update slot) for
      * a specific collection.
      */
-    private changedSubjects: { [collection: string]: Subject<BaseModel> } = {};
+    private changedSubjects: Record<string, Subject<BaseModel>> = {};
 
     /**
      * Observable subject for changed or deleted models in the datastore.

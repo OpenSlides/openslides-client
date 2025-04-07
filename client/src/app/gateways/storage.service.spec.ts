@@ -5,7 +5,7 @@ import { interval, map, Observable, takeWhile } from 'rxjs';
 import { StorageService } from './storage.service';
 
 class MockLocalStorage {
-    public storage: { [key: string]: any } = {};
+    public storage: Record<string, any> = {};
 
     private tick = interval(2);
 

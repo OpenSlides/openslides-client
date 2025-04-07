@@ -77,8 +77,8 @@
                             <!-- scale down -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Zoom out' | translate }}"
+                                type="button"
                                 (click)="scale(scrollScaleDirection.Down)"
                             >
                                 <mat-icon>zoom_out</mat-icon>
@@ -86,8 +86,8 @@
                             <!-- scale up -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Zoom in' | translate }}"
+                                type="button"
                                 (click)="scale(scrollScaleDirection.Up)"
                             >
                                 <mat-icon>zoom_in</mat-icon>
@@ -95,8 +95,8 @@
                             <!-- reset button -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Reset' | translate }}"
+                                type="button"
                                 (click)="scale(scrollScaleDirection.Reset)"
                             >
                                 <mat-icon>refresh</mat-icon>
@@ -110,9 +110,9 @@
                                 <button
                                     class="spacer-left-50"
                                     mat-icon-button
+                                    matTooltip="{{ 'Previous page' | translate }}"
                                     type="button"
                                     [disabled]="projector.scroll <= 4"
-                                    matTooltip="{{ 'Previous page' | translate }}"
                                     (click)="scrollPdf(scrollScaleDirection.Down)"
                                 >
                                     <mat-icon>keyboard_double_arrow_up</mat-icon>
@@ -121,9 +121,9 @@
                             <!-- scroll viewport up (fast), decrease scroll counter -->
                             <button
                                 mat-icon-button
+                                matTooltip="{{ 'Scroll up (big step)' | translate }}"
                                 type="button"
                                 [disabled]="projector.scroll <= 4"
-                                matTooltip="{{ 'Scroll up (big step)' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Down, 5)"
                             >
                                 <mat-icon>arrow_upward</mat-icon>
@@ -131,9 +131,9 @@
                             <!-- scroll viewport up (slow), decrease scroll counter -->
                             <button
                                 mat-icon-button
+                                matTooltip="{{ 'Scroll up' | translate }}"
                                 type="button"
                                 [disabled]="projector.scroll <= 0"
-                                matTooltip="{{ 'Scroll up' | translate }}"
                                 (click)="scroll(scrollScaleDirection.Down)"
                             >
                                 <mat-icon>arrow_drop_up</mat-icon>
@@ -141,8 +141,8 @@
                             <!-- scroll viewport down (slow), increase scroll counter -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Scroll down' | translate }}"
+                                type="button"
                                 (click)="scroll(scrollScaleDirection.Up)"
                             >
                                 <mat-icon>arrow_drop_down</mat-icon>
@@ -150,8 +150,8 @@
                             <!-- scroll viewport down (fast), increase scroll counter -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Scroll down (big step)' | translate }}"
+                                type="button"
                                 (click)="scroll(scrollScaleDirection.Up, 5)"
                             >
                                 <mat-icon>arrow_downward</mat-icon>
@@ -160,8 +160,8 @@
                             @if (isPdfProjection) {
                                 <button
                                     mat-icon-button
-                                    type="button"
                                     matTooltip="{{ 'Next page' | translate }}"
+                                    type="button"
                                     (click)="scrollPdf(scrollScaleDirection.Up)"
                                 >
                                     <mat-icon>keyboard_double_arrow_down</mat-icon>
@@ -170,8 +170,8 @@
                             <!-- reset button -->
                             <button
                                 mat-icon-button
-                                type="button"
                                 matTooltip="{{ 'Reset' | translate }}"
+                                type="button"
                                 (click)="scroll(scrollScaleDirection.Reset)"
                             >
                                 <mat-icon>refresh</mat-icon>
@@ -230,8 +230,8 @@
                                             </span>
                                             <button
                                                 mat-icon-button
-                                                type="button"
                                                 matTooltip="{{ 'Clear current projection' | translate }}"
+                                                type="button"
                                                 (click)="deleteProjection(projection)"
                                             >
                                                 <mat-icon>close</mat-icon>
@@ -297,8 +297,8 @@
                                                     <div>
                                                         <button
                                                             mat-icon-button
-                                                            type="button"
                                                             matTooltip="{{ 'Delete' | translate }}"
+                                                            type="button"
                                                             (click)="deleteProjection(projection)"
                                                         >
                                                             <mat-icon>delete</mat-icon>
@@ -313,8 +313,8 @@
                                     @if (!editQueue) {
                                         <button
                                             mat-icon-button
-                                            type="button"
                                             matTooltip="{{ 'Edit queue' | translate }}"
+                                            type="button"
                                             (click)="editQueue = !editQueue"
                                         >
                                             <mat-icon>edit</mat-icon>
@@ -323,8 +323,8 @@
                                     @if (editQueue) {
                                         <button
                                             mat-icon-button
-                                            type="button"
                                             matTooltip="{{ 'Close edit mode' | translate }}"
+                                            type="button"
                                             (click)="editQueue = !editQueue"
                                         >
                                             <mat-icon>close</mat-icon>

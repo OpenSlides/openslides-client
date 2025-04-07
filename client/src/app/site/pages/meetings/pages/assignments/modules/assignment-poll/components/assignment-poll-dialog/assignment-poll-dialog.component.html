@@ -1,14 +1,14 @@
 <mat-dialog-content>
     <os-assignment-poll-form
         #pollForm
-        [allowToSetMinMaxOnYNA]="true"
+        [allowToSetMinMax]="true"
         [data]="pollData"
         [percentBases]="AssignmentPollPercentBaseVerbose"
         [pollClassType]="pollClassType.Assignment"
         [pollMethods]="AssignmentPollMethodVerbose"
         [pollOptionAmount]="getOptionAmount()"
         [pollService]="assignmentPollService"
-    ></os-assignment-poll-form>
+    />
 
     <!-- Analog voting -->
     @if (isAnalogPoll && dialogVoteForm && !reloading) {

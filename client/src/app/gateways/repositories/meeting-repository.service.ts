@@ -26,9 +26,7 @@ export enum MeetingProjectionType {
     WiFiAccess = `wifi_access_data`
 }
 
-export interface ImportMeeting {
-    [collection: string]: unknown[];
-}
+export type ImportMeeting = Record<string, unknown[]>;
 
 export interface MeetingUserModifiedFields {
     addedUsers?: ViewUser[];
@@ -176,7 +174,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         /**
          * This is a mapping of user-id -> group-ids for a given meeting
          */
-        const userUpdate: { [userId: number]: Id[] } = {};
+        const userUpdate: Record<number, Id[]> = {};
         const { addedUsers, removedUsers, addedAdmins, removedAdmins }: MeetingUserModifiedFields = options;
         if (addedUsers?.length || removedUsers?.length) {
             if (!meeting?.default_group_id) {
@@ -322,7 +320,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * for the related user.
      */
     private getNewGroupsForUsers(
-        data: { [userId: number]: Id[] },
+        data: Record<number, Id[]>,
         users: ViewUser[] = [],
         meetingId: Id,
         groupId: Id

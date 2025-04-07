@@ -13,7 +13,8 @@ import {
 @Component({
     selector: `os-motion-main`,
     templateUrl: `./motion-main.component.html`,
-    styleUrls: [`./motion-main.component.scss`]
+    styleUrls: [`./motion-main.component.scss`],
+    standalone: false
 })
 export class MotionMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

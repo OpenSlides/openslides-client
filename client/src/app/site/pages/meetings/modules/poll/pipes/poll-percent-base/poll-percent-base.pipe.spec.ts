@@ -55,7 +55,7 @@ class MockInjectablePollService extends MockPollService {
     }
 }
 
-const testPollData: { [key: string]: PollData } = {
+const testPollData: Record<string, PollData> = {
     assignmentPoll: {
         pollClassType: PollClassType.Assignment,
         pollmethod: PollMethod.YN,

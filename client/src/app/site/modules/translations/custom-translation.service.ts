@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface CustomTranslation {
-    [original: string]: string;
-}
+export type CustomTranslation = Record<string, string>;
 
 @Injectable({
     providedIn: `root`

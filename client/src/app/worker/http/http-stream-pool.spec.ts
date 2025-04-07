@@ -66,7 +66,8 @@ describe(`http stream pool`, () => {
 
         beforeEach(() => {
             healthy = false;
-            fetchMock.mock(`end:/health`, () => {
+            fetchMock.mockGlobal();
+            fetchMock.route(`end:/health`, () => {
                 const body = JSON.stringify({
                     healthy
                 });
@@ -75,10 +76,12 @@ describe(`http stream pool`, () => {
                     headers: { 'Content-Type': `application/json` },
                     body
                 };
+            }, {
+                name: `health`
             });
         });
 
-        afterEach(() => fetchMock.reset());
+        afterEach(() => fetchMock.hardReset());
 
         it(`recognizes healty service`, async () => {
             healthy = true;
@@ -91,12 +94,13 @@ describe(`http stream pool`, () => {
         });
 
         it(`can handle broken health endpoint`, async () => {
-            fetchMock.mock(
-                `end:/health`,
+            fetchMock.modifyRoute(
+                `health`,
                 {
-                    status: 500
+                    response: {
+                        status: 500
+                    }
                 },
-                { overwriteRoutes: true }
             );
 
             await expectAsync(httpStreamPool.isEndpointHealthy()).toBeResolvedTo(false);

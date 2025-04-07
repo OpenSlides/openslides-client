@@ -55,7 +55,8 @@ export interface AllocationListConfig {
             multi: true
         }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AllocationListComponent implements ControlValueAccessor, OnInit {
     @Input()

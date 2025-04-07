@@ -9,7 +9,8 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 @Component({
     selector: `os-chat-group-detail-message`,
     templateUrl: `./chat-group-detail-message.component.html`,
-    styleUrls: [`./chat-group-detail-message.component.scss`]
+    styleUrls: [`./chat-group-detail-message.component.scss`],
+    standalone: false
 })
 export class ChatGroupDetailMessageComponent {
     @Input()

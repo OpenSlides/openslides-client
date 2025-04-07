@@ -1,4 +1,4 @@
-@import 'src/assets/styles/fonts.scss';
+@use 'src/assets/styles/font-variables.scss';
 
 #chyron,
 #chyron_new {
@@ -43,7 +43,7 @@
     font-size: 24px;
     .inner {
         .name {
-            font-family: customChyronNameFont, $font-chyronname;
+            font-family: customChyronNameFont, font-variables.$font-chyronname;
         }
 
         .level {

@@ -15,7 +15,8 @@ import { StructureLevelSortService } from '../../services/structure-level-sort.s
 @Component({
     selector: `os-structure-level-list`,
     templateUrl: `./structure-level-list.component.html`,
-    styleUrls: [`./structure-level-list.component.scss`]
+    styleUrls: [`./structure-level-list.component.scss`],
+    standalone: false
 })
 export class StructureLevelListComponent extends BaseMeetingListViewComponent<ViewStructureLevel> {
     @ViewChild(`structureLevelDialog`, { static: true })

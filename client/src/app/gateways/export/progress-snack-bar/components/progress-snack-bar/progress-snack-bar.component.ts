@@ -21,7 +21,8 @@ import { ProgressSnackBarControlService } from '../../services/progress-snack-ba
     templateUrl: `./progress-snack-bar.component.html`,
     styleUrls: [`./progress-snack-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProgressSnackBarComponent implements OnInit, OnDestroy {
     /**

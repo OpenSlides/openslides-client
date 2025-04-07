@@ -59,13 +59,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * The different methods for this poll.
      */
     @Input()
-    public pollMethods: { [key: string]: string };
+    public pollMethods: Record<string, string>;
 
     /**
      * The different percent bases for this poll.
      */
     @Input()
-    public percentBases: { [key: string]: string };
+    public percentBases: Record<string, string>;
 
     public alternativePercentBases = PollPercentBaseVerbose;
 
@@ -80,10 +80,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     /**
-     * The flag to allow min/max votes on YNA poll method
+     * The flag to allow min/max votes on YNA and YN poll method
      */
     @Input()
-    public allowToSetMinMaxOnYNA = false;
+    public allowToSetMinMax = false;
 
     public isCreatedList: boolean;
 
@@ -91,7 +91,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethod === FormPollMethod.LIST_YNA || this.isCreatedList;
     }
 
-    public get filteredPollMethods(): { [key: string]: string } {
+    public get filteredPollMethods(): Record<string, string> {
         if (!this.isCreatedList || !this.pollMethods) {
             return this.pollMethods;
         }
@@ -123,7 +123,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     /**
      * the filtered `percentBases`.
      */
-    public validPercentBases: { [key: string]: string };
+    public validPercentBases: Record<string, string>;
 
     /**
      * An twodimensional array to handle constant values for this poll.
@@ -158,6 +158,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private get isPollMethodYNA(): boolean {
         return (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YNA;
+    }
+
+    private get isPollMethodYN(): boolean {
+        return (this.contentForm?.get(`pollmethod`)?.value as PollMethod) === PollMethod.YN;
     }
 
     public get pollMethod(): FormPollMethod {
@@ -217,6 +221,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
+            if (this.allowToSetMinMax) {
+                this.updatePollMethod(PollMethod.Y);
+            }
         }
 
         this.subscriptions.push(
@@ -249,10 +256,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private updatePollMethod(method: PollMethod): void {
         this.contentForm.removeControl(`votes_amount`);
-        if (method === `Y` || method === `N` || (method === `YNA` && this.allowToSetMinMaxOnYNA)) {
+        if (
+            method === PollMethod.Y ||
+            method === PollMethod.N ||
+            ((method === PollMethod.YNA || method === PollMethod.YN) && this.allowToSetMinMax)
+        ) {
             this.contentForm.addControl(`votes_amount`, this.getVotesAmountControl());
         }
-        if (method === `N`) {
+        if (method === PollMethod.N) {
             this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValue(1);
         }
     }
@@ -279,7 +290,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     private checkPollBackend(): void {
         const pollType = this.data.content_object?.collection as PollClassType;
         if (!this.data.backend) {
-            if (pollType !== `topic`) {
+            if (pollType !== PollClassType.Topic) {
                 this.data.backend = this.meetingSettingsService.instant(`${pollType}_poll_default_backend`);
             } else {
                 this.data.backend = this.meetingSettingsService.instant(`poll_default_backend`);
@@ -300,16 +311,15 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return (
-            (selectedPollMethod === `Y` ||
-                selectedPollMethod === `N` ||
-                (selectedPollMethod === `YNA` && this.allowToSetMinMaxOnYNA)) &&
+            (selectedPollMethod === FormPollMethod.Y ||
+                (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
             (!data || !data.state || data.isCreated)
         );
     }
 
     public showMaxVotesPerOption(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
-        return selectedPollMethod === `Y` && (!data || !data.state || data.isCreated);
+        return selectedPollMethod === FormPollMethod.Y && (!data || !data.state || data.isCreated);
     }
 
     /**
@@ -398,7 +408,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      *
      * @param data Passing the properties of the poll.
      */
-    protected updatePollValues(data: { [key: string]: any }, additionalPollValues?: PollPropertyVerboseKey[]): void {
+    protected updatePollValues(data: Record<string, any>, additionalPollValues?: PollPropertyVerboseKey[]): void {
         if (this.data) {
             const pollMethod: FormPollMethod = data[`pollmethod`];
             const pollType: PollType = data[`type`];
@@ -441,7 +451,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 ]);
             }
 
-            if (pollMethod === FormPollMethod.YNA && this.allowToSetMinMaxOnYNA) {
+            if ((pollMethod === FormPollMethod.YNA || pollMethod === FormPollMethod.YN) && this.allowToSetMinMax) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_amount`),
                     data[`max_votes_amount`]
@@ -462,7 +472,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
-        return (formControl: AbstractControl): { [key: string]: any } | null => {
+        return (formControl: AbstractControl): Record<string, any> | null => {
             if (!this.pollOptionAmount || this.isList) {
                 return null;
             }
@@ -493,21 +503,26 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private getVotesAmountControl(): UntypedFormGroup {
-        const maxVotesPreselect = this.isPollMethodYNA && this.allowToSetMinMaxOnYNA ? this.pollOptionAmount : 1;
-        return this.fb.group(
-            {
-                max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
-                min_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
-            },
-            {
-                validators: [
-                    isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
-                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
-                ]
-            }
-        );
+        const maxVotesPreselect =
+            (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax ? this.pollOptionAmount : 1;
+        const config = {
+            max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
+            min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+            max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
+        };
+        if (this.allowToSetMinMax) {
+            config.max_votes_amount = [
+                maxVotesPreselect,
+                [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
+            ];
+        }
+        return this.fb.group(config, {
+            validators: [
+                isNumberRange(`min_votes_amount`, `max_votes_amount`),
+                this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
+            ]
+        });
     }
 
     private enableGlobalVoteControls(): void {
@@ -551,7 +566,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             if (pollMethod.includes(FormPollMethod.N)) {
                 this.disableGlobalVoteControls(`No`);
             }
-            if (pollMethod.includes(`A`)) {
+            if (pollMethod.includes(FormPollMethod.YNA)) {
                 this.disableGlobalVoteControls(`Abstain`);
             }
         }
@@ -577,6 +592,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 return this.translate.instant(`Min votes cannot be greater than max votes.`);
             case `rangeErrorMaxPerOption`:
                 return this.translate.instant(`Max votes per option cannot be greater than max votes.`);
+            case `max`:
+                return this.translate.instant(`Max votes cannot be greater than options.`);
             default:
                 return ``;
         }

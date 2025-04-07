@@ -16,7 +16,8 @@ import { SortListService } from 'src/app/ui/modules/list/definitions/sort-servic
 @Component({
     selector: `os-sort-bottom-sheet`,
     templateUrl: `./sort-bottom-sheet.component.html`,
-    styleUrls: [`./sort-bottom-sheet.component.scss`]
+    styleUrls: [`./sort-bottom-sheet.component.scss`],
+    standalone: false
 })
 export class SortBottomSheetComponent<V> implements OnInit {
     /**

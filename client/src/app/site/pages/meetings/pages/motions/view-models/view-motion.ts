@@ -227,7 +227,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         if (!!this.origin_id || !!this.origin_meeting_id) {
             status = ForwardingStatus.isDerived;
         }
-        if (!!this.derived_motion_ids?.length) {
+        if (this.derived_motion_ids?.length) {
             return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
         }
         return status;
@@ -382,6 +382,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         } else {
             return PROJECTIONDEFAULT.motion;
         }
+    }
+
+    public override canAccess(): boolean {
+        return !!this.sequential_number;
     }
 }
 

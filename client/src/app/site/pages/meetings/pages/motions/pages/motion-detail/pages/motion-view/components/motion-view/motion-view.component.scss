@@ -1,5 +1,5 @@
-@import 'src/app/site/pages/meetings/pages/motions/styles/motion-common-styles';
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/app/site/pages/meetings/pages/motions/styles/motion-common-styles';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 span {
     margin: 0;
@@ -73,7 +73,7 @@ span {
 }
 
 .motion-text {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }
 
 .motion-content {
@@ -135,6 +135,7 @@ span {
 }
 
 .mat-mdc-card.original-motion-card {
+    display: flex !important;
     border-color: #ff9001;
     border-width: 2px;
 }

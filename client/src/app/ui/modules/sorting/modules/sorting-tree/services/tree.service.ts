@@ -15,7 +15,7 @@ export class TreeService {
      * @returns the weight of the model
      */
     private getAttributeAsNumber<T extends Identifiable & Displayable>(item: T, key: keyof T): number {
-        return (<any>item[key]) as number;
+        return (item[key] as any) as number;
     }
 
     /**
@@ -147,7 +147,7 @@ export class TreeService {
         parentIdKey: keyof T,
         toNodeFn: (item: T, children: R[]) => R
     ): R[] {
-        const children: { [parendId: number]: T[] } = {};
+        const children: Record<number, T[]> = {};
         items.forEach(model => {
             if (model[parentIdKey]) {
                 const parentId = this.getAttributeAsNumber(model, parentIdKey);

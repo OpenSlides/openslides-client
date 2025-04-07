@@ -13,7 +13,7 @@ export class OrganizationSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
-    private settingSubjects: { [key: string]: BehaviorSubject<any> } = {};
+    private settingSubjects: Record<string, BehaviorSubject<any>> = {};
 
     private hasDataSubject = new BehaviorSubject(false);
 

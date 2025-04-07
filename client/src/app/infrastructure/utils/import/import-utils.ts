@@ -56,9 +56,7 @@ export type CsvMapping<T = any> = T & {
  */
 export type CsvImportStatus = 'new' | 'error' | 'done' | string;
 
-export interface CsvJsonMapping {
-    [key: string]: string;
-}
+export type CsvJsonMapping = Record<string, string>;
 
 export type RawObject<ToCreate> = { [key in keyof ToCreate]?: any };
 

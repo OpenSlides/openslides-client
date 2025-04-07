@@ -30,7 +30,8 @@ import { ViewStructureLevel } from '../../../../../structure-levels/view-models'
 @Component({
     selector: `os-participant-create-wizard`,
     templateUrl: `./participant-create-wizard.component.html`,
-    styleUrls: [`./participant-create-wizard.component.scss`]
+    styleUrls: [`./participant-create-wizard.component.scss`],
+    standalone: false
 })
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(MatStepper)
@@ -101,7 +102,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public isFormValid = false;
 
     public personalInfoFormValue: any = {};
-    public formErrors: { [name: string]: boolean } | null = null;
+    public formErrors: Record<string, boolean> | null = null;
     public groupsObservable: Observable<ViewGroup[]> | null = null;
 
     /**
@@ -134,15 +135,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return this.account ?? this.createUserForm.value;
     }
 
-    public get flicker(): Observable<boolean> {
-        return this.flickerSubject;
-    }
-
     public get isVoteWeightError(): boolean {
         return this.personalInfoFormValue.vote_weight < 0.000001;
     }
-
-    public flickerSubject = new BehaviorSubject<boolean>(false);
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
@@ -233,6 +228,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onChooseAccount(reverse = false): Promise<void> {
+        if (this._accountId) {
+            for (const item of Object.keys(this.createUserForm.controls)) {
+                if (!this.createUserForm.value[item]) {
+                    this.createUserForm.get(item).setValue(``);
+                }
+            }
+        }
         const result = await this.presenter.callForUsers({
             permissionRelatedId: this.activeMeetingId!,
             users: [this.createUserForm.value]
@@ -247,19 +249,17 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public async onAccountSelected(account: Partial<User>): Promise<void> {
         this.detailView?.enableSelfUpdate(false);
-        this.flickerSubject.next(true);
         const shouldReset = !!this.detailView;
         this.createUserForm.patchValue(account, { emitEvent: false });
         this._accountId = account.id || null;
         this._stepper.next();
         await this.checkScope();
-        if (shouldReset || this._isUserInScope) {
+        if ((shouldReset || this._isUserInScope) && !this.account) {
             this.detailView.resetEditMode();
         }
         if (this.account) {
             this.detailView.personalInfoForm.patchValue(this.account);
         }
-        this.flickerSubject.next(false);
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -357,7 +357,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     private checkSelectedGroupsCanManage(): boolean {
-        return (this.detailView.personalInfoForm.get(`group_ids`).value ?? [])
+        const group_ids = this.detailView.personalInfoForm.get(`group_ids`).value ?? [];
+        return group_ids
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
     }

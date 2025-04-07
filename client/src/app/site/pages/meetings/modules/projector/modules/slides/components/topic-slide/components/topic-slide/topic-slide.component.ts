@@ -6,6 +6,7 @@ import { TopicSlideData } from '../../topic-slide-data';
 @Component({
     selector: `os-topic-slide`,
     templateUrl: `./topic-slide.component.html`,
-    styleUrls: [`./topic-slide.component.scss`]
+    styleUrls: [`./topic-slide.component.scss`],
+    standalone: false
 })
 export class TopicSlideComponent extends BaseSlideComponent<TopicSlideData> {}

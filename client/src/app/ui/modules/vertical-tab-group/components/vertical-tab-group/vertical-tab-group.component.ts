@@ -19,7 +19,8 @@ import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-
 @Component({
     selector: `os-vertical-tab-group`,
     templateUrl: `./vertical-tab-group.component.html`,
-    styleUrls: [`./vertical-tab-group.component.scss`]
+    styleUrls: [`./vertical-tab-group.component.scss`],
+    standalone: false
 })
 export class VerticalTabGroupComponent {
     @ContentChildren(MatTab, { descendants: true, emitDistinctChangesOnly: true })

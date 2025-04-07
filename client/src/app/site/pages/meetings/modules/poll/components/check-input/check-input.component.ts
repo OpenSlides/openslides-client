@@ -6,7 +6,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
     selector: `os-check-input`,
     templateUrl: `./check-input.component.html`,
     styleUrls: [`./check-input.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => CheckInputComponent) }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => CheckInputComponent) }],
+    standalone: false
 })
 export class CheckInputComponent extends BaseUiComponent implements OnInit, ControlValueAccessor {
     /**

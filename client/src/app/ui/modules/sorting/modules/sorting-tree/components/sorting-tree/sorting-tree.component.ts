@@ -38,6 +38,13 @@ interface DragEvent {
     currentPosition: { x: number; y: number };
 }
 
+interface MoveNode<T> {
+    node: FlatNode<T>;
+    previousIndex: number;
+    nextIndex: number;
+    nextLevel: number;
+}
+
 /**
  * Class to hold the moved steps and the direction in horizontal and vertical way.
  */
@@ -50,7 +57,8 @@ class Movement {
 @Component({
     selector: `os-sorting-tree`,
     templateUrl: `./sorting-tree.component.html`,
-    styleUrls: [`./sorting-tree.component.scss`]
+    styleUrls: [`./sorting-tree.component.scss`],
+    standalone: false
 })
 export class SortingTreeComponent<T extends Identifiable & Displayable> implements OnDestroy {
     /**
@@ -75,7 +83,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Source for the tree
      */
-    public dataSource: ArrayDataSource<FlatNode<T>> = new ArrayDataSource(this.osTreeData);
+    public dataSource = new ArrayDataSource<FlatNode<T>>(this.osTreeData);
 
     /**
      * Number to calculate the next position the node is moved
@@ -120,6 +128,12 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * Reference to the model that is passed to this component
      */
     private _model: Observable<T[]> | null = null;
+
+    /**
+     * The index of multiple selected elements. Allows for multiple items to be
+     * selected and then moved
+     */
+    public multiSelectedIndex: number[] = [];
 
     /**
      * Input that defines the key for the parent id
@@ -244,6 +258,18 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         }
 
         return null;
+    }
+
+    public getMultiselectPreviousNode(node: FlatNode<T>): FlatNode<T> | null {
+        const nodeIndex = this.osTreeData.indexOf(node);
+
+        for (let i = nodeIndex - 1; i >= 0; --i) {
+            if (!this.multiSelectedIndex.includes(this.osTreeData[i].id)) {
+                return this.osTreeData[i];
+            }
+        }
+
+        return this.osTreeData[0];
     }
 
     /**
@@ -548,9 +574,12 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      *
      * @param event CdkDragStart which emits the event
      */
-    public startsDrag(event: CdkDragStart): void {
+    public startsDrag(event: CdkDragStart, node: FlatNode<T>): void {
+        if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(node.id)) {
+            this.multiSelectedIndex = [];
+        }
         this.removeSubscription();
-        const draggedNode = <FlatNode<T>>event.source.data;
+        const draggedNode = event.source.data as FlatNode<T>;
         this.placeholderLevel = draggedNode.level;
         this.nextNode = {
             ...draggedNode,
@@ -560,15 +589,68 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     }
 
     /**
+     * Handles a click on a row. If the control key is clicked, the element is
+     * added/removed from a multiselect list /(which will be handled on
+     * dropping)
+     *
+     * @param event MouseEvent.
+     * @param clickIndex The index of the row clicked.
+     */
+    public onItemClick(event: MouseEvent | Event, clickIndex: number): void {
+        if (event.type === `click` || (event as KeyboardEvent).key === ` `) {
+            document.getSelection().removeAllRanges();
+            event.preventDefault();
+            if ((event as MouseEvent).ctrlKey) {
+                const index = this.multiSelectedIndex.findIndex(i => i === clickIndex);
+                if (index === -1) {
+                    this.multiSelectedIndex.push(clickIndex);
+                } else {
+                    this.multiSelectedIndex = this.multiSelectedIndex
+                        .slice(0, index)
+                        .concat(this.multiSelectedIndex.slice(index + 1));
+                }
+            } else {
+                // deselect all when clicking on an non-selected item
+                if (this.multiSelectedIndex.length && !this.multiSelectedIndex.includes(clickIndex)) {
+                    this.multiSelectedIndex = [];
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the row at the given index is currently selected
+     *
+     * @param index
+     * @returns true if the item is currently selected
+     */
+    public isSelectedRow(index: number): boolean {
+        return this.multiSelectedIndex.includes(index);
+    }
+
+    public sortSelectedNodes(): void {
+        const newMultiSelectedIndex = this.multiSelectedIndex
+            .map(index => this.osTreeData.filter(item => item.id === index))
+            .sort((a, b) => a[0].position - b[0].position)
+            .map(item => item[0].id);
+        this.multiSelectedIndex = newMultiSelectedIndex;
+    }
+
+    /**
      * Function to handle the dropping of a node.
      *
      * @param node Is the dropped node.
      */
     public onDrop(node: FlatNode<T>): void {
         this.pointer = null;
+        this.sortSelectedNodes();
 
         this.madeChanges(true);
-        this.moveItemToTree(node, node.position!, this.nextPosition, this.placeholderLevel);
+        if (this.multiSelectedIndex.length > 0) {
+            this.moveMultiItemsToTree(node);
+        } else {
+            this.moveItemToTree(node, node.position!, this.nextPosition, this.placeholderLevel);
+        }
     }
 
     /**
@@ -712,6 +794,61 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                 break;
         }
         return currentPosition;
+    }
+
+    /**
+     * Function to handle movement of multiple selected nodes
+     * @param node Clicked node to drag
+     */
+    private moveMultiItemsToTree(node: FlatNode<T>): void {
+        // dict for not selected subnodes
+        const nonSelectedSubNodes: MoveNode<T>[] = [];
+
+        let nextPosition = this.nextPosition;
+
+        for (const nodeId of this.multiSelectedIndex) {
+            node = this.osTreeData.filter(item => item.id === nodeId)[0];
+            const direction = node.position < this.nextPosition ? 0 : 1;
+
+            // If there are subnodes that are not selected, move them to a previous parent
+            const subNodes = this.getAllSubNodes(node)?.filter(
+                n => !this.multiSelectedIndex.includes(n.id) && n !== node
+            );
+
+            const selectedNodeSubnodes = this.getAllSubNodes(node)?.filter(
+                n => this.multiSelectedIndex.includes(n.id) && n !== node
+            );
+
+            const previousNode = subNodes.length > 0 ? this.getMultiselectPreviousNode(subNodes[0]) : null;
+            if (previousNode) {
+                let previousPos = !this.multiSelectedIndex.includes(previousNode.id) ? previousNode.position : -1;
+                let previousLevel = !this.multiSelectedIndex.includes(previousNode.id) ? previousNode.level : -1;
+                for (const sub of subNodes) {
+                    nonSelectedSubNodes.push({
+                        node: sub,
+                        previousIndex: sub.position!,
+                        nextIndex: previousPos + 1,
+                        nextLevel: previousLevel >= sub.level ? sub.level : previousLevel + 1
+                    });
+                    previousPos += 1;
+                    previousLevel = previousLevel >= sub.level ? sub.level : previousLevel + 1;
+                }
+                for (const moveNode of nonSelectedSubNodes) {
+                    this.moveItemToTree(moveNode.node, moveNode.previousIndex, moveNode.nextIndex, moveNode.nextLevel);
+                }
+            }
+
+            // Set selected child nodes on same level as parent node to not be moved as child
+            for (const moveNode of selectedNodeSubnodes) {
+                this.moveItemToTree(moveNode, moveNode.position, moveNode.position, node.level);
+            }
+
+            // Update node information and move to goal
+            node = this.osTreeData.filter(item => item.id === nodeId)[0];
+            this.moveItemToTree(node, node.position, nextPosition, this.placeholderLevel);
+            nextPosition += direction;
+        }
+        this.multiSelectedIndex = [];
     }
 
     /**

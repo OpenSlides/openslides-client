@@ -30,14 +30,15 @@ const connectingTitle = _(`connecting ...`);
     selector: `os-call`,
     templateUrl: `./call.component.html`,
     styleUrls: [`./call.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CallComponent extends BaseMeetingComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output()
-    public conferenceTitle: EventEmitter<string> = new EventEmitter();
+    public conferenceTitle = new EventEmitter<string>();
 
     @Output()
-    public conferenceSubtitle: EventEmitter<string> = new EventEmitter();
+    public conferenceSubtitle = new EventEmitter<string>();
 
     public isJitsiActiveInAnotherTab: Observable<boolean> = this.callRestrictionService.isJitsiActiveInAnotherTab;
     public canEnterCall: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;

@@ -33,9 +33,7 @@ export type SettingsType =
     | 'groups'
     | 'daterange';
 
-export interface ChoicesMap {
-    [name: string]: string | number;
-}
+export type ChoicesMap = Record<string, string | number>;
 
 /**
  * Need for settings that depend on models. The collection is resolved via the
@@ -868,8 +866,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `motions_enable_origin_motion_display`,
-                        label: _(`Enable display of original forwarded motions`),
-                        type: `boolean`
+                        label: _(`Allow backtracking of forwarded motions`),
+                        type: `boolean`,
+                        helpText: _(`Requires permission to see origin motions`)
                     },
                     {
                         key: `motions_origin_motion_toggle_default`,

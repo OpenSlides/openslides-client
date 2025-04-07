@@ -11,16 +11,7 @@ describe(`GetUserScopePresenterService`, () => {
     let service: GetUserScopePresenterService;
     let presenter: MockPresenterService;
 
-    const scopeMap = {
-        2: { title: `meeting user` },
-        3: { title: `committee user` },
-        5: { title: `organization user` },
-        6: { title: `account admin` },
-        7: { title: `organization admin` },
-        8: { title: `superadmin` }
-    };
-
-    const testScopes: { [key in keyof typeof scopeMap]: any } = {
+    const testScopes: Record<number, any> = {
         2: {
             collection: UserScope.MEETING,
             id: 2,
