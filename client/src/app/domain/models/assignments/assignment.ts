@@ -51,10 +51,10 @@ export class Assignment extends BaseModel<Assignment> {
 }
 export interface Assignment
     extends HasMeetingId,
-        HasProjectionIds,
-        HasAttachmentMeetingMediafileIds,
-        HasTagIds,
-        HasAgendaItemId,
-        HasListOfSpeakersId,
-        HasSequentialNumber,
-        HasPollIds {}
+    HasProjectionIds,
+    HasAttachmentMeetingMediafileIds,
+    HasTagIds,
+    HasAgendaItemId,
+    HasListOfSpeakersId,
+    HasSequentialNumber,
+    HasPollIds {}

@@ -31,7 +31,7 @@ interface DialogData {
  * Determine answers from the dialog
  */
 interface DialogResult {
-    action: 'update' | 'delete';
+    action: `update` | `delete`;
     value: string | null;
 }
 

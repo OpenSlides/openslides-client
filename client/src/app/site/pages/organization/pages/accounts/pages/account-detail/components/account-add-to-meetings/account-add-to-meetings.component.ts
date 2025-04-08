@@ -111,8 +111,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                         this.operator.canSkipPermissionCheck
                             ? meetings.filter(meeting => !meeting.locked_from_inside)
                             : meetings.filter(
-                                  meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
-                              )
+                                    meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
+                                )
                     )
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))

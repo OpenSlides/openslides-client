@@ -193,7 +193,7 @@ export class OpenSlidesRouterService {
     private async validateGuard(
         guardToken: ProviderToken<any>,
         route: ActivatedRoute,
-        type: 'canActivateChild' | 'canActivate' | 'canLoad'
+        type: `canActivateChild` | `canActivate` | `canLoad`
     ): Promise<boolean | UrlTree> {
         const guard = this.injector.get(guardToken);
         const routerStateSnapshot = Object.assign({}, route.snapshot, { url: this.router.url });

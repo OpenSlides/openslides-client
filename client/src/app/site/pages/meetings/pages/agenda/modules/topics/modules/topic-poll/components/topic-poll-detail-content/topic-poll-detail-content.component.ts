@@ -47,7 +47,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
+    public iconSize: `large` | `gigantic` = `large`;
 
     private get state(): PollState {
         return this.poll.state;

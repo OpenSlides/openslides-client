@@ -100,7 +100,7 @@ describe(`http stream pool`, () => {
                     response: {
                         status: 500
                     }
-                },
+                }
             );
 
             await expectAsync(httpStreamPool.isEndpointHealthy()).toBeResolvedTo(false);

@@ -24,9 +24,9 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
 
 export interface OptionsObject {
-    fqid?: Fqid; //Obligatory if optionTypeText===false and this isn't a list
-    text?: string; //Obligatory if optionTypeText===true
-    poll_candidate_user_ids?: Id[]; //Obligatory if optionTypeText===false and this is a list
+    fqid?: Fqid; // Obligatory if optionTypeText===false and this isn't a list
+    text?: string; // Obligatory if optionTypeText===true
+    poll_candidate_user_ids?: Id[]; // Obligatory if optionTypeText===false and this is a list
     content_object?: BaseModel;
 }
 
@@ -296,7 +296,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     private createOptionsForVoteForm(): Record<string, any> {
         const isListPoll = this.pollForm.getValues().pollmethod === FormPollMethod.LIST_YNA;
         if (this.optionTypeText === false && !isListPoll) {
-            //with content_object_id
+            // with content_object_id
             return this.options?.mapToObject(option => ({
                 [option.fqid]: this.formBuilder.group(
                     // for each user, create a form group with a control for each valid input (Y, N, A)
@@ -315,8 +315,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                 )
             };
         } else {
-            //with text
-            //get a unique key
+            // with text
+            // get a unique key
             let key = 0;
             return this.options?.mapToObject(option => {
                 key++;

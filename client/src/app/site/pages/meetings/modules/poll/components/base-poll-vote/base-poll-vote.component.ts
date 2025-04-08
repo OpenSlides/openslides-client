@@ -472,7 +472,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 if (
                     ((!this.poll.has_voted_user_ids && votes.length > 0) ||
                         votes.filter(m => this.poll.has_voted_user_ids?.includes(m)).length > 0) &&
-                    this.poll.hasVoted
+                        this.poll.hasVoted
                 ) {
                     return;
                 }

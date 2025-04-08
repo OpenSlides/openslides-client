@@ -28,7 +28,7 @@ export class IconContainerComponent {
      * Optional size property. Can be large, if needed.
      */
     @Input()
-    public size: 'small' | 'medium' | 'large' | 'gigantic' = `medium`;
+    public size: `small` | `medium` | `large` | `gigantic` = `medium`;
 
     @Input()
     public inline = false;
