@@ -148,8 +148,8 @@ export class ParticipantPdfService {
             {
                 text: users_pdf_welcometext,
                 style: `userDataTopic`,
-                pageBreak: pageBreak ? `after`: undefined
-            },
+                pageBreak: pageBreak ? `after` : undefined
+            }
         ];
     }
 
