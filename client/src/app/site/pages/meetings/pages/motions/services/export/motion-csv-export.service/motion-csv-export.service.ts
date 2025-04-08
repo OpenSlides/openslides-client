@@ -159,7 +159,7 @@ export class MotionCsvExportService {
         this.csvExport.export(motions, exportProperties, this.translate.instant(`Motions`) + `.csv`);
     }
 
-    /**numberOrTitle
+    /** numberOrTitle
      * Exports the call list.
      *
      * @param motions All motions in the CSV. They should be ordered by weight correctly.

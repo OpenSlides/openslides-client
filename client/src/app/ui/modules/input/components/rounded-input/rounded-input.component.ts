@@ -7,7 +7,7 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 /**
  * Type declared to see, which values are possible for some inputs.
  */
-export type Size = 'small' | 'medium' | 'large';
+export type Size = `small` | `medium` | `large`;
 
 @Component({
     selector: `os-rounded-input`,

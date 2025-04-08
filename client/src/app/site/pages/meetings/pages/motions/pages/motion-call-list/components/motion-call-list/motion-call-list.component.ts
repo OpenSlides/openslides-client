@@ -199,7 +199,7 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
      * @param model either 'tag' or 'category' for the filter that changed
      * @param filter the filter that is supposed to be toggled.
      */
-    public onFilterChange(model: 'tag' | 'category', filter: SortTreeFilterId): void {
+    public onFilterChange(model: `tag` | `category`, filter: SortTreeFilterId): void {
         const value = model === `tag` ? this.activeTagFilters.value : this.activeCatFilters.value;
         if (!value.includes(filter)) {
             value.push(filter);
@@ -241,7 +241,7 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
      * @param model the property/model the filter is for
      * @param value
      */
-    private onSubscribedFilterChange(model: 'tag' | 'category', value: SortTreeFilterId[]): void {
+    private onSubscribedFilterChange(model: `tag` | `category`, value: SortTreeFilterId[]): void {
         if (model === `tag`) {
             this.activeTagFilterCount = value.length;
             this.tagFilterOptions.forEach(filterOption => {
