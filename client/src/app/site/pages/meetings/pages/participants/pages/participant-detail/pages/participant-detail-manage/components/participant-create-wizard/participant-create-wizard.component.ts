@@ -282,7 +282,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
             if (this._accountId) {
                 const dirtyPayload = {};
                 for (const field in payload) {
-                    if (this.account[field] !== payload[field]) {
+                    if (this.account === null || this.account[field] !== payload[field]) {
                         dirtyPayload[field] = payload[field];
                     }
                 }
