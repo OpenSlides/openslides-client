@@ -69,13 +69,6 @@ export enum PollMethod {
     Y = `Y`,
     YN = `YN`,
     YNA = `YNA`,
-    N = `N`
-}
-
-export enum FormPollMethod {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
     N = `N`,
     LIST_YNA = `yna`
 }
