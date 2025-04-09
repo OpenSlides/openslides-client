@@ -36,14 +36,14 @@ export class ParticipantPdfService {
      *
      * @returns doc def for the user
      */
-    public userAccessToDocDef(user: ViewUser): Content {
+    public userAccessToDocDef(user: ViewUser, pageBreak?: boolean): Content {
         const userHeadline = [
             {
                 text: user.short_name,
                 style: `userDataTitle`
             }
         ];
-        return [userHeadline, this.createAccessDataContent(user), this.createWelcomeText()];
+        return [userHeadline, this.createAccessDataContent(user), this.createWelcomeText(pageBreak)];
     }
 
     /**
@@ -137,7 +137,7 @@ export class ParticipantPdfService {
      *
      * @returns pdfMake definitions
      */
-    private createWelcomeText(): Content {
+    private createWelcomeText(pageBreak: boolean): Content {
         const users_pdf_welcometitle = this.meetingSettingsService.instant(`users_pdf_welcometitle`)!;
         const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`)!;
         return [
@@ -147,7 +147,8 @@ export class ParticipantPdfService {
             },
             {
                 text: users_pdf_welcometext,
-                style: `userDataTopic`
+                style: `userDataTopic`,
+                pageBreak: pageBreak ? `after` : undefined
             }
         ];
     }

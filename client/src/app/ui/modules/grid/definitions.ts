@@ -27,9 +27,9 @@ export enum GridBlockTileType {
 /**
  * Tells, whether to align the block and content next to each other or one below the other.
  */
-export type GridBlockTileOrientation = 'horizontal' | 'vertical';
+export type GridBlockTileOrientation = `horizontal` | `vertical`;
 
 /**
  * Tells, if the tile should only display the content or the title in the content part.
  */
-export type GridBlockTileShowOnly = 'title' | 'content' | null;
+export type GridBlockTileShowOnly = `title` | `content` | null;

@@ -43,6 +43,6 @@ interface IProjectorRelations {
 }
 export interface ViewProjector
     extends Projector,
-        ViewModelRelations<IProjectorRelations>,
-        HasMeeting,
-        HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}
+    ViewModelRelations<IProjectorRelations>,
+    HasMeeting,
+    HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}
