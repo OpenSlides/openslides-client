@@ -107,7 +107,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         lnMode: [],
         crMode: [this.crMode.Original],
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
-        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `list_of_speakers`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `speakers`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
         pageLayout: [],
         headerFooter: [],
@@ -122,7 +122,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         lnMode: [],
         crMode: [],
         content: [`title`, `number`, `sequential_number`],
-        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `list_of_speakers`],
+        metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `speakers`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
         pageLayout: [],
         headerFooter: [],
@@ -464,57 +464,57 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     // Transform form of motion export to MotionExportInfo for further processing
-        public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {
-            const exportInfo = {};
+    public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {
+        const exportInfo = {};
 
-            exportInfo[`format`] = dialogForm.value[`format`] as ExportFileFormat;
-            exportInfo[`crMode`] = dialogForm.get(`crMode`).value as ChangeRecoMode;
-            exportInfo[`lnMode`] = dialogForm.get(`lnMode`).value as LineNumberingMode;
-            exportInfo[`comments`] = dialogForm.get(`comments`).value;
-            exportInfo[`content`] = dialogForm.get(`content`).value.filter(obj => !obj.includes(`id`));
+        exportInfo[`format`] = dialogForm.value[`format`] as ExportFileFormat;
+        exportInfo[`crMode`] = dialogForm.get(`crMode`).value as ChangeRecoMode;
+        exportInfo[`lnMode`] = dialogForm.get(`lnMode`).value as LineNumberingMode;
+        exportInfo[`comments`] = dialogForm.get(`comments`).value;
+        exportInfo[`content`] = dialogForm.get(`content`).value.filter(obj => !obj.includes(`id`));
 
-            let intersection = [
-                `submitters`,
-                `supporters`,
-                `state`,
-                `recommendation`,
-                `category`,
-                `block`,
-                `tags`,
-                `polls`,
-                `list_of_speakers`,
-                `sequential_number`,
-                `referring_motions`,
-                `allcomments`,
-                `editors`,
-                `working_group_speakers`
-            ].filter(
-                element =>
-                    dialogForm.get(`metaInfo`).value?.includes(element) ||
-                    dialogForm.get(`content`).value?.includes(element) ||
-                    dialogForm.get(`personrelated`).value?.includes(element)
-            );
-            exportInfo[`metaInfo`] = intersection as InfoToExport[];
+        let intersection = [
+            `submitters`,
+            `supporters`,
+            `state`,
+            `recommendation`,
+            `category`,
+            `block`,
+            `tags`,
+            `polls`,
+            `speakers`,
+            `sequential_number`,
+            `referring_motions`,
+            `allcomments`,
+            `editors`,
+            `working_group_speakers`
+        ].filter(
+            element =>
+                dialogForm.get(`metaInfo`).value?.includes(element) ||
+                dialogForm.get(`content`).value?.includes(element) ||
+                dialogForm.get(`personrelated`).value?.includes(element)
+        );
+        exportInfo[`metaInfo`] = intersection as InfoToExport[];
 
-            intersection = [
-                `toc`,
-                `header`,
-                `page`,
-                `date`,
-                `attachments`,
-                `addBreaks`,
-                `continuousText`,
-                `onlyChangedLines`
-            ].filter(
-                element =>
-                    dialogForm.get(`pageLayout`).value?.includes(element) ||
-                    dialogForm.get(`headerFooter`).value?.includes(element) ||
-                    dialogForm.get(`content`).value?.includes(element)
-            );
-            exportInfo[`pdfOptions`] = intersection;
+        intersection = [
+            `toc`,
+            `header`,
+            `page`,
+            `date`,
+            `attachments`,
+            `addBreaks`,
+            `continuousText`,
+            `onlyChangedLines`
+        ].filter(
+            element =>
+                dialogForm.get(`pageLayout`).value?.includes(element) ||
+                dialogForm.get(`headerFooter`).value?.includes(element) ||
+                dialogForm.get(`content`).value?.includes(element)
+        );
+        exportInfo[`pdfOptions`] = intersection;
 
-            return exportInfo;
-        }
+        return exportInfo;
+    }
 
     public async exportMotions(): Promise<void> {
         this.repoSub.unsubscribe();

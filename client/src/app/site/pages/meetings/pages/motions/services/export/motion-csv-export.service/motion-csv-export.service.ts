@@ -100,6 +100,9 @@ export class MotionCsvExportService {
             crMode = this.crMode.Original;
         }
         const properties = sortMotionPropertyList([`number`, `title`].concat(contentToExport));
+        if (contentToExport.includes(`speakers`)) {
+            properties.push(`speakers`);
+        }
         const exportProperties: (CsvColumnDefinitionProperty<ViewMotion> | CsvColumnDefinitionMap<ViewMotion>)[] =
             properties.map(option => {
                 switch (option) {
@@ -138,7 +141,7 @@ export class MotionCsvExportService {
                             label: `Motion block`,
                             map: motion => (motion.block ? motion.block.getTitle() : ``)
                         };
-                    case `list_of_speakers`:
+                    case `speakers`:
                         return {
                             label: `Open requests to speak`,
                             map: motion =>

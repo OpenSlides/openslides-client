@@ -84,6 +84,9 @@ export class MotionXlsxExportService {
         if (infoToExport.includes(`referring_motions`)) {
             properties.push(`referring_motions`);
         }
+        if (infoToExport.includes(`speakers`)) {
+            properties.push(`speakers`);
+        }
 
         const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
             pageSetup: {
@@ -112,7 +115,7 @@ export class MotionXlsxExportService {
                     case `block`:
                         propertyHeader = _(`Motion block`);
                         break;
-                    case `list_of_speakers`:
+                    case `speakers`:
                         propertyHeader = _(`Open requests to speak`);
                         break;
                     case `working_group_speakers`:
@@ -158,16 +161,17 @@ export class MotionXlsxExportService {
             data.push(
                 ...properties.map(property => {
                     const motionProp = motion[property as keyof ViewMotion];
+                    if (!motionProp && property == `speakers`) {
+                        return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
+                            ? motion.list_of_speakers.waitingSpeakerAmount
+                            : ``;
+                    }
                     if (!motionProp && property !== `referring_motions`) {
                         return ``;
                     }
                     switch (property) {
                         case `submitters`:
                             return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
-                        case `list_of_speakers`:
-                            return motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
-                                ? motion.list_of_speakers.waitingSpeakerAmount
-                                : ``;
                         case `state`:
                             return this.motionService.getExtendedStateLabel(motion);
                         case `recommendation`:
