@@ -178,6 +178,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="supporters"
+                        [disabled]="isDisabled(supportersChip.value)"
                         [matBadgeHidden]="supportersChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Supporters' | translate }}</span>
