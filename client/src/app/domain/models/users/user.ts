@@ -6,7 +6,7 @@ import { BaseDecimalModel } from '../base/base-decimal-model';
 /**
  * Key to sort users by
  */
-export type UserSortProperty = 'first_name' | 'last_name' | 'number';
+export type UserSortProperty = `first_name` | `last_name` | `number`;
 
 /**
  * Iterable pre selection of genders

@@ -62,7 +62,7 @@ export class SingleOptionChartTableComponent {
     }
 
     @Input()
-    public iconSize: 'medium' | 'large' | 'gigantic' = `large`;
+    public iconSize: `medium` | `large` | `gigantic` = `large`;
 
     @Input()
     public shouldShowEntitled = false;

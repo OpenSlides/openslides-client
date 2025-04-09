@@ -40,7 +40,7 @@ export class CsvExportService {
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
-            encoding?: 'utf-8' | 'iso-8859-15';
+            encoding?: `utf-8` | `iso-8859-15`;
         } = {}
     ): void {
         let csvContent = []; // Holds all lines as arrays with each column-value

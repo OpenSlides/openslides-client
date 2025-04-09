@@ -24,7 +24,7 @@ import { MotionListInfoDialogService } from '../../modules/motion-list-info-dial
 /**
  * Determine the types of the motionList
  */
-type MotionListviewType = 'tiles' | 'list';
+type MotionListviewType = `tiles` | `list`;
 const MOTION_LIST_STORAGE_INDEX = `motions`;
 
 /**

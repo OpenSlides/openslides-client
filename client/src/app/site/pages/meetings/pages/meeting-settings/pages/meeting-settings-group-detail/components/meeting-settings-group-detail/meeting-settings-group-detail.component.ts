@@ -38,8 +38,7 @@ import {
 })
 export class MeetingSettingsGroupDetailComponent
     extends BaseMeetingComponent
-    implements OnInit, CanComponentDeactivate, OnDestroy
-{
+    implements OnInit, CanComponentDeactivate, OnDestroy {
     public settingsGroup!: SettingsGroup;
 
     public meeting!: ViewMeeting;

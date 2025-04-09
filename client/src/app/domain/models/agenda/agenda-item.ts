@@ -6,7 +6,7 @@ import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasTagIds } from '../../interfaces/has-tag-ids';
 import { BaseModel } from '../base/base-model';
 
-export type AgendaItemCreation = 'always' | 'never' | 'default_yes' | 'default_no';
+export type AgendaItemCreation = `always` | `never` | `default_yes` | `default_no`;
 
 export enum AgendaItemType {
     COMMON = `common`,
