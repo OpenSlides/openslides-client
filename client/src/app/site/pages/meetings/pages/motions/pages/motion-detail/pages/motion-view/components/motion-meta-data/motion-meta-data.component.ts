@@ -59,6 +59,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public showSupporters = false;
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
+    public allowSupporters$ = this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
     public originToggleDefault$ = this.meetingSettingsService
         .get(`motions_origin_motion_toggle_default`)
@@ -213,7 +214,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
+                this.updateSupportersSubject();})
         );
     }
 
@@ -446,8 +448,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return (
             supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.getMeetingUser().vote_delegated_to &&
-                this.meetingSettingsService.instant(`users_forbid_delegator_as_supporter`)
+                supporter.getMeetingUser().vote_delegated_to_id
             )
         );
     }
