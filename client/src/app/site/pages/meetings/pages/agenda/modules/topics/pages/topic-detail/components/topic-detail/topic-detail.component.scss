@@ -12,3 +12,10 @@
 :host ::ng-deep .detail-view {
     @include detail-view-appearance.detail-view-appearance;
 }
+
+.apply-button {
+    height: 37px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}

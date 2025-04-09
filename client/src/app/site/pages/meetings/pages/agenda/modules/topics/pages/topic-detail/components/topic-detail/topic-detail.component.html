@@ -26,19 +26,6 @@
             </h2>
         </div>
 
-        @if (editTopic && !newTopic) {
-            <div class="extra-controls-slot">
-                <button
-                    mat-icon-button
-                    matTooltip="'Apply topic content' | translate"
-                    type="button"
-                    (click)="applyTopicContent()"
-                >
-                    <mat-icon>save</mat-icon>
-                </button>
-            </div>
-        }
-
         <!-- Back and forth buttons -->
         @if (!editTopic && showNavigateButtons) {
             <div class="extra-controls-slot">
@@ -151,6 +138,12 @@
                                         ></os-list-search-selector>
                                     </mat-form-field>
                                 </div>
+                            </div>
+                        } @else {
+                            <div class="apply-button">
+                                <button mat-stroked-button (click)="applyTopicContent()">
+                                    <span>{{ 'Apply' | translate }}</span>
+                                </button>
                             </div>
                         }
                     </form>
