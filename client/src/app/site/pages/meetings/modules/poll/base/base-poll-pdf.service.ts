@@ -420,11 +420,11 @@ export abstract class BasePollPdfService {
             [
                 ...(enumerate
                     ? [
-                          {
-                              text: ``,
-                              style: `tableHeader`
-                          }
-                      ]
+                            {
+                                text: ``,
+                                style: `tableHeader`
+                            }
+                        ]
                     : []),
                 {
                     text: this.translate.instant(`Candidate`),
@@ -442,10 +442,10 @@ export abstract class BasePollPdfService {
             const tableLine = [
                 ...(enumerate
                     ? [
-                          {
-                              text: i + 1
-                          }
-                      ]
+                            {
+                                text: i + 1
+                            }
+                        ]
                     : []),
                 {
                     text: this.translate.instant(entry.title)
@@ -524,16 +524,16 @@ export abstract class BasePollPdfService {
                             : undefined;
                         return hasValue
                             ? {
-                                  text: `${this.pollParseNumber.transform(currentValue.amount)}${
-                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption) &&
-                                      showPercent
-                                          ? ` (${this.pollService.getVoteValueInPercent(
+                                    text: `${this.pollParseNumber.transform(currentValue.amount)}${
+                                        [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption) &&
+                                        showPercent
+                                            ? ` (${this.pollService.getVoteValueInPercent(
                                                 currentValue.amount,
                                                 currentValue.vote ? { poll, row: resultsTableData[i] } : { poll }
                                             )})`
-                                          : ``
-                                  }`
-                              }
+                                            : ``
+                                    }`
+                                }
                             : { text: `` };
                     })
                     .reverse()
@@ -655,7 +655,7 @@ export abstract class BasePollPdfService {
         )) {
             const name = date.user_merged_into_id
                 ? `${this.translate.instant(`Old account of`)} ` +
-                  this.getUserNameForExport(this.userRepo.getViewModel(date.user_merged_into_id))
+                this.getUserNameForExport(this.userRepo.getViewModel(date.user_merged_into_id))
                 : this.getUserNameForExport(date.user);
             let represented = ``;
             if (date.vote_delegated_to_user_id && !date.delegation_user_merged_into_id) {

@@ -1790,8 +1790,8 @@ export class MotionDiffService {
                         otherChange.getLineFrom() <= change.getLineTo()) ||
                         (otherChange.getLineTo() >= change.getLineFrom() &&
                             otherChange.getLineTo() <= change.getLineTo()) ||
-                        (otherChange.getLineFrom() <= change.getLineFrom() &&
-                            otherChange.getLineTo() >= change.getLineTo()))
+                            (otherChange.getLineFrom() <= change.getLineFrom() &&
+                                otherChange.getLineTo() >= change.getLineTo()))
             ).length > 0
         );
     }
@@ -1851,7 +1851,7 @@ export class MotionDiffService {
 
                     const type =
                         ` data-change-type="` +
-                        ((type: ViewUnifiedChangeType): 'amendment' | 'recommendation' | 'unknown' => {
+                        ((type: ViewUnifiedChangeType): `amendment` | `recommendation` | `unknown` => {
                             switch (type) {
                                 case ViewUnifiedChangeType.TYPE_AMENDMENT:
                                     return `amendment`;

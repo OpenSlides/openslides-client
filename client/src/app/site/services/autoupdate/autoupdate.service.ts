@@ -34,10 +34,10 @@ interface AutoupdateConnectConfig {
 }
 
 type AutoupdateSubscriptionMap = Record<number, {
-        modelRequest: ModelRequestObject;
-        modelSubscription: ModelSubscription;
-        description: string;
-    }>;
+    modelRequest: ModelRequestObject;
+    modelSubscription: ModelSubscription;
+    description: string;
+}>;
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;

@@ -45,7 +45,7 @@ export class AutoupdateStream extends HttpStream {
 
     public override async start(
         force?: boolean
-    ): Promise<{ stopReason: 'error' | 'aborted' | 'resolved' | 'in-use' | string; error?: any }> {
+    ): Promise<{ stopReason: `error` | `aborted` | `resolved` | `in-use` | string; error?: any }> {
         if (this.activeSubscriptions === null) {
             this.activeSubscriptions = [];
             for (const subscription of this.subscriptions) {
