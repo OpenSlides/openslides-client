@@ -197,7 +197,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TableHeader,
                 TableCell,
 
-                //Marks
+                // Marks
                 Bold,
                 Highlight.configure({
                     multicolor: true

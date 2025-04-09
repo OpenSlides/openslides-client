@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 
 import { User } from './user';
 
-export const userHeadersAndVerboseNames: Partial<Record<keyof User | 'gender', any>> = {
+export const userHeadersAndVerboseNames: Partial<Record<keyof User | `gender`, any>> = {
     title: _(`Title`),
     first_name: _(`Given name`),
     last_name: _(`Surname`),

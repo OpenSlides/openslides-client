@@ -227,7 +227,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param operation the action requested
      * @returns true if the user is able to perform the action
      */
-    public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
+    public hasPerms(operation: `addSelf` | `addOthers` | `createPoll` | `manage`): boolean {
         const isManager = this.operator.hasPerms(Permission.assignmentCanManage);
         switch (operation) {
             case `addSelf`:

@@ -54,7 +54,7 @@ export type CsvMapping<T = any> = T & {
  * The permitted states of a new entry. Only a 'new' entry should be imported
  * and then be set to 'done'.
  */
-export type CsvImportStatus = 'new' | 'error' | 'done' | string;
+export type CsvImportStatus = `new` | `error` | `done` | string;
 
 export type CsvJsonMapping = Record<string, string>;
 
