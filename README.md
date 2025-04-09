@@ -5,8 +5,10 @@ Delivers a responsive web application written in Angular Material, serving web b
 smartphones and tablet PCs.
 The client can be installed as a Progressive Web App (PWA).
 
-Sends requests to the [OpenSlides Backend](https://github.com/OpenSlides/openslides-backend) and receives live data from the [OpenSlides Autoupdate Service](https://github.com/OpenSlides/openslides-autoupdate-service).
-Interchanges information and data with surrounding OpenSlides clients using the [OpenSlides Inter-Client-Communication service](https://github.com/OpenSlides/openslides-icc-service).
+Sends requests to the [OpenSlides Backend](https://github.com/OpenSlides/openslides-backend) and receives live
+data from the [OpenSlides Autoupdate Service](https://github.com/OpenSlides/openslides-autoupdate-service).
+Interchanges information and data with surrounding OpenSlides clients using the
+[OpenSlides Inter-Client-Communication service](https://github.com/OpenSlides/openslides-icc-service).
 
 
 # Building the client
@@ -23,17 +25,17 @@ Change into openslides-client:
 
 Build the client using docker:
 
-`docker build . -t client`
+`make build-prod`
 
-That might take a few minutes. Once done, run the docker image:
+Once done, run the docker image:
 
-`docker run -d -p 8080:80 client`
+`docker run -d -p 8080:80 openslides-client`
 
 You should now have the client up and running in docker using nginx on http://localhost:8080/
 
 If you want to inspect the files you just build:
 
-`docker run -it client bash`
+`docker run -it openslides-client bash`
 
 ## Using npm
 
@@ -53,11 +55,12 @@ Build the client in production mode:
 
 `npm run build`
 
-That might take a few minutes.
 The static files will be build in `openslides-client/client/dist`.
 
 # Developing the client
-For further information about developing the OpenSlides client, refer to [the development readme](https://github.com/OpenSlides/openslides-client/blob/main/DEVELOPMENT.md).
+
+For further information about developing the OpenSlides client, refer to
+[the development readme](https://github.com/OpenSlides/openslides-client/blob/main/DEVELOPMENT.md).
 
 # For contributors
 
@@ -69,14 +72,47 @@ See https://github.com/OpenSlides/OpenSlides/wiki/Development-organization#pull-
 
 ## Code alignment
 
-Please respect the code-style defined in `.editorconfig` and `.pretierrc`.
+Please respect the code-style defined in `.editorconfig`, `eslint.config.json` and `.pretierrc`.
 Adjust your editor to the `.editorconfig` to avoid surprises.
 See https://editorconfig.org/ for details.
 
-Code can be cleaned and aligned automatically using `npm run cleanup`.
+Code can be cleaned and aligned automatically using `npm run-cleanup`.
 This will take care of code alignment, import sorting and quotation marks.
 To execute this inside the docker container, you can either use `make run-cleanup` while the client
 container is already running or `make run-cleanup-standalone` if it's not.
+
+## Running tests
+
+We are using karma tests for some parts of our application. You can run them using: 
+
+`make run-karma-tests`
+
+For development you can use:
+
+`npm run test-live`
+
+Note that you need Chromium installed for that. To use another browser refer to `package.json` and
+adjust the parameters accordingly. 
+
+Generally while unit tests are always appreciated we require tests only for changes on low level parts of the application
+like connection handling with the autoupdate (everything in the `src/app/worker/` directory) or utility functions
+(e.g. `src/app/infrastructure/utils/`).
+Also changes to regression prone code like the motion diff and line numbering (`line-numbering.service.spec.ts` and
+`motion-diff.service.ts`) should always contain tests for your changes. 
+
+## Running integration tests
+
+To test the full setup we include playwright integration tests. These mainly fulfill the purpose to test if 
+all parts of the client are working together with the other services and tests essential parts like
+the authentication processes, general connectivity to backend and autoupdate and some ui interactions. 
+
+These tests require the [full setup](https://github.com/OpenSlides/OpenSlides) to be running either 
+using a clean [dev setup](https://github.com/OpenSlides/OpenSlides/blob/main/DEVELOPMENT.md#before-starting-the-development)
+or [local prod setup](https://github.com/OpenSlides/OpenSlides/tree/main/dev/localprod#local-production-setup).
+
+With the setup running you can start the integraton tests with:
+
+`make run-playwright`
 
 ## Translation
 
@@ -90,104 +126,6 @@ The offical translation of OpenSlides can be found in [transifex](https://www.tr
 
 Grep the code for `| translate` and `this.translate` to find examples.
 
-## Code Documentation
+# Used software
 
-Please document new code using [JSDoc](https://devdocs.io/jsdoc/).
-
-The documentation of the source material can be generated
-using [compodoc](https://compodoc.app/) by
-running:
-
-`npm run compodoc`.
-
-A new web server will be started on http://localhost:8080/.
-Once running, the documentation will be updated automatically.
-
-You can run it on another port by adding your local port after the
-command. If no port specified, it will try to use 8080.
-
-See https://compodoc.app/guides/jsdoc-tags.html for details.
-
-## Used software
-
-OpenSlides Client uses the following software or parts of them:
-
-- [@angular/animations@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/cdk-experimental@13.2.4](https://github.com/angular/components), License: MIT
-- [@angular/cdk@13.2.3](https://github.com/angular/components), License: MIT
-- [@angular/common@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/compiler@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/core@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/forms@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/material-moment-adapter@13.2.3](https://github.com/angular/components), License: MIT
-- [@angular/material@13.2.3](https://github.com/angular/components), License: MIT
-- [@angular/platform-browser-dynamic@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/platform-browser@13.2.3](https://github.com/angular/angular), License: MIT
-- [@angular/router@13.2.3](https://github.com/angular/angular), License: MIT
-- [@ngx-pwa/local-storage@13.0.2](https://github.com/cyrilletuzi/angular-async-local-storage), License: MIT
-- [@ngx-translate/core@14.0.0](https://github.com/ngx-translate/core), License: MIT
-- [@ngx-translate/http-loader@7.0.0](https://github.com/ngx-translate/core), License: MIT
-- [@pebula/ngrid-material@4.0.0](undefined), License: UNKNOWN
-- [@pebula/ngrid@4.0.0](https://github.com/shlomiassaf/ngrid), License: MIT
-- [@pebula/utils@1.0.2](undefined), License: UNKNOWN
-- [@videojs/http-streaming@2.13.1](https://github.com/videojs/http-streaming), License: Apache-2.0
-- [acorn@8.7.0](https://github.com/acornjs/acorn), License: MIT
-- [broadcast-channel@4.10.0](https://github.com/pubkey/broadcast-channel), License: MIT
-- [chart.js@3.7.1](https://github.com/chartjs/Chart.js), License: MIT
-- [core-js@3.21.1](https://github.com/zloirock/core-js), License: MIT
-- [css-element-queries@1.2.3](https://github.com/marcj/css-element-queries), License: MIT
-- [exceljs@4.3.0](https://github.com/exceljs/exceljs), License: MIT
-- [file-saver@2.0.5](https://github.com/eligrey/FileSaver.js), License: MIT
-- [jszip@3.7.1](https://github.com/Stuk/jszip), License: (MIT OR GPL-3.0-or-later)
-- [lz4js@0.2.0](https://github.com/Benzinga/lz4js), License: ISC
-- [material-design-icons-iconfont@6.4.1](https://github.com/jossef/material-design-icons-iconfont), License: Apache-2.0
-- [moment@2.29.2](https://github.com/moment/moment), License: MIT
-- [ng-particles@2.41.4](https://github.com/matteobruni/tsparticles), License: MIT
-- [ng2-charts@3.0.8](https://github.com/valor-software/ng2-charts), License: ISC
-- [ng2-pdf-viewer@8.0.1](git+https://vadimdez@github.com/VadimDez/ng2-pdf-viewer), License: MIT
-- [ngx-device-detector@3.0.0](https://github.com/KoderLabs/ngx-device-detector), License: MIT
-- [ngx-file-drop@13.0.0](https://github.com/georgipeltekov/ngx-file-drop), License: MIT
-- [ngx-mat-select-search@4.0.2](https://github.com/bithost-gmbh/ngx-mat-select-search), License: MIT
-- [ngx-material-timepicker@5.5.3](https://github.com/Agranom/ngx-material-timepicker), License: MIT
-- [ngx-papaparse@5.0.0](https://github.com/alberthaff/ngx-papaparse), License: MIT
-- [pdfmake@0.2.4](https://github.com/bpampuch/pdfmake), License: MIT
-- [rxjs@7.5.4](https://github.com/reactivex/rxjs), License: Apache-2.0
-- [tinycolor2@1.4.2](https://github.com/bgrins/TinyColor), License: MIT
-- [ts-dedent@2.2.0](https://github.com/tamino-martinius/node-ts-dedent), License: MIT
-- [tslib@2.3.1](https://github.com/Microsoft/tslib), License: 0BSD
-- [tsparticles@1.41.4](https://github.com/matteobruni/tsparticles), License: MIT
-- [video.js@7.17.0](https://github.com/videojs/video.js), License: Apache-2.0
-- [zone.js@0.11.4](https://github.com/angular/angular), License: MIT
-- [@angular-devkit/build-angular@13.2.4](https://github.com/angular/angular-cli), License: MIT
-- [@angular-eslint/builder@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
-- [@angular-eslint/eslint-plugin-template@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
-- [@angular-eslint/eslint-plugin@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
-- [@angular-eslint/schematics@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
-- [@angular-eslint/template-parser@13.1.0](https://github.com/angular-eslint/angular-eslint), License: MIT
-- [@angular/cli@13.2.4](https://github.com/angular/angular-cli), License: MIT
-- [@angular/compiler-cli@13.2.3](https://github.com/angular/angular), License: MIT
-- [@biesbjerg/ngx-translate-extract-marker@1.0.0](https://github.com/biesbjerg/ngx-translate-extract-marker), License: MIT
-- [@biesbjerg/ngx-translate-extract@7.0.4](https://github.com/biesbjerg/ngx-translate-extract), License: MIT
-- [@types/file-saver@2.0.5](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@types/jasmine@3.10.3](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@types/js-yaml@4.0.5](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@types/node@12.20.46](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@types/tinycolor2@1.4.3](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@types/video.js@7.3.33](https://github.com/DefinitelyTyped/DefinitelyTyped), License: MIT
-- [@typescript-eslint/eslint-plugin@5.11.0](https://github.com/typescript-eslint/typescript-eslint), License: MIT
-- [@typescript-eslint/parser@5.11.0](https://github.com/typescript-eslint/typescript-eslint), License: BSD-2-Clause
-- [axios@0.26.0](https://github.com/axios/axios), License: MIT
-- [compression-webpack-plugin@9.2.0](https://github.com/webpack-contrib/compression-webpack-plugin), License: MIT
-- [eslint@8.9.0](https://github.com/eslint/eslint), License: MIT
-- [jasmine-core@4.0.1](https://github.com/jasmine/jasmine), License: MIT
-- [js-yaml@4.1.0](https://github.com/nodeca/js-yaml), License: MIT
-- [karma-chrome-launcher@3.1.0](https://github.com/karma-runner/karma-chrome-launcher), License: MIT
-- [karma-coverage@2.1.1](https://github.com/karma-runner/karma-coverage), License: MIT
-- [karma-jasmine-html-reporter@1.7.0](https://github.com/dfederm/karma-jasmine-html-reporter), License: MIT
-- [karma-jasmine@4.0.1](https://github.com/karma-runner/karma-jasmine), License: MIT
-- [karma@6.3.16](https://github.com/karma-runner/karma), License: MIT
-- [npm-license-crawler@0.2.1](http://github.com/mwittig/npm-license-crawler), License: BSD-3-Clause
-- [po2json@1.0.0-beta-2](https://github.com/mikeedwards/po2json), License: LGPL-2.0-or-later
-- [prettier@2.5.1](https://github.com/prettier/prettier), License: MIT
-- [typescript@4.5.5](https://github.com/Microsoft/TypeScript), License: Apache-2.0
-- [webpack-bundle-analyzer@4.5.0](https://github.com/webpack-contrib/webpack-bundle-analyzer), License: MIT
+The software used and its licenses can be found in `client/package.json` and `client/package-lock.json`.

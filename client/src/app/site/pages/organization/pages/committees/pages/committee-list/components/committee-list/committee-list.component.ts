@@ -25,7 +25,8 @@ const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
 @Component({
     selector: `os-committee-list`,
     templateUrl: `./committee-list.component.html`,
-    styleUrls: [`./committee-list.component.scss`]
+    styleUrls: [`./committee-list.component.scss`],
+    standalone: false
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
     private get messageForSpinner(): string {

@@ -222,10 +222,10 @@ function compareHistoryPositions(
         compare.user !== `User ${to.user_id}` ||
         compare.getLocaleString(`en`) !== new Date(to.timestamp * 1000).toLocaleString(`en`) ||
         compare.information?.join(`#`) !==
-            (isDeprecatedFormat
-                ? (to.information as string[])
-                : (to.information as { [fqid: string]: string[] })[fqid]
-            )?.join(`#`)
+        (isDeprecatedFormat
+            ? (to.information as string[])
+            : (to.information as Record<string, string[]>)[fqid]
+        )?.join(`#`)
     );
 }
 

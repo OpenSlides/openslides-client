@@ -18,23 +18,24 @@ export interface MotionForwardDialogReturnData {
 @Component({
     selector: `os-motion-forward-dialog`,
     templateUrl: `./motion-forward-dialog.component.html`,
-    styleUrls: [`./motion-forward-dialog.component.scss`]
+    styleUrls: [`./motion-forward-dialog.component.scss`],
+    standalone: false
 })
 export class MotionForwardDialogComponent implements OnInit {
     public get committeesObservable(): Observable<GetForwardingMeetingsPresenter[]> {
         return this.committeesSubject;
     }
 
-    public readonly checkboxStateMap: { [id: string]: boolean } = {};
-    public selectedMeetings: Set<Id> = new Set();
+    public readonly checkboxStateMap: Record<string, boolean> = {};
+    public selectedMeetings = new Set<Id>();
 
     public get activeMeetingCommitteeName(): string {
         return this.activeMeeting.meeting?.committee?.name;
     }
 
-    public useOriginalSubmitter = true;
-    public useOriginalNumber = true;
-    public useOriginalVersion = true;
+    public useOriginalSubmitter = false;
+    public useOriginalNumber = false;
+    public useOriginalVersion = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);

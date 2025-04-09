@@ -586,11 +586,11 @@ describe(`utils: functions`, () => {
     });
 
     describe(`partitionModelsForUpdate function`, () => {
-        type TestModel = Identifiable & { [key: string]: any };
-        type PartitionModelsForUpdateTestPayload<T extends Identifiable> = {
+        type TestModel = Identifiable & Record<string, any>;
+        interface PartitionModelsForUpdateTestPayload<T extends Identifiable> {
             test: { newValues: (T | Omit<T, `id`>)[]; originals: T[] };
             expect: ListUpdateData<T>;
-        };
+        }
         const data: ({ title: string } & PartitionModelsForUpdateTestPayload<TestModel>)[] = [
             {
                 title: `models that should create`,
@@ -724,12 +724,12 @@ describe(`utils: functions`, () => {
 
         it(`test with keys with spaces`, () => {
             expect(
-                replaceObjectKeys({ a: `b`, 'c d': `e`, f: `g h` }, [
+                replaceObjectKeys({ "a": `b`, 'c d': `e`, "f": `g h` }, [
                     [`a`, `b`],
                     [`c d`, `e`],
                     [`f`, `g h`]
                 ])
-            ).toEqual({ b: `b`, e: `e`, 'g h': `g h` });
+            ).toEqual({ "b": `b`, "e": `e`, 'g h': `g h` });
         });
     });
 

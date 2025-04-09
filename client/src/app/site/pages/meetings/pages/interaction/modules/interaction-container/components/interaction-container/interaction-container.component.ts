@@ -12,7 +12,8 @@ import { StreamService } from '../../../../services/stream.service';
     selector: `os-interaction-container`,
     templateUrl: `./interaction-container.component.html`,
     styleUrls: [`./interaction-container.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class InteractionContainerComponent extends BaseMeetingComponent implements OnInit {
     public get isClosed(): boolean {

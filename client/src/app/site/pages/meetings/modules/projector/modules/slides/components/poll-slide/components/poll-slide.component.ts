@@ -43,12 +43,12 @@ const NO_HEADER_TOP_MARGIN = 40;
     selector: `os-poll-slide`,
     templateUrl: `./poll-slide.component.html`,
     styleUrls: [`./poll-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PollSlideComponent
     extends BaseSlideComponent<PollSlideData>
-    implements BaseScaleScrollSlideComponent<PollSlideData>, OnDestroy
-{
+    implements BaseScaleScrollSlideComponent<PollSlideData>, OnDestroy {
     public PollState = PollState;
     public PollContentObjectType = PollContentObjectType;
 
@@ -85,15 +85,15 @@ export class PollSlideComponent
     } = { [`margin-top`]: `50px` };
 
     public textDivStyles: {
-        width?: string;
+        "width"?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'transform-origin'?: string;
-        transform?: string;
+        "transform"?: string;
     } = { [`transform-origin`]: `0 0` };
 
-    private _scroll: number = 0;
+    private _scroll = 0;
 
     @Input()
     public set scroll(scroll: number) {
@@ -107,8 +107,8 @@ export class PollSlideComponent
         return this._scroll;
     }
 
-    protected _actualScale: number = 1;
-    private _scale: number = 0;
+    protected _actualScale = 1;
+    private _scale = 0;
 
     @Input()
     public set scale(scale: number) {
@@ -134,13 +134,13 @@ export class PollSlideComponent
         );
     }
 
-    private _isSingleVotes: boolean = false;
+    private _isSingleVotes = false;
 
     private _invalidSingleVotesData = false;
 
-    public gridStyle: { [key: string]: any } = {};
+    public gridStyle: Record<string, any> = {};
 
-    public columnStyle: { [key: string]: any } = {};
+    public columnStyle: Record<string, any> = {};
 
     public bufferUp: number;
     public userVotesFormatted: [string, VoteResult][][];
@@ -149,13 +149,9 @@ export class PollSlideComponent
     private _orderBy: keyof User = `last_name`;
     private _userVotes: [string, VoteResult][] = [];
 
-    private _votes: {
-        [key: string]: SlidePollVote;
-    } = {};
+    private _votes: Record<string, SlidePollVote> = {};
 
-    private _entitledUsers: {
-        [key: string]: PollSlideEntitledUsersEntry;
-    } = {};
+    private _entitledUsers: Record<string, PollSlideEntitledUsersEntry> = {};
 
     private _meetingSettingsSubscriptions: Subscription[];
 
@@ -268,7 +264,7 @@ export class PollSlideComponent
         const poll: PollData = {
             getContentObjectTitle,
             pollmethod: data.pollmethod,
-            pollClassType: <PollClassType>collectionFromFqid(data.content_object_id),
+            pollClassType: collectionFromFqid(data.content_object_id) as PollClassType,
             state: data.state,
             onehundred_percent_base: data.onehundred_percent_base,
             votesvalid: data.votesvalid,
@@ -290,7 +286,7 @@ export class PollSlideComponent
             if (data.text) {
                 return { title: data.text };
             } else if (data.content_object && data.content_object.collection === `user`) {
-                return { title: (<any>data.content_object).username };
+                return { title: (data.content_object as any).username };
             } else if (data.content_object) {
                 modifyAgendaItemNumber(data.content_object!);
                 const repo = this.collectionMapperService.getRepository(data.content_object!.collection);
@@ -379,7 +375,7 @@ export class PollSlideComponent
                 TITLE_HEIGHT -
                 POLL_BAR_HEIGHT -
                 (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN)) /
-            this._actualScale;
+                this._actualScale;
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
         const columns = Math.min(Math.ceil(this._userVotes.length / visibleRows), this._maxColumns);
         return [columns, Math.max(visibleRows, Math.ceil(this._userVotes.length / columns))];

@@ -22,12 +22,12 @@ import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/se
     templateUrl: `./assignment-poll-detail.component.html`,
     styleUrls: [`./assignment-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AssignmentPollDetailComponent
     extends BasePollDetailComponent<ViewAssignment, AssignmentPollService>
-    implements OnInit
-{
+    implements OnInit {
     public filterProps = [`user.getFullName`];
 
     public isReady = false;
@@ -88,7 +88,7 @@ export class AssignmentPollDetailComponent
                             : (optionContent?.getShortName() ?? this.translate.instant(`Deleted user`));
                         votes[token].votes.push(
                             (pollOptions.length === 1 ? `` : `${candidate_name}: `) +
-                                `${this.voteValueToLabel(vote.value)}`
+                            `${this.voteValueToLabel(vote.value)}`
                         );
                     }
                 }

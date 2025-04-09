@@ -45,22 +45,15 @@
                         {{ 'Public access' | translate }}
                     </button>
                 }
-                <mat-expansion-panel
-                    class="spacer-bottom-10 spacer-top-25"
-                    style="border-radius: 4px !important"
-                    (afterCollapse)="setLoginAreaExpansion(false)"
-                    (afterExpand)="setLoginAreaExpansion(true)"
-                >
+                <mat-expansion-panel class="spacer-bottom-10 spacer-top-25" style="border-radius: 4px !important">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{ 'Internal login' | translate }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    @if (loginAreaExpanded) {
-                        <div>
-                            <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
-                        </div>
-                    }
+                    <div>
+                        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
+                    </div>
                 </mat-expansion-panel>
             </div>
         }

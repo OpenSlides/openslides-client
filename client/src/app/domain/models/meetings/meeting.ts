@@ -23,9 +23,7 @@ export class Settings {
 
     public welcome_title!: string;
     public welcome_text!: string;
-    public custom_translations!: {
-        [original: string]: string;
-    };
+    public custom_translations!: Record<string, string>;
 
     public point_of_order_category_ids!: Ids;
 
@@ -188,10 +186,10 @@ export class Settings {
     public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
     public assignment_poll_default_backend!: PollBackendDurationType;
 
-    //topic poll
+    // topic poll
     public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
 
-    //default poll
+    // default poll
     public poll_ballot_paper_selection: BallotPaperSelection;
     public poll_ballot_paper_number: number;
     public poll_sort_poll_result_by_votes: boolean;
@@ -201,7 +199,7 @@ export class Settings {
     public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_default_backend: PollBackendDurationType;
 
-    //SSO
+    // SSO
     public external_id!: string;
 
     // Structure Level
@@ -532,6 +530,6 @@ export class Meeting extends BaseModel<Meeting> {
 }
 export interface Meeting
     extends Settings,
-        HasProjectionIds,
-        HasProperties<MeetingMediafileUsageIdKey, number>,
-        HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}
+    HasProjectionIds,
+    HasProperties<MeetingMediafileUsageIdKey, number>,
+    HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

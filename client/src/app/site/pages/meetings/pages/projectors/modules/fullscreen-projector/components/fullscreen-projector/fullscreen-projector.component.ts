@@ -9,7 +9,8 @@ import { Dimension } from '../../../../definitions';
 @Component({
     selector: `os-fullscreen-projector`,
     templateUrl: `./fullscreen-projector.component.html`,
-    styleUrls: [`./fullscreen-projector.component.scss`]
+    styleUrls: [`./fullscreen-projector.component.scss`],
+    standalone: false
 })
 export class FullscreenProjectorComponent implements OnInit {
     public readonly COLLECTION = ViewProjector.COLLECTION;

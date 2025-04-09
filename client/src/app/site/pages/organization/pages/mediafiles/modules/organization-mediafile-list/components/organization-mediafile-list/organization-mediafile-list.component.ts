@@ -30,12 +30,12 @@ import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles
     selector: `os-organization-mediafile-list`,
     templateUrl: `./organization-mediafile-list.component.html`,
     styleUrls: [`./organization-mediafile-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OrganizationMediafileListComponent
     extends BaseListViewComponent<ViewMediafile>
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 
@@ -87,7 +87,7 @@ export class OrganizationMediafileListComponent
     public directoryChain: ViewMediafile[] = [];
 
     public directoryObservable: Observable<ViewMediafile[]>;
-    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
+    private directorySubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public constructor(
         protected override translate: TranslateService,

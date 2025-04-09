@@ -6,7 +6,8 @@ export interface ElementSize {
 }
 
 @Directive({
-    selector: `[osResized]`
+    selector: `[osResized]`,
+    standalone: false
 })
 export class ResizedDirective implements OnInit {
     @Output()

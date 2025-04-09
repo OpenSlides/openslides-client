@@ -31,7 +31,7 @@ interface DialogData {
  * Determine answers from the dialog
  */
 interface DialogResult {
-    action: 'update' | 'delete';
+    action: `update` | `delete`;
     value: string | null;
 }
 
@@ -68,7 +68,8 @@ interface RestrictionShape {
 @Component({
     selector: `os-workflow-detail`,
     templateUrl: `./workflow-detail.component.html`,
-    styleUrls: [`./workflow-detail.component.scss`]
+    styleUrls: [`./workflow-detail.component.scss`],
+    standalone: false
 })
 export class WorkflowDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;
@@ -345,7 +346,7 @@ Note: Does not affect the visibility of change recommendations.`
      * @param state The selected workflow state
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
-        this.openEditDialog((<any>state)[perm.selector], `Edit state`, perm.name, false, true).subscribe(result => {
+        this.openEditDialog((state as any)[perm.selector], `Edit state`, perm.name, false, true).subscribe(result => {
             if (!result) {
                 return;
             }
@@ -531,7 +532,7 @@ Note: Does not affect the visibility of change recommendations.`
     }
 
     public getValueOfState(state: ViewMotionState, perm: StatePerm): any {
-        return (<any>state)[perm.selector];
+        return (state as any)[perm.selector];
     }
 
     public sortedNextStates(state: ViewMotionState): ViewMotionState[] {

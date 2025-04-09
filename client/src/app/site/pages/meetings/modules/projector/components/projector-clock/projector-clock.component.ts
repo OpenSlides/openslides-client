@@ -5,7 +5,8 @@ import { ServerTimeService } from 'src/app/gateways/server-time.service';
 @Component({
     selector: `os-projector-clock`,
     templateUrl: `./projector-clock.component.html`,
-    styleUrls: [`./projector-clock.component.scss`]
+    styleUrls: [`./projector-clock.component.scss`],
+    standalone: false
 })
 export class ProjectorClockComponent implements OnInit, OnDestroy {
     @Input()

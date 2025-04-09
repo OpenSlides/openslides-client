@@ -13,7 +13,8 @@ interface SpeakerUserSelectDialogComponentData {
 @Component({
     selector: `os-speaker-user-select-dialog`,
     templateUrl: `./speaker-user-select-dialog.component.html`,
-    styleUrls: [`./speaker-user-select-dialog.component.scss`]
+    styleUrls: [`./speaker-user-select-dialog.component.scss`],
+    standalone: false
 })
 export class SpeakerUserSelectDialogComponent {
     public nonAvailableUserIds: Id[] = [];

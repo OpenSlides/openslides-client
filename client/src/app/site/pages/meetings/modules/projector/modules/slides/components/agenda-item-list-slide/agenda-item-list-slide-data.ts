@@ -1,8 +1,6 @@
 import { TitleInformationWithAgendaItem } from '../../definitions';
 
-interface AgendaItemTitleInformation extends TitleInformationWithAgendaItem {
-    [key: string]: any; // Each content object can have a variety of fields.
-}
+interface AgendaItemTitleInformation extends TitleInformationWithAgendaItem, Record<string, any> {}
 
 export interface SlideItem {
     title_information: AgendaItemTitleInformation;

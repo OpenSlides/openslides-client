@@ -175,7 +175,7 @@ export class MotionXlsxExportService {
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
                         case `working_group_speakers`:
-                            return (motionProp as Array<ViewMotionWorkingGroupSpeaker>)
+                            return (motionProp as ViewMotionWorkingGroupSpeaker[])
                                 .sort((a, b) => a.weight - b.weight)
                                 .join(`, `);
                         default:
@@ -187,11 +187,11 @@ export class MotionXlsxExportService {
                 data.push(
                     ...commentIds.map(commentId => {
                         if (commentId === PERSONAL_NOTE_ID) {
-                            return motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
+                            return motion?.getPersonalNote()?.note ?? ``;
                         } else {
                             const section = this.commentRepo.getViewModel(commentId)!;
                             const motionComment = motion.getCommentForSection(section);
-                            return motionComment && motionComment.comment
+                            return motionComment?.comment
                                 ? reconvertChars(stripHtmlTags(motionComment.comment))
                                 : ``;
                         }

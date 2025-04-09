@@ -19,23 +19,21 @@ import { ViewMeeting } from '../../view-models/view-meeting';
 export type SettingsValueMap = { [key in keyof Settings]?: any };
 
 export type SettingsType =
-    | 'string'
-    | 'email'
-    | 'text'
-    | 'markupText'
-    | 'integer'
-    | 'boolean'
-    | 'choice'
-    | 'date'
-    | 'datetime'
-    | 'translations'
-    | 'ranking'
-    | 'groups'
-    | 'daterange';
+    | `string`
+    | `email`
+    | `text`
+    | `markupText`
+    | `integer`
+    | `boolean`
+    | `choice`
+    | `date`
+    | `datetime`
+    | `translations`
+    | `ranking`
+    | `groups`
+    | `daterange`;
 
-export interface ChoicesMap {
-    [name: string]: string | number;
-}
+export type ChoicesMap = Record<string, string | number>;
 
 /**
  * Need for settings that depend on models. The collection is resolved via the

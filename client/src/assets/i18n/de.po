@@ -15,9 +15,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "mime-version: 1.0\n"
 
-msgid " "
-msgstr " "
-
 msgid "\"0\" means an unlimited number of active accounts"
 msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Accounts"
 

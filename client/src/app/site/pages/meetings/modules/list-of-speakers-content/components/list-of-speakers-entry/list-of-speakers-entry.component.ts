@@ -37,7 +37,8 @@ import { SpeakerUserSelectDialogService } from '../../modules/speaker-user-selec
     templateUrl: `./list-of-speakers-entry.component.html`,
     styleUrls: [`./list-of-speakers-entry.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     private _destroyed = new EventEmitter<boolean>();

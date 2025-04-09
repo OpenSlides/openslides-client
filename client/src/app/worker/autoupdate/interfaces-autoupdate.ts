@@ -10,7 +10,7 @@ export interface AutoupdateSetEndpointParams {
 }
 
 export interface AutoupdateSetEndpoint extends WorkerMessageContent {
-    action: 'set-endpoint';
+    action: `set-endpoint`;
     params: AutoupdateSetEndpointParams;
 }
 
@@ -23,7 +23,7 @@ export interface AutoupdateOpenStreamParams {
 }
 
 export interface AutoupdateOpenStream extends WorkerMessageContent {
-    action: 'open';
+    action: `open`;
     params: AutoupdateOpenStreamParams;
 }
 
@@ -32,7 +32,7 @@ export interface AutoupdateCloseStreamParams {
 }
 
 export interface AutoupdateCloseStream extends WorkerMessageContent {
-    action: 'close';
+    action: `close`;
     params: AutoupdateCloseStreamParams;
 }
 
@@ -42,29 +42,29 @@ export interface AutoupdateCleanupCacheParams {
 }
 
 export interface AutoupdateCleanupCache extends WorkerMessageContent {
-    action: 'cleanup-cache';
+    action: `cleanup-cache`;
     params: AutoupdateCleanupCacheParams;
 }
 
 export interface AutoupdateSetConnectionStatusParams {
-    status: 'online' | 'offline';
+    status: `online` | `offline`;
 }
 
 export interface AutoupdateSetConnectionStatus extends WorkerMessageContent {
-    action: 'set-connection-status';
+    action: `set-connection-status`;
     params: AutoupdateSetConnectionStatusParams;
 }
 
 export interface AutoupdateReconnectInactive extends WorkerMessageContent {
-    action: 'reconnect-inactive';
+    action: `reconnect-inactive`;
 }
 
 export interface AutoupdateReconnectForce extends WorkerMessageContent {
-    action: 'reconnect-force';
+    action: `reconnect-force`;
 }
 
 export interface AutoupdateWorkerResponse {
-    sender: 'autoupdate';
+    sender: `autoupdate`;
     action: string;
 }
 
@@ -74,39 +74,39 @@ export interface AutoupdateSetStreamIdContent {
 }
 
 export interface AutoupdateAuthChangeParams {
-    type: 'login' | 'logout';
+    type: `login` | `logout`;
 }
 
 export interface AutoupdateAuthChange extends WorkerMessageContent {
-    action: 'auth-change';
+    action: `auth-change`;
     params: AutoupdateAuthChangeParams;
 }
 
 export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse {
-    action: 'set-streamid';
+    action: `set-streamid`;
     content: AutoupdateSetStreamIdContent;
 }
 
 export interface AutoupdateReceiveDataContent {
-    streamIdDescriptions: { [id: Id]: string };
+    streamIdDescriptions: Record<Id, string>;
     data: any;
 }
 
 export interface AutoupdateReceiveData extends AutoupdateWorkerResponse {
-    action: 'receive-data';
+    action: `receive-data`;
     content: AutoupdateReceiveDataContent;
 }
 
 export interface AutoupdateReceiveError extends AutoupdateWorkerResponse {
-    action: 'receive-error';
+    action: `receive-error`;
     content: AutoupdateReceiveDataContent;
 }
 
 export interface AutoupdateStatusContent {
-    status: 'healthy' | 'unhealthy';
+    status: `healthy` | `unhealthy`;
 }
 
 export interface AutoupdateStatus extends AutoupdateWorkerResponse {
-    action: 'status';
+    action: `status`;
     content: AutoupdateStatusContent;
 }

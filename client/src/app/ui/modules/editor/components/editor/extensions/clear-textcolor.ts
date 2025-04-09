@@ -16,7 +16,7 @@ const ClearTextcolorPastePlugin = new Plugin({
             const doc = parser.parseFromString(html, `text/html`);
             const elements = doc.getElementsByTagName(`*`);
             for (let i = 0; i < elements.length; i++) {
-                const el = <HTMLElement>elements.item(i);
+                const el = elements.item(i) as HTMLElement;
                 if (el.style && el.style.color && tinycolor(el.style.color).toHex() === `000000`) {
                     el.style.color = ``;
                 }

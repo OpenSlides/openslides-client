@@ -299,15 +299,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 condition: model.id,
                                 label: model.getTitle(),
                                 isChild: !!model.parent,
-                                isActive: (<OsFilterOption>(
-                                    filter.options.find(f => (<OsFilterOption>f)?.condition === model.id)
-                                ))?.isActive,
+                                isActive: (filter.options.find(f => (f as OsFilterOption)?.condition === model.id) as OsFilterOption)?.isActive,
                                 skipTranslate: true,
                                 children: model.children?.length
                                     ? model.children.map((child: any) => ({
-                                          label: child.getTitle(),
-                                          condition: child.id
-                                      }))
+                                            label: child.getTitle(),
+                                            condition: child.id
+                                        }))
                                     : undefined
                             }))
                             .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
@@ -521,7 +519,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 filter =>
                     // Interfaces do not exist at runtime. Manually check if the
                     // Required information of the interface are present
-                    filter.hasOwnProperty(`options`) && filter.hasOwnProperty(`property`) && !!filter.property
+                    Object.prototype.hasOwnProperty.call(filter, `options`) && Object.prototype.hasOwnProperty.call(filter, `property`) && !!filter.property
             );
         } else {
             return false;
@@ -604,7 +602,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             toCheck = toCheck ? [toCheck] : [];
         }
         if (conditions.includes(null)) {
-            return (<any[]>toCheck).length === 0 || toCheck === null;
+            return (toCheck as any[]).length === 0 || toCheck === null;
         }
         return (toCheck as any[]).some(value => {
             if (conditions.includes(value)) {

@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="chat-form-field full-width" (keydown)="onKeyDown($event)">
     @if (currentMessage) {
         <div class="chat-form-field-prefix flex-vertical-center" matPrefix>
-            {{ 'Edit' | translate }}
+            <span>{{ 'Edit' | translate }}</span>
             <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
                 <mat-icon>close</mat-icon>
             </button>
@@ -20,9 +20,9 @@
         color="accent"
         mat-icon-button
         matSuffix
+        matTooltip=" {{ 'Send' | translate }}"
         type="button"
         [disabled]="!isMessageFormValid"
-        matTooltip=" {{ 'Send' | translate }}"
         (click)="sendChatMessage()"
     >
         <mat-icon>send</mat-icon>

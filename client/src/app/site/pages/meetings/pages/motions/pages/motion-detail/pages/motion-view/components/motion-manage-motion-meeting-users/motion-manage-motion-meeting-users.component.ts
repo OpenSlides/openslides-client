@@ -19,20 +19,18 @@ import { MotionPermissionService } from '../../../../../../services/common/motio
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };
 
-interface IdMap {
-    [user_id: number]: number;
-}
+type IdMap = Record<number, number>;
 
 @Component({
     selector: `os-motion-manage-motion-meeting-users`,
     templateUrl: `./motion-manage-motion-meeting-users.component.html`,
     styleUrls: [`./motion-manage-motion-meeting-users.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUserViewModel<M>, M extends BaseModel>
     extends BaseUiComponent
-    implements OnInit
-{
+    implements OnInit {
     public get motion(): ViewMotion {
         return this._motion;
     }
@@ -176,11 +174,11 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                 val.user_id
                     ? val
                     : firstValueFrom(
-                          this.motionController.getViewModelObservable(this.motion.id).pipe(
-                              map(motion => this.getIntermediateModels(motion).find(model => model.user_id === val.id)),
-                              filter(model => !!model)
-                          )
-                      )
+                            this.motionController.getViewModelObservable(this.motion.id).pipe(
+                                map(motion => this.getIntermediateModels(motion).find(model => model.user_id === val.id)),
+                                filter(model => !!model)
+                            )
+                        )
             )
         );
         if (this.useAdditionalInput) {
@@ -324,7 +322,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         }
         const searchId = +this.secondSelectorFormControl.value;
         const foundEntry = this.secondSelectorValues.find(entry => entry.id === searchId);
-        return !!foundEntry ? foundEntry.getTitle() : ``;
+        return foundEntry ? foundEntry.getTitle() : ``;
     }
 
     private changeSecondSelector(): void {

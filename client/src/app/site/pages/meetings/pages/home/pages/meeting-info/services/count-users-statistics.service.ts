@@ -8,19 +8,13 @@ import { AUTOUPDATE_DEFAULT_ENDPOINT } from 'src/app/site/services/autoupdate';
  */
 export interface CountUserStatistics {
     activeUserHandles: number;
-    activeUsers: {
-        [id: number]: number;
-    };
-    groups: {
-        [id: number]: {
-            name: string;
-            users: {
-                [id: number]: number;
-            };
-            userHandleCount: number;
-            meeting_id?: number;
-        };
-    };
+    activeUsers: Record<number, number>;
+    groups: Record<number, {
+        name: string;
+        users: Record<number, number>;
+        userHandleCount: number;
+        meeting_id?: number;
+    }>;
 }
 
 const CONNECTION_COUNT_PATH = `/system/${AUTOUPDATE_DEFAULT_ENDPOINT}/connection_count`;
@@ -46,7 +40,7 @@ export class CountUsersStatisticsService {
      * @returns a 2-tuple of count user statistics
      */
     public async countUsers(): Promise<CountUserStatistics[]> {
-        const raw = await this.http.get<{ [key: number]: { [id: string]: number } }>(CONNECTION_COUNT_PATH);
+        const raw = await this.http.get<Record<number, Record<string, number>>>(CONNECTION_COUNT_PATH);
         this._lastUpdated = Date.now();
         const result: CountUserStatistics[] = [];
         raw[2] = {};
@@ -70,7 +64,7 @@ export class CountUsersStatisticsService {
                 groups: {}
             };
             entries.forEach(entry => {
-                const userId = !!entry[0] ? +entry[0] : 0;
+                const userId = entry[0] ? +entry[0] : 0;
 
                 const user = this.userRepo.getViewModel(userId);
 

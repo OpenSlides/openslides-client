@@ -227,7 +227,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         if (!!this.origin_id || !!this.origin_meeting_id) {
             status = ForwardingStatus.isDerived;
         }
-        if (!!this.derived_motion_ids?.length) {
+        if (this.derived_motion_ids?.length) {
             return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
         }
         return status;
@@ -416,11 +416,11 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
 
 export interface ViewMotion
     extends Motion,
-        ViewModelRelations<IMotionRelations>,
-        HasMeeting,
-        HasAttachmentMeetingMediafiles,
-        HasPersonalNote,
-        HasTags,
-        HasAgendaItem,
-        HasListOfSpeakers,
-        HasReferencedMotionsInExtension {}
+    ViewModelRelations<IMotionRelations>,
+    HasMeeting,
+    HasAttachmentMeetingMediafiles,
+    HasPersonalNote,
+    HasTags,
+    HasAgendaItem,
+    HasListOfSpeakers,
+    HasReferencedMotionsInExtension {}

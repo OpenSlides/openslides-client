@@ -18,5 +18,5 @@ export function isDetailNavigable(obj: object | undefined): obj is DetailNavigab
     if (!obj) {
         return false;
     }
-    return typeof (<DetailNavigable>obj).getDetailStateUrl === `function`;
+    return typeof (obj as DetailNavigable).getDetailStateUrl === `function`;
 }

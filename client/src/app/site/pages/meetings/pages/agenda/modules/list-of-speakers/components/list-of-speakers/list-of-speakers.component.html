@@ -20,9 +20,9 @@
         <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button
                 mat-icon-button
+                matTooltip="{{ 'Re-add last speaker' | translate }}"
                 type="button"
                 [disabled]="!canReaddLastSpeaker"
-                matTooltip="{{ 'Re-add last speaker' | translate }}"
                 (click)="readdLastSpeaker()"
             >
                 <mat-icon>undo</mat-icon>
@@ -40,7 +40,7 @@
         [sortMode]="manualSortMode"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
         (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
-    ></os-list-of-speakers-content>
+    />
 
     <!-- special los part for structure level -->
     @if (
@@ -100,7 +100,7 @@
         }
     </button>
 
-    <mat-divider></mat-divider>
+    <mat-divider />
 
     <button
         class="red-warning-text"

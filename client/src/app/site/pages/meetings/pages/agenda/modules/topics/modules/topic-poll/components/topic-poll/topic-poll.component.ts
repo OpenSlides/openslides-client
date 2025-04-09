@@ -13,7 +13,8 @@ import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic
 @Component({
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
-    styleUrls: [`./topic-poll.component.scss`]
+    styleUrls: [`./topic-poll.component.scss`],
+    standalone: false
 })
 export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
     @Input()

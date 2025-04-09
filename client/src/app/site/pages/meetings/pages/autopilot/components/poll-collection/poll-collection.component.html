@@ -1,16 +1,10 @@
 @if (!disableRunning) {
     @for (poll of polls; track identifyPoll($index, poll)) {
-        <ng-container
-            [ngTemplateOutlet]="pollArea"
-            [ngTemplateOutletContext]="{ poll: poll, last: false }"
-        ></ng-container>
+        <ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: poll, last: false }" />
     }
 }
 @if (lastPublishedPoll && !hasProjectedModelOpenPolls && !disableFinished) {
-    <ng-container
-        [ngTemplateOutlet]="pollArea"
-        [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }"
-    ></ng-container>
+    <ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: lastPublishedPoll, last: true }" />
 }
 
 <ng-template #pollArea let-last="last" let-poll="poll">

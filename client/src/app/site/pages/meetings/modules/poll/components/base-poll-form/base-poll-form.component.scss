@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/variables.scss';
 .poll-preview-title {
     margin: 0;
 }
@@ -17,7 +17,7 @@
         grid-template-areas:
             'first second third'
             '. fourth fourth';
-        @include phone {
+        @include variables.phone {
             grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) !important;
             grid-template-areas:
                 'first second'

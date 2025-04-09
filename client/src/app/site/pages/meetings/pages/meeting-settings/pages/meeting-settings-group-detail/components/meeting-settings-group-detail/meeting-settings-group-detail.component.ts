@@ -33,12 +33,12 @@ import {
 @Component({
     selector: `os-meeting-settings-group-detail`,
     templateUrl: `./meeting-settings-group-detail.component.html`,
-    styleUrls: [`./meeting-settings-group-detail.component.scss`]
+    styleUrls: [`./meeting-settings-group-detail.component.scss`],
+    standalone: false
 })
 export class MeetingSettingsGroupDetailComponent
     extends BaseMeetingComponent
-    implements OnInit, CanComponentDeactivate, OnDestroy
-{
+    implements OnInit, CanComponentDeactivate, OnDestroy {
     public settingsGroup!: SettingsGroup;
 
     public meeting!: ViewMeeting;
@@ -199,7 +199,7 @@ export class MeetingSettingsGroupDetailComponent
     public hasChanges(): boolean {
         return this.settingsFields?.some(field => {
             const keys = Array.isArray(field.setting.key) ? field.setting.key : [field.setting.key];
-            return keys.some(key => this.changedSettings.hasOwnProperty(key) && !field.disabled);
+            return keys.some(key => Object.prototype.hasOwnProperty.call(this.changedSettings, key) && !field.disabled);
         });
     }
 

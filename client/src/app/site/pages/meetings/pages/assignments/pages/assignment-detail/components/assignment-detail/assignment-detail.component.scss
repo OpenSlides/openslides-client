@@ -1,5 +1,5 @@
-@import 'src/assets/styles/variables.scss';
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .full-width {
     width: 100%;
@@ -26,7 +26,7 @@ mat-card mat-card-content h3 {
         grid-column: 1;
     }
 
-    @include desktop {
+    @include variables.desktop {
         grid-template-columns: 1fr 2fr;
 
         .current-phase {
@@ -50,7 +50,7 @@ mat-card mat-card-content h3 {
 .candidates-list {
     padding: 15px 25px 0 25px;
 
-    @include phone {
+    @include variables.phone {
         padding: 15px 0 0 0;
     }
 
@@ -117,7 +117,7 @@ mat-card mat-card-content h3 {
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
 
-    @include phone {
+    @include variables.phone {
         padding: 15px 0 0 0;
     }
 
@@ -125,5 +125,5 @@ mat-card mat-card-content h3 {
 }
 
 :host ::ng-deep .detail-view {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }

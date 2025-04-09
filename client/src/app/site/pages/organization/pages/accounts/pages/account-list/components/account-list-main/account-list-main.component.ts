@@ -6,7 +6,8 @@ import { getMeetingUserIdsSubscriptionConfig } from '../../../../accounts.subscr
 @Component({
     selector: `os-account-list-main`,
     templateUrl: `./account-list-main.component.html`,
-    styleUrls: [`./account-list-main.component.scss`]
+    styleUrls: [`./account-list-main.component.scss`],
+    standalone: false
 })
 export class AccountListMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(params?: any): void {

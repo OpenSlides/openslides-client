@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@use 'src/assets/styles/variables.scss';
 
 os-dashboard {
     .organization-description {
@@ -46,7 +46,7 @@ os-dashboard {
         display: flex;
         margin: 16px 0;
 
-        @include desktop {
+        @include variables.desktop {
             max-width: 1000px;
             margin: 0 auto 40px auto;
         }

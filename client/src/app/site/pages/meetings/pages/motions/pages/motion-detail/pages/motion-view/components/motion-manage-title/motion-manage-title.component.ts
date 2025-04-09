@@ -13,7 +13,8 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
     selector: `os-motion-manage-title`,
     templateUrl: `./motion-manage-title.component.html`,
     styleUrls: [`./motion-manage-title.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     @ViewChild(ProjectableTitleComponent)

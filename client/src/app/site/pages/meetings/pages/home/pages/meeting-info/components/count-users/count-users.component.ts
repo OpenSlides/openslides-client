@@ -12,7 +12,8 @@ enum DISPLAY_MODES {
 @Component({
     selector: `os-count-users`,
     templateUrl: `./count-users.component.html`,
-    styleUrls: [`./count-users.component.scss`]
+    styleUrls: [`./count-users.component.scss`],
+    standalone: false
 })
 export class CountUsersComponent extends BaseUiComponent {
     public stats: CountUserStatistics[] | null = null;

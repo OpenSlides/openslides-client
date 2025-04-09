@@ -8,7 +8,8 @@ import { ChartData } from '../chart/chart.component';
 @Component({
     selector: `os-single-option-chart-table`,
     templateUrl: `./single-option-chart-table.component.html`,
-    styleUrls: [`./single-option-chart-table.component.scss`]
+    styleUrls: [`./single-option-chart-table.component.scss`],
+    standalone: false
 })
 export class SingleOptionChartTableComponent {
     private _poll: PollData;
@@ -61,7 +62,7 @@ export class SingleOptionChartTableComponent {
     }
 
     @Input()
-    public iconSize: 'medium' | 'large' | 'gigantic' = `large`;
+    public iconSize: `medium` | `large` | `gigantic` = `large`;
 
     @Input()
     public shouldShowEntitled = false;
@@ -70,7 +71,7 @@ export class SingleOptionChartTableComponent {
     public shouldShowEntitledPresent = false;
 
     @Input()
-    public title: string = ``;
+    public title = ``;
 
     public get chartData(): ChartData {
         return this._chartData;

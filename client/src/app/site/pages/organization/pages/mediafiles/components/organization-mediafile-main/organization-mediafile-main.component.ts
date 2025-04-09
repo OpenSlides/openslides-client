@@ -10,7 +10,8 @@ import { getOrganizationMediafileListSubscriptionConfig } from '../../mediafiles
     selector: `os-organization-mediafile-main`,
     templateUrl: `./organization-mediafile-main.component.html`,
     styleUrls: [`./organization-mediafile-main.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OrganizationMediafileMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(): void | ModelRequestConfig[] {

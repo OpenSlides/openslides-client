@@ -33,17 +33,15 @@ interface AutoupdateConnectConfig {
     compress?: number;
 }
 
-interface AutoupdateSubscriptionMap {
-    [id: number]: {
-        modelRequest: ModelRequestObject;
-        modelSubscription: ModelSubscription;
-        description: string;
-    };
-}
+type AutoupdateSubscriptionMap = Record<number, {
+    modelRequest: ModelRequestObject;
+    modelSubscription: ModelSubscription;
+    description: string;
+}>;
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;
-    idDescriptionMap: { [id: Id]: string };
+    idDescriptionMap: Record<Id, string>;
 }
 
 class AutoupdateEndpoint extends EndpointConfiguration {
@@ -70,7 +68,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _resolveDataReceived: { [key: number]: ((value: ModelData) => void)[] } = [];
+    private _resolveDataReceived: Record<number, ((value: ModelData) => void)[]> = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -167,7 +165,7 @@ export class AutoupdateService {
 
     public setAutoupdateConfig(config: AutoupdateConnectConfig | null): void {
         this._currentQueryParams = (
-            !!config ? (typeof config.compress === `number` ? config : { ...config, compress: 1 }) : { compress: 1 }
+            config ? (typeof config.compress === `number` ? config : { ...config, compress: 1 }) : { compress: 1 }
         ) as QueryParams;
     }
 
@@ -260,12 +258,8 @@ export class AutoupdateService {
             [modelData, autoupdateData]
         );
 
-        const fullListUpdateCollections: {
-            [collection: string]: Ids;
-        } = {};
-        const exclusiveListUpdateCollections: {
-            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
-        } = {};
+        const fullListUpdateCollections: Record<string, Ids> = {};
+        const exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }> = {};
 
         for (const id of requestIds) {
             const modelRequest = this._activeRequestObjects[id]?.modelRequest;
@@ -300,12 +294,8 @@ export class AutoupdateService {
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: {
-            [collection: string]: Ids;
-        },
-        exclusiveListUpdateCollections: {
-            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
-        },
+        fullListUpdateCollections: Record<string, Ids>,
+        exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }>,
         requestIds: number[]
     ): Promise<void> {
         const unlock = await this._mutex.lock();

@@ -232,12 +232,12 @@ describe(`MotionDiffService`, () => {
             const post = service.serializePartialDomFromChild(greatParent, lineTrace, true);
             expect(post).toBe(
                 `Line 7` +
-                    `</LI>` +
-                    `<LI class="li-class"><UL>` +
-                    `<LI>Level 2 LI 8</LI>` +
-                    `<LI>Level 2 LI 9</LI>` +
-                    `</UL></LI>` +
-                    `</UL>`
+                `</LI>` +
+                `<LI class="li-class"><UL>` +
+                `<LI>Level 2 LI 8</LI>` +
+                `<LI>Level 2 LI 9</LI>` +
+                `</UL></LI>` +
+                `</UL>`
             );
         }));
 
@@ -480,7 +480,7 @@ describe(`MotionDiffService`, () => {
 <LI>Punkt 4.3</LI>\
 </OL></LI></OL>`;
                 const out = service.replaceLinesMergeNodeArrays([node1.childNodes[0]], [node2.childNodes[0]]);
-                const outHtml = nodesToHtml([<Element>out[0]]);
+                const outHtml = nodesToHtml([out[0] as Element]);
                 expect(outHtml).toBe(
                     `<ol><li><ol><li>Punkt 4.1</li><li>Punkt 4.2</li><li>Punkt 4.3</li></ol></li></ol>`
                 );
@@ -649,7 +649,7 @@ describe(`MotionDiffService`, () => {
                     normalized = service.normalizeHtmlForDiff(unnormalized);
                 expect(normalized).toBe(
                     `This is our cool <A HREF="https://www.openslides.de/">home page</A> - have a look! ` +
-                        `<INPUT CHECKED TITLE='A title with "s' TYPE="checkbox">`
+                    `<INPUT CHECKED TITLE='A title with "s' TYPE="checkbox">`
                 );
             }
         ));
@@ -724,7 +724,7 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
-                        `<p class="insert">Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`
+                    `<p class="insert">Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`
                 );
             }
         ));
@@ -968,9 +968,9 @@ describe(`MotionDiffService`, () => {
 
                 expect(diff).toBe(
                     `<P class="delete">Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher. Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>` +
-                        `<P class="insert">Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher.</P>` +
-                        `<INS>\n</INS>` +
-                        `<P class="insert">Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>`
+                    `<P class="insert">Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher.</P>` +
+                    `<INS>\n</INS>` +
+                    `<P class="insert">Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>`
                 );
             }
         ));
@@ -1033,7 +1033,7 @@ describe(`MotionDiffService`, () => {
 
                 expect(diff).toBe(
                     `<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.<ins> Insertion 1</ins></p>\n` +
-                        `<p><ins>Insertion 2 </ins>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>`
+                    `<p><ins>Insertion 2 </ins>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>`
                 );
             }
         ));
@@ -1231,10 +1231,10 @@ describe(`MotionDiffService`, () => {
             const diff = service.diff(inHtml, outHtml);
             expect(diff).toBe(
                 `<p>Test 123<br>wir strikt ab. lehnen wir ` +
-                    brMarkup(1486) +
-                    `ab.<br>` +
-                    noMarkup(1487) +
-                    `Gegenüber</p>`
+                brMarkup(1486) +
+                `ab.<br>` +
+                noMarkup(1487) +
+                `Gegenüber</p>`
             );
         }));
 
@@ -1252,9 +1252,9 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<ul class="os-split-before">` +
-                        `<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>` +
-                        `<li class="testclass insert">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li>` +
-                        `</ul>`
+                    `<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>` +
+                    `<li class="testclass insert">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li>` +
+                    `</ul>`
                 );
             }
         ));
@@ -1276,14 +1276,14 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `Lorem ipsum <del>dolor</del><ins>ipsum</ins> sit amet, consectetuer adipiscing elit.</p>` +
-                        `<p>` +
-                        noMarkup(2) +
-                        `<ins>hier neuer Text</ins></p>` +
-                        `<p>` +
-                        noMarkup(3) +
-                        `Aenean commodo <ins>neu </ins>ligula eget dolor.</p>`
+                    noMarkup(1) +
+                    `Lorem ipsum <del>dolor</del><ins>ipsum</ins> sit amet, consectetuer adipiscing elit.</p>` +
+                    `<p>` +
+                    noMarkup(2) +
+                    `<ins>hier neuer Text</ins></p>` +
+                    `<p>` +
+                    noMarkup(3) +
+                    `Aenean commodo <ins>neu </ins>ligula eget dolor.</p>`
                 );
             }
         ));
@@ -1305,14 +1305,14 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>` +
-                        `<p>` +
-                        noMarkup(2) +
-                        `<ins>neuer Text</ins></p>` +
-                        `<p>` +
-                        noMarkup(3) +
-                        `Aenean commodo ligula eget dolor.</p>`
+                    noMarkup(1) +
+                    `Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>` +
+                    `<p>` +
+                    noMarkup(2) +
+                    `<ins>neuer Text</ins></p>` +
+                    `<p>` +
+                    noMarkup(3) +
+                    `Aenean commodo ligula eget dolor.</p>`
                 );
             }
         ));
@@ -1343,12 +1343,12 @@ describe(`MotionDiffService`, () => {
 
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(2) +
-                        `...so frißt er ` +
-                        brMarkup(3) +
-                        `Euch alle mit ` +
-                        brMarkup(4) +
-                        `Haut und Haar<ins> und Augen und Därme und alles</ins>.</p>`
+                    noMarkup(2) +
+                    `...so frißt er ` +
+                    brMarkup(3) +
+                    `Euch alle mit ` +
+                    brMarkup(4) +
+                    `Haut und Haar<ins> und Augen und Därme und alles</ins>.</p>`
                 );
             }
         ));
@@ -1369,11 +1369,11 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(2) +
-                        `their grammar, their pronunciation and their most common words. Everyone ` +
-                        brMarkup(3) +
-                        `realizes why a</p>\n` +
-                        `<p class="insert">NEW PARAGRAPH 2.</p>`
+                    noMarkup(2) +
+                    `their grammar, their pronunciation and their most common words. Everyone ` +
+                    brMarkup(3) +
+                    `realizes why a</p>\n` +
+                    `<p class="insert">NEW PARAGRAPH 2.</p>`
                 );
             }
         ));
@@ -1398,15 +1398,15 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(2) +
-                        `their grammar, their pronunciation and their most common words. Everyone ` +
-                        brMarkup(3) +
-                        `realizes why a</p>\n` +
-                        `<p class="insert">NEW PARAGRAPH 1.</p>\n` +
-                        `<p class="insert">NEW PARAGRAPH 2.</p>\n` +
-                        `<div>` +
-                        noMarkup(4) +
-                        `Go on</div>`
+                    noMarkup(2) +
+                    `their grammar, their pronunciation and their most common words. Everyone ` +
+                    brMarkup(3) +
+                    `realizes why a</p>\n` +
+                    `<p class="insert">NEW PARAGRAPH 1.</p>\n` +
+                    `<p class="insert">NEW PARAGRAPH 2.</p>\n` +
+                    `<div>` +
+                    noMarkup(4) +
+                    `Go on</div>`
                 );
             }
         ));
@@ -1435,12 +1435,12 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">\u00A0</SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
-                        `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">\u00A0</SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">\u00A0</SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">\u00A0</SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">\u00A0</SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
-                        `<P class="insert">holen, da rief sie alle sieben herbei und sprach:</P><INS>\n\n</INS>` +
-                        `<P class="insert"><SPAN>Hello</SPAN></P><INS>\n\n</INS>` +
-                        `<P class="insert"><SPAN>World</SPAN></P><INS>\n\n</INS>` +
-                        `<P class="insert"><SPAN>Ya</SPAN></P><INS>\n\n</INS>` +
-                        `<P class="insert">Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</P>`
+                    `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">\u00A0</SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">\u00A0</SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">\u00A0</SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">\u00A0</SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
+                    `<P class="insert">holen, da rief sie alle sieben herbei und sprach:</P><INS>\n\n</INS>` +
+                    `<P class="insert"><SPAN>Hello</SPAN></P><INS>\n\n</INS>` +
+                    `<P class="insert"><SPAN>World</SPAN></P><INS>\n\n</INS>` +
+                    `<P class="insert"><SPAN>Ya</SPAN></P><INS>\n\n</INS>` +
+                    `<P class="insert">Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</P>`
                 );
             }
         ));
@@ -1459,10 +1459,10 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<ul><li>` +
-                        noMarkup(1) +
-                        `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy ei rmodtem-` +
-                        brMarkup(2) +
-                        `Porinv idunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li></ul>`
+                    noMarkup(1) +
+                    `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy ei rmodtem-` +
+                    brMarkup(2) +
+                    `Porinv idunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li></ul>`
                 );
             }
         ));
@@ -1483,11 +1483,11 @@ describe(`MotionDiffService`, () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
-                        noMarkup(1) +
-                        `wuid Brotzeit? Pfenningguat Stubn bitt da, ` +
-                        `hog di hi fei nia need nia need <del>Goaßmaß </del><ins>Radler </ins>` +
-                        brMarkup(2) +
-                        `gscheid kloan mim</p>`
+                    noMarkup(1) +
+                    `wuid Brotzeit? Pfenningguat Stubn bitt da, ` +
+                    `hog di hi fei nia need nia need <del>Goaßmaß </del><ins>Radler </ins>` +
+                    brMarkup(2) +
+                    `gscheid kloan mim</p>`
                 );
             }
         ));
@@ -1673,11 +1673,11 @@ describe(`MotionDiffService`, () => {
 
             expect(out).toBe(
                 `<div class="os-colliding-change os-colliding-change-holder" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
-                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 2x</p>` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 3</p>`
+                `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
+                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
+                `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
+                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 2x</p>` +
+                `<p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 3</p>`
             );
         }));
     });
@@ -1846,9 +1846,9 @@ describe(`MotionDiffService`, () => {
                 );
                 expect(processedHtml).toBe(
                     `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                        `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
-                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
-                        `<span>==============</span></div>`
+                    `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
+                    `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
+                    `<span>==============</span></div>`
                 );
             }
         ));
@@ -1867,10 +1867,10 @@ describe(`MotionDiffService`, () => {
                 );
                 expect(processedHtml).toBe(
                     `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                        `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
-                        `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
-                        `<div>==============</div>` +
-                        `</div>`
+                    `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
+                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
+                    `<div>==============</div>` +
+                    `</div>`
                 );
             }
         ));

@@ -10,7 +10,8 @@ import { MotionCommentSectionControllerService } from '../../../../../../modules
     selector: `os-motion-comments`,
     templateUrl: `./motion-comments.component.html`,
     styleUrls: [`./motion-comments.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionCommentsComponent extends BaseUiComponent {
     /**

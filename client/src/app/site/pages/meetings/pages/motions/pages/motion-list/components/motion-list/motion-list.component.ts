@@ -25,7 +25,7 @@ import { MotionListInfoDialogService } from '../../modules/motion-list-info-dial
 /**
  * Determine the types of the motionList
  */
-type MotionListviewType = 'tiles' | 'list';
+type MotionListviewType = `tiles` | `list`;
 const MOTION_LIST_STORAGE_INDEX = `motions`;
 
 /**
@@ -42,7 +42,8 @@ interface TileCategoryInformation {
 @Component({
     selector: `os-motion-list`,
     templateUrl: `./motion-list.component.html`,
-    styleUrls: [`./motion-list.component.scss`]
+    styleUrls: [`./motion-list.component.scss`],
+    standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly gridBlockType = GridBlockTileType;

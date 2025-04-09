@@ -22,7 +22,8 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
 @Component({
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
-    styleUrls: [`./autopilot.component.scss`]
+    styleUrls: [`./autopilot.component.scss`],
+    standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers | null = null;
@@ -84,7 +85,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get projectionTarget(): '_blank' | '_self' {
+    public get projectionTarget(): `_blank` | `_self` {
         if (this.operator.hasPerms(this.permission.projectorCanManage)) {
             return `_self`;
         } else {
@@ -92,7 +93,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get lowerProjectionTarget(): '_blank' | '_self' {
+    public get lowerProjectionTarget(): `_blank` | `_self` {
         if (this.projectedViewModel?.COLLECTION === Mediafile.COLLECTION) {
             return `_blank`;
         } else {
@@ -106,9 +107,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public structureLevelCountdownEnabled = false;
 
-    public disabledContentElements: { [key: string]: boolean } = {};
+    public disabledContentElements: Record<string, boolean> = {};
 
-    public showRightCol: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public showRightCol = new BehaviorSubject<boolean>(false);
 
     private _currentProjection: ViewProjection | null = null;
 

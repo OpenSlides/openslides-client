@@ -66,14 +66,14 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * Stores all the viewModel in an object
      * @deprecated use `viewModelStoreSubject` instead
      */
-    protected viewModelStore: { [modelId: number]: V } = {};
+    protected viewModelStore: Record<number, V> = {};
 
-    protected viewModelStoreSubject = new BehaviorSubject<{ [modelId: number]: V }>({});
+    protected viewModelStoreSubject = new BehaviorSubject<Record<number, V>>({});
 
     /**
      * Stores subjects to viewModels in a list
      */
-    protected viewModelSubjects: { [modelId: number]: BehaviorSubject<V | null> } = {};
+    protected viewModelSubjects: Record<number, BehaviorSubject<V | null>> = {};
 
     /**
      * Observable subject for the whole list. These entries are unsorted, not piped through
@@ -107,7 +107,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected languageCollator: Intl.Collator;
 
-    protected relationsByKey: { [key: string]: Relation } = {};
+    protected relationsByKey: Record<string, Relation> = {};
 
     /**
      * The view model ctor of the encapsulated view model.
@@ -145,27 +145,27 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
-    private sortedViewModelLists: { [key: string]: V[] } = {};
-    private readonly sortedViewModelListUnsafeSubjects: { [key: string]: BehaviorSubject<V[]> } = {};
-    private readonly sortedViewModelListSubjects: { [key: string]: BehaviorSubject<V[]> } = {};
-    private idToSortedIndexMaps: { [key: string]: { [id: number]: number } } = {};
+    private sortedViewModelLists: Record<string, V[]> = {};
+    private readonly sortedViewModelListUnsafeSubjects: Record<string, BehaviorSubject<V[]>> = {};
+    private readonly sortedViewModelListSubjects: Record<string, BehaviorSubject<V[]>> = {};
+    private idToSortedIndexMaps: Record<string, Record<number, number>> = {};
 
-    private sortListServices: { [key: string]: SortListService<V> | null } = {};
+    private sortListServices: Record<string, SortListService<V> | null> = {};
 
-    private sortListServiceSubscriptions: { [key: string]: Subscription } = {};
+    private sortListServiceSubscriptions: Record<string, Subscription> = {};
 
     private updateActionPipeline: {
         priority: UpdatePipelineAction[];
         lesser: UpdatePipelineAction[];
         active: boolean;
     } = {
-        active: false,
-        priority: [],
-        lesser: []
-    };
+            active: false,
+            priority: [],
+            lesser: []
+        };
 
-    private foreignSortBaseKeys: { [key: string]: { [collection: string]: string[] } } = {};
-    private foreignSortBaseKeySubscriptions: { [key: string]: Subscription[] } = {};
+    private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
+    private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
 
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorService,
@@ -386,7 +386,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return this.modifiedIdsSubject;
     }
 
-    public getViewModelMapObservable(): Observable<{ [id: number]: V }> {
+    public getViewModelMapObservable(): Observable<Record<number, V>> {
         return this.viewModelStoreSubject;
     }
 
@@ -568,7 +568,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                         (currentType === iType || iType === PipelineActionType.Resort) &&
                         (!this.updateActionPipeline[priority][index].key ||
                             this.updateActionPipeline[priority][index].key ===
-                                this.updateActionPipeline[priority][i].key)
+                            this.updateActionPipeline[priority][i].key)
                     ) {
                         if (this.updateActionPipeline[priority][i].defer) {
                             this.updateActionPipeline[priority][i].defer.resolve();
@@ -661,9 +661,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     if (
                         (this.sortListServices[key]
                             ? await this.sortListServices[key].compare(
-                                  newViewModels[j],
-                                  this.sortedViewModelLists[key][i]
-                              )
+                                newViewModels[j],
+                                this.sortedViewModelLists[key][i]
+                            )
                             : newViewModels[j].id - this.sortedViewModelLists[key][i].id) < 0
                     ) {
                         this.sortedViewModelLists[key].splice(i, 0, newViewModels[j]);
@@ -733,7 +733,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// The following methods will be removed ///////////////////////
+    /// //////////////////// The following methods will be removed ///////////////////////
     /////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -743,16 +743,12 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
-        try {
-            const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
-            if (results) {
-                if (results.length !== 1) {
-                    throw new Error(`The action service did not respond with exactly one response for the request.`);
-                }
-                return results[0];
+        const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
+        if (results) {
+            if (results.length !== 1) {
+                throw new Error(`The action service did not respond with exactly one response for the request.`);
             }
-        } catch (e) {
-            throw e;
+            return results[0];
         }
     }
 
@@ -763,11 +759,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
-        try {
-            return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
     }
 
     /**
@@ -776,10 +768,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionsToBackend(actions: ActionRequest[], handle_separately = false): Promise<any> {
-        try {
-            return await this.actions.sendRequests(actions, handle_separately);
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.sendRequests(actions, handle_separately);
     }
 }

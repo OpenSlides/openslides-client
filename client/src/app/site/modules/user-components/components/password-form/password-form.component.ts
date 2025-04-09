@@ -22,7 +22,8 @@ const UndesiredPasswordFeedback = `ಠ_ಠ`;
 @Component({
     selector: `os-password-form`,
     templateUrl: `./password-form.component.html`,
-    styleUrls: [`./password-form.component.scss`]
+    styleUrls: [`./password-form.component.scss`],
+    standalone: false
 })
 export class PasswordFormComponent extends BaseComponent implements OnInit {
     @Output()

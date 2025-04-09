@@ -33,7 +33,8 @@ import { AssignmentCandidateControllerService } from '../../services/assignment-
 @Component({
     selector: `os-assignment-detail`,
     templateUrl: `./assignment-detail.component.html`,
-    styleUrls: [`./assignment-detail.component.scss`]
+    styleUrls: [`./assignment-detail.component.scss`],
+    standalone: false
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {
     public readonly COLLECTION = Assignment.COLLECTION;
@@ -226,7 +227,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param operation the action requested
      * @returns true if the user is able to perform the action
      */
-    public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
+    public hasPerms(operation: `addSelf` | `addOthers` | `createPoll` | `manage`): boolean {
         const isManager = this.operator.hasPerms(Permission.assignmentCanManage);
         switch (operation) {
             case `addSelf`:
@@ -293,7 +294,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param assignment
      */
     private patchForm(assignment: ViewAssignment): void {
-        const contentPatch: { [key: string]: any } = {};
+        const contentPatch: Record<string, any> = {};
         Object.keys(this.assignmentForm.controls).forEach(control => {
             contentPatch[control] = assignment[control as keyof ViewAssignment];
         });

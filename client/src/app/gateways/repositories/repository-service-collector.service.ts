@@ -12,7 +12,7 @@ import { ActionService } from '../actions';
     providedIn: `root`
 })
 export class RepositoryServiceCollectorService {
-    public collectionToKeyUpdatesObservableMap: { [collection: string]: BehaviorSubject<string[]> } = {};
+    public collectionToKeyUpdatesObservableMap: Record<string, BehaviorSubject<string[]>> = {};
 
     public constructor(
         public DS: DataStoreService,

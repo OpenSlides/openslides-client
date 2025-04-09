@@ -3,21 +3,21 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
  * Type declaring which strings are valid options for metainfos to be exported into a pdf
  */
 export type InfoToExport =
-    | 'submitters'
-    | 'supporters'
-    | 'state'
-    | 'recommendation'
-    | 'category'
-    | 'block'
-    | 'tags'
-    | 'polls'
-    | 'speakers'
-    | 'id'
-    | 'sequential_number'
-    | 'referring_motions'
-    | 'allcomments'
-    | 'editors'
-    | 'working_group_speakers';
+    | `submitters`
+    | `supporters`
+    | `state`
+    | `recommendation`
+    | `category`
+    | `block`
+    | `tags`
+    | `polls`
+    | `speakers`
+    | `id`
+    | `sequential_number`
+    | `referring_motions`
+    | `allcomments`
+    | `editors`
+    | `working_group_speakers`;
 
 /**
  * Determines the possible file format of a motion export
@@ -80,6 +80,6 @@ export function getVerboseNameOfMotionProperty(propertyName: keyof ViewMotion): 
     return motionHeadersAndVerboseNames[propertyName];
 }
 
-export function getMotionExportHeadersAndVerboseNames(): { [key: string]: string } {
+export function getMotionExportHeadersAndVerboseNames(): Record<string, string> {
     return motionExpectedHeaders.mapToObject(item => ({ [item]: getVerboseNameOfMotionProperty(item) }));
 }

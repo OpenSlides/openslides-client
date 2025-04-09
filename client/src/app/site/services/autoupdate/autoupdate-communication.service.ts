@@ -38,7 +38,7 @@ export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
     private openResolvers = new Map<string, ((value: number | PromiseLike<number>) => void)[]>();
     private endpointName: string;
-    private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
+    private autoupdateEndpointStatus: `healthy` | `unhealthy` = `healthy`;
     private unhealtyTimeout: any;
     private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
@@ -58,19 +58,19 @@ export class AutoupdateCommunicationService {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
                 switch (msg?.action) {
                     case `receive-data`:
-                        this.handleReceiveData(<AutoupdateReceiveData>msg, dataSubscription);
+                        this.handleReceiveData((msg as AutoupdateReceiveData), dataSubscription);
                         break;
                     case `receive-error`:
-                        this.handleReceiveError(<AutoupdateReceiveError>msg);
+                        this.handleReceiveError((msg as AutoupdateReceiveError));
                         break;
                     case `set-streamid`:
-                        this.handleSetStreamId(<AutoupdateSetStreamId>msg);
+                        this.handleSetStreamId((msg as AutoupdateSetStreamId));
                         break;
                     case `status`:
-                        this.handleStatus(<AutoupdateStatus>msg);
+                        this.handleStatus((msg as AutoupdateStatus));
                         break;
                     case `set-connection-mode`:
-                        this.handleSetConnectionMode(<string>msg.content);
+                        this.handleSetConnectionMode((msg.content as string));
                         break;
                 }
             });
@@ -170,7 +170,7 @@ export class AutoupdateCommunicationService {
      * @param streamId Id of the stream
      * @param deletedData map op collections and ids to be deleted
      */
-    public cleanupCollections(streamId: Id, deletedData: { [collection: string]: Id[] }): void {
+    public cleanupCollections(streamId: Id, deletedData: Record<string, Id[]>): void {
         const deletedFqids: string[] = [];
         for (const coll of Object.keys(deletedData)) {
             for (const id of deletedData[coll]) {

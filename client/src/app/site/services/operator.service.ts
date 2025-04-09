@@ -39,12 +39,12 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-function getUserCML(user: ViewUser): { [id: number]: string } | null {
+function getUserCML(user: ViewUser): Record<number, string> | null {
     if (!user.committee_management_ids) {
         return null; // Explicit null to distinguish from undefined
     }
 
-    const committeeManagementLevel: { [committeeId: number]: CML } = {};
+    const committeeManagementLevel: Record<number, CML> = {};
     for (const id of user.committee_management_ids) {
         committeeManagementLevel[id] = CML.can_manage;
     }
@@ -113,8 +113,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                  ? this.user?.hasMultipleMeetings
-                  : false)
+                    ? this.user?.hasMultipleMeetings
+                    : false)
         );
     }
 
@@ -235,10 +235,10 @@ export class OperatorService {
     // State management
     private _ready = false;
 
-    public readyDeferred: Deferred<void> = new Deferred();
+    public readyDeferred = new Deferred<void>();
 
     private _groupsLoaded = false;
-    private _groupsLoadedDeferred: Deferred<void> = new Deferred();
+    private _groupsLoadedDeferred = new Deferred<void>();
 
     private _currentOperatorDataSubscription: ModelSubscription | null = null;
     private _hasOperatorDataSubscriptionInitiated = false;
@@ -258,12 +258,12 @@ export class OperatorService {
         return this._permissionsSubject.value;
     }
 
-    private _permissionsSubject: BehaviorSubject<Permission[] | undefined> = new BehaviorSubject(undefined);
+    private _permissionsSubject = new BehaviorSubject<Permission[] | undefined>(undefined);
 
     private _groupIds: Id[] | undefined = undefined;
     private _meetingIds: Id[] | undefined = undefined;
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
-    private _CML: { [id: number]: string } | undefined = undefined;
+    private _CML: Record<number, string> | undefined = undefined;
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,

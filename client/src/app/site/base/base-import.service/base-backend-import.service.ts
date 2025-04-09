@@ -105,12 +105,12 @@ export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * List of possible errors and their verbose explanation.
      */
-    protected abstract readonly errorList: { [errorKey: string]: string };
+    protected abstract readonly errorList: Record<string, string>;
 
     /**
      * List of possible errors and their verbose explanation.
      */
-    private readonly verboseGeneralErrors: { [errorKey: string]: string } = {
+    private readonly verboseGeneralErrors: Record<string, string> = {
         [`Duplicate`]: `Is a duplicate`
     };
 
@@ -120,7 +120,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * Overwrite in subclass to define verbose titles for the ones sent by the backend
      */
-    protected readonly verboseSummaryTitles: { [title: string]: string } = {};
+    protected readonly verboseSummaryTitles: Record<string, string> = {};
 
     private set previews(preview: BackendImportPreview[] | null) {
         this._previews = preview;
@@ -151,7 +151,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * the list of parsed models that have been extracted from the opened file or inserted manually
      */
-    private _csvLines: { [header: string]: string }[] = [];
+    private _csvLines: Record<string, string>[] = [];
     private _receivedHeaders: string[] = [];
     private readonly _papa: Papa = this.importServiceCollector.papa;
 
@@ -200,7 +200,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
      *
      * @param lines should conform to the format expected by the backend.
      */
-    public addLines(...lines: { [header: string]: any }[]): void {
+    public addLines(...lines: Record<string, any>[]): void {
         for (const line of lines) {
             this._csvLines.push(line);
         }
@@ -322,7 +322,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
      * Should be overridden by sub-classes if the upload needs to be more specific.
      * F.e. if it is a meeting import and a meeting id needs to be given additionally
      */
-    protected calculateJsonUploadPayload(): { [key: string]: any } {
+    protected calculateJsonUploadPayload(): Record<string, any> {
         return {
             data: this._csvLines
         };
@@ -401,7 +401,7 @@ export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * Calls the relevant json_upload backend action with the payload.
      */
-    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]>;
+    protected abstract jsonUpload(payload: Record<string, any>): Promise<void | BackendImportRawPreview[]>;
     /**
      * Calls the relevant import backend action with the payload.
      *

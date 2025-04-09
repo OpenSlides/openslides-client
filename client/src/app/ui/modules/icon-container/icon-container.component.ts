@@ -7,7 +7,6 @@ import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
     selector: `os-icon-container`,
     templateUrl: `./icon-container.component.html`,
     styleUrls: [`./icon-container.component.scss`],
-    standalone: true,
     imports: [CommonModule, MatIconModule, MatTooltipModule]
 })
 export class IconContainerComponent {
@@ -29,7 +28,7 @@ export class IconContainerComponent {
      * Optional size property. Can be large, if needed.
      */
     @Input()
-    public size: 'small' | 'medium' | 'large' | 'gigantic' = `medium`;
+    public size: `small` | `medium` | `large` | `gigantic` = `medium`;
 
     @Input()
     public inline = false;
@@ -106,7 +105,7 @@ export class IconContainerComponent {
      * Optional action for clicking on the icon.
      */
     @Output()
-    public iconAction: EventEmitter<any> = new EventEmitter();
+    public iconAction = new EventEmitter<any>();
 
     public get calculatedIconClass(): string {
         return [this.iconAction ? `pointer` : ``, this.mirrored ? `mirrored` : ``, this.iconClass].join(` `).trim();

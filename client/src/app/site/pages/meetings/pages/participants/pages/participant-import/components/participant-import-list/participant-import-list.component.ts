@@ -9,14 +9,15 @@ import { ParticipantImportService } from '../../services';
 @Component({
     selector: `os-participant-import-list`,
     templateUrl: `./participant-import-list.component.html`,
-    styleUrls: [`./participant-import-list.component.scss`]
+    styleUrls: [`./participant-import-list.component.scss`],
+    standalone: false
 })
 export class ParticipantImportListComponent extends BaseViaBackendImportListMeetingComponent {
     public possibleFields = participantColumns;
 
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
-        label: (<any>participantHeadersAndVerboseNames)[header],
+        label: (participantHeadersAndVerboseNames as any)[header],
         isTableColumn: true
     }));
 
