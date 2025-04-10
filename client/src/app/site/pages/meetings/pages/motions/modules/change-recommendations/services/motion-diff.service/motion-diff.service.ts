@@ -262,41 +262,6 @@ export class MotionDiffService {
     }
 
     /**
-     * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replace)
-     * Returns replace if strings are equal
-     *
-     * @param {string} htmlOld
-     * @param {string} htmlNew
-     * @returns {number}
-     */
-    public detectReplacementType(htmlOld: string, htmlNew: string): ModificationType {
-        htmlOld = this.normalizeHtmlForDiff(htmlOld);
-        htmlNew = this.normalizeHtmlForDiff(htmlNew);
-
-        if (htmlOld === htmlNew) {
-            return ModificationType.TYPE_REPLACEMENT;
-        }
-
-        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
-
-        const remainderOld = htmlOld.substr(firstDiffIndex);
-        const remainderNew = htmlNew.substr(firstDiffIndex);
-
-        if (remainderOld.length > remainderNew.length) {
-            if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                return ModificationType.TYPE_DELETION;
-            }
-        } else if (remainderOld.length < remainderNew.length) {
-            if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                return ModificationType.TYPE_INSERTION;
-            }
-        }
-
-        return ModificationType.TYPE_REPLACEMENT;
-    }
-
-    /**
      * Adapted from http://ejohn.org/projects/javascript-diff-algorithm/
      * by John Resig, MIT License
      *
@@ -662,7 +627,7 @@ export class MotionDiffService {
      * @param {boolean} stripLineNumbers
      * @returns {string}
      */
-    private serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
+    public serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
@@ -713,7 +678,7 @@ export class MotionDiffService {
      * @param {boolean} stripLineNumbers
      * @returns {string}
      */
-    private serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
+    public serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
@@ -751,7 +716,7 @@ export class MotionDiffService {
             if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
                 html += `</` + node.nodeName + `>`;
             }
-            if (!found)  {
+            if (!found) {
                 throw new Error(`Inconsistency or invalid call of this function detected (from)`);
             }
         }
@@ -795,7 +760,7 @@ export class MotionDiffService {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
         if (this.lineNumberingService.getLineNumberRange(html).to < toLine) {
-            throw new Error(`Invalid call - The change is outside of the motion`); 
+            throw new Error(`Invalid call - The change is outside of the motion`);
         }
 
         const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
@@ -990,7 +955,7 @@ export class MotionDiffService {
      * @param {number} lineLength
      * @param {number} firstLine
      */
-    public formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    private formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
         let text = this.formatDiff(diff);
         text = this.lineNumberingService.insertLineNumbers({ html: text, lineLength, firstLine });
         return text;
@@ -1229,7 +1194,7 @@ export class MotionDiffService {
         return this.serializeDom(mergedFragment, true);
     }
 
-    public removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+    private removeLines(oldHtml: string, fromLine: number, toLine: number): string {
         return this.replaceLines(oldHtml, ``, fromLine, toLine);
     }
 
@@ -1241,7 +1206,7 @@ export class MotionDiffService {
      * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
      * it needs to be wrapped accordingly.
      */
-    public insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+    private insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
         return this.replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
     }
 
@@ -2237,7 +2202,6 @@ export class MotionDiffService {
             }
         } catch (e) {
             return ``;
-
         }
         return html;
     }
