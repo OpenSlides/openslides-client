@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
@@ -259,41 +258,6 @@ export class MotionDiffService {
         html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
         return html;
-    }
-
-    /**
-     * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replace)
-     * Returns replace if strings are equal
-     *
-     * @param {string} htmlOld
-     * @param {string} htmlNew
-     * @returns {number}
-     */
-    public detectReplacementType(htmlOld: string, htmlNew: string): ModificationType {
-        htmlOld = this.normalizeHtmlForDiff(htmlOld);
-        htmlNew = this.normalizeHtmlForDiff(htmlNew);
-
-        if (htmlOld === htmlNew) {
-            return ModificationType.TYPE_REPLACEMENT;
-        }
-
-        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
-
-        const remainderOld = htmlOld.substr(firstDiffIndex);
-        const remainderNew = htmlNew.substr(firstDiffIndex);
-
-        if (remainderOld.length > remainderNew.length) {
-            if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                return ModificationType.TYPE_DELETION;
-            }
-        } else if (remainderOld.length < remainderNew.length) {
-            if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                return ModificationType.TYPE_INSERTION;
-            }
-        }
-
-        return ModificationType.TYPE_REPLACEMENT;
     }
 
     /**
@@ -723,35 +687,37 @@ export class MotionDiffService {
 
         let html = ``;
         let found = false;
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === fromChildTrace[0]) {
-                found = true;
-                const childElement = node.childNodes[i] as Element;
-                const remainingTrace = fromChildTrace;
-                remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
-                    html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
-                }
-            } else if (found) {
-                if (node.childNodes[i].nodeType === TEXT_NODE) {
-                    html += node.childNodes[i].nodeValue;
-                } else {
+        if (fromChildTrace.length > 0) {
+            for (let i = 0; i < node.childNodes.length; i++) {
+                if (node.childNodes[i] === fromChildTrace[0]) {
+                    found = true;
                     const childElement = node.childNodes[i] as Element;
-                    if (
-                        !stripLineNumbers ||
-                        (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
-                            !this.lineNumberingService.isOsLineBreakNode(childElement))
-                    ) {
-                        html += this.serializeDom(childElement, stripLineNumbers);
+                    const remainingTrace = fromChildTrace;
+                    remainingTrace.shift();
+                    if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                        html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
+                    }
+                } else if (found) {
+                    if (node.childNodes[i].nodeType === TEXT_NODE) {
+                        html += node.childNodes[i].nodeValue;
+                    } else {
+                        const childElement = node.childNodes[i] as Element;
+                        if (
+                            !stripLineNumbers ||
+                            (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
+                                !this.lineNumberingService.isOsLineBreakNode(childElement))
+                        ) {
+                            html += this.serializeDom(childElement, stripLineNumbers);
+                        }
                     }
                 }
             }
-        }
-        if (!found) {
-            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
-        }
-        if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-            html += `</` + node.nodeName + `>`;
+            if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
+                html += `</` + node.nodeName + `>`;
+            }
+            if (!found) {
+                throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+            }
         }
         return html;
     }
@@ -792,6 +758,9 @@ export class MotionDiffService {
         if (typeof html !== `string`) {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
+        if (this.lineNumberingService.getLineNumberRange(html).to < toLine) {
+            throw new Error(`Invalid call - The change is outside of the motion`);
+        }
 
         const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
@@ -804,11 +773,10 @@ export class MotionDiffService {
         this.insertInternalLineMarkers(fragment);
 
         let toLineNumber: number;
-        if (toLine === null) {
-            const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
-            const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
-            toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
-        } else {
+        const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
+        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+        if (!(toLine === null) && toLineNumber >= toLine) {
             toLineNumber = toLine + 1;
         }
 
@@ -852,7 +820,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -914,23 +882,23 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
-
-        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-            if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
-                found = true;
-                fromChildTraceRel.shift();
-                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-            } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
-                found = false;
-                toChildTraceRel.shift();
-                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-            } else if (found === true) {
-                htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+        if (ancestor !== null) {
+            for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+                if (fromChildTraceRel[0] !== undefined && ancestor.childNodes[i] === fromChildTraceRel[0]) {
+                    found = true;
+                    fromChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                } else if (toChildTraceRel[0] !== undefined && ancestor.childNodes[i] === toChildTraceRel[0]) {
+                    found = false;
+                    toChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                } else if (found === true) {
+                    htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+                }
             }
         }
-
         currNode = ancestor;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
                 const currElement = currNode as Element;
                 const fakeOl = currElement.cloneNode(false) as any;
@@ -986,7 +954,7 @@ export class MotionDiffService {
      * @param {number} lineLength
      * @param {number} firstLine
      */
-    public formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    private formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
         let text = this.formatDiff(diff);
         text = this.lineNumberingService.insertLineNumbers({ html: text, lineLength, firstLine });
         return text;
@@ -1225,7 +1193,7 @@ export class MotionDiffService {
         return this.serializeDom(mergedFragment, true);
     }
 
-    public removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+    private removeLines(oldHtml: string, fromLine: number, toLine: number): string {
         return this.replaceLines(oldHtml, ``, fromLine, toLine);
     }
 
@@ -1237,7 +1205,7 @@ export class MotionDiffService {
      * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
      * it needs to be wrapped accordingly.
      */
-    public insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+    private insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
         return this.replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
     }
 
@@ -2095,7 +2063,7 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
@@ -2103,7 +2071,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 ) +
                 ` ` +
                 this.translate.instant(
@@ -2175,17 +2143,11 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // This only happens (as far as we know) when the motion text has been shortened at least one line
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+            return ``;
         }
 
         let html: string;
@@ -2220,20 +2182,25 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
-        const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
-        let html =
-            extracted.outerContextStart +
-            extracted.innerContextStart +
-            extracted.html +
-            extracted.innerContextEnd +
-            extracted.outerContextEnd;
-        if (lineNumbers) {
-            html = this.lineNumberingService.insertLineNumbers({
-                html,
-                lineLength,
-                highlight: highlightedLine,
-                firstLine: lineRange.from
-            });
+        let html: string;
+        try {
+            const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
+            html =
+                extracted.outerContextStart +
+                extracted.innerContextStart +
+                extracted.html +
+                extracted.innerContextEnd +
+                extracted.outerContextEnd;
+            if (lineNumbers) {
+                html = this.lineNumberingService.insertLineNumbers({
+                    html,
+                    lineLength,
+                    highlight: highlightedLine,
+                    firstLine: lineRange.from
+                });
+            }
+        } catch (e) {
+            return ``;
         }
         return html;
     }
