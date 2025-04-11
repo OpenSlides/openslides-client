@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Workbook, Worksheet } from 'exceljs';
 import { saveAs } from 'file-saver';
 
+import { ExportServiceModule } from '../export-service.module';
+
 @Injectable({
-    providedIn: `root`
+    providedIn: ExportServiceModule
 })
 export class XlsxExportService {
     /**

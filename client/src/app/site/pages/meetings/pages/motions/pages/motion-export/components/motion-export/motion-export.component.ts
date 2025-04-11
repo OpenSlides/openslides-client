@@ -28,6 +28,7 @@ import { AmendmentControllerService } from '../../../../services/common/amendmen
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
 import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
+import { MotionsExportModule } from '../../../../services/export/motions-export.module';
 @Component({
     standalone: true,
     selector: `os-motion-export`,
@@ -46,7 +47,8 @@ import { MotionExportInfo, MotionExportService } from '../../../../services/expo
         MatTabsModule,
         DirectivesModule,
         HeadBarModule,
-        OpenSlidesTranslationModule
+        OpenSlidesTranslationModule,
+        MotionsExportModule
     ]
 })
 export class MotionExportComponent extends BaseComponent implements AfterViewInit {
