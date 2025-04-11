@@ -56,5 +56,6 @@ interface ICommitteeRelations {
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
     managers: ViewUser[];
+    parent: ViewCommittee;
 }
 export interface ViewCommittee extends Committee, ViewModelRelations<ICommitteeRelations>, HasOrganizationTags {}

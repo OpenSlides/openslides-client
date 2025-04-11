@@ -349,6 +349,18 @@ export const RELATIONS: Relation[] = [
         OField: `native_users`,
         MField: `home_committee`
     }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewCommittee,
+        OField: `all_parent_ids`,
+        MField: `committee`
+    }),
+    ...makeO2O({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewCommittee,
+        AField: `parent`,
+        BField: `committee`
+    }),
     // ########## Meetings
     ...makeO2O({
         AViewModel: ViewMeeting,

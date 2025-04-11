@@ -125,13 +125,19 @@
                         }
                     }
                 </os-committee-meta-info>
-            }
-            <!-- Number of native users -->
-            @if (canManageCommittee) {
+                <!-- Number of native users -->
                 <os-committee-meta-info icon="supervisor_account" title="{{ 'Accounts' | translate }}">
                     @if (committee.native_user_ids) {
                         <span>
                             {{ committee.native_user_ids.length }}
+                        </span>
+                    }
+                </os-committee-meta-info>
+                <!-- Parent committee -->
+                <os-committee-meta-info icon="layers" title="{{ 'Parent Committee' | translate }}">
+                    @if (committee.parent) {
+                        <span>
+                            {{ committee.parent.name }}
                         </span>
                     }
                 </os-committee-meta-info>

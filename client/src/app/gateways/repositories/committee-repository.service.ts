@@ -43,7 +43,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `user_ids`,
             `manager_ids`,
             `external_id`,
-            `native_user_ids`
+            `native_user_ids`,
+            `parent_id`
         ]);
 
         return {
@@ -135,7 +136,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
                     ? []
                     : committee.receive_forwardings_from_committee_ids,
             external_id: committee.external_id,
-            native_user_ids: committee.native_user_ids === null ? [] : committee.native_user_ids
+            native_user_ids: committee.native_user_ids === null ? [] : committee.native_user_ids,
+            parent_id: committee.parent_id
         };
     }
 }
