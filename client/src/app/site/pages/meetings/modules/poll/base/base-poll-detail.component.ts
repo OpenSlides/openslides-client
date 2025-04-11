@@ -191,7 +191,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public exportPollResults(): void {
         this.pollPdfService.exportSinglePoll(this.poll, {
             votesData: this._votesDataSubject.value,
-            entitledUsersData: this._liveRegisterObservable.value
+            entitledUsersData: this.poll.isStarted ? this._liveRegisterObservable.value : this._entitledUsersSubject.value
         });
     }
 
