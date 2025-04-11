@@ -59,6 +59,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public showSupporters = false;
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
+    public allowSupporters$ = this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
     public originToggleDefault$ = this.meetingSettingsService
         .get(`motions_origin_motion_toggle_default`)
@@ -92,6 +93,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get isDifferedChangeRecoMode(): boolean {
         return this.changeRecoMode === ChangeRecoMode.Diff;
+    }
+
+    public get validSupporters(): number {
+        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
+    }
+
+    public get validSupportersText(): number {
+        return this.translate
+            .instant(
+                `of which %num% are not permissable`
+            )
+            .replace(`%num%`, this.validSupporters);
     }
 
     /**
@@ -161,6 +174,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._supportersSubject;
     }
 
+    public get canManage(): boolean {
+        return this.operator.hasPerms(Permission.userCanManage);
+    }
+
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     private _forwardingAvailable = false;
@@ -205,7 +222,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
+                this.updateSupportersSubject();
+            })
         );
     }
 
@@ -432,5 +451,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    public checkValidSupporter(supporter: ViewUser): boolean {
+        return (
+            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            !(
+                supporter.getMeetingUser().vote_delegated_to_id
+            )
+        );
     }
 }
