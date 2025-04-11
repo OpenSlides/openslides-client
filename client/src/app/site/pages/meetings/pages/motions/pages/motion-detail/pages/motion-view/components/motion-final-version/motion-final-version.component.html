@@ -9,6 +9,11 @@
                 {{ 'This field is required.' | translate }}
             </div>
         }
+        <div class="apply-button">
+            <button mat-stroked-button (click)="applyModifiedFinalVersion()">
+                <span>{{ 'Apply' | translate }}</span>
+            </button>
+        </div>
     </form>
 } @else {
     <div [innerHTML]="formattedText | trust: 'html'"></div>

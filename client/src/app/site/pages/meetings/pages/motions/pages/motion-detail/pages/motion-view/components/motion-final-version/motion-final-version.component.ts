@@ -67,6 +67,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
         this.leaveEditMode();
     }
 
+    public async applyModifiedFinalVersion(): Promise<void> {
+        await this.repo.update(this.contentForm.value, this.motion).resolve();
+        this.isEditMode = true;
+    }
+
     private createForm(): UntypedFormGroup {
         return this.fb.group({
             modified_final_version: [``, Validators.required]
