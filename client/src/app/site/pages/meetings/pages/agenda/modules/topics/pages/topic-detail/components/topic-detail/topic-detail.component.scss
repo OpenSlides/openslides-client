@@ -14,8 +14,11 @@
 }
 
 .apply-button {
-    height: 37px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    button {
+        height: 37px;
+        width: auto;
+        margin-left: auto;
+        margin-right: 0;
+    }
 }
