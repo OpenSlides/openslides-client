@@ -33,7 +33,7 @@
     [generatePasswordFn]="getRandomPasswordFn()"
     [isEditing]="isEditingUser"
     [isNewUser]="isNewUser"
-    [useAdditionalEditTemplate]="!!organizationManagementLevels.length"
+    [useAdditionalEditTemplate]="!!organizationManagementLevels.length || canManageHomeCommittee"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
     (errorEvent)="formErrors = $event"
@@ -43,11 +43,12 @@
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Home Committee -->
-            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
+            <div>
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Home committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="home_committee_id"
+                        [disabled]="!canManageHomeCommittee"
                         [multiple]="false"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
@@ -78,7 +79,7 @@
                 <mat-form-field class="form100 force-min-with">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
-                        formControlName="committee_management_ids"
+                        [formControl]="form.controls.committee_management_ids"
                         [multiple]="true"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
@@ -101,6 +102,9 @@
                     <mat-error translate>Please select a vote weight greater than zero.</mat-error>
                 }
             </mat-form-field>
+            <mat-checkbox formControlName="guest">
+                {{ 'guest' | translate }}
+            </mat-checkbox>
         </div>
     </ng-template>
 

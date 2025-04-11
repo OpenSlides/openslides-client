@@ -111,7 +111,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `is_active`,
             `meeting_ids`,
             `saml_id`,
-            `member_number`
+            `member_number`,
+            `guest`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -276,7 +277,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_management_ids: partialUser.committee_management_ids,
-            home_committee_id: partialUser.home_committee_id
+            home_committee_id: partialUser.home_committee_id,
+            guest: partialUser.guest
         };
 
         return partialPayload;
@@ -568,7 +570,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `number`,
             `structure_level`,
             `locked_out`,
-            `home_committee_id`
+            `home_committee_id`,
+            `guest`
         ];
         if (!create) {
             fields.push(`member_number`);

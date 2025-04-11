@@ -36,6 +36,7 @@ export class User extends BaseDecimalModel<User> {
     public readonly is_demo_user!: boolean;
     public readonly saml_id!: string;
     public readonly member_number!: string;
+    public readonly guest!: boolean;
 
     // Meeting and committee
     public meeting_ids!: Id[]; // (meeting/user_ids)[];
@@ -92,7 +93,8 @@ export class User extends BaseDecimalModel<User> {
         `vote_ids`,
         `poll_candidate_ids`,
         `meeting_ids`,
-        `organization_id`
+        `organization_id`,
+        `guest`
     ];
 }
 export interface User {}
