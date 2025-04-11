@@ -20,6 +20,7 @@
 
     --mat-menu-item-icon-color: rgba(0, 0, 0, 0.54);
     --mat-table-header-headline-color: rgba(0, 0, 0, 0.55);
+    --mat-chip-option-background-color: lightgrey;
 }
 
 .openslides-dark-theme {
@@ -28,6 +29,7 @@
     @include var-overwrites.os-var-overwrites();
 
     --mat-table-header-headline-color: rgba(255, 255, 255, 0.70);
+    --mat-chip-option-background-color: grey;
 
     mat-form-field:focus-within {
         mat-label{

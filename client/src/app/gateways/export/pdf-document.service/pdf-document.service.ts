@@ -23,7 +23,6 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { HttpService } from '../../http.service';
-import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { PdfImagesService } from './pdf-images.service';
@@ -293,7 +292,7 @@ export interface HeaderLogos {
  * ```
  */
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class PdfDocumentService {
     /**

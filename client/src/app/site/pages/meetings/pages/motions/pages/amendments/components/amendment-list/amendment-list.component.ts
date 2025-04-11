@@ -1,20 +1,18 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projectable-list/components/projectable-list/projectable-list.component';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
-import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { AMENDMENT_LIST_SUBSCRIPTION } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionExportService } from '../../../../services/export/motion-export.service/motion-export.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
 import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
@@ -69,8 +67,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private dialog: MotionExportDialogService,
-        private motionExport: MotionExportService,
         private linenumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
@@ -134,15 +130,12 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     }
 
     // todo put in own file
-    public async openExportDialog(): Promise<void> {
-        const dialogRef = await this.dialog.open(this.listComponent.source);
-        const exportInfo = await firstValueFrom(dialogRef.afterClosed());
-        if (exportInfo) {
-            this.motionExport.evaluateExportRequest(
-                exportInfo,
-                this.isMultiSelect ? this.selectedRows : this.listComponent.source
-            );
-        }
+    public openExportDialog(): void {
+        const motions = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
+        const motions_ids = motions.map(motion => motion.id);
+        this.router.navigate([this.activeMeetingId, `motions`, `amendments`, `motion-export`], {
+            queryParams: { motions: motions_ids }
+        });
     }
 
     /**
