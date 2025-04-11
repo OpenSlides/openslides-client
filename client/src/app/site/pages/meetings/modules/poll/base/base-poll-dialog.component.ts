@@ -6,7 +6,6 @@ import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
-    FormPollMethod,
     LOWEST_VOTE_VALUE,
     PollClassType,
     PollMethod,
@@ -135,13 +134,13 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         const pollForm = this.pollForm?.getValues();
         const voteForm = this.dialogVoteForm.value;
         const payload: any = { ...pollForm, ...voteForm, publish_immediately: this.publishImmediately };
-        payload.options = this.getOptions(voteForm.options, payload.pollmethod === FormPollMethod.LIST_YNA);
+        payload.options = this.getOptions(voteForm.options, payload.pollmethod === PollMethod.LIST_YNA);
         this.formatPayload(payload);
         this.dialogRef.close(payload);
     }
 
     private formatPayload(payload: any): void {
-        payload.pollmethod = (payload.pollmethod as FormPollMethod).toUpperCase();
+        payload.pollmethod = (payload.pollmethod as PollMethod).toUpperCase();
         if (this.isList) {
             payload.min_votes_amount = 1;
             payload.max_votes_amount = 1;
@@ -294,7 +293,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      * Create a form group for each option with the user id as key
      */
     private createOptionsForVoteForm(): Record<string, any> {
-        const isListPoll = this.pollForm.getValues().pollmethod === FormPollMethod.LIST_YNA;
+        const isListPoll = this.pollForm.getValues().pollmethod === PollMethod.LIST_YNA;
         if (this.optionTypeText === false && !isListPoll) {
             // with content_object_id
             return this.options?.mapToObject(option => ({
@@ -379,7 +378,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             if (data.pollmethod !== PollMethod.Y) {
                 votes.N = option.no;
             }
-            if (data.pollmethod.toUpperCase() === FormPollMethod.YNA) {
+            if (data.pollmethod.toUpperCase() === PollMethod.YNA) {
                 votes.A = option.abstain;
             }
             update.options[option.fqid] = votes;
