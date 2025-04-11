@@ -39,12 +39,8 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     /// ////////////////////// Bridge to the dedicated repo
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    public override getViewModelList(): ViewMotion[] {
-        return super.getViewModelList().filter(m => !!m.sequential_number);
-    }
-
-    public override getViewModelListObservable(): Observable<ViewMotion[]> {
-        return super.getViewModelListObservable().pipe(map(list => list.filter(m => !!m.sequential_number)));
+    public override getSortedViewModelListObservable(key = `default`): Observable<ViewMotion[]> {
+        return super.getSortedViewModelListObservable(key).pipe(map(l => l.filter(motion => !!motion.sequential_number)));
     }
 
     public create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
