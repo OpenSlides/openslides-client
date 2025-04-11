@@ -279,6 +279,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
             if (payload.gender_id === 0) {
                 payload.gender_id = null;
             }
+            payload.group_ids = this.cleanUpGroups(payload.group_ids);
             if (this._accountId) {
                 const dirtyPayload = {};
                 for (const field in payload) {
@@ -361,5 +362,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return group_ids
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
+    }
+
+    private cleanUpGroups(group_ids: number[]): number[] {
+        const meeting_group_ids = this.activeMeetingService.meeting.group_ids;
+        group_ids = group_ids.filter(group_id_1 =>
+            meeting_group_ids.find(group_id_2 => group_id_1 === group_id_2)
+        );
+        return group_ids;
     }
 }
