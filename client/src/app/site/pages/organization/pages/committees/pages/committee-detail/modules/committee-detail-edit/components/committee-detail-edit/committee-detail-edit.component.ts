@@ -185,6 +185,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
                     this.loadCommittee(this.committeeId);
                 })
             );
+            this.committeeForm.controls[`parent_id`].disable();
         } else {
             this.isCreateView = true;
         }
@@ -209,7 +210,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]],
-            external_id: [``]
+            external_id: [``],
+            parent_id: [``]
         };
         this.committeeForm = this.formBuilder.group(partialForm);
     }

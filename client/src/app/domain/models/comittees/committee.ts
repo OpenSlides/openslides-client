@@ -9,6 +9,7 @@ export class Committee extends BaseModel<Committee> {
     public name!: string;
     public description!: string;
     public external_id!: string;
+    public parent_id!: string;
 
     public meeting_ids!: Id[]; // (meeting/committee_id)[];
     public default_meeting_id!: Id; // meeting/default_meeting_for_committee_id;
@@ -18,6 +19,8 @@ export class Committee extends BaseModel<Committee> {
     public organization_id!: Id; // organization/committee_ids;
     public organization_tag_ids!: Id[]; // (committee/organization_tag_ids)[];
     public manager_ids!: Id[]; // (user/committe_management_ids)[]
+    public native_user_ids!: Id[];
+    public all_parent_ids!: Id[]; // (committee_all_parent_ids)[]
 
     public constructor(input?: any) {
         super(Committee.COLLECTION, input);
@@ -28,6 +31,7 @@ export class Committee extends BaseModel<Committee> {
         `name`,
         `description`,
         `external_id`,
+        `parent_id`,
         `meeting_ids`,
         `default_meeting_id`,
         `user_ids`,
@@ -35,6 +39,8 @@ export class Committee extends BaseModel<Committee> {
         `forward_to_committee_ids`,
         `receive_forwardings_from_committee_ids`,
         `organization_tag_ids`,
-        `organization_id`
+        `organization_id`,
+        `native_user_ids`,
+        `all_parent_ids`
     ];
 }
