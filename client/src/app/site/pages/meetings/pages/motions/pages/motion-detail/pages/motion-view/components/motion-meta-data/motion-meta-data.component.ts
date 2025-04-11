@@ -99,6 +99,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
     }
 
+    public get validSupportersText(): number {
+        return this.translate
+            .instant(
+                `of which %num% are not permissable`
+            )
+            .replace(`%num%`, this.validSupporters);
+    }
+
     /**
      * Custom recommender as set in the settings
      */
@@ -215,7 +223,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
         this.subscriptions.push(
             this.participantSort.getSortedViewModelListObservable().subscribe(() => {
-                this.updateSupportersSubject();})
+                this.updateSupportersSubject();
+            })
         );
     }
 

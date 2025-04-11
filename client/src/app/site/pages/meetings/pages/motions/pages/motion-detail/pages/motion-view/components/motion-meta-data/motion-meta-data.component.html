@@ -41,10 +41,10 @@
         <!-- show supporters (TODO: open in dialog) -->
         @if (motion.hasSupporters()) {
             <button mat-button type="button" (click)="openSupportersDialog()">
-                {{ motion.supporters.length }}{{ ' supporters' | translate }}
+                {{ motion.supporters.length }} {{ 'supporters' | translate }}
             </button>
             @if (validSupporters > 0 && canManage && (allowSupporters$ | async)) {
-                <span class="warn">{{ 'of which ' + validSupporters + ' are not permissable' | translate }}</span>
+                <span class="warn">{{ validSupportersText }}</span>
             }
             @if (showSupporters) {
                 <p class="supporters">
