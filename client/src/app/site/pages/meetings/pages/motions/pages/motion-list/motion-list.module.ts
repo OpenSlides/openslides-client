@@ -20,7 +20,6 @@ import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
 import { MotionMultiselectModule } from '../../components/motion-multiselect/motion-multiselect.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
-import { MotionExportComponent } from '../motion-export/components/motion-export/motion-export.component';
 import { MotionListComponent } from './components/motion-list/motion-list.component';
 import { MotionListInfoDialogModule } from './modules/motion-list-info-dialog/motion-list-info-dialog.module';
 import { MotionListRoutingModule } from './motion-list-routing.module';
@@ -35,7 +34,6 @@ import { MotionListRoutingModule } from './motion-list-routing.module';
         MotionListInfoDialogModule,
         MotionForwardDialogModule,
         MotionMultiselectModule,
-        MotionExportComponent,
         MatIconModule,
         MatCardModule,
         MatButtonModule,

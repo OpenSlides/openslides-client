@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
 
 import { MotionMainComponent } from './components/motion-main/motion-main.component';
-import { MotionExportComponent } from './pages/motion-export/components/motion-export/motion-export.component';
 
 const routes: Routes = [
     {
@@ -48,7 +47,7 @@ const routes: Routes = [
             },
             {
                 path: `motion-export`,
-                component: MotionExportComponent,
+                loadComponent: () => import(`./pages/motion-export/components/motion-export/motion-export.component`).then(m => m.MotionExportComponent),
                 data: { meetingPermissions: [Permission.motionCanSee] }
             },
             {
