@@ -5,13 +5,12 @@ import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 /**
  * Creates a PDF list for amendments
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class AmendmentListPdfService {
     public constructor(

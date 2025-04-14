@@ -46,6 +46,11 @@ const routes: Routes = [
                 data: { meetingPermissions: [Permission.tagCanManage] }
             },
             {
+                path: `motion-export`,
+                loadComponent: () => import(`./pages/motion-export/components/motion-export/motion-export.component`).then(m => m.MotionExportComponent),
+                data: { meetingPermissions: [Permission.motionCanSee] }
+            },
+            {
                 path: `polls`,
                 loadChildren: () => import(`./pages/motion-polls/motion-polls.module`).then(m => m.MotionPollsModule),
                 data: { meetingPermissions: [Permission.motionCanSee] }
