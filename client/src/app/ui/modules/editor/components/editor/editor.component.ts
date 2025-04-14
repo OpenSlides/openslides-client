@@ -185,8 +185,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 Blockquote,
                 BulletList.extend({
                     content() {
-                        return `${this.options.itemTypeName}+ paragraph*`
-                    },
+                        return `${this.options.itemTypeName}+ paragraph*`;
+                    }
                 }),
                 HardBreak,
                 Heading,
@@ -196,12 +196,12 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 ListItem.extend({
                     content() {
                         return `paragraph* block*`;
-                    },
+                    }
                 }),
                 OrderedList.extend({
                     content() {
-                        return `${this.options.itemTypeName}+ paragraph*`
-                    },
+                        return `${this.options.itemTypeName}+ paragraph*`;
+                    }
                 }),
                 Paragraph,
                 Text,

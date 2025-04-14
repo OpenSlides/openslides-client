@@ -1328,6 +1328,86 @@ describe(`MotionDiffService`, () => {
         ));
     });
 
+    describe(`diff os-split-* handling`, () => {
+        it(`nested split before in list`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService) => {
+                const inHtml = `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul><li>` +
+                    noMarkup(3) +
+                    `Ebene 3` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>`;
+                const outHtml = `<ul><li><ul><li><ul><li>Ebene 3</li><li>Test</li></ul></li></ul></li></ul>`;
+
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(`<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul><li>` +
+                    noMarkup(3) +
+                    `Ebene 3` +
+                    `</li>` +
+                    `<li class="insert">Test</li>` +
+                    `</ul>` +
+                    `</li></ul>` +
+                    `</li></ul>`
+                );
+            }
+        ));
+
+        it(`adds split before to correct node`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService) => {
+                const inHtml = `<p class="os-split-before">` +
+                    noMarkup(3) +
+                    `Bar` +
+                    `</p>` +
+                    `<p class="os-split-before">` +
+                    noMarkup(4) +
+                    `Foo</p>`;
+                const outHtml = `<p>Bar</p><p>Foo</p>`;
+
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(
+                    `<p class="os-split-before">` +
+                    noMarkup(3) +
+                    `Bar` +
+                    `</p>` +
+                    `<p>` +
+                    noMarkup(4) +
+                    `Foo</p>`
+                );
+            }
+        ));
+
+        it(`adds split after to correct node`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService) => {
+                const inHtml = `<p class="os-split-after">` +
+                    noMarkup(3) +
+                    `Bar` +
+                    `</p>` +
+                    `<p class="os-split-after">` +
+                    noMarkup(4) +
+                    `Foo</p>`;
+                const outHtml = `<p>Bar</p><p>Foo</p>`;
+
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(
+                    `<p>` +
+                    noMarkup(3) +
+                    `Bar` +
+                    `</p>` +
+                    `<p class="os-split-after">` +
+                    noMarkup(4) +
+                    `Foo</p>`
+                );
+            }
+        ));
+    });
+
     describe(`ignoring line numbers`, () => {
         it(`works despite line numbers, part 1`, inject(
             [MotionDiffService, LineNumberingService],

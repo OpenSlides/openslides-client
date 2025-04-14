@@ -1360,6 +1360,9 @@ export class MotionDiffService {
             }
         }
 
+        const origHtmlNew = htmlNew;
+        const origHtmlOld = htmlOld;
+
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
@@ -1771,14 +1774,46 @@ export class MotionDiffService {
         }
 
         if (isSplitAfter) {
-            diff = DomHelpers.addClassToLastNode(diff, `os-split-after`);
+            diff = this.readdOsSplit(diff, origHtmlOld, origHtmlNew);
         }
         if (isSplitBefore) {
-            diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
+            diff = this.readdOsSplit(diff, origHtmlOld, origHtmlNew, true);
         }
 
         this.diffCache.put(cacheKey, diff);
         return diff;
+    }
+
+    private readdOsSplit(diff: string, htmlOld: string, htmlNew: string, before = false): string {
+        const diffEl = document.createElement(`template`);
+        const htmlOldEl = document.createElement(`template`);
+        const htmlNewEl = document.createElement(`template`);
+        diffEl.innerHTML = diff;
+        htmlNewEl.innerHTML = htmlNew;
+        htmlOldEl.innerHTML = htmlOld;
+
+        let diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
+        let newNode = (before ? htmlNewEl.content.firstChild : htmlNewEl.content.lastChild) as HTMLElement;
+        let oldNode = (before ? htmlOldEl.content.firstChild : htmlOldEl.content.lastChild) as HTMLElement;
+        const className = before ? `os-split-before` : `os-split-after`;
+        while (diffNode && (newNode || oldNode)) {
+            diffNode?.classList?.add(className);
+            diffNode = diffNode?.querySelector(`& > *:not(.os-line-number)`);
+
+            if (newNode?.classList?.contains(className)) {
+                newNode = newNode.querySelector(`& > .${className}`);
+            } else {
+                newNode = null;
+            }
+
+            if (oldNode?.classList?.contains(className)) {
+                oldNode = oldNode.querySelector(`& > .${className}`);
+            } else {
+                oldNode = null;
+            }
+        }
+
+        return diffEl.innerHTML;
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
