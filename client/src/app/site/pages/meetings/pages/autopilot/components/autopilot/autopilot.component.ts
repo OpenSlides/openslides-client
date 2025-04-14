@@ -85,7 +85,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get projectionTarget(): '_blank' | '_self' {
+    public get projectionTarget(): `_blank` | `_self` {
         if (this.operator.hasPerms(this.permission.projectorCanManage)) {
             return `_self`;
         } else {
@@ -93,7 +93,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get lowerProjectionTarget(): '_blank' | '_self' {
+    public get lowerProjectionTarget(): `_blank` | `_self` {
         if (this.projectedViewModel?.COLLECTION === Mediafile.COLLECTION) {
             return `_blank`;
         } else {

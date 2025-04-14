@@ -34,7 +34,7 @@ export class ProjectorListEntryComponent {
         return this._projector;
     }
 
-    public get projectionTarget(): '_blank' | '_self' {
+    public get projectionTarget(): `_blank` | `_self` {
         if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return `_self`;
         } else {

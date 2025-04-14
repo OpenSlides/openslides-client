@@ -1,7 +1,7 @@
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '../mediafiles/mediafile.constants';
 import { PROJECTIONDEFAULTS, ProjectiondefaultValue } from '../projector/projection-default';
 
-export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
+export type ExportCsvEncoding = `utf-8` | `iso-8859-15`;
 
 /**
  * Server side ballot choice definitions.
@@ -11,7 +11,7 @@ export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
  * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
  * - CUSTOM_NUMBER a given number of ballots
  */
-export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
+export type BallotPaperSelection = `NUMBER_OF_DELEGATES` | `NUMBER_OF_ALL_PARTICIPANTS` | `CUSTOM_NUMBER`;
 
 export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
 

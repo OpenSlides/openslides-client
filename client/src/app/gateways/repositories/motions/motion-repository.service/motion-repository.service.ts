@@ -18,7 +18,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
-type SortProperty = 'sort_weight' | 'number';
+type SortProperty = `sort_weight` | `number`;
 
 @Injectable({
     providedIn: `root`

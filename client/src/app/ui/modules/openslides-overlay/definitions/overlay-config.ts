@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 export const OVERLAY_COMPONENT_DATA = new InjectionToken<any>(`overlay-component-data`);
 
-export type OverlayPosition = 'center' | 'left' | 'top' | 'right' | 'bottom';
+export type OverlayPosition = `center` | `left` | `top` | `right` | `bottom`;
 
 export interface CustomOverlayConfig<T = any> {
     /**

@@ -47,7 +47,7 @@ export class DurationService {
      * from the duration text.
      * @returns time in minutes or seconds or 0 if values are below 0 and not allow_negaitve or no parsable numbers
      */
-    public stringToDuration(durationText = ``, suffix: 'h' | 'm' = `h`, allow_negativ = false): number {
+    public stringToDuration(durationText = ``, suffix: `h` | `m` = `h`, allow_negativ = false): number {
         const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number | null = null;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {
@@ -94,7 +94,7 @@ export class DurationService {
      * @param suffix any suffix to add.
      * @returns a more human readable time representation
      */
-    public durationToString(duration: number, suffix: 'h' | 'm' | ''): string {
+    public durationToString(duration: number, suffix: `h` | `m` | ``): string {
         const negative = duration < 0;
         const major = negative ? Math.ceil(duration / 60) : Math.floor(duration / 60);
         const minor = `0${Math.abs(duration) % 60}`.slice(-2);

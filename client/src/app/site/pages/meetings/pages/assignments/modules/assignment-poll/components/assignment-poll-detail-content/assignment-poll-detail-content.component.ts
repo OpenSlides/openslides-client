@@ -43,7 +43,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
+    public iconSize: `large` | `gigantic` = `large`;
 
     public get chartData(): ChartData {
         return this._chartData;

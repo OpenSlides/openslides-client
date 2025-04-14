@@ -26,8 +26,7 @@ import { OsHideSortingOptionSetting, OsSortingDefinition, OsSortingOption, OsSor
 @Directive()
 export abstract class BaseSortListService<V extends BaseViewModel>
     extends BaseSortService<V>
-    implements SortListService<V>
-{
+    implements SortListService<V> {
     /**
      * The models own keys that the current sort option depends upon
      */
@@ -62,7 +61,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @returns wether current the sorting is ascending or descending
      */
     public get ascending(): boolean {
-        return this.sortDefinition!.sortAscending;
+        return this.sortDefinition?.sortAscending;
     }
 
     public get hasSortOptionSelected(): boolean {
