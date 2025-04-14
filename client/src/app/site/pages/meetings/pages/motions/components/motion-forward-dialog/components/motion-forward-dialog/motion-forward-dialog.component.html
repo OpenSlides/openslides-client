@@ -22,6 +22,9 @@
             {{ numAmendments }} {{ 'amendments' | translate }}
         </div>
     }
+    <div>
+        <mat-checkbox [(ngModel)]="withAttachments">{{ 'Forward with attachments' | translate }}</mat-checkbox>
+    </div>
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
