@@ -633,6 +633,9 @@ export class MotionDiffService {
         if (node.nodeName === `OS-LINEBREAK`) {
             return ``;
         }
+        if (toChildTrace.length === 0) {
+            return ``;
+        }
 
         let html = this.serializeTag(node);
         let found = false;
@@ -684,41 +687,43 @@ export class MotionDiffService {
         if (node.nodeName === `OS-LINEBREAK`) {
             return ``;
         }
+        if (fromChildTrace.length === 0) {
+            return ``;
+        }
 
         let html = ``;
         let found = false;
-        if (fromChildTrace.length > 0) {
-            for (let i = 0; i < node.childNodes.length; i++) {
-                if (node.childNodes[i] === fromChildTrace[0]) {
-                    found = true;
+        for (let i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i] === fromChildTrace[0]) {
+                found = true;
+                const childElement = node.childNodes[i] as Element;
+                const remainingTrace = fromChildTrace;
+                remainingTrace.shift();
+                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                    html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
+                }
+            } else if (found) {
+                if (node.childNodes[i].nodeType === TEXT_NODE) {
+                    html += node.childNodes[i].nodeValue;
+                } else {
                     const childElement = node.childNodes[i] as Element;
-                    const remainingTrace = fromChildTrace;
-                    remainingTrace.shift();
-                    if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
-                        html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
-                    }
-                } else if (found) {
-                    if (node.childNodes[i].nodeType === TEXT_NODE) {
-                        html += node.childNodes[i].nodeValue;
-                    } else {
-                        const childElement = node.childNodes[i] as Element;
-                        if (
-                            !stripLineNumbers ||
-                            (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
-                                !this.lineNumberingService.isOsLineBreakNode(childElement))
-                        ) {
-                            html += this.serializeDom(childElement, stripLineNumbers);
-                        }
+                    if (
+                        !stripLineNumbers ||
+                        (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
+                            !this.lineNumberingService.isOsLineBreakNode(childElement))
+                    ) {
+                        html += this.serializeDom(childElement, stripLineNumbers);
                     }
                 }
             }
-            if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-                html += `</` + node.nodeName + `>`;
-            }
-            if (!found) {
-                throw new Error(`Inconsistency or invalid call of this function detected (from)`);
-            }
         }
+        if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
+            html += `</` + node.nodeName + `>`;
+        }
+        if (!found) {
+            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+        }
+
         return html;
     }
 
@@ -776,7 +781,7 @@ export class MotionDiffService {
         const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
         const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
         toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
-        if (!(toLine === null) && toLineNumber >= toLine) {
+        if (toLine && toLineNumber >= toLine) {
             toLineNumber = toLine + 1;
         }
 
@@ -805,7 +810,7 @@ export class MotionDiffService {
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode && ancestor !== null) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -820,7 +825,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode && currNode.parentNode) {
+        while (currNode && currNode.parentNode && ancestor !== null) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -2147,7 +2152,6 @@ export class MotionDiffService {
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            return ``;
         }
 
         let html: string;
@@ -2200,7 +2204,6 @@ export class MotionDiffService {
                 });
             }
         } catch (e) {
-            return ``;
         }
         return html;
     }

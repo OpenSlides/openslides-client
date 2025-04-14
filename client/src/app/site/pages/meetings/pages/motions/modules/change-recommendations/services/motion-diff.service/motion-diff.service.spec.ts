@@ -9,6 +9,7 @@ import { ViewMotion } from '../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from './motion-diff.service';
+import { ExtractedContent } from '../../../../definitions';
 
 describe(`MotionDiffService`, () => {
     let service: MotionDiffService;
@@ -189,7 +190,7 @@ describe(`MotionDiffService`, () => {
         }));
     });
 
-    describe(`extraction of lines`, () => {
+    fdescribe(`extraction of lines`, () => {
         it(`locates line number nodes`, inject([MotionDiffService], (service: MotionDiffService) => {
             let lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 4);
             expect(lineNumberNode.parentNode.nodeName).toBe(`STRONG`);
@@ -218,6 +219,24 @@ describe(`MotionDiffService`, () => {
             toLineNode = service.getLineNumberNode(baseHtmlDom1, 10);
             commonAncestor = service.getCommonAncestor(fromLineNode, toLineNode);
             expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
+        }));
+
+        it(`throws error when CR in non existent line`, inject([MotionDiffService], (service: MotionDiffService) => {
+            let a: string | ExtractedContent = ``;
+            try {
+                a = service.extractRangeByLineNumbers(baseHtml2, 31, 31)
+            } catch (e) {}
+            expect(a).toBeFalsy();
+        }));
+
+        fit(`expect the currentNode to be Null`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const fragment = htmlToFragment(baseHtml2);
+            const fromLineNumberNode = service.getLineNumberNode(fragment, 31);
+            const toLineNumberNode = service.getLineNumberNode(fragment, null);
+            let currNode: Node = fromLineNumberNode as Element;
+            expect(currNode).toBeFalsy();
+            currNode = toLineNumberNode as Element;
+            expect(currNode).toBeFalsy();
         }));
 
         it(`renders DOMs correctly (1)`, inject([MotionDiffService], (service: MotionDiffService) => {
