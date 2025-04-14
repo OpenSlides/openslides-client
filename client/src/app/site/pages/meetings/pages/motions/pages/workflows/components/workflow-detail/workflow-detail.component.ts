@@ -196,6 +196,11 @@ Prerequisites:
             type: `check`
         },
         {
+            name: _(`Allow forwarding of amendments`),
+            selector: `allow_motion_forwarding_amendments`,
+            type: `check`
+        },
+        {
             name: _(`Set identifier`),
             help_text: _(
                 `Activates the automatic setting of a number for motions that reach this state. The scheme for numbering can be customized under > [Settings] > [Motions].`
