@@ -21,6 +21,7 @@ export class Committee extends BaseModel<Committee> {
     public manager_ids!: Id[]; // (user/committe_management_ids)[]
     public native_user_ids!: Id[];
     public all_parent_ids!: Id[]; // (committee_all_parent_ids)[]
+    public all_child_ids!: Id[];
 
     public constructor(input?: any) {
         super(Committee.COLLECTION, input);
@@ -41,6 +42,7 @@ export class Committee extends BaseModel<Committee> {
         `organization_tag_ids`,
         `organization_id`,
         `native_user_ids`,
-        `all_parent_ids`
+        `all_parent_ids`,
+        `all_child_ids`
     ];
 }

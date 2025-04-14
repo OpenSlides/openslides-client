@@ -26,6 +26,14 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         private userRepo: UserRepositoryService
     ) {
         super(repositoryServiceCollector, Committee);
+        // Update committee rights if user has rights in any parent
+        this.viewModelStoreSubject.subscribe(record =>  {
+            for (const key in record) {
+                if (this.operator.user.committee_management_ids.some(id => record[key].all_parent_ids?.includes(id))) {
+                    this.operator.updateUserCML(record[key].id)
+                }
+            }
+        })
     }
 
     public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;
@@ -44,7 +52,9 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `manager_ids`,
             `external_id`,
             `native_user_ids`,
-            `parent_id`
+            `parent_id`,
+            `all_parent_ids`,
+            `all_child_ids`
         ]);
 
         return {
@@ -137,7 +147,9 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
                     : committee.receive_forwardings_from_committee_ids,
             external_id: committee.external_id,
             native_user_ids: committee.native_user_ids === null ? [] : committee.native_user_ids,
-            parent_id: committee.parent_id
+            parent_id: committee.parent_id,
+            all_parent_ids: committee.all_parent_ids,
+            all_child_ids: committee.all_child_ids
         };
     }
 }

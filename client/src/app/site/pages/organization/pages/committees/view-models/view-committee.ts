@@ -57,5 +57,7 @@ interface ICommitteeRelations {
     organization: ViewOrganization;
     managers: ViewUser[];
     parent: ViewCommittee;
+    all_parents: ViewCommittee[];
+    all_childs: ViewCommittee[];
 }
 export interface ViewCommittee extends Committee, ViewModelRelations<ICommitteeRelations>, HasOrganizationTags {}

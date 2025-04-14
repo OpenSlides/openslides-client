@@ -428,6 +428,12 @@ export class OperatorService {
         this._CML = getUserCML(user);
     }
 
+    // Updates committee admin rights for subdivisions
+    public updateUserCML(sub_commmittee_id: Id): void {
+        const committeeManagementLevel = this._CML;
+        committeeManagementLevel[sub_commmittee_id] = CML.can_manage;
+    }
+
     private checkReadyState(): void {
         if (this._ready) {
             return;
