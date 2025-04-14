@@ -1,4 +1,4 @@
-import { Injectable, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 
 const PollValues: any = {
@@ -19,11 +19,7 @@ const PollValues: any = {
  * Pipe to transform a key from polls into a speaking word.
  */
 @Pipe({
-    name: `pollKeyVerbose`,
-    standalone: false
-})
-@Injectable({
-    providedIn: `root`
+    name: `pollKeyVerbose`
 })
 export class PollKeyVerbosePipe implements PipeTransform {
     public transform(value: string): string {
