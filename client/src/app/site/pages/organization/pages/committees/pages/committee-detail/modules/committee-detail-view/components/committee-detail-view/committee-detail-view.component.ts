@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
@@ -37,7 +37,11 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
+    public accountNumber = 0;
+    public committeeAccounts = 0;
+
     public childCommitteesObservable: Observable<ViewCommittee[]>;
+    public allSubCommitteesObservable: Observable<ViewCommittee[]>;
 
     public constructor(
         private translate: TranslateService,
@@ -59,11 +63,22 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map( arr => arr.filter( comm => 
                         comm.parent?.id === this.committeeId
                     )))
+                    this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
+                        commRepo.filter(comm => currentComm.all_child_ids?.includes(comm.id))
+                    ));
+                    this.currentCommitteeObservable.subscribe(comm => {
+                        this.committeeAccounts = comm?.native_user_ids ? comm?.native_user_ids?.length : 0;
+                    });
+                    this.allSubCommitteesObservable.pipe(map(committees => committees?.reduce((sum,item) => sum + (item?.native_user_ids?.length ?? 0), 0))
+                    )
+                    .subscribe(total => {
+                        this.accountNumber = (total ? total : 0) + this.committeeAccounts;
+                    });
                 }
             })
         );
         this.subscriptions.push(
-            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value))
+            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value)),
         );
     }
 
