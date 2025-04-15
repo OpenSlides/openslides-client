@@ -1,10 +1,4 @@
-<os-head-bar
-    [customMenu]="true"
-    [hasMainButton]="canManageCommittee"
-    [mainActionTooltip]="'New meeting' | translate"
-    [nav]="false"
-    (mainEvent)="onCreateMeeting()"
->
+<os-head-bar [customMenu]="true" [goBack]="true" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ (currentCommitteeObservable | async)?.name }}</h2>
@@ -12,6 +6,14 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [routerLink]="['/', 'committees']">
+            <mat-icon>view_headline</mat-icon>
+        </button>
+        @if (canManageCommittee) {
+            <button mat-icon-button type="button" [matMenuTriggerFor]="addMenu">
+                <mat-icon>add_circle</mat-icon>
+            </button>
+        }
         @if (isOrgaAdmin()) {
             <button data-cy="committeeMenuTrigger" mat-icon-button type="button" [matMenuTriggerFor]="committeeMenu">
                 <mat-icon>more_vert</mat-icon>
@@ -144,23 +146,51 @@
             }
         </mat-card-content>
     </mat-card>
-    <!-- Meetings -->
-    <div>
-        @if (!getMeetingsSorted(committee).length) {
-            <mat-card class="os-card">
-                <mat-card-content>
-                    {{ 'No meetings available' | translate }}
-                </mat-card-content>
-            </mat-card>
-        }
-        @for (meeting of getMeetingsSorted(committee); track meeting) {
-            <os-committee-meeting-preview
-                class="meeting-preview-card"
-                [committee]="committee"
-                [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
-                [meeting]="meeting"
-            ></os-committee-meeting-preview>
-        }
+    <div class="os-card">
+        <mat-tab-group mat-stretch-tabs="false">
+            <mat-tab label="{{ 'Committees' | translate }}">
+                <os-list [listObservable]="childCommitteesObservable" [multiSelect]="false">
+                    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
+                        @if (committee.canAccess()) {
+                            <a
+                                class="stretch-to-fill-parent"
+                                [attr.aria-label]="ariaLabel(committee)"
+                                [routerLink]="['/', 'committees', committee.id]"
+                            ></a>
+                            <div class="overflow-hidden">
+                                <div class="title-line ellipsis-overflow">
+                                    {{ committee.name }}
+                                    @if (committee.description?.trim()) {
+                                        <div class="subtitle ellipsis-overflow">
+                                            {{ committee.description }}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </os-list>
+            </mat-tab>
+            <mat-tab label="{{ 'Meetings' | translate }}">
+                <div>
+                    @if (!getMeetingsSorted(committee).length) {
+                        <mat-card class="os-card">
+                            <mat-card-content>
+                                {{ 'No meetings available' | translate }}
+                            </mat-card-content>
+                        </mat-card>
+                    }
+                    @for (meeting of getMeetingsSorted(committee); track meeting) {
+                        <os-committee-meeting-preview
+                            class="meeting-preview-card"
+                            [committee]="committee"
+                            [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
+                            [meeting]="meeting"
+                        ></os-committee-meeting-preview>
+                    }
+                </div>
+            </mat-tab>
+        </mat-tab-group>
     </div>
 }
 
@@ -192,6 +222,23 @@
                     <span>{{ 'Delete' | translate }}</span>
                 </button>
             </ng-container>
+        }
+    </ng-template>
+</mat-menu>
+
+<mat-menu #addMenu="matMenu">
+    <ng-template matMenuContent>
+        @if (currentCommitteeObservable | async; as committee) {
+            <a mat-menu-item [queryParams]="{ parentId: committeeId }" [routerLink]="['/', 'committees', 'create']">
+                <mat-icon>layers</mat-icon>
+                <span>{{ 'Add committee' | translate }}</span>
+            </a>
+            <a mat-menu-item type="button" [routerLink]="['meeting', 'create']">
+                <mat-icon>event_available</mat-icon>
+                <span>
+                    {{ 'Add meeting' | translate }}
+                </span>
+            </a>
         }
     </ng-template>
 </mat-menu>

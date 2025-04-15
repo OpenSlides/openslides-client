@@ -5,13 +5,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { ListModule } from 'src/app/ui/modules/list';
 
 import { CommitteeComponentsModule } from '../../../../modules/committee-components.module';
+import { CommitteeListServiceModule } from '../../../committee-list/services/committee-list-service.module';
 import { CommitteeDetailViewRoutingModule } from './committee-detail-view-routing.module';
 import { CommitteeDetailViewComponent } from './components/committee-detail-view/committee-detail-view.component';
 
@@ -22,6 +25,7 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
         CommaSeparatedListingComponent,
         CommitteeComponentsModule,
         CommitteeDetailViewRoutingModule,
+        CommitteeListServiceModule,
         DirectivesModule,
         HeadBarModule,
         OpenSlidesTranslationModule.forChild(),
@@ -30,7 +34,9 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
         MatMenuModule,
         RouterModule,
         MatDividerModule,
-        MatButtonModule
+        MatButtonModule,
+        ListModule,
+        MatTabsModule
     ]
 })
 export class CommitteeDetailViewModule {}
