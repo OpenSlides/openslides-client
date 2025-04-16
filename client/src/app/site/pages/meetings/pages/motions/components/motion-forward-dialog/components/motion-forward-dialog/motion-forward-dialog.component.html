@@ -18,8 +18,10 @@
     } @else {
         <div class="state">
             {{ data.motion.length - amendmentNumber() }} {{ 'motions' | translate }}
-            <span>&middot;</span>
-            {{ numAmendments }} {{ 'amendments in total' | translate }}
+            @if (numAmendments > 0) {
+                <span>&middot;</span>
+                {{ numAmendments }} {{ 'amendments in total' | translate }}
+            }
         </div>
     }
     @if (amendmentNumber() > 0) {
