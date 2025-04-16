@@ -5,11 +5,11 @@ import { E2EImportsModule } from 'src/e2e-imports.module';
 import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
 import { ChangeRecommendationUnifiedChange } from '../../../../../../modules/projector/modules/slides/components/motions/modules/motion-slide/change-recommendation-unified-change';
+import { ExtractedContent } from '../../../../definitions';
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from './motion-diff.service';
-import { ExtractedContent } from '../../../../definitions';
 
 describe(`MotionDiffService`, () => {
     let service: MotionDiffService;
@@ -190,7 +190,7 @@ describe(`MotionDiffService`, () => {
         }));
     });
 
-    fdescribe(`extraction of lines`, () => {
+    describe(`extraction of lines`, () => {
         it(`locates line number nodes`, inject([MotionDiffService], (service: MotionDiffService) => {
             let lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 4);
             expect(lineNumberNode.parentNode.nodeName).toBe(`STRONG`);
@@ -224,12 +224,12 @@ describe(`MotionDiffService`, () => {
         it(`throws error when CR in non existent line`, inject([MotionDiffService], (service: MotionDiffService) => {
             let a: string | ExtractedContent = ``;
             try {
-                a = service.extractRangeByLineNumbers(baseHtml2, 31, 31)
+                a = service.extractRangeByLineNumbers(baseHtml2, 31, 31);
             } catch (e) {}
             expect(a).toBeFalsy();
         }));
 
-        fit(`expect the currentNode to be Null`, inject([MotionDiffService], (service: MotionDiffService) => {
+        it(`expect the currentNode to be Null`, inject([MotionDiffService], (service: MotionDiffService) => {
             const fragment = htmlToFragment(baseHtml2);
             const fromLineNumberNode = service.getLineNumberNode(fragment, 31);
             const toLineNumberNode = service.getLineNumberNode(fragment, null);
