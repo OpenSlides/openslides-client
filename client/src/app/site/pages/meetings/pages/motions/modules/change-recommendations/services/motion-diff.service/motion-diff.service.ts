@@ -728,11 +728,11 @@ export class MotionDiffService {
                 }
             }
         }
-        if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-            html += `</` + node.nodeName + `>`;
-        }
         if (!found) {
             throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+        }
+        if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
+            html += `</` + node.nodeName + `>`;
         }
 
         return html;

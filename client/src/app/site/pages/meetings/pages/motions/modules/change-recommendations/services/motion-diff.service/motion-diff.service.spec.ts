@@ -167,8 +167,8 @@ describe(`MotionDiffService`, () => {
         `<li>` +
         noMarkup(6) +
         ` Line 4</li></ol>`;
-    
-        const baseHtml4 =
+
+    const baseHtml4 =
         `<p>` +
         noMarkup(1) +
         `Line 1 ` +
@@ -202,8 +202,6 @@ describe(`MotionDiffService`, () => {
         brMarkup(11) +
         `Line 11</p>`;
     let baseHtmlDom4: DocumentFragment;
-
-    const ELEMENT_NODE = Node.ELEMENT_NODE;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -282,7 +280,7 @@ describe(`MotionDiffService`, () => {
             const fragment = htmlToFragment(baseHtml2);
             const fromLineNumberNode = service.getLineNumberNode(fragment, 31);
             const toLineNumberNode = service.getLineNumberNode(fragment, null);
-            const ancestorData = service.getCommonAncestor(fromLineNumberNode, toLineNumberNode)
+            const ancestorData = service.getCommonAncestor(fromLineNumberNode, toLineNumberNode);
             const ancestor = ancestorData.commonAncestor;
             expect(ancestor).toBeFalsy();
         }));
@@ -317,7 +315,7 @@ describe(`MotionDiffService`, () => {
             expect(pre).toBe(`<LI class="li-class"><UL><LI>Level 2 LI 8</LI>`);
         }));
 
-        it(`renders DOMs correctly (3)`, inject([MotionDiffService], (service: MotionDiffService, lineService: LineNumberingService) => {
+        it(`renders DOMs correctly (3)`, inject([MotionDiffService], (service: MotionDiffService) => {
             const lineNo = service.getLineNumberNode(baseHtmlDom4, 9),
                 greatParent = lineNo.parentNode.parentNode;
 

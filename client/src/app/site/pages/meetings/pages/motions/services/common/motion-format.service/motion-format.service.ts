@@ -257,10 +257,11 @@ export class MotionFormatService {
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
-
-        text.push(
-            this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
-        );
+        if (this.lineNumberingService.getLineNumberRange(motionText).to >= lineLength) {
+            text.push(
+                this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+            );
+        }
         return this.adjustDiffClasses(text).join(``);
     };
 
