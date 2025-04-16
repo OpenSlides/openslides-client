@@ -240,27 +240,30 @@ export class MotionFormatService {
         for (let i = 0; i < changesToShow.length; i++) {
             if (changesToShow[i].getLineTo() > lastLineTo) {
                 const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
-                text.push(
-                    this.diffService.extractMotionLineRange(
-                        motionText,
-                        {
-                            from: i === 0 ? firstLine : changeFrom,
-                            to: changesToShow[i].getLineFrom() - 1
-                        },
-                        true,
-                        lineLength,
-                        highlightedLine
-                    )
-                );
+                if (lineLength <= this.lineNumberingService.getLineNumberRange(motionText).to) {
+                    text.push(
+                        this.diffService.extractMotionLineRange(
+                            motionText,
+                            {
+                                from: i === 0 ? firstLine : changeFrom,
+                                to: changesToShow[i].getLineFrom() - 1
+                            },
+                            true,
+                            lineLength,
+                            highlightedLine
+                        )
+                    );
+                }
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
             lastLineTo = changesToShow[i].getLineTo();
         }
-
-        text.push(
-            this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
-        );
+        if (this.lineNumberingService.getLineNumberRange(motionText).to >= lineLength) {
+            text.push(
+                this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+            );
+        }
         return this.adjustDiffClasses(text).join(``);
     };
 

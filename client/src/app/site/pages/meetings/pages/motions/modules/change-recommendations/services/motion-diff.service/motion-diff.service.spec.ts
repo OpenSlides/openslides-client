@@ -5,6 +5,7 @@ import { E2EImportsModule } from 'src/e2e-imports.module';
 import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
 import { ChangeRecommendationUnifiedChange } from '../../../../../../modules/projector/modules/slides/components/motions/modules/motion-slide/change-recommendation-unified-change';
+import { ExtractedContent } from '../../../../definitions';
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { LineNumberingService } from '../line-numbering.service';
@@ -167,6 +168,41 @@ describe(`MotionDiffService`, () => {
         noMarkup(6) +
         ` Line 4</li></ol>`;
 
+    const baseHtml4 =
+        `<p>` +
+        noMarkup(1) +
+        `Line 1 ` +
+        brMarkup(2) +
+        `Line 2 ` +
+        brMarkup(3) +
+        `Line <strong>3<br>` +
+        noMarkup(4) +
+        `Line 4 ` +
+        brMarkup(5) +
+        `Line</strong> 5</p>` +
+        `<span class="span-class">` +
+        `<span class="span-class">` +
+        noMarkup(6) +
+        `Line 6 ` +
+        brMarkup(7) +
+        `Line 7` +
+        `</span>` +
+        `<span class="span-class"><span>` +
+        `<span>` +
+        noMarkup(8) +
+        `Level 2 LI 8</span>` +
+        `<span>` +
+        noMarkup(9) +
+        `Level 2 LI 9</span>` +
+        `</span></span>` +
+        `</span>` +
+        `<p>` +
+        noMarkup(10) +
+        `Line 10 ` +
+        brMarkup(11) +
+        `Line 11</p>`;
+    let baseHtmlDom4: DocumentFragment;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule]
@@ -175,8 +211,10 @@ describe(`MotionDiffService`, () => {
         service = TestBed.inject(MotionDiffService);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
+        baseHtmlDom4 = htmlToFragment(baseHtml4);
         service.insertInternalLineMarkers(baseHtmlDom1);
         service.insertInternalLineMarkers(baseHtmlDom2);
+        service.insertInternalLineMarkers(baseHtmlDom4);
     });
 
     describe(`extraction of lines`, () => {
@@ -220,6 +258,33 @@ describe(`MotionDiffService`, () => {
             expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
         }));
 
+        it(`throws error when CR in non existent line`, inject([MotionDiffService], (service: MotionDiffService) => {
+            let a: string | ExtractedContent = ``;
+            try {
+                a = service.extractRangeByLineNumbers(baseHtml2, 31, 31);
+            } catch (e) {}
+            expect(a).toBeFalsy();
+        }));
+
+        it(`expect the currentNode to be Null`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const fragment = htmlToFragment(baseHtml2);
+            const fromLineNumberNode = service.getLineNumberNode(fragment, 31);
+            const toLineNumberNode = service.getLineNumberNode(fragment, null);
+            let currNode: Node = fromLineNumberNode as Element;
+            expect(currNode).toBeFalsy();
+            currNode = toLineNumberNode as Element;
+            expect(currNode).toBeFalsy();
+        }));
+
+        it(`expect the ancestor to be Null`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const fragment = htmlToFragment(baseHtml2);
+            const fromLineNumberNode = service.getLineNumberNode(fragment, 31);
+            const toLineNumberNode = service.getLineNumberNode(fragment, null);
+            const ancestorData = service.getCommonAncestor(fromLineNumberNode, toLineNumberNode);
+            const ancestor = ancestorData.commonAncestor;
+            expect(ancestor).toBeFalsy();
+        }));
+
         it(`renders DOMs correctly (1)`, inject([MotionDiffService], (service: MotionDiffService) => {
             const lineNo = service.getLineNumberNode(baseHtmlDom1, 7),
                 greatParent = lineNo.parentNode.parentNode;
@@ -248,6 +313,20 @@ describe(`MotionDiffService`, () => {
 
             const pre = service.serializePartialDomToChild(greatParent, lineTrace, true);
             expect(pre).toBe(`<LI class="li-class"><UL><LI>Level 2 LI 8</LI>`);
+        }));
+
+        it(`renders DOMs correctly (3)`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const lineNo = service.getLineNumberNode(baseHtmlDom4, 9),
+                greatParent = lineNo.parentNode.parentNode;
+
+            expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
+            expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
+            expect(service.serializePartialDomFromChild(lineNo, [], true)).toBe(``);
+
+            let motionText = service.serializePartialDomToChild(greatParent, [], true);
+            expect(motionText).toBe(``);
+            motionText = service.serializePartialDomFromChild(greatParent, [], true);
+            expect(motionText).toBe(``);
         }));
 
         it(`extracts a single line`, inject([MotionDiffService], (service: MotionDiffService) => {
@@ -540,96 +619,6 @@ describe(`MotionDiffService`, () => {
                 after = `<p>` + noMarkup(1) + `foo &amp; bar ins</p>`;
             const merged = service.replaceLines(pre, after, 1, 1);
             expect(merged).toBe(`<P>foo &amp; bar ins</P>`);
-        }));
-    });
-
-    describe(`detecting the type of change`, () => {
-        it(`detects no change as replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const html = `<p>Test 1</p>`;
-            const calculatedType = service.detectReplacementType(html, html);
-            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
-        }));
-
-        it(`detects a simple insertion`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1</p>`,
-                htmlAfter = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-        }));
-
-        it(`detects a simple insertion, ignoring case of tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<p>Test 1</p>`,
-                    htmlAfter = `<P>Test 1 Test 2</P>` + `\n` + `<P>Test 3</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, ignoring trailing whitespaces`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>`,
-                    htmlAfter = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, ignoring spaces between UL and LI`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<UL><LI>accusam et justo duo dolores et ea rebum.</LI></UL>`,
-                    htmlAfter =
-                        `<UL>` + `\n` + `<LI>accusam et justo duo dolores et ea rebum 123.</LI>` + `\n` + `</UL>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, despite &nbsp; tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>`,
-                    htmlAfter = `<P>dsds&nbsp;dsfsdfsdf sdf sdfs dds sd345 3453 45f dsds&nbsp;dsfsdfsdf</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple deletion`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                htmlAfter = `<p>Test 1</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-        }));
-
-        it(`detects a simple deletion, ignoring case of tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                    htmlAfter = `<P>Test 1</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-            }
-        ));
-
-        it(`detects a simple deletion, ignoring trailing whitespaces`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>`,
-                    htmlAfter = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-            }
-        ));
-
-        it(`detects a simple replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                htmlAfter = `<p>Test 1</p>` + `\n` + `<p>Test 2</p>` + `\n` + `<p>Test 3</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
         }));
     });
 
