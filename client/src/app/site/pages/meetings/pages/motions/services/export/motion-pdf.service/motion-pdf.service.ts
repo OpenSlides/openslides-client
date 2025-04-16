@@ -29,7 +29,6 @@ import { MotionLineNumberingService } from '../../common/motion-line-numbering.s
 import { InfoToExport } from '../definitions';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -74,7 +73,7 @@ const PDF_A5_POINTS_WIDTH = 419.544;
  * ```
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionPdfService {
     public constructor(

@@ -9,10 +9,9 @@ import {
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { MeetingSettingsService } from '../meeting-settings.service';
-import { MeetingExportModule } from './meeting-export.module';
 
 @Injectable({
-    providedIn: MeetingExportModule
+    providedIn: `root`
 })
 export class MeetingCsvExportService extends CsvExportService {
     public constructor(private meetingSettings: MeetingSettingsService) {
