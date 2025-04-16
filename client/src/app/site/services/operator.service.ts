@@ -91,8 +91,12 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
+    public get isCommitteeAdmin(): boolean {
+        return this._CML ? !!this._CML[this.activeCommitteeId] : false;
+    }
+
     public get canSkipPermissionCheck(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager;
+        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeAdmin;
     }
 
     public get isAccountAdmin(): boolean {
@@ -264,6 +268,7 @@ export class OperatorService {
     private _meetingIds: Id[] | undefined = undefined;
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
     private _CML: Record<number, string> | undefined = undefined;
+    public activeCommitteeId: Id | null = null;
 
     public constructor(
         private activeMeetingService: ActiveMeetingService,
@@ -316,6 +321,7 @@ export class OperatorService {
             const newMeetingId = meeting?.id || null;
             if (this._lastActiveMeetingId !== newMeetingId || !this._ready) {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
+                this.activeCommitteeId = meeting?.committee_id || null;
                 this._lastActiveMeetingId = newMeetingId;
                 this.operatorStateChange(false);
                 const user = this._userSubject.getValue();
@@ -432,6 +438,7 @@ export class OperatorService {
     public updateUserCML(sub_commmittee_id: Id): void {
         const committeeManagementLevel = this._CML;
         committeeManagementLevel[sub_commmittee_id] = CML.can_manage;
+        this._CML = committeeManagementLevel;
     }
 
     private checkReadyState(): void {

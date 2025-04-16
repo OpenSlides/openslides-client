@@ -78,6 +78,7 @@
                     <os-repo-search-selector
                         formControlName="parent_id"
                         [disableOptionWhenFn]="getDisableOptionWhenFn()"
+                        [includeNone]="isCreateView"
                         [multiple]="false"
                         [repo]="committeeRepo"
                         [showChips]="false"

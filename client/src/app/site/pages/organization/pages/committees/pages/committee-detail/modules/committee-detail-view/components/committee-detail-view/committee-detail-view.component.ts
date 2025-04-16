@@ -63,6 +63,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map( arr => arr.filter( comm => 
                         comm.parent?.id === this.committeeId
                     )))
+                    // subscribe to all sub committees to get aggregated data
                     this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
                         commRepo.filter(comm => currentComm.all_child_ids?.includes(comm.id))
                     ));
@@ -98,7 +99,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public isOrgaAdmin(): boolean {
-        return this.operator.isOrgaManager;
+        return this.operator.isOrgaManager || this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
     public isSuperAdmin(): boolean {

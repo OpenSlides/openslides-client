@@ -198,7 +198,7 @@
     <ng-template matMenuContent>
         @if (currentCommitteeObservable | async; as committee) {
             <a
-                *osOmlPerms="OML.can_manage_organization"
+                *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true"
                 data-cy="committeeEditAnchor"
                 mat-menu-item
                 [queryParams]="{ committeeId: committeeId }"
@@ -215,7 +215,7 @@
                     </span>
                 </a>
             }
-            <ng-container *osOmlPerms="OML.can_manage_organization">
+            <ng-container *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true">
                 <mat-divider />
                 <button class="red-warning-text" mat-menu-item (click)="onDeleteCommittee(committee)">
                     <mat-icon>delete</mat-icon>
