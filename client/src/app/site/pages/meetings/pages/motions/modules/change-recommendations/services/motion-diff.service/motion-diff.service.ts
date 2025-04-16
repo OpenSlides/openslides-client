@@ -2140,23 +2140,13 @@ export class MotionDiffService {
             return motionHtml;
         }
 
-        let data: ExtractedContent;
-
-        try {
-            data = this.extractRangeByLineNumbers(
-                motionHtml,
-                Math.max(maxLine + 1, lineRange?.from || 1),
-                lineRange?.to ?? null
-            );
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            console.error(this.errorMsg);
-        }
+        const data: ExtractedContent = this.extractRangeByLineNumbers(
+            motionHtml,
+            Math.max(maxLine + 1, lineRange?.from || 1),
+            lineRange?.to ?? null
+        );
         let html = ``;
-        if (data && data.html !== ``) {
+        if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
                 DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
@@ -2185,24 +2175,20 @@ export class MotionDiffService {
         highlightedLine?: number
     ): string {
         let html = ``;
-        try {
-            const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
-            html =
-                extracted.outerContextStart +
-                extracted.innerContextStart +
-                extracted.html +
-                extracted.innerContextEnd +
-                extracted.outerContextEnd;
-            if (lineNumbers) {
-                html = this.lineNumberingService.insertLineNumbers({
-                    html,
-                    lineLength,
-                    highlight: highlightedLine,
-                    firstLine: lineRange.from
-                });
-            }
-        } catch (e) {
-            console.error(this.errorMsg);
+        const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
+        html =
+            extracted.outerContextStart +
+            extracted.innerContextStart +
+            extracted.html +
+            extracted.innerContextEnd +
+            extracted.outerContextEnd;
+        if (lineNumbers) {
+            html = this.lineNumberingService.insertLineNumbers({
+                html,
+                lineLength,
+                highlight: highlightedLine,
+                firstLine: lineRange.from
+            });
         }
         return html;
     }

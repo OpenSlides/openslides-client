@@ -193,7 +193,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             });
         }
 
-        return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
+        return lineRange.to <= this.lineNumbering.getLineNumberRange(baseText).to ? this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine) : ``;
     }
 
     /**
