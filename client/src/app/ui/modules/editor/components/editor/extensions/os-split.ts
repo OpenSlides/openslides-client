@@ -15,6 +15,10 @@ declare module '@tiptap/core' {
     }
 }
 
+/**
+ * The following extensions prevent users from lowering list levels
+ * below the os-split-* parent lists.
+ */
 export const OsSplit = Extension.create({
     addGlobalAttributes() {
         return [{
