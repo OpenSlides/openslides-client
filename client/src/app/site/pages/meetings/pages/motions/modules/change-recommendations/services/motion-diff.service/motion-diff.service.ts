@@ -94,7 +94,7 @@ export class MotionDiffService {
         private translate: TranslateService
     ) {}
 
-    private error_msg =
+    private errorMsg =
         this.translate.instant(`Inconsistent data.`) +
         ` ` +
         this.translate.instant(
@@ -821,7 +821,7 @@ export class MotionDiffService {
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
-        while (currNode && currNode.parentNode && ancestor !== null) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -836,7 +836,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode && currNode.parentNode && ancestor !== null) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -2083,7 +2083,7 @@ export class MotionDiffService {
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            return `<em style="color: red; font-weight: bold;">` + this.error_msg + `</em>`;
+            return `<em style="color: red; font-weight: bold;">` + this.errorMsg + `</em>`;
         }
 
         oldText = this.lineNumberingService.insertLineNumbers({
@@ -2142,10 +2142,6 @@ export class MotionDiffService {
 
         let data: ExtractedContent;
 
-        // This only creates an error (as far as we know) when the motion text has been shortened at least one line
-        // without modifying the change recommendations accordingly.
-        // That's a pretty serious inconsistency that should not happen at all,
-        // we're just doing some basic damage control here.
         try {
             data = this.extractRangeByLineNumbers(
                 motionHtml,
@@ -2153,7 +2149,11 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            console.error(this.error_msg);
+            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // without modifying the change recommendations accordingly.
+            // That's a pretty serious inconsistency that should not happen at all,
+            // we're just doing some basic damage control here.
+            console.error(this.errorMsg);
         }
         let html = ``;
         if (data && data.html !== ``) {
@@ -2202,7 +2202,7 @@ export class MotionDiffService {
                 });
             }
         } catch (e) {
-            console.error(this.error_msg);
+            console.error(this.errorMsg);
         }
         return html;
     }
