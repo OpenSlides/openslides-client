@@ -1357,6 +1357,50 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
+        it(`nested split before with insert`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService) => {
+                const inHtml = `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul><li>` +
+                    noMarkup(3) +
+                    `Ebene 3` +
+                    `<ul><li>` +
+                    noMarkup(4) +
+                    `Test` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>`;
+                const outHtml = `<ul><li><ul><li><ul><li>Ebene 3</li><li>Test</li></ul></li></ul></li></ul>`;
+
+                const diff = service.diff(inHtml, outHtml);
+                expect(diff).toBe(
+                    `<ul class="delete os-split-before"><li class="os-split-before">` +
+                    `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul><li>` +
+                    noMarkup(3) +
+                    `Ebene 3` +
+                    `<ul><li>` +
+                    noMarkup(4) +
+                    `Test` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `<ul class="insert os-split-before"><li class="os-split-before">` +
+                    `<ul class="os-split-before"><li class="os-split-before">` +
+                    `<ul><li>` +
+                    `Ebene 3` +
+                    `</li><li>` +
+                    `Test` +
+                    `</li></ul>` +
+                    `</li></ul>` +
+                    `</li></ul>`
+                );
+            }
+        ));
+
         it(`adds split before to correct node`, inject(
             [MotionDiffService, LineNumberingService],
             (service: MotionDiffService) => {

@@ -1789,7 +1789,7 @@ export class MotionDiffService {
 
         const diffEl = document.createElement(`template`);
         diffEl.innerHTML = diff;
-        let diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
+        const diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
 
         const versionNodes: HTMLElement[] = [];
         let found = false;
@@ -1804,28 +1804,49 @@ export class MotionDiffService {
             return diff;
         }
 
-        while (diffNode && !!versionNodes.length) {
-            diffNode?.classList?.add(className);
-            diffNode = diffNode?.querySelector(`& > *:not(.os-line-number)`);
+        this.recAddOsSplit(diffNode, versionNodes, before);
 
-            for (let i = 0; i < versionNodes.length; i++) {
-                const v = versionNodes[i];
-                if (v?.classList?.contains(className)) {
-                    versionNodes[i] = v.querySelector(`& > .${className}`);
-                } else {
-                    versionNodes[i] = null;
-                }
+        return diffEl.innerHTML;
+    }
 
-                if (!versionNodes[i] || [
-                    `P`, `LI`, `OL`, `UL`, `BLOCKQUOTE`, `DIV`
-                ].indexOf(versionNodes[i].nodeName) === -1) {
-                    versionNodes.splice(i, 1);
-                    i--;
-                }
+    private recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before = false): void {
+        const className = before ? `os-split-before` : `os-split-after`;
+        let containsSplit = false;
+        for (const v of versions) {
+            if (v.classList.contains(className)) {
+                containsSplit = true;
             }
         }
 
-        return diffEl.innerHTML;
+        if (!containsSplit) {
+            return;
+        }
+
+        const nextVersions: HTMLElement[] = [];
+        for (const v of versions) {
+            const s = v.querySelector(`& > .${className}`) as HTMLElement;
+            if (s) {
+                nextVersions.push(s);
+            }
+        }
+
+        diff?.classList?.add(className);
+        const nextDiffNode = diff?.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+        if (nextDiffNode) {
+            this.recAddOsSplit(nextDiffNode, nextVersions, before);
+        }
+
+        if (
+            diff.nextElementSibling &&
+            ((diff.classList.contains(`delete`) && diff.nextElementSibling.classList.contains(`insert`)) ||
+                (diff.classList.contains(`insert`) && diff.nextElementSibling.classList.contains(`delete`)))
+        ) {
+            diff.nextElementSibling.classList?.add(className);
+            const nextSibDiffNode = diff.nextElementSibling.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+            if (nextSibDiffNode) {
+                this.recAddOsSplit(nextSibDiffNode, nextVersions, before);
+            }
+        }
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
