@@ -1774,42 +1774,54 @@ export class MotionDiffService {
         }
 
         if (isSplitAfter) {
-            diff = this.readdOsSplit(diff, origHtmlOld, origHtmlNew);
+            diff = this.readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
         }
         if (isSplitBefore) {
-            diff = this.readdOsSplit(diff, origHtmlOld, origHtmlNew, true);
+            diff = this.readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
         }
 
         this.diffCache.put(cacheKey, diff);
         return diff;
     }
 
-    private readdOsSplit(diff: string, htmlOld: string, htmlNew: string, before = false): string {
-        const diffEl = document.createElement(`template`);
-        const htmlOldEl = document.createElement(`template`);
-        const htmlNewEl = document.createElement(`template`);
-        diffEl.innerHTML = diff;
-        htmlNewEl.innerHTML = htmlNew;
-        htmlOldEl.innerHTML = htmlOld;
-
-        let diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
-        let newNode = (before ? htmlNewEl.content.firstChild : htmlNewEl.content.lastChild) as HTMLElement;
-        let oldNode = (before ? htmlOldEl.content.firstChild : htmlOldEl.content.lastChild) as HTMLElement;
+    public readdOsSplit(diff: string, versions: string[], before = false): string {
         const className = before ? `os-split-before` : `os-split-after`;
-        while (diffNode && (newNode || oldNode)) {
+
+        const diffEl = document.createElement(`template`);
+        diffEl.innerHTML = diff;
+        let diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
+
+        const versionNodes: HTMLElement[] = [];
+        let found = false;
+        for (const v of versions) {
+            const el = document.createElement(`template`);
+            el.innerHTML = v;
+            versionNodes.push((before ? el.content.firstChild : el.content.lastChild) as HTMLElement);
+            found = found || !!el.content.querySelector(`.${className}`);
+        }
+
+        if (!found) {
+            return diff;
+        }
+
+        while (diffNode && !!versionNodes.length) {
             diffNode?.classList?.add(className);
             diffNode = diffNode?.querySelector(`& > *:not(.os-line-number)`);
 
-            if (newNode?.classList?.contains(className)) {
-                newNode = newNode.querySelector(`& > .${className}`);
-            } else {
-                newNode = null;
-            }
+            for (let i = 0; i < versionNodes.length; i++) {
+                const v = versionNodes[i];
+                if (v?.classList?.contains(className)) {
+                    versionNodes[i] = v.querySelector(`& > .${className}`);
+                } else {
+                    versionNodes[i] = null;
+                }
 
-            if (oldNode?.classList?.contains(className)) {
-                oldNode = oldNode.querySelector(`& > .${className}`);
-            } else {
-                oldNode = null;
+                if (!versionNodes[i] || [
+                    `P`, `LI`, `OL`, `UL`, `BLOCKQUOTE`, `DIV`
+                ].indexOf(versionNodes[i].nodeName) === -1) {
+                    versionNodes.splice(i, 1);
+                    i--;
+                }
             }
         }
 
