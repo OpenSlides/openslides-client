@@ -94,6 +94,17 @@ export class MotionDiffService {
         private translate: TranslateService
     ) {}
 
+    private error_msg =
+        this.translate.instant(`Inconsistent data.`) +
+        ` ` +
+        this.translate.instant(
+            `A change recommendation or amendment is probably referring to a nonexistent line number.`
+        ) +
+        ` ` +
+        this.translate.instant(
+            `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+        );
+
     /**
      * Searches for the line breaking node within the given Document specified by the given lineNumber.
      * This is performed by using a querySelector.
@@ -2072,17 +2083,7 @@ export class MotionDiffService {
             // without modifying the change recommendations accordingly.
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+            return `<em style="color: red; font-weight: bold;">` + this.error_msg + `</em>`;
         }
 
         oldText = this.lineNumberingService.insertLineNumbers({
@@ -2152,17 +2153,7 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            console.error(msg);
+            console.error(this.error_msg);
         }
         let html = ``;
         if (data && data.html !== ``) {
@@ -2211,17 +2202,7 @@ export class MotionDiffService {
                 });
             }
         } catch (e) {
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            console.error(msg);
+            console.error(this.error_msg);
         }
         return html;
     }
