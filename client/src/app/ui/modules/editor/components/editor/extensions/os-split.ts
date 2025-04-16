@@ -1,4 +1,19 @@
 import { Extension } from "@tiptap/core";
+import BulletList from '@tiptap/extension-bullet-list';
+import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
+import { NodeType } from "@tiptap/pm/model";
+
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        osSplit: {
+            /**
+             * Add an iframe
+             */
+            osSplitLift: (typeOrName: string | NodeType) => ReturnType;
+        };
+    }
+}
 
 export const OsSplit = Extension.create({
     addGlobalAttributes() {
@@ -8,5 +23,44 @@ export const OsSplit = Extension.create({
                 class: {}
             }
         }];
+    },
+    addCommands() {
+        return {
+            osSplitLift:
+                name => ({ commands, tr }): boolean => {
+                    const head = tr.selection.$head;
+                    const classNames: string = head.node(head.depth - 3).attrs[`class`] ?? ``;
+                    if (classNames.indexOf(`os-split-`) !== -1) {
+                        return true;
+                    }
+                    return commands.liftListItem(name);
+                }
+        };
+    }
+});
+
+export const OsSplitListItem = ListItem.extend({
+    content() {
+        return `paragraph* block*`;
+    },
+    addKeyboardShortcuts() {
+        return {
+            ...this.parent?.(),
+            'Shift-Tab': (): boolean => {
+                return this.editor.commands.osSplitLift(this.name);
+            }
+        };
+    }
+});
+
+export const OsSplitBulletList = BulletList.extend({
+    content() {
+        return `${this.options.itemTypeName}+ paragraph*`;
+    }
+});
+
+export const OsSplitOrderedList = OrderedList.extend({
+    content() {
+        return `${this.options.itemTypeName}+ paragraph*`;
     }
 });
