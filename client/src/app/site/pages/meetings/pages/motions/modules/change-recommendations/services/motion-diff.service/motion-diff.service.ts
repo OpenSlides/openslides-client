@@ -2141,6 +2141,10 @@ export class MotionDiffService {
 
         let data: ExtractedContent;
 
+        // This only creates an error (as far as we know) when the motion text has been shortened at least one line
+        // without modifying the change recommendations accordingly.
+        // That's a pretty serious inconsistency that should not happen at all,
+        // we're just doing some basic damage control here.
         try {
             data = this.extractRangeByLineNumbers(
                 motionHtml,
@@ -2148,14 +2152,20 @@ export class MotionDiffService {
                 lineRange?.to ?? null
             );
         } catch (e) {
-            // This only happens (as far as we know) when the motion text has been shortened at least one line
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
+                ) +
+                ` ` +
+                this.translate.instant(
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+                );
+            console.error(msg);
         }
-
-        let html: string;
-        if (data.html !== ``) {
+        let html = ``;
+        if (data && data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
                 DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
@@ -2163,9 +2173,6 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
             html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
-        } else {
-            // Prevents empty lines at the end of the motion
-            html = ``;
         }
         return html;
     }
@@ -2186,7 +2193,7 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
-        let html: string;
+        let html = ``;
         try {
             const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
             html =
@@ -2204,6 +2211,17 @@ export class MotionDiffService {
                 });
             }
         } catch (e) {
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
+                ) +
+                ` ` +
+                this.translate.instant(
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+                );
+            console.error(msg);
         }
         return html;
     }
