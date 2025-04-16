@@ -7,10 +7,12 @@
     & li > p:last-of-type {
         margin-bottom: 0;
     }
-    & {
-      p:after {
-          content: '';
-          display: inline-block;
-      }
+}
+
+.tiptap-view,
+.motion-text {
+    p:after {
+        content: '';
+        display: inline-block;
     }
 }
