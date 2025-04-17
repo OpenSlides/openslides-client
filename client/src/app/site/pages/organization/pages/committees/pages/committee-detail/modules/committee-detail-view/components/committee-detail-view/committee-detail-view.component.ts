@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
@@ -13,6 +13,8 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models/view-committee';
+import { CommitteeFilterService } from '../../../../../committee-list/services/committee-list-filter.service/committee-filter.service';
+import { CommitteeSortService } from '../../../../../committee-list/services/committee-list-sort.service/committee-sort.service';
 
 @Component({
     selector: `os-committee-detail-view`,
@@ -35,14 +37,22 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
+    public accountNumber = 0;
+    public committeeAccounts = 0;
+
+    public childCommitteesObservable: Observable<ViewCommittee[]>;
+    public allSubCommitteesObservable: Observable<ViewCommittee[]>;
+
     public constructor(
         private translate: TranslateService,
         private route: ActivatedRoute,
         private router: Router,
         private operator: OperatorService,
-        private committeeRepo: CommitteeControllerService,
+        public committeeRepo: CommitteeControllerService,
         private promptService: PromptService,
-        private orgaSettings: OrganizationSettingsService
+        private orgaSettings: OrganizationSettingsService,
+        public filterService: CommitteeFilterService,
+        public sortService: CommitteeSortService
     ) {
         super();
         this.subscriptions.push(
@@ -50,11 +60,26 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                 if (params) {
                     this.committeeId = Number(params[`committeeId`]);
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
+                    this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map( arr => arr.filter( comm => 
+                        comm.parent?.id === this.committeeId
+                    )))
+                    // subscribe to all sub committees to get aggregated data
+                    this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
+                        commRepo.filter(comm => currentComm.all_child_ids?.includes(comm.id))
+                    ));
+                    this.currentCommitteeObservable.subscribe(comm => {
+                        this.committeeAccounts = comm?.native_user_ids ? comm?.native_user_ids?.length : 0;
+                    });
+                    this.allSubCommitteesObservable.pipe(map(committees => committees?.reduce((sum,item) => sum + (item?.native_user_ids?.length ?? 0), 0))
+                    )
+                    .subscribe(total => {
+                        this.accountNumber = (total ? total : 0) + this.committeeAccounts;
+                    });
                 }
             })
         );
         this.subscriptions.push(
-            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value))
+            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value)),
         );
     }
 
@@ -74,7 +99,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public isOrgaAdmin(): boolean {
-        return this.operator.isOrgaManager;
+        return this.operator.isOrgaManager || this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
     public isSuperAdmin(): boolean {
@@ -119,5 +144,13 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
         return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
+    }
+
+    public ariaLabel(committee: ViewCommittee): string {
+        return this.translate.instant(`Navigate to committee detail view from `) + committee.name;
+    }
+
+    public isChildCommittee(committee: ViewCommittee): boolean {
+        return committee.all_parent_ids?.includes(this.committeeId);
     }
 }
