@@ -194,7 +194,7 @@ Prerequisites:
             ),
             selector: `allow_motion_forwarding`,
             type: `check`
-        },{
+        }, {
             name: _(`Allow forwarding of amendments`),
             help_text: _(
                 `Causes amendments in this state to be automatically forwarded along with their lead motion, should said lead motion be forwarded.`
