@@ -7,7 +7,7 @@ import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { MotionChangeRecommendationRepositoryService, MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
@@ -44,6 +44,7 @@ export class MotionForwardDialogService extends BaseDialogService<
     public constructor(
         private translate: TranslateService,
         private repo: MotionRepositoryService,
+        private repoCR: MotionChangeRecommendationRepositoryService,
         private formatService: MotionFormatService,
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
@@ -80,7 +81,7 @@ export class MotionForwardDialogService extends BaseDialogService<
     }
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
-        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
+        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding && !motion.isAmendment());
         if (toForward.length === 0) {
             this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
             return;
@@ -105,7 +106,14 @@ export class MotionForwardDialogService extends BaseDialogService<
                     dialogData.useOriginalVersion,
                     ...forwardMotions
                 );
-                this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
+
+                let numToForwardAmendments = 0;
+                toForward.forEach(motion =>
+                    motion.amendments.forEach(amendment => numToForwardAmendments += amendment.state?.allow_motion_forwarding && amendment.isAmendment() ? 1 : 0
+                    )
+                );
+                const numToForwardCR = dialogData.useOriginalVersion && toForward.length === 1 ? toForward[0].change_recommendations.length : 0;
+                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length, numToForwardAmendments, numToForwardCR, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
@@ -139,22 +147,31 @@ export class MotionForwardDialogService extends BaseDialogService<
 
     private createForwardingSuccessMessage(
         selectedMotionsLength: number,
+        forwardedAmendmentsAmount: number,
+        forwardedCRsAmount: number,
         result: { success: number; partial: number }
     ): string {
         const ofTranslated = this.translate.instant(`of`);
-        const successfulMessage = this.translate.instant(`successfully forwarded`);
+        const andTranslated = this.translate.instant(`and`);
+        const wereTranslated = selectedMotionsLength === 1 && forwardedAmendmentsAmount === 0 && forwardedCRsAmount === 0 ? this.translate.instant(`was`) : this.translate.instant(`were`);
+
+        const successfulMessage = wereTranslated + ` ` + this.translate.instant(`successfully forwarded`);
         const partialMessage = this.translate.instant(`partially forwarded`);
-        const verboseName = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
-        const additionalInfo = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
+
+        const verboseNameMotions = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
+        const verboseNameAmendments = this.translate.instant(this.repo.getVerboseNameAmendment(forwardedAmendmentsAmount !== 1));
+        const verboseNameCR = this.translate.instant(this.repoCR.getVerboseName(forwardedCRsAmount !== 1));
+
+        const additionalInfoMotions = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
+        const additionalInfoAmendments = forwardedAmendmentsAmount === 0 ? `` : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
+        const additionalInfoCR = forwardedCRsAmount === 0 ? `` : `${andTranslated} ${forwardedCRsAmount} ${verboseNameCR} `;
 
         let resultString = ``;
         if (result.success || !result.partial) {
-            resultString = `${result.success} ${additionalInfo}${verboseName} ${successfulMessage}`;
+            resultString = `${result.success} ${additionalInfoMotions}${verboseNameMotions} ${additionalInfoAmendments} ${additionalInfoCR} ${successfulMessage}`;
         }
         if (result.partial) {
-            resultString = `${resultString}${result.success && result.partial ? `, ` : ``}${
-                result.partial
-            } ${additionalInfo}${!result.success ? verboseName : ``} ${partialMessage}`;
+            resultString = `${resultString}${result.success && result.partial ? `, ` : ``} ${result.partial} ${additionalInfoMotions} ${!result.success ? verboseNameMotions : ``} ${additionalInfoAmendments} ${additionalInfoCR} ${partialMessage}`;
         }
 
         return resultString;

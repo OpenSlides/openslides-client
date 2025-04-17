@@ -17,9 +17,19 @@
         </div>
     } @else {
         <div class="state">
-            {{ data.motion.length }} {{ 'motions' | translate }}
-            <span>&middot;</span>
-            {{ numAmendments }} {{ 'amendments' | translate }}
+            {{ data.motion.length - amendmentNumber() }} {{ 'motions' | translate }}
+            @if (numAmendments > 0) {
+                <span>&middot;</span>
+                {{ numAmendments }} {{ 'amendments in total' | translate }}
+            }
+        </div>
+    }
+    @if (amendmentNumber() > 0) {
+        <div class="state">
+            {{
+                'Please be aware that amendments cannot be forwarded on their own and therefore are not counted'
+                    | translate
+            }}
         </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
@@ -46,6 +56,13 @@
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
                             <mat-radio-button [value]="false">
                                 {{ 'Final version' | translate }}
+                                @if (amendmentNumber() > 0) {
+                                    <br />
+                                    {{
+                                        'Amendments cannot be forwarded and will be excluded even if they are selected'
+                                            | translate
+                                    }}
+                                }
                             </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'Original version with all changes' | translate }}

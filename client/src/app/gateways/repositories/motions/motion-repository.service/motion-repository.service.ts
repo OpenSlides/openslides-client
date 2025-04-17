@@ -294,6 +294,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Motions` : `Motion`);
 
+    public getVerboseNameAmendment = (plural = false): string => this.translate.instant(plural ? `Amendments` : `Amendment`);
+
     public getProjectorTitle = (
         viewMotion: ViewMotion
     ): {
