@@ -70,7 +70,7 @@
     "@tsparticles/plugin-emitters": "^3.8.1",
     "@tsparticles/shape-text": "^3.8.1",
     "@tsparticles/slim": "^3.8.1",
-    "chart.js": "^4.4.8",
+    "chart.js": "^4.4.9",
     "cm-chess": "^3.5.1",
     "cm-chessboard": "^8.7.8",
     "date-fns": "^4.1.0",
