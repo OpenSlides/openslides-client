@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ListOfSpeakersContentModule } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/list-of-speakers-content.module';
@@ -48,6 +49,7 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MatIconModule,
         MatListModule,
         MatFormFieldModule,
+        MatTooltipModule,
         TopicPollModule,
         RouterModule,
         IconContainerComponent,

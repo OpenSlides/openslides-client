@@ -3,8 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { VOTE_MAJORITY, VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll/poll-constants';
 
 @Pipe({
-    name: `pollParseNumber`,
-    standalone: false
+    name: `pollParseNumber`
 })
 export class PollParseNumberPipe implements PipeTransform {
     private formatter = new Intl.NumberFormat(`us-us`, {

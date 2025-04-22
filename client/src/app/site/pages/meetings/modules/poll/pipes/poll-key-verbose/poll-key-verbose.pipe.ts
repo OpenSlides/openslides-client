@@ -19,8 +19,7 @@ const PollValues: any = {
  * Pipe to transform a key from polls into a speaking word.
  */
 @Pipe({
-    name: `pollKeyVerbose`,
-    standalone: false
+    name: `pollKeyVerbose`
 })
 export class PollKeyVerbosePipe implements PipeTransform {
     public transform(value: string): string {
