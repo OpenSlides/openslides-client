@@ -1,4 +1,3 @@
-// eslint-disable-next-line simple-import-sort/imports
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
