@@ -6,7 +6,6 @@ import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/p
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from '../../../modules/poll/pipes';
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models';
 import { AssignmentExportServiceModule } from './assignment-export-service.module';
@@ -19,9 +18,6 @@ export class AssignmentPdfService {
     public constructor(
         private translate: TranslateService,
         private htmlToPdfService: HtmlToPdfService,
-        private pollKeyVerbose: PollKeyVerbosePipe,
-        private parsePollNumber: PollParseNumberPipe,
-        private pollPercentBase: PollPercentBasePipe,
         private assignmentPollService: AssignmentPollService
     ) {}
 
@@ -181,7 +177,7 @@ export class AssignmentPdfService {
                 const tableData = this.assignmentPollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
                     const rank = [`user`, `list`].includes(pollResult.class) ? index + 1 : ``;
-                    const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
+                    const voteOption = this.translate.instant(this.assignmentPollService.pollKeyVerbose(pollResult.votingOption));
                     const resultLine = this.getPollResult(pollResult, poll);
                     const tableLine = [
                         {
@@ -262,12 +258,12 @@ export class AssignmentPdfService {
                 }
             })
             .map((singleResult: VotingResult) => {
-                const pollKey = this.pollKeyVerbose.transform(singleResult.vote!);
+                const pollKey = this.assignmentPollService.pollKeyVerbose(singleResult.vote!);
                 const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
-                const resultValue = this.parsePollNumber.transform(singleResult.amount!);
-                const resultInPercent = this.pollPercentBase.transform(singleResult.amount!, poll, votingResult);
+                const resultValue = this.assignmentPollService.parseNumber(singleResult.amount!);
+                const resultInPercent = this.assignmentPollService.getVoteValueInPercent(singleResult.amount!, { poll: poll, row: votingResult });
                 return `${votingKey}${resultValue} ${
-                    singleResult.showPercent && resultInPercent ? resultInPercent : ``
+                    singleResult.showPercent && resultInPercent ? `(${resultInPercent})` : ``
                 }`;
             });
         return resultList.join(`\n`);
