@@ -7,7 +7,6 @@ import { ExportFileFormat, InfoToExport } from '../definitions';
 import { MotionCsvExportService } from '../motion-csv-export.service';
 import { MotionPdfExportService } from '../motion-pdf-export.service';
 import { MotionXlsxExportService } from '../motion-xlsx-export.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 /**
  * Shape the structure of the dialog data
@@ -24,7 +23,7 @@ export interface MotionExportInfo {
 }
 
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionExportService {
     public constructor(
