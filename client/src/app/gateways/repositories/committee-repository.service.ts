@@ -147,7 +147,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
                     : committee.receive_forwardings_from_committee_ids,
             external_id: committee.external_id,
             native_user_ids: committee.native_user_ids === null ? [] : committee.native_user_ids,
-            parent_id: committee.parent_id,
+            parent_id: !committee.parent_id ? undefined : committee.parent_id,
             all_parent_ids: committee.all_parent_ids,
             all_child_ids: committee.all_child_ids
         };
