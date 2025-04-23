@@ -7,7 +7,7 @@ import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
-import { MotionChangeRecommendationRepositoryService, MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
@@ -15,6 +15,7 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
 import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { ViewMotion } from '../../../view-models';
@@ -44,7 +45,7 @@ export class MotionForwardDialogService extends BaseDialogService<
     public constructor(
         private translate: TranslateService,
         private repo: MotionRepositoryService,
-        private repoCR: MotionChangeRecommendationRepositoryService,
+        private changeRecoRepo: MotionChangeRecommendationControllerService,
         private formatService: MotionFormatService,
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
@@ -159,8 +160,8 @@ export class MotionForwardDialogService extends BaseDialogService<
         const partialMessage = this.translate.instant(`partially forwarded`);
 
         const verboseNameMotions = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
-        const verboseNameAmendments = this.translate.instant(this.repo.getVerboseNameAmendment(forwardedAmendmentsAmount !== 1));
-        const verboseNameCR = this.translate.instant(this.repoCR.getVerboseName(forwardedCRsAmount !== 1));
+        const verboseNameAmendments = this.translate.instant(this.repo.getVerboseName(forwardedAmendmentsAmount !== 1, true));
+        const verboseNameCR = this.translate.instant(this.changeRecoRepo.getVerboseName(forwardedCRsAmount !== 1));
 
         const additionalInfoMotions = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
         const additionalInfoAmendments = forwardedAmendmentsAmount === 0 ? `` : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
