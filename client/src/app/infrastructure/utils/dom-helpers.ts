@@ -309,27 +309,6 @@ export function addCSSClassToFirstTag(html: string, className: string): string {
 }
 
 /**
- * Adds a CSS class to the last opening HTML tag within the given string.
- *
- * @param {string} html
- * @param {string} className
- * @returns {string}
- */
-export function addClassToLastNode(html: string, className: string): string {
-    const node = document.createElement(`div`);
-    node.innerHTML = html;
-    for (let i = node.childNodes.length - 1; i >= 0; i--) {
-        if (node.childNodes[i].nodeType === Node.ELEMENT_NODE) {
-            const childElement = node.childNodes[i] as HTMLElement;
-            childElement.classList.add(className);
-
-            return node.innerHTML;
-        }
-    }
-    return node.innerHTML;
-}
-
-/**
  * Add the CSS-class to the existing "class"-attribute, or add one.
  * Works on strings, not nodes
  *
