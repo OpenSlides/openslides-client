@@ -1813,7 +1813,7 @@ export class MotionDiffService {
         const className = before ? `os-split-before` : `os-split-after`;
         let containsSplit = false;
         for (const v of versions) {
-            if (v.classList.contains(className)) {
+            if (v?.classList.contains(className)) {
                 containsSplit = true;
             }
         }
@@ -1824,7 +1824,7 @@ export class MotionDiffService {
 
         const nextVersions: HTMLElement[] = [];
         for (const v of versions) {
-            const s = v.querySelector(`& > .${className}`) as HTMLElement;
+            const s = v?.querySelector(`& > .${className}`) as HTMLElement;
             if (s) {
                 nextVersions.push(s);
             }
