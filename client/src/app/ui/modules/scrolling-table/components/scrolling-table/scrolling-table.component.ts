@@ -34,12 +34,12 @@ interface DataSourceProvider<T> {
     selector: `os-scrolling-table`,
     templateUrl: `./scrolling-table.component.html`,
     styleUrls: [`./scrolling-table.component.scss`],
-    providers: [{ provide: SCROLLING_TABLE, useExisting: ScrollingTableComponent }]
+    providers: [{ provide: SCROLLING_TABLE, useExisting: ScrollingTableComponent }],
+    standalone: false
 })
 export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     extends BaseUiComponent
-    implements AfterViewInit, OnDestroy, OnInit
-{
+    implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild(CdkVirtualScrollViewport)
     public scrollViewport: CdkVirtualScrollViewport | undefined;
 
@@ -242,7 +242,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             return `calc(100vh - ${distTop}px)`;
         }
 
-        return Math.min(this.rowHeight * this._dataSource.getValue().length, (<any>window).innerHeight - 150) + `px`;
+        return Math.min(this.rowHeight * this._dataSource.getValue().length, (window as any).innerHeight - 150) + `px`;
     }
 
     private buildDataTable(): void {

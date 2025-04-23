@@ -59,13 +59,13 @@
         }
 
         <!-- Final edit buttons -->
-        <ng-container *osPerms="permission.motionCanManage">
+        <ng-container *osPerms="permission.motionCanManage; and: !noEdit">
             <!-- create final version -->
             @if (showCreateFinalVersionButton) {
                 <button
                     mat-icon-button
-                    type="button"
                     matTooltip="{{ 'Create editorial final version' | translate }}"
+                    type="button"
                     (click)="createModifiedFinalVersion()"
                 >
                     <mat-icon>file_copy</mat-icon>
@@ -76,8 +76,8 @@
                 @if (!isEditingFinalVersion) {
                     <button
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Edit editorial final version' | translate }}"
+                        type="button"
                         (click)="editModifiedFinalVersion()"
                     >
                         <mat-icon>edit</mat-icon>
@@ -86,8 +86,8 @@
                     <!-- save final version -->
                     <button
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Save editorial final version' | translate }}"
+                        type="button"
                         (click)="saveModifiedFinalVersion()"
                     >
                         <mat-icon>done</mat-icon>
@@ -96,8 +96,8 @@
                     <!-- cancel final version edit -->
                     <button
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Cancel editing without saving' | translate }}"
+                        type="button"
                         (click)="cancelEditingModifiedFinalVersion()"
                     >
                         <mat-icon>close</mat-icon>
@@ -107,8 +107,8 @@
                     <button
                         class="red-warning-text"
                         mat-icon-button
-                        type="button"
                         matTooltip="{{ 'Delete editorial final version' | translate }}"
+                        type="button"
                         (click)="deleteModifiedFinalVersion()"
                     >
                         <mat-icon>delete</mat-icon>
@@ -153,7 +153,7 @@
                     </button>
                 }
                 <div
-                    *osPerms="permission.motionCanManage"
+                    *osPerms="permission.motionCanManage; and: !noEdit"
                     aria-disabled="true"
                     id="lineNumberItem"
                     mat-list-item

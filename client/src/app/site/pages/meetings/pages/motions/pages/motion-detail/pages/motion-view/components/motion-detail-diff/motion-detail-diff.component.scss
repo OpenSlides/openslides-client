@@ -1,7 +1,7 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 :host ::ng-deep .underlined-links {
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }
 
 .diff-box {
@@ -16,35 +16,51 @@
             opacity: 1;
         }
     }
+    & {
+        .action-row {
+            position: absolute;
+            right: 0;
+            font-size: 0.8em;
+            opacity: 0.5;
+            overflow: hidden;
 
-    .action-row {
-        position: absolute;
-        right: 0;
-        font-size: 0.8em;
-        opacity: 0.5;
-        overflow: hidden;
+            .btn-delete {
+                margin-left: 5px;
+                color: red;
+            }
 
-        .btn-delete {
-            margin-left: 5px;
-            color: red;
+            .btn-edit {
+                margin-left: 5px;
+            }
+
+            .btn-amend-info {
+                margin-left: 5px;
+                min-width: 68px;
+            }
         }
 
-        .btn-edit {
-            margin-left: 5px;
+        .amendment-cr-hint {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            padding: 0 12px;
+            color: var(--theme-primary-500);
         }
 
-        .btn-amend-info {
-            margin-left: 5px;
-            min-width: 68px;
-        }
-    }
+        .status-row {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            .collission-hint {
+                padding-right: 4px;
+            }
 
-    .status-row {
-        font-style: italic;
-        color: gray;
-
-        & > *:after {
-            content: ':';
+            & > .status-content:last-child:after {
+                font-style: italic;
+                color: gray;
+                content: ':';
+            }
         }
     }
 }

@@ -70,12 +70,7 @@
 
                     <!-- Is Template -->
                     <span
-                        *osCmlPerms="
-                            CML.can_manage;
-                            committeeId: meeting.committee_id;
-                            nonAdminCheck: true;
-                            and: meeting.isTemplate
-                        "
+                        *osCmlPerms="CML.can_manage; committeeId: meeting.committee_id; and: meeting.isTemplate"
                         class="icon-prefix"
                     >
                         <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
@@ -158,8 +153,8 @@
                 <div>
                     <os-icon-container
                         icon="group"
-                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Participants' | translate }}"
+                        iconTooltipPosition="right"
                     >
                         {{ meeting.userAmount }}
                     </os-icon-container>
@@ -169,8 +164,8 @@
                 <div>
                     <os-icon-container
                         icon="assignment"
-                        iconTooltipPosition="right"
                         iconTooltip="{{ 'Motions' | translate }}"
+                        iconTooltipPosition="right"
                     >
                         {{ meeting.motionsAmount }}
                     </os-icon-container>
@@ -181,7 +176,7 @@
 
     <div *osScrollingTableCell="'menu'; row as meeting; config: { width: 40 }">
         <button
-            *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id; nonAdminCheck: true"
+            *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id"
             data-cy="meetingListSingleMenuTrigger"
             mat-icon-button
             [disabled]="isMultiSelect"

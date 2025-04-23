@@ -2,9 +2,7 @@ import { mergeAttributes, Node } from '@tiptap/core';
 
 export interface IframeOptions {
     inline: boolean;
-    HTMLAttributes: {
-        [key: string]: any;
-    };
+    HTMLAttributes: Record<string, any>;
 }
 
 declare module '@tiptap/core' {
@@ -81,16 +79,16 @@ export default Node.create<IframeOptions>({
         return {
             setIframe:
                 (options: { src: string; title?: string }) =>
-                ({ tr, dispatch }): boolean => {
-                    const { selection } = tr;
-                    const node = this.type.create(options);
+                    ({ tr, dispatch }): boolean => {
+                        const { selection } = tr;
+                        const node = this.type.create(options);
 
-                    if (dispatch) {
-                        tr.replaceRangeWith(selection.from, selection.to, node);
+                        if (dispatch) {
+                            tr.replaceRangeWith(selection.from, selection.to, node);
+                        }
+
+                        return true;
                     }
-
-                    return true;
-                }
         };
     }
 });

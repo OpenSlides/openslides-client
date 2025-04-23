@@ -1,3 +1,5 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+
 @mixin icon-container($iconSize, $contentSize, $fontWeight) {
     line-height: $iconSize;
 

@@ -3,10 +3,8 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import { HttpService } from 'src/app/gateways/http.service';
 
-import { ExportServiceModule } from '../export-service.module';
-
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class FileExportService {
     public constructor(private http: HttpService) {}
@@ -37,6 +35,6 @@ export class FileExportService {
         const zip = new JSZip();
         await createContentFn(zip);
         const archive = await zip.generateAsync({ type: `blob` });
-        saveAs(archive, `${filename}.zip`);
+        saveAs(archive, `${filename.replace(`/`, `:`)}.zip`);
     }
 }

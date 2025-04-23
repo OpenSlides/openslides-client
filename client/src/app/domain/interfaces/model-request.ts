@@ -2,9 +2,7 @@ import { Id } from '../definitions/key-types';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor;
 
-export interface Fields {
-    [field: string]: FieldDescriptor | null;
-}
+export type Fields = Record<string, FieldDescriptor | null>;
 
 export interface HasFields {
     fields: Fields;
@@ -16,10 +14,10 @@ export interface ModelRequest extends HasFields {
 }
 
 export interface GenericRelationFieldDecriptor extends HasFields {
-    type: 'generic-relation-list' | 'generic-relation';
+    type: `generic-relation-list` | `generic-relation`;
 }
 
 export interface RelationFieldDescriptor extends HasFields {
-    type: 'relation-list' | 'relation';
+    type: `relation-list` | `relation`;
     collection: string;
 }

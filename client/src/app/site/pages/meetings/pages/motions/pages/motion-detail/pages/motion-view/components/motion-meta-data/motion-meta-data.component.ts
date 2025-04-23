@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -27,7 +28,8 @@ import { SearchListDefinition } from '../motion-extension-field/motion-extension
     selector: `os-motion-meta-data`,
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit, OnDestroy {
     public categories$: Observable<ViewMotionCategory[]> = this.categoryRepo.getViewModelListObservable();
@@ -37,13 +39,35 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public changeRecoMode: ChangeRecoMode;
 
+    @Input()
+    public activeOriginMotions: ViewMotion[];
+
+    @Output()
+    public enableOriginMotion = new EventEmitter<Id>();
+
+    @Output()
+    public disableOriginMotion = new EventEmitter<Id>();
+
+    @Output()
+    public setShowAllAmendments = new EventEmitter<boolean>();
+
+    public originMotionStatus: Record<number, boolean> = {};
+
     /**
      * Determine if the name of supporters are visible
      */
     public showSupporters = false;
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
+    public allowSupporters$ = this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
+    public originToggleDefault$ = this.meetingSettingsService
+        .get(`motions_origin_motion_toggle_default`)
+        .pipe(map(v => !!v));
+
+    public displayOriginEnabled$ = this.meetingSettingsService
+        .get(`motions_enable_origin_motion_display`)
+        .pipe(map(v => !!v));
 
     /**
      * @returns the current recommendation label (with extension)
@@ -69,6 +93,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get isDifferedChangeRecoMode(): boolean {
         return this.changeRecoMode === ChangeRecoMode.Diff;
+    }
+
+    public get validSupporters(): number {
+        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
+    }
+
+    public get validSupportersText(): number {
+        return this.translate
+            .instant(
+                `of which %num% are not permissable`
+            )
+            .replace(`%num%`, this.validSupporters);
     }
 
     /**
@@ -112,12 +148,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return null;
     }
 
-    public override get showAllAmendments(): boolean {
-        return this.viewService.currentShowAllAmendmentsState;
-    }
-
-    public override set showAllAmendments(is: boolean) {
-        this.viewService.showAllAmendmentsStateSubject.next(is);
+    public set showAllAmendments(is: boolean) {
+        this.setShowAllAmendments.emit(is);
     }
 
     public get showForwardButton(): boolean {
@@ -138,13 +170,17 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
-    private _forwardingAvailable = false;
-
     public get supportersObservable(): Observable<ViewUser[]> {
         return this._supportersSubject;
     }
 
+    public get canManage(): boolean {
+        return this.operator.hasPerms(Permission.userCanManage);
+    }
+
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
+
+    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -167,7 +203,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
         if (operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-                this._forwardingAvailable = forwardingAvailable;
+                this._forwardingAvailable = forwardingAvailable && !this.motion.isAmendment();
                 this.cd.markForCheck();
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
@@ -181,8 +217,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public ngOnInit(): void {
         this.participantSort.initSorting();
 
+        for (const motion of this.activeOriginMotions) {
+            this.originMotionStatus[motion.id] = true;
+        }
+
         this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
+                this.updateSupportersSubject();
+            })
         );
     }
 
@@ -298,6 +340,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.showSupporters = !this.showSupporters;
     }
 
+    public toggleOriginMotion(e: { checked: boolean }, id: Id): void {
+        if (e.checked) {
+            this.enableOriginMotion.emit(id);
+        } else {
+            this.disableOriginMotion.emit(id);
+        }
+    }
+
     public getCategorySelectionMarginLeft(category: ViewMotionCategory): string {
         return (
             (!this.motion.category_id || this.motion.category_id === category.id ? 0 : 32) + category.level * 5 + `px`
@@ -351,6 +401,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
+    public canView(origin: ViewMotion | ViewMeeting): boolean {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.sequential_number !== undefined;
+        }
+
+        return origin?.canAccess();
+    }
+
     private async updateSupportersSubject(): Promise<void> {
         this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
     }
@@ -392,5 +451,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    public checkValidSupporter(supporter: ViewUser): boolean {
+        return (
+            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            !(
+                supporter.getMeetingUser().vote_delegated_to_id
+            )
+        );
     }
 }

@@ -7,6 +7,7 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MotionFormatResult } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
@@ -17,7 +18,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
-type SortProperty = 'sort_weight' | 'number';
+type SortProperty = `sort_weight` | `number`;
 
 @Injectable({
     providedIn: `root`
@@ -56,13 +57,23 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public async createForwarded(meetingIds: Id[], ...motions: any[]): Promise<{ success: number; partial: number }> {
+    public async createForwarded(
+        meetingIds: Id[],
+        useOriginalSubmitter: boolean,
+        useOriginalNumber: boolean,
+        useOriginalVersion: boolean,
+        ...motions: MotionFormatResult[]
+    ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
         motions.forEach(motion => {
             payloads.push(
                 meetingIds.map(id => {
                     return {
                         meeting_id: id,
+                        use_original_submitter: useOriginalSubmitter,
+                        use_original_number: useOriginalNumber,
+                        with_amendments: useOriginalVersion,
+                        with_change_recommendations: useOriginalVersion,
                         ...motion
                     };
                 })

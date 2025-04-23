@@ -1,0 +1,151 @@
+<div class="origin-motion-header">
+    <div class="title">
+        <h1>
+            @if (motion.number) {
+                {{ motion.number }}:
+            }
+            {{ motion.title }}
+        </h1>
+    </div>
+
+    <div class="motion-controls">
+        <button class="expand-button" mat-button (click)="expanded = !expanded">
+            Metadata
+            <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+    </div>
+</div>
+
+<div class="metadata-detail" role="region" [ngClass]="{ active: expanded }">
+    <!-- Submitters -->
+    @if (motion.submitters?.length || motion.additional_submitter) {
+        <div>
+            <div class="remove-top-margin">
+                <os-motion-manage-motion-meeting-users
+                    additionalInputField="additional_submitter"
+                    additionalInputLabel="{{ 'Extension' | translate }}"
+                    field="submitters"
+                    secondSelectorLabel="{{ 'Committees' | translate }}"
+                    title="{{ 'Submitters' | translate }}"
+                    [additionalInputValue]="motion.additional_submitter"
+                    [disableEdit]="true"
+                    [loadSecondSelectorValues]="loadForwardingCommittees"
+                    [motion]="motion"
+                    [repo]="motionSubmitterRepo"
+                    [useAdditionalInput]="true"
+                ></os-motion-manage-motion-meeting-users>
+            </div>
+        </div>
+    }
+
+    <!-- Set State -->
+    @if (motion.state$ | async; as motionState) {
+        <div>
+            <os-motion-extension-field
+                extensionLabel="{{ 'Extension' | translate }}"
+                title="{{ 'State' | translate }}"
+                [canBeEdited]="false"
+                [chipValue]="stateLabel | translate"
+                [classes]="motion.stateCssColor"
+                [hasExtension]="!!motionState && motionState.show_state_extension_field"
+                [inputValue]="motion.state_extension"
+            ></os-motion-extension-field>
+        </div>
+    }
+
+    <!-- Recommendation -->
+    @if (isRecommendationEnabled) {
+        <div>
+            <os-motion-extension-field
+                extensionLabel="{{ 'Extension' | translate }}"
+                [canBeEdited]="false"
+                [chipValue]="recommendationLabel | translate"
+                [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
+                [inputValue]="motion?.recommendation_extension"
+                [internal]="motion?.state?.is_internal"
+                [listValueTransformFns]="[motionTransformFn]"
+                [searchLists]="searchLists"
+                [title]="motion.meeting?.motions_recommendations_by"
+                (succeeded)="setRecommendationExtension($event)"
+            ></os-motion-extension-field>
+            <!-- recommendation referenced motions -->
+            @if (motion.recommendation_extension_reference_ids?.length) {
+                @if (referencedMotions$ | async; as referencedMotions) {
+                    <div class="spacer-top-10">
+                        @for (motion of referencedMotions; track motion.id; let last = $last) {
+                            <span>
+                                <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
+                                @if (!last) {
+                                    <span class="referencelist">&nbsp;·&nbsp;</span>
+                                }
+                            </span>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    }
+
+    <!-- Category -->
+    @if (motion.category) {
+        <div>
+            <h4>{{ 'Category' | translate }}</h4>
+            <os-chip-select chipClass="grey multi-line-chip">
+                <div>
+                    @if (motion.category.parent) {
+                        <div>
+                            {{ motion.category.parent }}
+                        </div>
+                        <span>{{ 'Subcategory' | translate }}:</span>
+                    }
+                    {{ motion.category }}
+                </div>
+            </os-chip-select>
+        </div>
+    }
+
+    <!-- Tags -->
+    @if (motion.hasTags()) {
+        <div>
+            <h4>{{ 'Tags' | translate }}</h4>
+            <os-chip-select>
+                @for (tag of motion.tags$ | async; track tag.id) {
+                    <os-chip-select-chip disableRipple disabled>
+                        {{ tag }}
+                    </os-chip-select-chip>
+                }
+            </os-chip-select>
+        </div>
+    }
+
+    <!-- Block -->
+    @if (motion.block) {
+        <div>
+            <h4>
+                {{ 'Motion block' | translate }}
+            </h4>
+            <os-chip-select>
+                {{ motion.block }}
+            </os-chip-select>
+        </div>
+    }
+
+    <!-- Created timestamp -->
+    @if (motion.workflow_timestamp) {
+        <div>
+            <h4>{{ 'Submission date' | translate }}</h4>
+            <div>{{ motion.workflow_timestamp | localizedDate }}</div>
+        </div>
+    }
+
+    <!-- Created timestamp -->
+    @if (motion.created) {
+        <div>
+            <h4>{{ 'Creation date' | translate }}</h4>
+            <div>{{ motion.created | localizedDate }}</div>
+        </div>
+    }
+
+    <!-- motion polls -->
+    <os-motion-manage-polls [hideAdd]="true" [inTabs]="true" [motion]="motion"></os-motion-manage-polls>
+</div>

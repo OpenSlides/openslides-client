@@ -30,8 +30,7 @@ export interface BaseVoteData extends Identifiable {
 @Directive()
 export abstract class BasePollDetailComponent<V extends PollContentObject, S extends PollService>
     extends BaseMeetingComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     public readonly COLLECTION = ViewPoll.COLLECTION;
 
     /**
@@ -50,15 +49,15 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public readonly voteOptionStyle: any = {
         Y: {
             css: `yes`,
-            icon: `thumb_up`
+            icon: `check_circle`
         },
         N: {
             css: `no`,
-            icon: `thumb_down`
+            icon: `cancel`
         },
         A: {
             css: `abstain`,
-            icon: `trip_origin`
+            icon: `circle`
         }
     };
 
@@ -108,6 +107,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     private entitledUsersSubscription: Subscription | null = null;
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
+    public delegationEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_delegations`);
 
     public countVoteAllowedAndPresent = 0;
     public countVoteAllowed = 0;
@@ -191,7 +191,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public exportPollResults(): void {
         this.pollPdfService.exportSinglePoll(this.poll, {
             votesData: this._votesDataSubject.value,
-            entitledUsersData: this._entitledUsersSubject.value
+            entitledUsersData: this.poll.isStarted ? this._liveRegisterObservable.value : this._entitledUsersSubject.value
         });
     }
 
@@ -272,13 +272,13 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                                 : null,
                             user_merged_into: entry.user_merged_into_id
                                 ? `${this.translate.instant(`Old account of`)} ${users
-                                      .find(user => user.id === entry.user_merged_into_id)
-                                      ?.getShortName()}`
+                                    .find(user => user.id === entry.user_merged_into_id)
+                                    ?.getShortName()}`
                                 : null,
                             delegation_user_merged_into: entry.delegation_user_merged_into_id
                                 ? `(${this.translate.instant(`represented by old account of`)}) ${users
-                                      .find(user => user.id === entry.delegation_user_merged_into_id)
-                                      ?.getShortName()}`
+                                    .find(user => user.id === entry.delegation_user_merged_into_id)
+                                    ?.getShortName()}`
                                 : null
                         });
                     }
@@ -366,7 +366,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     public onTabChange(): void {
         const isSwitchingToEntitledList = this._isViewingVoteslist === true;
-        //only set the new list after the old cell definitions have been deleted
+        // only set the new list after the old cell definitions have been deleted
         const clearSubscription = this.scrollTableManage.cellDefinitionsObservable.subscribe(data => {
             if (!data.length) {
                 this.toggleIsViewing(!isSwitchingToEntitledList, isSwitchingToEntitledList);

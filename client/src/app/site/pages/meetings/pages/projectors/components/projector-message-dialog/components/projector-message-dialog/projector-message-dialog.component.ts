@@ -9,7 +9,8 @@ import { MessageDialogData } from '../../definitions';
 @Component({
     selector: `os-projector-message-dialog`,
     templateUrl: `./projector-message-dialog.component.html`,
-    styleUrls: [`./projector-message-dialog.component.scss`]
+    styleUrls: [`./projector-message-dialog.component.scss`],
+    standalone: false
 })
 export class ProjectorMessageDialogComponent extends BaseComponent implements OnInit {
     /**

@@ -29,12 +29,12 @@ import { AmendmentData, MotionSlideData } from '../../motion-slide-data';
     selector: `os-motion-slide`,
     templateUrl: `./motion-slide.component.html`,
     styleUrls: [`./motion-slide.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionSlideComponent
     extends BaseMotionSlideComponent<MotionSlideData>
-    implements BaseScaleScrollSlideComponent<MotionSlideData>
-{
+    implements BaseScaleScrollSlideComponent<MotionSlideData> {
     /**
      * Indicates the LineNumberingMode Mode.
      */
@@ -135,7 +135,7 @@ export class MotionSlideComponent
     }
 
     public textDivStyles: {
-        width?: string;
+        "width"?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention

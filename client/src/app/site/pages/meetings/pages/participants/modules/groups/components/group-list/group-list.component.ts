@@ -19,7 +19,8 @@ import { GroupControllerService } from '../../services';
 @Component({
     selector: `os-group-list`,
     templateUrl: `./group-list.component.html`,
-    styleUrls: [`./group-list.component.scss`]
+    styleUrls: [`./group-list.component.scss`],
+    standalone: false
 })
 export class GroupListComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
     /**
@@ -55,7 +56,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Holds the current value fo all permissions for all groups.
      */
-    public currentPermissions: { [id: number]: { [perm: string]: boolean } } = {};
+    public currentPermissions: Record<number, Record<string, boolean>> = {};
 
     @ViewChild(`groupForm`, { static: true })
     public groupForm: UntypedFormGroup | null = null;
@@ -297,6 +298,6 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
      * Function to allow to edit the external_id
      */
     public get allowExternalId(): boolean {
-        return this.operator.isMeetingAdmin || this.operator.isSuperAdmin;
+        return this.operator.isMeetingAdmin || this.operator.canSkipPermissionCheck;
     }
 }

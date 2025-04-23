@@ -135,7 +135,7 @@ export class GlobalSearchService {
         const collection = collectionFromFqid(fqid);
         const result = results[fqid];
         if (collection === `tag` && results[fqid].content?.tagged_ids) {
-            for (const taggedFqid of results[fqid].content?.tagged_ids) {
+            for (const taggedFqid of results[fqid].content.tagged_ids) {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
 
                 this.updateMatchedByFqids(fqid, taggedFqid, results);
@@ -173,16 +173,16 @@ export class GlobalSearchService {
         fqid: Fqid,
         results: GlobalSearchResponse
     ): {
-        title: string;
-        text: string;
-        obj: any;
-        fqid: string;
-        collection: string;
-        url: string;
-        meeting: any;
-        committee: any;
-        score: number;
-    } {
+            title: string;
+            text: string;
+            obj: any;
+            fqid: string;
+            collection: string;
+            url: string;
+            meeting: any;
+            committee: any;
+            score: number;
+        } {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);

@@ -16,7 +16,7 @@ import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-ame
 import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
 
-interface MotionFormatResult {
+export interface MotionFormatResult {
     origin_id: Id;
     title: string;
     text: string;
@@ -122,16 +122,21 @@ export class MotionFormatService {
      * Format the motion for forwarding, tries to get the mod final version or the
      * final version with all unified changes
      */
-    public formatMotionForForward(motion: ViewMotion): MotionFormatResult {
+    public formatMotionForForward(motion: ViewMotion, useOriginal?: boolean): MotionFormatResult {
         const lineLength = this.settings.instant(`motions_line_length`);
-        const finalMotionText = this.getFinalMotionText(motion, lineLength!);
-        const textWithoutLines = this.lineNumberingService.stripLineNumbers(finalMotionText);
+        let title = motion.title;
+        let text = motion.text;
+        if (!useOriginal) {
+            title = this.getFinalTitle(motion, lineLength);
+            const finalMotionText = this.getFinalMotionText(motion, lineLength!);
+            text = this.lineNumberingService.stripLineNumbers(finalMotionText);
+        }
 
         return {
             origin_id: motion.id,
-            title: this.getFinalTitle(motion, lineLength),
             reason: motion.reason || ``,
-            text: textWithoutLines
+            title,
+            text
         };
     }
 
@@ -139,7 +144,7 @@ export class MotionFormatService {
         const titleChange = this.getUnifiedChanges(motion, lineLength).find((obj: ViewUnifiedChange) =>
             obj.isTitleChange()
         )!;
-        const crMode = !!motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
+        const crMode = motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
 
         if (titleChange) {
             return this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
@@ -154,7 +159,7 @@ export class MotionFormatService {
      */
     private getFinalMotionText(motion: ViewMotion, lineLength: number): string {
         const changes: ViewUnifiedChange[] = this.getUnifiedChanges(motion, lineLength);
-        const crMode = !!motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
+        const crMode = motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
         return this.formatMotion({ targetMotion: motion, crMode, changes, lineLength, firstLine: motion.firstLine });
     }
 

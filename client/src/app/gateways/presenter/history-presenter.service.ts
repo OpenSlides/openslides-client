@@ -42,14 +42,12 @@ export class HistoryPosition extends Position {
     }
 }
 
-interface HistoryPresenterResponse {
-    [fqid: string]: Position[];
-}
+type HistoryPresenterResponse = Record<string, Position[]>;
 
 const HISTORY_ENDPOINT = `/system/autoupdate/history_information`;
 
 const getUniqueItems = (positions: Position[]): Position[] => {
-    const positionMap: { [positionNumber: number]: Position } = {};
+    const positionMap: Record<number, Position> = {};
     for (const position of positions) {
         positionMap[position.position] = position;
     }

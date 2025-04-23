@@ -1,4 +1,4 @@
-@import 'src/assets/styles/drag.scss';
+@use 'src/assets/styles/drag.scss';
 
 cdk-tree-node {
     margin: 3px 0;
@@ -53,4 +53,12 @@ cdk-tree-node {
 
 .cdk-drop-list.cdk-drop-list-dragging .cdk-tree-node:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.backgroundSelected {
+    background: rgba(0, 0, 0, 0.155) !important;
+}
+
+.backgroundLight {
+    background: inherit !important;
 }

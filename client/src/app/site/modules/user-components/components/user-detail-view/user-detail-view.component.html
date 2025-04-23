@@ -1,4 +1,4 @@
-<div class="content-container spacer-bottom-60">
+<div class="content-container" [class.spacer-bottom-60]="useBottomMargin">
     @if (isEditing) {
         @if (useMatcard) {
             <mat-card class="os-card">
@@ -59,23 +59,25 @@
     <form [formGroup]="personalInfoForm">
         <h2>{{ 'Personal information' | translate }}</h2>
         <!-- First line -->
-        <div class="personal-info-area">
-            <!-- Title -->
-            <mat-form-field class="form16 force-min-width">
-                <mat-label>{{ 'Title' | translate }}</mat-label>
-                <input formControlName="title" matInput type="text" />
-            </mat-form-field>
-            <!-- First name -->
-            <mat-form-field class="form38 force-min-width">
-                <mat-label>{{ 'Given name' | translate }}</mat-label>
-                <input formControlName="first_name" matInput osAutofocus type="text" />
-            </mat-form-field>
-            <!-- Last name -->
-            <mat-form-field class="form38 force-min-width">
-                <mat-label>{{ 'Surname' | translate }}</mat-label>
-                <input formControlName="last_name" matInput type="text" />
-            </mat-form-field>
-        </div>
+        @if (!isAccountSelfUpdate) {
+            <div class="personal-info-area">
+                <!-- Title -->
+                <mat-form-field class="form16 force-min-width">
+                    <mat-label>{{ 'Title' | translate }}</mat-label>
+                    <input formControlName="title" matInput type="text" />
+                </mat-form-field>
+                <!-- First name -->
+                <mat-form-field class="form38 force-min-width">
+                    <mat-label>{{ 'Given name' | translate }}</mat-label>
+                    <input formControlName="first_name" matInput osAutofocus type="text" />
+                </mat-form-field>
+                <!-- Last name -->
+                <mat-form-field class="form38 force-min-width">
+                    <mat-label>{{ 'Surname' | translate }}</mat-label>
+                    <input formControlName="last_name" matInput type="text" />
+                </mat-form-field>
+            </div>
+        }
 
         <!-- Second line -->
         <div class="personal-info-area">
@@ -103,8 +105,8 @@
             <mat-form-field
                 class="force-min-width"
                 [ngClass]="{
-                    form58: isAllowed('update'),
-                    form100: !isAllowed('update')
+                    form58: isAllowed('update') && !isAccountSelfUpdate,
+                    form100: !isAllowed('update') || isAccountSelfUpdate
                 }"
             >
                 <mat-label>{{ 'Email' | translate }}</mat-label>
@@ -116,7 +118,7 @@
                 }
             </mat-form-field>
             <!-- Member Number -->
-            @if (isAllowed('update')) {
+            @if (isAllowed('update') && !isAccountSelfUpdate) {
                 <mat-form-field class="form38 force-min-width">
                     <mat-label>{{ 'Membership number' | translate }}</mat-label>
                     <input formControlName="member_number" matInput type="text" />
@@ -131,8 +133,8 @@
                 <mat-form-field
                     class="force-min-width"
                     [ngClass]="{
-                        form48: isAllowed('update'),
-                        form100: !isAllowed('update')
+                        form48: isAllowed('update') && !isAccountSelfUpdate,
+                        form100: !isAllowed('update') || isAccountSelfUpdate
                     }"
                 >
                     <mat-label>{{ 'Username' | translate }}</mat-label>
@@ -158,7 +160,7 @@
             }
 
             <!-- Initial Password -->
-            @if (isAllowed('update') && !user?.saml_id) {
+            @if (isAllowed('update') && !user?.saml_id && !isAccountSelfUpdate) {
                 <mat-form-field class="form48 force-min-width">
                     <mat-label>{{ 'Initial password' | translate }}</mat-label>
                     <input autocomplete="off" formControlName="default_password" matInput />
@@ -188,7 +190,7 @@
             }
         </div>
 
-        @if (isAllowed('seeName')) {
+        @if (isAllowed('seeName') && !isAccountSelfUpdate) {
             <div>
                 @if (!isSelf) {
                     <mat-checkbox formControlName="is_active">{{ 'active' | translate }}</mat-checkbox>
@@ -200,7 +202,7 @@
 </ng-template>
 
 <ng-template #showTemplate>
-    <h2>{{ 'Personal information' | translate }}</h2>
+    <h2 [class.header-margin]="!useBottomMargin">{{ 'Personal information' | translate }}</h2>
     @if (user) {
         <!-- Displayed name -->
         @if (isAllowed('seeName')) {

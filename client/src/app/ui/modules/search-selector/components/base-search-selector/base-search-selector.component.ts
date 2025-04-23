@@ -27,8 +27,7 @@ import { ParentErrorStateMatcher } from '../../validators';
 @Directive()
 export abstract class BaseSearchSelectorComponent
     extends BaseFormFieldControlComponent<Selectable>
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
 
@@ -260,7 +259,7 @@ export abstract class BaseSearchSelectorComponent
     private _snapshotValue: Selectable[] | Selectable | null = null;
     private _isFirstUpdate = true;
 
-    private _selectableItemsIdMap: { [id: number]: Selectable } = {};
+    private _selectableItemsIdMap: Record<number, Selectable> = {};
     private _selectableItemsList: Selectable[] = [];
 
     private get currentSearchValue(): string {
@@ -274,7 +273,7 @@ export abstract class BaseSearchSelectorComponent
             })
         );
 
-        //Create css style for the mat-selects panel
+        // Create css style for the mat-selects panel
         const sheet = document.createElement(`style`);
         sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
         document.body.appendChild(sheet);
@@ -310,19 +309,28 @@ export abstract class BaseSearchSelectorComponent
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
+            if (!this.matSelect.panel) {
+                setTimeout(() => this.onOpenChanged(this.matSelect.panelOpen), 100);
+                return;
+            }
+
             // Ensure that the main panel doesn't ever scroll away from the top
             const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
             const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
             const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
-            document.documentElement.style.setProperty(
-                `--os-search-selector-panel-height`,
-                `${cdkRect.bottom - inputRect.top}px`
-            );
-            panelElement.addEventListener(`scroll`, () => {
-                if (panelElement.scrollTop !== 0) {
-                    panelElement.scrollTo({ top: 0 });
-                }
-            });
+            if (inputRect) {
+                document.documentElement.style.setProperty(
+                    `--os-search-selector-panel-height`,
+                    `${cdkRect.bottom - inputRect.top}px`
+                );
+            }
+            if (panelElement) {
+                panelElement.addEventListener(`scroll`, () => {
+                    if (panelElement.scrollTop !== 0) {
+                        panelElement.scrollTo({ top: 0 });
+                    }
+                });
+            }
 
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();

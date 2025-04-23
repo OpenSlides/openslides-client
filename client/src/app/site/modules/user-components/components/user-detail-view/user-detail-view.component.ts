@@ -32,7 +32,8 @@ import { OneOfValidator } from '../../validators';
 @Component({
     selector: `os-user-detail-view`,
     templateUrl: `./user-detail-view.component.html`,
-    styleUrls: [`./user-detail-view.component.scss`]
+    styleUrls: [`./user-detail-view.component.scss`],
+    standalone: false
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     /**
@@ -81,6 +82,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useBottomMargin = true;
+
+    @Input()
     public useAdditionalEditTemplate = true;
 
     @Input()
@@ -97,6 +101,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this._additionalValidators = validators;
         this.prepareForm();
     }
+
+    @Input()
+    public isAccountSelfUpdate = false;
 
     @Input()
     public patchFormValueFn: (controlName: string, user?: ViewUser) => any | null = () => {};
@@ -117,7 +124,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public validEvent = new EventEmitter<boolean>();
 
     @Output()
-    public errorEvent = new EventEmitter<{ [name: string]: boolean } | null>();
+    public errorEvent = new EventEmitter<Record<string, boolean> | null>();
 
     @Output()
     public submitEvent = new EventEmitter<void>();
@@ -276,15 +283,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private updateFormControlsAccessibility(fn: (controlName: string) => boolean): void {
         const formControlNames = Object.keys(this.personalInfoForm.controls);
 
-        // Enable all controls.
         formControlNames.forEach(formControlName => {
-            setTimeout(() => this.personalInfoForm.get(formControlName)!.enable(), 1000);
-        });
-
-        // Disable not permitted controls
-        formControlNames.forEach(formControlName => {
-            if (!fn(formControlName)) {
-                setTimeout(() => this.personalInfoForm.get(formControlName)!.disable(), 1000);
+            if (fn(formControlName)) {
+                this.personalInfoForm.get(formControlName).enable();
+            } else {
+                this.personalInfoForm.get(formControlName).disable();
             }
         });
     }
@@ -301,7 +304,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
     }
 
-    private getCreateFormControlsConfig(): { [key: string]: any } {
+    private getCreateFormControlsConfig(): Record<string, any> {
         return {
             username: [``, this.isNewUser ? [this.noSpaceValidator()] : [Validators.required, this.noSpaceValidator()]],
             pronoun: [``, Validators.maxLength(32)],
@@ -345,12 +348,12 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         };
     }
 
-    private getChangedValues(formData: { [key: string]: any }): { [key: string]: any } {
+    private getChangedValues(formData: Record<string, any>): Record<string, any> {
         const data = this.useAdditionalEditTemplate
             ? formData
             : Object.keys(formData).mapToObject(key =>
-                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
-              );
+                    Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+                );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

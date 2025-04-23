@@ -49,7 +49,7 @@ export class StorageService {
      * Clear the whole cache except for keys given in `addNoClearKey`.
      */
     public async clear(): Promise<void> {
-        const savedData: { [key: string]: any } = {};
+        const savedData: Record<string, any> = {};
         for (const key of this.noClearKeys) {
             savedData[key] = await this.get(key);
         }

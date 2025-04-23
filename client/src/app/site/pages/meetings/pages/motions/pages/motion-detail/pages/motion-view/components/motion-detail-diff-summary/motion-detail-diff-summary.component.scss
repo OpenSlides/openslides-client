@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .change-recommendation-summary {
     border-radius: 3px;
@@ -14,11 +14,12 @@
         margin-left: 0.3em;
     }
 
-    ul {
-        padding: 0 0 0 32px;
+    ul.changes-list {
+        padding: 0 0 0 2em;
+        margin-right: 1em;
+        width: calc(100% - 3em);
         list-style: none;
         display: table;
-        margin-right: 1em;
     }
 
     li {
@@ -35,5 +36,5 @@
 }
 
 .mat-mdc-icon-button.smaller-icon-button {
-    @include custom-size-button(24px, 14px);
+    @include button.custom-size-button(24px, 14px);
 }

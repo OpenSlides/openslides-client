@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,14 +22,14 @@ interface MenuItem {
 enum MenuItems {
     CHANGE_PASSWORD = `Change password`,
     SHOW_PROFILE = `My profile`,
-    SHOW_MEETINGS = `My meetings`,
-    CLIENT_SETTINGS = `Settings`
+    SHOW_MEETINGS = `My meetings`
 }
 
 @Component({
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
-    styleUrls: [`./account-dialog.component.scss`]
+    styleUrls: [`./account-dialog.component.scss`],
+    standalone: false
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`changePasswordComponent`, { static: false })
@@ -45,9 +44,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         },
         {
             name: MenuItems.CHANGE_PASSWORD
-        },
-        {
-            name: MenuItems.CLIENT_SETTINGS
         }
     ];
 
@@ -95,7 +91,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public isUserPasswordValid = false;
     public userPersonalForm: any;
     public userPasswordForm!: PasswordForm;
-    public clientSettingsForm!: UntypedFormGroup;
 
     private _self: ViewUser | null = null;
     private _isUserInScope = false;
@@ -110,7 +105,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private snackbar: MatSnackBar,
         private authService: AuthService,
         private translate: TranslateService,
-        private fb: UntypedFormBuilder,
         private store: StorageService
     ) {
         super();
@@ -121,17 +115,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
             this.repo.getViewModelObservable(this.operator.operatorId!).subscribe(user => (this._self = user)),
             this.operator.operatorUpdated.subscribe(() => this.updateIsUserInScope())
         );
-
-        this.clientSettingsForm = this.fb.group({
-            disablePauseAuConnections: [false]
-        });
-
-        this.store.get(`clientSettings`).then((val: any) => {
-            if (val) {
-                this.clientSettingsForm.patchValue(val);
-                this.clientSettingsForm.markAsUntouched();
-            }
-        });
     }
 
     /**
@@ -205,11 +188,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         }
         this.isUserFormValid = false;
         this.isEditing = false;
-    }
-
-    public async saveClientSettings(): Promise<void> {
-        this.store.set(`clientSettings`, this.clientSettingsForm.getRawValue());
-        this.clientSettingsForm.markAsPristine();
     }
 
     private async updateIsUserInScope(): Promise<void> {

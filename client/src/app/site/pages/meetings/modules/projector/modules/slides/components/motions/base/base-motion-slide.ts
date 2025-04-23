@@ -17,9 +17,7 @@ export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
 /**
  * Format for referenced motions: A mapping of motion fqids to their title information.
  */
-export interface ReferencedMotions {
-    [fqid: string]: MotionTitleInformation;
-}
+export type ReferencedMotions = Record<string, MotionTitleInformation>;
 
 /**
  * Base slide for motions and motion blocks. This provides the functionality of

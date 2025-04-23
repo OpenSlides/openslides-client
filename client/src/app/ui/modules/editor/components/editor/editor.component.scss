@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .editor {
     .editor-menu {
@@ -32,14 +32,16 @@
             &.active {
                 background: rgba(0, 0, 0, 0.32);
             }
-            input[type='color'] {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                cursor: pointer;
+            & {
+                input[type='color'] {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                }
             }
         }
         > .button-group {
@@ -86,19 +88,21 @@
                     border: 1px dashed #bbb;
                 }
             }
-            p {
-                br:only-child {
-                    content: '';
-                    display: inline-block;
-                }
+
+            li.os-split-before {
+                list-style: none;
             }
 
-            @include detail-view-appearance;
+            @include detail-view-appearance.detail-view-appearance;
         }
         &:focus-within {
             border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color);
             border-bottom-width: 2px;
             padding-bottom: 0;
         }
+    }
+
+    .focused {
+        outline: black auto 1px;
     }
 }

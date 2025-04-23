@@ -158,7 +158,7 @@ export class LineNumberingService {
     public isOsLineBreakNode(node: Node): boolean {
         let isLineBreak = false;
         if (node && node.nodeType === ELEMENT_NODE) {
-            const element = <Element>node;
+            const element = node as Element;
             if (element.nodeName === `BR` && element.hasAttribute(`class`)) {
                 const classes = element.getAttribute(`class`)!.split(` `);
                 if (classes.indexOf(`os-line-break`) > -1) {
@@ -178,7 +178,7 @@ export class LineNumberingService {
     public isOsLineNumberNode(node: Node): boolean {
         let isLineNumber = false;
         if (node && node.nodeType === ELEMENT_NODE) {
-            const element = <Element>node;
+            const element = node as Element;
             if (node.nodeName === `SPAN` && element.hasAttribute(`class`)) {
                 const classes = element.getAttribute(`class`)!.split(` `);
                 if (classes.indexOf(`os-line-number`) > -1) {
@@ -220,7 +220,7 @@ export class LineNumberingService {
      */
     private moveLeadingLineBreaksToOuterNode(innerNode: Element, outerNode: Element): void {
         if (isInlineElement(innerNode)) {
-            const firstChild = <Element>innerNode.firstChild;
+            const firstChild = innerNode.firstChild as Element;
             if (this.isOsLineBreakNode(firstChild)) {
                 const br = innerNode.firstChild as Node;
                 innerNode.removeChild(br);
@@ -318,7 +318,7 @@ export class LineNumberingService {
         const headings = [];
         const headingNodes = fragment.querySelectorAll(`h1, h2, h3, h4, h5, h6`);
         for (let i = 0; i < headingNodes.length; i++) {
-            const heading = <HTMLElement>headingNodes.item(i);
+            const heading = headingNodes.item(i) as HTMLElement;
             const linenumbers = heading.querySelectorAll(`.os-line-number`);
             if (linenumbers.length > 0) {
                 const number = parseInt(linenumbers.item(0).getAttribute(`data-line-number`) as string, 10);
@@ -351,7 +351,7 @@ export class LineNumberingService {
                 continue;
             }
             if (childNode.nodeName === `UL` || childNode.nodeName === `OL`) {
-                const childElement = <Element>childNode;
+                const childElement = childNode as Element;
                 let start = 1;
                 if (childElement.getAttribute(`start`) !== null) {
                     start = parseInt(childElement.getAttribute(`start`) as string, 10);
@@ -360,7 +360,7 @@ export class LineNumberingService {
                     if (childElement.childNodes.item(j).nodeType === TEXT_NODE) {
                         continue;
                     }
-                    const newParent = <Element>childElement.cloneNode(false);
+                    const newParent = childElement.cloneNode(false) as Element;
                     if (childElement.nodeName === `OL`) {
                         newParent.setAttribute(`start`, start.toString());
                     }
@@ -582,7 +582,7 @@ export class LineNumberingService {
                     };
                 }
 
-                (<number>this.currentInlineOffset)++;
+                (this.currentInlineOffset as number)++;
                 i++;
             }
             const lastLine = addLine(node.nodeValue!.substring(currLineStart));
@@ -636,10 +636,10 @@ export class LineNumberingService {
                     element.appendChild(ret[j]);
                 }
             } else if (oldChildren[i].nodeType === ELEMENT_NODE) {
-                const childElement = <Element>oldChildren[i];
+                const childElement = oldChildren[i] as Element;
                 const firstword = this.lengthOfFirstInlineWord(childElement);
                 const overlength =
-                    <number>this.currentInlineOffset + firstword > length && <number>this.currentInlineOffset > 0;
+                    (this.currentInlineOffset as number) + firstword > length && (this.currentInlineOffset as number) > 0;
                 if (overlength && isInlineElement(childElement)) {
                     this.currentInlineOffset = 0;
                     this.lastInlineBreakablePoint = null;
@@ -684,8 +684,8 @@ export class LineNumberingService {
             if (oldChildren[i].nodeType === TEXT_NODE) {
                 if (!oldChildren[i].nodeValue!.match(/\S/)) {
                     // White space nodes between block elements should be ignored
-                    const prevIsBlock = i > 0 && !isInlineElement((<Element[]>oldChildren)[i - 1]);
-                    const nextIsBlock = i < oldChildren.length - 1 && !isInlineElement((<Element[]>oldChildren)[i + 1]);
+                    const prevIsBlock = i > 0 && !isInlineElement((oldChildren as Element[])[i - 1]);
+                    const nextIsBlock = i < oldChildren.length - 1 && !isInlineElement((oldChildren as Element[])[i + 1]);
                     if (
                         (prevIsBlock && nextIsBlock) ||
                         (i === 0 && nextIsBlock) ||
@@ -704,8 +704,8 @@ export class LineNumberingService {
                 const overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
                 if (
                     overlength &&
-                    isInlineElement((<Element[]>oldChildren)[i]) &&
-                    !this.isIgnoredByLineNumbering((<Element[]>oldChildren)[i])
+                    isInlineElement((oldChildren as Element[])[i]) &&
+                    !this.isIgnoredByLineNumbering((oldChildren as Element[])[i])
                 ) {
                     this.currentInlineOffset = 0;
                     this.lastInlineBreakablePoint = null;
@@ -714,7 +714,7 @@ export class LineNumberingService {
                         element.appendChild(this.createLineNumber() as Element);
                     }
                 }
-                const changedNode = this.insertLineNumbersToNode((<Element[]>oldChildren)[i], length, highlight);
+                const changedNode = this.insertLineNumbersToNode((oldChildren as Element[])[i], length, highlight);
                 this.moveLeadingLineBreaksToOuterNode(changedNode, element);
                 element.appendChild(changedNode);
             } else {
@@ -835,7 +835,7 @@ export class LineNumberingService {
             this.lineNumberCache.put(cacheKey, newHtml);
         }
 
-        if (<number>highlight > 0) {
+        if ((highlight as number) > 0) {
             newHtml = this.highlightLine(newHtml, highlight);
         }
 
@@ -947,12 +947,12 @@ export class LineNumberingService {
         const parentIsInline = (el: Element): boolean => isInlineElement(el.parentElement!);
         while (parentIsInline(lineNumber)) {
             const parent: Element = lineNumber.parentElement as Element;
-            const beforeParent: Element = <Element>parent.cloneNode(false);
+            const beforeParent: Element = parent.cloneNode(false) as Element;
 
             // If the node right before the line number is a line break, move it outside along with the line number
             let lineBreak: Element | null = null;
             if (this.isOsLineBreakNode(lineNumber.previousSibling!)) {
-                lineBreak = <Element>lineNumber.previousSibling;
+                lineBreak = lineNumber.previousSibling as Element;
                 lineBreak.remove();
             }
 

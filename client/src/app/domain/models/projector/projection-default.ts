@@ -4,7 +4,7 @@ export const PROJECTIONDEFAULT = {
     agendaItemList: `agenda_item_list`,
     topics: `topic`,
     listOfSpeakers: `list_of_speakers`,
-    currentListOfSpeakers: `current_list_of_speakers`,
+    currentListOfSpeakers: `current_los`,
     motion: `motion`,
     amendment: `amendment`,
     motionBlock: `motion_block`,
@@ -21,7 +21,7 @@ export type ProjectiondefaultKey = keyof typeof PROJECTIONDEFAULT;
 
 export type ProjectiondefaultValue = (typeof PROJECTIONDEFAULT)[ProjectiondefaultKey];
 
-export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string } = {
+export const PROJECTIONDEFAULT_VERBOSE: Record<ProjectiondefaultKey, string> = {
     agendaItemList: _(`Agenda`),
     topics: _(`Topics`),
     listOfSpeakers: _(`List of speakers`),

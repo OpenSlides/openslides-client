@@ -8,7 +8,8 @@ import { MotionPollDialogService } from '../../../../../../modules/motion-poll/s
     selector: `os-motion-manage-polls`,
     templateUrl: `./motion-manage-polls.component.html`,
     styleUrls: [`./motion-manage-polls.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionManagePollsComponent {
     @Input()
@@ -16,6 +17,9 @@ export class MotionManagePollsComponent {
 
     @Input()
     public hideAdd: boolean;
+
+    @Input()
+    public inTabs: boolean;
 
     public constructor(private pollDialog: MotionPollDialogService) {}
 

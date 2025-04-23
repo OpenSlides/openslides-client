@@ -65,7 +65,7 @@
                             [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
                             [motion]="motion"
                             [scrollToChange]="scrollToChange"
-                            [showAllAmendments]="showAllAmendments$ | async"
+                            [showAllAmendments]="showAllAmendments"
                             [showPreamble]="false"
                             [showSummary]="false"
                             (createChangeRecommendation)="createChangeRecommendation.emit($event)"
@@ -79,7 +79,7 @@
                     [lineNumberingMode]="lineNumberingMode"
                     [motion]="motion"
                     [scrollToChange]="scrollToChange"
-                    [showAllAmendments]="showAllAmendments$ | async"
+                    [showAllAmendments]="showAllAmendments"
                     (createChangeRecommendation)="createChangeRecommendation.emit($event)"
                 ></os-motion-detail-diff>
             }

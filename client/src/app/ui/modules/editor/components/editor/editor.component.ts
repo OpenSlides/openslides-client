@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
-import BulletList from '@tiptap/extension-bullet-list';
 import Color from '@tiptap/extension-color';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
@@ -27,8 +28,6 @@ import { Level as HeadingLevel } from '@tiptap/extension-heading';
 import History from '@tiptap/extension-history';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
-import ListItem from '@tiptap/extension-list-item';
-import OrderedList from '@tiptap/extension-ordered-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
@@ -45,6 +44,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
+import { EditorTabNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -59,6 +59,7 @@ import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
+import { OsSplit, OsSplitBulletList, OsSplitListItem, OsSplitOrderedList } from './extensions/os-split';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -92,10 +93,18 @@ const DEFAULT_COLOR_PALETE = [
     selector: `os-editor`,
     templateUrl: `./editor.component.html`,
     styleUrls: [`./editor.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }],
+    standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
     @ViewChild(`editorEl`) private editorEl: ElementRef;
+
+    @ViewChildren(`btn`)
+    public buttonElements!: QueryList<ElementRef>;
+
+    @ViewChild(`isDisabled`) public isDisabled: EditorTabNavigationDirective;
+
+    @ViewChild(`setTab`) public setTab: EditorTabNavigationDirective;
 
     @Input()
     public customSettings: object = {};
@@ -105,6 +114,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
+
+    public focusText = false;
+    public focusBackground = false;
 
     public override contentForm!: UntypedFormControl;
 
@@ -168,14 +180,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 // Nodes
                 Document,
                 Blockquote,
-                BulletList,
                 HardBreak,
                 Heading,
                 ImageResize.configure({
                     inline: true
                 }),
-                ListItem,
-                OrderedList,
+                OsSplitBulletList,
+                OsSplitOrderedList,
+                OsSplitListItem,
                 Paragraph,
                 Text,
                 Table,
@@ -183,7 +195,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TableHeader,
                 TableCell,
 
-                //Marks
+                // Marks
                 Bold,
                 Highlight.configure({
                     multicolor: true
@@ -204,6 +216,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
                 }),
+                OsSplit,
                 Extension.create({
                     name: `angular-component-ext`,
                     onCreate: () => {
@@ -264,7 +277,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const doc = parser.parseFromString(this.value, `text/html`);
             const elements = doc.getElementsByTagName(`*`);
             for (let i = 0; i < elements.length; i++) {
-                const el = <HTMLElement>elements[i];
+                const el = elements[i] as HTMLElement;
                 if (el.style.color) {
                     this.textColorSet.add(tinycolor(el.style.color).toHexString());
                 }
@@ -289,14 +302,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public updateFontColor(e: Event): void {
-        const val = (<any>e.target)?.value;
+        const val = (e.target as any)?.value;
         if (val) {
             this.editor.chain().focus().setColor(val).run();
         }
     }
 
     public updateHighlightColor(e: Event): void {
-        const val = (<any>e.target)?.value;
+        const val = (e.target as any)?.value;
         if (val) {
             this.editor.chain().focus().setHighlight({ color: val }).run();
         }
@@ -442,5 +455,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         return dom.body.innerHTML;
+    }
+
+    public setFocus(help?: boolean): void {
+        this.focusText = help;
+        if (help === undefined) {
+            this.focusBackground = help;
+        } else {
+            this.focusBackground = !help;
+        }
     }
 }

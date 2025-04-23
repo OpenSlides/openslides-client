@@ -14,9 +14,7 @@ export class MeetingSettingsDefinitionService {
         return meetingSettings;
     }
 
-    public get settingsDefaults(): {
-        [key: string]: any;
-    } {
+    public get settingsDefaults(): Record<string, any> {
         return meetingSettingsDefaults;
     }
 
@@ -74,12 +72,12 @@ export class MeetingSettingsDefinitionService {
         if (
             ((!setting.type || [`string`, `text`, `email`, `markupText`].includes(setting.type)) &&
                 typeof defaultValue !== `string`) ||
-            ([`integer`, `date`, `datetime`, `daterange`].includes(setting.type) && typeof defaultValue !== `number`) ||
-            (setting.type === `boolean` && typeof defaultValue !== `boolean`)
+                ([`integer`, `date`, `datetime`, `daterange`].includes(setting.type) && typeof defaultValue !== `number`) ||
+                (setting.type === `boolean` && typeof defaultValue !== `boolean`)
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
         }
-        if (setting.type === `choice` && setting.choices && !setting.choices.hasOwnProperty(defaultValue)) {
+        if (setting.type === `choice` && setting.choices && !Object.prototype.hasOwnProperty.call(setting.choices, defaultValue)) {
             throw new Error(
                 `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
             );

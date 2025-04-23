@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 
 import { Permission } from './permission';
 
-export type PermissionsMap = { [key in Permission]?: Permission[] };
+export type PermissionsMap = Partial<Record<Permission, Permission[]>>;
 
 export interface DisplayPermission {
     display_name: string;
@@ -150,6 +150,10 @@ Further requirements:
 3. forwarding must be activated in the workflow in the state.`
                 ),
                 value: Permission.motionCanForward
+            },
+            {
+                display_name: _(`Can see origin motion`),
+                value: Permission.motionCanSeeOrigin
             },
             {
                 display_name: _(`Can support motions`),

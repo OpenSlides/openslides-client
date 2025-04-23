@@ -20,9 +20,7 @@ export interface HasReferencedMotionInExtensionIds {
     referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
 }
 
-export interface AmendmentParagraphs {
-    [index: number]: string;
-}
+export type AmendmentParagraphs = Record<number, string>;
 
 /**
  * Representation of Motion.
@@ -55,7 +53,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public forwarded!: number; // It's a timestamp
     public last_modified!: number;
     public start_line_number!: number;
-    public amendment_paragraphs!: { [key: number]: string };
+    public amendment_paragraphs!: Record<number, string>;
 
     public lead_motion_id!: Id; // motion/amendment_ids;
     public amendment_ids!: Id[]; // (motion/lead_motion_id)[];
@@ -156,11 +154,11 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
 }
 export interface Motion
     extends HasMeetingId,
-        HasAgendaItemId,
-        HasListOfSpeakersId,
-        HasTagIds,
-        HasAttachmentMeetingMediafileIds,
-        HasPersonalNoteIds,
-        HasProjectionIds,
-        HasReferencedMotionInExtensionIds,
-        HasPollIds {}
+    HasAgendaItemId,
+    HasListOfSpeakersId,
+    HasTagIds,
+    HasAttachmentMeetingMediafileIds,
+    HasPersonalNoteIds,
+    HasProjectionIds,
+    HasReferencedMotionInExtensionIds,
+    HasPollIds {}

@@ -11,7 +11,8 @@ import { EntitledUsersListFilterService } from '../../services/entitled-user-fil
     templateUrl: `./entitled-users-table.component.html`,
     styleUrls: [`./entitled-users-table.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class EntitledUsersTableComponent {
     private _isViewingThis = true;
@@ -44,6 +45,9 @@ export class EntitledUsersTableComponent {
 
     @Input()
     public displayVoteWeight: boolean;
+
+    @Input()
+    public displayDelegation: boolean;
 
     public readonly permission = Permission;
 

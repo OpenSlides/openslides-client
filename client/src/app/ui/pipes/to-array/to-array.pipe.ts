@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: `toArray`
+    name: `toArray`,
+    standalone: false
 })
 export class ToArrayPipe implements PipeTransform {
     public transform<T>(value: T | T[]): T[] {

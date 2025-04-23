@@ -13,7 +13,8 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     templateUrl: `./motion-final-version.component.html`,
     styleUrls: [`./motion-final-version.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
     @Input()
@@ -64,6 +65,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     private async saveModifiedFinalVersion(): Promise<void> {
         await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.leaveEditMode();
+    }
+
+    public async applyModifiedFinalVersion(): Promise<void> {
+        await this.repo.update(this.contentForm.value, this.motion).resolve();
+        this.isEditMode = true;
     }
 
     private createForm(): UntypedFormGroup {

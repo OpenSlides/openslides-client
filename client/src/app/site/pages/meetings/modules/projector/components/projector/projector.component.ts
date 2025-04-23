@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import {
     auditTime,
     BehaviorSubject,
@@ -22,7 +22,8 @@ import { Dimension, SlideData } from '../../../../pages/projectors/definitions';
 @Component({
     selector: `os-projector`,
     templateUrl: `./projector.component.html`,
-    styleUrls: [`./projector.component.scss`]
+    styleUrls: [`./projector.component.scss`],
+    standalone: false
 })
 export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     private readonly projectorSubject = new BehaviorSubject<ViewProjector | null>(null);
@@ -48,6 +49,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
      */
     @ViewChild(`container`, { static: true })
     private containerElement: ElementRef | null = null;
+
+    @Output() public loadedSlidesEvent = new EventEmitter<void>();
 
     /**
      * The css class assigned to this projector.
@@ -80,23 +83,23 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
             backgroundImage: string;
         };
     } = {
-        container: {
-            height: `0px`
-        },
-        projector: {
-            transform: `none`,
-            width: `0px`,
-            height: `0px`,
-            color: `black`,
-            backgroundColor: `white`,
-            H1Color: `#317796`
-        },
-        headerFooter: {
-            color: `white`,
-            backgroundColor: `#317796`,
-            backgroundImage: `none`
-        }
-    };
+            container: {
+                height: `0px`
+            },
+            projector: {
+                transform: `none`,
+                width: `0px`,
+                height: `0px`,
+                color: `black`,
+                backgroundColor: `white`,
+                H1Color: `#317796`
+            },
+            headerFooter: {
+                color: `white`,
+                backgroundColor: `#317796`,
+                backgroundImage: `none`
+            }
+        };
 
     /**
      * All slides to show on this projector

@@ -24,7 +24,8 @@ export interface SearchListDefinition {
     selector: `os-motion-extension-field`,
     templateUrl: `./motion-extension-field.component.html`,
     styleUrls: [`./motion-extension-field.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     /**

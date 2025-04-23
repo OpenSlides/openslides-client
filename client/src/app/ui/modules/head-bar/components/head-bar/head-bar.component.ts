@@ -70,7 +70,8 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     selector: `os-head-bar`,
     templateUrl: `./head-bar.component.html`,
     styleUrls: [`./head-bar.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class HeadBarComponent implements OnInit, AfterViewInit {
     /**
@@ -276,7 +277,7 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
         } else if (this.routingState.customOrigin && this.routingState.customOrigin !== this.router.url) {
             this.router.navigate([this.routingState.customOrigin], { relativeTo: this.route });
         } else {
-            const relativeToRoute = !!this.route.snapshot.url.length ? this.route : this.route.parent;
+            const relativeToRoute = this.route.snapshot.url.length ? this.route : this.route.parent;
             this.router.navigate([this.prevUrl], { relativeTo: relativeToRoute });
         }
     }

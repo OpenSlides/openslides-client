@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { AssignMeetingsResult } from 'src/app/gateways/repositories/users';
@@ -19,7 +19,8 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
     selector: `os-account-add-to-meetings`,
     templateUrl: `./account-add-to-meetings.component.html`,
     styleUrls: [`./account-add-to-meetings.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit {
     public user: ViewUser | null = null;
@@ -27,7 +28,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public lastGroupName = ``;
 
     public meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
-    public meetingsObservable: Observable<ViewMeeting[]> | null = null;
+    public meetings$: Observable<ViewMeeting[]> | null = null;
 
     public get warningMessage(): string {
         if (!this.selectedMeetings?.length) {
@@ -96,8 +97,6 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public ngOnInit(): void {
-        this.meetingsObservable = this.meetingsSubject as Observable<ViewMeeting[]>;
-
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
                 if (params[`id`]) {
@@ -109,26 +108,31 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 .getViewModelListObservable()
                 .pipe(
                     map(meetings =>
-                        this.operator.isSuperAdmin
+                        this.operator.canSkipPermissionCheck
                             ? meetings.filter(meeting => !meeting.locked_from_inside)
                             : meetings.filter(
-                                  meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
-                              )
+                                    meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
+                                )
                     )
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
         );
+        this.meetings$ = this.meetingsSubject.pipe(filter(meetings => !!meetings.length));
     }
 
     public async assign(): Promise<void> {
         if (this.user) {
             this.waitingForResults = true;
-            const result = await this.userController
-                .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
-                .resolve();
-            if (result) {
-                this.lastGroupName = this.groupName;
-                this.parseIntoResultSubject(result);
+            try {
+                const result = await this.userController
+                    .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
+                    .resolve();
+                if (result) {
+                    this.lastGroupName = this.groupName;
+                    this.parseIntoResultSubject(result);
+                }
+            } catch (e) {
+                console.warn(`Found:`, e);
             }
             this.waitingForResults = false;
         }
@@ -161,6 +165,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     private updatePermissions(): void {
-        this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users);
+        this.canManage =
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isCommitteeManager;
     }
 }

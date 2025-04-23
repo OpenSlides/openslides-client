@@ -29,8 +29,10 @@
             text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
         }
 
-        a.mat-mdc-button-base {
-            text-decoration: inherit;
+        & {
+           a.mat-mdc-button-base {
+                text-decoration: inherit;
+           }
         }
     }
 
@@ -89,7 +91,7 @@
     }
 
     .outline-border-bottom {
-        border-bottom: 1px solid $os-outline;
+        border-bottom: 1px solid mat.m2-get-color-from-palette(mat.$m2-grey-palette, 300);
     }
 
     /* motion list/detail view */
@@ -117,7 +119,6 @@
     }
 
     .subtitle {
-        @extend .subtitle-nocolor;
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 

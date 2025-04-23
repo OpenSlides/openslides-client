@@ -80,17 +80,13 @@ export class AuthService {
      * Required, if anyone signs in as guest.
      */
     public async login(username: string, password: string): Promise<void> {
-        try {
-            const response = await this.authAdapter.login({ username, password });
-            if (response?.success) {
-                // Shutdowning kills all connections. The operator is listening for token changes, so
-                // we must hold them back to this point.
-                this._loginEvent.emit();
-                this.lifecycleService.reboot();
-                this.sharedWorker.sendMessage(`auth`, { action: `update` });
-            }
-        } catch (e) {
-            throw e;
+        const response = await this.authAdapter.login({ username, password });
+        if (response?.success) {
+            // Shutdowning kills all connections. The operator is listening for token changes, so
+            // we must hold them back to this point.
+            this._loginEvent.emit();
+            this.lifecycleService.reboot();
+            this.sharedWorker.sendMessage(`auth`, { action: `update` });
         }
     }
 

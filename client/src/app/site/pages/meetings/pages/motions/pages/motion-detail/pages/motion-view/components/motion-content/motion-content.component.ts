@@ -15,16 +15,17 @@ import { MotionChangeRecommendationDialogService } from '../../../../modules/mot
     selector: `os-motion-content`,
     templateUrl: `./motion-content.component.html`,
     styleUrls: [`./motion-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public readonly ChangeRecoMode = ChangeRecoMode;
     public readonly LineNumberingMode = LineNumberingMode;
 
     private _changeRecoMode: ChangeRecoMode;
-    public get changeRecoMode(): ChangeRecoMode {
-        return this._changeRecoMode;
-    }
+
+    @Input()
+    public noEditMode = false;
 
     @Input()
     public set changeRecoMode(value: ChangeRecoMode) {
@@ -34,8 +35,25 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.cd.markForCheck();
     }
 
+    public get changeRecoMode(): ChangeRecoMode {
+        return this._changeRecoMode;
+    }
+
     @Input()
     public lineNumberingMode: LineNumberingMode;
+
+    @Input()
+    public set showAllAmendments(value: boolean) {
+        if (value != this.showAllAmendments) {
+            this.showAllAmendments$.next(value);
+        }
+    }
+
+    public get showAllAmendments(): boolean {
+        return this.showAllAmendments$.value;
+    }
+
+    public showAllAmendments$ = new BehaviorSubject(false);
 
     private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] } = new BehaviorSubject([]);
 

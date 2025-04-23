@@ -5,7 +5,8 @@ import { TileComponent } from '../tile/tile.component';
 @Component({
     selector: `os-grid`,
     templateUrl: `./grid.component.html`,
-    styleUrls: [`./grid.component.scss`]
+    styleUrls: [`./grid.component.scss`],
+    standalone: false
 })
 export class GridComponent {
     @ContentChildren(TileComponent, { descendants: false })

@@ -6,7 +6,7 @@ import { ParagraphToChoose } from '../../../../../../services/common/motion-line
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 
 interface ParagraphBasedAmendmentContent {
-    amendment_paragraphs: { [paragraph_number: number]: any };
+    amendment_paragraphs: Record<number, any>;
     selected_paragraphs: ParagraphToChoose[];
     broken_paragraphs: string[];
 }
@@ -17,7 +17,8 @@ const CONTENT_FORM_SUBSCRIPTION_NAME = `contentForm`;
     selector: `os-paragraph-based-amendment-editor`,
     templateUrl: `./paragraph-based-amendment-editor.component.html`,
     styleUrls: [`./paragraph-based-amendment-editor.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ParagraphBasedAmendmentEditorComponent extends BaseMotionDetailChildComponent {
     @Output()

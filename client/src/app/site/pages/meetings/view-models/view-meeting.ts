@@ -141,14 +141,19 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public getStatus(): string[] {
-        const status: string[] = [];
-        this.isArchived ? status.push(`isArchived`) : status.push(`isNotArchived`);
-        this.enable_anonymous ? status.push(`isAnonymous`) : status.push(`isNotAnonymous`);
-        this.isTemplate ? status.push(`isTemplate`) : status.push(`isNotTemplate`);
+        const status: string[] = [
+            this.isArchived ? `isArchived` : `isNotArchived`,
+            this.enable_anonymous ? `isAnonymous` : `isNotAnonymous`,
+            this.isTemplate ? `isTemplate` : `isNotTemplate`
+        ];
         if (this.locked_from_inside) {
             status.push(`isLockedFromInside`);
         }
         return status;
+    }
+
+    public canEditMeetingSetting(user: ViewUser): boolean {
+        return user.getMeetingUser(this.id)?.group_ids.includes(this.meeting.admin_group_id);
     }
 }
 interface IMeetingRelations {
@@ -211,8 +216,8 @@ interface IMeetingRelations {
 }
 export interface ViewMeeting
     extends Meeting,
-        ViewModelRelations<IMeetingRelations>,
-        HasProjectorTitle,
-        HasOrganizationTags,
-        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
-        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
+    ViewModelRelations<IMeetingRelations>,
+    HasProjectorTitle,
+    HasOrganizationTags,
+    HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+    HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

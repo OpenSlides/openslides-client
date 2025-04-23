@@ -1,6 +1,6 @@
 <h4>
     <span class="title-font">{{ title }}</span>
-    @if (perms.isAllowed('change_metadata')) {
+    @if (!disableEdit && perms.isAllowed('change_metadata')) {
         @if (isEditMode) {
             <button class="small-button" disableRipple mat-icon-button type="button" (click)="onCancel()">
                 <mat-icon>close</mat-icon>
@@ -13,7 +13,7 @@
     }
 </h4>
 
-@if (!isEditMode || !perms.isAllowed('change_metadata')) {
+@if (!isEditMode || !perms.isAllowed('change_metadata') || disableEdit) {
     <div>
         @for (model of intermediateModels$ | async; track model.id) {
             <mat-chip-listbox class="user">
@@ -38,8 +38,8 @@
                     <span>
                         <button
                             mat-icon-button
-                            type="button"
                             matTooltip="{{ 'Remove' | translate }}"
+                            type="button"
                             (click)="onRemove(user)"
                         >
                             <mat-icon>close</mat-icon>
@@ -50,8 +50,8 @@
         </os-sorting-list>
         <div class="text-field-container">
             <os-participant-search-selector
-                [nonSelectableUserIds]="editUserIds"
                 placeholder="{{ 'Select participant' | translate }}"
+                [nonSelectableUserIds]="editUserIds"
                 (userSelected)="addUser($event)"
             ></os-participant-search-selector>
         </div>

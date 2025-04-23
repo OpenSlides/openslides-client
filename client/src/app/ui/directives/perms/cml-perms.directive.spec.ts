@@ -9,21 +9,18 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { CmlPermsDirective } from './cml-perms.directive';
 import { BasePermsTestComponent } from './perms.directive.spec';
 
-type TestConditionalType = {
+interface TestConditionalType {
     and: boolean;
     or: boolean;
     complement: boolean;
     id: number;
     nonAdmin: boolean;
     orOML: OML | undefined;
-};
+}
 
 @Component({
     template: `
-        <div
-            *osCmlPerms="permission; committeeId: conditionals.id; nonAdminCheck: conditionals.nonAdmin"
-            id="normal"
-        ></div>
+        <div *osCmlPerms="permission; committeeId: conditionals.id" id="normal"></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; or: conditionals.or" id="or"></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; and: conditionals.and" id="and"></div>
         <div
@@ -31,16 +28,15 @@ type TestConditionalType = {
             id="complement"
         ></div>
         <div *osCmlPerms="permission; committeeId: conditionals.id; orOML: conditionals.orOML" id="oml"></div>
-        <ng-container
-            *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate"
-        ></ng-container>
+        <ng-container *osCmlPerms="permission; committeeId: conditionals.id; then: thenTemplate; else elseTemplate" />
         <ng-template #thenTemplate>
             <div id="then"></div>
         </ng-template>
         <ng-template #elseTemplate>
             <div id="else"></div>
         </ng-template>
-    `
+    `,
+    standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {
     public permission = CML.can_manage;
@@ -64,11 +60,7 @@ class MockOperatorService {
     }
 
     public hasCommitteePermissions(committeeId: Id | null, ...checkPerms: CML[]): boolean {
-        return this._isAdmin || this.hasCommitteePermissionsNonAdminCheck(committeeId, ...checkPerms);
-    }
-
-    public hasCommitteePermissionsNonAdminCheck(committeeId: Id | null, ...checkPerms: CML[]): boolean {
-        return checkPerms.some(perm => this._permList.includes(perm));
+        return this._isAdmin || checkPerms.some(perm => this._permList.includes(perm));
     }
 
     public changeOperatorPermsForTest(newPermList: CML[], oml?: OML | undefined): void {
@@ -119,22 +111,6 @@ describe(`CmlPermsDirective`, () => {
         operatorService.changeOperatorPermsForTest([], OML.superadmin);
         update();
         expect(getElement(`#normal`)).toBeTruthy();
-    });
-
-    it(`check if element gets restricted with non-admin-check`, async () => {
-        fixture.componentInstance.setTestComponentData({ nonAdmin: true });
-        operatorService.changeOperatorPermsForTest([CML.can_manage]);
-        update();
-        expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([]);
-        update();
-        expect(getElement(`#normal`)).toBeFalsy();
-        operatorService.changeOperatorPermsForTest([CML.can_manage], OML.superadmin);
-        update();
-        expect(getElement(`#normal`)).toBeTruthy();
-        operatorService.changeOperatorPermsForTest([], OML.superadmin);
-        update();
-        expect(getElement(`#normal`)).toBeFalsy();
     });
 
     it(`check if or condition works`, async () => {

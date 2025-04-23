@@ -14,7 +14,8 @@ const TEXT_IMPORT_TAB_INDEX = 0;
 @Component({
     selector: `os-topic-import`,
     templateUrl: `./topic-import.component.html`,
-    styleUrls: [`./topic-import.component.scss`]
+    styleUrls: [`./topic-import.component.scss`],
+    standalone: false
 })
 export class TopicImportComponent extends BaseViaBackendImportListMeetingComponent {
     /**
@@ -26,7 +27,7 @@ export class TopicImportComponent extends BaseViaBackendImportListMeetingCompone
 
     public columns: ImportListHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
         property: header,
-        label: (<any>topicHeadersAndVerboseNames)[header],
+        label: (topicHeadersAndVerboseNames as any)[header],
         isTableColumn: true,
         isRequired: header === `title`,
         flexible: [`title`, `text`, `agenda_comment`].includes(header)

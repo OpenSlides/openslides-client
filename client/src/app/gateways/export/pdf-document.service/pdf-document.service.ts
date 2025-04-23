@@ -23,7 +23,6 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { HttpService } from '../../http.service';
-import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { PdfImagesService } from './pdf-images.service';
@@ -128,17 +127,11 @@ interface PdfDocumentFooterConfig {
     pageNumberPosition?: DocumentPosition;
 }
 
-export interface PdfVirtualFileSystem {
-    [url: string]: string;
-}
+export type PdfVirtualFileSystem = Record<string, string>;
 
 export interface PdfImageDescription {
-    images?: {
-        [url: string]: string;
-    };
-    svgs?: {
-        [url: string]: string;
-    };
+    images?: Record<string, string>;
+    svgs?: Record<string, string>;
 }
 
 export interface PdfFontDescription {
@@ -299,7 +292,7 @@ export interface HeaderLogos {
  * ```
  */
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class PdfDocumentService {
     /**
@@ -308,7 +301,7 @@ export class PdfDocumentService {
      */
     private imageUrls: string[] = [];
 
-    private headerLogos: { [place: string]: HeaderLogos | null } = {};
+    private headerLogos: Record<string, HeaderLogos | null> = {};
 
     private pdfWorker: Worker | null = null;
 
@@ -328,39 +321,36 @@ export class PdfDocumentService {
     }
 
     private async updateHeader(places: any): Promise<void> {
-        return new Promise(async resolve => {
-            for (const place of places) {
-                const url = this.mediaManageService.getLogoUrl(place);
-                if (url) {
-                    const fetchResult = await fetch(url);
-                    const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
-                    if (svg) {
-                        const text = await fetchResult.text();
+        for (const place of places) {
+            const url = this.mediaManageService.getLogoUrl(place);
+            if (url) {
+                const fetchResult = await fetch(url);
+                const svg = fetchResult.headers.get(`content-type`).includes(`image/svg+xml`);
+                if (svg) {
+                    const text = await fetchResult.text();
 
-                        if (text.length >= 1) {
-                            const start = text.indexOf(`<svg`);
-                            const restText = text.slice(start + 5);
-                            const viewBox = this.getViewBox(text);
-                            const svgText = [`<svg `, viewBox, restText].join(``);
-                            this.headerLogos[place] = {
-                                place: place,
-                                isSVG: true,
-                                content: svgText
-                            };
-                        }
-                    } else {
+                    if (text.length >= 1) {
+                        const start = text.indexOf(`<svg`);
+                        const restText = text.slice(start + 5);
+                        const viewBox = this.getViewBox(text);
+                        const svgText = [`<svg `, viewBox, restText].join(``);
                         this.headerLogos[place] = {
                             place: place,
-                            isSVG: false,
-                            content: url
+                            isSVG: true,
+                            content: svgText
                         };
                     }
                 } else {
-                    this.headerLogos[place] = null;
+                    this.headerLogos[place] = {
+                        place: place,
+                        isSVG: false,
+                        content: url
+                    };
                 }
+            } else {
+                this.headerLogos[place] = null;
             }
-            resolve();
-        });
+        }
     }
 
     private getViewBox(text: string): string {

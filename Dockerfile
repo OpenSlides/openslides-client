@@ -1,5 +1,5 @@
-FROM node:22.13 as build
-ENV NODE_VERSION=20.14.0
+FROM node:22.14 as build
+ENV NODE_VERSION=22.14.0
 
 WORKDIR /app
 

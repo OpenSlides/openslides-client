@@ -14,7 +14,8 @@ import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subsc
     selector: `os-dashboard`,
     templateUrl: `./dashboard.component.html`,
     styleUrls: [`./dashboard.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DashboardComponent extends BaseComponent {
     public get noMeetingsToShow(): boolean {
@@ -85,7 +86,7 @@ export class DashboardComponent extends BaseComponent {
                 const filteredMeetings = meetings.filter(
                     meeting =>
                         this.operator.isInMeeting(meeting.id) ||
-                        this.operator.isSuperAdmin ||
+                        this.operator.canSkipPermissionCheck ||
                         (meeting.publicAccessPossible() && this.operator.isAnonymous)
                 );
                 const currentDate = new Date();

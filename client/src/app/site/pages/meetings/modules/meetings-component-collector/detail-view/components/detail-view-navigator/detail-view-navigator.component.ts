@@ -5,7 +5,8 @@ import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/de
 @Component({
     selector: `os-detail-view-navigator`,
     templateUrl: `./detail-view-navigator.component.html`,
-    styleUrls: [`./detail-view-navigator.component.scss`]
+    styleUrls: [`./detail-view-navigator.component.scss`],
+    standalone: false
 })
 export class DetailViewNavigatorComponent {
     @Input()

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
 import { Action } from 'src/app/gateways/actions';
@@ -18,6 +19,14 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         super(repositoryServiceCollector, MotionCategory);
     }
 
+    public override getViewModelList(): ViewMotionCategory[] {
+        return this.filterForeignMeetingModelsFromList(super.getViewModelList());
+    }
+
+    public override getViewModelListObservable(): Observable<ViewMotionCategory[]> {
+        return super.getViewModelListObservable().pipe(map(cat => this.filterForeignMeetingModelsFromList(cat)));
+    }
+
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {
         const payload = categories.map(category => this.getCreatePayload(category));
         return this.sendBulkActionToBackend(MotionCategoryAction.CREATE, payload);
@@ -27,7 +36,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         const payload = {
             id: viewModel.id,
             name: update.name,
-            prefix: !!update.prefix ? update.prefix : null // "" -> null
+            prefix: update.prefix ? update.prefix : null // "" -> null
         };
         return this.sendActionToBackend(MotionCategoryAction.UPDATE, payload);
     }

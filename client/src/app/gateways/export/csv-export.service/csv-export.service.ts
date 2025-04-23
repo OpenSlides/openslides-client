@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../../site/base/base-view-model';
-import { ExportServiceModule } from '../export-service.module';
 import { FileExportService } from '../file-export.service/file-export.service';
 import {
     CsvColumnsDefinition,
@@ -15,7 +14,7 @@ import {
 } from './csv-export-utils';
 
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class CsvExportService {
     private exporter = inject(FileExportService);
@@ -41,7 +40,7 @@ export class CsvExportService {
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
-            encoding?: 'utf-8' | 'iso-8859-15';
+            encoding?: `utf-8` | `iso-8859-15`;
         } = {}
     ): void {
         let csvContent = []; // Holds all lines as arrays with each column-value

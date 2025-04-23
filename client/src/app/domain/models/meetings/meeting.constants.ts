@@ -1,7 +1,7 @@
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '../mediafiles/mediafile.constants';
 import { PROJECTIONDEFAULTS, ProjectiondefaultValue } from '../projector/projection-default';
 
-export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
+export type ExportCsvEncoding = `utf-8` | `iso-8859-15`;
 
 /**
  * Server side ballot choice definitions.
@@ -11,7 +11,7 @@ export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
  * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
  * - CUSTOM_NUMBER a given number of ballots
  */
-export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
+export type BallotPaperSelection = `NUMBER_OF_DELEGATES` | `NUMBER_OF_ALL_PARTICIPANTS` | `CUSTOM_NUMBER`;
 
 export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
 
@@ -29,3 +29,13 @@ export const MEETING_DEFAULT_PROJECTOR_IDS_KEYS = PROJECTIONDEFAULTS.map(
 ) as MeetingDefaultProjectorIdsKey[];
 
 export type ViewMeetingDefaultProjectorsKey = `default_projectors_${ProjectiondefaultValue}`;
+
+export const MEETING_PDF_EXPORT_HEADING_STYLES = {
+    // specified heading styles for OpenSlides
+    h1: [`font-size:18`, `font-weight:bold`],
+    h2: [`font-size:15`, `font-weight:bold`],
+    h3: [`font-size:11`, `font-weight:bold`],
+    h4: [`font-size:10`, `font-weight:bold`],
+    h5: [`font-size:10`, `font-style:italic`],
+    h6: [`font-size:10`]
+};

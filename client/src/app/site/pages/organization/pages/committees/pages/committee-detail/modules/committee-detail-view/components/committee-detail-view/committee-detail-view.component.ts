@@ -17,7 +17,8 @@ import { ViewCommittee } from '../../../../../../view-models/view-committee';
 @Component({
     selector: `os-committee-detail-view`,
     templateUrl: `./committee-detail-view.component.html`,
-    styleUrls: [`./committee-detail-view.component.scss`]
+    styleUrls: [`./committee-detail-view.component.scss`],
+    standalone: false
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent {
     public readonly OML = OML;
@@ -29,10 +30,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public receiveExpanded = false;
     public forwardingExpanded = false;
     public requireDuplicateFrom = false;
-
-    public get canManageMeetingsInCommittee(): boolean {
-        return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
-    }
 
     public get canManageCommittee(): boolean {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);

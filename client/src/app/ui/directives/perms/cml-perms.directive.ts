@@ -5,7 +5,8 @@ import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: `[osCmlPerms]`
+    selector: `[osCmlPerms]`,
+    standalone: false
 })
 export class CmlPermsDirective extends BasePermsDirective<CML> {
     @Input()
@@ -35,12 +36,6 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
     }
 
     @Input()
-    public set osCmlPermsNonAdminCheck(value: boolean) {
-        this._checkNonAdmin = value;
-        this.updatePermission();
-    }
-
-    @Input()
     public set osCmlPermsThen(template: TemplateRef<any>) {
         this.setThenTemplate(template);
     }
@@ -57,7 +52,6 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
     }
 
     private _committeeId: Id | undefined = undefined;
-    private _checkNonAdmin = false;
     private _orOML: OML | undefined = undefined;
 
     protected hasPermissions(): boolean {
@@ -67,10 +61,6 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
         if (!this._committeeId) {
             return false;
         }
-        if (this._checkNonAdmin) {
-            return this.operator.hasCommitteePermissionsNonAdminCheck(this._committeeId, ...this.permissions);
-        } else {
-            return this.operator.hasCommitteePermissions(this._committeeId, ...this.permissions);
-        }
+        return this.operator.hasCommitteePermissions(this._committeeId, ...this.permissions);
     }
 }

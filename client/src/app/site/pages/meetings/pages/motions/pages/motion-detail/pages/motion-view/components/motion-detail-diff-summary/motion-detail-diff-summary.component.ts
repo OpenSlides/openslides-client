@@ -25,7 +25,8 @@ import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-m
     templateUrl: `./motion-detail-diff-summary.component.html`,
     styleUrls: [`./motion-detail-diff-summary.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent implements AfterViewInit {
     /**
@@ -77,6 +78,11 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
 
+    public canAccess(origin: ViewMotion): boolean {
+        const motion = origin as ViewMotion;
+        return motion.sequential_number && motion.meeting?.id === this.activeMeetingId;
+    }
+
     /**
      * Scrolls to the native element specified by [scrollToChange]
      */
@@ -85,7 +91,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
             return;
         }
 
-        const element = <HTMLElement>this.elContainer;
+        const element = this.elContainer as HTMLElement;
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
         target.scrollIntoView({ behavior: `smooth`, block: `center` });
     }

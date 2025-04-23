@@ -12,8 +12,8 @@
                     @if (projector.show_logo) {
                         <img
                             class="projector-logo-main"
-                            [alt]="'Projector logo' | translate"
                             src="{{ projectorLogo }}"
+                            [alt]="'Projector logo' | translate"
                         />
                     }
                 }
@@ -51,6 +51,7 @@
                     [scale]="projector!.scale"
                     [scroll]="projector!.scroll"
                     [slideData]="slide"
+                    (loadedSlidesEvent)="loadedSlidesEvent.emit()"
                 ></os-slide-container>
             </div>
         }

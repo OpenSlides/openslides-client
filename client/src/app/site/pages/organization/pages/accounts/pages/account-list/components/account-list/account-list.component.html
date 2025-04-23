@@ -91,8 +91,8 @@
             @if (!!user.meetings?.length) {
                 <os-icon-container
                     icon="event_available"
-                    matTooltipPosition="left"
                     matTooltip="{{ 'Meetings' | translate }}"
+                    matTooltipPosition="left"
                     [noWrap]="true"
                     [showIcon]="true"
                 >
@@ -104,8 +104,8 @@
             @if (user.isLastEmailSent) {
                 <os-icon-container
                     icon="mail"
-                    matTooltipPosition="left"
                     matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                    matTooltipPosition="left"
                 ></os-icon-container>
             }
         </div>
@@ -113,8 +113,8 @@
             <os-icon-container
                 *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true; and: !!getOmlByUser(user)"
                 icon="engineering"
-                matTooltipPosition="left"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
+                matTooltipPosition="left"
                 [matTooltipDisabled]="!isMobile"
             >
                 @if (!isMobile) {
@@ -142,7 +142,11 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <a *osOmlPerms="OML.can_manage_users" mat-menu-item [routerLink]="[member.id, 'meetings']">
+        <a
+            *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true"
+            mat-menu-item
+            [routerLink]="[member.id, 'meetings']"
+        >
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>

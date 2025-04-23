@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Content, ContentColumns } from 'pdfmake/interfaces';
-import { ExportServiceModule } from 'src/app/gateways/export';
+import { MEETING_PDF_EXPORT_HEADING_STYLES } from 'src/app/domain/models/meetings/meeting.constants';
 
 export interface ChildNodeParagraphPayload {
     child: Element;
@@ -29,7 +29,7 @@ export interface CreateSpecificParagraphPayload {
  * ```
  */
 @Injectable({
-    providedIn: ExportServiceModule
+    providedIn: `root`
 })
 export class HtmlToPdfService {
     /**
@@ -47,22 +47,16 @@ export class HtmlToPdfService {
      */
     protected readonly H_MARGIN_TOP = 10.0;
 
-    /**
-     * Conversion of HTML tags into pdfmake directives
-     */
-    private elementStyles: any = {
+    // Load either specific meeting styles or default html style
+    public headingStyles: any = MEETING_PDF_EXPORT_HEADING_STYLES;
+
+    public defaultStyles: any = {
         // should be the same for most HTML code
         b: [`font-weight:bold`],
         strong: [`font-weight:bold`],
         u: [`text-decoration:underline`],
         em: [`font-style:italic`],
         i: [`font-style:italic`],
-        h1: [`font-size:14`, `font-weight:bold`],
-        h2: [`font-size:12`, `font-weight:bold`],
-        h3: [`font-size:10`, `font-weight:bold`],
-        h4: [`font-size:10`, `font-style:italic`],
-        h5: [`font-size:10`],
-        h6: [`font-size:10`],
         a: [`color:blue`, `text-decoration:underline`],
         strike: [`text-decoration:line-through`],
         s: [`text-decoration:line-through`],
@@ -70,6 +64,11 @@ export class HtmlToPdfService {
         del: [`color:red`, `text-decoration:line-through`],
         ins: [`color:green`, `text-decoration:underline`]
     };
+
+    /**
+     * Conversion of HTML tags into pdfmake directives
+     */
+    public elementStyles: any = { ...this.defaultStyles, ...this.headingStyles };
 
     /**
      * Treatment of required CSS-Classes
@@ -281,7 +280,7 @@ export class HtmlToPdfService {
     protected createHyperlinkParagraph(data: CreateSpecificParagraphPayload): any {
         let newParagraph = this.createFormattedParagraph(data);
 
-        const href = (<HTMLAnchorElement>data.element).href;
+        const href = (data.element as HTMLAnchorElement).href;
         if (href) {
             newParagraph = this.addPropertyToTexts(newParagraph, `link`, href);
         }
@@ -340,10 +339,10 @@ export class HtmlToPdfService {
         // Fixes nested lists being placed inside `text` elements
         if (
             children.length === 1 &&
-            (<any>children[0])?.text?.length &&
-            (<any>children[0])?.text.find((el: any) => !!el.ul)
+            (children[0] as any)?.text?.length &&
+            (children[0] as any)?.text.find((el: any) => !!el.ul)
         ) {
-            children = [{ stack: (<any>children[0]).text }];
+            children = [{ stack: (children[0] as any).text }];
         }
 
         // keep the numbers of the ol list

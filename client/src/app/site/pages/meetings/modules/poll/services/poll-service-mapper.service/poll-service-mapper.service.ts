@@ -5,7 +5,7 @@ import { PollServiceModule } from '../poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export class PollServiceMapperService {
-    private _registry: { [collection: string]: PollService } = {};
+    private _registry: Record<string, PollService> = {};
 
     public registerService(collection: string, service: PollService): void {
         this._registry[collection] = service;

@@ -90,7 +90,7 @@ export class InteractionReceiveService {
     ) {}
 
     public startListening(lazyServices: InteractionReceiveSetupServices): void {
-        if (!!this._inviteSubscription) {
+        if (this._inviteSubscription) {
             return;
         }
         this._lazyServices = lazyServices;
@@ -116,7 +116,7 @@ export class InteractionReceiveService {
                     }
                     if (hasStreamUrl && canSeeStream) {
                         return ConferenceState.stream;
-                    } else if (showConf && canEnterCall && (!hasStreamUrl || !canSeeStream)) {
+                    } else if (showConf && canEnterCall && canSeeStream && !hasStreamUrl) {
                         return ConferenceState.jitsi;
                     } else {
                         return ConferenceState.none;

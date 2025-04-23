@@ -6,7 +6,8 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: `[osPerms]`
+    selector: `[osPerms]`,
+    standalone: false
 })
 export class PermsDirective extends BasePermsDirective<Permission> implements OnInit, OnDestroy {
     /**

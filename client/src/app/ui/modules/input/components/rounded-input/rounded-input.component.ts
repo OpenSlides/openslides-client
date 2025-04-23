@@ -7,13 +7,14 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 /**
  * Type declared to see, which values are possible for some inputs.
  */
-export type Size = 'small' | 'medium' | 'large';
+export type Size = `small` | `medium` | `large`;
 
 @Component({
     selector: `os-rounded-input`,
     templateUrl: `./rounded-input.component.html`,
     styleUrls: [`./rounded-input.component.scss`],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }],
+    standalone: false
 })
 export class RoundedInputComponent extends BaseFormControlComponent<string> implements OnInit {
     /**

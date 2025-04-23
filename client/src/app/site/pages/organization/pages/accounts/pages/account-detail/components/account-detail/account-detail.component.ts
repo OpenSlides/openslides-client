@@ -20,27 +20,26 @@ import { CommitteeSortService } from '../../../../../committees/pages/committee-
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
-interface ParticipationTableData {
-    [committee_id: Id]: ParticipationTableDataRow;
-}
-type ParticipationTableDataRow = {
+type ParticipationTableData = Record<Id, ParticipationTableDataRow>;
+interface ParticipationTableDataRow {
     committee_name?: string;
     is_manager?: boolean;
-    meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
-};
-type ParticipationTableMeetingDataRow = {
+    meetings: Record<Id, ParticipationTableMeetingDataRow>;
+}
+interface ParticipationTableMeetingDataRow {
     meeting_name: string;
     group_names: string[];
     is_public: boolean;
     is_closed: boolean;
     is_archieved: boolean;
     is_accessible: boolean;
-};
+}
 
 @Component({
     selector: `os-account-detail`,
     templateUrl: `./account-detail.component.html`,
-    styleUrls: [`./account-detail.component.scss`]
+    styleUrls: [`./account-detail.component.scss`],
+    standalone: false
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {
@@ -57,7 +56,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get orgaManagementLevelChangeDisabled(): boolean {
-        return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
+        return (
+            this.user?.id === this.operator.operatorId &&
+            (this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isAccountAdmin)
+        );
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
@@ -73,7 +75,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public isFormValid = false;
     public personalInfoFormValue: any = {};
-    public formErrors: { [name: string]: boolean } | null = null;
+    public formErrors: Record<string, boolean> | null = null;
 
     public isEditingUser = false;
     public user: ViewUser | null = null;
@@ -92,7 +94,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return (
             (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
                 this.operator.isAnyCommitteeAdmin()) &&
-            (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
+                (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
 
@@ -118,7 +120,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     };
 
     private _tableData: ParticipationTableData = {};
-    private _numCommittees: number = 0;
+    private _numCommittees = 0;
 
     public constructor(
         protected override translate: TranslateService,
@@ -220,7 +222,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return !isLastColumnOfCommitte ? `divider-bottom` : ``;
     }
 
-    public getNumberOfKeys(item: { [key: string]: any }): number {
+    public getNumberOfKeys(item: Record<string, any>): number {
         return Object.keys(item).length;
     }
 
@@ -253,7 +255,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && this.operator.isSuperAdmin)
+                    (!meeting.locked_from_inside && this.operator.canSkipPermissionCheck)
             };
         });
         this._tableData = tableData;

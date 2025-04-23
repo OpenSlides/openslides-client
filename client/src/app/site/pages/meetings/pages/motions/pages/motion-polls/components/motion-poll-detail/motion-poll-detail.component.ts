@@ -20,7 +20,8 @@ export interface ExtendedVoteData extends BaseVoteData {
     templateUrl: `./motion-poll-detail.component.html`,
     styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotion, MotionPollService> {
     public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`, `vote_verbose_translated`];
@@ -31,6 +32,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     public displayVoteWeight: boolean;
 
+    public displayDelegation: boolean;
+
     public constructor(
         protected override translate: TranslateService,
         pollService: MotionPollService,
@@ -39,6 +42,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     ) {
         super(pollService, pollPdfService);
         this.subscriptions.push(this.voteWeightEnabled.subscribe(data => (this.displayVoteWeight = data)));
+        this.subscriptions.push(this.delegationEnabled.subscribe(data => (this.displayDelegation = data)));
     }
 
     protected createVotesData(): ExtendedVoteData[] {

@@ -15,7 +15,7 @@
 
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="viewTemplate" />
         </mat-card-content>
     </mat-card>
 </os-detail-view>
@@ -43,11 +43,11 @@
                         <os-poll-progress [poll]="poll"></os-poll-progress>
                         <div *osPerms="permission.pollCanManage" class="poll-content">
                             <div class="user-subtitle">
-                                {{ 'Present people allowed to vote:' | translate }}
+                                {{ 'Present entitled users' | translate }}:
                                 {{ countVoteAllowedAndPresent }}
                             </div>
                             <div class="user-subtitle">
-                                {{ 'All people allowed to vote:' | translate }}
+                                {{ 'All entitled users' | translate }}:
                                 {{ countVoteAllowed }}
                             </div>
                         </div>
@@ -70,6 +70,7 @@
                             </mat-tab>
                             <mat-tab label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="entitledUsersObservable"
                                     [isViewingThis]="isViewingEntitledUserslist"
@@ -83,6 +84,7 @@
                             </mat-tab>
                             <mat-tab *osPerms="permission.pollCanManage" label="{{ 'Entitled users' | translate }}">
                                 <os-entitled-users-table
+                                    [displayDelegation]="displayDelegation"
                                     [displayVoteWeight]="displayVoteWeight"
                                     [entitledUsersObservable]="liveRegisterObservable"
                                 ></os-entitled-users-table>
@@ -95,16 +97,12 @@
     }
 
     <!-- Meta Infos -->
-    <os-assignment-poll-meta-info [poll]="poll"></os-assignment-poll-meta-info>
+    <os-assignment-poll-meta-info [poll]="poll" />
 </ng-template>
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <os-projector-button
-        *osPerms="permission.projectorCanManage"
-        [menuItem]="true"
-        [object]="poll"
-    ></os-projector-button>
+    <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="poll" />
     <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="openDialog(poll)">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
@@ -117,7 +115,7 @@
         <mat-icon>warning</mat-icon>
         <span>{{ 'Anonymize votes' | translate }}</span>
     </button>
-    <mat-divider></mat-divider>
+    <mat-divider />
 
     <!-- Export -->
     <button mat-menu-item (click)="exportPollResults()">

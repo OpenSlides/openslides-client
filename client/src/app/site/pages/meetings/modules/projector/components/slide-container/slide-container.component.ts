@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ComponentRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { SlideData } from '../../../../pages/projectors/definitions';
@@ -7,13 +16,14 @@ import { BaseSlideComponent } from '../../modules/slides/base/base-slide-compone
 import { SlideManagerService } from '../../modules/slides/services/slide-manager.service';
 
 function hasError(obj: object): obj is { error: string } {
-    return (<{ error: string }>obj)?.error !== undefined;
+    return (obj as { error: string })?.error !== undefined;
 }
 
 @Component({
     selector: `os-slide-container`,
     templateUrl: `./slide-container.component.html`,
-    styleUrls: [`./slide-container.component.scss`]
+    styleUrls: [`./slide-container.component.scss`],
+    standalone: false
 })
 export class SlideContainerComponent {
     private previousSlideName: string | undefined;
@@ -72,6 +82,8 @@ export class SlideContainerComponent {
     }
 
     private _projector!: ViewProjector;
+
+    @Output() public loadedSlidesEvent = new EventEmitter<void>();
 
     /**
      * Variable, if the projector header is enabled.
@@ -216,6 +228,9 @@ export class SlideContainerComponent {
         if (this.slideRef && this.slideRef.instance) {
             this.slideRef.instance.data = this.slideData;
             this.slideRef.changeDetectorRef.detectChanges();
+            if (this.slideData.collection.endsWith(`mediafile`)) {
+                this.loadedSlidesEvent.emit();
+            }
         }
     }
 

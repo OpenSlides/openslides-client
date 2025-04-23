@@ -5,7 +5,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Decimal, Id } from '../../domain/definitions/key-types';
 
 export function toBase64(data: File | Blob): Promise<string> {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (): void => {
             const resultStr: string = reader.result as string;
@@ -242,7 +242,7 @@ export function escapeRegExp(str: string): string {
 export function splitStringKeepSeperator(
     str: string,
     by: string,
-    position?: 'prepend' | 'append' | 'between' | string
+    position?: `prepend` | `append` | `between` | string
 ): string[] {
     if (position === `prepend`) {
         return str.split(new RegExp(`(?=${escapeRegExp(by)})`, `g`));
@@ -264,7 +264,6 @@ export function djb2hash(str: string): string {
     let char: number;
     for (let i = 0; i < str.length; i++) {
         char = str.charCodeAt(i);
-        // tslint:disable-next-line:no-bitwise
         hash = (hash << 5) + hash + char;
     }
     return hash.toString();
@@ -279,16 +278,16 @@ export function djb2hash(str: string): string {
  */
 export function joinTypedArrays<
     T extends
-        | Int8Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int16Array
-        | Uint16Array
-        | Int32Array
-        | Uint32Array
-        | Float32Array
-        | Float64Array
->(type: { new (len: number): T }, a: T, b: T): T {
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array
+>(type: new (len: number) => T, a: T, b: T): T {
     const res = new type(a.length + b.length);
     res.set(a);
     res.set(b, a.length);
@@ -306,15 +305,15 @@ export function joinTypedArrays<
  */
 export function splitTypedArray<
     T extends
-        | Int8Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int16Array
-        | Uint16Array
-        | Int32Array
-        | Uint32Array
-        | Float32Array
-        | Float64Array
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array
 >(seperator: any, arr: T): T[] {
     const res: T[] = [];
     let start = 0;
@@ -475,10 +474,10 @@ export function partitionModelsForUpdate<T extends Identifiable>(
 export type ObjectReplaceKeysConfig = [string, string][];
 
 export function replaceObjectKeys(
-    object: { [key: string]: any },
+    object: Record<string, any>,
     config: ObjectReplaceKeysConfig,
     reverse?: boolean
-): { [key: string]: any } {
+): Record<string, any> {
     if (reverse) {
         return replaceObjectKeys(
             object,
@@ -486,7 +485,7 @@ export function replaceObjectKeys(
         );
     }
     const map = new Map<string, string>(config);
-    const result: { [key: string]: any } = {};
+    const result: Record<string, any> = {};
     for (const key of Object.keys(object)) {
         const newKey = map.get(key) ?? key;
         result[newKey] = object[key];

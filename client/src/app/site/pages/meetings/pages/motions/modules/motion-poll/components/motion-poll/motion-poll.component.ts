@@ -14,7 +14,8 @@ import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/mot
 @Component({
     selector: `os-motion-poll`,
     templateUrl: `./motion-poll.component.html`,
-    styleUrls: [`./motion-poll.component.scss`]
+    styleUrls: [`./motion-poll.component.scss`],
+    standalone: false
 })
 export class MotionPollComponent extends BasePollComponent {
     @Input()
@@ -61,6 +62,10 @@ export class MotionPollComponent extends BasePollComponent {
 
     public get isPublished(): boolean {
         return this.poll.state === PollState.Published;
+    }
+
+    public get isSameMeeting(): boolean {
+        return !this.poll.meeting_id || this.activeMeetingId === this.poll.meeting_id;
     }
 
     public constructor(

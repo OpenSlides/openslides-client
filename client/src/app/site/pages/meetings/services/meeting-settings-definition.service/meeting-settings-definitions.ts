@@ -19,23 +19,21 @@ import { ViewMeeting } from '../../view-models/view-meeting';
 export type SettingsValueMap = { [key in keyof Settings]?: any };
 
 export type SettingsType =
-    | 'string'
-    | 'email'
-    | 'text'
-    | 'markupText'
-    | 'integer'
-    | 'boolean'
-    | 'choice'
-    | 'date'
-    | 'datetime'
-    | 'translations'
-    | 'ranking'
-    | 'groups'
-    | 'daterange';
+    | `string`
+    | `email`
+    | `text`
+    | `markupText`
+    | `integer`
+    | `boolean`
+    | `choice`
+    | `date`
+    | `datetime`
+    | `translations`
+    | `ranking`
+    | `groups`
+    | `daterange`;
 
-export interface ChoicesMap {
-    [name: string]: string | number;
-}
+export type ChoicesMap = Record<string, string | number>;
 
 /**
  * Need for settings that depend on models. The collection is resolved via the
@@ -663,7 +661,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_enable_sidebox_on_projector`,
                         label: _(`Show meta information box beside the title on projector`),
                         type: `boolean`,
-                        helpText: _(`If deactivated it is displayed below the title`)
+                        helpText: _(`If deactivated it is displayed below the title.`)
                     },
                     {
                         key: `motions_hide_metadata_background`,
@@ -672,7 +670,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_block_slide_columns`,
-                        label: _(`Maximum number of columns on motion block slide`),
+                        label: _(`Maximum number of columns in motion block projection`),
                         type: `integer`,
                         validators: [Validators.min(1)]
                     }
@@ -823,6 +821,22 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         helpText: _(
                             `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
                         )
+                    },
+                    {
+                        key: `motion_poll_projection_name_order_first`,
+                        label: _(`Sort participant names on single votes projection by`),
+                        type: `choice`,
+                        choices: {
+                            first_name: _(`Given name`),
+                            last_name: _(`Surname`)
+                        },
+                        helpText: _(`Only for nominal votes.`)
+                    },
+                    {
+                        key: `motion_poll_projection_max_columns`,
+                        label: _(`Maximum number of columns in single votes projection`),
+                        type: `integer`,
+                        helpText: _(`Only for nominal votes.`)
                     }
                 ]
             },
@@ -844,6 +858,24 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Custom number of ballot papers`),
                         type: `integer`,
                         validators: [Validators.min(1)]
+                    }
+                ]
+            },
+            {
+                label: _(`Forwarding`),
+                settings: [
+                    {
+                        key: `motions_enable_origin_motion_display`,
+                        label: _(`Allow backtracking of forwarded motions`),
+                        type: `boolean`,
+                        helpText: _(`Requires permission to see origin motions`)
+                    },
+                    {
+                        key: `motions_origin_motion_toggle_default`,
+                        label: _(`Preload original motions`),
+                        type: `boolean`,
+                        hide: true,
+                        disable: settings => !settings.motions_enable_origin_motion_display
                     }
                 ]
             }

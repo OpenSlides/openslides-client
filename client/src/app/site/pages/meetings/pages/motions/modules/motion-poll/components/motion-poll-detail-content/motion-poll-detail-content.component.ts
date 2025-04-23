@@ -18,7 +18,8 @@ const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
     selector: `os-motion-poll-detail-content`,
     templateUrl: `./motion-poll-detail-content.component.html`,
     styleUrls: [`./motion-poll-detail-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy, OnInit {
     private _poll!: PollData | null;
@@ -45,7 +46,13 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     @Input()
-    public iconSize: 'large' | 'gigantic' = `large`;
+    public title = ``;
+
+    @Input()
+    public shouldShowEntitled = false;
+
+    @Input()
+    public iconSize: `medium` | `large` | `gigantic` = `large`;
 
     private get state(): PollState | null {
         return this.poll?.state || null;

@@ -21,7 +21,7 @@
             @if (meeting.isArchived) {
                 <mat-label class="archived-label">{{ 'Archived' | translate }}</mat-label>
             }
-            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
+            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id">
                 @if (isTemplateMeeting) {
                     <div class="template-indicator">
                         <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
@@ -131,7 +131,7 @@
 
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
-        @if (!meeting.isArchived && (meeting?.canBeEnteredBy(operator.user) || operator.isSuperAdmin)) {
+        @if (!meeting.isArchived && (meeting?.canBeEnteredBy(operator.user) || operator.canSkipPermissionCheck)) {
             <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
@@ -145,7 +145,7 @@
                 <span>{{ 'Public template' | translate }}</span>
             </button>
         }
-        @if (!isLockedFromInside) {
+        @if (canEditMeetingSetting) {
             <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
@@ -167,10 +167,12 @@
                 <span>{{ 'Export' | translate }}</span>
             </button>
         }
-        <mat-divider></mat-divider>
-        <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+        @if (canEditMeetingSetting) {
+            <mat-divider />
+            <button class="red-warning-text" mat-menu-item (click)="onDeleteMeeting()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>

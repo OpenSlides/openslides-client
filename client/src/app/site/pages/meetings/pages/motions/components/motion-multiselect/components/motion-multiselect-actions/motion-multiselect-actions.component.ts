@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SortListService } from 'src/app/ui/modules/list';
 
@@ -9,13 +11,13 @@ import { MotionCategoryControllerService } from '../../../../modules/categories/
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service';
-import { MotionExportDialogService } from '../../../motion-export-dialog/services/motion-export-dialog.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 
 @Component({
     selector: `os-motion-multiselect-actions`,
     templateUrl: `./motion-multiselect-actions.component.html`,
-    styleUrls: [`./motion-multiselect-actions.component.scss`]
+    styleUrls: [`./motion-multiselect-actions.component.scss`],
+    standalone: false
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {
     public readonly permission = Permission;
@@ -55,14 +57,16 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
      */
     public motionBlocks: ViewMotionBlock[] = [];
 
+    protected componentServiceCollector = inject(ComponentServiceCollectorService);
+
     public constructor(
         public multiselectService: MotionMultiselectService,
         private categoryRepo: MotionCategoryControllerService,
         private motionBlockRepo: MotionBlockControllerService,
         private tagRepo: TagControllerService,
         private meetingSettingsService: MeetingSettingsService,
-        private exportDialog: MotionExportDialogService,
-        private _sortService: MotionListSortService
+        private _sortService: MotionListSortService,
+        private route: ActivatedRoute
     ) {
         super();
     }
@@ -87,6 +91,10 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
      * Opens the dialog to choose options for exporting selected motions.
      */
     public async openExportDialog(): Promise<void> {
-        this.exportDialog.export(await this.sortService.sort(this.selectedMotions));
+        const motions_ids = this.selectedMotions.map(motion => motion.id);
+        this.componentServiceCollector.router.navigate([`motion-export`], {
+            relativeTo: this.route,
+            queryParams: { motions: motions_ids }
+        });
     }
 }
