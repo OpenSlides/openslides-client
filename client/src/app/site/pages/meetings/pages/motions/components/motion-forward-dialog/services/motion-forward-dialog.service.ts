@@ -109,10 +109,12 @@ export class MotionForwardDialogService extends BaseDialogService<
                 );
 
                 let numToForwardAmendments = 0;
-                toForward.forEach(motion =>
-                    motion.amendments.forEach(amendment => numToForwardAmendments += amendment.state?.allow_motion_forwarding && amendment.isAmendment() ? 1 : 0
-                    )
-                );
+                if (dialogData.useOriginalVersion) {
+                    toForward.forEach(motion =>
+                        motion.amendments.forEach(amendment => numToForwardAmendments += amendment.state?.allow_amendment_forwarding && amendment.isAmendment() ? 1 : 0
+                        )
+                    );
+                }
                 const numToForwardCR = dialogData.useOriginalVersion && toForward.length === 1 ? toForward[0].change_recommendations.length : 0;
                 this.snackbar.open(this.createForwardingSuccessMessage(toForward.length, numToForwardAmendments, numToForwardCR, result), `Ok`);
             } catch (e: any) {
