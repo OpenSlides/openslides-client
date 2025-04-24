@@ -556,8 +556,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 }
             }
         }
-        if (payload.home_committee_id === 0) {
-            payload.home_committee_id = null;
+
+        for (const key of Object.keys(temp).filter(field=>this.isIdFieldAndCanBe0(field))) {
+            if (temp[key] === 0) {
+                payload[key] = null;
+            }
         }
         return { ...payload };
     }
@@ -582,6 +585,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         return fields.includes(field);
     }
+
+    private isIdFieldAndCanBe0(field: string): boolean {
+        return field == "home_committee_id"
+    }
+
 
     public preventAlterationOnDemoUsers(users: Identifiable | Identifiable[]): void {
         if (Array.isArray(users)) {
