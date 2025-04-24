@@ -49,6 +49,7 @@
                     <os-repo-search-selector
                         formControlName="home_committee_id"
                         [disabled]="!canManageHomeCommittee"
+                        [includeNone]="true"
                         [multiple]="false"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
