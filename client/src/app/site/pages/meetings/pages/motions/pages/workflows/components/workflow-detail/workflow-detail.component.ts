@@ -198,7 +198,11 @@ Prerequisites:
         {
             name: _(`Allow forwarding of amendments`),
             help_text: _(
-                `Causes amendments in this state to be automatically forwarded along with their lead motion, should said lead motion be forwarded.`
+                `Enables the forwarding of amendments in the selected state.
+
+Prerequisites:
+1. Motion forwarding is activated.
+2. 'Original version with changes' in forwarding dialog must be selected.`
             ),
             selector: `allow_amendment_forwarding`,
             type: `check`
