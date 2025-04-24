@@ -422,6 +422,15 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         $event.preventDefault();
         this.changeRecommendationMenu.closeMenu();
 
+        const recoModel = reco.getModel();
+        const motionText = this.diff.extractMotionLineRange(this.lineNumbering.insertLineNumbers({
+            html: this.motion.text,
+            lineLength: this.lineLength,
+            firstLine: this.motion.firstLine
+        }), { from: recoModel.line_from, to: recoModel.line_to }, false, this.lineLength);
+        recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText]);
+        recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText], true);
+
         const data: MotionContentChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,
             newChangeRecommendation: false,
