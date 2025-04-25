@@ -52,8 +52,8 @@ export class User extends BaseDecimalModel<User> {
 
     public organization_management_level!: keyof OMLMapping;
     public committee_management_ids!: Id[];
-    public home_committee_id: Id;
-    public gender_id: Id; // (gender/user_ids)[]
+    public home_committee_id: Id; // committee/navive_user_ids;
+    public gender_id: Id; // (gender/user_ids)[];
 
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);

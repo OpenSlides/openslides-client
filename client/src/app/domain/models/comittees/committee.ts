@@ -18,9 +18,9 @@ export class Committee extends BaseModel<Committee> {
     public receive_forwardings_from_committee_ids!: Id[]; // (committee/forward_to_committee_ids)[];
     public organization_id!: Id; // organization/committee_ids;
     public organization_tag_ids!: Id[]; // (committee/organization_tag_ids)[];
-    public manager_ids!: Id[]; // (user/committe_management_ids)[]
-    public native_user_ids!: Id[];
-    public all_parent_ids!: Id[]; // (committee_all_parent_ids)[]
+    public manager_ids!: Id[]; // (user/committe_management_ids)[];
+    public native_user_ids!: Id[]; // (user/home_committee_id)[];
+    public all_parent_ids!: Id[]; // (committee_all_parent_ids)[];
     public all_child_ids!: Id[];
 
     public constructor(input?: any) {
