@@ -59,7 +59,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public showSupporters = false;
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
-    public allowSupporters$ = this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
     public originToggleDefault$ = this.meetingSettingsService
         .get(`motions_origin_motion_toggle_default`)
@@ -457,7 +456,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return (
             supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.getMeetingUser().vote_delegated_to_id
+                supporter.getMeetingUser().vote_delegated_to_id && this.activeMeeting.users_forbid_delegator_as_supporter && this.activeMeeting.users_enable_vote_delegations
             )
         );
     }
