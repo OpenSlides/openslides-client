@@ -65,7 +65,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     )))
                     // subscribe to all sub committees to get aggregated data
                     this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
-                        commRepo.filter(comm => currentComm.all_child_ids?.includes(comm.id))
+                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
                     ));
                     this.currentCommitteeObservable.subscribe(comm => {
                         this.committeeAccounts = comm?.native_user_ids ? comm?.native_user_ids?.length : 0;
