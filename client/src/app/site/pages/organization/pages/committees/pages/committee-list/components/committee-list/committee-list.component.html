@@ -162,12 +162,17 @@
             data-cy="committeeListSingleDeleteButton"
             mat-menu-item
             type="button"
+            [disabled]="hasCommitteeChildren(committee)"
             (click)="doDelete(committee)"
         >
             <mat-icon>delete</mat-icon>
             <span>
                 {{ 'Delete' | translate }}
             </span>
+            @if (hasCommitteeChildren(committee)) {
+                <br />
+                <i>{{ 'Has subcommittees' | translate }}</i>
+            }
         </button>
     </ng-template>
 </mat-menu>
