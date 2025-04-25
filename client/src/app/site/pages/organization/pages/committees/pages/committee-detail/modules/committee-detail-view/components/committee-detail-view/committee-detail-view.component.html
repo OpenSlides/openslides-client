@@ -147,7 +147,7 @@
         </mat-card-content>
     </mat-card>
     <div class="os-card">
-        <mat-tab-group mat-stretch-tabs="false">
+        <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
             <mat-tab label="{{ 'Committees' | translate }}">
                 <os-list [listObservable]="childCommitteesObservable" [multiSelect]="false">
                     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">

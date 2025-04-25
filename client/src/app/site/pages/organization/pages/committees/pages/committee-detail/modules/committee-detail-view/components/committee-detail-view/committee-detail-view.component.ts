@@ -153,4 +153,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public isChildCommittee(committee: ViewCommittee): boolean {
         return committee.all_parent_ids?.includes(this.committeeId);
     }
+
+    public getIndex(committee: ViewCommittee): number {
+        return committee.meetings.length > 0 || committee.meetings.length === 0 && committee.all_childs.length === 0 ? 1 : 0;
+    }
 }
