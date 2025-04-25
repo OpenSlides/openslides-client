@@ -91,12 +91,8 @@ export class OperatorService {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
-    public get isCommitteeAdmin(): boolean {
-        return this._CML ? !!this._CML[this.activeCommitteeId] : false;
-    }
-
     public get canSkipPermissionCheck(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeAdmin;
+        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
     }
 
     public get isAccountAdmin(): boolean {
