@@ -92,6 +92,7 @@ export class ModelRequestBuilderService {
             this.fieldsets[repo.COLLECTION] = repo.getFieldsets();
         }
         this.loaded.resolve();
+        console.log(`apps loaded!`);
     }
 
     public async build(simplifiedModelRequest: SimplifiedModelRequest<any>): Promise<ModelRequestObject> {
