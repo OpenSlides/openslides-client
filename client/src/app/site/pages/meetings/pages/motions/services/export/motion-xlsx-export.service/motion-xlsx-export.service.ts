@@ -116,7 +116,7 @@ export class MotionXlsxExportService {
                         propertyHeader = _(`Motion block`);
                         break;
                     case `speakers`:
-                        propertyHeader = _(`Open requests to speak`);
+                        propertyHeader = _(`Number of open requests to speak`);
                         break;
                     case `working_group_speakers`:
                         propertyHeader = _(`Spokesperson`);
