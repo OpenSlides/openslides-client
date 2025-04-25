@@ -102,7 +102,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public get validSupportersText(): number {
         return this.translate
             .instant(
-                `of which %num% are not permissable`
+                `of which %num% not permissable`
             )
             .replace(`%num%`, this.validSupporters);
     }

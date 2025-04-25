@@ -143,7 +143,7 @@ export class MotionCsvExportService {
                         };
                     case `speakers`:
                         return {
-                            label: `Open requests to speak`,
+                            label: `Number of open requests to speak`,
                             map: motion =>
                                 motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
                                     ? motion.list_of_speakers.waitingSpeakerAmount.toString()
