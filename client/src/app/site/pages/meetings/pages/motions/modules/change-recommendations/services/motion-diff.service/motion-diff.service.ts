@@ -1360,6 +1360,9 @@ export class MotionDiffService {
             }
         }
 
+        const origHtmlNew = htmlNew;
+        const origHtmlOld = htmlOld;
+
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
@@ -1771,14 +1774,79 @@ export class MotionDiffService {
         }
 
         if (isSplitAfter) {
-            diff = DomHelpers.addClassToLastNode(diff, `os-split-after`);
+            diff = this.readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
         }
         if (isSplitBefore) {
-            diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
+            diff = this.readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
         }
 
         this.diffCache.put(cacheKey, diff);
         return diff;
+    }
+
+    public readdOsSplit(diff: string, versions: string[], before = false): string {
+        const className = before ? `os-split-before` : `os-split-after`;
+
+        const diffEl = document.createElement(`template`);
+        diffEl.innerHTML = diff;
+        const diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
+
+        const versionNodes: HTMLElement[] = [];
+        let found = false;
+        for (const v of versions) {
+            const el = document.createElement(`template`);
+            el.innerHTML = v;
+            versionNodes.push((before ? el.content.firstChild : el.content.lastChild) as HTMLElement);
+            found = found || !!el.content.querySelector(`.${className}`);
+        }
+
+        if (!found) {
+            return diff;
+        }
+
+        this.recAddOsSplit(diffNode, versionNodes, before);
+
+        return diffEl.innerHTML;
+    }
+
+    private recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before = false): void {
+        const className = before ? `os-split-before` : `os-split-after`;
+        let containsSplit = false;
+        for (const v of versions) {
+            if (v?.classList.contains(className)) {
+                containsSplit = true;
+            }
+        }
+
+        if (!containsSplit) {
+            return;
+        }
+
+        const nextVersions: HTMLElement[] = [];
+        for (const v of versions) {
+            const s = v?.querySelector(`& > .${className}`) as HTMLElement;
+            if (s) {
+                nextVersions.push(s);
+            }
+        }
+
+        diff?.classList?.add(className);
+        const nextDiffNode = diff?.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+        if (nextDiffNode) {
+            this.recAddOsSplit(nextDiffNode, nextVersions, before);
+        }
+
+        if (
+            diff.nextElementSibling &&
+            ((diff.classList.contains(`delete`) && diff.nextElementSibling.classList.contains(`insert`)) ||
+                (diff.classList.contains(`insert`) && diff.nextElementSibling.classList.contains(`delete`)))
+        ) {
+            diff.nextElementSibling.classList?.add(className);
+            const nextSibDiffNode = diff.nextElementSibling.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+            if (nextSibDiffNode) {
+                this.recAddOsSplit(nextSibDiffNode, nextVersions, before);
+            }
+        }
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {

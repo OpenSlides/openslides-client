@@ -94,6 +94,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
+    public get validSupporters(): number {
+        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
+    }
+
+    public get validSupportersText(): number {
+        return this.translate
+            .instant(
+                `of which %num% not permissable`
+            )
+            .replace(`%num%`, this.validSupporters);
+    }
+
     /**
      * Custom recommender as set in the settings
      */
@@ -161,6 +173,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._supportersSubject;
     }
 
+    public get canManage(): boolean {
+        return this.operator.hasPerms(Permission.userCanManage);
+    }
+
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     private _forwardingAvailable = false;
@@ -205,7 +221,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
+                this.updateSupportersSubject();
+            })
         );
     }
 
@@ -432,5 +450,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    public checkValidSupporter(supporter: ViewUser): boolean {
+        return (
+            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            !(
+                supporter.getMeetingUser().vote_delegated_to_id && this.activeMeeting.users_forbid_delegator_as_supporter && this.activeMeeting.users_enable_vote_delegations
+            )
+        );
     }
 }
