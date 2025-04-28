@@ -43,18 +43,14 @@
             <button mat-button type="button" (click)="openSupportersDialog()">
                 {{ motion.supporters.length }} {{ 'supporters' | translate }}
             </button>
-            @if (validSupporters > 0 && canManage && (allowSupporters$ | async)) {
+            @if (canManage && validSupporters > 0) {
                 <span class="warn">{{ validSupportersText }}</span>
             }
             @if (showSupporters) {
                 <p class="supporters">
                     <os-comma-separated-listing [list]="supportersObservable | async">
                         <ng-template let-supporter>
-                            <span
-                                [class.warn]="
-                                    !checkValidSupporter(supporter) && canManage && (allowSupporters$ | async)
-                                "
-                            >
+                            <span [class.warn]="canManage && !checkValidSupporter(supporter)">
                                 {{ supporter.full_name }}
                             </span>
                         </ng-template>
