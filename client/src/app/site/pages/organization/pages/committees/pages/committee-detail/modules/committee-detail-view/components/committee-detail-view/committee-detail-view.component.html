@@ -132,14 +132,19 @@
                         }
                     }
                 </os-committee-meta-info>
-                <!-- Number of native users -->
-                <os-committee-meta-info icon="supervisor_account" title="{{ 'Accounts' | translate }}">
-                    @if (committee.native_user_ids) {
-                        <span>
-                            {{ accountNumber }}
-                        </span>
-                    }
+                <!-- Number of total accounts -->
+                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
+                    <span>{{ accountNumber }}</span>
                 </os-committee-meta-info>
+                <!-- Number of native users -->
+                <os-committee-meta-info icon="person" title="{{ 'Home Committee Accounts' | translate }}">
+                    <span>{{ accountHomeCommitteeNumber }}</span>
+                </os-committee-meta-info>
+                <!-- Number of users with guest -->
+                <os-committee-meta-info icon="person" title="{{ 'Guest' | translate }}">
+                    <span>{{ accountGuestNumber }}</span>
+                </os-committee-meta-info>
+
                 <!-- Parent committee -->
                 <os-committee-meta-info icon="layers" title="{{ 'Parent Committee' | translate }}">
                     @if (committee.parent) {

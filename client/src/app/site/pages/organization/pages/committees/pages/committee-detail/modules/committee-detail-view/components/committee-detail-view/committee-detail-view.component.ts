@@ -38,6 +38,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public accountNumber = 0;
+    public accountHomeCommitteeNumber = 0;
+    public accountGuestNumber = 0;
     public committeeAccounts = 0;
 
     public childCommitteesObservable: Observable<ViewCommittee[]>;
@@ -62,18 +64,17 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
                     this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map( arr => arr.filter( comm => 
                         comm.parent?.id === this.committeeId
-                    )))
+                    )));
                     // subscribe to all sub committees to get aggregated data
                     this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
                     ));
-                    this.currentCommitteeObservable.subscribe(comm => {
-                        this.committeeAccounts = comm?.native_user_ids ? comm?.native_user_ids?.length : 0;
-                    });
-                    this.allSubCommitteesObservable.pipe(map(committees => committees?.reduce((sum,item) => sum + (item?.native_user_ids?.length ?? 0), 0))
-                    )
-                    .subscribe(total => {
-                        this.accountNumber = (total ? total : 0) + this.committeeAccounts;
+                    combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
+                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm.id === comm.id)
+                    )).subscribe(committees => {
+                        this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
+                        this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
+                        this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
                     });
                 }
             })
@@ -157,4 +158,36 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public getIndex(committee: ViewCommittee): number {
         return committee.meetings.length > 0 || committee.meetings.length === 0 && committee.all_childs.length === 0 ? 1 : 0;
     }
+
+    private calculateIds(committees: ViewCommittee[], perCommitteeFct: (commitee:ViewCommittee) => Set<number>): number {
+        const result = new Set<number>([]);
+        for (const c of committees) {
+            result.update(perCommitteeFct(c));
+        }
+        return result.size;
+    }
+
+    private calcAccountIds(committee:ViewCommittee): Set<number> {
+        const result = new Set<number>(committee.manager_ids);
+        result.update(new Set(committee.user_ids));
+        return result;
+    }
+
+    private calcHomeComitteeIds(committee: ViewCommittee): Set<number> {
+        const result = new Set<number>([]);
+        result.update(new Set(committee.native_user_ids));
+        return result;
+    }
+
+    private calcGuestIds(committee: ViewCommittee): Set<number> {
+        const result = new Set<number>([]);
+        for (const user of committee.users) {
+            if (user.guest) {
+                result.add(user.id);
+            }
+        }
+        return result;
+    }
+
+
 }
