@@ -102,10 +102,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public get canManageHomeCommittee(): boolean {
         return this.user?.home_committee_id
-                ? this.operator.hasCommitteePermissions(this.user?.home_committee_id, CML.can_manage)
-                : this.operator.hasOrganizationPermissions(OML.can_manage_users)
-        }
-        
+            ? this.operator.hasCommitteePermissions(this.user?.home_committee_id, CML.can_manage)
+            : this.operator.hasOrganizationPermissions(OML.can_manage_users);
+    }
 
     public get comitteeAdministrationAmount(): number {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;

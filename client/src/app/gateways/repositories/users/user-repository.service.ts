@@ -133,7 +133,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`, `home_committee_id`, `guest`])
+            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`, `home_committee_id`, `guest`]);
 
         const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
@@ -557,7 +557,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             }
         }
 
-        for (const key of Object.keys(temp).filter(field=>this.isIdFieldAndCanBe0(field))) {
+        for (const key of Object.keys(temp).filter(field => this.isIdFieldAndCanBe0(field))) {
             if (temp[key] === 0) {
                 payload[key] = null;
             }
@@ -587,9 +587,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     }
 
     private isIdFieldAndCanBe0(field: string): boolean {
-        return field == "home_committee_id"
+        return field == `home_committee_id`;
     }
-
 
     public preventAlterationOnDemoUsers(users: Identifiable | Identifiable[]): void {
         if (Array.isArray(users)) {

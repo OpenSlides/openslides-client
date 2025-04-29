@@ -33,5 +33,5 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `is_present`,
     `locked_out`,
     `saml_id`,
-    `comment`,
+    `comment`
 ];

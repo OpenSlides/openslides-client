@@ -11,5 +11,5 @@ export const committeeHeadersAndVerboseNames = {
     meeting_end_time: _(`End date`),
     meeting_admins: _(`Meeting administrator`),
     meeting_template: _(`Meeting template`),
-    parent: _(`Parent`),
+    parent: _(`Parent`)
 };

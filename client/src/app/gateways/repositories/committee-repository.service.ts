@@ -27,13 +27,13 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     ) {
         super(repositoryServiceCollector, Committee);
         // Update committee rights if user has rights in any parent
-        this.viewModelStoreSubject.subscribe(record =>  {
+        this.viewModelStoreSubject.subscribe(record => {
             for (const key in record) {
                 if (this.operator.user.committee_management_ids.some(id => record[key].all_parent_ids?.includes(id))) {
-                    this.operator.updateUserCML(record[key].id)
+                    this.operator.updateUserCML(record[key].id);
                 }
             }
-        })
+        });
     }
 
     public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;

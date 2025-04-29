@@ -230,16 +230,16 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 property: `hasHomeCommittee`,
                 label: _(`Home committee`),
                 options: [
-                    {condition: true, label: _(`Has a home committee`)},
-                    {condition: [false, null], label: _(`Has no home committee`)}
+                    { condition: true, label: _(`Has a home committee`) },
+                    { condition: [false, null], label: _(`Has no home committee`) }
                 ]
             },
             {
                 property: `guest`,
                 label: _(`Guest`),
                 options: [
-                    {condition: true, label: _(`Is guest`) },
-                    {condition: [false, null], label: _(`Is not guest`)}
+                    { condition: true, label: _(`Is guest`) },
+                    { condition: [false, null], label: _(`Is not guest`) }
                 ]
             }
         ];

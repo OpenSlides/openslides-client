@@ -62,14 +62,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                 if (params) {
                     this.committeeId = Number(params[`committeeId`]);
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
-                    this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map( arr => arr.filter( comm => 
+                    this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map(arr => arr.filter(comm =>
                         comm.parent?.id === this.committeeId
                     )));
                     // subscribe to all sub committees to get aggregated data
-                    this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
+                    this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
                     ));
-                    combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) => 
+                    combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm.id === comm.id)
                     )).subscribe(committees => {
                         this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
@@ -80,7 +80,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
             })
         );
         this.subscriptions.push(
-            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value)),
+            this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value))
         );
     }
 
@@ -156,10 +156,10 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public getIndex(committee: ViewCommittee): number {
-        return committee.meetings.length > 0 || committee.meetings.length === 0 && committee.all_childs.length === 0 ? 1 : 0;
+        return committee.meetings.length > 0 || (committee.meetings.length === 0 && committee.all_childs.length === 0) ? 1 : 0;
     }
 
-    private calculateIds(committees: ViewCommittee[], perCommitteeFct: (commitee:ViewCommittee) => Set<number>): number {
+    private calculateIds(committees: ViewCommittee[], perCommitteeFct: (commitee: ViewCommittee) => Set<number>): number {
         const result = new Set<number>([]);
         for (const c of committees) {
             result.update(perCommitteeFct(c));
@@ -167,7 +167,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return result.size;
     }
 
-    private calcAccountIds(committee:ViewCommittee): Set<number> {
+    private calcAccountIds(committee: ViewCommittee): Set<number> {
         const result = new Set<number>(committee.manager_ids);
         result.update(new Set(committee.user_ids));
         return result;
@@ -188,6 +188,4 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         }
         return result;
     }
-
-
 }

@@ -60,7 +60,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
 
     public get canEnter(): boolean {
         return (this.operator.isInMeetingIds(this.meeting.id) && this.meeting.canBeEnteredBy(this.operator.user)) ||
-        this.operator.hasCommitteePermissions(this.meeting.committee_id, CML.can_manage);
+            this.operator.hasCommitteePermissions(this.meeting.committee_id, CML.can_manage);
     }
 
     public get isLockedFromInside(): boolean {

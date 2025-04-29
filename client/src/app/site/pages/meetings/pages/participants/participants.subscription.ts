@@ -76,8 +76,8 @@ export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator =
                             idField: `user_id`,
                             fieldset: `participantList`,
                             follow: [
-                                { idField: `gender_id`, fieldset: [`name`]},
-                                { idField: `home_committee_id`, fieldset: [`name`]}
+                                { idField: `gender_id`, fieldset: [`name`] },
+                                { idField: `home_committee_id`, fieldset: [`name`] }
                             ]
                         }
                     ]
