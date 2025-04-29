@@ -36,7 +36,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     ///////////////////////////////////////////////
-    /////// Repos & services
+    /// //// Repos & services
     ///////////////////////////////////////////////
 
     public categoryRepo = inject(MotionCategoryControllerService);
@@ -53,7 +53,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     protected override translate = inject(TranslateService);
 
     ///////////////////////////////////////////////
-    /////// Settings variables
+    /// //// Settings variables
     ///////////////////////////////////////////////
 
     protected get lineLength(): number {

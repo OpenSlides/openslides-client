@@ -19,8 +19,7 @@ import { PollServiceMapperService } from '../../services/poll-service-mapper.ser
  * ```
  */
 @Pipe({
-    name: `pollPercentBase`,
-    standalone: false
+    name: `pollPercentBase`
 })
 export class PollPercentBasePipe implements PipeTransform {
     public constructor(

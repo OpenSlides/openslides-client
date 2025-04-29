@@ -230,6 +230,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onChooseAccount(reverse = false): Promise<void> {
+        if (this._accountId) {
+            for (const item of Object.keys(this.createUserForm.controls)) {
+                if (!this.createUserForm.value[item]) {
+                    this.createUserForm.get(item).setValue(``);
+                }
+            }
+        }
         const result = await this.presenter.callForUsers({
             permissionRelatedId: this.activeMeetingId!,
             users: [this.createUserForm.value]
@@ -249,7 +256,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         this._accountId = account.id || null;
         this._stepper.next();
         await this.checkScope();
-        if (shouldReset || this._isUserInScope) {
+        if ((shouldReset || this._isUserInScope) && !this.account) {
             this.detailView.resetEditMode();
         }
         if (this.account) {
@@ -267,17 +274,18 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                     : undefined,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                          .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
-                          .filter((id: Id | undefined) => !!id)
+                            .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
+                            .filter((id: Id | undefined) => !!id)
                     : []
             };
             if (payload.gender_id === 0) {
                 payload.gender_id = null;
             }
+            payload.group_ids = this.cleanUpGroups(payload.group_ids);
             if (this._accountId) {
                 const dirtyPayload = {};
                 for (const field in payload) {
-                    if (this.account[field] !== payload[field]) {
+                    if (this.account === null || this.account[field] !== payload[field]) {
                         dirtyPayload[field] = payload[field];
                     }
                 }
@@ -352,8 +360,17 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     private checkSelectedGroupsCanManage(): boolean {
-        return (this.detailView.personalInfoForm.get(`group_ids`).value ?? [])
+        const group_ids = this.detailView.personalInfoForm.get(`group_ids`).value ?? [];
+        return group_ids
             .map((id: Id): ViewGroup => this.groupRepo.getViewModel(id))
             .some(group => group.hasPermission(Permission.userCanManage));
+    }
+
+    private cleanUpGroups(group_ids: number[]): number[] {
+        const meeting_group_ids = this.activeMeetingService.meeting.group_ids;
+        group_ids = group_ids.filter(group_id =>
+            meeting_group_ids.includes(group_id)
+        );
+        return group_ids;
     }
 }

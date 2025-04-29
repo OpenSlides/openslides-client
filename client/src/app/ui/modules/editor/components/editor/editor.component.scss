@@ -88,11 +88,9 @@
                     border: 1px dashed #bbb;
                 }
             }
-            p {
-                br:only-child {
-                    content: '';
-                    display: inline-block;
-                }
+
+            li.os-split-before {
+                list-style: none;
             }
 
             @include detail-view-appearance.detail-view-appearance;

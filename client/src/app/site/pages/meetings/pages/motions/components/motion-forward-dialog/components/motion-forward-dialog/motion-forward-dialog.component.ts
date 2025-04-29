@@ -33,9 +33,9 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.activeMeeting.meeting?.committee?.name;
     }
 
-    public useOriginalSubmitter = true;
-    public useOriginalNumber = true;
-    public useOriginalVersion = true;
+    public useOriginalSubmitter = false;
+    public useOriginalNumber = false;
+    public useOriginalVersion = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
@@ -90,5 +90,9 @@ export class MotionForwardDialogComponent implements OnInit {
         for (const meeting of meetings) {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
+    }
+
+    public amendmentNumber(): number {
+        return this.data.motion.filter(motion => !!motion.isAmendment()).length;
     }
 }

@@ -96,7 +96,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return (
             (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
                 this.operator.isAnyCommitteeAdmin()) &&
-            (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
+                (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
 

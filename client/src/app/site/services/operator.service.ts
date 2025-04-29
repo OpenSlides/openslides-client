@@ -113,8 +113,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                  ? this.user?.hasMultipleMeetings
-                  : false)
+                    ? this.user?.hasMultipleMeetings
+                    : false)
         );
     }
 

@@ -17,6 +17,8 @@ import {
     PollType,
     PollTypeVerbose,
     PollTypeVerboseKey,
+    PollValues,
+    VOTE_MAJORITY,
     VOTE_UNDOCUMENTED,
     VotingResult,
     YES_KEY
@@ -27,7 +29,6 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { PollServiceModule } from '../poll-service.module';
 
 const PollChartBarThickness = 20;
@@ -46,8 +47,6 @@ export abstract class PollService {
 
     private organizationSettingsService = inject(OrganizationSettingsService);
     protected translate = inject(TranslateService);
-    protected pollKeyVerbose = inject(PollKeyVerbosePipe);
-    protected pollParseNumber = inject(PollParseNumberPipe);
     protected themeService = inject(ThemeService);
 
     public constructor() {
@@ -124,8 +123,8 @@ export abstract class PollService {
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
                 const voteValue = option[field] as number;
-                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
-                const resultValue = this.pollParseNumber.transform(voteValue);
+                const votingKey = this.translate.instant(this.pollKeyVerbose(field));
+                const resultValue = this.parseNumber(voteValue);
                 const resultInPercent = this.getVoteValueInPercent(voteValue, { poll, row: option });
                 let resultLabel = `${resultValue}`;
                 if (!excludeYNALabels) {
@@ -141,6 +140,31 @@ export abstract class PollService {
             const optionName = option.getOptionTitle().title;
             return `${optionName} · ${votingResults.join(` · `)}`;
         });
+    }
+
+    public pollKeyVerbose(value: string): string {
+        return PollValues[value] || value;
+    }
+
+    public parseNumber(value?: number): string {
+        const formatter = new Intl.NumberFormat(`us-us`, {
+            style: `decimal`,
+            useGrouping: false,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 6
+        });
+
+        switch (value) {
+            case VOTE_MAJORITY:
+                return this.translate.instant(`majority`);
+            case undefined:
+            case null:
+                return formatter.format(0);
+            case VOTE_UNDOCUMENTED:
+                return this.translate.instant(`undocumented`);
+            default:
+                return formatter.format(value);
+        }
     }
 
     private getGlobalVoteKeys(poll: PollData): VotingResult[] {

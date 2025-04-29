@@ -17,7 +17,6 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
-import { MotionExportDialogModule } from '../../components/motion-export-dialog/motion-export-dialog.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
 import { MotionMultiselectModule } from '../../components/motion-multiselect/motion-multiselect.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
@@ -34,7 +33,6 @@ import { MotionListRoutingModule } from './motion-list-routing.module';
         MotionsListServiceModule,
         MotionListInfoDialogModule,
         MotionForwardDialogModule,
-        MotionExportDialogModule,
         MotionMultiselectModule,
         MatIconModule,
         MatCardModule,

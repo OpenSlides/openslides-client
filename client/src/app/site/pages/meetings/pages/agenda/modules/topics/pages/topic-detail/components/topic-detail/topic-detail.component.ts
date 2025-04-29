@@ -357,6 +357,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         }
     }
 
+    public async applyTopicContent(): Promise<void> {
+        await this.repo.update(this.topicForm!.value, this.topic!);
+    }
+
     private async createTopic(): Promise<void> {
         await this.repo.create(this.topicForm!.value);
         this.router.navigate([this.activeMeetingId, `agenda`]);

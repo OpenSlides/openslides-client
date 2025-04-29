@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotionExportDialogComponent } from './motion-export-dialog.component';
+import { MotionExportComponent } from './motion-export.component';
 
-xdescribe(`MotionExportDialogComponent`, () => {
-    let component: MotionExportDialogComponent;
-    let fixture: ComponentFixture<MotionExportDialogComponent>;
+xdescribe(`MotionExportComponent`, () => {
+    let component: MotionExportComponent;
+    let fixture: ComponentFixture<MotionExportComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MotionExportDialogComponent]
+            declarations: [MotionExportComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MotionExportDialogComponent);
+        fixture = TestBed.createComponent(MotionExportComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -82,6 +82,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public useMatcard = true;
 
     @Input()
+    public useBottomMargin = true;
+
+    @Input()
     public useAdditionalEditTemplate = true;
 
     @Input()
@@ -361,8 +364,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         const data = this.useAdditionalEditTemplate
             ? formData
             : Object.keys(formData).mapToObject(key =>
-                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
-              );
+                    Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+                );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

@@ -14,10 +14,10 @@ export interface ModelRequest extends HasFields {
 }
 
 export interface GenericRelationFieldDecriptor extends HasFields {
-    type: 'generic-relation-list' | 'generic-relation';
+    type: `generic-relation-list` | `generic-relation`;
 }
 
 export interface RelationFieldDescriptor extends HasFields {
-    type: 'relation-list' | 'relation';
+    type: `relation-list` | `relation`;
     collection: string;
 }

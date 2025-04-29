@@ -19,19 +19,19 @@ import { ViewMeeting } from '../../view-models/view-meeting';
 export type SettingsValueMap = { [key in keyof Settings]?: any };
 
 export type SettingsType =
-    | 'string'
-    | 'email'
-    | 'text'
-    | 'markupText'
-    | 'integer'
-    | 'boolean'
-    | 'choice'
-    | 'date'
-    | 'datetime'
-    | 'translations'
-    | 'ranking'
-    | 'groups'
-    | 'daterange';
+    | `string`
+    | `email`
+    | `text`
+    | `markupText`
+    | `integer`
+    | `boolean`
+    | `choice`
+    | `date`
+    | `datetime`
+    | `translations`
+    | `ranking`
+    | `groups`
+    | `daterange`;
 
 export type ChoicesMap = Record<string, string | number>;
 

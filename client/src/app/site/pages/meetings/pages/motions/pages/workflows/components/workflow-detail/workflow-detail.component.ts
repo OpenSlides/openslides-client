@@ -31,7 +31,7 @@ interface DialogData {
  * Determine answers from the dialog
  */
 interface DialogResult {
-    action: 'update' | 'delete';
+    action: `update` | `delete`;
     value: string | null;
 }
 
@@ -193,6 +193,18 @@ Prerequisites:
 3. user must have group permission for forwarding.`
             ),
             selector: `allow_motion_forwarding`,
+            type: `check`
+        },
+        {
+            name: _(`Allow forwarding of amendments`),
+            help_text: _(
+                `Enables the forwarding of amendments in the selected state.
+
+Prerequisites:
+1. Motion forwarding is activated.
+2. 'Original version with changes' in forwarding dialog must be selected.`
+            ),
+            selector: `allow_amendment_forwarding`,
             type: `check`
         },
         {

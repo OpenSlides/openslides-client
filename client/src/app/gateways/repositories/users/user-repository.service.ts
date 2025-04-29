@@ -29,7 +29,7 @@ export type GeneralUser = ViewUser & ViewMeetingUser;
  * Unified type name for state fields like `is_active`, `is_physical_person`, `is_present_in_meetings`
  * and 'locked_out'.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person' | 'locked_out';
+export type UserStateField = `is_active` | `is_present_in_meetings` | `is_physical_person` | `locked_out`;
 
 export interface AssignMeetingsPayload {
     meeting_ids: Id[];
@@ -54,7 +54,7 @@ export type ExtendedUserPatchFn =
     | Partial<Record<keyof User & MeetingUser, any>>[]
     | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
 
-export type EmailSentResultType = 'user_error' | 'settings_error' | 'configuration_error' | 'other_error';
+export type EmailSentResultType = `user_error` | `settings_error` | `configuration_error` | `other_error`;
 
 export interface EmailSentResult {
     type: EmailSentResultType;
@@ -153,13 +153,13 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 user: this.sanitizePayload(this.getBaseUserPayloadCreate(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
-                          first_meeting_user: this.sanitizePayload(
-                              this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
-                          ),
-                          rest: meetingUsers.map(meetingUser =>
-                              this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
-                          )
-                      }
+                            first_meeting_user: this.sanitizePayload(
+                                this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
+                            ),
+                            rest: meetingUsers.map(meetingUser =>
+                                this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
+                            )
+                        }
                     : {})
             };
         });
