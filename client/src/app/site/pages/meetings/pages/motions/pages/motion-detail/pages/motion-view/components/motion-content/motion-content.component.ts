@@ -27,6 +27,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Input()
     public noEditMode = false;
 
+    public editMode = false;
+
     @Input()
     public set changeRecoMode(value: ChangeRecoMode) {
         this._changeRecoMode = value;

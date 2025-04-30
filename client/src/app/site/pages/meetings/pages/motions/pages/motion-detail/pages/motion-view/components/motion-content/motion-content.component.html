@@ -11,8 +11,8 @@
         <div
             class="motion-text underlined-links"
             [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None || editMode"
+            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside && !editMode"
         >
             @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
                 <os-motion-detail-original-change-recommendations
@@ -26,6 +26,7 @@
                 <os-motion-final-version
                     [formattedText]="formattedTextPlain$ | async"
                     [motion]="motion"
+                    (changeEditMode)="this.editMode = $event"
                 ></os-motion-final-version>
             }
         </div>
