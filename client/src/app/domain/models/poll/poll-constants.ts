@@ -131,7 +131,22 @@ export const PollTypeVerbose = {
 
 export type PollTypeVerboseKey = keyof typeof PollTypeVerbose;
 
-export const PollPropertyVerbose = {
+export interface PollPropertyVerboseType {
+    onehundred_percent_base: string;
+    type: string;
+    pollmethod: string;
+    state: string;
+    groups: string;
+    votes_amount: string;
+    global_yes: string;
+    global_no: string;
+    global_abstain: string;
+    max_votes_amount: string;
+    min_votes_amount: string;
+    max_votes_per_option: string;
+};
+
+export const PollPropertyVerbose: PollPropertyVerboseType = {
     onehundred_percent_base: _(`100% base`),
     type: _(`Voting type`),
     pollmethod: _(`Voting method`),
