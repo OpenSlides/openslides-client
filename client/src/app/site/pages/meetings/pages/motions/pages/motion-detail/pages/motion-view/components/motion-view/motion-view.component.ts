@@ -94,12 +94,20 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public showAllAmendments = false;
+    private _forwardingAvailable = false;
 
     /**
      * preloaded next motion for direct navigation
      */
     public nextMotion: ViewMotion | null = null;
     public previousMotion: ViewMotion | null = null;
+
+    public get showForwardMenuButton(): boolean {
+        return !!this.motion.state?.allow_motion_forwarding &&
+            this.operator.hasPerms(Permission.motionCanForward) &&
+            this._forwardingAvailable &&
+            !this.motion.derived_motions.length;
+    }
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
@@ -567,5 +575,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             return ChangeRecoMode.Original;
         }
         return mode;
+    }
+
+    public setShowForwardAvailable(value: boolean): void {
+        this._forwardingAvailable = value;
+        this.cd.markForCheck();
     }
 }

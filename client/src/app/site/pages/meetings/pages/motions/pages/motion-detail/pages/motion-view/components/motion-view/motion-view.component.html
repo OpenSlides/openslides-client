@@ -98,8 +98,8 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                @if (!motion.isAmendment()) {
-                    <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
+                @if (!motion.isAmendment() && showForwardMenuButton) {
+                    <div>
                         <button mat-menu-item (click)="forwardMotionToMeetings()">
                             <mat-icon>forward</mat-icon>
                             <span>{{ 'Forward' | translate }}</span>
@@ -191,6 +191,7 @@
             [activeOriginMotions]="originMotionsLoaded"
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
+            (canShowForwarded)="setShowForwardAvailable($event)"
             (disableOriginMotion)="hideOriginMotion($event)"
             (enableOriginMotion)="displayOriginMotion($event)"
             (setShowAllAmendments)="showAllAmendments = $event"

@@ -51,6 +51,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Output()
     public setShowAllAmendments = new EventEmitter<boolean>();
 
+    @Output()
+    public canShowForwarded = new EventEmitter<boolean>();
+
     public originMotionStatus: Record<number, boolean> = {};
 
     /**
@@ -204,12 +207,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable && !this.motion.isAmendment();
                 this.cd.markForCheck();
+                this.canShowForwarded.emit(this.showForwardButton);
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
                 };
             });
         } else {
             this._forwardingAvailable = false;
+            this.canShowForwarded.emit(this.showForwardButton);
         }
     }
 
