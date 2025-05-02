@@ -102,15 +102,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public nextMotion: ViewMotion | null = null;
     public previousMotion: ViewMotion | null = null;
 
-    public get showForwardMenuButton(): boolean {
-        return !!this.motion.state?.allow_motion_forwarding &&
-            this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable &&
-            !this.motion.derived_motions.length;
-    }
-
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
+    }
+
+    public get showForwardMenuButton(): boolean {
+        return (
+            !!this.motion.state?.allow_motion_forwarding &&
+            this.operator.hasPerms(Permission.motionCanForward) &&
+            this._forwardingAvailable &&
+            !this.motion.derived_motions.length
+        );
     }
 
     private _changeRecoMode: ChangeRecoMode = ChangeRecoMode.Original;
@@ -188,6 +190,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 )
                 .subscribe(() => this.onMotionChange())
         );
+
+        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
+            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+                this._forwardingAvailable = forwardingAvailable && !this.motion?.isAmendment();
+                this.cd.markForCheck();
+            });
+        }
     }
 
     /**
@@ -575,10 +584,5 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             return ChangeRecoMode.Original;
         }
         return mode;
-    }
-
-    public setShowForwardAvailable(value: boolean): void {
-        this._forwardingAvailable = value;
-        this.cd.markForCheck();
     }
 }
