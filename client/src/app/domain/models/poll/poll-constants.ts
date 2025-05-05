@@ -131,7 +131,21 @@ export const PollTypeVerbose = {
 
 export type PollTypeVerboseKey = keyof typeof PollTypeVerbose;
 
-export const PollPropertyVerbose: Record<string, string> = {
+export type PollPropertyVerboseKey =
+    | `onehundred_percent_base`
+    | `type`
+    | `pollmethod`
+    | `state`
+    | `groups`
+    | `votes_amount`
+    | `global_yes`
+    | `global_no`
+    | `global_abstain`
+    | `max_votes_amount`
+    | `min_votes_amount`
+    | `max_votes_per_option`;
+
+export const PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = {
     onehundred_percent_base: _(`100% base`),
     type: _(`Voting type`),
     pollmethod: _(`Voting method`),
@@ -160,7 +174,7 @@ export const PollValues: any = {
     amount_global_abstain: _(`General abstain`)
 };
 
-export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
+// export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
 
 export const PollMethodVerbose = {
     Y: ``,
