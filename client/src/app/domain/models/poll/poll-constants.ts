@@ -174,8 +174,6 @@ export const PollValues: any = {
     amount_global_abstain: _(`General abstain`)
 };
 
-// export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
-
 export const PollMethodVerbose = {
     Y: ``,
     N: ``,
