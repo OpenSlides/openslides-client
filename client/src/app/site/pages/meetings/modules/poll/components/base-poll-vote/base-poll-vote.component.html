@@ -285,51 +285,6 @@
                                         </div>
                                     }
                                 }
-                                @if (settings.isSplitSingleOption && displayed_in_autopilot) {
-                                    <ng-container>
-                                        @for (
-                                            action of voteActions.length ? voteActions : voteOptions;
-                                            track action.vote;
-                                            let i = $index
-                                        ) {
-                                            <div class="vote-button-area" role="gridcell" [ngClass]="'option' + i">
-                                                <button
-                                                    class="vote-button"
-                                                    mat-raised-button
-                                                    role="radio"
-                                                    [ariaLabel]="
-                                                        settings.isSplitSingleOption && !displayed_in_autopilot
-                                                            ? (action.label | translate)
-                                                            : undefined
-                                                    "
-                                                    [attr.aria-checked]="
-                                                        getActionButtonClass(action, option, delegation)
-                                                            ? 'true'
-                                                            : 'false'
-                                                    "
-                                                    [disabled]="isDeliveringVote(delegation)"
-                                                    (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                                >
-                                                    <div
-                                                        class="vote-button-content"
-                                                        [ngClass]="
-                                                            getActionButtonContentClass(action, option, delegation)
-                                                        "
-                                                    >
-                                                        <os-custom-icon
-                                                            class="vote-button-cross"
-                                                            [customIcon]="drawnCross"
-                                                            [ngClass]="getActionButtonClass(action, option, delegation)"
-                                                        ></os-custom-icon>
-                                                        <mat-icon class="vote-button-circle">
-                                                            radio_button_unchecked
-                                                        </mat-icon>
-                                                    </div>
-                                                </button>
-                                            </div>
-                                        }
-                                    </ng-container>
-                                }
                                 @if (poll.max_votes_per_option > 1) {
                                     <mat-form-field appearance="outline" class="vote-input" role="gridcell">
                                         <input
