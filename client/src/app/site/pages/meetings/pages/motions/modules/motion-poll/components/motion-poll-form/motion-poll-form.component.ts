@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { PollPropertyVerboseType } from 'src/app/domain/models/poll';
+import { _ } from '@ngx-translate/core';
+import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
@@ -14,7 +15,7 @@ import {
     standalone: false
 })
 export class MotionPollFormComponent extends BasePollFormComponent {
-    public override PollPropertyVerbose: PollPropertyVerboseType = { ...this.PollPropertyVerbose, pollmethod: `Poll method` };
+    public override PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = { ...this.PollPropertyVerbose, pollmethod: _(`Poll method`) };
     public get hideSelects(): PollFormHideSelectsData {
         return {
             globalOptions: true
