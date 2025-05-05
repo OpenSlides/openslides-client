@@ -792,7 +792,7 @@ export class MotionDiffService {
         const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
         const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
         toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
-        if (toLine && toLineNumber >= toLine) {
+        if (!(toLine === null) && toLineNumber >= toLine) {
             toLineNumber = toLine + 1;
         }
 

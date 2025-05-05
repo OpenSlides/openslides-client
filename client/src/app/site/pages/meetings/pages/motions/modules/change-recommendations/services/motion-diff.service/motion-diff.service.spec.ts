@@ -1752,33 +1752,38 @@ describe(`MotionDiffService`, () => {
         ));
 
         it(`renders colliding lines`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // This test is with accepted amendments
             const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p>`;
+
+            const amendment1 = new ViewMotionAmendedParagraph(
+                { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
+                0,
+                `<p>Test 1x</p>`,
+                { from: 1, to: 1 }
+            );
+            const amendment3 = new ViewMotionAmendedParagraph(
+                { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
+                1,
+                `<p>Test 2x</p>`,
+                { from: 2, to: 2 }
+            );
+            const changeRec = new ChangeRecommendationUnifiedChange({
+                id: 2,
+                rejected: false,
+                line_from: 1,
+                line_to: 1,
+                text: `<p>Test 1y</p>`,
+                type: ModificationType.TYPE_REPLACEMENT,
+                other_description: ``,
+                creation_time: 0
+            });
 
             const out = service.getTextWithChanges(
                 inHtml,
                 [
-                    new ViewMotionAmendedParagraph(
-                        { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
-                        0,
-                        `<p>Test 1x</p>`,
-                        { from: 1, to: 1 }
-                    ),
-                    new ChangeRecommendationUnifiedChange({
-                        id: 2,
-                        rejected: false,
-                        line_from: 1,
-                        line_to: 1,
-                        text: `<p>Test 1y</p>`,
-                        type: ModificationType.TYPE_REPLACEMENT,
-                        other_description: ``,
-                        creation_time: 0
-                    }),
-                    new ViewMotionAmendedParagraph(
-                        { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
-                        1,
-                        `<p>Test 2x</p>`,
-                        { from: 2, to: 2 }
-                    )
+                    amendment1,
+                    changeRec,
+                    amendment3
                 ],
                 20,
                 true
