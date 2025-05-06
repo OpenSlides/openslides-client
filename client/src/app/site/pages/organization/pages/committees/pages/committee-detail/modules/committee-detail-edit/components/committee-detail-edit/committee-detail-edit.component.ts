@@ -185,7 +185,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
                     this.loadCommittee(this.committeeId);
                 })
             );
-            this.committeeForm.controls[`parent_id`].disable();
         } else if (this.route.snapshot.queryParams?.[`parentId`]) {
             this.isCreateView = true;
             this.route.queryParams.subscribe(queryParams => {
