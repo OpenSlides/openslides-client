@@ -62,6 +62,21 @@
                     {{ 'guest' | translate }}
                 </mat-checkbox>
             </div>
+            <!-- Committee admin -->
+            <div *osOmlPerms="OML.can_manage_organization">
+                <mat-form-field class="form100 force-min-width">
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        [formControl]="form.controls.committee_management_ids"
+                        [multiple]="true"
+                        [repo]="committeeController"
+                        [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetFn()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+            </div>
             <!-- Administration roles (at organization level) -->
             <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
                 <mat-form-field class="form100 force-min-width">
@@ -76,21 +91,6 @@
                             </mat-option>
                         }
                     </mat-select>
-                </mat-form-field>
-            </div>
-            <!-- Committee admin -->
-            <div *osOmlPerms="OML.can_manage_organization">
-                <mat-form-field class="form100 force-min-width">
-                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        [formControl]="form.controls.committee_management_ids"
-                        [multiple]="true"
-                        [repo]="committeeController"
-                        [sortService]="committeeSortService"
-                        [subscriptionConfig]="committeeSubscriptionConfig"
-                        [transformPropagateFn]="getTransformPropagateFn()"
-                        [transformSetFn]="getTransformSetFn()"
-                    ></os-repo-search-selector>
                 </mat-form-field>
             </div>
         </div>
