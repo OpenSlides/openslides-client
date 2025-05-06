@@ -38,7 +38,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public accountNumber = 0;
-    public accountInChildrenNumber = 0;
+    public accountInMeetingsNumber = 0;
     public accountHomeCommitteeNumber = 0;
     public accountGuestNumber = 0;
     public committeeAccounts = 0;
@@ -77,10 +77,9 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                         this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
                         this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
                     });
-                    this.childCommitteesObservable.subscribe(committees => {
-                        this.accountInChildrenNumber = this.calculateIds(committees, this.calcAccountIds);
-                    }
-                    );
+                    this.currentCommitteeObservable.subscribe(comm => {
+                        this.accountInMeetingsNumber = comm.user_ids?.length;
+                    });
                 }
             })
         );
