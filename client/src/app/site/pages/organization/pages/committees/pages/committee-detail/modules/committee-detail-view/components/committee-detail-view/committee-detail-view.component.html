@@ -170,7 +170,13 @@
     <div class="os-card">
         <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
             <mat-tab label="{{ 'Committees' | translate }}">
-                <os-list [filterProps]="['name']" [listObservable]="childCommitteesObservable" [multiSelect]="false">
+                <os-list
+                    [filterProps]="['name']"
+                    [fullScreen]="false"
+                    [listObservable]="childCommitteesObservable"
+                    [multiSelect]="false"
+                    [vScrollFixed]="70"
+                >
                     <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
                         @if (committee.canAccess()) {
                             <a
