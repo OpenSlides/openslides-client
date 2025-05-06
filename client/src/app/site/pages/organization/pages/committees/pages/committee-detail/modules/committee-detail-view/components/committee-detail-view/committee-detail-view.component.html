@@ -25,7 +25,14 @@
 @if (currentCommitteeObservable | async; as committee) {
     <div>
         @for (item of committee.all_parents; track item.id) {
-            <button mat-button [routerLink]="['/', 'committees', item.id]">&gt; {{ item.getTitle() }}</button>
+            <button mat-button [routerLink]="['/', 'committees', item.id]">
+                @if ($first) {
+                    <mat-icon>layers</mat-icon>
+                } @else {
+                    <mat-icon>chevron_right</mat-icon>
+                }
+                {{ item.getTitle() }}
+            </button>
         }
     </div>
     <mat-card class="committee-details os-card">
