@@ -82,7 +82,7 @@ export class MotionForwardDialogService extends BaseDialogService<
     }
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
-        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding );
+        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
         const amountSelectedAmendments = toForward.filter(motion => motion.isAmendment()).length;
 
         if (toForward.filter(motion => !motion.isAmendment()).length === 0) {
