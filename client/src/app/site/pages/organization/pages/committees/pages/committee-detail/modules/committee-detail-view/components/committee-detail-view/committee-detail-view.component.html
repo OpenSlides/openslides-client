@@ -196,6 +196,20 @@
                             </div>
                         }
                     </div>
+                    <!-- layers with committee.length-->
+                    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 40 }" class="cell-slot fill">
+                        @if (committee.canAccess()) {
+                            <div>
+                                <os-icon-container
+                                    icon="layers"
+                                    iconTooltip="{{ 'Child committees' | translate }}"
+                                    iconTooltipPosition="right"
+                                >
+                                    {{ committee.child_ids?.length ?? 0 }}
+                                </os-icon-container>
+                            </div>
+                        }
+                    </div>
                 </os-list>
             </mat-tab>
             <mat-tab label="{{ 'Meetings' | translate }}">

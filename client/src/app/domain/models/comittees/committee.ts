@@ -10,6 +10,7 @@ export class Committee extends BaseModel<Committee> {
     public description!: string;
     public external_id!: string;
     public parent_id!: string;
+    public child_ids!: Id[];
 
     public meeting_ids!: Id[]; // (meeting/committee_id)[];
     public default_meeting_id!: Id; // meeting/default_meeting_for_committee_id;
@@ -33,6 +34,7 @@ export class Committee extends BaseModel<Committee> {
         `description`,
         `external_id`,
         `parent_id`,
+        `child_ids`,
         `meeting_ids`,
         `default_meeting_id`,
         `user_ids`,

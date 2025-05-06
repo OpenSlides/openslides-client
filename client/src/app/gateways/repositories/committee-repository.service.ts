@@ -53,6 +53,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `external_id`,
             `native_user_ids`,
             `parent_id`,
+            `child_ids`,
             `all_parent_ids`,
             `all_child_ids`
         ]);

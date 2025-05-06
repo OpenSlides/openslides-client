@@ -13,6 +13,7 @@ import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separat
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 
+import { IconContainerComponent } from "../../../../../../../../../ui/modules/icon-container/icon-container.component";
 import { CommitteeComponentsModule } from '../../../../modules/committee-components.module';
 import { CommitteeListServiceModule } from '../../../committee-list/services/committee-list-service.module';
 import { CommitteeDetailViewRoutingModule } from './committee-detail-view-routing.module';
@@ -36,7 +37,8 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
         MatDividerModule,
         MatButtonModule,
         ListModule,
-        MatTabsModule
+        MatTabsModule,
+        IconContainerComponent
     ]
 })
 export class CommitteeDetailViewModule {}
