@@ -364,3 +364,10 @@ mat-hint, .hint {
 .text-medium {
     font-size: 14px;
 }
+
+.html-view {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
