@@ -98,7 +98,7 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                @if (!motion.isAmendment() && showForwardMenuButton) {
+                @if (!motion.isAmendment() && showForwardMenuEntry) {
                     <div>
                         <button mat-menu-item (click)="forwardMotionToMeetings()">
                             <mat-icon>forward</mat-icon>
@@ -191,7 +191,7 @@
             [activeOriginMotions]="originMotionsLoaded"
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
-            [showForwardButton]="showForwardMenuButton"
+            [showForwardButton]="showForwardButton"
             (disableOriginMotion)="hideOriginMotion($event)"
             (enableOriginMotion)="displayOriginMotion($event)"
             (setShowAllAmendments)="showAllAmendments = $event"
