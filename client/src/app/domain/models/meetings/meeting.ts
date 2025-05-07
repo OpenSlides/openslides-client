@@ -30,7 +30,7 @@ export class Settings {
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
     public enable_anonymous!: boolean;
-    public language!: boolean;
+    public language!: string;
 
     // Jitsi/Livestream settings
     public jitsi_domain!: string;
