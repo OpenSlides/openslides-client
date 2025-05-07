@@ -6,11 +6,4 @@
         <span>{{ 'Received votes' | translate }}</span>
         <mat-progress-bar class="voting-progress-bar" mode="determinate" [value]="valueInPercent"></mat-progress-bar>
     </div>
-} @else {
-    <div class="type-and-state italic spacer-bottom-20 break-word">
-        <!-- State -->
-        <i>
-            {{ 'Voting in progress' | translate }}
-        </i>
-    </div>
 }
