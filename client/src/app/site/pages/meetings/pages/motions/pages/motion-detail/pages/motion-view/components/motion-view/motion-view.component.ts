@@ -18,6 +18,7 @@ import {
     filter,
     firstValueFrom,
     Observable,
+    startWith,
     Subject,
     Subscription
 } from 'rxjs';
@@ -422,7 +423,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
             this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
-            motion.amendments$
+            motion.amendments$.pipe(startWith([]))
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {
