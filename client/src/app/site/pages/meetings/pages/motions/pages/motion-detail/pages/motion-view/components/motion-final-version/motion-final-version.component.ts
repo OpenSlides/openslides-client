@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { MotionDiffService } from '../../../../../../modules/change-recommendations/services';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
@@ -17,11 +18,13 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     standalone: false
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
+    public readonly LineNumberingMode = LineNumberingMode;
+
     @Input()
     public formattedText: UnsafeHtml = ``;
 
-    @Output()
-    public changeEditMode = new BehaviorSubject<boolean>(false);
+    @Input()
+    public lineNumberingMode: LineNumberingMode;
 
     public contentForm!: UntypedFormGroup;
 
@@ -59,12 +62,10 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     private enterEditMode(): void {
         this.patchForm();
         this.isEditMode = true;
-        this.changeEditMode.next(true);
     }
 
     private leaveEditMode(): void {
         this.isEditMode = false;
-        this.changeEditMode.next(false);
     }
 
     private async saveModifiedFinalVersion(): Promise<void> {
@@ -75,7 +76,6 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     public async applyModifiedFinalVersion(): Promise<void> {
         await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.isEditMode = true;
-        this.changeEditMode.next(true);
     }
 
     private createForm(): UntypedFormGroup {
