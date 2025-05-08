@@ -108,10 +108,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public get showForwardMenuEntry(): boolean {
+        const derivedMotionMeetingIds = this.motion.derived_motions?.map(derivedMotion => +derivedMotion.meeting_id);
+        const forwardingMeetingsIds = this.motionForwardingService.forwardingMeetings.flatMap(obj => obj.meetings?.map(e => +e.id));
         return (
             !!this.motion.state?.allow_motion_forwarding &&
             this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable
+            this._forwardingAvailable &&
+            forwardingMeetingsIds.some(meetingId => !derivedMotionMeetingIds.includes(meetingId))
         );
     }
 
@@ -195,7 +198,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 .subscribe(() => this.onMotionChange())
         );
 
-        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
+        if (operator.hasPerms(Permission.motionCanForward)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
                 this._forwardingAvailable = forwardingAvailable && !this.motion?.isAmendment();
                 this.cd.markForCheck();
