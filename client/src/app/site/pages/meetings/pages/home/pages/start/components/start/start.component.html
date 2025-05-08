@@ -21,7 +21,7 @@
                     <h1>{{ welcomeTitle }}</h1>
                 }
                 @if (welcomeTextObservable | async; as welcomeText) {
-                    <div [innerHTML]="welcomeText | trust: 'html'"></div>
+                    <div class="html-view" [innerHTML]="welcomeText | trust: 'html'"></div>
                 }
             </div>
         }
