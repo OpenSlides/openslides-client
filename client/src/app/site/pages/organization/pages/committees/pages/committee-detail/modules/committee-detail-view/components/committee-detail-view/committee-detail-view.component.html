@@ -157,13 +157,13 @@
                 </os-committee-meta-info>
 
                 <!-- Parent committee -->
-                <os-committee-meta-info icon="layers" title="{{ 'Parent Committee' | translate }}">
-                    @if (committee.parent) {
+                @if (committee.parent) {
+                    <os-committee-meta-info icon="layers" title="{{ 'Parent Committee' | translate }}">
                         <span>
                             {{ committee.parent.name }}
                         </span>
-                    }
-                </os-committee-meta-info>
+                    </os-committee-meta-info>
+                }
             }
             <div class="os-card">
                 <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
