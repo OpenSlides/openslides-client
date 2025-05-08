@@ -37,8 +37,8 @@ export class MotionForwardDialogService extends BaseDialogService<
         return this._forwardingCommitteesSubject;
     }
 
-    public get forwardingMeetings(): GetForwardingMeetingsPresenter[] {
-        return this._forwardingMeetings;
+    public get forwardingMeetingIds(): number[] {
+        return this._forwardingMeetings.flatMap(obj => obj.meetings?.map(m => +m.id));
     }
 
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);

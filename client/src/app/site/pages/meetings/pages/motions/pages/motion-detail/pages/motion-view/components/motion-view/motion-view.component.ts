@@ -109,7 +109,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public get showForwardMenuEntry(): boolean {
         const derivedMotionMeetingIds = this.motion.derived_motions?.map(derivedMotion => +derivedMotion.meeting_id);
-        const forwardingMeetingsIds = this.motionForwardingService.forwardingMeetings.flatMap(obj => obj.meetings?.map(e => +e.id));
+        const forwardingMeetingsIds = this.motionForwardingService.forwardingMeetingIds;
         return (
             !!this.motion.state?.allow_motion_forwarding &&
             this.operator.hasPerms(Permission.motionCanForward) &&
