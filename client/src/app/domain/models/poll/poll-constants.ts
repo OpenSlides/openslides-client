@@ -146,6 +146,8 @@ export const PollPropertyVerbose = {
     max_votes_per_option: _(`Maximum amount of votes per option`)
 };
 
+export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
+
 export const PollValues: any = {
     votesvalid: `Valid votes`,
     votesinvalid: `Invalid votes`,
@@ -159,8 +161,6 @@ export const PollValues: any = {
     amount_global_no: _(`General rejection`),
     amount_global_abstain: _(`General abstain`)
 };
-
-export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
 
 export const PollMethodVerbose = {
     Y: ``,
