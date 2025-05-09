@@ -88,11 +88,11 @@ export default tseslint.config({
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "@typescript-eslint/ban-ts-comment": ["error"],
         "@typescript-eslint/prefer-for-of": ["error"],
+        "no-useless-escape": ["error"],
 
         "@typescript-eslint/no-empty-object-type": ["warn"],
         "no-async-promise-executor": ["warn"],
         "no-case-declarations": ["warn"],
-        "no-useless-escape": ["warn"],
         // TODO: Disable - empty catch should contain at least an description comment
         "no-empty": ["error", { "allowEmptyCatch": true }],
 

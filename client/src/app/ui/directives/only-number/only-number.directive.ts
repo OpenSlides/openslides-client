@@ -95,7 +95,7 @@ export class OnlyNumberDirective implements OnInit {
         if (this._osOnlyNumberAllowDecimal) {
             const maximumDecimalDigits =
                 this._osOnlyNumberMaxDecimalDigits === 0 ? `` : `{${this._osOnlyNumberMaxDecimalDigits}}`;
-            regexString = `^([1-9][0-9]*|0)((\,|\.)${maximumDecimalDigits})?$`;
+            regexString = `^([1-9][0-9]*|0)((,|.)${maximumDecimalDigits})?$`;
         } else {
             const hexCharacters = this._osOnlyNumberAllowHex ? `a-fA-F` : ``;
             const allowedFirstCharacter = `[1-9${hexCharacters}]`;

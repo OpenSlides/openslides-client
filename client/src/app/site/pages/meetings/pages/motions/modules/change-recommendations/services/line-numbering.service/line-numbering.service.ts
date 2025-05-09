@@ -147,7 +147,7 @@ export class LineNumberingService {
     private ignoreInsertedText = false;
 
     // A precompiled regular expression that looks for line number nodes in a HTML string
-    private getLineNumberRangeRegexp = RegExp(/<span[^>]+data\-line\-number=\"(\d+)\"/, `gi`);
+    private getLineNumberRangeRegexp = RegExp(/<span[^>]+data-line-number="(\d+)"/, `gi`);
 
     /**
      * Returns true, if the given node is a OpenSlides-specific line breaking node.
