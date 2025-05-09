@@ -5,6 +5,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -85,6 +86,20 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
      */
     public getDisableOptionWhenFn(): (value: Selectable) => boolean {
         return value => value.id === this.committeeId;
+    }
+
+    public getDisableOptionWhenFnForParent(): (value: Selectable) => boolean {
+        return value => {
+            if (value.id === this.committeeId) {
+                return true;
+            } else if (this.isCreateView) {
+                return !this.operator.hasCommitteePermissions(value.id, CML.can_manage);
+            } else {
+                const valueAncesterIds = this.committeeRepo.getViewModel(value.id)?.all_parent_ids ?? [];
+                const sameAncesterIds = (this.editCommittee.all_parent_ids ?? []).filter(commId => valueAncesterIds.includes(commId));
+                return !this.operator.isOrgaManager && !sameAncesterIds.some(commId => this.operator.hasCommitteePermissions(commId, CML.can_manage));
+            }
+        };
     }
 
     /**
