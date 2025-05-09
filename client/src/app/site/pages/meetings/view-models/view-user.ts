@@ -113,6 +113,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return !!this.member_number;
     }
 
+    public get hasHomeCommittee(): boolean {
+        return !!this.home_committee_id;
+    }
+
     public get gender_name(): string {
         return this.gender?.name ?? ``;
     }
@@ -384,6 +388,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
+    home_committee: ViewCommittee;
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];

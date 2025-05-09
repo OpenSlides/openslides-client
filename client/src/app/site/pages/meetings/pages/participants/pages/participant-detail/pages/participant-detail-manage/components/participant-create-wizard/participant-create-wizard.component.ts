@@ -54,7 +54,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
         is_present: [``],
-        locked_out: [``]
+        locked_out: [``],
+        home_committee_id: [``],
+        guest: [``]
     };
 
     public get randomPasswordFn(): (() => string) | null {
