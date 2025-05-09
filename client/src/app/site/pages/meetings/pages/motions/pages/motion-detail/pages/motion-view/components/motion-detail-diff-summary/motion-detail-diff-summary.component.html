@@ -24,10 +24,15 @@
                             } @else {
                                 <span>&ensp;({{ 'Change recommendation' | translate }})</span>
                             }
-                            @if(motion.isForwardedAmendment && backtrackingIsOn) {
-                                <mat-icon class="pointer-icon" color="primary" inline [matTooltip]="'was forwarded' | translate">
+                            @if (motion.isForwardedAmendment && backtrackingIsOn) {
+                                <mat-icon
+                                    class="pointer-icon"
+                                    color="primary"
+                                    inline
+                                    [matTooltip]="'was forwarded' | translate"
+                                >
                                     info
-                                </mat-icon>                              
+                                </mat-icon>
                             }
                         </a>
                         @if (isChangeRecommendation(change)) {

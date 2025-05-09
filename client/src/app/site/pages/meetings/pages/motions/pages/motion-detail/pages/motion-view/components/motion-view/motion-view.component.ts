@@ -96,7 +96,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public showAllAmendments = false;
 
-    public markAmendmentAsForwarded(): boolean {
+    public backtrackingIsOn(): boolean {
         return this.originMotionsLoaded.length > 0;
     }
 

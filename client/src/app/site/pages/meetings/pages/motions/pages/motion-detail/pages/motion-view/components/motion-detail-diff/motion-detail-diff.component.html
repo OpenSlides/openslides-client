@@ -2,11 +2,11 @@
 <div class="motion-detail-diff">
     @if (showSummary) {
         <os-motion-detail-diff-summary
+            [backtrackingIsOn]="backtrackingIsOn"
             [changes]="changes"
             [elContainer]="nativeElement"
             [motion]="motion"
             [scrollToChange]="scrollToChange"
-            [backtrackingIsOn]="backtrackingIsOn"
         ></os-motion-detail-diff-summary>
     }
     @if (showPreamble) {
@@ -109,10 +109,15 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
-                                @if(motion.isForwardedAmendment && backtrackingIsOn) {
-                                    <mat-icon class="pointer-icon" color="primary" inline [matTooltip]="'was forwarded' | translate">
+                                @if (motion.isForwardedAmendment && backtrackingIsOn) {
+                                    <mat-icon
+                                        class="pointer-icon"
+                                        color="primary"
+                                        inline
+                                        [matTooltip]="'was forwarded' | translate"
+                                    >
                                         info
-                                    </mat-icon>                              
+                                    </mat-icon>
                                 }
                                 <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
                                 <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>

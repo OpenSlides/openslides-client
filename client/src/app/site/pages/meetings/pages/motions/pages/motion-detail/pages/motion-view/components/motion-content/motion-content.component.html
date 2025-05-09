@@ -31,6 +31,7 @@
         </div>
     } @else {
         <os-motion-detail-diff
+            [backtrackingIsOn]="backtrackingIsOn"
             [changes]="changesForDiffMode$ | async"
             [highlightedLine]="highlightedLine"
             [lineNumberingMode]="lineNumberingMode"
@@ -38,7 +39,6 @@
             [noEditMode]="noEditMode"
             [scrollToChange]="scrollToChange"
             [showAllAmendments]="showAllAmendments$ | async"
-            [backtrackingIsOn]="backtrackingIsOn"
             (createChangeRecommendation)="createChangeRecommendation($event)"
         />
     }

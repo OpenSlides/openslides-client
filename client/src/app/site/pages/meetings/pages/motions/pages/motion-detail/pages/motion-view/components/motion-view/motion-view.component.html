@@ -258,11 +258,11 @@
 
             <os-motion-content
                 #content
+                [backtrackingIsOn]="backtrackingIsOn()"
                 [changeRecoMode]="changeRecoMode"
                 [lineNumberingMode]="lineNumberingMode"
                 [motion]="motion"
                 [showAllAmendments]="showAllAmendments"
-                [backtrackingIsOn]="markAmendmentAsForwarded()"
                 [unifiedChanges]="unifiedChanges$"
                 (updateCrMode)="changeRecoMode = $event"
             />
