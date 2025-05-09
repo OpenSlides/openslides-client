@@ -96,6 +96,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public showAllAmendments = false;
 
+    public markAmendmentAsForwarded(): boolean {
+        return this.originMotionsLoaded.length > 0;
+    }
+
     /**
      * preloaded next motion for direct navigation
      */
@@ -390,7 +394,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private addOriginMotionTab(id: Id): void {
         const originMotion = this.repo.getViewModelUnsafe(id);
-        if (!this.originMotionsLoaded.find(m => m.id === id)) {
+        if (!this.originMotionsLoaded.find(m => m.id === id) && originMotion) {
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
             originMotion.meeting = meeting;
 

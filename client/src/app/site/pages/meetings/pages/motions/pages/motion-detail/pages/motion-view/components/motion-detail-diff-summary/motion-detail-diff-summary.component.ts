@@ -46,6 +46,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     @Input()
     public elContainer: any;
 
+    @Input()
+    public backtrackingIsOn: boolean = false;
+
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
      *
