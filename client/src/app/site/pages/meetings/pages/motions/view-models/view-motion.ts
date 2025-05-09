@@ -71,6 +71,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.state?.workflow || null;
     }
 
+    public get isForwardedAmendment(): boolean {
+        return this.markAmendmentsAsForwarded;
+    }
+
     public get submittersAsUsers(): ViewUser[] {
         return (this.submitters || []).map(submitter => submitter.user);
     }
@@ -408,6 +412,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     comments: ViewMotionComment[];
+    markAmendmentsAsForwarded: boolean;
 }
 
 export interface ViewMotion
