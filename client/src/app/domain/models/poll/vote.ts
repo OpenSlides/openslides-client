@@ -39,4 +39,11 @@ export class Vote extends BaseModel<Vote> {
     ];
 }
 
-export interface Vote extends HasMeetingId {}
+export interface Vote extends HasMeetingId {
+    weight: number;
+    value: VoteValue;
+    option_id: Id; // (assignment|motion)_option/vote_ids;
+    user_i: Id; // user/vote_ids;
+    delegated_user_id: Id; // meeting_user/vote_delegated_vote_ids;
+    user_token: string;
+}

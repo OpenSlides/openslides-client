@@ -32,4 +32,13 @@ export class StructureLevel extends BaseModel<StructureLevel> {
         `meeting_id`
     ];
 }
-export interface StructureLevel extends HasMeetingId {}
+export interface StructureLevel extends HasMeetingId {
+    readonly name: string;
+    readonly color: string;
+    readonly default_time: number;
+
+    // Relations
+    meeting_id: Id;
+    meeting_user_ids: Id[];
+    structure_level_list_of_speakers_ids: Id[];
+}

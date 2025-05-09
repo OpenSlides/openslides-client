@@ -276,8 +276,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const parser = new DOMParser();
             const doc = parser.parseFromString(this.value, `text/html`);
             const elements = doc.getElementsByTagName(`*`);
-            for (let i = 0; i < elements.length; i++) {
-                const el = elements[i] as HTMLElement;
+            for (const element of elements) {
+                const el = element as HTMLElement;
                 if (el.style.color) {
                     this.textColorSet.add(tinycolor(el.style.color).toHexString());
                 }

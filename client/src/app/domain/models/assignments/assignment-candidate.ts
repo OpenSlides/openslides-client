@@ -25,4 +25,8 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
         `meeting_id`
     ];
 }
-export interface AssignmentCandidate extends HasMeetingId {}
+export interface AssignmentCandidate extends HasMeetingId {
+    weight: number;
+    assignment_id: Id;
+    meeting_user_id: Id;
+}

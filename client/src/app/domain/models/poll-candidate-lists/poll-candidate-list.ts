@@ -19,4 +19,7 @@ export class PollCandidateList extends BaseModel<PollCandidateList> {
         `option_id`
     ];
 }
-export interface PollCandidateList extends HasMeetingId {}
+export interface PollCandidateList extends HasMeetingId {
+    option_id: Id; // option/content_object_id;
+    poll_candidate_ids: Id[]; // poll_candidate/poll_candidate_list_id;
+}

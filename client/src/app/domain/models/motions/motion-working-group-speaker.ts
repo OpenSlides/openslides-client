@@ -22,4 +22,8 @@ export class MotionWorkingGroupSpeaker extends BaseModel<MotionWorkingGroupSpeak
         `meeting_id`
     ];
 }
-export interface MotionWorkingGroupSpeaker extends HasMeetingId {}
+export interface MotionWorkingGroupSpeaker extends HasMeetingId {
+    weight: number;
+    meeting_user_id: Id; // meeting_user/submitted_motion_ids;
+    motion_id: Id; // motion/working_group_speaker_ids;
+}
