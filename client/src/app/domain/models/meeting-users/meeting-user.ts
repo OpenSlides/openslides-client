@@ -57,4 +57,26 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `structure_level_ids`
     ];
 }
-export interface MeetingUser {}
+export interface MeetingUser {
+    readonly comment: string;
+    readonly number: string;
+    readonly about_me: string;
+    readonly vote_weight: number;
+    readonly locked_out: boolean;
+
+    user_id: Id;
+    meeting_id: Id;
+
+    vote_delegated_to_id: Id; // meeting_user/vote_delegations_from_ids;
+
+    group_ids: Id[]; // (group/meeting_user_ids)[];
+    speaker_ids: Id[]; // (speaker/meeting_user_id)[];
+    personal_note_ids: Id[]; // (personal_note/meeting_user_id)[];
+    supported_motion_ids: Id[]; // (motion/supporter_meeting_user_ids)[];
+    submitted_motion_ids: Id[]; // (motion_submitter/meeting_user_id)[];
+    assignment_candidate_ids: Id[]; // (assignment_candidate/meeting_user_id)[];
+    vote_delegated_vote_ids: Id[];
+    vote_delegations_from_ids: Id[]; // meeting_user/vote_delegated_to_id;
+    chat_message_ids: Id[]; // (chat_message/meeting_user_id)[];
+    structure_level_ids: Id[]; // structure_level/meeting_user_ids
+}

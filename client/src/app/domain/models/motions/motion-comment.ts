@@ -22,4 +22,8 @@ export class MotionComment extends BaseModel<MotionComment> {
         `meeting_id`
     ];
 }
-export interface MotionComment extends HasMeetingId {}
+export interface MotionComment extends HasMeetingId {
+    comment: string;
+    motion_id: Id; // motion/comment_ids;
+    section_id: Id; // motion_comment_section/comment_ids;
+}

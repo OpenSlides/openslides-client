@@ -8,7 +8,7 @@ export class MotionEditor extends BaseModel<MotionEditor> {
     public weight!: number;
 
     public meeting_user_id!: Id; // meeting_user/motion_editor_ids;
-    public motion_id!: Id; // motion/editor_ids;
+    public motion_id: Id; // motion/editor_ids;
 
     public constructor(input?: any) {
         super(MotionEditor.COLLECTION, input);
@@ -22,4 +22,8 @@ export class MotionEditor extends BaseModel<MotionEditor> {
         `meeting_id`
     ];
 }
-export interface MotionEditor extends HasMeetingId {}
+export interface MotionEditor extends HasMeetingId {
+    weight: number;
+    meeting_user_id: Id; // meeting_user/motion_editor_ids;
+    motion_id: Id; // motion/editor_ids;
+}

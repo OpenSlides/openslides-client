@@ -25,4 +25,8 @@ export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
         `speaker_ids`
     ];
 }
-export interface PointOfOrderCategory extends HasMeetingId {}
+export interface PointOfOrderCategory extends HasMeetingId {
+    text: string;
+    rank: number;
+    speaker_ids: Id[];
+}

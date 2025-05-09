@@ -28,4 +28,10 @@ export class ActionWorker extends BaseModel {
     ];
 }
 
-export interface ActionWorker {}
+export interface ActionWorker {
+    name: string;
+    state: ActionWorkerState;
+    created: number;
+    timestamp: number;
+    result?: any;
+}

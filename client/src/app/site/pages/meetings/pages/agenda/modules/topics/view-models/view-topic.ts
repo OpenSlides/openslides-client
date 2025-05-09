@@ -52,4 +52,4 @@ export interface ViewTopic
     HasMeeting,
     ViewTopicRelations {}
 
-interface ViewTopicRelations extends HasPolls<ViewTopic> {}
+interface ViewTopicRelations extends HasPolls<ViewTopic> { null }
