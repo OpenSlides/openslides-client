@@ -621,8 +621,8 @@ export class LineNumberingService {
      */
     private insertLineNumbersToInlineNode(element: Element, length: number, highlight: number | null): Element {
         const oldChildren: Node[] = [];
-        for (let i = 0; i < element.childNodes.length; i++) {
-            oldChildren.push(element.childNodes[i]);
+        for (const child of element.childNodes) {
+            oldChildren.push(child);
         }
 
         while (element.firstChild) {
@@ -632,8 +632,8 @@ export class LineNumberingService {
         for (let i = 0; i < oldChildren.length; i++) {
             if (oldChildren[i].nodeType === TEXT_NODE) {
                 const ret = this.textNodeToLines(oldChildren[i], length, highlight);
-                for (let j = 0; j < ret.length; j++) {
-                    element.appendChild(ret[j]);
+                for (const elem of ret) {
+                    element.appendChild(elem);
                 }
             } else if (oldChildren[i].nodeType === ELEMENT_NODE) {
                 const childElement = oldChildren[i] as Element;
@@ -672,8 +672,8 @@ export class LineNumberingService {
         this.prependLineNumberToFirstText = true;
 
         const oldChildren = [];
-        for (let i = 0; i < element.childNodes.length; i++) {
-            oldChildren.push(element.childNodes[i]);
+        for (const child of element.childNodes) {
+            oldChildren.push(child);
         }
 
         while (element.firstChild) {
@@ -696,8 +696,8 @@ export class LineNumberingService {
                     }
                 }
                 const ret = this.textNodeToLines(oldChildren[i], length, highlight);
-                for (let j = 0; j < ret.length; j++) {
-                    element.appendChild(ret[j]);
+                for (const elem of ret) {
+                    element.appendChild(elem);
                 }
             } else if (oldChildren[i].nodeType === ELEMENT_NODE) {
                 const firstword = this.lengthOfFirstInlineWord(oldChildren[i]);
