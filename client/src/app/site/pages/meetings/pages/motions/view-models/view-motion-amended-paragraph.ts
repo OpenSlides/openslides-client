@@ -75,10 +75,9 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
             case MergeAmendment.NO:
                 return false;
             default:
-                const mergeRecommendation = this.amendment.recommendation
+                switch (this.amendment.recommendation
                     ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED;
-                switch (mergeRecommendation) {
+                    : MergeAmendment.UNDEFINED) {
                     case MergeAmendment.YES:
                         return true;
                     case MergeAmendment.NO:
@@ -101,19 +100,17 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
     }
 
     public showInDiffView(): boolean {
-        const mergeState = this.amendment.state
+        switch (this.amendment.state
             ? this.amendment.state.merge_amendment_into_final
-            : MergeAmendment.UNDEFINED;
-        switch (mergeState) {
+            : MergeAmendment.UNDEFINED) {
             case MergeAmendment.YES:
                 return true;
             case MergeAmendment.NO:
                 return false;
             default:
-                const mergeRecommendation = this.amendment.recommendation
+                switch (this.amendment.recommendation
                     ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED;
-                switch (mergeRecommendation) {
+                    : MergeAmendment.UNDEFINED) {
                     case MergeAmendment.YES:
                         return true;
                     case MergeAmendment.NO:

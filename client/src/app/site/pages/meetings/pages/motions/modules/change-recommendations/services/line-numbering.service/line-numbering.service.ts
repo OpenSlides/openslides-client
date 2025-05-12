@@ -247,6 +247,8 @@ export class LineNumberingService {
      */
     public calcBlockNodeLength(node: Element, oldLength: number): number {
         let newLength = oldLength;
+        const styles = node.getAttribute(`style`);
+        let padding = 0;
         switch (node.nodeName) {
             case `LI`:
                 newLength -= 5;
@@ -256,8 +258,6 @@ export class LineNumberingService {
                 break;
             case `DIV`:
             case `P`:
-                const styles = node.getAttribute(`style`);
-                let padding = 0;
                 if (styles) {
                     const leftpad = styles.split(`padding-left:`);
                     if (leftpad.length > 1) {
