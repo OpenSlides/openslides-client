@@ -196,6 +196,18 @@ Prerequisites:
             type: `check`
         },
         {
+            name: _(`Allow forwarding of amendments`),
+            help_text: _(
+                `Enables the forwarding of amendments in the selected state.
+
+Prerequisites:
+1. Motion forwarding is activated.
+2. 'Original version with changes' in forwarding dialog must be selected.`
+            ),
+            selector: `allow_amendment_forwarding`,
+            type: `check`
+        },
+        {
             name: _(`Set identifier`),
             help_text: _(
                 `Activates the automatic setting of a number for motions that reach this state. The scheme for numbering can be customized under > [Settings] > [Motions].`

@@ -1,32 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { VOTE_MAJORITY, VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll/poll-constants';
+
+import { PollService } from '../../services/poll.service';
 
 @Pipe({
-    name: `pollParseNumber`,
-    standalone: false
+    name: `pollParseNumber`
 })
 export class PollParseNumberPipe implements PipeTransform {
-    private formatter = new Intl.NumberFormat(`us-us`, {
-        style: `decimal`,
-        useGrouping: false,
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 6
-    });
-
-    public constructor(private translate: TranslateService) {}
+    public constructor(private pollService: PollService) {}
 
     public transform(value?: number): string {
-        switch (value) {
-            case VOTE_MAJORITY:
-                return this.translate.instant(`majority`);
-            case undefined:
-            case null:
-                return this.formatter.format(0);
-            case VOTE_UNDOCUMENTED:
-                return this.translate.instant(`undocumented`);
-            default:
-                return this.formatter.format(value);
-        }
+        return this.pollService.parseNumber(value);
     }
 }

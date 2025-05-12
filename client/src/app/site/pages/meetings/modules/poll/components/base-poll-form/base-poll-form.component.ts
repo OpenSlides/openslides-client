@@ -52,7 +52,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
 
     public PollType = PollType;
-    public PollPropertyVerbose = PollPropertyVerbose;
+    public PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = PollPropertyVerbose;
     public readonly pollBackendDurationChoices = PollBackendDurationChoices;
 
     /**

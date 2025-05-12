@@ -14,6 +14,7 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
+import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -46,7 +47,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private config: DateFnsConfigurationService,
         private updateService: UpdateService,
         private router: Router,
-        private modelStore: ViewModelStoreService
+        private modelStore: ViewModelStoreService,
+        private ctService: CustomTranslationService
     ) {
         overloadJsFunctions();
         this.addDebugFunctions();
@@ -82,6 +84,13 @@ export class OpenSlidesMainComponent implements OnInit {
 
             // update date-fns locale
             this.updateLocaleByName(event.lang);
+        });
+
+        this.ctService.customTranslationSubject.subscribe(ct => {
+            this.translate.setTranslation(`en`, ct || {}, false);
+            if (this.translate.currentLang !== `en`) {
+                this.translate.setTranslation(this.translate.currentLang, {}, true);
+            }
         });
     }
 

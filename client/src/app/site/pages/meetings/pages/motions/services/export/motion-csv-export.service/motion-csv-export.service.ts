@@ -12,7 +12,6 @@ import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionFormatService } from '../../common/motion-format.service';
 import { getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../definitions';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionCsvExport {
     number?: string;
@@ -53,7 +52,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
 ];
 
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionCsvExportService {
     public crMode = ChangeRecoMode;
@@ -100,39 +99,71 @@ export class MotionCsvExportService {
         if (!crMode) {
             crMode = this.crMode.Original;
         }
-
         const properties = sortMotionPropertyList([`number`, `title`].concat(contentToExport));
+        if (contentToExport.includes(`speakers`)) {
+            properties.push(`speakers`);
+        }
         const exportProperties: (CsvColumnDefinitionProperty<ViewMotion> | CsvColumnDefinitionMap<ViewMotion>)[] =
             properties.map(option => {
-                if (option === `submitters`) {
-                    return {
-                        label: `submitters`,
-                        map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
-                    };
-                } else if (option === `recommendation`) {
-                    return {
-                        label: `recommendation`,
-                        map: motion => this.motionService.getExtendedRecommendationLabel(motion)
-                    };
-                } else if (option === `state`) {
-                    return {
-                        label: `state`,
-                        map: motion => this.motionService.getExtendedStateLabel(motion)
-                    };
-                } else if (option === `text`) {
-                    return {
-                        label: `Text`,
-                        map: motion => this.createText(motion, crMode!)
-                    };
-                } else if (option === `block`) {
-                    return {
-                        label: `Motion block`,
-                        map: motion => (motion.block ? motion.block.getTitle() : ``)
-                    };
-                } else {
-                    return { property: option } as CsvColumnDefinitionProperty<ViewMotion>;
+                switch (option) {
+                    case `submitters`:
+                        return {
+                            label: `submitters`,
+                            map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
+                        };
+                    case `editors`:
+                        return {
+                            label: `Motion editors`,
+                            map: motion => motion.editors.join(`, `)
+                        };
+                    case `working_group_speakers`:
+                        return {
+                            label: `Spokesperson`,
+                            map: motion => motion.working_group_speakers.join(`, `)
+                        };
+                    case `recommendation`:
+                        return {
+                            label: `recommendation`,
+                            map: motion => this.motionService.getExtendedRecommendationLabel(motion)
+                        };
+                    case `state`:
+                        return {
+                            label: `state`,
+                            map: motion => this.motionService.getExtendedStateLabel(motion)
+                        };
+                    case `text`:
+                        return {
+                            label: `Text`,
+                            map: motion => this.createText(motion, crMode!)
+                        };
+                    case `block`:
+                        return {
+                            label: `Motion block`,
+                            map: motion => (motion.block ? motion.block.getTitle() : ``)
+                        };
+                    case `speakers`:
+                        return {
+                            label: `Number of open requests to speak`,
+                            map: motion =>
+                                motion.list_of_speakers && motion.list_of_speakers.waitingSpeakerAmount > 0
+                                    ? motion.list_of_speakers.waitingSpeakerAmount.toString()
+                                    : ``
+                        };
+                    default:
+                        return { property: option } as CsvColumnDefinitionProperty<ViewMotion>;
                 }
             });
+        // referring motions
+        if (contentToExport?.includes(`referring_motions`)) {
+            exportProperties.push({
+                label: `Referring motions`,
+                map: motion =>
+                    motion.referenced_in_motion_recommendation_extensions
+                        .naturalSort(this.translate.currentLang, [`number`, `title`])
+                        .map(motion => motion.getNumberOrTitle())
+                        .join(`, `)
+            });
+        }
         exportProperties.push(
             ...comments.map(commentId => {
                 const label =
