@@ -94,11 +94,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this.unifiedChanges$.value;
     }
 
-    public showAllAmendments = false;
-
-    public backtrackingIsOn(): boolean {
+    public get backtrackingIsOn(): boolean {
         return this.originMotionsLoaded.length > 0;
     }
+
+    public showAllAmendments = false;
 
     /**
      * preloaded next motion for direct navigation
