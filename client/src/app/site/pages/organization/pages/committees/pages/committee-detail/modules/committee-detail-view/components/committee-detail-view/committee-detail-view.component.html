@@ -188,7 +188,19 @@
                                 *osScrollingTableCell="'meta'; row as committee; config: { width: 40 }"
                                 class="cell-slot fill"
                             >
-                                @if (committee.canAccess()) {
+                                @if (committee.canAccess() && !!committee.meeting_ids?.length) {
+                                    <div>
+                                        <os-icon-container
+                                            icon="event_available"
+                                            iconTooltip="{{ 'Meetings' | translate }}"
+                                            iconTooltipPosition="right"
+                                        >
+                                            {{ committee.meeting_ids?.length ?? 0 }}
+                                        </os-icon-container>
+                                    </div>
+                                }
+
+                                @if (committee.canAccess() && !!committee.child_ids?.length) {
                                     <div>
                                         <os-icon-container
                                             icon="layers"
