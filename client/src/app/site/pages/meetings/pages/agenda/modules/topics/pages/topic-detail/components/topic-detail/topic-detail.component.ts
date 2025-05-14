@@ -77,6 +77,11 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public readonly hasLoaded = new Deferred<boolean>();
 
+    /**
+     * Show apply feedback for a short time
+     */
+    public applyFeedback = false;
+
     private _topicId: Id | null = null;
 
     public getTitleFn = (): string => this.topic.getListTitle();
@@ -359,6 +364,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public async applyTopicContent(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
+        this.applyFeedback = true;
+        setTimeout(() => this.applyFeedback = false, 2000);
     }
 
     private async createTopic(): Promise<void> {

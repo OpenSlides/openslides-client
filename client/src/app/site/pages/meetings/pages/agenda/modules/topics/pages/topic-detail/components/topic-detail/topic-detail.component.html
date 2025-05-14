@@ -144,6 +144,11 @@
                                 <button mat-stroked-button (click)="applyTopicContent()">
                                     <span>{{ 'Apply' | translate }}</span>
                                 </button>
+                                @if (applyFeedback) {
+                                    <div class="apply-feedback-icon">
+                                        <mat-icon>check</mat-icon>
+                                    </div>
+                                }
                             </div>
                         }
                     </form>
