@@ -91,7 +91,7 @@
                 }
 
                 @if (editTopic && topicForm) {
-                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+                    <form tabindex="-1" [formGroup]="topicForm">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>
