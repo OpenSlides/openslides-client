@@ -1,3 +1,5 @@
+@use 'src/assets/styles/h-scroller.scss';
+
 .committee-details {
     position: relative;
     margin-bottom: 3em !important;
@@ -36,4 +38,54 @@
     &.expanded {
         max-height: 100%;
     }
+}
+
+$navbar-size: 40px;
+
+.breadcrumb-nav-bar {
+    width: 100%;
+    display: flex;
+}
+
+.breadcrumb-section {
+    white-space: nowrap;
+    display: flex;
+
+    .mat-mdc-button {
+        padding: 0;
+    }
+}
+
+.arrow {
+    height: $navbar-size;
+    .mat-icon {
+        line-height: $navbar-size;
+        height: $navbar-size;
+    }
+}
+
+.mat-mdc-button.breadcrumb {
+    height: $navbar-size;
+    > .content-node {
+        white-space: nowrap;
+    }
+}
+
+.fake-breadcrumb {
+    padding: 0;
+}
+
+.breadcrumb-text {
+    font-size: 16px;
+    font-weight: 500;
+    margin: auto 0px;
+    overflow: hidden;
+}
+
+.breadcrumb-position {
+    position: fixed;
+    top: 78px;
+    z-index: 101;
+    background-color: var(--theme-primary-contrast-500);
+    width: 100%;
 }

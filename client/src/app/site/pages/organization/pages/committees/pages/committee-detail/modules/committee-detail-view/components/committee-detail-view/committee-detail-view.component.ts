@@ -137,6 +137,10 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         });
     }
 
+    public getNavbarCommittees(committee: ViewCommittee): ViewCommittee[] {
+        return [...committee.all_parents, committee];
+    }
+
     public toggleForwardingList(): void {
         this.forwardingExpanded = !this.forwardingExpanded;
     }
