@@ -139,31 +139,20 @@
                         }
                     }
                 </os-committee-meta-info>
-                <!-- Number of total accounts -->
+                <!-- Numbers of accounts -->
                 <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
-                    <span>{{ accountNumber }}</span>
+                    <div>
+                        {{ 'Total:' | translate }}&nbsp;{{ accountNumber }}&nbsp;({{
+                            'of this active:' | translate
+                        }}&nbsp;{{ accountActiveNumber }})
+                    </div>
+                    @if (!!accountHomeCommitteeNumber) {
+                        <div>{{ 'Home Committee:' | translate }}&nbsp;{{ accountHomeCommitteeNumber }}</div>
+                    }
+                    @if (!!accountGuestNumber) {
+                        <div>{{ 'External:' | translate }}&nbsp;{{ accountGuestNumber }}</div>
+                    }
                 </os-committee-meta-info>
-                <!-- Number of accounts in the meetings -->
-                <os-committee-meta-info icon="person" title="{{ 'Accounts in meetings' | translate }}">
-                    <span>{{ accountInMeetingsNumber }}</span>
-                </os-committee-meta-info>
-                <!-- Number of native users -->
-                <os-committee-meta-info icon="person" title="{{ 'Home Committee Accounts' | translate }}">
-                    <span>{{ accountHomeCommitteeNumber }}</span>
-                </os-committee-meta-info>
-                <!-- Number of users with guest -->
-                <os-committee-meta-info icon="person" title="{{ 'Guest' | translate }}">
-                    <span>{{ accountGuestNumber }}</span>
-                </os-committee-meta-info>
-
-                <!-- Parent committee -->
-                @if (committee.parent) {
-                    <os-committee-meta-info icon="layers" title="{{ 'Parent Committee' | translate }}">
-                        <span>
-                            {{ committee.parent.name }}
-                        </span>
-                    </os-committee-meta-info>
-                }
             }
             <div class="os-card">
                 <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">

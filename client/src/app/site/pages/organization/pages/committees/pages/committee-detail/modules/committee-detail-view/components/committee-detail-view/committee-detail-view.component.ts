@@ -38,7 +38,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public accountNumber = 0;
-    public accountInMeetingsNumber = 0;
+    public accountActiveNumber = 0;
     public accountHomeCommitteeNumber = 0;
     public accountGuestNumber = 0;
     public committeeAccounts = 0;
@@ -74,11 +74,9 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm.id === comm.id)
                     )).subscribe(committees => {
                         this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
+                        this.accountActiveNumber = this.calculateIds(committees, this.calcAccountActiveIds);
                         this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
                         this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
-                    });
-                    this.currentCommitteeObservable.subscribe(comm => {
-                        this.accountInMeetingsNumber = comm.user_ids?.length;
                     });
                 }
             })
@@ -174,6 +172,16 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     private calcAccountIds(committee: ViewCommittee): Set<number> {
         const result = new Set<number>(committee.manager_ids);
         result.update(new Set(committee.user_ids));
+        return result;
+    }
+
+    private calcAccountActiveIds(committee: ViewCommittee): Set<number> {
+        const result = new Set<number>(committee.manager_ids);
+        for (const user of committee.users ?? []) {
+            if (user.is_active) {
+                result.add(user.id);
+            }
+        }
         return result;
     }
 
