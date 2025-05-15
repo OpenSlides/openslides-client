@@ -170,7 +170,7 @@ export const PollMethodVerbose = {
 };
 
 export const PollPercentBaseVerbose = {
-    Y: ``,
+    Y: _(`Sum of votes without general options`),
     YN: _(`Yes/No`),
     YNA: _(`Yes/No/Abstain`),
     valid: _(`All valid ballots`),
