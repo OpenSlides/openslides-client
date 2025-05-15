@@ -89,52 +89,56 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
-        <div>
-            @if (getCommitteeChildrenNumber(committee)) {
-                <div>
-                    <os-icon-container
-                        icon="layers"
-                        iconTooltip="{{ 'Child committees' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ getCommitteeChildrenNumber(committee) }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.meetingAmount) {
-                <div>
-                    <os-icon-container
-                        icon="event_available"
-                        iconTooltip="{{ 'Meetings' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.meetingAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.memberAmount) {
-                <div>
-                    <os-icon-container
-                        icon="group"
-                        iconTooltip="{{ 'Accounts' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.memberAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.managerAmount) {
-                <div>
-                    <os-icon-container
-                        icon="engineering"
-                        iconTooltip="{{ 'Committee management' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.managerAmount }}
-                    </os-icon-container>
-                </div>
-            }
+    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 150 }">
+        <div class="meta-flex-row">
+            <div class="meta-flex-column">
+                @if (committee.meetingAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="event_available"
+                            iconTooltip="{{ 'Meetings' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.meetingAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+                @if (getCommitteeChildrenNumber(committee)) {
+                    <div>
+                        <os-icon-container
+                            icon="layers"
+                            iconTooltip="{{ 'Child committees' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ getCommitteeChildrenNumber(committee) }}
+                        </os-icon-container>
+                    </div>
+                }
+            </div>
+            <div class="meta-flex-column">
+                @if (committee.memberAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="group"
+                            iconTooltip="{{ 'Accounts' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.memberAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+                @if (committee.managerAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="engineering"
+                            iconTooltip="{{ 'Committee management' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.managerAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 
