@@ -25,14 +25,13 @@
 @if (currentCommitteeObservable | async; as committee) {
     <div class="breadcrumb-position">
         <span class="breadcrumb-nav-bar h-scroller">
+            <button class="breadcrumb" mat-button [routerLink]="['/', 'committees']">
+                <mat-icon class="grey-icon foreground-icon">layers</mat-icon>
+            </button>
             @for (item of getNavbarCommittees(committee); track item.id) {
                 <span class="breadcrumb-section">
                     <span class="arrow">
-                        @if ($first) {
-                            <mat-icon>layers</mat-icon>
-                        } @else {
-                            <mat-icon>chevron_right</mat-icon>
-                        }
+                        <mat-icon class="grey-icon foreground-icon">chevron_right</mat-icon>
                     </span>
                     @if (!$last) {
                         <button class="breadcrumb" mat-button [routerLink]="['/', 'committees', item.id]">
