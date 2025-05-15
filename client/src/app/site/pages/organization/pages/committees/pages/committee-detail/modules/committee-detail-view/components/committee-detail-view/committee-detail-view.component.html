@@ -171,83 +171,87 @@
             }
             <div class="os-card">
                 <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
-                    <mat-tab label="{{ 'Committees' | translate }}">
-                        <os-list
-                            [filterProps]="['name']"
-                            [fullScreen]="false"
-                            [listObservable]="childCommitteesObservable"
-                            [multiSelect]="false"
-                            [vScrollFixed]="70"
-                        >
-                            <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
-                                @if (committee.canAccess()) {
-                                    <a
-                                        class="stretch-to-fill-parent"
-                                        [attr.aria-label]="ariaLabel(committee)"
-                                        [routerLink]="['/', 'committees', committee.id]"
-                                    ></a>
-                                    <div class="overflow-hidden">
-                                        <div class="title-line ellipsis-overflow">
-                                            {{ committee.name }}
-                                            @if (committee.description?.trim()) {
-                                                <div class="subtitle ellipsis-overflow">
-                                                    {{ committee.description }}
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            <!-- layers with committee.length-->
-                            <div
-                                *osScrollingTableCell="'meta'; row as committee; config: { width: 40 }"
-                                class="cell-slot fill"
+                    @if (!!(childCommitteesObservable | async).length) {
+                        <mat-tab label="{{ 'Committees' | translate }}">
+                            <os-list
+                                [filterProps]="['name']"
+                                [fullScreen]="false"
+                                [listObservable]="childCommitteesObservable"
+                                [multiSelect]="false"
+                                [vScrollFixed]="70"
                             >
-                                @if (committee.canAccess() && !!committee.meeting_ids?.length) {
-                                    <div>
-                                        <os-icon-container
-                                            icon="event_available"
-                                            iconTooltip="{{ 'Meetings' | translate }}"
-                                            iconTooltipPosition="right"
-                                        >
-                                            {{ committee.meeting_ids?.length ?? 0 }}
-                                        </os-icon-container>
-                                    </div>
-                                }
+                                <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
+                                    @if (committee.canAccess()) {
+                                        <a
+                                            class="stretch-to-fill-parent"
+                                            [attr.aria-label]="ariaLabel(committee)"
+                                            [routerLink]="['/', 'committees', committee.id]"
+                                        ></a>
+                                        <div class="overflow-hidden">
+                                            <div class="title-line ellipsis-overflow">
+                                                {{ committee.name }}
+                                                @if (committee.description?.trim()) {
+                                                    <div class="subtitle ellipsis-overflow">
+                                                        {{ committee.description }}
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <!-- layers with committee.length-->
+                                <div
+                                    *osScrollingTableCell="'meta'; row as committee; config: { width: 40 }"
+                                    class="cell-slot fill"
+                                >
+                                    @if (committee.canAccess() && !!committee.meeting_ids?.length) {
+                                        <div>
+                                            <os-icon-container
+                                                icon="event_available"
+                                                iconTooltip="{{ 'Meetings' | translate }}"
+                                                iconTooltipPosition="right"
+                                            >
+                                                {{ committee.meeting_ids?.length ?? 0 }}
+                                            </os-icon-container>
+                                        </div>
+                                    }
 
-                                @if (committee.canAccess() && !!committee.child_ids?.length) {
-                                    <div>
-                                        <os-icon-container
-                                            icon="layers"
-                                            iconTooltip="{{ 'Child committees' | translate }}"
-                                            iconTooltipPosition="right"
-                                        >
-                                            {{ committee.child_ids?.length ?? 0 }}
-                                        </os-icon-container>
-                                    </div>
+                                    @if (committee.canAccess() && !!committee.child_ids?.length) {
+                                        <div>
+                                            <os-icon-container
+                                                icon="layers"
+                                                iconTooltip="{{ 'Child committees' | translate }}"
+                                                iconTooltipPosition="right"
+                                            >
+                                                {{ committee.child_ids?.length ?? 0 }}
+                                            </os-icon-container>
+                                        </div>
+                                    }
+                                </div>
+                            </os-list>
+                        </mat-tab>
+                    }
+                    @if (!!committee.meetings.length) {
+                        <mat-tab label="{{ 'Meetings' | translate }}">
+                            <div>
+                                @if (!getMeetingsSorted(committee).length) {
+                                    <mat-card class="meeting-preview-card">
+                                        <mat-card-content>
+                                            {{ 'No meetings available' | translate }}
+                                        </mat-card-content>
+                                    </mat-card>
+                                }
+                                @for (meeting of getMeetingsSorted(committee); track meeting) {
+                                    <os-committee-meeting-preview
+                                        class="meeting-preview-card"
+                                        [committee]="committee"
+                                        [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
+                                        [meeting]="meeting"
+                                    ></os-committee-meeting-preview>
                                 }
                             </div>
-                        </os-list>
-                    </mat-tab>
-                    <mat-tab label="{{ 'Meetings' | translate }}">
-                        <div>
-                            @if (!getMeetingsSorted(committee).length) {
-                                <mat-card class="meeting-preview-card">
-                                    <mat-card-content>
-                                        {{ 'No meetings available' | translate }}
-                                    </mat-card-content>
-                                </mat-card>
-                            }
-                            @for (meeting of getMeetingsSorted(committee); track meeting) {
-                                <os-committee-meeting-preview
-                                    class="meeting-preview-card"
-                                    [committee]="committee"
-                                    [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
-                                    [meeting]="meeting"
-                                ></os-committee-meeting-preview>
-                            }
-                        </div>
-                    </mat-tab>
+                        </mat-tab>
+                    }
                 </mat-tab-group>
             </div>
         </mat-card-content>
