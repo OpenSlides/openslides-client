@@ -92,9 +92,6 @@ msgstr ""
 msgid "Access data (PDF)"
 msgstr ""
 
-msgid "Access groups"
-msgstr ""
-
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid ""
 "Access only possible for participants of this meeting. All other accounts "
@@ -1675,14 +1672,14 @@ msgstr ""
 msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
-msgid "Default vote method"
-msgstr ""
-
 msgid "Default vote weight"
 msgstr ""
 
 msgid "Default voting duration"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Default voting method"
 msgstr ""
 
 msgid "Default voting type"
@@ -1966,6 +1963,10 @@ msgid "Election"
 msgstr ""
 
 msgid "Election documents"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll-form/assignment-poll-form.component.ts
+msgid "Election method"
 msgstr ""
 
 msgid "Elections"
@@ -2608,6 +2609,10 @@ msgstr ""
 
 #: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "If deactivated it is displayed below the title."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+msgid "If empty, everyone can access."
 msgstr ""
 
 msgid ""
