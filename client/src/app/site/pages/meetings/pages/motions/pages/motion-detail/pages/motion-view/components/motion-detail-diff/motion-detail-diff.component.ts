@@ -108,6 +108,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public showSummary = true;
+    
+    @Input()
+    public originMeetingName = [``];
 
     @Input()
     public set showPreamble(value: boolean) {
