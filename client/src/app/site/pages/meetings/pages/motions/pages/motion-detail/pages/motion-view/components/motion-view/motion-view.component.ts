@@ -98,6 +98,55 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this.originMotionsLoaded.length > 0;
     }
 
+    public get originMeetingName(): string[] {
+        const meetingName = [];
+        let j = 0;
+        for (let i = 0; i < this.motion.amendments.length; i++) {
+            // If the change is a recommendation the list needs an entry for it,
+            // but the change recommendation is just in the current meeting and should not have a meeting name
+            if (this.unifiedChanges[j]?.getChangeId().indexOf(`recommendation`) === 0) {
+                meetingName.push(``);
+                j += 1;
+            }
+            meetingName.push(this.getMeetingName(i, this.motion))
+            j += 1;
+        }
+        return meetingName;
+    }
+
+    private getMeetingName(i: number, motion: ViewMotion) : string {
+        /**
+         * if the motion has no origin then return the meeting name
+         * 
+         * if the motion still has an origin then load the origin Motion and look if that motion has an origin
+         * also check the new index for the amendment
+         */
+        const originMotion: ViewMotion | null  = this.repo.getViewModel(motion.origin_id)
+        if (this.meetingRepo.getViewModel(motion.amendments[i]?.origin_meeting_id) === null) {
+            return this.meetingRepo.getViewModel(motion.amendments[i].origin_meeting_id ?? motion.meeting_id).name
+        } else if (originMotion !== null && originMotion.amendments[i] && this.repo.getViewModel(originMotion.amendments[i]?.origin_meeting_id) === null) {
+            //console.log(`I have to go deeper`)
+            let index = 0;
+            const amendment = motion.amendments[i];
+            //console.log(this.repo.getViewModel(amendment.origin_id).getTitle())
+            const newIndex = motion.amendments.findIndex(x => x.getTitle() === this.repo.getViewModel(amendment.origin_id).getTitle())
+            //console.log(newIndex)
+            //console.log(`amendments title from the motion: `)
+            //motion.amendments.forEach(x => console.log(x.getTitle()))
+            //console.log(`amendment to compare to: `)
+            //console.log(this.repo.getViewModel(amendment.origin_id).getTitle())
+            //console.log(originMotion.amendments[index].getTitle())
+            //console.log(this.meetingRepo.getViewModel(originMotion.amendments[index].id))
+            console.log(this.meetingRepo.getViewModel(originMotion.amendments[index].meeting_id)?.name)
+            return this.getMeetingName(newIndex, originMotion)
+        } else {
+            console.log(`I am forwarded`)
+        }
+        //console.log(this.getMeetingName(i, originMotion))
+        return this.meetingRepo.getViewModel(motion.amendments[i].origin_meeting_id ?? motion.meeting_id).name 
+        
+    }
+
     public showAllAmendments = false;
     private _forwardingAvailable = false;
 
