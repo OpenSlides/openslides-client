@@ -195,4 +195,8 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     public hasCommitteeChildren(committee: ViewCommittee): boolean {
         return committee.all_childs.length > 0;
     }
+
+    public getCommitteeChildrenNumber(committee: ViewCommittee): number {
+        return committee.child_ids?.length ?? 0;
+    }
 }

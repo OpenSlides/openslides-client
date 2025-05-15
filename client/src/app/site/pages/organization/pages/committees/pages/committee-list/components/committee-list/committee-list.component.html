@@ -91,6 +91,17 @@
 
     <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
+            @if (getCommitteeChildrenNumber(committee)) {
+                <div>
+                    <os-icon-container
+                        icon="layers"
+                        iconTooltip="{{ 'Child committees' | translate }}"
+                        iconTooltipPosition="right"
+                    >
+                        {{ getCommitteeChildrenNumber(committee) }}
+                    </os-icon-container>
+                </div>
+            }
             @if (committee.meetingAmount) {
                 <div>
                     <os-icon-container
