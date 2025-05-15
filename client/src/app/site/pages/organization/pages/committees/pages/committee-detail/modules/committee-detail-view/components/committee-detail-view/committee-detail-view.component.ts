@@ -71,7 +71,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
                     ));
                     combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
-                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm.id === comm.id)
+                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm?.id === comm.id)
                     )).subscribe(committees => {
                         this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
                         this.accountActiveNumber = this.calculateIds(committees, this.calcAccountActiveIds);
