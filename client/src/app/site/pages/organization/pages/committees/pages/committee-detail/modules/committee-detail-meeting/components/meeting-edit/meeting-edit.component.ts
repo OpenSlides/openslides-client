@@ -267,7 +267,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
 
         if (this.isJitsiManipulationAllowed) {
-            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^\/]$/)];
+            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }

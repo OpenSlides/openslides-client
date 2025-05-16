@@ -113,8 +113,8 @@ class TestComponent {
             data: {
                 collection: `wifi_access_data`,
                 users_pdf_wlan_encryption: `WPA`,
-                users_pdf_wlan_password: `Super&StrongP455Word\\\"`,
-                users_pdf_wlan_ssid: `RandomWiWi\;\:`
+                users_pdf_wlan_password: `Super&StrongP455Word\\"`,
+                users_pdf_wlan_ssid: `RandomWiWi;:`
             },
             stable: false,
             type: `wifi_access_data`,
@@ -249,8 +249,8 @@ describe(`WifiAccessDataSlideComponent`, () => {
     it(`should have correct data for special characters`, () => {
         testComponent.type = `specialChar`;
         fixture.detectChanges();
-        expect(component.ssid).toBe(`RandomWiWi\;\:`);
-        expect(component.password).toBe(`Super&StrongP455Word\\\"`);
+        expect(component.ssid).toBe(`RandomWiWi;:`);
+        expect(component.password).toBe(`Super&StrongP455Word\\"`);
         expect(component.encryption).toBe(`WPA/WPA2`);
         const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,

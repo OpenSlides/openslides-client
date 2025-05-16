@@ -398,14 +398,14 @@ export class MotionDiffService {
             { by: `\n`, type: `append` }
         ]) {
             const newArr = [];
-            for (let i = 0; i < res.length; i++) {
+            for (const str of res) {
                 // Don't split HTML tags
-                if (res[i][0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
-                    newArr.push(res[i]);
+                if (str[0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
+                    newArr.push(str);
                     continue;
                 }
 
-                newArr.push(...splitStringKeepSeperator(res[i], splitConf.by, splitConf.type));
+                newArr.push(...splitStringKeepSeperator(str, splitConf.by, splitConf.type));
             }
             res = newArr;
         }
@@ -429,8 +429,8 @@ export class MotionDiffService {
 
         let str = ``;
         if (out.n.length === 0) {
-            for (let i = 0; i < out.o.length; i++) {
-                str += `<del>` + out.o[i] + `</del>`;
+            for (const o of out.o) {
+                str += `<del>` + o + `</del>`;
             }
         } else {
             if (out.n[0].text === undefined) {
@@ -530,9 +530,9 @@ export class MotionDiffService {
                 node.setAttribute(`style`, stylesNew.join(`;`));
             }
         }
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                this.removeColorStyles((node.childNodes[i] as Element));
+        for (const child of node.childNodes) {
+            if (child.nodeType === ELEMENT_NODE) {
+                this.removeColorStyles((child as Element));
             }
         }
     }
@@ -606,22 +606,22 @@ export class MotionDiffService {
         if (node.nodeName === `BR`) {
             const element = node as Element;
             let br = `<BR`;
-            for (let i = 0; i < element.attributes.length; i++) {
-                const attr = element.attributes[i];
+            for (const attibutes of element.attributes) {
+                const attr = attibutes;
                 br += ` ` + attr.name + `="` + attr.value + `"`;
             }
             return br + `>`;
         }
 
         let html = this.serializeTag(node);
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === TEXT_NODE) {
-                html += node.childNodes[i]
+        for (const child of node.childNodes) {
+            if (child.nodeType === TEXT_NODE) {
+                html += child
                     .nodeValue!.replace(/&/g, `&amp;`)
                     .replace(/</g, `&lt;`)
                     .replace(/>/g, `&gt;`);
             } else {
-                html += this.serializeDom(node.childNodes[i], stripLineNumbers);
+                html += this.serializeDom(child, stripLineNumbers);
             }
         }
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
@@ -642,9 +642,9 @@ export class MotionDiffService {
     public removeDuplicateClassesInsertedByCkeditor(html: string): string {
         const fragment = DomHelpers.htmlToFragment(html);
         const items = fragment.querySelectorAll(`li.os-split-before`);
-        for (let i = 0; i < items.length; i++) {
-            if (!DomHelpers.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
-                DomHelpers.removeCSSClass(items[i], `os-split-before`);
+        for (const item of items) {
+            if (!DomHelpers.isFirstNonemptyChild(item.parentNode!, item)) {
+                DomHelpers.removeCSSClass(item, `os-split-before`);
             }
         }
         return this.serializeDom(fragment, false);
@@ -723,20 +723,20 @@ export class MotionDiffService {
 
         let html = ``;
         let found = false;
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === fromChildTrace[0]) {
+        for (const child of node.childNodes) {
+            if (child === fromChildTrace[0]) {
                 found = true;
-                const childElement = node.childNodes[i] as Element;
+                const childElement = child as Element;
                 const remainingTrace = fromChildTrace;
                 remainingTrace.shift();
                 if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
                     html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (found) {
-                if (node.childNodes[i].nodeType === TEXT_NODE) {
-                    html += node.childNodes[i].nodeValue;
+                if (child.nodeType === TEXT_NODE) {
+                    html += child.nodeValue;
                 } else {
-                    const childElement = node.childNodes[i] as Element;
+                    const childElement = child as Element;
                     if (
                         !stripLineNumbers ||
                         (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
@@ -1151,13 +1151,12 @@ export class MotionDiffService {
         const fragment = DomHelpers.htmlToFragment(html);
 
         const delNodes = fragment.querySelectorAll(`.delete, del`);
-        for (let i = 0; i < delNodes.length; i++) {
-            delNodes[i].parentNode!.removeChild(delNodes[i]);
+        for (const del of delNodes) {
+            del.parentNode!.removeChild(del);
         }
 
         const insNodes = fragment.querySelectorAll(`ins`);
-        for (let i = 0; i < insNodes.length; i++) {
-            const ins = insNodes[i];
+        for (const ins of insNodes) {
             while (ins.childNodes.length > 0) {
                 const child = ins.childNodes.item(0);
                 ins.removeChild(child);
@@ -1167,8 +1166,8 @@ export class MotionDiffService {
         }
 
         const insertNodes = fragment.querySelectorAll(`.insert`);
-        for (let i = 0; i < insertNodes.length; i++) {
-            DomHelpers.removeCSSClass(insertNodes[i], `insert`);
+        for (const insert of insertNodes) {
+            DomHelpers.removeCSSClass(insert, `insert`);
         }
 
         return this.serializeDom(fragment, false);
@@ -1206,20 +1205,20 @@ export class MotionDiffService {
         merged = this.replaceLinesMergeNodeArrays(merged, Array.prototype.slice.call(followingFragment.childNodes));
 
         const mergedFragment = document.createDocumentFragment();
-        for (let i = 0; i < merged.length; i++) {
-            mergedFragment.appendChild(merged[i]);
+        for (const merge of merged) {
+            mergedFragment.appendChild(merge);
         }
 
         const forgottenTemplates = mergedFragment.querySelectorAll(`TEMPLATE`);
-        for (let i = 0; i < forgottenTemplates.length; i++) {
-            const el = forgottenTemplates[i];
+        for (const forgottenTemp of forgottenTemplates) {
+            const el = forgottenTemp;
             el.parentNode!.removeChild(el);
         }
 
         const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
-        for (let i = 0; i < forgottenSplitClasses.length; i++) {
-            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
-            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
+        for (const forgottenSplit of forgottenSplitClasses) {
+            DomHelpers.removeCSSClass(forgottenSplit, `os-split-before`);
+            DomHelpers.removeCSSClass(forgottenSplit, `os-split-after`);
         }
 
         return this.serializeDom(mergedFragment, true);
@@ -1273,8 +1272,8 @@ export class MotionDiffService {
         const newTextWithBreaks = document.createElement(`div`);
         newTextWithBreaks.innerHTML = newText;
 
-        for (let i = 0; i < oldTextWithBreaks.childNodes.length; i++) {
-            currChild = oldTextWithBreaks.childNodes[i] as Element;
+        for (const child of oldTextWithBreaks.childNodes) {
+            currChild = child as Element;
             if (currChild.nodeType === TEXT_NODE) {
                 const wrapDel = document.createElement(`del`);
                 oldTextWithBreaks.insertBefore(wrapDel, currChild);
@@ -1285,8 +1284,8 @@ export class MotionDiffService {
                 this.removeColorStyles(currChild);
             }
         }
-        for (let i = 0; i < newTextWithBreaks.childNodes.length; i++) {
-            currChild = newTextWithBreaks.childNodes[i] as Element;
+        for (const child of newTextWithBreaks.childNodes) {
+            currChild = child as Element;
             if (currChild.nodeType === TEXT_NODE) {
                 const wrapIns = document.createElement(`ins`);
                 newTextWithBreaks.insertBefore(wrapIns, currChild);
@@ -1490,7 +1489,7 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)(<del> <\/del>)?<ins>([\s\S]*?)\1<\/ins>/gi,
             (_found: string, paragraph: string, span: string, _emptyDel: string, insText: string): string => {
-                return `<ins>` + insText + `<\/ins>` + paragraph + span;
+                return `<ins>` + insText + `</ins>` + paragraph + span;
             }
         );
 
