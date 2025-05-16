@@ -22,8 +22,8 @@
     </ng-container>
 </os-head-bar>
 
-@if (currentCommitteeObservable | async; as committee) {
-    <div class="breadcrumb-position">
+<os-head-toolbar>
+    @if (currentCommitteeObservable | async; as committee) {
         <span class="breadcrumb-nav-bar h-scroller">
             <button class="breadcrumb" mat-button [routerLink]="['/', 'committees']">
                 <mat-icon class="grey-icon foreground-icon">layers</mat-icon>
@@ -47,7 +47,10 @@
                 </span>
             }
         </span>
-    </div>
+    }
+</os-head-toolbar>
+
+@if (currentCommitteeObservable | async; as committee) {
     <div style="margin-top: 10px">&nbsp;</div>
     <mat-card class="committee-details os-card">
         <mat-card-content>

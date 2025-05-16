@@ -81,12 +81,3 @@ $navbar-size: 40px;
     margin: auto 0px;
     overflow: hidden;
 }
-
-.breadcrumb-position {
-    position: fixed;
-    top: 78px;
-    z-index: 101;
-    background-color: var(--mat-sidenav-container-background-color);
-    width: 100%;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
-}

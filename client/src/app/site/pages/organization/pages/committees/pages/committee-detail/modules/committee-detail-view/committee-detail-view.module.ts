@@ -11,6 +11,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { HeadToolbarComponent } from 'src/app/ui/modules/head-toolbar/head-toolbar.component';
 import { ListModule } from 'src/app/ui/modules/list';
 
 import { IconContainerComponent } from "../../../../../../../../../ui/modules/icon-container/icon-container.component";
@@ -29,6 +30,7 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
         CommitteeListServiceModule,
         DirectivesModule,
         HeadBarModule,
+        HeadToolbarComponent,
         OpenSlidesTranslationModule.forChild(),
         MatIconModule,
         MatCardModule,
