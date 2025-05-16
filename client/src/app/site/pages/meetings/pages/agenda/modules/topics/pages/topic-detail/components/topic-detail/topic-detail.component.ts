@@ -325,18 +325,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     }
 
     /**
-     * clicking Shift and Enter will save automatically
-     * Hitting escape while in topicForm should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
-        }
-    }
-
-    /**
      * Save a new topic as agenda item
      */
     private async saveTopic(): Promise<void> {
