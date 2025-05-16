@@ -191,4 +191,12 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     public ariaLabel(committee: ViewCommittee): string {
         return this.translate.instant(`Navigate to committee detail view from `) + committee.name;
     }
+
+    public hasCommitteeChildren(committee: ViewCommittee): boolean {
+        return committee.all_childs.length > 0;
+    }
+
+    public getCommitteeChildrenNumber(committee: ViewCommittee): number {
+        return committee.child_ids?.length ?? 0;
+    }
 }
