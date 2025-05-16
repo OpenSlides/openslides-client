@@ -104,7 +104,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public showAllAmendments = false;
 
     @Input()
+    public backtrackingIsOn = false;
+
+    @Input()
     public showSummary = true;
+    
+    @Input()
+    public originMeetingName = [``];
 
     @Input()
     public set showPreamble(value: boolean) {

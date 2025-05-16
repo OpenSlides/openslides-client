@@ -132,6 +132,9 @@
                                         <span>{{ data.motion[0].number }}</span>
                                     </span>
                                 }
+                                <mat-checkbox [(ngModel)]="markAmendmentsAsForwarded">
+                                    {{ 'mark amendments as original' | translate }}
+                                </mat-checkbox>
                             </mat-radio-button>
                         </mat-radio-group>
                     </span>
