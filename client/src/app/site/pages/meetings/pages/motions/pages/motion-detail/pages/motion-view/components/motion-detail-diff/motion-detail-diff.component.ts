@@ -193,7 +193,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             });
         }
 
-        return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
+        return lineRange.to <= this.lineNumbering.getLineNumberRange(baseText).to ? this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine) : ``;
     }
 
     /**
@@ -249,14 +249,20 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 firstLine: this.motion.firstLine
             });
         }
+        let lastChange = ``;
 
-        return this.diff.getTextRemainderAfterLastChange(
-            baseText,
-            this.allTextChangingObjects,
-            this.lineLength,
-            this.highlightedLine,
-            this.lineRange
-        );
+        try {
+            lastChange = this.diff.getTextRemainderAfterLastChange(
+                baseText,
+                this.allTextChangingObjects,
+                this.lineLength,
+                this.highlightedLine,
+                this.lineRange
+            );
+        } catch (e) {
+            console.error(e);
+        }
+        return lastChange;
     }
 
     /**

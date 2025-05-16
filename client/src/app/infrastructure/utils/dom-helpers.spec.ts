@@ -55,7 +55,7 @@ describe(`utils: dom helpers`, () => {
         });
 
         it(`search not existing`, () => {
-            const res = getNodeByName(dummyEl3Span, `non-existant`, true);
+            const res = getNodeByName(dummyEl3Span, `nonexistent`, true);
             expect(res).toBe(null);
         });
 
