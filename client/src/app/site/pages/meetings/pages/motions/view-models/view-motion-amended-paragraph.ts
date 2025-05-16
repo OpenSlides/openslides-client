@@ -66,25 +66,16 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
      * @returns {boolean}
      */
     public isAccepted(): boolean {
-        const mergeState = this.amendment.state
-            ? this.amendment.state.merge_amendment_into_final
-            : MergeAmendment.UNDEFINED;
-        switch (mergeState) {
-            case MergeAmendment.YES:
+        if (this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES) {
+            return true;
+        } else if (this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.NO) {
+            return false;
+        } else {
+            if (this.amendment.recommendation && this.amendment.recommendation.merge_amendment_into_final === MergeAmendment.YES) {
                 return true;
-            case MergeAmendment.NO:
+            } else {
                 return false;
-            default:
-                switch (this.amendment.recommendation
-                    ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED) {
-                    case MergeAmendment.YES:
-                        return true;
-                    case MergeAmendment.NO:
-                        return false;
-                    default:
-                        return false;
-                }
+            }
         }
     }
 
@@ -100,24 +91,16 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
     }
 
     public showInDiffView(): boolean {
-        switch (this.amendment.state
-            ? this.amendment.state.merge_amendment_into_final
-            : MergeAmendment.UNDEFINED) {
-            case MergeAmendment.YES:
+        if (this.amendment.recommendation && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES) {
+            return true;
+        } else if (this.amendment.recommendation && this.amendment.state.merge_amendment_into_final === MergeAmendment.NO) {
+            return false;
+        } else {
+            if (this.amendment.recommendation && this.amendment.recommendation.merge_amendment_into_final === MergeAmendment.YES) {
                 return true;
-            case MergeAmendment.NO:
+            } else {
                 return false;
-            default:
-                switch (this.amendment.recommendation
-                    ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED) {
-                    case MergeAmendment.YES:
-                        return true;
-                    case MergeAmendment.NO:
-                        return false;
-                    default:
-                        return false;
-                }
+            }
         }
     }
 
