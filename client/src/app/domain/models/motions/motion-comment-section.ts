@@ -34,13 +34,4 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
         `meeting_id`
     ];
 }
-export interface MotionCommentSection extends HasMeetingId {
-    sequential_number: number;
-    name: string;
-    weight: number;
-    submitter_can_write: boolean;
-
-    comment_ids: Id[]; // (motion_comment/section_id)[];
-    read_group_ids: Id[]; // (group/read_comment_section_ids)[];
-    write_group_ids: Id[]; // (group/write_comment_section_ids)[];
-}
+export interface MotionCommentSection extends HasMeetingId {}

@@ -15,7 +15,4 @@ export class Tag extends BaseModel<Tag> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Tag)[] = [`id`, `name`, `tagged_ids`, `meeting_id`];
 }
-export interface Tag extends HasMeetingId {
-    name: string;
-    tagged_ids: Fqid[]; // (*/tag_ids)[];
-}
+export interface Tag extends HasMeetingId {}

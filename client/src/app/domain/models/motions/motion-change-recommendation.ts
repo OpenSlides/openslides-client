@@ -39,15 +39,4 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
         `meeting_id`
     ];
 }
-export interface MotionChangeRecommendation extends HasMeetingId {
-    rejected: boolean;
-    internal: boolean;
-    type: ModificationType;
-    other_description: string;
-    line_from: number;
-    line_to: number;
-    text: string;
-    creation_time: string;
-
-    motion_id: Id; // motion/change_recommendation_ids;
-}
+export interface MotionChangeRecommendation extends HasMeetingId {}

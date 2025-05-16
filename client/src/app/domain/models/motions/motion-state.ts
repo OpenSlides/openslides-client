@@ -88,30 +88,4 @@ export class MotionState extends BaseModel<MotionState> {
         `meeting_id`
     ];
 }
-export interface MotionState extends HasMeetingId {
-    name: string;
-    recommendation_label: string;
-    is_internal: boolean;
-    css_class: string;
-    restrictions: Restriction[];
-    allow_support: boolean;
-    allow_create_poll: boolean;
-    allow_submitter_edit: boolean;
-    allow_motion_forwarding: boolean;
-    allow_amendment_forwarding: boolean;
-    set_workflow_timestamp: boolean;
-    set_number: boolean;
-    show_state_extension_field: boolean;
-    merge_amendment_into_final: MergeAmendment;
-    show_recommendation_extension_field: boolean;
-    weight: number;
-
-    next_state_ids: Id[]; // (motion_state/previous_state_ids)[];
-    previous_state_ids: Id[]; // (motion_state/next_state_ids)[];
-    motion_ids: Id[]; // (motion/state_id)[];
-    motion_recommendation_ids: Id[]; // (motion/recommendation_id)[];
-    workflow_id: Id; // motion_workflow/state_ids;
-    first_state_of_workflow_id: Id; // motion_workflow/first_state_id;
-    submitter_withdraw_state_id: Id;
-    submitter_withdraw_back_ids: Id[];
-}
+export interface MotionState extends HasMeetingId {}

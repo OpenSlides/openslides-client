@@ -40,16 +40,4 @@ export class Projection extends BaseModel<Projection> {
         `meeting_id`
     ];
 }
-export interface Projection extends HasMeetingId {
-    stable: boolean;
-    type: string;
-    options: Record<string, any>;
-    weight: number;
-    // Calculated field
-    content: ProjectionContent;
-
-    content_object_id: Fqid; // */projection_ids
-    current_projector_id: Id; // projector/current_projection_ids;
-    preview_projector_id: Id; // projector/preview_projection_ids;
-    history_projector_id: Id; // projector/history_projection_ids;
-}
+export interface Projection extends HasMeetingId {}

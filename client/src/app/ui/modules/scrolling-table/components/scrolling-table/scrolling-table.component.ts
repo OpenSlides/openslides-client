@@ -16,6 +16,8 @@ const SELECTION_MODE_SUBSCRIPTION = `selection_mode`;
 const DATA_SOURCE_SUBSCRIPTION = `data_source`;
 const FULL_DATA_SOURCE_SUBSCRIPTION = `full_data_source`;
 
+export interface ScrollingTableRowClickEvent {}
+
 export interface ScrollingTableSelectionChangeEvent<T> {
     affectedRows: T[];
     selected: number;

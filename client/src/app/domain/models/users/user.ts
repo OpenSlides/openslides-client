@@ -93,37 +93,4 @@ export class User extends BaseDecimalModel<User> {
         `organization_id`
     ];
 }
-export interface User {
-    readonly username: string;
-    readonly title: string;
-    readonly pronoun: string;
-    readonly first_name: string;
-    readonly last_name: string;
-    readonly is_active: boolean;
-    readonly is_physical_person: boolean;
-    readonly default_password: string;
-    readonly can_change_own_password: boolean;
-    readonly email: string;
-    readonly last_email_sent: number; // comes in seconds
-    readonly last_login: number; // comes in seconds
-    readonly default_vote_weight: number;
-    readonly is_demo_user: boolean;
-    readonly saml_id: string;
-    readonly member_number: string;
-
-    // Meeting and committee
-    meeting_ids: Id[]; // (meeting/user_ids)[];
-    is_present_in_meeting_ids: Id[]; // (meeting/present_user_ids)[];
-    committee_ids: Id[]; // (committee/user_ids)[];
-    meeting_user_ids: Id[]; // (meeting_user/user_id);
-
-    poll_voted_ids: string[]; // (poll/voted_ids)[];
-    vote_ids: string[]; // (vote/user_id)[];
-    option_ids: string[];
-    poll_candidate_ids: Id[]; // (poll_candidate/user_id);
-    organization_id: Id; // organization/committee_ids;
-
-    organization_management_level: keyof OMLMapping;
-    committee_management_ids: Id[];
-    gender_id: Id; // (gender/user_ids)[]
-}
+export interface User {}

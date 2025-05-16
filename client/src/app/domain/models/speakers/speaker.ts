@@ -59,20 +59,4 @@ export class Speaker extends BaseModel<Speaker> {
         `meeting_id`
     ];
 }
-export interface Speaker extends HasMeetingId {
-    begin_time: number;
-    /**
-     * Unixtime. Null if the speech has not ended yet. This time is in seconds.
-     */
-    end_time: number;
-    pause_time: number;
-    total_pause: number;
-    weight: number;
-    point_of_order: boolean;
-    speech_state: SpeechState;
-    note: UnsafeHtml;
-    list_of_speakers_id: Id; // list_of_speakers/speaker_ids;
-    meeting_user_id: Id; // meeting_user/speaker_ids;
-    point_of_order_category_id: Id; // point_of_order_category/speaker_ids;
-    structure_level_list_of_speakers_id: Id; // structure_level_list_of_speakers/speaker_ids
-}
+export interface Speaker extends HasMeetingId {}

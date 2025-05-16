@@ -24,9 +24,4 @@ export class PersonalNote extends BaseModel<PersonalNote> {
         `meeting_id`
     ];
 }
-export interface PersonalNote extends HasMeetingId {
-    note: string;
-    star: boolean;
-    meeting_user_id: Id; // meeting_user/personal_note_ids;
-    content_object_id: Fqid; // */personal_note_ids;
-}
+export interface PersonalNote extends HasMeetingId {}

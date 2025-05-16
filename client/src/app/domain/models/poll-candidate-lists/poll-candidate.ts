@@ -22,8 +22,4 @@ export class PollCandidate extends BaseModel<PollCandidate> {
         `meeting_id`
     ];
 }
-export interface PollCandidate extends HasMeetingId {
-    weight: number;
-    poll_candidate_list_id: Id; // poll_candidate_list/poll_candidate_ids;
-    user_id: Id; // user/poll_candidate_ids;
-}
+export interface PollCandidate extends HasMeetingId {}

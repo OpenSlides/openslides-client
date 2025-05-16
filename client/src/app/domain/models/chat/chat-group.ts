@@ -28,11 +28,4 @@ export class ChatGroup extends BaseModel<ChatGroup> implements HasMeetingId {
     ];
 }
 
-export interface ChatGroup {
-    readonly name: string;
-    readonly meeting_id: Id;
-    readonly weight: number;
-    readonly chat_message_ids: Id[]; // (chat_message/chat_group_id)[]
-    readonly read_group_ids: Id[]; // (group/read_chat_group_id)[]
-    readonly write_group_ids: Id[]; // (group/write_chat_group_id)[]
-}
+export interface ChatGroup {}

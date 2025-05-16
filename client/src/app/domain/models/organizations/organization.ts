@@ -99,18 +99,4 @@ export class Organization extends BaseModel<Organization> {
     ];
 }
 
-export interface Organization extends OrganizationSetting {
-    name: string;
-    description: string;
-    committee_ids: Id[]; // (committee/organization_id)[];
-    user_ids: Id[]; // (user/organization_id)[];
-    resource_ids: Id[]; // (resource/organization_id)[];
-    organization_tag_ids: Id[]; // (organization_tag/organization_id)[];
-    theme_ids: Id[]; // (theme/organization_id);
-    active_meeting_ids: Id[]; // (meeting/is_active_in_organization_id)[];
-    archived_meeting_ids: Id[]; // (meeting/is_archived_in_organization_id)[];
-    template_meeting_ids: Id[]; // (meeting/template_for_organization_id)[];
-    mediafile_ids: Id[];
-    gender_ids: Id[]; // (gender/organization_id);
-    published_mediafile_ids: Id[];
-}
+export interface Organization extends OrganizationSetting {}

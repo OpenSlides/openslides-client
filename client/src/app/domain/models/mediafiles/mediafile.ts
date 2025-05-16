@@ -65,18 +65,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         `meeting_mediafile_ids`
     ];
 }
-export interface Mediafile extends HasOwnerId {
-    title: string;
-    is_directory: boolean;
-    published_to_meetings_in_organization_id: Id;
-    meeting_mediafile_ids: Id[];
-    filesize: string;
-    filename: string;
-    mimetype: string;
-    pdf_information: PdfInformation;
-    create_timestamp: string;
-    token: string;
-
-    parent_id: Id; // mediafile/child_ids;
-    child_ids: Id[]; // (mediafile/parent_id)[];
-}
+export interface Mediafile extends HasOwnerId {}

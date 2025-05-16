@@ -34,14 +34,4 @@ export class StructureLevelListOfSpeakers extends BaseModel<StructureLevelListOf
         `meeting_id`
     ];
 }
-export interface StructureLevelListOfSpeakers extends HasMeetingId {
-    readonly initial_time: number;
-    readonly additional_time: number;
-    readonly remaining_time: number;
-    readonly current_start_time: number;
-
-    // Relations
-    structure_level_id: Id; // structure_level/structure_level_list_of_speakers_ids
-    list_of_speakers_id: Id; // list_of_speakers/structure_level_list_of_speakers_ids
-    speaker_ids: Id[]; // speaker/structure_level_list_of_speakers_id
-}
+export interface StructureLevelListOfSpeakers extends HasMeetingId {}
