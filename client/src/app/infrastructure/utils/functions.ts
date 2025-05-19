@@ -347,9 +347,10 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     );
 
     // Extract strings from JSON
-    const stringRegex = /\"([^\"]*)\"/g;
+    const stringRegex = /"([^"]*)"/g;
     const stringReplacement = `#`;
     let strings: string[] = [...json.match(stringRegex)];
+
     while (stringRegex.test(json)) {
         json = json.replace(stringRegex, stringReplacement);
     }

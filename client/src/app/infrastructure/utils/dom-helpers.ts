@@ -74,12 +74,12 @@ export function getNodeContextTrace(node: Node): Node[] {
  * @param child
  */
 export function isFirstNonemptyChild(node: Node, child: Node): boolean {
-    for (let i = 0; i < node.childNodes.length; i++) {
-        if (node.childNodes[i] === child) {
+    for (const childNode of node.childNodes) {
+        if (childNode === child) {
             return true;
         }
 
-        if (node.childNodes[i].nodeType !== Node.TEXT_NODE || node.childNodes[i].nodeValue?.match(/\S/)) {
+        if (childNode.nodeType !== Node.TEXT_NODE || childNode.nodeValue?.match(/\S/)) {
             return false;
         }
     }
@@ -347,8 +347,8 @@ export function serializeTag(node: Node): string {
 
     const element = node as Element;
     let html = `<` + element.nodeName;
-    for (let i = 0; i < element.attributes.length; i++) {
-        const attr = element.attributes[i];
+    for (const attibute of element.attributes) {
+        const attr = attibute;
         html += ` ` + attr.name + `="` + attr.value + `"`;
     }
     html += `>`;
