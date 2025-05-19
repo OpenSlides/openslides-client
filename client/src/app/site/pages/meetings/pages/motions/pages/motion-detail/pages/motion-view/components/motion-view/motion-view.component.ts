@@ -105,14 +105,14 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             // If the change is a recommendation the list needs an entry for it,
             // but the change recommendation is just in the current meeting and should not have a meeting name
             if (this.unifiedChanges[j]?.getChangeId().indexOf(`recommendation`) === 0) {
-                meetingName.push(``);
+                meetingName.push(undefined);
                 j += 1;
             } 
             if (this.meetingRepo.getViewModel(this.motion.amendments[i]?.origin_meeting_id) !== null && this.motion.amendments[0].all_origin_ids[0] !== null) {
                 const amendment = this.motion.amendments[i];
                 meetingName.push(this.meetingRepo.getViewModel(this.repo.getViewModel(amendment.all_origin_ids[0])?.meeting_id)?.name)
             } else {
-                meetingName.push(``);
+                meetingName.push(undefined);
             }
             j += 1;
         } 

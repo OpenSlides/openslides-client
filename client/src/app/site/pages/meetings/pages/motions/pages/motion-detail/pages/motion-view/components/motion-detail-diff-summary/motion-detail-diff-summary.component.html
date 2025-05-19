@@ -24,7 +24,7 @@
                             } @else {
                                 <span>&ensp;({{ 'Change recommendation' | translate }})</span>
                             }
-                            @if (motion.isForwardedAmendment && backtrackingIsOn  && originMeetingName[i] !== ``) {
+                            @if (motion.isForwardedAmendment && backtrackingIsOn  && originMeetingName[i] !== undefined) {
                                 <mat-icon
                                     class="pointer-icon"
                                     color="primary"
