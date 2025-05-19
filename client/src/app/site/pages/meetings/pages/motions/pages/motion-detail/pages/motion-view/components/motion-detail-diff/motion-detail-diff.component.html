@@ -6,6 +6,7 @@
             [changes]="changes"
             [elContainer]="nativeElement"
             [motion]="motion"
+            [originMeetingName]="originMeetingName"
             [scrollToChange]="scrollToChange"
         ></os-motion-detail-diff-summary>
     }
@@ -109,7 +110,7 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
-                                @if (motion.isForwardedAmendment && backtrackingIsOn) {
+                                @if (motion.isForwardedAmendment && backtrackingIsOn && originMeetingName[i] !== ``) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"
