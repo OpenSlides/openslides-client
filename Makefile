@@ -19,8 +19,6 @@ build-dev:
 	make build-aio context=dev submodule=client
 
 #docker build -t openslides-client-dev -f Dockerfile.dev .
-build-dev:
-	docker build -t openslides-client-dev -f Dockerfile.dev .
 
 build-prod:
 	docker build -t openslides-client -f Dockerfile .
