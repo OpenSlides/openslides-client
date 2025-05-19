@@ -204,6 +204,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
         this.css.projector.height = this.currentProjectorSize.height + `px`;
         this.css.container.height = Math.round(scale * this.currentProjectorSize.height) + `px`;
         this.updateCSS();
+        this.projectorElement.nativeElement.dispatchEvent(new Event(`resize`));
     }
 
     /**
