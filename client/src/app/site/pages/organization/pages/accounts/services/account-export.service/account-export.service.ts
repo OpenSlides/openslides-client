@@ -29,8 +29,7 @@ export class AccountExportService {
         this.csvExportService.export(
             dataSource,
             accountColumns.map(key => ({
-                property: key as keyof ViewUser,
-                is_object: key === `home_committee`
+                property: key as keyof ViewUser
             })),
             `${this.translate.instant(`Accounts`)}.csv`
         );
