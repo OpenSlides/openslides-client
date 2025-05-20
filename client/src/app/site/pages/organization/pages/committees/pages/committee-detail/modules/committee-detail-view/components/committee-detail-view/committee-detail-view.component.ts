@@ -153,10 +153,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
 
-    public ariaLabel(committee: ViewCommittee): string {
-        return this.translate.instant(`Navigate to committee detail view from `) + committee.name;
-    }
-
     public isChildCommittee(committee: ViewCommittee): boolean {
         return committee.all_parent_ids?.includes(this.committeeId);
     }

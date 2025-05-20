@@ -186,7 +186,9 @@
                                     @if (committee.canAccess()) {
                                         <a
                                             class="stretch-to-fill-parent"
-                                            [attr.aria-label]="ariaLabel(committee)"
+                                            [attr.aria-label]="
+                                                ('Navigate to committee detail view from ' | translate) + committee.name
+                                            "
                                             [routerLink]="['/', 'committees', committee.id]"
                                         ></a>
                                         <div class="overflow-hidden">
