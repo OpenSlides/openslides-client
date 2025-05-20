@@ -160,8 +160,10 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
     modelRequest: {
         ids,
         viewModelCtor: ViewMotion,
-        fieldset: [`forwarded`, `created`, `sequential_number`],
-        follow: [{ idField: `meeting_id`, fieldset: [`name`, `description`] }]
+        fieldset: [`forwarded`, `created`, `sequential_number`, `marked_forwarded`],
+        follow: [{ idField: `meeting_id`, fieldset: [`name`, `description`] },
+        { idField: `amendment_ids`, fieldset: [`marked_forwarded`],   follow: [`meeting_id`] }
+    ]
     },
     subscriptionName: MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION
 });
@@ -213,7 +215,8 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `origin_meeting_id`,
             `derived_motion_ids`,
             `identical_motion_ids`,
-            `amendment_paragraphs`
+            `amendment_paragraphs`,
+            `marked_forwarded`
         ]
     },
     subscriptionName: MOTION_DETAIL_SUBSCRIPTION

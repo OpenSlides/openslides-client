@@ -72,8 +72,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get isForwardedAmendment(): boolean {
-        return true;
-        return this.markAmendmentsAsForwarded;
+        console.log(this.marked_forwarded)
+        return this.marked_forwarded;
     }
 
     public get submittersAsUsers(): ViewUser[] {
@@ -413,7 +413,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     comments: ViewMotionComment[];
-    markAmendmentsAsForwarded: boolean;
+    marked_forwarded: boolean;
 }
 
 export interface ViewMotion
