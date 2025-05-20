@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
@@ -22,7 +22,7 @@ import { CommitteeSortService } from '../../../../../committee-list/services/com
     styleUrls: [`./committee-detail-view.component.scss`],
     standalone: false
 })
-export class CommitteeDetailViewComponent extends BaseUiComponent {
+export class CommitteeDetailViewComponent extends BaseUiComponent implements OnDestroy {
     public readonly OML = OML;
 
     public committeeId: Id | null = null;
@@ -45,6 +45,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
 
     public childCommitteesObservable: Observable<ViewCommittee[]>;
     public allSubCommitteesObservable: Observable<ViewCommittee[]>;
+
+    private _numberSubscription: Subscription | null = null;
 
     public constructor(
         private translate: TranslateService,
@@ -70,7 +72,11 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
                     this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
                     ));
-                    combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
+
+                    if (this._numberSubscription) {
+                        this._numberSubscription.unsubscribe();
+                    }
+                    this._numberSubscription = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm?.id === comm.id)
                     )).subscribe(committees => {
                         this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
@@ -84,6 +90,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         this.subscriptions.push(
             this.orgaSettings.get(`require_duplicate_from`).subscribe(value => (this.requireDuplicateFrom = value))
         );
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this._numberSubscription) {
+            this._numberSubscription.unsubscribe();
+            this._numberSubscription = null;
+        }
     }
 
     public onCreateMeeting(): void {
