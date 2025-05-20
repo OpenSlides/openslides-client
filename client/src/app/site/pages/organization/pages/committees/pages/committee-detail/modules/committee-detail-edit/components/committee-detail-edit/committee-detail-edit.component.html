@@ -77,7 +77,7 @@
                     <mat-label>{{ 'Parent Committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="parent_id"
-                        [disableOptionWhenFn]="getDisableOptionWhenFnForParent()"
+                        [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
                         [includeNone]="isCreateView"
                         [multiple]="false"
                         [repo]="committeeRepo"

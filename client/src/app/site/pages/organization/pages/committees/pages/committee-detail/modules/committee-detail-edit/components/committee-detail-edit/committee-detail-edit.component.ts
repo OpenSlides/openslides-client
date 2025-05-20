@@ -88,7 +88,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         return value => value.id === this.committeeId;
     }
 
-    public getDisableOptionWhenFnForParent(): (value: Selectable) => boolean {
+    public getDisableOptionForCommitteeParentFn(): (value: Selectable) => boolean {
         return value => {
             if (value.id === this.committeeId) {
                 return true;
