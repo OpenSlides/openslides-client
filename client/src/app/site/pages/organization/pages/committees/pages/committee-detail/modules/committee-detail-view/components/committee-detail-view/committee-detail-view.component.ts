@@ -67,7 +67,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
                     this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map(arr => arr.filter(comm =>
                         comm.parent?.id === this.committeeId
-                    )));
+                    ).sort((a, b) => a.name.localeCompare(b.name))));
                     // subscribe to all sub committees to get aggregated data
                     this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
                         commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
