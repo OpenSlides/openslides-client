@@ -556,10 +556,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 }
             }
         }
-        if (temp[`home_committee_id`] === 0) {
-            payload[`home_committee_id`] = null;
-        }
-
         return { ...payload };
     }
 

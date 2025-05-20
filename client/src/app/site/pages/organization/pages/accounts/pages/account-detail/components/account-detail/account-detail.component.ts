@@ -371,6 +371,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 payload.gender_id = null;
             }
         }
+        if (payload.home_committee_id === 0) {
+            if (isCreate) {
+                delete payload.home_committee_id;
+            } else {
+                payload.home_committee_id = null;
+            }
+        }
         return payload;
     }
 
