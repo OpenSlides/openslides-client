@@ -52,7 +52,15 @@ RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/
 # compile the angular project
 RUN npm run build
 
+
 # Prod wants nginx as base image for some reason
 FROM nginx:latest as prod
+
+LABEL org.opencontainers.image.title="OpenSlides Client"
+LABEL org.opencontainers.image.description="Web client for OpenSlides which serves as the users main interaction point while using the OpenSlides system. "
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.source="https://github.com/OpenSlides/openslides-client"
+
+
 COPY --from=build /app/dist/client/browser /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
