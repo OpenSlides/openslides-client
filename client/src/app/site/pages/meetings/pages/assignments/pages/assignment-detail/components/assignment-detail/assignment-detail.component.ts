@@ -278,17 +278,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * Hitting escape while in the edit form should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
-        }
-    }
-
-    /**
      * Changes/updates the assignment form values
      *
      * @param assignment

@@ -91,7 +91,7 @@
                 }
 
                 @if (editTopic && topicForm) {
-                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+                    <form tabindex="-1" [formGroup]="topicForm">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -144,6 +144,11 @@
                                 <button mat-stroked-button (click)="applyTopicContent()">
                                     <span>{{ 'Apply' | translate }}</span>
                                 </button>
+                                @if (applyFeedback) {
+                                    <div class="apply-feedback-icon">
+                                        <mat-icon>check</mat-icon>
+                                    </div>
+                                }
                             </div>
                         }
                     </form>

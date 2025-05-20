@@ -146,15 +146,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
         }
     }
 
-    /**
-     * Clicking escape while in editForm should deactivate edit mode.
-     *
-     * @param event The key that was pressed
-     */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this._dialogRef.close();
-        }
         if (event.key === `Enter`) {
             this.save();
         }

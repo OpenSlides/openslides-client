@@ -252,14 +252,14 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             .sort((a, b) => a - b);
         let toDelete: number[] = [];
         let currentId = 0;
-        for (let i = 0; i < source.length; i++) {
-            while (currentId < sourceMapKeys.length && source[i].id >= sourceMapKeys[currentId]) {
-                if (source[i].id > sourceMapKeys[currentId]) {
+        for (const item of source) {
+            while (currentId < sourceMapKeys.length && item.id >= sourceMapKeys[currentId]) {
+                if (item.id > sourceMapKeys[currentId]) {
                     toDelete.push(sourceMapKeys[currentId]);
                 }
                 currentId++;
             }
-            this.addOrChangeItemInDataSourceMap(source[i]);
+            this.addOrChangeItemInDataSourceMap(item);
         }
         if (currentId < sourceMapKeys.length) {
             toDelete = toDelete.concat(sourceMapKeys.slice(currentId));
