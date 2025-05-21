@@ -233,6 +233,11 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             parent_id: [``]
         };
         this.committeeForm = this.formBuilder.group(partialForm);
+        if (!this.operator.isOrgaManager && !this.isCreateView) {
+            this.committeeForm.get(`manager_ids`).disable();
+            this.committeeForm.get(`forward_to_committee_ids`).disable();
+            this.committeeForm.get(`receive_forwardings_from_committee_ids`).disable();
+        }
     }
 
     private preselectSelfAsManager(): void {
