@@ -167,41 +167,6 @@ describe(`MotionDiffService`, () => {
         noMarkup(6) +
         ` Line 4</li></ol>`;
 
-    const baseHtml4 =
-        `<p>` +
-        noMarkup(1) +
-        `Line 1 ` +
-        brMarkup(2) +
-        `Line 2 ` +
-        brMarkup(3) +
-        `Line <strong>3<br>` +
-        noMarkup(4) +
-        `Line 4 ` +
-        brMarkup(5) +
-        `Line</strong> 5</p>` +
-        `<span class="span-class">` +
-        `<span class="span-class">` +
-        noMarkup(6) +
-        `Line 6 ` +
-        brMarkup(7) +
-        `Line 7` +
-        `</span>` +
-        `<span class="span-class"><span>` +
-        `<span>` +
-        noMarkup(8) +
-        `Level 2 LI 8</span>` +
-        `<span>` +
-        noMarkup(9) +
-        `Level 2 LI 9</span>` +
-        `</span></span>` +
-        `</span>` +
-        `<p>` +
-        noMarkup(10) +
-        `Line 10 ` +
-        brMarkup(11) +
-        `Line 11</p>`;
-    let baseHtmlDom4: DocumentFragment;
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule]
@@ -210,10 +175,8 @@ describe(`MotionDiffService`, () => {
         service = TestBed.inject(MotionDiffService);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
-        baseHtmlDom4 = htmlToFragment(baseHtml4);
         service.insertInternalLineMarkers(baseHtmlDom1);
         service.insertInternalLineMarkers(baseHtmlDom2);
-        service.insertInternalLineMarkers(baseHtmlDom4);
     });
 
     describe(`extraction of lines`, () => {
@@ -288,7 +251,7 @@ describe(`MotionDiffService`, () => {
         }));
 
         it(`renders DOMs correctly (3)`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom4, 9);
+            const lineNo = service.getLineNumberNode(baseHtmlDom2, 9);
 
             expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
             expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
