@@ -69,6 +69,7 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
      * Saves changes and updates the content.
      */
     public saveChanges(): void {
+        console.log(`Start`, this.startForm.value[`welcome_text`]);
         this.meetingRepositoryService
             .update({
                 id: this.activeMeetingId,

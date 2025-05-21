@@ -438,6 +438,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     protected updateForm(value: string | null): void {
+        console.log(`Update Form`, value);
         this.contentForm.setValue(value);
     }
 
@@ -450,7 +451,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             unwrapNode(listParagraphs.item(i));
         }
 
-        if (!this.editor.getText()) {
+        if (!this.editor.getText() && !dom.images.length) {
             return ``;
         }
 
