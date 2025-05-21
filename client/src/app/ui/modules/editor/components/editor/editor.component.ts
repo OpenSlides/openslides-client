@@ -438,7 +438,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     protected updateForm(value: string | null): void {
-        console.log(`Update Form`, value);
         this.contentForm.setValue(value);
     }
 
