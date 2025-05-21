@@ -35,7 +35,7 @@ export class EditorHtmlDialogComponent {
 
             result += indent + `<` + element + `>\r\n`;
 
-            if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith(`input`)) {
+            if (element.match(/^<?\w[^>]*[^/]$/) && !element.startsWith(`input`)) {
                 indent += tab;
             }
         });

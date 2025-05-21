@@ -268,9 +268,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     public leaveEditMotion(motion: HasSequentialNumber | null = this.motion): void {
         if (motion?.sequential_number) {
-            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
+            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number], { replaceUrl: true });
         } else {
-            this.router.navigate([this.activeMeetingId, `motions`]);
+            this.router.navigate([this.activeMeetingId, `motions`], { replaceUrl: true });
         }
     }
 
