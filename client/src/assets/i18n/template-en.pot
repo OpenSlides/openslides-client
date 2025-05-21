@@ -40,7 +40,7 @@ msgstr ""
 
 msgid ""
 "A change recommendation or amendment is probably referring to a "
-"non-existant line number."
+"nonexistent line number."
 msgstr ""
 
 msgid "A client error occurred. Please contact your system administrator."

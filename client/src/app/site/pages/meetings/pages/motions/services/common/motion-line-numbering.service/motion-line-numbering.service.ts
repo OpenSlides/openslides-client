@@ -195,7 +195,7 @@ export class MotionLineNumberingService {
             if (baseParagraphs[paraNo] === undefined) {
                 console.log(`applyChangesToAmendment`, baseParagraphs, paraNo);
                 const msg =
-                    `Inconsistent data. An amendment is probably referring to a non-existant line number. ` +
+                    `Inconsistent data. An amendment is probably referring to a nonexistent line number. ` +
                     `You can back up its content when editing it and delete it afterwards.`;
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
@@ -259,41 +258,6 @@ export class MotionDiffService {
         html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
         return html;
-    }
-
-    /**
-     * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replace)
-     * Returns replace if strings are equal
-     *
-     * @param {string} htmlOld
-     * @param {string} htmlNew
-     * @returns {number}
-     */
-    public detectReplacementType(htmlOld: string, htmlNew: string): ModificationType {
-        htmlOld = this.normalizeHtmlForDiff(htmlOld);
-        htmlNew = this.normalizeHtmlForDiff(htmlNew);
-
-        if (htmlOld === htmlNew) {
-            return ModificationType.TYPE_REPLACEMENT;
-        }
-
-        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
-
-        const remainderOld = htmlOld.substr(firstDiffIndex);
-        const remainderNew = htmlNew.substr(firstDiffIndex);
-
-        if (remainderOld.length > remainderNew.length) {
-            if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                return ModificationType.TYPE_DELETION;
-            }
-        } else if (remainderOld.length < remainderNew.length) {
-            if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                return ModificationType.TYPE_INSERTION;
-            }
-        }
-
-        return ModificationType.TYPE_REPLACEMENT;
     }
 
     /**
@@ -753,6 +717,7 @@ export class MotionDiffService {
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
             html += `</` + node.nodeName + `>`;
         }
+
         return html;
     }
 
@@ -986,7 +951,7 @@ export class MotionDiffService {
      * @param {number} lineLength
      * @param {number} firstLine
      */
-    public formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    private formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
         let text = this.formatDiff(diff);
         text = this.lineNumberingService.insertLineNumbers({ html: text, lineLength, firstLine });
         return text;
@@ -1224,7 +1189,7 @@ export class MotionDiffService {
         return this.serializeDom(mergedFragment, true);
     }
 
-    public removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+    private removeLines(oldHtml: string, fromLine: number, toLine: number): string {
         return this.replaceLines(oldHtml, ``, fromLine, toLine);
     }
 
@@ -1236,7 +1201,7 @@ export class MotionDiffService {
      * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
      * it needs to be wrapped accordingly.
      */
-    public insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+    private insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
         return this.replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
     }
 
@@ -2170,7 +2135,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 ) +
                 ` ` +
                 this.translate.instant(
@@ -2250,12 +2215,12 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 );
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
-        let html: string;
+        let html = ``;
         if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
@@ -2264,9 +2229,6 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
             html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
-        } else {
-            // Prevents empty lines at the end of the motion
-            html = ``;
         }
         return html;
     }
@@ -2287,8 +2249,9 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
+        let html = ``;
         const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
-        let html =
+        html =
             extracted.outerContextStart +
             extracted.innerContextStart +
             extracted.html +
