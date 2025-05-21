@@ -1,4 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { TooltipPosition } from '@angular/material/tooltip';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
@@ -61,6 +63,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         }
         return this.motion.amendments[amendment_index]?.isForwardedAmendment;
     }
+
+    public positionOptions: TooltipPosition[] = [`after`, `before`, `above`, `below`, `left`, `right`];
+    public position = new FormControl(this.positionOptions[2]);
 
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
