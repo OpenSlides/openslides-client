@@ -84,16 +84,12 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
 
     /**
      * clicking Enter will save automatically
-     * clicking Escape will cancel the process
      *
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Enter`) {
             this.save();
-            this.dialogRef!.close();
-        }
-        if (event.key === `Escape`) {
             this.dialogRef!.close();
         }
     }
