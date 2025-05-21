@@ -72,7 +72,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get isForwardedAmendment(): boolean {
-        console.log(this.marked_forwarded)
         return this.marked_forwarded;
     }
 

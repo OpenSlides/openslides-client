@@ -110,7 +110,11 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
-                                @if (motion.isForwardedAmendment && backtrackingIsOn && originMeetingName[i] !== undefined) {
+                                @if (
+                                    change.amendment.isForwardedAmendment &&
+                                    backtrackingIsOn &&
+                                    originMeetingName[i] !== undefined
+                                ) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"

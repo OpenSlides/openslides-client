@@ -21,18 +21,22 @@
                             }
                             @if (isAmendment(change)) {
                                 <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
+                                @if (
+                                    isAmendmentMarkedForwarded(i) &&
+                                    backtrackingIsOn &&
+                                    originMeetingName[i] !== undefined
+                                ) {
+                                    <mat-icon
+                                        class="pointer-icon"
+                                        color="primary"
+                                        inline
+                                        [matTooltip]="originMeetingName[i]"
+                                    >
+                                        info
+                                    </mat-icon>
+                                }
                             } @else {
                                 <span>&ensp;({{ 'Change recommendation' | translate }})</span>
-                            }
-                            @if (motion.isForwardedAmendment && backtrackingIsOn  && originMeetingName[i] !== undefined) {
-                                <mat-icon
-                                    class="pointer-icon"
-                                    color="primary"
-                                    inline
-                                    [matTooltip]="originMeetingName[i]"
-                                >
-                                    info
-                                </mat-icon>
                             }
                         </a>
                         @if (isChangeRecommendation(change)) {

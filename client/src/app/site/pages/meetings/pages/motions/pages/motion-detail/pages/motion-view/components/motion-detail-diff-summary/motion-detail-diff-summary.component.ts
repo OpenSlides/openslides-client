@@ -48,9 +48,19 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     @Input()
     public backtrackingIsOn = false;
-    
+
     @Input()
     public originMeetingName = [``];
+
+    public isAmendmentMarkedForwarded(i): boolean {
+        let amendment_index = -1;
+        for (let j = 0; this.changes.length && j <= i; j++) {
+            if (this.isAmendment(this.changes[j])) {
+                amendment_index += 1;
+            }
+        }
+        return this.motion.amendments[amendment_index]?.isForwardedAmendment;
+    }
 
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"

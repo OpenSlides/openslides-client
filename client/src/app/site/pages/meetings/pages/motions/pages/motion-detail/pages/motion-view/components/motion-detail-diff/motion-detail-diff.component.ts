@@ -9,7 +9,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { TooltipPosition } from '@angular/material/tooltip';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -108,9 +110,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     @Input()
     public showSummary = true;
-    
+
     @Input()
     public originMeetingName = [``];
+
+    public positionOptions: TooltipPosition[] = [`after`, `before`, `above`, `below`, `left`, `right`];
+    public position = new FormControl(this.positionOptions[2]);
 
     @Input()
     public set showPreamble(value: boolean) {
