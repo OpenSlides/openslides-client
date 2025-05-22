@@ -1,7 +1,4 @@
-# Frage: Testing Image wird von einem anderen Ordner heraus als die anderen Images aufgerufen (./client/tests)
-#       Package ist anders!
-
-ARG CONTEXT=dev
+ARG CONTEXT=prod
 ARG NODE_IMAGE_VERSION=22.14
 
 FROM node:${NODE_IMAGE_VERSION}-alpine as base
