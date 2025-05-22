@@ -297,14 +297,14 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         const children = elementCopy.childNodes;
 
         // using for-of did not work as expected
-        for (let i = 0; i < children.length; i++) {
-            if (this.getLineNumber(children[i] as Element)) {
-                children[i].remove();
+        for (const child of children) {
+            if (this.getLineNumber(child as Element)) {
+                child.remove();
             }
 
-            if (children[i]?.childNodes.length > 0) {
-                const cleanChildren = this.cleanLineNumbers(children[i] as Element);
-                elementCopy.replaceChild(cleanChildren, children[i]);
+            if (child?.childNodes.length > 0) {
+                const cleanChildren = this.cleanLineNumbers(child as Element);
+                elementCopy.replaceChild(cleanChildren, child);
             }
         }
 

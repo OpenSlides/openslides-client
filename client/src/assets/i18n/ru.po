@@ -50,7 +50,7 @@ msgid "<unknown>"
 msgstr ""
 
 msgid ""
-"A change recommendation or amendment is probably referring to a non-existant"
+"A change recommendation or amendment is probably referring to a nonexistent"
 " line number."
 msgstr ""
 

@@ -42,6 +42,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public activeOriginMotions: ViewMotion[];
 
+    @Input()
+    public showForwardButton = false;
+
     @Output()
     public enableOriginMotion = new EventEmitter<Id>();
 
@@ -151,15 +154,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.setShowAllAmendments.emit(is);
     }
 
-    public get showForwardButton(): boolean {
-        return (
-            !!this.motion.state?.allow_motion_forwarding &&
-            this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable &&
-            !this.motion.derived_motions.length
-        );
-    }
-
     public get operatorIsSubmitter(): boolean {
         return (
             this.motion.submitters &&
@@ -178,8 +172,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
-
-    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -201,15 +193,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         super();
 
         if (operator.hasPerms(Permission.motionCanManageMetadata)) {
-            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-                this._forwardingAvailable = forwardingAvailable && !this.motion.isAmendment();
-                this.cd.markForCheck();
+            this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
                 };
             });
-        } else {
-            this._forwardingAvailable = false;
         }
     }
 
