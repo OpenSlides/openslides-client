@@ -248,6 +248,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     public searchFilter(filterValue: string): void {
         this.inputValue = filterValue;
+        this.cd.markForCheck();
     }
 
     public scrollTo(offset: number): void {
