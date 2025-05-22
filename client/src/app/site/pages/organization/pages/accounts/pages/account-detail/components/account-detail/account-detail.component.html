@@ -55,7 +55,7 @@
                         [sortService]="committeeSortService"
                         [subscriptionConfig]="committeeSubscriptionConfig"
                         [transformPropagateFn]="getTransformPropagateFn()"
-                        [transformSetFn]="getTransformSetFnHomeCommittee()"
+                        [transformSetFn]="getTransformSetHomeCommitteeFn()"
                     ></os-repo-search-selector>
                 </mat-form-field>
                 <mat-checkbox class="form50 guest-margin-top force-min-width" formControlName="guest">
@@ -67,7 +67,7 @@
                 <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-repo-search-selector
-                        [formControl]="form.controls.committee_management_ids"
+                        formControlName="committee_management_ids"
                         [multiple]="true"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
@@ -122,7 +122,7 @@
             <div>
                 <h4>{{ 'Home Committee' | translate }}</h4>
                 <a [routerLink]="'/committees/' + user.home_committee_id">
-                    {{ getHomeCommitteeName(user.home_committee_id) }}
+                    {{ user.home_committee.name }}
                 </a>
             </div>
         }

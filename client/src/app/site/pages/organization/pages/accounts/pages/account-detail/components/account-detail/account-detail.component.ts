@@ -152,7 +152,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return () => (this.user ? this.user.committee_management_ids : []);
     }
 
-    public getTransformSetFnHomeCommittee(): (value?: string[]) => Id {
+    public getTransformSetHomeCommitteeFn(): (value?: string[]) => Id {
         return () => (this.user ? this.user.home_committee_id : null);
     }
 
@@ -222,10 +222,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             this.committeeController.getViewModel(committeeId)
         );
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
-    }
-
-    public getHomeCommitteeName(committeeId: Id): string {
-        return this.committeeController.getViewModel(committeeId).name;
     }
 
     public getCellClass(isCommitteeRow: boolean, isLastColumnOfCommitte: boolean, isLastLine: boolean): string {
