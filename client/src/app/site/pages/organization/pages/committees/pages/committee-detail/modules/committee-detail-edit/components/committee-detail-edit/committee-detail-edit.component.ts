@@ -40,6 +40,10 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public editCommittee!: ViewCommittee;
 
+    public get includeNoneInParentCommittee(): boolean {
+        return this.isCreateView && this.operator.isOrgaManager;
+    }
+
     private get managerIdCtrl(): AbstractControl {
         return this.committeeForm.get(`manager_ids`)!;
     }
