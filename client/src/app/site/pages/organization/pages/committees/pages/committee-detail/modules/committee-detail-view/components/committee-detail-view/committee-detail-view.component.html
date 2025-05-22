@@ -51,7 +51,6 @@
 </os-head-toolbar>
 
 @if (currentCommitteeObservable | async; as committee) {
-    <div style="margin-top: 10px">&nbsp;</div>
     <mat-card class="committee-details os-card">
         <mat-card-content>
             <!-- name -->
@@ -174,7 +173,7 @@
             <div class="os-card">
                 <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
                     @if (!!(childCommitteesObservable | async).length) {
-                        <mat-tab label="{{ 'Committees' | translate }}">
+                        <mat-tab [label]="'Committees' | translate">
                             <os-list
                                 [filterProps]="['name']"
                                 [fullScreen]="false"
@@ -212,8 +211,8 @@
                                         <div>
                                             <os-icon-container
                                                 icon="event_available"
-                                                iconTooltip="{{ 'Meetings' | translate }}"
                                                 iconTooltipPosition="right"
+                                                [iconTooltip]="'Meetings' | translate"
                                             >
                                                 {{ committee.meeting_ids?.length ?? 0 }}
                                             </os-icon-container>
@@ -224,8 +223,8 @@
                                         <div>
                                             <os-icon-container
                                                 icon="layers"
-                                                iconTooltip="{{ 'Child committees' | translate }}"
                                                 iconTooltipPosition="right"
+                                                [iconTooltip]="'Child committees' | translate"
                                             >
                                                 {{ committee.child_ids?.length ?? 0 }}
                                             </os-icon-container>
@@ -236,7 +235,7 @@
                         </mat-tab>
                     }
                     @if (!!committee.meetings.length) {
-                        <mat-tab label="{{ 'Meetings' | translate }}">
+                        <mat-tab [label]="'Meetings' | translate">
                             <div>
                                 @if (!getMeetingsSorted(committee).length) {
                                     <mat-card class="meeting-preview-card">

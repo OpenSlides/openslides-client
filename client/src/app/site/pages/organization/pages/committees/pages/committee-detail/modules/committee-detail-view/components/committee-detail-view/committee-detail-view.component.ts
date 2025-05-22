@@ -44,7 +44,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     public committeeAccounts = 0;
 
     public childCommitteesObservable: Observable<ViewCommittee[]>;
-    public allSubCommitteesObservable: Observable<ViewCommittee[]>;
 
     private _numberSubscription: Subscription | null = null;
 
@@ -68,11 +67,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
                     this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map(arr => arr.filter(comm =>
                         comm.parent?.id === this.committeeId
                     ).sort((a, b) => a.name.localeCompare(b.name))));
-                    // subscribe to all sub committees to get aggregated data
-                    this.allSubCommitteesObservable = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
-                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id))
-                    ));
-
                     if (this._numberSubscription) {
                         this._numberSubscription.unsubscribe();
                     }
