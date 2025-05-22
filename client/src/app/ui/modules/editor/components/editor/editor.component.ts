@@ -450,7 +450,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             unwrapNode(listParagraphs.item(i));
         }
 
-        if (!this.editor.getText()) {
+        if (!this.editor.getText() && !dom.images.length) {
             return ``;
         }
 
