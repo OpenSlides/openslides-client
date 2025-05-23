@@ -17,6 +17,7 @@
     }
     .col-main {
         flex-grow: 1;
+        width: min(770px, calc(vw - 32px));
     }
     .col-right {
         width: auto;
