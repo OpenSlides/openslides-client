@@ -50,7 +50,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     @Input()
     public elContainer: any;
 
-    public originName(i: number): string | undefined {
+    private getAmendmentIndex(i: number): number {
         let amendmentIndex = -1;
         for (let j = 0; this.changes.length && j <= i; j++) {
             if (this.isAmendment(this.changes[j])) {
@@ -58,23 +58,23 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
             }
         }
         const amendment = this.motion.amendments[amendmentIndex];
-        const changeIsAmendment: boolean = this.changes[i].getIdentifier() === amendment.getNumberOrTitle();
+        const changeIsAmendment: boolean = this.changes[i].getIdentifier() === amendment?.getNumberOrTitle();
+        return changeIsAmendment ? amendmentIndex : undefined;
+    }
 
-        if (changeIsAmendment && amendment.origin_meeting_id) {
+    public originName(i: number): string | undefined {
+        const amendmentIndex = this.getAmendmentIndex(i);
+        const amendment = this.motion.amendments[amendmentIndex];
+
+        if (amendmentIndex !== undefined && amendment?.origin_meeting_id) {
             return this.meetingRepo.getViewModel(this.motionRepo.getViewModel(amendment.all_origin_ids[0])?.meeting_id)?.name;
         } else {
             return undefined;
         }
     }
 
-    public isAmendmentMarkedForwarded(i): boolean {
-        let amendmentIndex = -1;
-        for (let j = 0; this.changes.length && j <= i; j++) {
-            if (this.isAmendment(this.changes[j])) {
-                amendmentIndex += 1;
-            }
-        }
-        return this.motion.amendments[amendmentIndex]?.isForwardedAmendment;
+    public isAmendmentMarkedForwarded(i: number): boolean {
+        return this.motion.amendments[this.getAmendmentIndex(i)]?.isForwardedAmendment;
     }
 
     public position = new FormControl(`above` as TooltipPosition);
