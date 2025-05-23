@@ -6,3 +6,14 @@
     display: flex;
     flex-direction: column;
 }
+
+.meta-flex-row {
+    display: flex;
+    flex-flow: row;
+}
+
+.meta-flex-column {
+    display: flex;
+    flex-flow: column;
+    width: 75px;
+}

@@ -30,6 +30,10 @@ const accountListSubsciptionContent = {
         {
             idField: `gender_id`,
             fieldset: [`name`]
+        },
+        {
+            idField: `home_committee_id`,
+            fieldset: [`name`]
         }
     ]
 };
