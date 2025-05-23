@@ -5,7 +5,6 @@
             [changes]="changes"
             [elContainer]="nativeElement"
             [motion]="motion"
-            [originMeetingName]="originMeetingName"
             [scrollToChange]="scrollToChange"
         ></os-motion-detail-diff-summary>
     }
@@ -109,12 +108,14 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
-                                @if (change.amendment.isForwardedAmendment && originMeetingName[i] !== undefined) {
+                                @if (
+                                    change.amendment.isForwardedAmendment && originName(change.amendment) !== undefined
+                                ) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"
                                         inline
-                                        [matTooltip]="originMeetingName[i]"
+                                        [matTooltip]="originName(change.amendment)"
                                         [matTooltipPosition]="position.value!"
                                     >
                                         info

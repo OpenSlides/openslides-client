@@ -94,27 +94,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this.unifiedChanges$.value;
     }
 
-    public get originMeetingName(): string[] {
-        const meetingName = [];
-        let i = 0;
-        for (const amendment of this.motion.amendments) {
-            // If the change is a recommendation the list needs an entry for it,
-            // but the change recommendation is just in the current meeting and should not have a meeting name
-            if (this.unifiedChanges[i]?.getChangeId().indexOf(`recommendation`) === 0) {
-                meetingName.push(undefined);
-                i += 1;
-            }
-            if (this.meetingRepo.getViewModel(amendment?.origin_meeting_id) !== null && this.motion.amendments[0].all_origin_ids[0] !== null) {
-                meetingName.push(this.meetingRepo.getViewModel(this.repo.getViewModel(amendment.all_origin_ids[0])?.meeting_id)?.name);
-            } else {
-                meetingName.push(undefined);
-            }
-            i += 1;
-        }
-
-        return meetingName;
-    }
-
     public showAllAmendments = false;
     private _forwardingAvailable = false;
 
