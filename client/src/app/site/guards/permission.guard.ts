@@ -49,6 +49,6 @@ export class PermissionGuard {
     }
 
     private isLoginPage(url: string): boolean {
-        return url.startsWith(`/login`) || new RegExp(`^\/[0-9]+\/login`).test(url);
+        return url.startsWith(`/login`) || new RegExp(`^[0-9]+login`).test(url);
     }
 }

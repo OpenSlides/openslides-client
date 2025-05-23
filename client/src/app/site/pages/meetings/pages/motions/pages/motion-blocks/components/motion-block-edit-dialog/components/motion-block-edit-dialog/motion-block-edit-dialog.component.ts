@@ -23,12 +23,6 @@ export class MotionBlockEditDialogComponent {
         });
     }
 
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.dialogRef.close();
-        }
-    }
-
     public saveBlock(): void {
         this.dialogRef.close(this.blockEditForm.value);
     }

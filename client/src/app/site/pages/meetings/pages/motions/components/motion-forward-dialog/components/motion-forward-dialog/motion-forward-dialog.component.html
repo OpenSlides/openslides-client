@@ -26,7 +26,7 @@
     }
     @if (amendmentNumber() > 0) {
         <div class="state">
-            {{ 'Note: Amendments cannot be forwarded without their parent motion.' | translate }}
+            {{ 'Note: Amendments cannot be directly forwarded.' | translate }}
         </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
