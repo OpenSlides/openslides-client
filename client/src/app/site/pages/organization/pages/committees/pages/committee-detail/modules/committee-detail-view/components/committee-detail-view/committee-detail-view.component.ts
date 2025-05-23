@@ -184,7 +184,12 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     }
 
     private calcAccountActiveIds(committee: ViewCommittee): Set<number> {
-        const result = new Set<number>(committee.manager_ids);
+        const result = new Set<number>();
+        for (const user of committee.managers ?? []) {
+            if (user.is_active) {
+                result.add(user.id);
+            }
+        }
         for (const user of committee.users ?? []) {
             if (user.is_active) {
                 result.add(user.id);
