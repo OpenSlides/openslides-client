@@ -49,23 +49,19 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     public elContainer: any;
 
     @Input()
-    public backtrackingIsOn = false;
-
-    @Input()
     public originMeetingName = [``];
 
     public isAmendmentMarkedForwarded(i): boolean {
-        let amendment_index = -1;
+        let amendmentIndex = -1;
         for (let j = 0; this.changes.length && j <= i; j++) {
             if (this.isAmendment(this.changes[j])) {
-                amendment_index += 1;
+                amendmentIndex += 1;
             }
         }
-        return this.motion.amendments[amendment_index]?.isForwardedAmendment;
+        return this.motion.amendments[amendmentIndex]?.isForwardedAmendment;
     }
 
-    public positionOptions: TooltipPosition[] = [`after`, `before`, `above`, `below`, `left`, `right`];
-    public position = new FormControl(this.positionOptions[2]);
+    public position = new FormControl(`above` as TooltipPosition);
 
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"

@@ -56,9 +56,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public showAllAmendments$ = new BehaviorSubject(false);
 
     @Input()
-    public backtrackingIsOn = false;
-
-    @Input()
     public originMeetingName = [``];
 
     private unifiedChanges$: Observable<ViewUnifiedChange[]> & { value: ViewUnifiedChange[] } = new BehaviorSubject([]);

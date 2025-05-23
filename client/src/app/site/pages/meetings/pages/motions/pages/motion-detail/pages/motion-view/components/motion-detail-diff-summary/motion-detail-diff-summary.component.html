@@ -21,11 +21,7 @@
                             }
                             @if (isAmendment(change)) {
                                 <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
-                                @if (
-                                    isAmendmentMarkedForwarded(i) &&
-                                    backtrackingIsOn &&
-                                    originMeetingName[i] !== undefined
-                                ) {
+                                @if (isAmendmentMarkedForwarded(i) && originMeetingName[i] !== undefined) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"

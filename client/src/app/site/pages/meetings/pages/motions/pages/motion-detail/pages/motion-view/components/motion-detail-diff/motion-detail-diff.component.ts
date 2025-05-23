@@ -106,16 +106,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public showAllAmendments = false;
 
     @Input()
-    public backtrackingIsOn = false;
-
-    @Input()
     public showSummary = true;
 
     @Input()
     public originMeetingName = [``];
 
-    public positionOptions: TooltipPosition[] = [`after`, `before`, `above`, `below`, `left`, `right`];
-    public position = new FormControl(this.positionOptions[2]);
+    public position = new FormControl(`above` as TooltipPosition);
 
     @Input()
     public set showPreamble(value: boolean) {

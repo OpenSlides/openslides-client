@@ -2,7 +2,6 @@
 <div class="motion-detail-diff">
     @if (showSummary) {
         <os-motion-detail-diff-summary
-            [backtrackingIsOn]="backtrackingIsOn"
             [changes]="changes"
             [elContainer]="nativeElement"
             [motion]="motion"
@@ -110,11 +109,7 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
-                                @if (
-                                    change.amendment.isForwardedAmendment &&
-                                    backtrackingIsOn &&
-                                    originMeetingName[i] !== undefined
-                                ) {
+                                @if (change.amendment.isForwardedAmendment && originMeetingName[i] !== undefined) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"

@@ -94,10 +94,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return this.unifiedChanges$.value;
     }
 
-    public get backtrackingIsOn(): boolean {
-        return this.originMotionsLoaded.length > 0;
-    }
-
     public get originMeetingName(): string[] {
         const meetingName = [];
         let i = 0;
@@ -438,7 +434,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private addOriginMotionTab(id: Id): void {
         const originMotion = this.repo.getViewModelUnsafe(id);
-        if (!this.originMotionsLoaded.find(m => m.id === id) && originMotion) {
+        if (originMotion && !this.originMotionsLoaded.find(m => m.id === id)) {
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
             originMotion.meeting = meeting;
 
