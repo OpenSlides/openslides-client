@@ -53,6 +53,7 @@ export class OrganizationNavigationComponent {
             displayName: `Tags`,
             icon: `local_offer`,
             permission: OML.can_manage_organization,
+            optionalCML: CML.can_manage,
             weight: 250
         },
         {
