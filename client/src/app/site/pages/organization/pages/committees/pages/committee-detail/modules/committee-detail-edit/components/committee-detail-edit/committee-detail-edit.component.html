@@ -78,9 +78,10 @@
                     <os-repo-search-selector
                         formControlName="parent_id"
                         [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
-                        [includeNone]="includeNoneInParentCommittee"
+                        [includeNone]="isOrgaManager && isCreateView"
                         [multiple]="false"
                         [repo]="committeeRepo"
+                        [required]="!isOrgaManager"
                         [showChips]="false"
                         [sortService]="committeeSortService"
                         [tooltipFn]="getTooltipFn()"
