@@ -193,7 +193,7 @@ export class GlobalSearchComponent implements OnDestroy {
         const textParts = text
             .replace(/<br\s*\/?>/g, `\n`)
             .replace(removeTags, ``)
-            .split(new RegExp(`(<mark>[^<]+<\/mark>)`, `g`));
+            .split(new RegExp(`(<mark>[^<]+</mark>)`, `g`));
         let totalLength = 0;
 
         if (textParts.length > 1) {

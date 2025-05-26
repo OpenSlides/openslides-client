@@ -72,8 +72,8 @@ export class MeetingSettingsDefinitionService {
         if (
             ((!setting.type || [`string`, `text`, `email`, `markupText`].includes(setting.type)) &&
                 typeof defaultValue !== `string`) ||
-            ([`integer`, `date`, `datetime`, `daterange`].includes(setting.type) && typeof defaultValue !== `number`) ||
-            (setting.type === `boolean` && typeof defaultValue !== `boolean`)
+                ([`integer`, `date`, `datetime`, `daterange`].includes(setting.type) && typeof defaultValue !== `number`) ||
+                (setting.type === `boolean` && typeof defaultValue !== `boolean`)
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
         }

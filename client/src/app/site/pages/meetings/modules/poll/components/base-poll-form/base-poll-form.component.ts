@@ -52,7 +52,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
 
     public PollType = PollType;
-    public PollPropertyVerbose = PollPropertyVerbose;
+    public PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = PollPropertyVerbose;
     public readonly pollBackendDurationChoices = PollBackendDurationChoices;
 
     /**
@@ -221,6 +221,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
+            if (this.allowToSetMinMax) {
+                this.updatePollMethod(PollMethod.Y);
+            }
         }
 
         this.subscriptions.push(
@@ -310,7 +313,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return (
             (selectedPollMethod === FormPollMethod.Y ||
                 (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
-            (!data || !data.state || data.isCreated)
+                (!data || !data.state || data.isCreated)
         );
     }
 
@@ -502,20 +505,24 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     private getVotesAmountControl(): UntypedFormGroup {
         const maxVotesPreselect =
             (this.isPollMethodYNA || this.isPollMethodYN) && this.allowToSetMinMax ? this.pollOptionAmount : 1;
-        return this.fb.group(
-            {
-                max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
-                min_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
-            },
-            {
-                validators: [
-                    isNumberRange(`min_votes_amount`, `max_votes_amount`),
-                    this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
-                    isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
-                ]
-            }
-        );
+        const config = {
+            max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
+            min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+            max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
+        };
+        if (this.allowToSetMinMax) {
+            config.max_votes_amount = [
+                maxVotesPreselect,
+                [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
+            ];
+        }
+        return this.fb.group(config, {
+            validators: [
+                isNumberRange(`min_votes_amount`, `max_votes_amount`),
+                this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`),
+                isNumberRange(`max_votes_per_option`, `max_votes_amount`, `rangeErrorMaxPerOption`)
+            ]
+        });
     }
 
     private enableGlobalVoteControls(): void {
@@ -585,6 +592,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 return this.translate.instant(`Min votes cannot be greater than max votes.`);
             case `rangeErrorMaxPerOption`:
                 return this.translate.instant(`Max votes per option cannot be greater than max votes.`);
+            case `max`:
+                return this.translate.instant(`Max votes cannot be greater than options.`);
             default:
                 return ``;
         }

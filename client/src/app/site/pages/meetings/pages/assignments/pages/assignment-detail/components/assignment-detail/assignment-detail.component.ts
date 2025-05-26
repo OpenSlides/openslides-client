@@ -227,7 +227,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * @param operation the action requested
      * @returns true if the user is able to perform the action
      */
-    public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
+    public hasPerms(operation: `addSelf` | `addOthers` | `createPoll` | `manage`): boolean {
         const isManager = this.operator.hasPerms(Permission.assignmentCanManage);
         switch (operation) {
             case `addSelf`:
@@ -274,17 +274,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
         if (!newMode) {
             this.isEditing = false;
-        }
-    }
-
-    /**
-     * Hitting escape while in the edit form should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
         }
     }
 

@@ -96,7 +96,7 @@ export class OpenSlidesRouterService {
         const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
-        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
+        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^/[0-9]+/${UrlTarget.LOGIN}`).test(url)) {
             this.setNextAfterLoginUrl(url);
             this.router.navigate([`/`, UrlTarget.LOGIN]);
         }
@@ -193,7 +193,7 @@ export class OpenSlidesRouterService {
     private async validateGuard(
         guardToken: ProviderToken<any>,
         route: ActivatedRoute,
-        type: 'canActivateChild' | 'canActivate' | 'canLoad'
+        type: `canActivateChild` | `canActivate` | `canLoad`
     ): Promise<boolean | UrlTree> {
         const guard = this.injector.get(guardToken);
         const routerStateSnapshot = Object.assign({}, route.snapshot, { url: this.router.url });

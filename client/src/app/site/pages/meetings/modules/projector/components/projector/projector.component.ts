@@ -88,23 +88,23 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
             backgroundImage: string;
         };
     } = {
-        container: {
-            height: `0px`
-        },
-        projector: {
-            transform: `none`,
-            width: `0px`,
-            height: `0px`,
-            color: `black`,
-            backgroundColor: `white`,
-            H1Color: `#317796`
-        },
-        headerFooter: {
-            color: `white`,
-            backgroundColor: `#317796`,
-            backgroundImage: `none`
-        }
-    };
+            container: {
+                height: `0px`
+            },
+            projector: {
+                transform: `none`,
+                width: `0px`,
+                height: `0px`,
+                color: `black`,
+                backgroundColor: `white`,
+                H1Color: `#317796`
+            },
+            headerFooter: {
+                color: `white`,
+                backgroundColor: `#317796`,
+                backgroundImage: `none`
+            }
+        };
 
     /**
      * Info about if the user is offline.

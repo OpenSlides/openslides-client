@@ -2,25 +2,22 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewMotion } from '../../../view-models';
 import { AmendmentListPdfService } from '../amendment-list-pdf.service';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionPdfService } from '../motion-pdf.service';
 import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 /**
  * Export service to handle various kind of exporting necessities.
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionPdfExportService {
     public constructor(
         private translate: TranslateService,
-        private meetingSettingsService: MeetingSettingsService,
         private motionPdfService: MotionPdfService,
         private amendmentListPdfService: AmendmentListPdfService,
         private pdfCatalogService: MotionPdfCatalogService,

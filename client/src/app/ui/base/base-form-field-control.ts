@@ -28,8 +28,7 @@ import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
  */
 @Directive()
 export abstract class BaseFormFieldControlComponent<T>
-    implements MatFormFieldControl<T>, OnDestroy, ControlValueAccessor
-{
+implements MatFormFieldControl<T>, OnDestroy, ControlValueAccessor {
     public static nextId = 0;
 
     @HostBinding() public id = `base-form-control-${BaseFormFieldControlComponent.nextId++}`;

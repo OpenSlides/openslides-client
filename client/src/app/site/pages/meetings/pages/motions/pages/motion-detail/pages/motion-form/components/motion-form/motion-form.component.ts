@@ -27,7 +27,7 @@ import { HasSequentialNumber, Selectable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
-import { RawUser } from 'src/app/gateways/repositories/users';
+import { RawUser, UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -192,6 +192,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         public vp: ViewPortService,
         public participantRepo: ParticipantControllerService,
         public participantSortService: ParticipantListSortService,
+        public userRepo: UserRepositoryService,
         public categoryRepo: MotionCategoryControllerService,
         public workflowRepo: MotionWorkflowControllerService,
         private fb: UntypedFormBuilder,
@@ -242,6 +243,15 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     public saveMotion(event?: any): () => Promise<void> {
         return async () => {
             const update = event || this.temporaryMotion;
+            if (update.supporter_ids && update.supporter_ids.length > 0) {
+                update[`supporter_meeting_user_ids`] = [];
+                for (const supporterId of update.supporter_ids) {
+                    const supporter = this.userRepo.getViewModel(supporterId);
+                    update[`supporter_meeting_user_ids`].push(supporter.getMeetingUser().id);
+                }
+                delete update.supporter_ids;
+            }
+
             if (this.newMotion) {
                 for (const key in update) {
                     if (update[key] === null || update[key].length === 0) {
@@ -258,9 +268,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     public leaveEditMotion(motion: HasSequentialNumber | null = this.motion): void {
         if (motion?.sequential_number) {
-            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
+            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number], { replaceUrl: true });
         } else {
-            this.router.navigate([this.activeMeetingId, `motions`]);
+            this.router.navigate([this.activeMeetingId, `motions`], { replaceUrl: true });
         }
     }
 

@@ -68,7 +68,7 @@
                         @if (topic.text) {
                             <span>
                                 <!-- Render topic text as HTML -->
-                                <div class="detail-view" [innerHTML]="topic.text | trust: 'html'"></div>
+                                <div class="detail-view html-view" [innerHTML]="topic.text | trust: 'html'"></div>
                             </span>
                         }
                     </div>
@@ -91,7 +91,7 @@
                 }
 
                 @if (editTopic && topicForm) {
-                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+                    <form tabindex="-1" [formGroup]="topicForm">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -138,6 +138,17 @@
                                         ></os-list-search-selector>
                                     </mat-form-field>
                                 </div>
+                            </div>
+                        } @else {
+                            <div class="apply-button">
+                                <button mat-stroked-button (click)="applyTopicContent()">
+                                    <span>{{ 'Apply' | translate }}</span>
+                                </button>
+                                @if (applyFeedback) {
+                                    <div class="apply-feedback-icon">
+                                        <mat-icon>check</mat-icon>
+                                    </div>
+                                }
                             </div>
                         }
                     </form>

@@ -235,7 +235,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             this.pdfPage = 0;
         }
         if (this.isPdfProjection) {
-            this.repo.scroll(this.projector, direction, step * 100)
+            this.repo.scroll(this.projector, direction, step * 100);
         } else {
             this.repo.scroll(this.projector, direction, step);
         }

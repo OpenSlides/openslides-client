@@ -69,7 +69,11 @@
                 (click)="updateSpeakerMeetingUser()"
                 (keyup.enter)="updateSpeakerMeetingUser()"
             >
-                Select speaker
+                @if (enableUpdateUserButton()) {
+                    Select speaker
+                } @else {
+                    Deleted user
+                }
             </span>
         }
 
@@ -235,7 +239,7 @@
                 </div>
             </div>
             <ng-container *osPerms="permission.listOfSpeakersCanManage">
-                @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.meeting_user_id) {
+                @if (enableUpdateUserButton()) {
                     <button
                         mat-icon-button
                         matTooltip="{{ 'Select speaker' | translate }}"

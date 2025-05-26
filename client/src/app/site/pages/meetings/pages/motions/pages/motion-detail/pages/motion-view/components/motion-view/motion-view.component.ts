@@ -18,6 +18,7 @@ import {
     filter,
     firstValueFrom,
     Observable,
+    startWith,
     Subject,
     Subscription
 } from 'rxjs';
@@ -94,6 +95,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public showAllAmendments = false;
+    private _forwardingAvailable = false;
 
     /**
      * preloaded next motion for direct navigation
@@ -103,6 +105,21 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
+    }
+
+    public get showForwardMenuEntry(): boolean {
+        const derivedMotionMeetingIds = this.motion.derived_motions?.map(derivedMotion => +derivedMotion.meeting_id);
+        const forwardingMeetingsIds = this.motionForwardingService.forwardingMeetingIds;
+        return (
+            !!this.motion.state?.allow_motion_forwarding &&
+            this.operator.hasPerms(Permission.motionCanForward) &&
+            this._forwardingAvailable &&
+            forwardingMeetingsIds.some(meetingId => !derivedMotionMeetingIds.includes(meetingId))
+        );
+    }
+
+    public get showForwardButton(): boolean {
+        return this.showForwardMenuEntry && !this.motion.derived_motions.length;
     }
 
     private _changeRecoMode: ChangeRecoMode = ChangeRecoMode.Original;
@@ -180,6 +197,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 )
                 .subscribe(() => this.onMotionChange())
         );
+
+        if (operator.hasPerms(Permission.motionCanForward)) {
+            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+                this._forwardingAvailable = forwardingAvailable && !this.motion?.isAmendment();
+                this.cd.markForCheck();
+            });
+        }
     }
 
     /**
@@ -422,7 +446,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
             this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
-            motion.amendments$
+            motion.amendments$.pipe(startWith([]))
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {

@@ -93,6 +93,9 @@
                                     type="number"
                                     [errorStateMatcher]="parentErrorStateMatcher"
                                 />
+                                @if (contentForm.controls['votes_amount']?.get('max_votes_amount').hasError('max')) {
+                                    <mat-error>{{ getErrorMessage('max') }}</mat-error>
+                                }
                             </mat-form-field>
                         }
                     </ng-container>

@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -85,7 +86,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get projectionTarget(): '_blank' | '_self' {
+    public get projectionTarget(): `_blank` | `_self` {
         if (this.operator.hasPerms(this.permission.projectorCanManage)) {
             return `_self`;
         } else {
@@ -93,8 +94,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         }
     }
 
-    public get lowerProjectionTarget(): '_blank' | '_self' {
-        if (this.projectedViewModel?.COLLECTION === Mediafile.COLLECTION) {
+    public get lowerProjectionTarget(): `_blank` | `_self` {
+        if ([Mediafile.COLLECTION, MeetingMediafile.COLLECTION].includes(this.projectedViewModel?.COLLECTION)) {
             return `_blank`;
         } else {
             return `_self`;

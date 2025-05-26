@@ -1,4 +1,4 @@
-<div class="content-container spacer-bottom-60">
+<div class="content-container" [class.spacer-bottom-60]="useBottomMargin">
     @if (isEditing) {
         @if (useMatcard) {
             <mat-card class="os-card">
@@ -87,6 +87,7 @@
                 <os-repo-search-selector
                     formControlName="gender_id"
                     [includeNone]="true"
+                    [pipeFn]="genderPipeFn"
                     [repo]="genderRepo"
                     [subscriptionConfig]="genderListSubscriptionConfig"
                 ></os-repo-search-selector>
@@ -202,7 +203,7 @@
 </ng-template>
 
 <ng-template #showTemplate>
-    <h2>{{ 'Personal information' | translate }}</h2>
+    <h2 [class.header-margin]="!useBottomMargin">{{ 'Personal information' | translate }}</h2>
     @if (user) {
         <!-- Displayed name -->
         @if (isAllowed('seeName')) {

@@ -17,9 +17,16 @@
         </div>
     } @else {
         <div class="state">
-            {{ data.motion.length }} {{ 'motions' | translate }}
-            <span>&middot;</span>
-            {{ numAmendments }} {{ 'amendments' | translate }}
+            {{ data.motion.length - amendmentNumber() }} {{ 'motions' | translate }}
+            @if (numAmendments > 0) {
+                <span>&middot;</span>
+                {{ numAmendments }} {{ 'amendments' | translate }}
+            }
+        </div>
+    }
+    @if (amendmentNumber() > 0) {
+        <div class="state">
+            {{ 'Note: Amendments cannot be directly forwarded.' | translate }}
         </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
@@ -44,9 +51,12 @@
                 @if (rowName === 'motion_version') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
+                            <mat-radio-button [value]="false">
+                                {{ 'Final version' | translate }}
+                                <i>({{ 'Note: Amendments will not be forwarded.' | translate }})</i>
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
-                                {{ 'Original version with all changes' | translate }}
-                                <br />
+                                {{ 'Original version with changes' | translate }}
                                 @if (
                                     data.motion.length === 1 &&
                                     (data.motion[0].amendment_ids?.length > 0 ||
@@ -64,7 +74,7 @@
                                                 data.motion[0].amendment_ids?.length > 0 &&
                                                 data.motion[0].change_recommendation_ids?.length > 0
                                             ) {
-                                                {{ 'and' | translate }}
+                                                +
                                             }
                                             @if (data.motion[0].change_recommendation_ids?.length === 1) {
                                                 {{ data.motion[0].change_recommendation_ids.length }}
@@ -78,14 +88,19 @@
                                     </span>
                                 }
                             </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'Final version' | translate }}
-                            </mat-radio-button>
                         </mat-radio-group>
                     </span>
                 } @else if (rowName === 'submitter') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
+                            <mat-radio-button [value]="false">
+                                {{ 'committee name' | translate }}
+                                @if (activeMeetingCommitteeName) {
+                                    <span class="data-preview">
+                                        <span>{{ activeMeetingCommitteeName }}</span>
+                                    </span>
+                                }
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'original submitter' | translate }}
                                 @if (data.motion.length === 1 && data.motion[0].submitterNames.length > 0) {
@@ -102,19 +117,14 @@
                                     </span>
                                 }
                             </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'committee name' | translate }}
-                                @if (activeMeetingCommitteeName) {
-                                    <span class="data-preview">
-                                        <span>{{ activeMeetingCommitteeName }}</span>
-                                    </span>
-                                }
-                            </mat-radio-button>
                         </mat-radio-group>
                     </span>
                 } @else if (rowName === 'identifier') {
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
+                            <mat-radio-button [value]="false">
+                                {{ 'without identifier' | translate }}
+                            </mat-radio-button>
                             <mat-radio-button [value]="true">
                                 {{ 'original identifier' | translate }}
                                 @if (data.motion.length === 1) {
@@ -122,9 +132,6 @@
                                         <span>{{ data.motion[0].number }}</span>
                                     </span>
                                 }
-                            </mat-radio-button>
-                            <mat-radio-button [value]="false">
-                                {{ 'without identifier' | translate }}
                             </mat-radio-button>
                         </mat-radio-group>
                     </span>

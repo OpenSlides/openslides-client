@@ -40,7 +40,7 @@ msgstr ""
 
 msgid ""
 "A change recommendation or amendment is probably referring to a "
-"non-existant line number."
+"nonexistent line number."
 msgstr ""
 
 msgid "A client error occurred. Please contact your system administrator."
@@ -90,9 +90,6 @@ msgid "Accept"
 msgstr ""
 
 msgid "Access data (PDF)"
-msgstr ""
-
-msgid "Access groups"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
@@ -351,6 +348,10 @@ msgstr ""
 msgid "Allow create poll"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Allow forwarding of amendments"
+msgstr ""
+
 msgid "Allow forwarding of motions"
 msgstr ""
 
@@ -412,10 +413,6 @@ msgid "Amount of meetings"
 msgstr ""
 
 msgid "Amount of votes"
-msgstr ""
-
-#: /app/src/app/site/pages/login/pages/reset-password/components/reset-password/reset-password.component.ts
-msgid "An email with a password reset link has been sent."
 msgstr ""
 
 msgid "An error occurred while voting."
@@ -1675,14 +1672,14 @@ msgstr ""
 msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 
-#: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
-msgid "Default vote method"
-msgstr ""
-
 msgid "Default vote weight"
 msgstr ""
 
 msgid "Default voting duration"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Default voting method"
 msgstr ""
 
 msgid "Default voting type"
@@ -1968,6 +1965,10 @@ msgstr ""
 msgid "Election documents"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll-form/assignment-poll-form.component.ts
+msgid "Election method"
+msgstr ""
+
 msgid "Elections"
 msgstr ""
 
@@ -2069,6 +2070,15 @@ msgstr ""
 msgid ""
 "Enables the editing of the motion text and reason by submitters in the "
 "selected state after the motion has been created."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Enables the forwarding of amendments in the selected state.\n"
+"\n"
+"Prerequisites:\n"
+"1. Motion forwarding is activated.\n"
+"2. 'Original version with changes' in forwarding dialog must be selected."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
@@ -2204,9 +2214,6 @@ msgstr ""
 msgid "Export moderator note as PDF"
 msgstr ""
 
-msgid "Export motions"
-msgstr ""
-
 msgid "Export personal note only"
 msgstr ""
 
@@ -2316,9 +2323,6 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid "Formalities"
-msgstr ""
-
-msgid "Format"
 msgstr ""
 
 msgid "Forspeech"
@@ -2517,6 +2521,10 @@ msgstr ""
 msgid "Header"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Header and footer"
+msgstr ""
+
 msgid "Header background color"
 msgstr ""
 
@@ -2603,6 +2611,10 @@ msgstr ""
 msgid "If deactivated it is displayed below the title."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/components/mediafile-list/mediafile-list.component.html
+msgid "If empty, everyone can access."
+msgstr ""
+
 msgid ""
 "If it is an amendment, you can back up its content when editing it and "
 "delete it afterwards."
@@ -2610,6 +2622,12 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/projectors/components/projector-countdown-dialog/components/projector-countdown-dialog/projector-countdown-dialog.component.html
 msgid "If the value is set to 0 the time counts up as stopwatch."
+msgstr ""
+
+#: app/src/app/site/pages/login/pages/reset-password/components/reset-password/reset-password.component.ts
+msgid ""
+"If your email address exists in our database, you will receive a password "
+"reset email."
 msgstr ""
 
 #: /app/src/app/ui/modules/editor/components/editor-image-dialog/editor-image-dialog.component.html
@@ -3050,6 +3068,10 @@ msgid "Mandates switched sucessfully!"
 msgstr ""
 
 msgid "Mark as personal favorite"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component.ts
+msgid "Max votes cannot be greater than options."
 msgstr ""
 
 #: app/src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component.ts
@@ -3567,6 +3589,14 @@ msgstr ""
 msgid "Note, that the default password will be changed to the new generated one."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Note: Amendments cannot be forwarded without their parent motion."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Note: Amendments will not be forwarded."
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
 msgid ""
 "Note: The public access setting is deactivated for the organization. Please "
@@ -3579,6 +3609,10 @@ msgid ""
 msgstr ""
 
 msgid "Notes"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Notes and Comments"
 msgstr ""
 
 msgid "Number"
@@ -3615,6 +3649,10 @@ msgid "Number of motions"
 msgstr ""
 
 msgid "Number of next speakers automatically connecting to the live conference"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/services/export/motion-xlsx-export.service/motion-xlsx-export.service.ts
+msgid "Number of open requests to speak"
 msgstr ""
 
 msgid "Number of participants"
@@ -3734,9 +3772,6 @@ msgstr ""
 msgid "Open projection dialog"
 msgstr ""
 
-msgid "Open requests to speak"
-msgstr ""
-
 msgid "OpenSlides URL"
 msgstr ""
 
@@ -3796,7 +3831,7 @@ msgid "Original version"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
-msgid "Original version with all changes"
+msgid "Original version with changes"
 msgstr ""
 
 msgid "Out of sync"
@@ -3830,6 +3865,10 @@ msgid "Page"
 msgstr ""
 
 msgid "Page format"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Page layout"
 msgstr ""
 
 msgid "Page margin bottom in mm"
@@ -3968,6 +4007,10 @@ msgid "Pause speech"
 msgstr ""
 
 msgid "Permissions"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Person-related fields"
 msgstr ""
 
 msgid "Personal data changed"
@@ -4902,6 +4945,10 @@ msgstr ""
 msgid "Structure levels"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import.service/participant-import.service.ts
+msgid "Structure levels created"
+msgstr ""
+
 msgid "Subcategory"
 msgstr ""
 
@@ -5019,6 +5066,10 @@ msgstr ""
 
 #: /app/src/app/ui/modules/editor/components/editor-link-dialog/editor-link-dialog.component.html
 msgid "Text to display"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Text version"
 msgstr ""
 
 msgid "The account is deactivated."
@@ -6104,6 +6155,10 @@ msgstr ""
 msgid "of"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-meta-data/motion-meta-data.component.ts
+msgid "of which %num% not permissable"
+msgstr ""
+
 msgid "open votes"
 msgstr ""
 
@@ -6200,6 +6255,14 @@ msgstr ""
 
 #: /app/src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component.ts
 msgid "votes per option"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/services/motion-forward-dialog.service.ts
+msgid "was"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/services/motion-forward-dialog.service.ts
+msgid "were"
 msgstr ""
 
 msgid "will be created"

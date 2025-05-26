@@ -10,7 +10,6 @@ import {
 } from 'src/app/domain/models/motions/motions.constants';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -29,7 +28,6 @@ import { MotionLineNumberingService } from '../../common/motion-line-numbering.s
 import { InfoToExport } from '../definitions';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
-import { MotionsExportModule } from '../motions-export.module';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -74,7 +72,7 @@ const PDF_A5_POINTS_WIDTH = 419.544;
  * ```
  */
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionPdfService {
     public constructor(
@@ -87,8 +85,6 @@ export class MotionPdfService {
         private htmlToPdfService: MotionHtmlToPdfService,
         private linenumberingService: LineNumberingService,
         private commentRepo: MotionCommentSectionControllerService,
-        private pollKeyVerbose: PollKeyVerbosePipe,
-        private parsePollNumber: PollParseNumberPipe,
         private organizationSettingsService: OrganizationSettingsService,
         private motionPollService: MotionPollService,
         private motionFormatService: MotionFormatService,
@@ -445,11 +441,11 @@ export class MotionPdfService {
                     const column3: any[] = [];
                     tableData.forEach(votingResult => {
                         const votingOption = this.translate.instant(
-                            this.pollKeyVerbose.transform(votingResult.votingOption)
+                            this.motionPollService.pollKeyVerbose(votingResult.votingOption)
                         );
                         const value = votingResult.value[0];
                         if (value.amount !== VOTE_UNDOCUMENTED) {
-                            const resultValue = this.parsePollNumber.transform(value.amount!);
+                            const resultValue = this.motionPollService.parseNumber(value.amount!);
                             column1.push(`${votingOption}:`);
                             if (value.showPercent) {
                                 const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
