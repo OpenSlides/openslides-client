@@ -81,7 +81,7 @@
                         [includeNone]="isOrgaManager && isCreateView"
                         [multiple]="false"
                         [repo]="committeeRepo"
-                        [required]="!isOrgaManager"
+                        [required]="!isOrgaManager && isCreateView"
                         [showChips]="false"
                         [sortService]="committeeSortService"
                         [tooltipFn]="getTooltipFn()"
