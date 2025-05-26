@@ -1,6 +1,11 @@
 <os-head-bar>
     <div class="title-slot">
-        <h2>{{ 'Autopilot' | translate }}</h2>
+        <h2>
+            {{ 'Autopilot' | translate }}
+            @if (title.toLowerCase() === 'axolotl') {
+                ⚞(⚬___⚬)⚟
+            }
+        </h2>
     </div>
 
     <!-- Menu -->
@@ -23,7 +28,16 @@
     </ng-container>
 </os-head-bar>
 
-<div class="content-container">
+<div
+    class="content-container"
+    [ngClass]="{
+        'split-autopilot':
+            disabledContentElements['speaking-times'] !== true &&
+                structureLevelCountdownEnabled &&
+                listOfSpeakers &&
+                showRightCol | async
+    }"
+>
     <div class="col-wrapper">
         <div class="col-main">
             <!-- Title Card -->
