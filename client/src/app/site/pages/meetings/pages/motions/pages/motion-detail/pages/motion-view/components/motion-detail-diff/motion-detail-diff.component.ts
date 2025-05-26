@@ -121,11 +121,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public originName(amendment: ViewMotion): string | undefined {
-        if (!amendment.origin_meeting_id) {
-            return undefined;
-        } else {
-            return this.meetingRepo.getViewModel(this.motionRepo.getViewModel(amendment.all_origin_ids[0])?.meeting_id)?.name;
+        if (amendment.all_origins.length) {
+            return amendment.all_origins[0].meeting?.name;
         }
+        return undefined;
     }
 
     @Input()
