@@ -88,7 +88,7 @@ export class OperatorService {
     }
 
     public get isCommitteeManager(): boolean {
-        return !!(this.user?.committee_management_ids || []).length;
+        return !!(this._userSubject.value?.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -814,6 +814,10 @@ export class OperatorService {
                                 ]
                             }
                         ]
+                    },
+                    {
+                        idField: `committee_management_ids`,
+                        fieldset: [`child_ids`]
                     }
                 ]
             };
