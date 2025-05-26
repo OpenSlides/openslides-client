@@ -98,11 +98,9 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
                 return true;
             } else if (this.isCreateView) {
                 return !this.operator.hasCommitteePermissions(value.id, CML.can_manage);
-            } else {
-                const valueAncesterIds = this.committeeRepo.getViewModel(value.id)?.all_parent_ids ?? [];
-                const sameAncesterIds = (this.editCommittee.all_parent_ids ?? []).filter(commId => valueAncesterIds.includes(commId));
-                return !this.operator.isOrgaManager && !sameAncesterIds.some(commId => this.operator.hasCommitteePermissions(commId, CML.can_manage));
             }
+
+            return false;
         };
     }
 
