@@ -2187,48 +2187,37 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        let maxLine = lineRange?.from || 0;
+        let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
+        let maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+
         changes.forEach((change: ViewUnifiedChange) => {
-            if (change.getLineTo() > maxLine) {
-                maxLine = change.getLineTo();
+            if (change.getLineTo() > maxFromLine &&  change.getLineTo() <= maxToLine) {
+                maxFromLine = change.getLineTo();
             }
         }, 0);
 
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
-
+        
         let data: ExtractedContent;
 
-        try {
-            data = this.extractRangeByLineNumbers(
-                motionHtml,
-                Math.max(maxLine + 1, lineRange?.from || 1),
-                lineRange?.to ?? null
-            );
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
-        }
-
+        data = this.extractRangeByLineNumbers(
+            motionHtml,
+            Math.max(maxFromLine + 1, lineRange?.from || 1),
+            lineRange?.to ? maxToLine : null
+        );
+        
+    
         let html = ``;
-        if (data.html !== ``) {
+        if (data?.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
                 DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxFromLine + 1 });
         }
         return html;
     }
