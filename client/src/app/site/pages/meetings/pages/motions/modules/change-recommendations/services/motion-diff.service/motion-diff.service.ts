@@ -756,7 +756,7 @@ export class MotionDiffService {
     ): ExtractedContent {
         if (typeof html !== `string`) {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
-        }        
+        }
         if (this.lineNumberingService.getLineNumberRange(html).to < toLine) {
             throw new Error(`Invalid call - The change is outside of the motion`);
         }
@@ -2119,7 +2119,7 @@ export class MotionDiffService {
         highlight?: number
     ): string {
         let data: ExtractedContent;
-        let oldText: string;``
+        let oldText = ``;
 
         try {
             data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
@@ -2191,10 +2191,10 @@ export class MotionDiffService {
         lineRange?: LineRange
     ): string {
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
-        let maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+        const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
 
         changes.forEach((change: ViewUnifiedChange) => {
-            if (change.getLineTo() > maxFromLine &&  change.getLineTo() <= maxToLine) {
+            if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
             }
         }, 0);
@@ -2202,16 +2202,13 @@ export class MotionDiffService {
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
-        
-        let data: ExtractedContent;
 
-        data = this.extractRangeByLineNumbers(
+        const data: ExtractedContent = this.extractRangeByLineNumbers(
             motionHtml,
             Math.max(maxFromLine + 1, lineRange?.from || 1),
             lineRange?.to ? maxToLine : null
         );
-        
-    
+
         let html = ``;
         if (data?.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
