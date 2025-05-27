@@ -66,7 +66,7 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
                     } else if (
                         this.activeMeeting.meetingId &&
                         (mediafile.published_to_meetings_in_organization_id !== ORGANIZATION_ID ||
-                            !(this.operator.isMeetingAdmin || this.operator.isOrgaManager))
+                            !(this.operator.isMeetingAdmin || this.operator.isOrgaManager || this.operator.isCommitteeManager))
                     ) {
                         return false;
                     }

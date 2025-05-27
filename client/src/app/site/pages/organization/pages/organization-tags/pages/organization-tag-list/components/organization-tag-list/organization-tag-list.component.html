@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="true"
+    [hasMainButton]="isOrgaManager"
     [mainActionTooltip]="'New tag' | translate"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="createOrganizationTag()"
@@ -10,9 +10,13 @@
     </div>
 
     <!-- Menu -->
-    <ng-container class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="orgaTagMenu"><mat-icon>more_vert</mat-icon></button>
-    </ng-container>
+    @if (isOrgaManager) {
+        <ng-container class="menu-slot">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="orgaTagMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </ng-container>
+    }
 
     <!-- Multiselect info -->
     <ng-container class="central-info-slot">
@@ -35,16 +39,18 @@
             <os-chip [color]="orgaTag.color">{{ orgaTag.name }}</os-chip>
         </div>
     </div>
-    <div *osScrollingTableCell="'edit'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
-        <button mat-icon-button (click)="editOrganizationTag(orgaTag)">
-            <mat-icon>edit</mat-icon>
-        </button>
-    </div>
-    <div *osScrollingTableCell="'delete'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
-        <button color="warn" mat-icon-button (click)="deleteOrganizationTags(orgaTag)">
-            <mat-icon>delete</mat-icon>
-        </button>
-    </div>
+    @if (isOrgaManager) {
+        <div *osScrollingTableCell="'edit'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
+            <button mat-icon-button (click)="editOrganizationTag(orgaTag)">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+        <div *osScrollingTableCell="'delete'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
+            <button color="warn" mat-icon-button (click)="deleteOrganizationTags(orgaTag)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    }
 </os-list>
 
 <mat-menu #orgaTagMenu="matMenu">

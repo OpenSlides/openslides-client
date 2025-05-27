@@ -286,6 +286,12 @@ export const RELATIONS: Relation[] = [
         MField: `gender`,
         OField: `users`
     }),
+    ...makeM2O({
+        MViewModel: ViewUser,
+        OViewModel: ViewCommittee,
+        MField: `home_committee`,
+        OField: `users`
+    }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
     {
@@ -336,6 +342,30 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewCommittee,
         AField: `forward_to_committees`,
         BField: `receive_forwardings_from_committees`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewUser,
+        OField: `native_users`,
+        MField: `home_committee`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewCommittee,
+        OField: `all_parents`,
+        MField: `committee`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewCommittee,
+        OField: `all_childs`,
+        MField: `committee`
+    }),
+    ...makeO2O({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewCommittee,
+        AField: `parent`,
+        BField: `committee`
     }),
     // ########## Meetings
     ...makeO2O({
