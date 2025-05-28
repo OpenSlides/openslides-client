@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -6,6 +6,7 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
 
@@ -48,31 +49,17 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     @Input()
     public elContainer: any;
 
-    private getAmendmentIndex(i: number): number {
-        let amendmentIndex = -1;
-        for (let j = 0; this.changes.length && j <= i; j++) {
-            if (this.isAmendment(this.changes[j])) {
-                amendmentIndex += 1;
-            }
-        }
-        const amendment = this.motion.amendments[amendmentIndex];
-        const changeIsAmendment: boolean = this.changes[i].getIdentifier() === amendment?.getNumberOrTitle();
-        return changeIsAmendment ? amendmentIndex : undefined;
+    private getAmendment(change: ViewUnifiedChange): ViewMotion {
+        const id = change.getChangeId().slice(`amendment-`.length, change.getChangeId().lastIndexOf(`-`));
+        return this.motionRepo.getViewModel(Number(id));
     }
 
-    public originName(i: number): string | undefined {
-        const amendmentIndex = this.getAmendmentIndex(i);
-        const amendment = this.motion.amendments[amendmentIndex];
-
-        if (amendmentIndex !== undefined && amendment?.origin_meeting_id) {
-            return amendment.all_origins[0].meeting.name;
-        } else {
-            return undefined;
-        }
+    public originMeetingName(change: ViewUnifiedChange): string {
+        return this.getAmendment(change).all_origins[0].meeting.name;
     }
 
-    public isAmendmentMarkedForwarded(i: number): boolean {
-        return this.motion.amendments[this.getAmendmentIndex(i)]?.isForwardedAmendment;
+    public isAmendmentMarkedForwarded(change: ViewUnifiedChange): boolean {
+        return this.getAmendment(change).isForwardedAmendment;
     }
 
     public position = new FormControl(`above` as TooltipPosition);
@@ -126,6 +113,8 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
         target.scrollIntoView({ behavior: `smooth`, block: `center` });
     }
+
+    protected motionRepo = inject(MotionControllerService);
 
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {
         $event.preventDefault();

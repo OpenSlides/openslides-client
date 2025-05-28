@@ -21,12 +21,12 @@
                             }
                             @if (isAmendment(change)) {
                                 <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
-                                @if (isAmendmentMarkedForwarded(i) && originName(i) !== undefined) {
+                                @if (isAmendmentMarkedForwarded(change)) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"
                                         inline
-                                        [matTooltip]="originName(i)"
+                                        [matTooltip]="originMeetingName(change)"
                                         [matTooltipPosition]="position.value!"
                                     >
                                         info
