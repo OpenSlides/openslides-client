@@ -1,13 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
 
@@ -67,7 +65,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         const amendment = this.motion.amendments[amendmentIndex];
 
         if (amendmentIndex !== undefined && amendment?.origin_meeting_id) {
-            return this.meetingRepo.getViewModel(this.motionRepo.getViewModel(amendment.all_origin_ids[0])?.meeting_id)?.name;
+            return amendment.all_origins[0].meeting.name;
         } else {
             return undefined;
         }
@@ -134,9 +132,6 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         $event.stopPropagation();
         this.scrollToChangeElement(change);
     }
-
-    protected motionRepo = inject(MotionControllerService);
-    protected meetingRepo = inject(MeetingRepositoryService);
 
     public ngAfterViewInit(): void {
         if (this.scrollToChange) {
