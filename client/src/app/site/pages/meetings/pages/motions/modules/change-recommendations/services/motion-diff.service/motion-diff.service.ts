@@ -757,9 +757,6 @@ export class MotionDiffService {
         if (typeof html !== `string`) {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
-        if (this.lineNumberingService.getLineNumberRange(html).to < toLine) {
-            throw new Error(`Invalid call - The change is outside of the motion`);
-        }
 
         const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
@@ -2118,8 +2115,12 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
+        if (this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
+            throw new Error(`Invalid call - The change is outside of the motion`);
+        }
+
         let data: ExtractedContent;
-        let oldText = ``;
+        let oldText: string;
 
         try {
             data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
