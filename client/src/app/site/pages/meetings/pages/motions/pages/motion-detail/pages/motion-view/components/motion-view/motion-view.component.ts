@@ -413,7 +413,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private addOriginMotionTab(id: Id): void {
         const originMotion = this.repo.getViewModelUnsafe(id);
-        if (!this.originMotionsLoaded.find(m => m.id === id)) {
+        if (originMotion && !this.originMotionsLoaded.find(m => m.id === id)) {
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
             originMotion.meeting = meeting;
 
