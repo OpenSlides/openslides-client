@@ -33,22 +33,18 @@
 >
     <div *osScrollingTableCell="'name'; row as gender" class="cell-slot fill">
         <div>
-            @if (gender.id > 4) {
-                {{ gender.name }}
-            } @else {
-                {{ gender.name | translate }}
-            }
+            {{ gender.name | translate }}
         </div>
     </div>
     <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        @if (gender.id > 4 && !isMultiSelect) {
+        @if (!gender.isPredefined && !isMultiSelect) {
             <button mat-icon-button (click)="openGenderDialog(gender)">
                 <mat-icon>edit</mat-icon>
             </button>
         }
     </div>
     <div *osScrollingTableCell="'delete'; row as gender; config: { width: 40 }" class="cell-slot fill">
-        @if (gender.id > 4 && !isMultiSelect) {
+        @if (!gender.isPredefined && !isMultiSelect) {
             <button color="warn" mat-icon-button (click)="deleteGenders(gender)">
                 <mat-icon>delete</mat-icon>
             </button>
