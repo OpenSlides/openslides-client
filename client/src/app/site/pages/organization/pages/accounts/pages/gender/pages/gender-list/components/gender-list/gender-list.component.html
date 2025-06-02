@@ -33,7 +33,11 @@
 >
     <div *osScrollingTableCell="'name'; row as gender" class="cell-slot fill">
         <div>
-            {{ gender.name }}
+            @if (gender.id > 4) {
+                {{ gender.name }}
+            } @else {
+                {{ gender.name | translate }}
+            }
         </div>
     </div>
     <div *osScrollingTableCell="'edit'; row as gender; config: { width: 40 }" class="cell-slot fill">
