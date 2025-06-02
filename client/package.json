@@ -46,7 +46,7 @@
     "@angular/service-worker": "^19.2.14",
     "@intevation/tiptap-extension-office-paste": "^0.1.0",
     "@material/typography": "^14.0.0",
-    "@ngx-pwa/local-storage": "^19.0.0",
+    "@ngx-pwa/local-storage": "^20.0.0",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
     "@tiptap/core": "^2.12.0",
