@@ -258,15 +258,6 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         return group.isAdminGroup || group.isDefaultGroup || group.isAnonymousGroup;
     }
 
-    /**
-     * Clicking escape while in #newGroupForm should cancel editing.
-     */
-    public keyDownFunction(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.cancelEditing();
-        }
-    }
-
     public getSaveAction(): () => Promise<void> {
         return async () => {
             // send all changes as a bulk update

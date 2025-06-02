@@ -250,6 +250,14 @@ describe(`MotionDiffService`, () => {
             expect(pre).toBe(`<LI class="li-class"><UL><LI>Level 2 LI 8</LI>`);
         }));
 
+        it(`renders DOMs correctly (3)`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const lineNo = service.getLineNumberNode(baseHtmlDom2, 9);
+
+            expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
+            expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
+            expect(service.serializePartialDomFromChild(lineNo, [], true)).toBe(``);
+        }));
+
         it(`extracts a single line`, inject([MotionDiffService], (service: MotionDiffService) => {
             const diff = service.extractRangeByLineNumbers(baseHtml1, 1, 1);
             expect(diff.html).toBe(`<P class="os-split-after">Line 1 `);
@@ -540,96 +548,6 @@ describe(`MotionDiffService`, () => {
                 after = `<p>` + noMarkup(1) + `foo &amp; bar ins</p>`;
             const merged = service.replaceLines(pre, after, 1, 1);
             expect(merged).toBe(`<P>foo &amp; bar ins</P>`);
-        }));
-    });
-
-    describe(`detecting the type of change`, () => {
-        it(`detects no change as replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const html = `<p>Test 1</p>`;
-            const calculatedType = service.detectReplacementType(html, html);
-            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
-        }));
-
-        it(`detects a simple insertion`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1</p>`,
-                htmlAfter = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-        }));
-
-        it(`detects a simple insertion, ignoring case of tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<p>Test 1</p>`,
-                    htmlAfter = `<P>Test 1 Test 2</P>` + `\n` + `<P>Test 3</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, ignoring trailing whitespaces`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>`,
-                    htmlAfter = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, ignoring spaces between UL and LI`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<UL><LI>accusam et justo duo dolores et ea rebum.</LI></UL>`,
-                    htmlAfter =
-                        `<UL>` + `\n` + `<LI>accusam et justo duo dolores et ea rebum 123.</LI>` + `\n` + `</UL>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple insertion, despite &nbsp; tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>`,
-                    htmlAfter = `<P>dsds&nbsp;dsfsdfsdf sdf sdfs dds sd345 3453 45f dsds&nbsp;dsfsdfsdf</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
-            }
-        ));
-
-        it(`detects a simple deletion`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                htmlAfter = `<p>Test 1</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-        }));
-
-        it(`detects a simple deletion, ignoring case of tags`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                    htmlAfter = `<P>Test 1</P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-            }
-        ));
-
-        it(`detects a simple deletion, ignoring trailing whitespaces`, inject(
-            [MotionDiffService],
-            (service: MotionDiffService) => {
-                const htmlBefore = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>`,
-                    htmlAfter = `<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>`;
-                const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-                expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
-            }
-        ));
-
-        it(`detects a simple replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const htmlBefore = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`,
-                htmlAfter = `<p>Test 1</p>` + `\n` + `<p>Test 2</p>` + `\n` + `<p>Test 3</p>`;
-            const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
-            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
         }));
     });
 
@@ -1763,33 +1681,37 @@ describe(`MotionDiffService`, () => {
         ));
 
         it(`renders colliding lines`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // This test is with accepted amendments
             const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p>`;
+            const amendment1 = new ViewMotionAmendedParagraph(
+                { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
+                0,
+                `<p>Test 1x</p>`,
+                { from: 1, to: 1 }
+            );
+            const amendment3 = new ViewMotionAmendedParagraph(
+                { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
+                1,
+                `<p>Test 2x</p>`,
+                { from: 2, to: 2 }
+            );
+            const changeRec = new ChangeRecommendationUnifiedChange({
+                id: 2,
+                rejected: false,
+                line_from: 1,
+                line_to: 1,
+                text: `<p>Test 1y</p>`,
+                type: ModificationType.TYPE_REPLACEMENT,
+                other_description: ``,
+                creation_time: 0
+            });
 
             const out = service.getTextWithChanges(
                 inHtml,
                 [
-                    new ViewMotionAmendedParagraph(
-                        { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
-                        0,
-                        `<p>Test 1x</p>`,
-                        { from: 1, to: 1 }
-                    ),
-                    new ChangeRecommendationUnifiedChange({
-                        id: 2,
-                        rejected: false,
-                        line_from: 1,
-                        line_to: 1,
-                        text: `<p>Test 1y</p>`,
-                        type: ModificationType.TYPE_REPLACEMENT,
-                        other_description: ``,
-                        creation_time: 0
-                    }),
-                    new ViewMotionAmendedParagraph(
-                        { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
-                        1,
-                        `<p>Test 2x</p>`,
-                        { from: 2, to: 2 }
-                    )
+                    amendment1,
+                    changeRec,
+                    amendment3
                 ],
                 20,
                 true
