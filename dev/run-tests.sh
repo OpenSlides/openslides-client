@@ -10,6 +10,8 @@ IMAGE_TAG=openslides-client-test
 CATCH=0
 PERSIST_CONTAINERS=$1
 
+# Linters
+
 docker build -f ./Dockerfile.AIO ./ --tag ${IMAGE_TAG} --build-arg CONTEXT=tests --target tests || CATCH=1
 docker run -t ${IMAGE_TAG} /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox" || CATCH=1
 docker run -t ${IMAGE_TAG} npm run lint || CATCH=1

@@ -21,6 +21,8 @@ LABEL org.opencontainers.image.description="Web client for OpenSlides which serv
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/OpenSlides/openslides-client"
 
+
+
 # Development Image
 FROM base as dev
 
@@ -30,9 +32,7 @@ CMD npm start
 
 
 # Testing Image
-FROM dev as tests
-
-FROM mcr.microsoft.com/playwright:v1.52.0-jammy
+FROM mcr.microsoft.com/playwright:v1.52.0-jammy  as tests
 
 COPY ./package.json .
 COPY ./package-lock.json .
