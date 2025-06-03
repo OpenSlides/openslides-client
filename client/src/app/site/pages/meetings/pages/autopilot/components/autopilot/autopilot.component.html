@@ -139,7 +139,7 @@
             </ng-container>
 
             <!-- Moderator Note-->
-            @if (hasCurrentProjection && disabledContentElements['moderation-note'] !== true) {
+            @if (hasCurrentProjection && !!listOfSpeakers && disabledContentElements['moderation-note'] !== true) {
                 <div>
                     <os-moderation-note
                         [listOfSpeakers]="listOfSpeakers"
