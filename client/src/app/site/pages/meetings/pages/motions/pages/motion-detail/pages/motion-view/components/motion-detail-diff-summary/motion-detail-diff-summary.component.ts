@@ -50,8 +50,8 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     public elContainer: any;
 
     private getAmendment(change: ViewUnifiedChange): ViewMotion {
-        const id = change.getChangeId().slice(`amendment-`.length, change.getChangeId().lastIndexOf(`-`));
-        return this.motionRepo.getViewModel(Number(id));
+        const id = +change.getChangeId().split(`-`)[1];;
+        return this.motionRepo.getViewModel(id);
     }
 
     public originMeetingName(change: ViewUnifiedChange): string {

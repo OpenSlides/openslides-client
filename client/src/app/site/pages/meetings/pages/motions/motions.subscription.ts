@@ -161,7 +161,8 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
         ids,
         viewModelCtor: ViewMotion,
         fieldset: [`forwarded`, `created`, `sequential_number`],
-        follow: [{ idField: `meeting_id`, fieldset: [`name`, `description`] },
+        follow: [
+            { idField: `meeting_id`, fieldset: [`name`, `description`] },
             { idField: `amendment_ids`, fieldset: [], follow: [`meeting_id`] }
         ]
     },

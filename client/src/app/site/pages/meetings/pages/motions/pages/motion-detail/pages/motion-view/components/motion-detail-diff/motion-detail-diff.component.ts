@@ -155,7 +155,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private lineNumbering: LineNumberingService,
         private recoRepo: MotionChangeRecommendationControllerService,
         private motionRepo: MotionControllerService,
-        private meetingRepo: MeetingRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
         private el: ElementRef,
         private promptService: PromptService,
