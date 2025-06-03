@@ -90,7 +90,11 @@
                             </mat-radio-button>
                         </mat-radio-group>
                         @if (data.motion[0].amendment_ids?.length > 1) {
-                            <mat-checkbox [(ngModel)]="markAmendmentsAsForwarded" [disabled]="!useOriginalVersion" class="indented">
+                            <mat-checkbox
+                                class="indented"
+                                [disabled]="!useOriginalVersion"
+                                [(ngModel)]="markAmendmentsAsForwarded"
+                            >
                                 {{ 'mark amendments as original' | translate }}
                             </mat-checkbox>
                         }
