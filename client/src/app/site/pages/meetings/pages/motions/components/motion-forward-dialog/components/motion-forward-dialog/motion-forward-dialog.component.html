@@ -89,6 +89,11 @@
                                 }
                             </mat-radio-button>
                         </mat-radio-group>
+                        @if (data.motion[0].amendment_ids?.length > 1) {
+                            <mat-checkbox [(ngModel)]="markAmendmentsAsForwarded" [disabled]="!useOriginalVersion" class="indented">
+                                {{ 'mark amendments as original' | translate }}
+                            </mat-checkbox>
+                        }
                     </span>
                 } @else if (rowName === 'submitter') {
                     <span>
@@ -132,9 +137,6 @@
                                         <span>{{ data.motion[0].number }}</span>
                                     </span>
                                 }
-                                <mat-checkbox [(ngModel)]="markAmendmentsAsForwarded">
-                                    {{ 'mark amendments as original' | translate }}
-                                </mat-checkbox>
                             </mat-radio-button>
                         </mat-radio-group>
                     </span>
