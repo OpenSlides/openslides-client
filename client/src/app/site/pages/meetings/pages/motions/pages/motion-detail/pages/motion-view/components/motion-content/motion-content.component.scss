@@ -10,3 +10,12 @@
         font-weight: bold;
     }
 }
+
+.attachment-entry {
+    height: auto;
+
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+    }
+}

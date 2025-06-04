@@ -27,3 +27,12 @@
     color: green;
     margin-top: 8px;
 }
+
+.attachment-entry {
+    height: auto;
+
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+    }
+}
