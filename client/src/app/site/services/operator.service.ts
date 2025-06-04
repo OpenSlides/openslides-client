@@ -89,7 +89,7 @@ export class OperatorService {
 
     public get isCommitteeManager(): boolean {
         if (this.activeMeeting) {
-            return !!this._CML[this.activeMeeting.committee_id];
+            return this._CML && !!this._CML[this.activeMeeting.committee_id];
         }
 
         return !!(this._userSubject.value?.committee_management_ids || []).length;
