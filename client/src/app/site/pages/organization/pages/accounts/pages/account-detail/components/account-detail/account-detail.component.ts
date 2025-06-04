@@ -2,7 +2,6 @@ import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
@@ -331,21 +330,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private async updateUser(): Promise<void> {
         const payload = this.getPartialUserPayload(false);
-        if (
-            !(
-                this.user.id === this.operator.operatorId &&
-                this.operator.user.organization_management_level !== payload.organization_management_level
-            ) ||
-            (await this.promptService.open(
-                _(`This action will diminish your organization management level`),
-                _(
-                    `This will diminish your ability to do things on the organization level and you will not be able to revert this yourself.`
-                )
-            ))
-        ) {
-            await this.userController.update(payload, this.user!).resolve();
-            this.router.navigate([`..`], { relativeTo: this.route });
-        }
+        await this.userController.update(payload, this.user!).resolve();
+        this.router.navigate([`..`], { relativeTo: this.route });
     }
 
     private getPartialUserPayload(isCreate: boolean): any {
