@@ -15,6 +15,6 @@ export const userHeadersAndVerboseNames: Partial<Record<keyof User | `gender` | 
     is_active: _(`Active`),
     is_physical_person: _(`Natural person`),
     saml_id: _(`SSO identification`),
-    home_committee: _(`Home Committee`),
-    guest: _(`Guest`)
+    home_committee: _(`Home committee`),
+    guest: _(`External`)
 };

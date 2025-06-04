@@ -107,7 +107,7 @@
                     <div>
                         <os-icon-container
                             icon="layers"
-                            iconTooltip="{{ 'Child committees' | translate }}"
+                            iconTooltip="{{ 'Subcommittees' | translate }}"
                             iconTooltipPosition="right"
                         >
                             {{ getCommitteeChildrenNumber(committee) }}
@@ -184,10 +184,6 @@
             <span>
                 {{ 'Delete' | translate }}
             </span>
-            @if (hasCommitteeChildren(committee)) {
-                <br />
-                <i>{{ 'Has subcommittees' | translate }}</i>
-            }
         </button>
     </ng-template>
 </mat-menu>

@@ -156,24 +156,24 @@
                     }
                 </os-committee-meta-info>
                 <!-- Numbers of accounts -->
-                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
+                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }} ({{ 'incl. subcommittees' | translate }})">
                     <div>
-                        {{ 'Total:' | translate }}&nbsp;{{ accountNumber }}&nbsp;({{
-                            'of this active:' | translate
-                        }}&nbsp;{{ accountActiveNumber }})
+                        <b>{{ accountNumber }} {{ 'total' | translate }}</b>,
+                        {{ 'of which' | translate }} ...<br>
+                        &nbsp;· {{ accountActiveNumber }} {{'active' | translate }}
                     </div>
-                    @if (!!accountHomeCommitteeNumber) {
-                        <div>{{ 'Home Committee:' | translate }}&nbsp;{{ accountHomeCommitteeNumber }}</div>
-                    }
                     @if (!!accountGuestNumber) {
-                        <div>{{ 'External:' | translate }}&nbsp;{{ accountGuestNumber }}</div>
+                        <div>&nbsp;· {{ accountGuestNumber }} {{ 'external' | translate }}</div>
+                    }
+                    @if (!!accountHomeCommitteeNumber) {
+                        <div>&nbsp;· {{ accountHomeCommitteeNumber }} {{ 'with' | translate }} {{ 'Home committee' | translate }}</div>
                     }
                 </os-committee-meta-info>
             }
             <div class="os-card">
                 <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
                     @if (!!(childCommitteesObservable | async).length) {
-                        <mat-tab [label]="'Committees' | translate">
+                        <mat-tab [label]="'Subcommittees' | translate">
                             <os-list
                                 [filterProps]="['name']"
                                 [fullScreen]="false"
@@ -224,7 +224,7 @@
                                             <os-icon-container
                                                 icon="layers"
                                                 iconTooltipPosition="right"
-                                                [iconTooltip]="'Child committees' | translate"
+                                                [iconTooltip]="'Subcommittees' | translate"
                                             >
                                                 {{ committee.child_ids?.length ?? 0 }}
                                             </os-icon-container>
@@ -284,7 +284,11 @@
             }
             <ng-container *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true">
                 <mat-divider />
-                <button class="red-warning-text" mat-menu-item (click)="onDeleteCommittee(committee)">
+                <button 
+                    class="red-warning-text" mat-menu-item 
+                    (click)="onDeleteCommittee(committee)"
+                    [disabled]="hasCommitteeChildren(committee)"
+                >
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>
@@ -298,12 +302,12 @@
         @if (currentCommitteeObservable | async; as committee) {
             <a mat-menu-item [queryParams]="{ parentId: committeeId }" [routerLink]="['/', 'committees', 'create']">
                 <mat-icon>layers</mat-icon>
-                <span>{{ 'Add committee' | translate }}</span>
+                <span>{{ 'New committee' | translate }}</span>
             </a>
             <a mat-menu-item type="button" [routerLink]="['meeting', 'create']">
                 <mat-icon>event_available</mat-icon>
                 <span>
-                    {{ 'Add meeting' | translate }}
+                    {{ 'New meeting' | translate }}
                 </span>
             </a>
         }
