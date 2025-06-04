@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
+    {{ data.motion.length > 1 ? ('Forward motions' | translate) : ('Forwarding of motion' | translate) }}
     @if (data.motion.length === 1 && data.motion[0].number) {
         {{ data.motion[0].number }}
     }
@@ -26,7 +26,7 @@
     }
     @if (amendmentNumber() > 0) {
         <div class="state">
-            {{ 'Note: Amendments cannot be directly forwarded.' | translate }}
+            {{ 'Note: Amendments cannot be forwarded without their parent motion.' | translate }}
         </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
