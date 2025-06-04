@@ -213,4 +213,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
         }
         return result;
     }
+
+    public hasCommitteeChildren(committee: ViewCommittee): boolean {
+        return committee.all_childs.length > 0;
+    }
 }

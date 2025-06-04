@@ -236,10 +236,10 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             },
             {
                 property: `guest`,
-                label: _(`Guest`),
+                label: _(`External`),
                 options: [
-                    { condition: true, label: _(`Is guest`) },
-                    { condition: [false, null], label: _(`Is not guest`) }
+                    { condition: true, label: _(`Is external`) },
+                    { condition: [false, null], label: _(`Is not external`) }
                 ]
             }
         ];
