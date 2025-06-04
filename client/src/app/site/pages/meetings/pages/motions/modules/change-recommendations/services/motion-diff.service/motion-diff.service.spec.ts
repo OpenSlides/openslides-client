@@ -1912,7 +1912,7 @@ describe(`MotionDiffService`, () => {
                     ],
                     20
                 )
-            ).toBe(inHtml);
+            ).toBe(``);
         }));
 
         it(`ignores partial out of scope change recommendations`, inject([MotionDiffService], (service: MotionDiffService) => {

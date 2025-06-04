@@ -757,9 +757,6 @@ export class MotionDiffService {
         if (typeof html !== `string`) {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
-        if (this.lineNumberingService.getLineNumberRange(html).to < toLine) {
-            throw new Error(`Invalid call - The change is outside of the motion`);
-        }
 
         const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
@@ -2116,43 +2113,31 @@ export class MotionDiffService {
         html: LineNumberedString,
         change: ViewUnifiedChange,
         lineLength: number,
-        highlight?: number
+        highlight?: number,
+        getError?: boolean
     ): string {
-        let data: ExtractedContent;
-        let oldText = ``;
-
-        try {
-            data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
-            oldText =
-                data.outerContextStart +
-                data.innerContextStart +
-                data.html +
-                data.innerContextEnd +
-                data.outerContextEnd;
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+        if (!getError && this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
+            throw new Error(`Invalid call - The change is outside of the motion`);
         }
+        let oldText: string;
+
+        const to = !getError ? change.getLineTo() : this.lineNumberingService.getLineNumberRange(html).to;
+        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom()) ? this.lineNumberingService.getLineNumberRange(html).from : change.getLineFrom();
+
+        const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
+        oldText =
+            data.outerContextStart +
+            data.innerContextStart +
+            data.html +
+            data.innerContextEnd +
+            data.outerContextEnd;
 
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
             lineLength,
             firstLine: change.getLineFrom()
         });
-        let diff = this.diff(oldText, change.getChangeNewText());
+        let diff = !getError ? this.diff(oldText, change.getChangeNewText()) : oldText;
 
         // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
         // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
@@ -2192,15 +2177,20 @@ export class MotionDiffService {
     ): string {
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
         const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+        let hasRemainederOneChangedLine = false;
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
+                hasRemainederOneChangedLine = true;
             }
         }, 0);
 
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
+        }
+        if (!hasRemainederOneChangedLine) {
+            return ``;
         }
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(
@@ -2255,5 +2245,9 @@ export class MotionDiffService {
             });
         }
         return html;
+    }
+
+    private isMoreThanTwoLines(html: LineNumberedString, lineFrom: number): boolean {
+        return lineFrom > (this.lineNumberingService.getLineNumberRange(html).to + 1);
     }
 }
