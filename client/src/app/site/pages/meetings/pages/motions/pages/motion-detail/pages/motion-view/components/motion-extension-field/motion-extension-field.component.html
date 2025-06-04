@@ -16,11 +16,11 @@
     >
         @if (canBeEdited) {
             <mat-basic-chip class="pointer" disableRipple [matMenuTriggerFor]="triggerMenu" [ngClass]="classes">
-                {{ chipValue || '–' | translate }}
+                <span class="wrap-chip">{{ chipValue || '–' | translate }}</span>
             </mat-basic-chip>
         } @else {
-            <mat-basic-chip disableRipple [ngClass]="classes">
-                {{ chipValue | translate }}
+            <mat-basic-chip disableRipple style="text-wrap: wrap" [ngClass]="classes">
+                <span class="wrap-chip">{{ chipValue | translate }}</span>
             </mat-basic-chip>
         }
         @if (internal) {
