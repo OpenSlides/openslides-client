@@ -156,17 +156,24 @@
                     }
                 </os-committee-meta-info>
                 <!-- Numbers of accounts -->
-                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }} ({{ 'incl. subcommittees' | translate }})">
+                <os-committee-meta-info
+                    icon="person"
+                    title="{{ 'Accounts' | translate }} ({{ 'incl. subcommittees' | translate }})"
+                >
                     <div>
-                        <b>{{ accountNumber }} {{ 'total' | translate }}</b>,
-                        {{ 'of which' | translate }} ...<br>
-                        &nbsp;· {{ accountActiveNumber }} {{'active' | translate }}
+                        <b>{{ accountNumber }} {{ 'total' | translate }}</b>
+                        , {{ 'of which' | translate }} ...
+                        <br />
+                        &nbsp;· {{ accountActiveNumber }} {{ 'active' | translate }}
                     </div>
                     @if (!!accountGuestNumber) {
                         <div>&nbsp;· {{ accountGuestNumber }} {{ 'external' | translate }}</div>
                     }
                     @if (!!accountHomeCommitteeNumber) {
-                        <div>&nbsp;· {{ accountHomeCommitteeNumber }} {{ 'with' | translate }} {{ 'Home committee' | translate }}</div>
+                        <div>
+                            &nbsp;· {{ accountHomeCommitteeNumber }} {{ 'with' | translate }}
+                            {{ 'Home committee' | translate }}
+                        </div>
                     }
                 </os-committee-meta-info>
             }
@@ -284,10 +291,11 @@
             }
             <ng-container *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true">
                 <mat-divider />
-                <button 
-                    class="red-warning-text" mat-menu-item 
-                    (click)="onDeleteCommittee(committee)"
+                <button
+                    class="red-warning-text"
+                    mat-menu-item
                     [disabled]="hasCommitteeChildren(committee)"
+                    (click)="onDeleteCommittee(committee)"
                 >
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
