@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
@@ -50,7 +51,7 @@ import { MotionExportInfo, MotionExportService } from '../../../../services/expo
         OpenSlidesTranslationModule
     ]
 })
-export class MotionExportComponent extends BaseComponent implements AfterViewInit {
+export class MotionExportComponent extends BaseComponent implements AfterViewInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
 
     /**
@@ -207,6 +208,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     private repoSub: Subscription;
+    private patchOnAnimation = true;
 
     /**
      * Constructor
@@ -220,7 +222,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         private motionRepo: MotionRepositoryService,
         private exportService: MotionExportService,
         private amendmentRepo: AmendmentControllerService,
-        private motionLineNumbering: MotionLineNumberingService
+        private motionLineNumbering: MotionLineNumberingService,
+        private storeService: StorageService
     ) {
         super();
         this.subscriptions.push(
@@ -257,6 +260,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
     }
 
+    public override ngOnDestroy(): void {
+        this.storeService.set(`motion-export-selection`, this.dialogForm.value);
+    }
+
     // React to changes on the file format
     public tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
         this.isCSVExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.CSV;
@@ -264,13 +271,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     };
 
     public animationDone(): void {
-        if (this.isCSVExport) {
-            this.dialogForm.patchValue(this.csvDefaults);
-        } else if (this.isXLSXExport) {
-            this.dialogForm.patchValue(this.xlsxDefaults);
-        } else {
-            this.dialogForm.patchValue(this.pdfDefaults);
+        if (this.patchOnAnimation) {
+            if (this.isCSVExport) {
+                this.dialogForm.patchValue(this.csvDefaults);
+            } else if (this.isXLSXExport) {
+                this.dialogForm.patchValue(this.xlsxDefaults);
+            } else {
+                this.dialogForm.patchValue(this.pdfDefaults);
+            }
         }
+        this.patchOnAnimation = true;
         if (!this.motions_models.includes(null)) {
             this.hasAvailableVariables();
         }
@@ -301,6 +311,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
+        const savedDefaults = await this.storeService.get(`motion-export-selection`);
+        if (savedDefaults) {
+            this.patchOnAnimation = false;
+            this.tabGroup.selectedIndex = (savedDefaults as any).format - 1;
+            this.dialogForm.patchValue(savedDefaults);
+        }
         return;
     }
 
@@ -450,7 +466,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             .get(formControl)
             .setValue(
                 !this.meetingSettingsService.instant(setting)
-                    ? this.dialogForm.get(formControl).value.filter(obj => !obj.includes(value))
+                    ? this.dialogForm.get(formControl).value?.filter(obj => !obj.includes(value))
                     : this.dialogForm.get(formControl).value
             );
     }
