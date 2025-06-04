@@ -36,7 +36,7 @@ test.describe('Testing committees', () => {
         await listComponent.getRowByText(committee.name).click();
         await expect(page).toHaveURL(`/committees/${committee.id}`);
         await expect(page.locator(`body`)).toContainText(committee.name);
-        await page.locator('[data-cy=headbarBackButton]').click();
+        await page.locator(`.breadcrumb-nav-bar .breadcrumb:first-of-type`).click();
         await expect(page).toHaveURL(`/committees`);
         await logout(context);
     });
