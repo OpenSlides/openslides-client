@@ -618,6 +618,8 @@ export class PdfDocumentService {
         this.imageUrls = imageUrls ? imageUrls : [];
         const pageOrientation: PageOrientation = landscape ? `landscape` : `portrait`;
         const result = {
+            version: `1.5`,
+            subset: `PDF/A-3a`,
             pageSize,
             pageOrientation,
             pageMargins,
@@ -635,7 +637,7 @@ export class PdfDocumentService {
             content: documentContent,
             styles: this.getStandardPaperStyles(pageSize)
         };
-        return result;
+        return result as TDocumentDefinitions;
     }
 
     /**

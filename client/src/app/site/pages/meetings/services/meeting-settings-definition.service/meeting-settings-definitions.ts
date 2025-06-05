@@ -803,7 +803,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motion_poll_default_method`,
-                        label: _(`Default vote method`),
+                        label: _(`Default voting method`),
                         type: `choice`,
                         choices: MotionPollMethodVerbose
                     },

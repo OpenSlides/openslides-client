@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
+    {{ data.motion.length > 1 ? ('Forward motions' | translate) : ('Forwarding of motion' | translate) }}
     @if (data.motion.length === 1 && data.motion[0].number) {
         {{ data.motion[0].number }}
     }
@@ -20,16 +20,13 @@
             {{ data.motion.length - amendmentNumber() }} {{ 'motions' | translate }}
             @if (numAmendments > 0) {
                 <span>&middot;</span>
-                {{ numAmendments }} {{ 'amendments in total' | translate }}
+                {{ numAmendments }} {{ 'amendments' | translate }}
             }
         </div>
     }
     @if (amendmentNumber() > 0) {
         <div class="state">
-            {{
-                'Please be aware that amendments cannot be forwarded on their own and therefore are not counted'
-                    | translate
-            }}
+            {{ 'Note: Amendments cannot be forwarded without their parent motion.' | translate }}
         </div>
     }
     <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
@@ -56,17 +53,10 @@
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalVersion">
                             <mat-radio-button [value]="false">
                                 {{ 'Final version' | translate }}
-                                @if (amendmentNumber() > 0) {
-                                    <br />
-                                    {{
-                                        'Amendments cannot be forwarded and will be excluded even if they are selected'
-                                            | translate
-                                    }}
-                                }
+                                <i>({{ 'Note: Amendments will not be forwarded.' | translate }})</i>
                             </mat-radio-button>
                             <mat-radio-button [value]="true">
-                                {{ 'Original version with all changes' | translate }}
-                                <br />
+                                {{ 'Original version with changes' | translate }}
                                 @if (
                                     data.motion.length === 1 &&
                                     (data.motion[0].amendment_ids?.length > 0 ||
@@ -84,7 +74,7 @@
                                                 data.motion[0].amendment_ids?.length > 0 &&
                                                 data.motion[0].change_recommendation_ids?.length > 0
                                             ) {
-                                                {{ 'and' | translate }}
+                                                +
                                             }
                                             @if (data.motion[0].change_recommendation_ids?.length === 1) {
                                                 {{ data.motion[0].change_recommendation_ids.length }}

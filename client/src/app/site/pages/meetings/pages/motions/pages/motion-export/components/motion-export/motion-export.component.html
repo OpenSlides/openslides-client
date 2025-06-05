@@ -1,6 +1,6 @@
 <os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportMotions()">
     <div class="title-slot">
-        <h2>{{ 'Export ' + motionsNr + ' Motions' | translate }}</h2>
+        <h2>{{ motionsNr }} {{ 'motions' | translate }}</h2>
     </div>
 </os-head-bar>
 
@@ -287,7 +287,7 @@
                             value="speakers"
                             [matBadgeHidden]="speakRequestsChipOption.selected ? 'false' : 'true'"
                         >
-                            <span>{{ 'Open requests to speak' | translate }}</span>
+                            <span>{{ 'Number of open requests to speak' | translate }}</span>
                         </mat-chip-option>
                     }
                 </mat-chip-listbox>

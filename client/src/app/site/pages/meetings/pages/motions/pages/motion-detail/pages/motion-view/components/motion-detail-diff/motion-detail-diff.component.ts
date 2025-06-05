@@ -421,7 +421,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             html: this.motion.text,
             lineLength: this.lineLength,
             firstLine: this.motion.firstLine
-        }), { from: recoModel.line_from, to: recoModel.line_to }, false, this.lineLength);
+        }), {
+            from: reco.getLineFrom(),
+            to: reco.getLineTo()
+        }, false, this.lineLength);
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText]);
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText], true);
 
