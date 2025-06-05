@@ -89,7 +89,7 @@
                                 }
                             </mat-radio-button>
                         </mat-radio-group>
-                        @if (data.motion[0].amendment_ids?.length > 1) {
+                        @if (hasAnyAmendment()) {
                             <mat-checkbox
                                 class="indented"
                                 [disabled]="!useOriginalVersion"
