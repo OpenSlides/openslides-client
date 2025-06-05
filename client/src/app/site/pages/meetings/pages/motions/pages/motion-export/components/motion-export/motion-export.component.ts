@@ -208,7 +208,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     private repoSub: Subscription;
-    private patchOnAnimation = true;
+    private patchFormToDefaultsOnTabChange = true;
 
     /**
      * Constructor
@@ -272,7 +272,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     };
 
     public animationDone(): void {
-        if (this.patchOnAnimation) {
+        if (this.patchFormToDefaultsOnTabChange) {
             if (this.isCSVExport) {
                 this.dialogForm.patchValue(this.csvDefaults);
             } else if (this.isXLSXExport) {
@@ -281,7 +281,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.dialogForm.patchValue(this.pdfDefaults);
             }
         }
-        this.patchOnAnimation = true;
+        this.patchFormToDefaultsOnTabChange = true;
         if (!this.motions_models.includes(null)) {
             this.hasAvailableVariables();
         }
@@ -314,7 +314,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         });
         const savedDefaults = await this.storeService.get(`motion-export-selection`);
         if (savedDefaults) {
-            this.patchOnAnimation = false;
+            this.patchFormToDefaultsOnTabChange = false;
             this.tabGroup.selectedIndex = (savedDefaults as any).format - 1;
             this.dialogForm.patchValue(savedDefaults);
         }
