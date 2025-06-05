@@ -240,21 +240,46 @@ export class MotionFormatService {
         for (let i = 0; i < changesToShow.length; i++) {
             if (changesToShow[i].getLineTo() > lastLineTo) {
                 const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
-                text.push(
-                    this.diffService.extractMotionLineRange(
-                        motionText,
-                        {
-                            from: i === 0 ? firstLine : changeFrom,
-                            to: changesToShow[i].getLineFrom() - 1
-                        },
-                        true,
-                        lineLength,
-                        highlightedLine
-                    )
-                );
+                try {
+                    text.push(
+                        this.diffService.extractMotionLineRange(
+                            motionText,
+                            {
+                                from: i === 0 ? firstLine : changeFrom,
+                                to: changesToShow[i].getLineFrom() - 1
+                            },
+                            true,
+                            lineLength,
+                            highlightedLine
+                        )
+                    );
+                } catch (e) { }
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
-            text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            try {
+                text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            } catch (e) {
+            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // without modifying the change recommendations accordingly.
+            // That's a pretty serious inconsistency that should not happen at all,
+            // we're just doing some basic damage control here.
+                const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
+                ) +
+                ` ` +
+                this.translate.instant(
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+                ) +
+                ` ` +
+                this.translate.instant(
+                    `If it is a change recommendation, please delete the change recommendation.`
+                );
+                const textBeforeError = this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine, true);
+                text.push(textBeforeError + `<em style="color: red; font-weight: bold;">` + msg + `</em>`);
+            }
             lastLineTo = changesToShow[i].getLineTo();
         }
 

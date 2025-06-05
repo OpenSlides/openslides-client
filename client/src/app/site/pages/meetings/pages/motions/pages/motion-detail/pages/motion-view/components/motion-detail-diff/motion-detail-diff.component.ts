@@ -192,8 +192,11 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 firstLine: this.motion.firstLine
             });
         }
-
-        return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
+        try {
+            return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
+        } catch (e) {
+            return ``;
+        }
     }
 
     /**
@@ -222,7 +225,26 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             lineLength: this.lineLength,
             firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
-        return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
+        try {
+            return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
+        } catch (e) {
+            // This only happens (as far as we know) when the motion text has been altered (shortened)
+            // without modifying the change recommendations accordingly.
+            // That's a pretty serious inconsistency that should not happen at all,
+            // we're just doing some basic damage control here.
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
+                ) +
+                ` ` +
+                this.translate.instant(
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+                );
+            const textBeforeError = this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine, true);
+            return textBeforeError + `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+        }
     }
 
     /**
