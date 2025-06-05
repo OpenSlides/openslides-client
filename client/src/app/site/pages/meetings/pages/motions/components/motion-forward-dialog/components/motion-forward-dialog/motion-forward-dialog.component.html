@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
+    {{ data.motion.length > 1 ? ('Forward motions' | translate) : ('Forwarding of motion' | translate) }}
     @if (data.motion.length === 1 && data.motion[0].number) {
         {{ data.motion[0].number }}
     }

@@ -110,7 +110,7 @@
                     <mat-divider />
                     <!-- Edit-->
                     @if (perms.isAllowed('update', motion)) {
-                        <button mat-menu-item [routerLink]="['edit']">
+                        <button mat-menu-item [replaceUrl]="true" [routerLink]="['edit']">
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit' | translate }}</span>
                         </button>

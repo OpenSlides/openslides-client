@@ -86,8 +86,10 @@ export class MotionForwardDialogService extends BaseDialogService<
     }
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
-        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding && !motion.isAmendment());
-        if (toForward.length === 0) {
+        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
+        const amountSelectedAmendments = toForward.filter(motion => motion.isAmendment()).length;
+
+        if (toForward.filter(motion => !motion.isAmendment()).length === 0) {
             this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
             return;
         }
@@ -121,7 +123,7 @@ export class MotionForwardDialogService extends BaseDialogService<
                     );
                 }
                 const numToForwardCR = dialogData.useOriginalVersion && toForward.length === 1 ? toForward[0].change_recommendations.length : 0;
-                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length, numToForwardAmendments, numToForwardCR, result), `Ok`);
+                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length - amountSelectedAmendments, numToForwardAmendments, numToForwardCR, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
