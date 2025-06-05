@@ -13,6 +13,7 @@ export interface MotionForwardDialogReturnData {
     useOriginalSubmitter: boolean;
     useOriginalNumber: boolean;
     useOriginalVersion: boolean;
+    markAmendmentsAsForwarded: boolean;
 }
 
 @Component({
@@ -36,6 +37,7 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalSubmitter = false;
     public useOriginalNumber = false;
     public useOriginalVersion = false;
+    public markAmendmentsAsForwarded = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
@@ -61,7 +63,8 @@ export class MotionForwardDialogComponent implements OnInit {
             meetingIds: Array.from(this.selectedMeetings),
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
-            useOriginalVersion: this.useOriginalVersion
+            useOriginalVersion: this.useOriginalVersion,
+            markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
 
@@ -94,5 +97,14 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public amendmentNumber(): number {
         return this.data.motion.filter(motion => !!motion.isAmendment()).length;
+    }
+
+    public hasAnyAmendment(): boolean {
+        for (const motion of this.data.motion) {
+            if (motion.amendments.length > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
