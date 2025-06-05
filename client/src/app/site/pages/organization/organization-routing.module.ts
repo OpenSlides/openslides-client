@@ -44,7 +44,7 @@ const routes: Routes = [
                 path: `organization-tags`,
                 loadChildren: () =>
                     import(`./pages/organization-tags/organization-tags.module`).then(m => m.OrganizationTagsModule),
-                data: { omlPermissions: [OML.can_manage_organization] },
+                data: { omlPermissions: [OML.can_manage_organization], optionalCmlPermissions: [CML.can_manage] },
                 canLoad: [PermissionGuard]
             },
             {

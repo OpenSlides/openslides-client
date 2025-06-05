@@ -51,7 +51,7 @@ msgid "<unknown>"
 msgstr ""
 
 msgid ""
-"A change recommendation or amendment is probably referring to a nonexistent"
+"A change recommendation or amendment is probably referring to a non-existant"
 " line number."
 msgstr ""
 "Una recomendación de cambio o enmienda se refiere probablemente a un número "

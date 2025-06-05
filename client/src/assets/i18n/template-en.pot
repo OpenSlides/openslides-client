@@ -39,8 +39,8 @@ msgid "<unknown>"
 msgstr ""
 
 msgid ""
-"A change recommendation or amendment is probably referring to a "
-"nonexistent line number."
+"A change recommendation or amendment is probably referring to a nonexistent "
+"line number."
 msgstr ""
 
 msgid "A client error occurred. Please contact your system administrator."
@@ -2226,6 +2226,10 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
+#: app/src/app/domain/models/users/user.constants.ts
+msgid "External"
+msgstr ""
+
 msgid "External ID"
 msgstr ""
 
@@ -2441,6 +2445,10 @@ msgstr ""
 msgid "Has SSO identification"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has a home committee"
+msgstr ""
+
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Has a membership number"
 msgstr ""
@@ -2476,6 +2484,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Has no email address"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has no home committee"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
@@ -2579,6 +2591,10 @@ msgid "History"
 msgstr ""
 
 msgid "Home"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Home committee"
 msgstr ""
 
 msgid "How to create new amendments"
@@ -2800,6 +2816,10 @@ msgstr ""
 msgid "Is committee admin"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is external"
+msgstr ""
+
 msgid "Is favorite"
 msgstr ""
 
@@ -2840,6 +2860,10 @@ msgid "Is not an amendment"
 msgstr ""
 
 msgid "Is not archived"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is not external"
 msgstr ""
 
 msgid "Is not favorite"
@@ -3901,6 +3925,14 @@ msgstr ""
 msgid "Parent agenda item"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-edit/components/committee-detail-edit/committee-detail-edit.component.html
+msgid "Parent committee"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-import/definitions/index.ts
+msgid "Parent committee name"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
 msgid "Parent motion text changed"
 msgstr ""
@@ -4950,6 +4982,10 @@ msgid "Structure levels created"
 msgstr ""
 
 msgid "Subcategory"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "Subcommittees"
 msgstr ""
 
 msgid "Submission date"
@@ -6031,6 +6067,10 @@ msgstr ""
 msgid "example"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "external"
+msgstr ""
+
 msgid "female"
 msgstr ""
 
@@ -6066,6 +6106,10 @@ msgid "hidden"
 msgstr ""
 
 msgid "inactive"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "incl. subcommittees"
 msgstr ""
 
 msgid "inline"
@@ -6155,6 +6199,10 @@ msgstr ""
 msgid "of"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "of which"
+msgstr ""
+
 #: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-meta-data/motion-meta-data.component.ts
 msgid "of which %num% not permissable"
 msgstr ""
@@ -6241,6 +6289,10 @@ msgstr ""
 msgid "today"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "total"
+msgstr ""
+
 msgid "undocumented"
 msgstr ""
 
@@ -6273,6 +6325,10 @@ msgstr ""
 
 #: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
 msgid "will be updated"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "with"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
