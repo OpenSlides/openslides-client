@@ -1,10 +1,16 @@
+SERVICE=client
 docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
 
+# Build images for different contexts
+
 build-dev:
-	docker build -t openslides-client-dev -f Dockerfile.dev .
+	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) dev
 
 build-prod:
-	docker build -t openslides-client -f Dockerfile .
+	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) prod
+
+build-test:
+	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) tests
 
 run-dev: | build-dev
 	$(docker-run)
@@ -18,7 +24,8 @@ run-cleanup-standalone: | build-dev
 run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
-run-tests: run-check-linting run-check-prettifying run-karma-tests | build-dev
+run-tests: 
+	bash dev/run-tests.sh
 
 run-karma-tests: | build-dev
 	docker run -t openslides-client-dev /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
