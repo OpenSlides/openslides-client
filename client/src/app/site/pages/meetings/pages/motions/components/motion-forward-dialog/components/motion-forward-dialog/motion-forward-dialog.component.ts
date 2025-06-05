@@ -99,12 +99,12 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.data.motion.filter(motion => !!motion.isAmendment()).length;
     }
 
-    public hasAnyAmendment() : boolean{
+    public hasAnyAmendment(): boolean {
         for (const motion of this.data.motion) {
             if (motion.amendments.length > 0) {
                 return true;
             }
         }
-        return false
+        return false;
     }
 }
