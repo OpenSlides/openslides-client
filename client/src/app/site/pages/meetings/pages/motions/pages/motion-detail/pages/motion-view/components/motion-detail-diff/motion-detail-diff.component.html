@@ -113,6 +113,12 @@
                             </div>
                         }
                     </div>
+                    @if (isAmendment(change) && showAllAmendments && originMotionDisplay && change.amendment.origin) {
+                        <div class="amendment-origin">
+                            {{ change.amendment.origin_meeting }}:
+                            {{ change.amendment.origin.state }}
+                        </div>
+                    }
                     <div
                         class="motion-text motion-text-diff"
                         [attr.data-change-id]="change.getChangeId()"
