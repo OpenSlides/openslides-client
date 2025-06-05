@@ -33,7 +33,12 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     ) {
         super(controllerServiceCollector, User, repo);
         this.operator.user.committee_managements$.subscribe(committees => {
-            this._committee_users_set = new Set(committees.flatMap(committee => committee.user_ids ?? []));
+            const userIds1 = new Set(committees.flatMap(committee => committee.user_ids ?? []));
+            const userIds2 = committees.flatMap(committee => committee.all_childs ?? []).flatMap(committee => committee.user_ids ?? []);
+            for (const id of userIds2) {
+                userIds1.add(id);
+            }
+            this._committee_users_set = userIds1;
         });
     }
 
