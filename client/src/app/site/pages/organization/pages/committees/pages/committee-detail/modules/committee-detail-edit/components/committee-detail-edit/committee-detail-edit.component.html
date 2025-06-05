@@ -73,6 +73,20 @@
                     <mat-label>{{ 'External ID' | translate }}</mat-label>
                     <input formControlName="external_id" matInput />
                 </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Parent committee' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="parent_id"
+                        [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
+                        [includeNone]="isOrgaManager && isCreateView"
+                        [multiple]="false"
+                        [repo]="committeeRepo"
+                        [required]="!isOrgaManager && isCreateView"
+                        [showChips]="false"
+                        [sortService]="committeeSortService"
+                        [tooltipFn]="getTooltipFn()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
             </form>
         }
     </mat-card-content>
