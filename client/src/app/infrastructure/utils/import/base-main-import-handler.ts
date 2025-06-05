@@ -29,8 +29,7 @@ interface ImportResponse {
 
 export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable>
     extends BaseImportHandler<MainModel>
-    implements MainImportHandler<MainModel>
-{
+    implements MainImportHandler<MainModel> {
     protected set modelsImported(value: ImportModel<MainModel>[]) {
         this._modelsImportedSubject.next(value);
     }

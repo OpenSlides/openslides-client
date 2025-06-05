@@ -18,7 +18,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
-type SortProperty = 'sort_weight' | 'number';
+type SortProperty = `sort_weight` | `number`;
 
 @Injectable({
     providedIn: `root`
@@ -294,7 +294,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return agendaTitle;
     };
 
-    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false, amendment = false): string => {
+        if (amendment) {
+            return this.translate.instant(plural ? `Amendments` : `Amendment`);
+        }
+        return this.translate.instant(plural ? `Motions` : `Motion`);
+    };
 
     public getProjectorTitle = (
         viewMotion: ViewMotion

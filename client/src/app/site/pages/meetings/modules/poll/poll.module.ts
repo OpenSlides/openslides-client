@@ -44,7 +44,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    declarations: [...PIPES, ...COMPONENTS],
+    declarations: [...COMPONENTS],
     imports: [
         CommonModule,
         BaseChartDirective,
@@ -65,6 +65,7 @@ const COMPONENTS = [
         DirectivesModule,
         SearchSelectorModule,
         MatProgressSpinnerModule,
+        ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS],

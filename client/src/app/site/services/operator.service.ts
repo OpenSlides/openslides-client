@@ -39,18 +39,6 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-function getUserCML(user: ViewUser): Record<number, string> | null {
-    if (!user.committee_management_ids) {
-        return null; // Explicit null to distinguish from undefined
-    }
-
-    const committeeManagementLevel: Record<number, CML> = {};
-    for (const id of user.committee_management_ids) {
-        committeeManagementLevel[id] = CML.can_manage;
-    }
-    return committeeManagementLevel;
-}
-
 @Injectable({
     providedIn: `root`
 })
@@ -92,7 +80,7 @@ export class OperatorService {
     }
 
     public get canSkipPermissionCheck(): boolean {
-        return this.isSuperAdmin || this.isOrgaManager;
+        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
     }
 
     public get isAccountAdmin(): boolean {
@@ -100,7 +88,11 @@ export class OperatorService {
     }
 
     public get isCommitteeManager(): boolean {
-        return !!(this.user?.committee_management_ids || []).length;
+        if (this.activeMeeting) {
+            return this._CML && !!this._CML[this.activeMeeting.committee_id];
+        }
+
+        return !!(this._userSubject.value?.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -113,8 +105,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                  ? this.user?.hasMultipleMeetings
-                  : false)
+                    ? this.user?.hasMultipleMeetings
+                    : false)
         );
     }
 
@@ -218,9 +210,7 @@ export class OperatorService {
         return activeMeeting ? activeMeeting.admin_group_id : null;
     }
 
-    private get currentCommitteeIds(): Id[] {
-        return this._userSubject?.value?.committee_ids || [];
-    }
+    private currentCommitteeIds: Set<Id> = new Set<Id>();
 
     private readonly _operatorUpdatedSubject = new Subject<void>();
     private readonly _operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
@@ -416,6 +406,8 @@ export class OperatorService {
     }
 
     private updateUser(user: ViewUser): void {
+        this.currentCommitteeIds.update(new Set(user.committee_ids));
+
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
             this._permissions = this.calcPermissions();
@@ -425,7 +417,22 @@ export class OperatorService {
             this._OML = user.organization_management_level || null;
         }
         this._meetingIds = user.ensuredMeetingIds;
-        this._CML = getUserCML(user);
+        this._CML = this.getUserCML(user);
+    }
+
+    private getUserCML(user: ViewUser): Record<number, string> | null {
+        if (!user.committee_management_ids) {
+            return null; // Explicit null to distinguish from undefined
+        }
+
+        const committeeManagementLevel: Record<number, CML> = {};
+        for (const committee of user.committee_managements) {
+            committeeManagementLevel[committee.id] = CML.can_manage;
+            for (const childId of committee?.child_ids || []) {
+                committeeManagementLevel[childId] = CML.can_manage;
+            }
+        }
+        return committeeManagementLevel;
     }
 
     private checkReadyState(): void {
@@ -667,9 +674,10 @@ export class OperatorService {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
-        if (!this._CML || !committeeId || !this.currentCommitteeIds.includes(committeeId)) {
+        if (!this._CML || !committeeId || !this.currentCommitteeIds.has(committeeId)) {
             return false;
         }
+
         const currentCommitteePermission = cmlNameMapping[(this._CML || {})[committeeId]] || 0;
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
     }
@@ -702,7 +710,7 @@ export class OperatorService {
      * @returns `true` if the operator is in at least one of the given committees.
      */
     public isInCommitteesNonAdminCheck(...committees: Committee[]): boolean {
-        return committees.some(committee => this.currentCommitteeIds.includes(committee.id));
+        return committees.some(committee => this.currentCommitteeIds.has(committee.id));
     }
 
     /**
@@ -810,6 +818,10 @@ export class OperatorService {
                                 ]
                             }
                         ]
+                    },
+                    {
+                        idField: `committee_management_ids`,
+                        fieldset: [`child_ids`]
                     }
                 ]
             };

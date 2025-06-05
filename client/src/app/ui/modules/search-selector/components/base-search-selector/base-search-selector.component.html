@@ -66,7 +66,7 @@
         class="vscroll-viewport"
         maxBufferPx="600"
         minBufferPx="400"
-        [itemSize]="50"
+        [itemSize]="itemSizeInPx"
         [ngStyle]="{ height: panelHeight + 'px' }"
     >
         @if ((filteredItemsObservable | async)?.length === 0) {

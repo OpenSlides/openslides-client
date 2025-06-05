@@ -1,6 +1,5 @@
 import {
     addClassToHtmlTag,
-    addClassToLastNode,
     addCSSClass,
     addCSSClassToFirstTag,
     fragmentToHtml,
@@ -56,7 +55,7 @@ describe(`utils: dom helpers`, () => {
         });
 
         it(`search not existing`, () => {
-            const res = getNodeByName(dummyEl3Span, `non-existant`, true);
+            const res = getNodeByName(dummyEl3Span, `nonexistent`, true);
             expect(res).toBe(null);
         });
 
@@ -313,22 +312,6 @@ describe(`utils: dom helpers`, () => {
             const strIn = `<ol start='2' class='my-old-class'><li>`,
                 inserted = addCSSClassToFirstTag(strIn, `newClass`);
             expect(inserted).toBe(`<ol start='2' class="my-old-class newClass"><li>`);
-        });
-    });
-
-    describe(`addClassToLastNode function`, () => {
-        it(`adds class`, () => {
-            expect(addClassToLastNode(`<div></div>`, `bar`)).toBe(`<div class="bar"></div>`);
-        });
-
-        it(`adds class only to last node`, () => {
-            expect(addClassToLastNode(`<div></div><div class="foo"></div>`, `bar`)).toBe(
-                `<div></div><div class="foo bar"></div>`
-            );
-        });
-
-        it(`does nothing on empty html input`, () => {
-            expect(addClassToLastNode(``, `bar`)).toBe(``);
         });
     });
 

@@ -52,7 +52,9 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
         is_present: [``],
-        locked_out: [``]
+        locked_out: [``],
+        guest: [``],
+        home_committee_id: [``]
     };
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
@@ -308,8 +310,8 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
                     : null,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                          .filter(id => !!id)
+                            .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                            .filter(id => !!id)
                     : []
             };
             if (payload.member_number === ``) {

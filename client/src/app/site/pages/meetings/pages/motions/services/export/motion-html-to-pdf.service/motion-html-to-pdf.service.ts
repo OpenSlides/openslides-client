@@ -7,8 +7,6 @@ import {
     HtmlToPdfService
 } from 'src/app/gateways/export/html-to-pdf.service';
 
-import { MotionsExportModule } from '../motions-export.module';
-
 /**
  * Shape of line number objects
  */
@@ -30,7 +28,7 @@ interface HtmlToPdfConfig {
 }
 
 @Injectable({
-    providedIn: MotionsExportModule
+    providedIn: `root`
 })
 export class MotionHtmlToPdfService extends HtmlToPdfService {
     /**
@@ -198,9 +196,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             }
 
             for (const line of lines) {
-                if (line.lineNumber) {
-                    listCol.columns[0].stack.push(this.getLineNumberObject(line));
-                }
+                listCol.columns[0].stack.push(this.getLineNumberObject(line));
             }
 
             list[nodeName] = cleanedChildren;
@@ -301,14 +297,14 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         const children = elementCopy.childNodes;
 
         // using for-of did not work as expected
-        for (let i = 0; i < children.length; i++) {
-            if (this.getLineNumber(children[i] as Element)) {
-                children[i].remove();
+        for (const child of children) {
+            if (this.getLineNumber(child as Element)) {
+                child.remove();
             }
 
-            if (children[i]?.childNodes.length > 0) {
-                const cleanChildren = this.cleanLineNumbers(children[i] as Element);
-                elementCopy.replaceChild(cleanChildren, children[i]);
+            if (child?.childNodes.length > 0) {
+                const cleanChildren = this.cleanLineNumbers(child as Element);
+                elementCopy.replaceChild(cleanChildren, child);
             }
         }
 

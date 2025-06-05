@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 
 import { User } from './user';
 
-export const userHeadersAndVerboseNames: Partial<Record<keyof User | 'gender', any>> = {
+export const userHeadersAndVerboseNames: Partial<Record<keyof User | `gender` | `home_committee`, any>> = {
     title: _(`Title`),
     first_name: _(`Given name`),
     last_name: _(`Surname`),
@@ -14,5 +14,7 @@ export const userHeadersAndVerboseNames: Partial<Record<keyof User | 'gender', a
     default_password: _(`Initial password`),
     is_active: _(`Active`),
     is_physical_person: _(`Natural person`),
-    saml_id: _(`SSO identification`)
+    saml_id: _(`SSO identification`),
+    home_committee: _(`Home committee`),
+    guest: _(`External`)
 };

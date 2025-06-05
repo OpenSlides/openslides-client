@@ -19,19 +19,19 @@ import { ViewMeeting } from '../../view-models/view-meeting';
 export type SettingsValueMap = { [key in keyof Settings]?: any };
 
 export type SettingsType =
-    | 'string'
-    | 'email'
-    | 'text'
-    | 'markupText'
-    | 'integer'
-    | 'boolean'
-    | 'choice'
-    | 'date'
-    | 'datetime'
-    | 'translations'
-    | 'ranking'
-    | 'groups'
-    | 'daterange';
+    | `string`
+    | `email`
+    | `text`
+    | `markupText`
+    | `integer`
+    | `boolean`
+    | `choice`
+    | `date`
+    | `datetime`
+    | `translations`
+    | `ranking`
+    | `groups`
+    | `daterange`;
 
 export type ChoicesMap = Record<string, string | number>;
 
@@ -803,7 +803,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motion_poll_default_method`,
-                        label: _(`Default vote method`),
+                        label: _(`Default voting method`),
                         type: `choice`,
                         choices: MotionPollMethodVerbose
                     },

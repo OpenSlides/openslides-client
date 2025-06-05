@@ -42,6 +42,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public activeOriginMotions: ViewMotion[];
 
+    @Input()
+    public showForwardButton = false;
+
     @Output()
     public enableOriginMotion = new EventEmitter<Id>();
 
@@ -94,6 +97,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.changeRecoMode === ChangeRecoMode.Diff;
     }
 
+    public get validSupporters(): number {
+        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
+    }
+
+    public get validSupportersText(): number {
+        return this.translate
+            .instant(
+                `of which %num% not permissable`
+            )
+            .replace(`%num%`, this.validSupporters);
+    }
+
     /**
      * Custom recommender as set in the settings
      */
@@ -139,15 +154,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.setShowAllAmendments.emit(is);
     }
 
-    public get showForwardButton(): boolean {
-        return (
-            !!this.motion.state?.allow_motion_forwarding &&
-            this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable &&
-            !this.motion.derived_motions.length
-        );
-    }
-
     public get operatorIsSubmitter(): boolean {
         return (
             this.motion.submitters &&
@@ -161,9 +167,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this._supportersSubject;
     }
 
-    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
+    public get canManage(): boolean {
+        return this.operator.hasPerms(Permission.userCanManage);
+    }
 
-    private _forwardingAvailable = false;
+    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * The subscription to the recommender config variable.
@@ -185,15 +193,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         super();
 
         if (operator.hasPerms(Permission.motionCanManageMetadata)) {
-            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-                this._forwardingAvailable = forwardingAvailable && !this.motion.isAmendment();
-                this.cd.markForCheck();
+            this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
                 };
             });
-        } else {
-            this._forwardingAvailable = false;
         }
     }
 
@@ -205,7 +209,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => this.updateSupportersSubject())
+            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
+                this.updateSupportersSubject();
+            })
         );
     }
 
@@ -432,5 +438,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    public checkValidSupporter(supporter: ViewUser): boolean {
+        return (
+            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            !(
+                supporter.getMeetingUser().vote_delegated_to_id && this.activeMeeting.users_forbid_delegator_as_supporter && this.activeMeeting.users_enable_vote_delegations
+            )
+        );
     }
 }

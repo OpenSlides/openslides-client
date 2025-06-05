@@ -30,3 +30,19 @@
         margin-left: -30px;
     }
 }
+
+.apply-button {
+    display: flex;
+    button {
+        margin-top: 10px;
+        height: 37px;
+        width: auto;
+        margin-left: auto;
+        margin-right: 0;
+    }
+}
+
+.apply-feedback-icon {
+    color: green;
+    margin-top: 16px;
+}

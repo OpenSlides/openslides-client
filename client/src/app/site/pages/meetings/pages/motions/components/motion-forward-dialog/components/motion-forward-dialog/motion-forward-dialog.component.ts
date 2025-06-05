@@ -94,4 +94,8 @@ export class MotionForwardDialogComponent implements OnInit {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
     }
+
+    public amendmentNumber(): number {
+        return this.data.motion.filter(motion => !!motion.isAmendment()).length;
+    }
 }

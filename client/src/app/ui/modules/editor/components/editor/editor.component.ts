@@ -20,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
-import BulletList from '@tiptap/extension-bullet-list';
 import Color from '@tiptap/extension-color';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
@@ -29,8 +28,6 @@ import { Level as HeadingLevel } from '@tiptap/extension-heading';
 import History from '@tiptap/extension-history';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
-import ListItem from '@tiptap/extension-list-item';
-import OrderedList from '@tiptap/extension-ordered-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
@@ -62,6 +59,7 @@ import { ClearTextcolorPaste } from './extensions/clear-textcolor';
 import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
+import { OsSplit, OsSplitBulletList, OsSplitListItem, OsSplitOrderedList } from './extensions/os-split';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -182,14 +180,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 // Nodes
                 Document,
                 Blockquote,
-                BulletList,
                 HardBreak,
                 Heading,
                 ImageResize.configure({
                     inline: true
                 }),
-                ListItem,
-                OrderedList,
+                OsSplitBulletList,
+                OsSplitOrderedList,
+                OsSplitListItem,
                 Paragraph,
                 Text,
                 Table,
@@ -197,7 +195,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TableHeader,
                 TableCell,
 
-                //Marks
+                // Marks
                 Bold,
                 Highlight.configure({
                     multicolor: true
@@ -218,6 +216,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
                 }),
+                OsSplit,
                 Extension.create({
                     name: `angular-component-ext`,
                     onCreate: () => {
@@ -277,8 +276,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const parser = new DOMParser();
             const doc = parser.parseFromString(this.value, `text/html`);
             const elements = doc.getElementsByTagName(`*`);
-            for (let i = 0; i < elements.length; i++) {
-                const el = elements[i] as HTMLElement;
+            for (const element of elements) {
+                const el = element as HTMLElement;
                 if (el.style.color) {
                     this.textColorSet.add(tinycolor(el.style.color).toHexString());
                 }
@@ -451,7 +450,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             unwrapNode(listParagraphs.item(i));
         }
 
-        if (!this.editor.getText()) {
+        if (!this.editor.getText() && !dom.images.length) {
             return ``;
         }
 

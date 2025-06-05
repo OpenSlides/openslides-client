@@ -9,10 +9,9 @@ import {
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { MeetingSettingsService } from '../meeting-settings.service';
-import { MeetingExportModule } from './meeting-export.module';
 
 @Injectable({
-    providedIn: MeetingExportModule
+    providedIn: `root`
 })
 export class MeetingCsvExportService extends CsvExportService {
     public constructor(private meetingSettings: MeetingSettingsService) {
@@ -39,7 +38,7 @@ export class MeetingCsvExportService extends CsvExportService {
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
-            encoding?: 'utf-8' | 'iso-8859-15';
+            encoding?: `utf-8` | `iso-8859-15`;
         } = {}
     ): void {
         super.export(models, columns, filename, { lineSeparator, columnSeparator, encoding });
