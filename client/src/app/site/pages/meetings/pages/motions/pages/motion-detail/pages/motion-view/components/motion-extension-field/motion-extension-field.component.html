@@ -19,7 +19,7 @@
                 <span class="wrap-chip">{{ chipValue || '–' | translate }}</span>
             </mat-basic-chip>
         } @else {
-            <mat-basic-chip disableRipple style="text-wrap: wrap" [ngClass]="classes">
+            <mat-basic-chip disableRipple [ngClass]="classes">
                 <span class="wrap-chip">{{ chipValue | translate }}</span>
             </mat-basic-chip>
         }
