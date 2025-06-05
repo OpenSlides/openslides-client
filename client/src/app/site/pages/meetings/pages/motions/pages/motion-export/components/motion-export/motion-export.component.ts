@@ -262,6 +262,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     public override ngOnDestroy(): void {
         this.storeService.set(`motion-export-selection`, this.dialogForm.value);
+        super.ngOnDestroy();
     }
 
     // React to changes on the file format
