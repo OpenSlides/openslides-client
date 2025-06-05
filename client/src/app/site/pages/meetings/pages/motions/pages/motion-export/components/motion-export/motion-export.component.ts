@@ -280,8 +280,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             } else {
                 this.dialogForm.patchValue(this.pdfDefaults);
             }
+        } else {
+            this.patchFormToDefaultsOnTabChange = true;
         }
-        this.patchFormToDefaultsOnTabChange = true;
         if (!this.motions_models.includes(null)) {
             this.hasAvailableVariables();
         }
