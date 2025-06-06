@@ -271,7 +271,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.isXLSXExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.XLSX;
     };
 
-    public animationDone(): void {
+    public afterTabChanged(): void {
         if (this.patchFormToDefaultsOnTabChange) {
             if (this.isCSVExport) {
                 this.dialogForm.patchValue(this.csvDefaults);
