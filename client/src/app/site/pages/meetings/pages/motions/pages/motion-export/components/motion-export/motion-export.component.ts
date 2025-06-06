@@ -30,6 +30,11 @@ import { MotionLineNumberingService } from '../../../../services/common/motion-l
 import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
 
+interface SavedSelections {
+    tab_index: number;
+    tab_selections: object[];
+}
+
 @Component({
     standalone: true,
     selector: `os-motion-export`,
@@ -209,7 +214,10 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     private repoSub: Subscription;
 
-    private savedSelections: any = null;
+    private savedSelections: SavedSelections = {
+        tab_index: 0,
+        tab_selections: [this.pdfDefaults, this.csvDefaults, this.xlsxDefaults]
+    };
 
     /**
      * Constructor
@@ -313,14 +321,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
-        this.storeService.get(`motion-export-selection`).then(savedDefaults => {
-            if (savedDefaults) {
+        this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
+            if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
-            } else {
-                this.savedSelections = {
-                    tab_index: 0,
-                    tab_selections: [this.pdfDefaults, this.csvDefaults, this.xlsxDefaults]
-                };
             }
             this.tabGroup.selectedIndex = this.savedSelections.tab_index;
             this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
