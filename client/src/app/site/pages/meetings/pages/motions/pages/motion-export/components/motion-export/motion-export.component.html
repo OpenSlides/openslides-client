@@ -8,7 +8,7 @@
     <mat-tab-group
         #tabGroup
         mat-stretch-tabs="false"
-        (animationDone)="animationDone()"
+        (animationDone)="afterTabChanged()"
         (selectedTabChange)="tabChanged($event)"
     >
         <mat-tab label="PDF">

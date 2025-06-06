@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
@@ -28,6 +29,11 @@ import { AmendmentControllerService } from '../../../../services/common/amendmen
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
 import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
+
+interface SavedSelections {
+    tab_index: number;
+    tab_selections: object[];
+}
 
 @Component({
     standalone: true,
@@ -50,7 +56,7 @@ import { MotionExportInfo, MotionExportService } from '../../../../services/expo
         OpenSlidesTranslationModule
     ]
 })
-export class MotionExportComponent extends BaseComponent implements AfterViewInit {
+export class MotionExportComponent extends BaseComponent implements AfterViewInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
 
     /**
@@ -208,6 +214,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     private repoSub: Subscription;
 
+    private savedSelections: SavedSelections = {
+        tab_index: 0,
+        tab_selections: [this.pdfDefaults, this.csvDefaults, this.xlsxDefaults]
+    };
+
     /**
      * Constructor
      * Sets the default values for the lineNumberingMode and changeRecoMode and creates the form.
@@ -220,7 +231,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         private motionRepo: MotionRepositoryService,
         private exportService: MotionExportService,
         private amendmentRepo: AmendmentControllerService,
-        private motionLineNumbering: MotionLineNumberingService
+        private motionLineNumbering: MotionLineNumberingService,
+        private storeService: StorageService
     ) {
         super();
         this.subscriptions.push(
@@ -257,20 +269,28 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         }
     }
 
+    public override ngOnDestroy(): void {
+        this.savedSelections.tab_selections.splice(this.dialogForm.value.format - 1, 1, this.dialogForm.value);
+        this.storeService.set(`motion-export-selection`, this.savedSelections);
+        super.ngOnDestroy();
+    }
+
     // React to changes on the file format
     public tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+        this.savedSelections.tab_selections.splice(this.dialogForm.value.format - 1, 1, this.dialogForm.value);
         this.isCSVExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.CSV;
         this.isXLSXExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.XLSX;
     };
 
-    public animationDone(): void {
+    public afterTabChanged(): void {
         if (this.isCSVExport) {
-            this.dialogForm.patchValue(this.csvDefaults);
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[1]);
         } else if (this.isXLSXExport) {
-            this.dialogForm.patchValue(this.xlsxDefaults);
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[2]);
         } else {
-            this.dialogForm.patchValue(this.pdfDefaults);
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[0]);
         }
+
         if (!this.motions_models.includes(null)) {
             this.hasAvailableVariables();
         }
@@ -301,7 +321,13 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
-        return;
+        this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
+            if (savedDefaults?.tab_index !== undefined) {
+                this.savedSelections = savedDefaults;
+            }
+            this.tabGroup.selectedIndex = this.savedSelections.tab_index;
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
+        });
     }
 
     // Function to determine whioch options are available, set as defaults and disabled
@@ -356,16 +382,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
         }
-
-        const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
-        this.dialogForm.get(`lnMode`).setValue(lnDefaultMode === this.lnMode.Inside ? this.lnMode.Outside : lnDefaultMode);
-
-        let crDefaultMode = this.meetingSettingsService!.instant(`motions_recommendation_text_mode`);
-        if (this.isCSVExport && [this.crMode.Diff, this.crMode.Changed].includes(crDefaultMode)) {
-            crDefaultMode = this.crMode.Original;
-        }
-        this.dialogForm.get(`crMode`).setValue(crDefaultMode === `agreed` ? this.crMode.ModifiedFinal : crDefaultMode);
-        return;
     }
 
     /**
@@ -450,7 +466,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             .get(formControl)
             .setValue(
                 !this.meetingSettingsService.instant(setting)
-                    ? this.dialogForm.get(formControl).value.filter(obj => !obj.includes(value))
+                    ? this.dialogForm.get(formControl).value?.filter(obj => !obj.includes(value))
                     : this.dialogForm.get(formControl).value
             );
     }
