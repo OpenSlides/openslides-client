@@ -15,6 +15,8 @@ interface GetUserScopeIdentifiedScope {
     id: Id;
     user_oml: OML | ``;
     committee_ids: number[];
+    user_in_archived_meetings_only: boolean;
+    home_committee_id: Id;
 }
 
 export type GetUserScopePresenterResult = Record<Id, GetUserScopeIdentifiedScope>;
