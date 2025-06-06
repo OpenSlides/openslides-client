@@ -313,13 +313,13 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
-        const savedDefaults = await this.storeService.get(`motion-export-selection`);
-        if (savedDefaults) {
-            this.patchFormToDefaultsOnTabChange = false;
-            this.tabGroup.selectedIndex = (savedDefaults as any).format - 1;
-            this.dialogForm.patchValue(savedDefaults);
-        }
-        return;
+        this.storeService.get(`motion-export-selection`).then(savedDefaults => {
+            if (savedDefaults) {
+                this.patchFormToDefaultsOnTabChange = false;
+                this.tabGroup.selectedIndex = (savedDefaults as any).format - 1;
+                this.dialogForm.patchValue(savedDefaults);
+            }
+        });
     }
 
     // Function to determine whioch options are available, set as defaults and disabled
