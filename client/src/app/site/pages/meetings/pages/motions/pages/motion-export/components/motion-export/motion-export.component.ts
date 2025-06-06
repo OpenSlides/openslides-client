@@ -208,7 +208,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     private repoSub: Subscription;
-    private patchFormToDefaultsOnTabChange = true;
+
+    private savedSelections: any = null;
 
     /**
      * Constructor
@@ -261,28 +262,27 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     public override ngOnDestroy(): void {
-        this.storeService.set(`motion-export-selection`, this.dialogForm.value);
+        this.savedSelections.tab_selections.splice(this.dialogForm.value.format - 1, 1, this.dialogForm.value);
+        this.storeService.set(`motion-export-selection`, this.savedSelections);
         super.ngOnDestroy();
     }
 
     // React to changes on the file format
     public tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+        this.savedSelections.tab_selections.splice(this.dialogForm.value.format - 1, 1, this.dialogForm.value);
         this.isCSVExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.CSV;
         this.isXLSXExport = this.fileFormats[tabChangeEvent.index] === ExportFileFormat.XLSX;
     };
 
     public afterTabChanged(): void {
-        if (this.patchFormToDefaultsOnTabChange) {
-            if (this.isCSVExport) {
-                this.dialogForm.patchValue(this.csvDefaults);
-            } else if (this.isXLSXExport) {
-                this.dialogForm.patchValue(this.xlsxDefaults);
-            } else {
-                this.dialogForm.patchValue(this.pdfDefaults);
-            }
+        if (this.isCSVExport) {
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[1]);
+        } else if (this.isXLSXExport) {
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[2]);
         } else {
-            this.patchFormToDefaultsOnTabChange = true;
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[0]);
         }
+
         if (!this.motions_models.includes(null)) {
             this.hasAvailableVariables();
         }
@@ -315,10 +315,15 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         });
         this.storeService.get(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults) {
-                this.patchFormToDefaultsOnTabChange = false;
-                this.tabGroup.selectedIndex = (savedDefaults as any).format - 1;
-                this.dialogForm.patchValue(savedDefaults);
+                this.savedSelections = savedDefaults;
+            } else {
+                this.savedSelections = {
+                    tab_index: 0,
+                    tab_selections: [this.pdfDefaults, this.csvDefaults, this.xlsxDefaults]
+                };
             }
+            this.tabGroup.selectedIndex = this.savedSelections.tab_index;
+            this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
         });
     }
 
@@ -374,16 +379,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
         }
-
-        const lnDefaultMode = this.meetingSettingsService!.instant(`motions_default_line_numbering`);
-        this.dialogForm.get(`lnMode`).setValue(lnDefaultMode === this.lnMode.Inside ? this.lnMode.Outside : lnDefaultMode);
-
-        let crDefaultMode = this.meetingSettingsService!.instant(`motions_recommendation_text_mode`);
-        if (this.isCSVExport && [this.crMode.Diff, this.crMode.Changed].includes(crDefaultMode)) {
-            crDefaultMode = this.crMode.Original;
-        }
-        this.dialogForm.get(`crMode`).setValue(crDefaultMode === `agreed` ? this.crMode.ModifiedFinal : crDefaultMode);
-        return;
     }
 
     /**
