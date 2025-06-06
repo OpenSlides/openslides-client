@@ -148,7 +148,7 @@
                         <h4>{{ 'Election documents' | translate }}</h4>
                         <mat-list class="election-document-list" dense>
                             @for (file of sortedAttachments; track file) {
-                                <mat-list-item>
+                                <mat-list-item class="attachment-entry">
                                     <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                 </mat-list-item>
                             }
