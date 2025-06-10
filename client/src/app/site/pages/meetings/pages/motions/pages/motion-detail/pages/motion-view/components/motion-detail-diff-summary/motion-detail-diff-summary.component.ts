@@ -78,6 +78,13 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
 
+    public isMoreThanOneLineOff(change: ViewUnifiedChange): boolean {
+        // I desire the motion number from and to 
+        // motionLastLine has to get the last line from the motion
+        let motionLastLine = 100;
+        return (motionLastLine + 1 < change.getLineFrom())
+    }
+
     public canAccess(origin: ViewMotion): boolean {
         const motion = origin as ViewMotion;
         return motion.sequential_number && motion.meeting?.id === this.activeMeetingId;

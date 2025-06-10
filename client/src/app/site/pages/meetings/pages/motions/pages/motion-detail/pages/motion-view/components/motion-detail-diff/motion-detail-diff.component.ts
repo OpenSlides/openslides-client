@@ -426,6 +426,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         }
     }
 
+    public test(html: ViewUnifiedChange): boolean {
+        if(!html || this.isAmendment(html)) {
+            return false;
+        }
+        //console.log(html)
+        //console.log(html.getLineFrom())
+        //again I need the motion last line number to check if html.getLineFrom() is too big.
+        return false
+    }
+
     /**
      * Edits a change recommendation.
      * The template has to make sure only to pass change recommendations to this method.
