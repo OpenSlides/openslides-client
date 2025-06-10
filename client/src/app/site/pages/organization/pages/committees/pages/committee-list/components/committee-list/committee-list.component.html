@@ -58,7 +58,7 @@
     </div>
     <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
-            @if (committee.forward_to_committees?.length && operator.isOrgaManager) {
+            @if (committee.forward_to_committees?.length && operator.canSkipPermissionCheck) {
                 <div>
                     <os-icon-container
                         icon="file_upload"
@@ -67,12 +67,12 @@
                         [noWrap]="true"
                     >
                         <span>
-                            {{ committee.forward_to_committees.length }}
+                            {{ committee.forward_to_committee_ids.length }}
                         </span>
                     </os-icon-container>
                 </div>
             }
-            @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
+            @if (committee.receive_forwardings_from_committees?.length && operator.canSkipPermissionCheck) {
                 <div>
                     <os-icon-container
                         icon="file_download"
@@ -81,7 +81,7 @@
                         [noWrap]="true"
                     >
                         <span>
-                            {{ committee.receive_forwardings_from_committees.length }}
+                            {{ committee.receive_forwardings_from_committee_ids.length }}
                         </span>
                     </os-icon-container>
                 </div>
