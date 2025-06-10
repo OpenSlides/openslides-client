@@ -2135,7 +2135,7 @@ export class MotionDiffService {
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
             lineLength,
-            firstLine: change.getLineFrom()
+            firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).from : change.getLineFrom()
         });
         let diff = !getError ? this.diff(oldText, change.getChangeNewText()) : oldText;
 
