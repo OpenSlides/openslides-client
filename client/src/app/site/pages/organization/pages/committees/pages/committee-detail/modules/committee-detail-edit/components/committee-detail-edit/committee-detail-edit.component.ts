@@ -30,7 +30,7 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
     standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {
-    private committeeId: number | null = null;
+    public committeeId: number | null = null;
 
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
