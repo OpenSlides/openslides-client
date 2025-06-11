@@ -146,7 +146,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     }
 
     public getNavbarCommittees(committee: ViewCommittee): ViewCommittee[] {
-        return [...committee.all_parents, committee];
+        return [...committee.all_parents.sort((a, b) => a.all_parents.length - b.all_parents.length), committee];
     }
 
     public toggleForwardingList(): void {
