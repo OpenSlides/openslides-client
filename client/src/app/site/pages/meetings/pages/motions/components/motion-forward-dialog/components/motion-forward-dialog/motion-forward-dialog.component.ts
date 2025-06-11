@@ -51,6 +51,9 @@ export class MotionForwardDialogComponent implements OnInit {
     ) {}
 
     public async ngOnInit(): Promise<void> {
+        for (const committee of this.data.forwardingMeetings) {
+            committee.meetings = committee.meetings.sort((meeting1, meeting2) => meeting2.start_time - meeting1.start_time);
+        }
         this.committeesSubject.next(this.data.forwardingMeetings);
         this.selectedMeetings = new Set();
         this.initStateMap();
