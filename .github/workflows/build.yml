@@ -75,14 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: create docker dev image
-        run: make build-dev
-
-      - name: Check linting
-        run: make run-check-linting
-
-      - name: Check prettifying
-        run: make run-check-prettifying
-
-      - name: Run karma tests
-        run: make run-karma-tests
+      - name: Run Test
+        uses: Janmtbehrens/OpenSlides/dev/actions/build-and-test-service@all-in-one
+        with:
+          service: client

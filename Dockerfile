@@ -1,13 +1,55 @@
-FROM node:22.15 as build
-ENV NODE_VERSION=22.14.0
+ARG CONTEXT=prod
+FROM node:22.15-alpine as base
 
+## Setup
+ARG CONTEXT
+ENV NODE_VERSION=22.15.0
 WORKDIR /app
+ENV ${CONTEXT}=1
 
+## Installs
 COPY client/package.json .
 COPY client/package-lock.json .
 RUN npm ci
 
-COPY client /app/
+COPY client ./
+
+## External Information
+LABEL org.opencontainers.image.title="OpenSlides Client"
+LABEL org.opencontainers.image.description="Web client for OpenSlides which serves as the users main interaction point while using the OpenSlides system. "
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.source="https://github.com/OpenSlides/openslides-client"
+
+## Command
+COPY ./dev/command.sh ./
+RUN chmod +x command.sh
+CMD ["./command.sh"]
+
+
+# Development Image
+FROM base as dev
+
+RUN apk add --no-cache git
+
+
+# Testing Image
+
+FROM dev as tests
+
+# Playwright Image
+
+FROM mcr.microsoft.com/playwright:v1.52.0-jammy as playwright
+
+WORKDIR /
+
+COPY ./package.json .
+COPY ./package-lock.json .
+ENV CI=1
+RUN npm ci
+
+
+# Production Image
+FROM base as build
 
 ARG VERSION=dev
 RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/version.txt; fi
@@ -15,11 +57,18 @@ RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/
 # compile the angular project
 RUN npm run build
 
-FROM nginx:latest
-COPY --from=build /app/dist/client/browser /usr/share/nginx/html
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Prod wants nginx as base image for some reason
+FROM nginx:latest as prod
+
+WORKDIR /
+
+# User is given by nginx image
 
 LABEL org.opencontainers.image.title="OpenSlides Client"
 LABEL org.opencontainers.image.description="Web client for OpenSlides which serves as the users main interaction point while using the OpenSlides system. "
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/OpenSlides/openslides-client"
+
+COPY --from=build /app/dist/client/browser /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
