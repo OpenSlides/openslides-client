@@ -2106,6 +2106,8 @@ export class MotionDiffService {
         } as DiffLinesInParagraph;
     }
 
+    public oldLine = 0; 
+
     /**
      * Returns the HTML with the changes, optionally with a highlighted line.
      * The original motion needs to be provided.
@@ -2129,7 +2131,7 @@ export class MotionDiffService {
         let oldText: string;
 
         const to = !getError ? change.getLineTo() : this.lineNumberingService.getLineNumberRange(html).to;
-        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom()) ? this.lineNumberingService.getLineNumberRange(html).from : change.getLineFrom();
+        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom()) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
         oldText =
@@ -2185,18 +2187,21 @@ export class MotionDiffService {
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
         const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
         let hasRemainederOneChangedLine = false;
+        let isBroken = false;
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
                 hasRemainederOneChangedLine = true;
+            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo())) {
+                isBroken = true;
             }
         }, 0);
 
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
-        if (!hasRemainederOneChangedLine) {
+        if (!hasRemainederOneChangedLine || isBroken) {
             return ``;
         }
 
