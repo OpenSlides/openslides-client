@@ -633,6 +633,9 @@ export class MotionDiffService {
         if (node.nodeName === `OS-LINEBREAK`) {
             return ``;
         }
+        if (toChildTrace.length === 0) {
+            return ``;
+        } 
 
         let html = this.serializeTag(node);
         let found = false;
@@ -682,6 +685,9 @@ export class MotionDiffService {
             return ``;
         }
         if (node.nodeName === `OS-LINEBREAK`) {
+            return ``;
+        }
+        if (fromChildTrace.length === 0) {
             return ``;
         }
 
@@ -802,7 +808,7 @@ export class MotionDiffService {
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -817,7 +823,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -879,39 +885,40 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
-
-        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-            if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
-                found = true;
-                fromChildTraceRel.shift();
-                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-            } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
-                found = false;
-                toChildTraceRel.shift();
-                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-            } else if (found === true) {
-                htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+        if (ancestor) {
+            for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+                if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+                    found = true;
+                    fromChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+                    found = false;
+                    toChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                } else if (found === true) {
+                    htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+                }
             }
-        }
-
-        currNode = ancestor;
-        while (currNode.parentNode) {
-            if (currNode.nodeName === `OL`) {
-                const currElement = currNode as Element;
-                const fakeOl = currElement.cloneNode(false) as any;
-                const offset = currElement.getAttribute(`start`)
-                    ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
-                    : 0;
-                fakeOl.setAttribute(
-                    `start`,
-                    ((DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
-                );
-                outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
-            } else {
-                outerContextStart = this.serializeTag(currNode) + outerContextStart;
+    
+            currNode = ancestor;
+            while (currNode.parentNode) {
+                if (currNode.nodeName === `OL`) {
+                    const currElement = currNode as Element;
+                    const fakeOl = currElement.cloneNode(false) as any;
+                    const offset = currElement.getAttribute(`start`)
+                        ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
+                        : 0;
+                    fakeOl.setAttribute(
+                        `start`,
+                        ((DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
+                    );
+                    outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
+                } else {
+                    outerContextStart = this.serializeTag(currNode) + outerContextStart;
+                }
+                outerContextEnd += `</` + currNode.nodeName + `>`;
+                currNode = currNode.parentNode;
             }
-            outerContextEnd += `</` + currNode.nodeName + `>`;
-            currNode = currNode.parentNode;
         }
 
         const ret = {
