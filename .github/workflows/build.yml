@@ -75,11 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Tests
-        uses: Janmtbehrens/OpenSlides/dev/actions/build-service@all-in-one
+      - name: Run Test
+        uses: Janmtbehrens/OpenSlides/dev/actions/build-and-test-service@all-in-one
         with:
           service: client
-          context: tests
-
-      - name: Run tests
-        run: make run-tests
