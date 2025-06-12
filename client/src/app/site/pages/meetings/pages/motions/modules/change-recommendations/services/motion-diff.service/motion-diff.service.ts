@@ -2193,7 +2193,7 @@ export class MotionDiffService {
             if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
                 hasRemainederOneChangedLine = true;
-            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo())) {
+            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo() + 1)) {
                 isBroken = true;
             }
         }, 0);

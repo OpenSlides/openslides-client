@@ -167,9 +167,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      */
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
+        this.lastLineNr
         const lineRange: LineRange = {
             from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine),
-            to: change2 ? change2.getLineFrom() - 1 : (this.lineRange?.to ?? null)
+            to: change2 ? (change2.getLineFrom() > this.lastLineNr ? this.lastLineNr - 1 : change2.getLineFrom() - 1) : (this.lineRange?.to ?? null)
         };
 
         if (lineRange.from > lineRange.to && change1 && change2) {
