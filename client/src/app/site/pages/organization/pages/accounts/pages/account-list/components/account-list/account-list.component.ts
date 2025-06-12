@@ -161,10 +161,21 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
                 throw new Error(_(`No committee selected`));
             }
             if (result.action === ADD) {
-                this.controller.bulkAddHomeCommitteeToUsers(this.selectedRows, result.firstId).resolve();
+                this.userController.update({ home_committee_id: result.firstId, guest: false }, ...this.selectedRows).resolve();
             } else if (result.action === REMOVE) {
-                this.controller.bulkRemoveHomeCommitteeFromUsers(this.selectedRows).resolve();
+                this.userController.update({ home_committee_id: null }, ...this.selectedRows).resolve();
             }
+        }
+    }
+
+    public async changeGuest(): Promise<void> {
+        const title = this.translate.instant(`Set external status for selected accounts`);
+        const SET_ACTIVE = _(`active`);
+        const SET_INACTIVE = _(`inactive`);
+        const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
+        if (result) {
+            const isGuest = result.action === SET_ACTIVE;
+            this.userController.update({ guest: isGuest, home_committee_id: isGuest ? null : undefined }, ...this.selectedRows).resolve();
         }
     }
 
