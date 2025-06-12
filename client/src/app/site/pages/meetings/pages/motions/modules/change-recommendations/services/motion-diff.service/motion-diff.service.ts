@@ -784,6 +784,7 @@ export class MotionDiffService {
         }
 
         const fromLineNumberNode = this.getLineNumberNode(fragment, fromLine);
+        //console.log(fromLineNumberNode)
         const toLineNumberNode = toLineNumber ? this.getLineNumberNode(fragment, toLineNumber) : null;
         const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
@@ -2131,7 +2132,7 @@ export class MotionDiffService {
         let oldText: string;
 
         const to = !getError ? change.getLineTo() : this.lineNumberingService.getLineNumberRange(html).to;
-        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom()) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
+        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom() + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
         oldText =
@@ -2144,7 +2145,7 @@ export class MotionDiffService {
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
             lineLength,
-            firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).from : change.getLineFrom()
+            firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom()
         });
         let diff = !getError ? this.diff(oldText, change.getChangeNewText()) : oldText;
 
