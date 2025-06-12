@@ -135,4 +135,36 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     public mergeTogether(payload: { id: number; user_ids: number[] }[]): Action<void> {
         return this.repo.mergeTogether(payload);
     }
+
+    public bulkAddHomeCommitteeToUsers(users: ViewUser[], committee_id: number): Action<void> {
+        const patchFn = (
+            user: ViewUser
+        ): {
+            id: number;
+            home_committee_id: number;
+            guest: boolean;
+        } => {
+            return {
+                id: user.id,
+                home_committee_id: committee_id,
+                guest: false
+            };
+        };
+        return this.repo.update(patchFn, ...users);
+    }
+
+    public bulkRemoveHomeCommitteeFromUsers(users: ViewUser[]): Action<void> {
+        const patchFn = (
+            user: ViewUser
+        ): {
+            id: number;
+            home_committee_id: null;
+        } => {
+            return {
+                id: user.id,
+                home_committee_id: null
+            };
+        };
+        return this.repo.update(patchFn, ...users);
+    }
 }

@@ -206,6 +206,10 @@
                     <mat-icon class="red-warning-text">do_not_disturb_on</mat-icon>
                     <span>{{ 'Enable/disable accounts' | translate }} ...</span>
                 </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignHomeCommitteeToUsers()">
+                    <mat-icon>home_work</mat-icon>
+                    <span>{{ 'Set/remove home committee' | translate }} ...</span>
+                </button>
                 <button
                     *osOmlPerms="OML.can_manage_users"
                     mat-menu-item

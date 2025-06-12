@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { getOmlVerboseName, OML } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -16,6 +17,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
+import { ViewCommittee } from '../../../../../committees';
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
@@ -65,6 +67,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private route: ActivatedRoute,
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
+        private committeeRepo: CommitteeRepositoryService,
         private choiceService: ChoiceService,
         private userController: UserControllerService,
         public searchService: AccountListSearchService,
@@ -135,6 +138,32 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
                         action.resolve();
                     }
                 });
+            }
+        }
+    }
+
+    public async assignHomeCommitteeToUsers(): Promise<void> {
+        const title = this.translate.instant(`This will add or remove the selected accounts to the selected home committee:`);
+        const ADD = _(`Add`);
+        const REMOVE = _(`Remove`);
+        const actions = [ADD, REMOVE];
+        const committees = this.committeeRepo.getViewModelList();
+        const result = await this.choiceService.open<ViewCommittee>({
+            title,
+            choices: committees,
+            actions,
+            content: this.translate.instant(
+                `Attention: Accounts will overwrite other home committees if possible and remove the external status.`
+            )
+        });
+        if (result) {
+            if (!result.firstId) {
+                throw new Error(_(`No committee selected`));
+            }
+            if (result.action === ADD) {
+                this.controller.bulkAddHomeCommitteeToUsers(this.selectedRows, result.firstId).resolve();
+            } else if (result.action === REMOVE) {
+                this.controller.bulkRemoveHomeCommitteeFromUsers(this.selectedRows).resolve();
             }
         }
     }
