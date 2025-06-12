@@ -78,7 +78,7 @@ jobs:
       - name: Build Dev
         uses: Janmtbehrens/OpenSlides/dev/actions/build-service@all-in-one
         with:
-          service: auth
+          service: client
           context: dev
 
       - name: Run tests
