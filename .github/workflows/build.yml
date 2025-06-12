@@ -75,11 +75,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Dev
+      - name: Build Tests
         uses: Janmtbehrens/OpenSlides/dev/actions/build-service@all-in-one
         with:
           service: client
-          context: dev
+          context: tests
 
       - name: Run tests
         run: make run-tests
