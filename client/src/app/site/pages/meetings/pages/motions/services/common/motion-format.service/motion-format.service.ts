@@ -240,20 +240,18 @@ export class MotionFormatService {
         for (let i = 0; i < changesToShow.length; i++) {
             if (changesToShow[i].getLineTo() > lastLineTo) {
                 const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
-                try {
-                    text.push(
-                        this.diffService.extractMotionLineRange(
-                            motionText,
-                            {
-                                from: i === 0 ? firstLine : changeFrom,
-                                to: changesToShow[i].getLineFrom() - 1
-                            },
-                            true,
-                            lineLength,
-                            highlightedLine
-                        )
-                    );
-                } catch (e) { }
+                text.push(
+                    this.diffService.extractMotionLineRange(
+                        motionText,
+                        {
+                            from: i === 0 ? firstLine : changeFrom,
+                            to: changesToShow[i].getLineFrom() - 1
+                        },
+                        true,
+                        lineLength,
+                        highlightedLine
+                    )
+                );
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
             try {
