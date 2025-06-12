@@ -82,7 +82,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     }
 
     public isMoreThanOneLineOff(change: ViewUnifiedChange): boolean {
-        return (this.lastLineNr + 1 < change.getLineFrom())
+        return (this.lastLineNr + 1 < change.getLineFrom());
     }
 
     public canAccess(origin: ViewMotion): boolean {

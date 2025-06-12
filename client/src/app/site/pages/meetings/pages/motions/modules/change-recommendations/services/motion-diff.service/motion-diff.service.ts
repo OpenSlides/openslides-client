@@ -635,7 +635,7 @@ export class MotionDiffService {
         }
         if (toChildTrace.length === 0) {
             return ``;
-        } 
+        }
 
         let html = this.serializeTag(node);
         let found = false;
@@ -784,7 +784,6 @@ export class MotionDiffService {
         }
 
         const fromLineNumberNode = this.getLineNumberNode(fragment, fromLine);
-        //console.log(fromLineNumberNode)
         const toLineNumberNode = toLineNumber ? this.getLineNumberNode(fragment, toLineNumber) : null;
         const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
@@ -900,7 +899,7 @@ export class MotionDiffService {
                     htmlOut += this.serializeDom(ancestor.childNodes[i], true);
                 }
             }
-    
+
             currNode = ancestor;
             while (currNode.parentNode) {
                 if (currNode.nodeName === `OL`) {
@@ -2106,8 +2105,6 @@ export class MotionDiffService {
             textPost
         } as DiffLinesInParagraph;
     }
-
-    public oldLine = 0; 
 
     /**
      * Returns the HTML with the changes, optionally with a highlighted line.

@@ -428,10 +428,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         }
     }
 
-    public test(html: ViewUnifiedChange): boolean {
-        return html.getLineFrom() > this.lastLineNr + 1
-    }
-
     /**
      * Edits a change recommendation.
      * The template has to make sure only to pass change recommendations to this method.
@@ -518,11 +514,11 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             }, 50);
         }
         const baseText = this.lineNumbering.insertLineNumbers({
-                html: this.motion!.text,
-                lineLength: this.lineLength,
-                firstLine: this.motion.firstLine
+            html: this.motion!.text,
+            lineLength: this.lineLength,
+            firstLine: this.motion.firstLine
         });
-        this.lastLineNr = this.lineNumbering.getLineNumberRange(baseText).to
+        this.lastLineNr = this.lineNumbering.getLineNumberRange(baseText).to;
     }
 
     /**
