@@ -129,6 +129,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      */
     public lineLength!: number;
 
+    public lastLineNr: number;
+
     public preamble!: string;
 
     private _showPreamble = true;
@@ -427,13 +429,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public test(html: ViewUnifiedChange): boolean {
-        if(!html || this.isAmendment(html)) {
-            return false;
-        }
-        //console.log(html)
-        //console.log(html.getLineFrom())
-        //again I need the motion last line number to check if html.getLineFrom() is too big.
-        return false
+        return html.getLineFrom() > this.lastLineNr + 1
     }
 
     /**
@@ -521,6 +517,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
+        const baseText = this.lineNumbering.insertLineNumbers({
+                html: this.motion!.text,
+                lineLength: this.lineLength,
+                firstLine: this.motion.firstLine
+        });
+        this.lastLineNr = this.lineNumbering.getLineNumberRange(baseText).to
     }
 
     /**

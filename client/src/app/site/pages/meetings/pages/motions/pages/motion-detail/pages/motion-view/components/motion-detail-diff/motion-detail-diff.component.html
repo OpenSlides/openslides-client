@@ -6,6 +6,7 @@
             [elContainer]="nativeElement"
             [motion]="motion"
             [scrollToChange]="scrollToChange"
+            [lastLineNr]="lastLineNr"
         ></os-motion-detail-diff-summary>
     }
     @if (showPreamble) {
@@ -113,16 +114,14 @@
                             </div>
                         }
                     </div>
-                    @if (!test(change)) {
-                        <div
-                            class="motion-text motion-text-diff"
-                            [attr.data-change-id]="change.getChangeId()"
-                            [class.line-numbers-inline]="isLineNumberingInline()"
-                            [class.line-numbers-none]="isLineNumberingNone()"
-                            [class.line-numbers-outside]="isLineNumberingOutside()"
-                            [innerHTML]="getDiff(change) | trust: 'html'"
-                        ></div>
-                    }
+                    <div
+                        class="motion-text motion-text-diff"
+                        [attr.data-change-id]="change.getChangeId()"
+                        [class.line-numbers-inline]="isLineNumberingInline()"
+                        [class.line-numbers-none]="isLineNumberingNone()"
+                        [class.line-numbers-outside]="isLineNumberingOutside()"
+                        [innerHTML]="getDiff(change) | trust: 'html'"
+                    ></div>
                     @if (
                         isAmendment(change) && showAllAmendments && change.amendment.change_recommendation_ids?.length
                     ) {

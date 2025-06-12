@@ -46,6 +46,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     @Input()
     public elContainer: any;
 
+    @Input()
+    public lastLineNr: number;
+
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
      *
@@ -79,10 +82,7 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     }
 
     public isMoreThanOneLineOff(change: ViewUnifiedChange): boolean {
-        // I desire the motion number from and to 
-        // motionLastLine has to get the last line from the motion
-        let motionLastLine = 100;
-        return (motionLastLine + 1 < change.getLineFrom())
+        return (this.lastLineNr + 1 < change.getLineFrom())
     }
 
     public canAccess(origin: ViewMotion): boolean {
