@@ -46,6 +46,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
     @Input()
     public elContainer: any;
 
+    @Input()
+    public lastLineNr: number;
+
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
      *
@@ -76,6 +79,10 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
      */
     public isChangeRecommendation(change: ViewUnifiedChange): boolean {
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
+    }
+
+    public isMoreThanOneLineOff(change: ViewUnifiedChange): boolean {
+        return (this.lastLineNr + 1 < change.getLineFrom());
     }
 
     public canAccess(origin: ViewMotion): boolean {
