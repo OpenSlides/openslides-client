@@ -37,6 +37,9 @@ export class ErrorMainComponent implements OnInit {
     }
 
     private getReturnUrl(): (string | number)[] {
+        if (typeof this._meetingId !== `number`) {
+            this._meetingId = Number(this._meetingId);
+        }
         if (!this.authService.isAuthenticated()) {
             return [`login`];
         } else if (this._meetingId && this.operator.isInMeeting(this._meetingId)) {
