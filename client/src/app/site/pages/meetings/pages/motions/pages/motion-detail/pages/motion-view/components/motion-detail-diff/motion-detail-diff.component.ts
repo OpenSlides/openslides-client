@@ -9,7 +9,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { TooltipPosition } from '@angular/material/tooltip';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -106,6 +108,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public showSummary = true;
 
+    public position = new FormControl(`above` as TooltipPosition);
+
     @Input()
     public set showPreamble(value: boolean) {
         this._showPreamble = value;
@@ -113,6 +117,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     public get showPreamble(): boolean {
         return this.motion.showPreamble ? this._showPreamble : false;
+    }
+
+    public originName(amendment: ViewMotion): string | undefined {
+        if (amendment.all_origins.length) {
+            return amendment.all_origins[0].meeting?.name;
+        }
+        return undefined;
     }
 
     @Input()
