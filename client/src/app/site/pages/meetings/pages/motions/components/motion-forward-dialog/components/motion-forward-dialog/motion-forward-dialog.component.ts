@@ -51,6 +51,7 @@ export class MotionForwardDialogComponent implements OnInit {
     ) {}
 
     public async ngOnInit(): Promise<void> {
+
         for (const committee of this.data.forwardingMeetings) {
             committee.meetings = this.getMeetingsSorted(committee);
         }
@@ -59,7 +60,7 @@ export class MotionForwardDialogComponent implements OnInit {
         this.initStateMap();
     }
 
-    public getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
+    private getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
         return committee.meetings.sort((a, b) => {
             const end_time = b.end_time - a.end_time;
             if (Number.isNaN(end_time)) {
