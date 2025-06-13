@@ -170,11 +170,11 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
 
     public async changeGuest(): Promise<void> {
         const title = this.translate.instant(`Set external status for selected accounts`);
-        const SET_ACTIVE = _(`active`);
-        const SET_INACTIVE = _(`inactive`);
-        const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
+        const SET_EXTERNAL = _(`external`);
+        const SET_NOT_EXTERNAL = _(`not external`);
+        const result = await this.choiceService.open({ title, actions: [SET_EXTERNAL, SET_NOT_EXTERNAL] });
         if (result) {
-            const isGuest = result.action === SET_ACTIVE;
+            const isGuest = result.action === SET_EXTERNAL;
             this.userController.update({ guest: isGuest, home_committee_id: isGuest ? null : undefined }, ...this.selectedRows).resolve();
         }
     }
