@@ -103,7 +103,7 @@ export class AuthCheckService {
         await this.fetchMeetingIfNotExists(+meetingIdString);
 
         await this.operator.ready;
-        return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.canSkipPermissionCheck;
+        return this.operator.canSkipPermissionCheck || this.operator.hasMeetingAccess(Number(meetingIdString));
     }
 
     private async fetchMeetingIfNotExists(meetingId: Id): Promise<void> {
@@ -112,7 +112,7 @@ export class AuthCheckService {
                 await this.modelRequestBuilder.build({
                     ids: [meetingId],
                     viewModelCtor: ViewMeeting,
-                    fieldset: [`enable_anonymous`, `name`]
+                    fieldset: [`enable_anonymous`, `name`, `committee_id`]
                 }),
                 `meeting_single`
             );

@@ -166,6 +166,6 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     private updatePermissions(): void {
         this.canManage =
-            this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isCommitteeManager;
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isAnyCommitteeManager;
     }
 }
