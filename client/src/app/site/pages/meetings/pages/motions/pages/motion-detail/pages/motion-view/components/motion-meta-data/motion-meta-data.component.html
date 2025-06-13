@@ -169,9 +169,9 @@
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
             [chipValue]="recommendationLabel | translate"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [searchFieldInput]="motion?.recommendation_extension"
             [internal]="motion?.state?.is_internal"
             [listValueTransformFns]="[motionTransformFn]"
+            [searchFieldInput]="motion?.recommendation_extension"
             [searchLists]="searchLists"
             (succeeded)="setRecommendationExtension($event)"
         >
