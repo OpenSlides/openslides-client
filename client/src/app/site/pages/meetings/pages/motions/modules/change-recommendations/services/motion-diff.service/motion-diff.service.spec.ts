@@ -1936,7 +1936,7 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+                ``
             );
         }));
     });

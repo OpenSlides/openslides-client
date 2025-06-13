@@ -2191,7 +2191,7 @@ export class MotionDiffService {
             if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
                 hasRemainederOneChangedLine = true;
-            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo() + 1)) {
+            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo())) {
                 isBroken = true;
             }
         }, 0);
@@ -2258,6 +2258,6 @@ export class MotionDiffService {
     }
 
     private isMoreThanTwoLines(html: LineNumberedString, lineFrom: number): boolean {
-        return lineFrom > (this.lineNumberingService.getLineNumberRange(html).to + 1);
+        return lineFrom > (this.lineNumberingService.getLineNumberRange(html).to + 2);
     }
 }
