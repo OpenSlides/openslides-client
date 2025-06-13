@@ -27,3 +27,14 @@
     color: green;
     margin-top: 8px;
 }
+
+.attachment-entry {
+    height: auto;
+    height: max-content !important;
+
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+        word-break: break-word;
+    }
+}

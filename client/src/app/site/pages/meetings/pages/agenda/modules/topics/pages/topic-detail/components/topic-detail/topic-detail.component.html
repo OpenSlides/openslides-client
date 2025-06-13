@@ -81,7 +81,7 @@
                             </h3>
                             <mat-list dense>
                                 @for (file of sortedAttachments; track file) {
-                                    <mat-list-item>
+                                    <mat-list-item class="attachment-entry">
                                         <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                     </mat-list-item>
                                 }
