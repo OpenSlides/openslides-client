@@ -59,7 +59,7 @@ RUN npm run build
 
 
 # Prod wants nginx as base image for some reason
-FROM nginx:latest as prod
+FROM nginx:1.28.0 as prod
 
 WORKDIR /
 
