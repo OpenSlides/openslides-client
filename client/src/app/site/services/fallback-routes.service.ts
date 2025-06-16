@@ -37,7 +37,7 @@ export class FallbackRoutesService {
     public getFallbackRoute(): string | null {
         for (const entry of this.fallbackEntries) {
             if (entry.permission === Permission.meetingCanSeeFrontpage && this.operator.hasPerms(entry.permission!)) {
-                return ``
+                return ``;
             } else if (this.operator.hasPerms(entry.permission!)) {
                 return entry.route;
             }
