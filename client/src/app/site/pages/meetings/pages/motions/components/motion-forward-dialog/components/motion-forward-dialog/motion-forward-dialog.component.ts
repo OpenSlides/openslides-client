@@ -51,9 +51,29 @@ export class MotionForwardDialogComponent implements OnInit {
     ) {}
 
     public async ngOnInit(): Promise<void> {
+        for (const committee of this.data.forwardingMeetings) {
+            committee.meetings = this.getMeetingsSorted(committee);
+        }
         this.committeesSubject.next(this.data.forwardingMeetings);
         this.selectedMeetings = new Set();
         this.initStateMap();
+    }
+
+    private getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
+        return committee.meetings.sort((a, b) => {
+            const end_time = b.end_time - a.end_time;
+            if (Number.isNaN(end_time)) {
+                if (b.end_time) {
+                    return b.end_time;
+                } else if (a.end_time) {
+                    return -a.end_time;
+                }
+                return a.name.localeCompare(b.name);
+            } else if (end_time === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return end_time;
+        });
     }
 
     public onSaveClicked(): void {
