@@ -157,9 +157,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             )
         });
         if (result) {
-            if (!result.firstId) {
-                throw new Error(_(`No committee selected`));
-            }
             if (result.action === ADD) {
                 this.userController.update({ home_committee_id: result.firstId, guest: false }, ...this.selectedRows).resolve();
             } else if (result.action === REMOVE) {
