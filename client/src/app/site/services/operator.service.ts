@@ -83,19 +83,23 @@ export class OperatorService {
         return this.isSuperAdmin || this.isOrgaManager;
     }
 
+    public get canSkipPermissionCheckMeetingInternal(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
+    }
+
     public get isAccountAdmin(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public get isCommitteeManager(): boolean {
         if (this.activeMeeting) {
-            return this._CML && !!this._CML[this.activeMeeting.committee_id];
+            return this.hasCommitteeManagementRights(this.activeMeeting.committee_id);
         }
         return false;
     }
 
     public get isAnyCommitteeManager(): boolean {
-        return !!(this._userSubject.value?.committee_management_ids || []).length;
+        return !!this._CML && !!Object.keys(this._CML).length;
     }
 
     public get isAnyManager(): boolean {
@@ -253,7 +257,6 @@ export class OperatorService {
 
     private _permissionsSubject = new BehaviorSubject<Permission[] | undefined>(undefined);
 
-    private _groups_to_meetings: Record<Id, Id> = {};
     private _groupIds: Id[] | undefined = undefined;
     private _meetingIds: Id[] | undefined = undefined;
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
@@ -409,12 +412,15 @@ export class OperatorService {
         );
     }
 
+    public hasCommitteeManagementRights(committee_id: number): boolean {
+        return this._CML && !!this._CML[committee_id];
+    }
+
     private updateUser(user: ViewUser): void {
         this.currentCommitteeIds.update(new Set(user.committee_ids));
 
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
-            this._groups_to_meetings = user.meeting_users.flatMap(mUser => mUser.group_ids.map(gId => [gId, mUser.meeting_id])).mapToObject(line => ({ [line[0]]: line[1] }));
             this._permissions = this.calcPermissions();
         }
         // The OML has to be changed only if new data come in.
@@ -698,10 +704,6 @@ export class OperatorService {
         return this.isInMeeting(meetingId);
     }
 
-    public isAnyCommitteeAdmin(): boolean {
-        return !!this._CML && !!Object.keys(this._CML).length;
-    }
-
     /**
      * Determines whether the current operator is included in at least one of the committees, which are passed.
      * This function checks also if an operator is a "superadmin" -> then, they is technically in every committee.
@@ -758,15 +760,16 @@ export class OperatorService {
      * @returns `true`, if the operator is in at least one group or they are an admin. a superadmin or a orgaadmin.
      */
     public isInGroupIds(...groupIds: Id[]): boolean {
-        if (!this._groupIds) {
-            return false;
-        }
-        if (this.canSkipPermissionCheck) {
+        const meetingIds = Array.from(new Set(groupIds.map(groupId => {
+            const group = this.groupRepo.getViewModel(groupId);
+            return group?.meeting_id;
+        }))).filter(meetingId => !!meetingId);
+        if (this.canSkipPermissionCheck || !!meetingIds.find(id => this.isCommitteeManagerForMeeting(id))) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
             // An admin has all perms and is technically in every group.
-            return !!this._groupIds.find(id => id === this.adminGroupId || (this._groups_to_meetings[id] && this.isCommitteeManagerForMeeting(this._groups_to_meetings[id])));
+            return !!this._groupIds.find(id => id === this.adminGroupId);
         }
         return true;
     }
@@ -842,6 +845,20 @@ export class OperatorService {
                     {
                         idField: `committee_management_ids`,
                         fieldset: [`all_child_ids`]
+                        // follow: [
+                        //     {
+                        //         idField: ,
+                        //         fieldset: [],
+                        //         follow: [{
+                        //             idField: `meeting_ids`,
+                        //             follow: [{idField: `group_ids`, fieldset: ["meeting_id"]}]
+                        //         }]
+                        //     },
+                        //     {
+                        //         idField: `meeting_ids`,
+                        //         follow: [{idField: `group_ids`, fieldset: ["meeting_id"]}]
+                        //     }
+                        // ]
                     }
                 ]
             };

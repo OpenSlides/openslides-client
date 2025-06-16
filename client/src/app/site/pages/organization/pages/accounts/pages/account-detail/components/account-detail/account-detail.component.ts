@@ -99,7 +99,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get canSeeParticipationTable(): boolean {
         return (
             (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
-                this.operator.isAnyCommitteeAdmin()) &&
+                this.operator.isAnyCommitteeManager) &&
                 (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
@@ -281,7 +281,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && this.operator.canSkipPermissionCheck)
+                    (!meeting.locked_from_inside && (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManagerForMeeting(meeting.id)))
             };
         });
         this._tableData = tableData;

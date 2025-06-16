@@ -116,7 +116,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             title,
             choices: this.operator.canSkipPermissionCheck
                 ? meetings.filter(meeting => !meeting.locked_from_inside)
-                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside),
+                : meetings.filter(meeting => (this.operator.isInMeeting(meeting.id) || this.operator.isCommitteeManagerForMeeting(meeting.id)) && !meeting.locked_from_inside),
             multiSelect: true,
             actions,
             content: this.translate.instant(
