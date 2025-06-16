@@ -100,14 +100,7 @@ export class MotionForwardDialogComponent implements OnInit {
     }
 
     public hasAnyAmendment(): boolean {
-        let hasAmend = false;
-        this.data.motion.some(motion => {
-            if (motion.amendments.length > 0) {
-                hasAmend = true;
-            }
-        }
-        );
-
-        return hasAmend;
+        const hasAmend: (element: ViewMotion) => boolean = element => element.amendments.length > 0;
+        return this.data.motion.some(hasAmend);
     }
 }
