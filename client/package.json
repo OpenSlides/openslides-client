@@ -117,7 +117,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@vendure/ngx-translate-extract": "^9.4.0",
-    "angular-eslint": "^19.7.0",
+    "angular-eslint": "^20.0.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
