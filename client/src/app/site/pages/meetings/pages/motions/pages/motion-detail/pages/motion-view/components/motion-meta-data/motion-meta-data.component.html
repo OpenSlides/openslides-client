@@ -92,7 +92,7 @@
             [chipValue]="stateLabel | translate"
             [classes]="motion.stateCssColor"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
-            [inputValue]="motion?.state_extension"
+            [searchFieldInput]="motion?.state_extension"
             (succeeded)="setStateExtension($event)"
         >
             <span class="trigger-menu">
@@ -169,9 +169,9 @@
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
             [chipValue]="recommendationLabel | translate"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [inputValue]="motion?.recommendation_extension"
             [internal]="motion?.state?.is_internal"
             [listValueTransformFns]="[motionTransformFn]"
+            [searchFieldInput]="motion?.recommendation_extension"
             [searchLists]="searchLists"
             (succeeded)="setRecommendationExtension($event)"
         >

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 ARG CONTEXT=prod
 FROM node:22.15-alpine as base
+=======
+FROM node:22.16 as build
+ENV NODE_VERSION=22.14.0
+>>>>>>> upstream/main
 
 ## Setup
 ARG CONTEXT

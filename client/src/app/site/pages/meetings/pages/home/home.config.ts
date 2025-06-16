@@ -5,7 +5,7 @@ export const HomeAppConfig: AppConfig = {
     name: `common`,
     meetingMenuMentries: [
         {
-            route: `.`,
+            route: ``,
             displayName: `Home`,
             icon: `home`,
             weight: 100,
