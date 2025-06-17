@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { combineLatest, map, merge, mergeMap, Observable, of } from 'rxjs';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { ProjectionControllerService } from '../../services/projection-controller.service';
@@ -33,7 +33,9 @@ export class PresentationControlsComponent {
     public constructor(private projectionRepo: ProjectionControllerService) {}
 
     public getMediafile(projection: ViewProjection): ViewMediafile | null {
-        if (projection.content_object instanceof ViewMediafile) {
+        if (projection.content_object instanceof ViewMeetingMediafile) {
+            return projection.content_object.mediafile;
+        } else if (projection.content_object instanceof ViewMediafile) {
             return projection.content_object;
         } else {
             return null;
@@ -81,12 +83,12 @@ export class PresentationControlsComponent {
     }
 
     public fullscreen(projection: ViewProjection): void {
-        projection.options[`fullscreen`] = !projection.options[`fullscreen`];
+        projection.options[`fullscreen`] = !(projection.options[`fullscreen`] ?? true);
         this.updateProjectionOptions(projection);
     }
 
     public isFullscreen(projection: ViewProjection): boolean {
-        return projection.options[`fullscreen`];
+        return projection.options[`fullscreen`] ?? true;
     }
 
     private updateProjectionOptions(projection: ViewProjection): void {
