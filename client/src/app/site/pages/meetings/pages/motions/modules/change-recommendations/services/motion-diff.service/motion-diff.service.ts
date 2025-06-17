@@ -2182,24 +2182,22 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
+        if (changes.length === 0 && !lineRange) {
+            return motionHtml;
+        }
+
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
         const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
         let hasRemainederOneChangedLine = false;
-        let isBroken = false;
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
                 hasRemainederOneChangedLine = true;
-            } else if (this.isMoreThanTwoLines(motionHtml, change.getLineTo())) {
-                isBroken = true;
             }
         }, 0);
 
-        if (changes.length === 0 && !lineRange) {
-            return motionHtml;
-        }
-        if (!hasRemainederOneChangedLine || isBroken) {
+        if (!hasRemainederOneChangedLine) {
             return ``;
         }
 
@@ -2257,7 +2255,7 @@ export class MotionDiffService {
         return html;
     }
 
-    private isMoreThanTwoLines(html: LineNumberedString, lineFrom: number): boolean {
-        return lineFrom > (this.lineNumberingService.getLineNumberRange(html).to + 2);
+    private isMoreThanTwoLines(html: LineNumberedString, lineTo: number): boolean {
+        return lineTo > (this.lineNumberingService.getLineNumberRange(html).to + 2);
     }
 }
