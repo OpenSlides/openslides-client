@@ -99,10 +99,6 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         return change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
 
-    public isMoreThanOneLineOff(change: ViewUnifiedChange): boolean {
-        return (this.lastLineNr + 1 < change.getLineFrom());
-    }
-
     public canAccess(origin: ViewMotion): boolean {
         const motion = origin as ViewMotion;
         return motion.sequential_number && motion.meeting?.id === this.activeMeetingId;
