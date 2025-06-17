@@ -30,6 +30,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     public isEditMode = false;
 
+    /**
+     * Show apply feedback for a short time
+     */
+    public applyFeedback = false;
+
     public constructor(
         protected override translate: TranslateService,
         private diffService: MotionDiffService,
@@ -74,6 +79,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     }
 
     public async applyModifiedFinalVersion(): Promise<void> {
+        this.applyFeedback = true;
+        setTimeout(() => {
+            this.applyFeedback = false;
+            this.cd.markForCheck();
+        }, 2000);
         await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.isEditMode = true;
     }

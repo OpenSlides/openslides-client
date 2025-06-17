@@ -31,7 +31,7 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
      * Check in multiselect if a default gender is selected
      */
     public get hasDefaultGenderSelected(): boolean {
-        return this.selectedRows.filter(view => view.id <= 4).length > 0;
+        return this.selectedRows.filter(view => view.isPredefined).length > 0;
     }
 
     private currentGender: ViewGender;
@@ -71,7 +71,7 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
                 : this.translate.instant(`Are you sure you want to delete all selected genders?`);
         const content = genders.length === 1 ? genders[0].name : ``;
         if (await this.promptService.open(title, content)) {
-            const deleteGenderIds = genders.map(g => g.id).filter(id => id > 4);
+            const deleteGenderIds = genders.filter(g => !g.isPredefined).map(g => g.id);
             if (deleteGenderIds) {
                 return this.repo.delete(...deleteGenderIds).then(() => this.cd.detectChanges());
             }
@@ -84,16 +84,12 @@ export class GenderListComponent extends BaseListViewComponent<ViewGender> {
 
     /**
      * clicking Enter will save automatically
-     * clicking Escape will cancel the process
      *
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Enter`) {
             this.save();
-            this.dialogRef!.close();
-        }
-        if (event.key === `Escape`) {
             this.dialogRef!.close();
         }
     }
