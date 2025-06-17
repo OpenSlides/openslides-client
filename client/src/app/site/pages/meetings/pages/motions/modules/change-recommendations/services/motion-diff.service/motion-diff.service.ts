@@ -633,6 +633,9 @@ export class MotionDiffService {
         if (node.nodeName === `OS-LINEBREAK`) {
             return ``;
         }
+        if (toChildTrace.length === 0) {
+            return ``;
+        }
 
         let html = this.serializeTag(node);
         let found = false;
@@ -682,6 +685,9 @@ export class MotionDiffService {
             return ``;
         }
         if (node.nodeName === `OS-LINEBREAK`) {
+            return ``;
+        }
+        if (fromChildTrace.length === 0) {
             return ``;
         }
 
@@ -802,7 +808,7 @@ export class MotionDiffService {
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -817,7 +823,7 @@ export class MotionDiffService {
 
         currNode = toLineNumberNode as Element;
         isSplit = false;
-        while (currNode.parentNode) {
+        while (currNode && currNode.parentNode) {
             if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
@@ -879,39 +885,40 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
-
-        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-            if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
-                found = true;
-                fromChildTraceRel.shift();
-                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-            } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
-                found = false;
-                toChildTraceRel.shift();
-                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-            } else if (found === true) {
-                htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+        if (ancestor) {
+            for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+                if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+                    found = true;
+                    fromChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+                    found = false;
+                    toChildTraceRel.shift();
+                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                } else if (found === true) {
+                    htmlOut += this.serializeDom(ancestor.childNodes[i], true);
+                }
             }
-        }
 
-        currNode = ancestor;
-        while (currNode.parentNode) {
-            if (currNode.nodeName === `OL`) {
-                const currElement = currNode as Element;
-                const fakeOl = currElement.cloneNode(false) as any;
-                const offset = currElement.getAttribute(`start`)
-                    ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
-                    : 0;
-                fakeOl.setAttribute(
-                    `start`,
-                    ((DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
-                );
-                outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
-            } else {
-                outerContextStart = this.serializeTag(currNode) + outerContextStart;
+            currNode = ancestor;
+            while (currNode.parentNode) {
+                if (currNode.nodeName === `OL`) {
+                    const currElement = currNode as Element;
+                    const fakeOl = currElement.cloneNode(false) as any;
+                    const offset = currElement.getAttribute(`start`)
+                        ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
+                        : 0;
+                    fakeOl.setAttribute(
+                        `start`,
+                        ((DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
+                    );
+                    outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
+                } else {
+                    outerContextStart = this.serializeTag(currNode) + outerContextStart;
+                }
+                outerContextEnd += `</` + currNode.nodeName + `>`;
+                currNode = currNode.parentNode;
             }
-            outerContextEnd += `</` + currNode.nodeName + `>`;
-            currNode = currNode.parentNode;
         }
 
         const ret = {
@@ -2113,43 +2120,31 @@ export class MotionDiffService {
         html: LineNumberedString,
         change: ViewUnifiedChange,
         lineLength: number,
-        highlight?: number
+        highlight?: number,
+        getError?: boolean
     ): string {
-        let data: ExtractedContent;
+        if (!getError && this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
+            throw new Error(`Invalid call - The change is outside of the motion`);
+        }
         let oldText: string;
 
-        try {
-            data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
-            oldText =
-                data.outerContextStart +
-                data.innerContextStart +
-                data.html +
-                data.innerContextEnd +
-                data.outerContextEnd;
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
-        }
+        const to = !getError ? change.getLineTo() : this.lineNumberingService.getLineNumberRange(html).to;
+        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom() + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
+
+        const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
+        oldText =
+            data.outerContextStart +
+            data.innerContextStart +
+            data.html +
+            data.innerContextEnd +
+            data.outerContextEnd;
 
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
             lineLength,
-            firstLine: change.getLineFrom()
+            firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom()
         });
-        let diff = this.diff(oldText, change.getChangeNewText());
+        let diff = !getError ? this.diff(oldText, change.getChangeNewText()) : oldText;
 
         // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
         // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
@@ -2187,48 +2182,40 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        let maxLine = lineRange?.from || 0;
-        changes.forEach((change: ViewUnifiedChange) => {
-            if (change.getLineTo() > maxLine) {
-                maxLine = change.getLineTo();
-            }
-        }, 0);
-
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
 
-        let data: ExtractedContent;
+        let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
+        const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+        let hasRemainederOneChangedLine = false;
 
-        try {
-            data = this.extractRangeByLineNumbers(
-                motionHtml,
-                Math.max(maxLine + 1, lineRange?.from || 1),
-                lineRange?.to ?? null
-            );
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+        changes.forEach((change: ViewUnifiedChange) => {
+            if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
+                maxFromLine = change.getLineTo();
+                hasRemainederOneChangedLine = true;
+            }
+        }, 0);
+
+        if (!hasRemainederOneChangedLine) {
+            return ``;
         }
 
+        const data: ExtractedContent = this.extractRangeByLineNumbers(
+            motionHtml,
+            Math.max(maxFromLine + 1, lineRange?.from || 1),
+            lineRange?.to ? maxToLine : null
+        );
+
         let html = ``;
-        if (data.html !== ``) {
+        if (data?.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
                 DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxFromLine + 1 });
         }
         return html;
     }
@@ -2266,5 +2253,9 @@ export class MotionDiffService {
             });
         }
         return html;
+    }
+
+    private isMoreThanTwoLines(html: LineNumberedString, lineTo: number): boolean {
+        return lineTo > (this.lineNumberingService.getLineNumberRange(html).to + 2);
     }
 }

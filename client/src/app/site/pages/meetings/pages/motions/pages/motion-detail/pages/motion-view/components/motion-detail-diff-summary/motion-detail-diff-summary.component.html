@@ -14,14 +14,15 @@
                 <li *cdkVirtualFor="let change of changes; let i = index">
                     <span class="one-line">
                         <a href="" (click)="scrollToChangeClicked(change, $event)">
-                            @if (!change.isTitleChange()) {
-                                <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
-                            } @else {
-                                <span>{{ 'Title' | translate }}</span>
-                            }
-                            @if (isAmendment(change)) {
-                                <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
-                                @if (isAmendmentMarkedForwarded(change)) {
+                            @if (!(this.lastLineNr + 1 < change.getLineFrom())) {
+                                @if (!change.isTitleChange()) {
+                                    <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
+                                } @else {
+                                    <span>{{ 'Title' | translate }}</span>
+                                }
+                                @if (isAmendment(change)) {
+                                    <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
+                                    @if (isAmendmentMarkedForwarded(change)) {
                                     <mat-icon
                                         class="pointer-icon"
                                         color="primary"
@@ -32,8 +33,11 @@
                                         info
                                     </mat-icon>
                                 }
+                                } @else {
+                                    <span>&ensp;({{ 'Change recommendation' | translate }})</span>
+                                }
                             } @else {
-                                <span>&ensp;({{ 'Change recommendation' | translate }})</span>
+                                <span>{{ 'Inconsistent data.' | translate }}</span>
                             }
                         </a>
                         @if (isChangeRecommendation(change)) {
