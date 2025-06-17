@@ -752,7 +752,7 @@ export class LineNumberingService {
             return element;
         } else if (isInlineElement(element)) {
             return this.insertLineNumbersToInlineNode(element, length, highlight);
-        } else if (element.tagName === `P` && !element.childNodes.length && this.currentLineNumber !== null) {
+        } else if ([`P`, `LI`].indexOf(element.tagName) !== -1 && !element.childNodes.length && this.currentLineNumber !== null) {
             const lineNumber = this.createLineNumber();
             if (lineNumber) {
                 element.appendChild(lineNumber);
