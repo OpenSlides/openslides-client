@@ -845,20 +845,6 @@ export class OperatorService {
                     {
                         idField: `committee_management_ids`,
                         fieldset: [`all_child_ids`]
-                        // follow: [
-                        //     {
-                        //         idField: ,
-                        //         fieldset: [],
-                        //         follow: [{
-                        //             idField: `meeting_ids`,
-                        //             follow: [{idField: `group_ids`, fieldset: ["meeting_id"]}]
-                        //         }]
-                        //     },
-                        //     {
-                        //         idField: `meeting_ids`,
-                        //         follow: [{idField: `group_ids`, fieldset: ["meeting_id"]}]
-                        //     }
-                        // ]
                     }
                 ]
             };
