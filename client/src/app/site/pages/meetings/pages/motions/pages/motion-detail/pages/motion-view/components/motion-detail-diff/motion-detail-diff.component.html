@@ -126,7 +126,12 @@
                             </div>
                         }
                     </div>
-                    @if (isAmendment(change) && showAllAmendments && originMotionDisplay && change.amendment.origin) {
+                    @if (
+                        isAmendment(change) &&
+                        showAllAmendments &&
+                        originMotionDisplay &&
+                        originMotionsLoadedIds.includes(change.amendment.lead_motion.origin_id)
+                    ) {
                         <div class="amendment-origin">
                             {{ change.amendment.origin_meeting }}:
                             {{ change.amendment.origin.state }}
