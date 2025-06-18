@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    {{ data.motion.length > 1 ? 'Forward motions' : ('Forwarding of motion' | translate) }}
+    {{ data.motion.length > 1 ? ('Forward motions' | translate) : ('Forwarding of motion' | translate) }}
     @if (data.motion.length === 1 && data.motion[0].number) {
         {{ data.motion[0].number }}
     }
@@ -89,6 +89,15 @@
                                 }
                             </mat-radio-button>
                         </mat-radio-group>
+                        @if (hasAnyAmendment()) {
+                            <mat-checkbox
+                                class="indented"
+                                [disabled]="!useOriginalVersion"
+                                [(ngModel)]="markAmendmentsAsForwarded"
+                            >
+                                {{ 'mark amendments as original' | translate }}
+                            </mat-checkbox>
+                        }
                     </span>
                 } @else if (rowName === 'submitter') {
                     <span>

@@ -87,6 +87,7 @@
                 <os-repo-search-selector
                     formControlName="gender_id"
                     [includeNone]="true"
+                    [pipeFn]="genderPipeFn"
                     [repo]="genderRepo"
                     [subscriptionConfig]="genderListSubscriptionConfig"
                 ></os-repo-search-selector>

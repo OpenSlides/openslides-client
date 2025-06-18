@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
@@ -262,41 +261,6 @@ export class MotionDiffService {
     }
 
     /**
-     * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replace)
-     * Returns replace if strings are equal
-     *
-     * @param {string} htmlOld
-     * @param {string} htmlNew
-     * @returns {number}
-     */
-    public detectReplacementType(htmlOld: string, htmlNew: string): ModificationType {
-        htmlOld = this.normalizeHtmlForDiff(htmlOld);
-        htmlNew = this.normalizeHtmlForDiff(htmlNew);
-
-        if (htmlOld === htmlNew) {
-            return ModificationType.TYPE_REPLACEMENT;
-        }
-
-        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
-
-        const remainderOld = htmlOld.substr(firstDiffIndex);
-        const remainderNew = htmlNew.substr(firstDiffIndex);
-
-        if (remainderOld.length > remainderNew.length) {
-            if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                return ModificationType.TYPE_DELETION;
-            }
-        } else if (remainderOld.length < remainderNew.length) {
-            if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                return ModificationType.TYPE_INSERTION;
-            }
-        }
-
-        return ModificationType.TYPE_REPLACEMENT;
-    }
-
-    /**
      * Adapted from http://ejohn.org/projects/javascript-diff-algorithm/
      * by John Resig, MIT License
      *
@@ -398,14 +362,14 @@ export class MotionDiffService {
             { by: `\n`, type: `append` }
         ]) {
             const newArr = [];
-            for (let i = 0; i < res.length; i++) {
+            for (const str of res) {
                 // Don't split HTML tags
-                if (res[i][0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
-                    newArr.push(res[i]);
+                if (str[0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
+                    newArr.push(str);
                     continue;
                 }
 
-                newArr.push(...splitStringKeepSeperator(res[i], splitConf.by, splitConf.type));
+                newArr.push(...splitStringKeepSeperator(str, splitConf.by, splitConf.type));
             }
             res = newArr;
         }
@@ -429,8 +393,8 @@ export class MotionDiffService {
 
         let str = ``;
         if (out.n.length === 0) {
-            for (let i = 0; i < out.o.length; i++) {
-                str += `<del>` + out.o[i] + `</del>`;
+            for (const o of out.o) {
+                str += `<del>` + o + `</del>`;
             }
         } else {
             if (out.n[0].text === undefined) {
@@ -530,9 +494,9 @@ export class MotionDiffService {
                 node.setAttribute(`style`, stylesNew.join(`;`));
             }
         }
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                this.removeColorStyles((node.childNodes[i] as Element));
+        for (const child of node.childNodes) {
+            if (child.nodeType === ELEMENT_NODE) {
+                this.removeColorStyles((child as Element));
             }
         }
     }
@@ -606,22 +570,22 @@ export class MotionDiffService {
         if (node.nodeName === `BR`) {
             const element = node as Element;
             let br = `<BR`;
-            for (let i = 0; i < element.attributes.length; i++) {
-                const attr = element.attributes[i];
+            for (const attibutes of element.attributes) {
+                const attr = attibutes;
                 br += ` ` + attr.name + `="` + attr.value + `"`;
             }
             return br + `>`;
         }
 
         let html = this.serializeTag(node);
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === TEXT_NODE) {
-                html += node.childNodes[i]
+        for (const child of node.childNodes) {
+            if (child.nodeType === TEXT_NODE) {
+                html += child
                     .nodeValue!.replace(/&/g, `&amp;`)
                     .replace(/</g, `&lt;`)
                     .replace(/>/g, `&gt;`);
             } else {
-                html += this.serializeDom(node.childNodes[i], stripLineNumbers);
+                html += this.serializeDom(child, stripLineNumbers);
             }
         }
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
@@ -642,9 +606,9 @@ export class MotionDiffService {
     public removeDuplicateClassesInsertedByCkeditor(html: string): string {
         const fragment = DomHelpers.htmlToFragment(html);
         const items = fragment.querySelectorAll(`li.os-split-before`);
-        for (let i = 0; i < items.length; i++) {
-            if (!DomHelpers.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
-                DomHelpers.removeCSSClass(items[i], `os-split-before`);
+        for (const item of items) {
+            if (!DomHelpers.isFirstNonemptyChild(item.parentNode!, item)) {
+                DomHelpers.removeCSSClass(item, `os-split-before`);
             }
         }
         return this.serializeDom(fragment, false);
@@ -723,20 +687,20 @@ export class MotionDiffService {
 
         let html = ``;
         let found = false;
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === fromChildTrace[0]) {
+        for (const child of node.childNodes) {
+            if (child === fromChildTrace[0]) {
                 found = true;
-                const childElement = node.childNodes[i] as Element;
+                const childElement = child as Element;
                 const remainingTrace = fromChildTrace;
                 remainingTrace.shift();
                 if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
                     html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (found) {
-                if (node.childNodes[i].nodeType === TEXT_NODE) {
-                    html += node.childNodes[i].nodeValue;
+                if (child.nodeType === TEXT_NODE) {
+                    html += child.nodeValue;
                 } else {
-                    const childElement = node.childNodes[i] as Element;
+                    const childElement = child as Element;
                     if (
                         !stripLineNumbers ||
                         (!this.lineNumberingService.isOsLineNumberNode(childElement) &&
@@ -753,6 +717,7 @@ export class MotionDiffService {
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
             html += `</` + node.nodeName + `>`;
         }
+
         return html;
     }
 
@@ -986,7 +951,7 @@ export class MotionDiffService {
      * @param {number} lineLength
      * @param {number} firstLine
      */
-    public formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    private formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
         let text = this.formatDiff(diff);
         text = this.lineNumberingService.insertLineNumbers({ html: text, lineLength, firstLine });
         return text;
@@ -1151,13 +1116,12 @@ export class MotionDiffService {
         const fragment = DomHelpers.htmlToFragment(html);
 
         const delNodes = fragment.querySelectorAll(`.delete, del`);
-        for (let i = 0; i < delNodes.length; i++) {
-            delNodes[i].parentNode!.removeChild(delNodes[i]);
+        for (const del of delNodes) {
+            del.parentNode!.removeChild(del);
         }
 
         const insNodes = fragment.querySelectorAll(`ins`);
-        for (let i = 0; i < insNodes.length; i++) {
-            const ins = insNodes[i];
+        for (const ins of insNodes) {
             while (ins.childNodes.length > 0) {
                 const child = ins.childNodes.item(0);
                 ins.removeChild(child);
@@ -1167,8 +1131,8 @@ export class MotionDiffService {
         }
 
         const insertNodes = fragment.querySelectorAll(`.insert`);
-        for (let i = 0; i < insertNodes.length; i++) {
-            DomHelpers.removeCSSClass(insertNodes[i], `insert`);
+        for (const insert of insertNodes) {
+            DomHelpers.removeCSSClass(insert, `insert`);
         }
 
         return this.serializeDom(fragment, false);
@@ -1206,26 +1170,26 @@ export class MotionDiffService {
         merged = this.replaceLinesMergeNodeArrays(merged, Array.prototype.slice.call(followingFragment.childNodes));
 
         const mergedFragment = document.createDocumentFragment();
-        for (let i = 0; i < merged.length; i++) {
-            mergedFragment.appendChild(merged[i]);
+        for (const merge of merged) {
+            mergedFragment.appendChild(merge);
         }
 
         const forgottenTemplates = mergedFragment.querySelectorAll(`TEMPLATE`);
-        for (let i = 0; i < forgottenTemplates.length; i++) {
-            const el = forgottenTemplates[i];
+        for (const forgottenTemp of forgottenTemplates) {
+            const el = forgottenTemp;
             el.parentNode!.removeChild(el);
         }
 
         const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
-        for (let i = 0; i < forgottenSplitClasses.length; i++) {
-            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
-            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
+        for (const forgottenSplit of forgottenSplitClasses) {
+            DomHelpers.removeCSSClass(forgottenSplit, `os-split-before`);
+            DomHelpers.removeCSSClass(forgottenSplit, `os-split-after`);
         }
 
         return this.serializeDom(mergedFragment, true);
     }
 
-    public removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+    private removeLines(oldHtml: string, fromLine: number, toLine: number): string {
         return this.replaceLines(oldHtml, ``, fromLine, toLine);
     }
 
@@ -1237,7 +1201,7 @@ export class MotionDiffService {
      * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
      * it needs to be wrapped accordingly.
      */
-    public insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+    private insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
         return this.replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
     }
 
@@ -1273,8 +1237,8 @@ export class MotionDiffService {
         const newTextWithBreaks = document.createElement(`div`);
         newTextWithBreaks.innerHTML = newText;
 
-        for (let i = 0; i < oldTextWithBreaks.childNodes.length; i++) {
-            currChild = oldTextWithBreaks.childNodes[i] as Element;
+        for (const child of oldTextWithBreaks.childNodes) {
+            currChild = child as Element;
             if (currChild.nodeType === TEXT_NODE) {
                 const wrapDel = document.createElement(`del`);
                 oldTextWithBreaks.insertBefore(wrapDel, currChild);
@@ -1285,8 +1249,8 @@ export class MotionDiffService {
                 this.removeColorStyles(currChild);
             }
         }
-        for (let i = 0; i < newTextWithBreaks.childNodes.length; i++) {
-            currChild = newTextWithBreaks.childNodes[i] as Element;
+        for (const child of newTextWithBreaks.childNodes) {
+            currChild = child as Element;
             if (currChild.nodeType === TEXT_NODE) {
                 const wrapIns = document.createElement(`ins`);
                 newTextWithBreaks.insertBefore(wrapIns, currChild);
@@ -1490,7 +1454,7 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)(<del> <\/del>)?<ins>([\s\S]*?)\1<\/ins>/gi,
             (_found: string, paragraph: string, span: string, _emptyDel: string, insText: string): string => {
-                return `<ins>` + insText + `<\/ins>` + paragraph + span;
+                return `<ins>` + insText + `</ins>` + paragraph + span;
             }
         );
 
@@ -2171,7 +2135,7 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 ) +
                 ` ` +
                 this.translate.instant(
@@ -2251,12 +2215,12 @@ export class MotionDiffService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
                 );
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
-        let html: string;
+        let html = ``;
         if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
@@ -2265,9 +2229,6 @@ export class MotionDiffService {
                 data.innerContextEnd +
                 data.outerContextEnd;
             html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
-        } else {
-            // Prevents empty lines at the end of the motion
-            html = ``;
         }
         return html;
     }
@@ -2288,8 +2249,9 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
+        let html = ``;
         const extracted = this.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
-        let html =
+        html =
             extracted.outerContextStart +
             extracted.innerContextStart +
             extracted.html +

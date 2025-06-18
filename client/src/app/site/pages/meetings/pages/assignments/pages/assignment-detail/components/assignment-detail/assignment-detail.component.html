@@ -148,7 +148,7 @@
                         <h4>{{ 'Election documents' | translate }}</h4>
                         <mat-list class="election-document-list" dense>
                             @for (file of sortedAttachments; track file) {
-                                <mat-list-item>
+                                <mat-list-item class="attachment-entry">
                                     <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
                                 </mat-list-item>
                             }
@@ -244,7 +244,7 @@
 <ng-template #assignmentFormTemplate>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <form class="content" tabindex="-1" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
+            <form class="content" tabindex="-1" [formGroup]="assignmentForm">
                 <div>
                     <!-- title -->
                     <mat-form-field class="full-width">

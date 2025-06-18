@@ -19,7 +19,8 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { map, OperatorFunction, Subscription } from 'rxjs';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
 import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
@@ -137,6 +138,14 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public genderListSubscriptionConfig = getGenderListSubscriptionConfig();
 
+    public genderPipeFn: OperatorFunction<any, any> = map(items => {
+        const newItems = items.map(item => {
+            item.getTitle = (): string => this.translate.instant(item.name);
+            return item;
+        });
+        return newItems;
+    });
+
     private set _initialState(state: any | null) {
         this._initialStateString = JSON.stringify(state);
     }
@@ -162,7 +171,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         private fb: UntypedFormBuilder,
         private operator: OperatorService,
         public genderRepo: GenderControllerService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private translate: TranslateService
     ) {
         super();
     }
@@ -255,6 +265,18 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             { emitEvent: false }
         );
         this._initialState = personalInfoPatch;
+        if (this._additionalFormControls) {
+            this.personalInfoForm.controls[`guest`].valueChanges.subscribe(value => {
+                if (value) {
+                    this.personalInfoForm.get(`home_committee_id`).setValue(null);
+                }
+            });
+            this.personalInfoForm.controls[`home_committee_id`].valueChanges.subscribe(value => {
+                if (value) {
+                    this.personalInfoForm.get(`guest`).setValue(false);
+                }
+            });
+        }
     }
 
     private performSelfUpdate(): void {

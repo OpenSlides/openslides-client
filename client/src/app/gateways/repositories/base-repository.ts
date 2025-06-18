@@ -159,10 +159,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         lesser: UpdatePipelineAction[];
         active: boolean;
     } = {
-            active: false,
-            priority: [],
-            lesser: []
-        };
+        active: false,
+        priority: [],
+        lesser: []
+    };
 
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
@@ -661,9 +661,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     if (
                         (this.sortListServices[key]
                             ? await this.sortListServices[key].compare(
-                                newViewModels[j],
-                                this.sortedViewModelLists[key][i]
-                            )
+                                    newViewModels[j],
+                                    this.sortedViewModelLists[key][i]
+                                )
                             : newViewModels[j].id - this.sortedViewModelLists[key][i].id) < 0
                     ) {
                         this.sortedViewModelLists[key].splice(i, 0, newViewModels[j]);

@@ -24,9 +24,10 @@ export class CommitteeImportListComponent extends BaseViaBackendImportListCompon
             `name`,
             `forward_to_committees`,
             `organization_tags`,
-            `maangers`,
+            `managers`,
             `meeting_admins`,
-            `meeting_template`
+            `meeting_template`,
+            `parent`
         ].includes(header),
         is_list: [`forward_to_committees`, `organization_tags`, `managers`, `meeting_admins`].includes(header)
     }));

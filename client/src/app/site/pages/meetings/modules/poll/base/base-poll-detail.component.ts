@@ -105,6 +105,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     protected optionsLoaded = new Deferred();
 
     private entitledUsersSubscription: Subscription | null = null;
+    private liveRegisterSubscription: Subscription | null = null;
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
     public delegationEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_delegations`);
@@ -289,6 +290,9 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     }
 
     private setLiveRegisterData(): void {
+        if (this.liveRegisterSubscription) {
+            this.liveRegisterSubscription.unsubscribe();
+        }
         const userIds = new Set<Id>([]);
         for (const group of this.poll.entitled_groups) {
             const meetingUserIds = group.meeting_user_ids ?? [];
@@ -302,7 +306,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         });
         userIds.update(delegates);
         this.subscriptions.push(
-            this.userRepo
+            (this.liveRegisterSubscription = this.userRepo
                 .getViewModelListObservable()
                 .pipe(
                     filter(users => !!users.length),
@@ -333,7 +337,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
                 })
-        );
+            ));
     }
 
     public hasUserVoteDelegation(user: ViewUser): boolean {
@@ -362,6 +366,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         super.ngOnDestroy();
         this.entitledUsersSubscription?.unsubscribe();
         this.entitledUsersSubscription = null;
+        this.liveRegisterSubscription?.unsubscribe();
+        this.liveRegisterSubscription = null;
     }
 
     public onTabChange(): void {

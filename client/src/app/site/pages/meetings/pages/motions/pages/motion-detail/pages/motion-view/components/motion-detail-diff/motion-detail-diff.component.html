@@ -108,6 +108,19 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
+                                @if (
+                                    change.amendment.isForwardedAmendment && originName(change.amendment) !== undefined
+                                ) {
+                                    <mat-icon
+                                        class="pointer-icon"
+                                        color="primary"
+                                        inline
+                                        [matTooltip]="originName(change.amendment)"
+                                        [matTooltipPosition]="position.value!"
+                                    >
+                                        info
+                                    </mat-icon>
+                                }
                                 <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
                                 <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
                             </div>

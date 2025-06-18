@@ -225,6 +225,22 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: true, label: _(`Has a membership number`) },
                     { condition: [false, null], label: _(`Has no membership number`) }
                 ]
+            },
+            {
+                property: `hasHomeCommittee`,
+                label: _(`Home committee`),
+                options: [
+                    { condition: true, label: _(`Has a home committee`) },
+                    { condition: [false, null], label: _(`Has no home committee`) }
+                ]
+            },
+            {
+                property: `guest`,
+                label: _(`External`),
+                options: [
+                    { condition: true, label: _(`Is external`) },
+                    { condition: [false, null], label: _(`Is not external`) }
+                ]
             }
         ];
         return staticFilterDefinitions.concat(nonStaticFilterDefinitions);

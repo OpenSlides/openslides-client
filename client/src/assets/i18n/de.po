@@ -54,8 +54,8 @@ msgid "<unknown>"
 msgstr "<unbekannt>"
 
 msgid ""
-"A change recommendation or amendment is probably referring to a non-existant"
-" line number."
+"A change recommendation or amendment is probably referring to a nonexistent "
+"line number."
 msgstr ""
 "Ein Änderungsantrag oder eine Änderungsempfehlung bezieht sich "
 "wahrscheinlich auf eine nicht vorhandene Zeilennummer."
@@ -111,9 +111,6 @@ msgstr "Annehmen"
 
 msgid "Access data (PDF)"
 msgstr "Zugangsdaten (PDF)"
-
-msgid "Access groups"
-msgstr "Zugriffsgruppen"
 
 msgid ""
 "Access only possible for participants of this meeting. All other accounts "
@@ -1726,14 +1723,14 @@ msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 "Voreingestellte Sichtbarkeit für neue Tagesordnungspunkte (außer Themen)"
 
-msgid "Default vote method"
-msgstr "Voreingestellte Abstimmungsmethode"
-
 msgid "Default vote weight"
 msgstr "Standard-Stimmgewicht"
 
 msgid "Default voting duration"
 msgstr "Voreingestellte Dauer der Stimmabgabe"
+
+msgid "Default voting method"
+msgstr "Voreingestellte Abstimmungsmethode"
 
 msgid "Default voting type"
 msgstr "Voreingestellte Art der Stimmabgabe"
@@ -2023,6 +2020,9 @@ msgstr "Wahl"
 msgid "Election documents"
 msgstr "Wahlunterlagen"
 
+msgid "Election method"
+msgstr "Wahlmethode"
+
 msgid "Elections"
 msgstr "Wahlen"
 
@@ -2306,6 +2306,9 @@ msgstr "Ausgewählte Anträge exportieren"
 msgid "Extension"
 msgstr "Erweiterung"
 
+msgid "External"
+msgstr "Externe"
+
 msgid "External ID"
 msgstr "Externe ID"
 
@@ -2511,6 +2514,9 @@ msgstr "Gruppen mit Schreibberechtigungen"
 msgid "Has SSO identification"
 msgstr "Hat SSO-Kennung"
 
+msgid "Has a home committee"
+msgstr "Hat ein Heimatgremium"
+
 msgid "Has a membership number"
 msgstr "Hat eine Mitgliedsnummer"
 
@@ -2540,6 +2546,9 @@ msgstr "Hat keine SSO-Kennung"
 
 msgid "Has no email address"
 msgstr "Hat keine E-Mail-Adresse"
+
+msgid "Has no home committee"
+msgstr "Hat kein Heimatgremium"
 
 msgid "Has no identical motions"
 msgstr "Hat keine wortgleichen Anträge"
@@ -2631,6 +2640,9 @@ msgstr "Chronik"
 msgid "Home"
 msgstr "Startseite"
 
+msgid "Home committee"
+msgstr "Heimatgremium"
+
 msgid "How to create new amendments"
 msgstr "Erstellung von Änderungsanträgen"
 
@@ -2656,6 +2668,9 @@ msgstr "Bezeichner"
 
 msgid "If deactivated it is displayed below the title."
 msgstr "Wenn deaktiviert erfolgt die Anzeige unterhalb des Antragstitels."
+
+msgid "If empty, everyone can access."
+msgstr "Voller Zugriff, wenn keine Gruppe eingetragen."
 
 msgid ""
 "If it is an amendment, you can back up its content when editing it and "
@@ -2833,6 +2848,9 @@ msgstr "Ist geschlossen"
 msgid "Is committee admin"
 msgstr "Ist Gremienadmin"
 
+msgid "Is external"
+msgstr "Ist extern"
+
 msgid "Is favorite"
 msgstr "Ist Favorit"
 
@@ -2868,6 +2886,9 @@ msgstr "Ist kein Änderungsantrag"
 
 msgid "Is not archived"
 msgstr "Ist nicht archiviert"
+
+msgid "Is not external"
+msgstr "Ist nicht extern"
 
 msgid "Is not favorite"
 msgstr "Ist kein Favorit"
@@ -3881,6 +3902,12 @@ msgstr "Parallel hochladen"
 
 msgid "Parent agenda item"
 msgstr "Elternelement in der Tagesordnung"
+
+msgid "Parent committee"
+msgstr "Elterngremium"
+
+msgid "Parent committee name"
+msgstr "Elterngremiumname"
 
 msgid "Parent motion text changed"
 msgstr "Antragstext des Hauptantrags geändert"
@@ -4898,6 +4925,9 @@ msgstr "Gliederungsebenen erstellt"
 msgid "Subcategory"
 msgstr "Untersachgebiet"
 
+msgid "Subcommittees"
+msgstr "Untergremien"
+
 msgid "Submission date"
 msgstr "Einreichungsdatum"
 
@@ -5577,7 +5607,7 @@ msgid "Voting is currently in progress."
 msgstr "Stimmabgabe läuft aktuell "
 
 msgid "Voting method"
-msgstr "Wahlmethode"
+msgstr "Abstimmungsmethode"
 
 msgid "Voting opened"
 msgstr "Abstimmung eröffnet"
@@ -6030,6 +6060,9 @@ msgstr "beendet"
 msgid "example"
 msgstr "Beispiel"
 
+msgid "external"
+msgstr "extern"
+
 msgid "female"
 msgstr "weiblich"
 
@@ -6065,6 +6098,9 @@ msgstr "versteckt"
 
 msgid "inactive"
 msgstr "inaktiv"
+
+msgid "incl. subcommittees"
+msgstr "inkl. Untergremien"
 
 msgid "inline"
 msgstr "innerhalb"
@@ -6150,6 +6186,9 @@ msgstr "nicht angegeben"
 msgid "of"
 msgstr "von"
 
+msgid "of which"
+msgstr "davon"
+
 msgid "of which %num% not permissable"
 msgstr "davon %num% nicht zulässig"
 
@@ -6231,6 +6270,9 @@ msgstr "bis"
 msgid "today"
 msgstr "heute"
 
+msgid "total"
+msgstr "insgesamt"
+
 msgid "undocumented"
 msgstr "nicht erfasst"
 
@@ -6260,6 +6302,9 @@ msgstr "werden importiert"
 
 msgid "will be updated"
 msgstr "werden aktualisiert"
+
+msgid "with"
+msgstr "mit"
 
 msgid "without identifier"
 msgstr "ohne Bezeichner"
