@@ -70,7 +70,9 @@ jobs:
         working-directory: "./dev/localprod"
         run: docker compose down --volumes --remove-orphans
 
-  build-and-test-dev-image:
+  # This setups and runs the dev/run-tests.sh script
+  run-test-script:
+    name: Run-tests.sh Script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
