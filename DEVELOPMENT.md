@@ -16,7 +16,7 @@ Change into the client:
 
 Build the docker image with your tool chain:
 
-`docker build . -f Dockerfile.dev -t client-dev`
+`docker build . -t client-dev --build-arg CONTEXT=dev` 
 
 Run the developing docker image:
 

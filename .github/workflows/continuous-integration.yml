@@ -1,4 +1,4 @@
-name: CI
+name: CI - Build and Test Service
 
 on:
   pull_request:
@@ -70,19 +70,14 @@ jobs:
         working-directory: "./dev/localprod"
         run: docker compose down --volumes --remove-orphans
 
-  build-and-test-dev-image:
+  # This setups and runs the dev/run-tests.sh script
+  run-test-script:
+    name: Run-tests.sh Script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: create docker dev image
-        run: make build-dev
-
-      - name: Check linting
-        run: make run-check-linting
-
-      - name: Check prettifying
-        run: make run-check-prettifying
-
-      - name: Run karma tests
-        run: make run-karma-tests
+      - name: Run Test
+        uses: Janmtbehrens/OpenSlides/dev/actions/build-and-test-service@all-in-one
+        with:
+          service: client
