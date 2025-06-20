@@ -1,5 +1,5 @@
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { GeneralUser } from 'src/app/gateways/repositories/users';
+import { userHeadersAndVerboseNames } from 'src/app/site/pages/meetings/view-models/view-user';
 
 export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: any } = {
     ...userHeadersAndVerboseNames,
