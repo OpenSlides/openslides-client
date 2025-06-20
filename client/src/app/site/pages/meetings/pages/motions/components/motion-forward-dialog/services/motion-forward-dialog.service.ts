@@ -112,6 +112,7 @@ export class MotionForwardDialogService extends BaseDialogService<
                     dialogData.useOriginalNumber,
                     dialogData.useOriginalVersion,
                     dialogData.withAttachments,
+                    dialogData.markAmendmentsAsForwarded,
                     ...forwardMotions
                 );
 

@@ -364,7 +364,7 @@
     @if (!getHeader(def).is_object) {
         <ng-container
             [ngTemplateOutlet]="nonObjectEntryTemplate"
-            [ngTemplateOutletContext]="{ entry: entry, type: getHeader(def).type }"
+            [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
         />
     }
 </ng-template>
