@@ -80,7 +80,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                         `name`,
                         `permissions`,
                         `weight`,
-                        `external_id`
+                        `external_id`,
+                        `meeting_id`
                     ]
                 },
                 {
