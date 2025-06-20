@@ -86,7 +86,7 @@ export class MotionForwardDialogComponent implements OnInit {
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
             useOriginalVersion: this.useOriginalVersion,
-            withAttachments: this.withAttachments
+            withAttachments: this.withAttachments,
             markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
