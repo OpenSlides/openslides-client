@@ -8,9 +8,8 @@
             {{ 'Required permissions to view this page:' | translate }}
         </p>
     }
-    @for (message of msg; track message) {
-        <span class="message">{{ message | translate }}</span>
-    }
+    <span class="message">{{ msg }}</span>
+
     <div class="go-back-button">
         <button mat-raised-button (click)="leaveErrorPage()">{{ 'Back to OpenSlides' | translate }}</button>
     </div>
