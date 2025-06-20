@@ -13,6 +13,7 @@ export interface MotionForwardDialogReturnData {
     useOriginalSubmitter: boolean;
     useOriginalNumber: boolean;
     useOriginalVersion: boolean;
+    withAttachments: boolean;
     markAmendmentsAsForwarded: boolean;
 }
 
@@ -37,6 +38,7 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalSubmitter = false;
     public useOriginalNumber = false;
     public useOriginalVersion = false;
+    public withAttachments = false;
     public markAmendmentsAsForwarded = false;
 
     public get numAmendments(): number {
@@ -84,6 +86,7 @@ export class MotionForwardDialogComponent implements OnInit {
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
             useOriginalVersion: this.useOriginalVersion,
+            withAttachments: this.withAttachments,
             markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
