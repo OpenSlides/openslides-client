@@ -109,6 +109,10 @@ msgstr ""
 msgid "Account admin"
 msgstr ""
 
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Account created"
+msgstr ""
+
 #: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
 msgid "Account successfully added."
 msgstr ""
@@ -713,6 +717,10 @@ msgid ""
 "Attention: Accounts will add to the default group of each meeting only. If "
 "another group is intended please use the 'Add to meetings' dialog in "
 "account detail view."
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "Attention: Existing home committees and external status will be overwritten."
 msgstr ""
 
 msgid "Attention: First enter the wifi data in [Settings > General]"
@@ -3947,6 +3955,14 @@ msgstr ""
 msgid "Participant added to group {} in meeting {}"
 msgstr ""
 
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant added to group {} in meeting {}."
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant added to meeting {}."
+msgstr ""
+
 msgid "Participant added to multiple groups in meeting {}"
 msgstr ""
 
@@ -3975,6 +3991,10 @@ msgid "Participant number"
 msgstr ""
 
 msgid "Participant removed from group {} in meeting {}"
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant removed from meeting {}"
 msgstr ""
 
 msgid "Participant removed from multiple groups in meeting {}"
@@ -4627,6 +4647,14 @@ msgstr ""
 msgid "Set category"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.html
+msgid "Set external"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "Set external status for selected accounts"
+msgstr ""
+
 msgid "Set favorite"
 msgstr ""
 
@@ -4695,6 +4723,10 @@ msgid "Set tags"
 msgstr ""
 
 msgid "Set workflow"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.html
+msgid "Set/remove home committee"
 msgstr ""
 
 msgid "Set/remove meeting"
@@ -5246,9 +5278,6 @@ msgid ""
 "meeting and is not manager of any committee"
 msgstr ""
 
-msgid "This action will diminish your organization management level"
-msgstr ""
-
 msgid "This action will remove you from one or more groups."
 msgstr ""
 
@@ -5338,9 +5367,10 @@ msgstr ""
 msgid "This will add or remove the selected accounts to following meetings:"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
 msgid ""
-"This will diminish your ability to do things on the organization level and "
-"you will not be able to revert this yourself."
+"This will add or remove the selected accounts to the selected home "
+"committee:"
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -6158,6 +6188,10 @@ msgstr ""
 msgid "male"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "mark amendments as original"
+msgstr ""
+
 msgid "max. 32 characters allowed"
 msgstr ""
 
@@ -6190,6 +6224,10 @@ msgid "non-nominal"
 msgstr ""
 
 msgid "none"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "not external"
 msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
