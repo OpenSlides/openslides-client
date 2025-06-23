@@ -19,6 +19,6 @@ docker run -t ${IMAGE_TAG} /bin/sh -c "apk add chromium && npm run test-silently
 docker run -t ${IMAGE_TAG} npm run lint || CATCH=1
 docker run -t ${IMAGE_TAG} npm run prettify-check || CATCH=1
 
-if [ -z $PERSIST_CONTAINERS ]; then docker stop $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}") || CATCH=1; fi
+if [ -z "$PERSIST_CONTAINERS" ]; then docker stop "$(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}")" || CATCH=1; fi
 
 exit $CATCH
