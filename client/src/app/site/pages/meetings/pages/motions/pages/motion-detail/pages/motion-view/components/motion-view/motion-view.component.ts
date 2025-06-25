@@ -75,6 +75,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      */
     public set motion(motion: ViewMotion) {
         this._motion = motion;
+        this.onMotionSet();
     }
 
     public get motion(): ViewMotion {
@@ -434,6 +435,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         this.changeRecoMode =
             this.meetingSettingsService.instant(`motions_recommendation_text_mode`) || ChangeRecoMode.Original;
 
+        this.subscriptions.updateSubscription(
+            `sorted-changes`,
+            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
+        );
+    }
+
+    private onMotionSet(): void {
         this.subscriptions.updateSubscription(
             `sorted-changes`,
             this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
