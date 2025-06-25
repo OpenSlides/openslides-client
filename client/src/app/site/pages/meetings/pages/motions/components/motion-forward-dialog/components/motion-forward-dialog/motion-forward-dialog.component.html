@@ -29,10 +29,8 @@
             {{ 'Note: Amendments cannot be forwarded without their parent motion.' | translate }}
         </div>
     }
-    <div>
-        <mat-checkbox [(ngModel)]="withAttachments">{{ 'Forward with attachments' | translate }}</mat-checkbox>
-    </div>
-    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting']">
+
+    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting', 'attachments']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
             <td *matCellDef="let rowName" mat-cell>
@@ -44,6 +42,10 @@
                     <span>{{ 'Identifier' | translate }}:</span>
                 } @else if (rowName === 'meeting') {
                     <span>{{ 'Target meeting' | translate }}:</span>
+                } @else if (rowName === 'attachments') {
+                    @if (data.motion.length > 1 || (data.motion.length === 1 && data.motion[0].hasAttachments())) {
+                        <span>{{ 'Forward with attachments' | translate }}:</span>
+                    }
                 }
             </td>
         </ng-container>
@@ -146,6 +148,12 @@
                                 }
                             </mat-radio-button>
                         </mat-radio-group>
+                    </span>
+                } @else if (rowName === 'attachments') {
+                    <span>
+                        @if (data.motion.length > 1 || (data.motion.length === 1 && data.motion[0].hasAttachments())) {
+                            <mat-checkbox [(ngModel)]="withAttachments"></mat-checkbox>
+                        }
                     </span>
                 } @else if (rowName === 'meeting') {
                     <span class="motion-forward-meeting-list">
