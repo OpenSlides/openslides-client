@@ -1,4 +1,3 @@
-import { _ } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
