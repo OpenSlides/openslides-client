@@ -26,26 +26,6 @@ export enum DuplicateStatus {
  */
 export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
-/**
- * For account and participant imports
- */
-export const userHeadersAndVerboseNames: Partial<Record<keyof ViewUser, any>> = {
-    title: _(`Title`),
-    first_name: _(`Given name`),
-    last_name: _(`Surname`),
-    email: _(`Email`),
-    member_number: _(`Membership number`),
-    pronoun: _(`Pronoun`),
-    gender: _(`Gender`),
-    username: _(`Username`),
-    default_password: _(`Initial password`),
-    is_active: _(`Active`),
-    is_physical_person: _(`Natural person`),
-    saml_id: _(`SSO identification`),
-    home_committee: _(`Home committee`),
-    guest: _(`External`)
-};
-
 export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
 
