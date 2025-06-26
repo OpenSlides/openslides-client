@@ -26,6 +26,7 @@ RUN chmod +x command.sh
 CMD ["./command.sh"]
 
 
+
 # Development Image
 FROM base as dev
 
@@ -35,17 +36,6 @@ RUN apk add --no-cache git
 # Testing Image
 
 FROM dev as tests
-
-# Playwright Image
-
-FROM mcr.microsoft.com/playwright:v1.52.0-jammy as playwright
-
-WORKDIR /
-
-COPY ./package.json .
-COPY ./package-lock.json .
-ENV CI=1
-RUN npm ci
 
 
 # Production Image
