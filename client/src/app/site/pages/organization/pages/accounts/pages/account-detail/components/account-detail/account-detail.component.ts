@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -63,8 +64,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     @ViewChild(UserDetailViewComponent, { static: false })
     public set userDetailView(userDetailView: UserDetailViewComponent | undefined) {
-        userDetailView?.markAsPristine();
+        this._detailView = userDetailView;
+        this._detailView?.markAsPristine();
     }
+
+    private _detailView: UserDetailViewComponent;
 
     public additionalFormControls = {
         default_vote_weight: [``, Validators.min(0.000001)],
@@ -82,6 +86,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public user: ViewUser | null = null;
     public isNewUser = false;
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
+    public home_committee_id: number = undefined;
 
     public get numCommittees(): number {
         return this._numCommittees;
@@ -94,15 +99,15 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get canSeeParticipationTable(): boolean {
         return (
             (this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
-                this.operator.isAnyCommitteeAdmin()) &&
+                this.operator.isAnyCommitteeManager) &&
                 (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
     }
 
     public get canManageHomeCommittee(): boolean {
-        return this.user?.home_committee_id
-            ? this.operator.hasCommitteePermissions(this.user?.home_committee_id, CML.can_manage)
-            : this.operator.hasOrganizationPermissions(OML.can_manage_users);
+        return this.home_committee_id
+            ? this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage)
+            : this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isAnyCommitteeManager;
     }
 
     public get comitteeAdministrationAmount(): number {
@@ -119,6 +124,15 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         }
         return this.operator.hasOrganizationPermissions(this.userOML);
     }
+
+    public shouldEnableFormControl(): boolean {
+        if (!this.userOML && (!this.home_committee_id || this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage))) {
+            return true;
+        }
+        return this.operator.hasOrganizationPermissions(this.userOML);
+    }
+
+    public shouldEnableFormControlFn: (_: string) => boolean = (_: string) => this.shouldEnableFormControl();
 
     public tableDataAscOrderCompare = <T>(a: KeyValue<string, T>, b: KeyValue<string, T>): number => {
         const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
@@ -138,7 +152,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         public readonly committeeSortService: CommitteeSortService,
         private accountController: AccountControllerService,
         private userController: UserControllerService,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private scopePresenter: GetUserScopePresenterService
     ) {
         super();
     }
@@ -266,7 +281,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && this.operator.canSkipPermissionCheck)
+                    (!meeting.locked_from_inside && (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManagerForMeeting(meeting.id)))
             };
         });
         this._tableData = tableData;
@@ -306,12 +321,25 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                     if (user) {
                         const title = user.getTitle();
                         super.setTitle(title);
+                        if (user.id !== this.user?.id) {
+                            this.home_committee_id = undefined;
+                            this.loadHomeCommitteeId(user.id);
+                        }
                         this.user = user;
                         this.generateParticipationTableData();
+                    } else {
+                        this.home_committee_id = undefined;
                     }
+                    this._detailView?.update();
                 })
             );
         }
+    }
+
+    private async loadHomeCommitteeId(userId: number): Promise<void> {
+        const presenterResult = await this.scopePresenter.call({ user_ids: [userId] });
+        this.home_committee_id = presenterResult[userId].home_committee_id;
+        this._detailView?.update();
     }
 
     private async createOrUpdateUser(): Promise<void> {
@@ -338,6 +366,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
             payload[`committee_management_ids`] = undefined;
+            payload[`organization_management_level`] = undefined;
         }
         if (payload.member_number === ``) {
             if (isCreate) {
