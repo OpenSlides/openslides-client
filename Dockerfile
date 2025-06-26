@@ -5,8 +5,6 @@ FROM node:22.16-alpine as base
 ARG CONTEXT
 ENV NODE_VERSION=22.16.0
 WORKDIR /app
-# Used for easy target differentiation
-ARG ${CONTEXT}=1 
 ENV APP_CONTEXT=${CONTEXT}
 
 ## Installs
@@ -27,28 +25,23 @@ COPY ./dev/command.sh ./
 RUN chmod +x command.sh
 CMD ["./command.sh"]
 
-
-
 # Development Image
 FROM base as dev
 
 RUN apk add --no-cache git
 
-
 # Testing Image
 
 FROM dev as tests
-
 
 # Production Image
 FROM base as build
 
 ARG VERSION=dev
-RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/version.txt; fi
+RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version.txt || true
 
 # compile the angular project
 RUN npm run build
-
 
 # Prod wants nginx as base image for some reason
 FROM nginx:1.28.0 as prod
