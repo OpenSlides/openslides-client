@@ -5,7 +5,9 @@ FROM node:22.16-alpine as base
 ARG CONTEXT
 ENV NODE_VERSION=22.16.0
 WORKDIR /app
-ENV ${CONTEXT}=1
+# Used for easy target differentiation
+ARG ${CONTEXT}=1 
+ENV APP_CONTEXT=${CONTEXT}
 
 ## Installs
 COPY client/package.json .

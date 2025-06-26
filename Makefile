@@ -1,7 +1,20 @@
+# Helpers
+
 SERVICE=client
 docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
 
+# Parameters
+
+ATTACH=false
+STANDALONE=false
+DETACH=false
+LOG=$(SERVICE)
+CONTEXT=dev
+
 # Build images for different contexts
+
+build:
+	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) $(CONTEXT)
 
 build-dev:
 	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) dev
@@ -12,11 +25,15 @@ build-prod:
 build-test:
 	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) tests
 
+# Development tools
+
 run-dev: | build-dev
 	$(docker-run)
 
 run-dev-interactive: | build-dev
 	$(docker-run) sh
+
+# Testing tools
 
 run-cleanup-standalone: | build-dev
 	$(docker-run) npm run cleanup

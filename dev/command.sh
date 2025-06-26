@@ -1,3 +1,3 @@
 #!/bin/sh
 
-if [ ! -z "$dev" ]; then npm start; fi
+if [ "$APP_CONTEXT" = "dev"   ]; then npm start; fi
