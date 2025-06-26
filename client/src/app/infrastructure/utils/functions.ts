@@ -430,7 +430,7 @@ export function filterObject(obj: unknown, callbackFn: (keyValue: { key: string;
     return Object.entries(obj)
         .filter(([key, value]) => callbackFn({ key, value }))
         .map(([key, value]) => ({ [key]: value }))
-        .reduce((prev, curr) => Object.assign(prev, curr));
+        .reduce((prev, curr) => Object.assign(prev, curr), {});
 }
 
 export interface ListUpdateData<T extends Identifiable> {
