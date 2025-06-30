@@ -268,12 +268,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         if (this._additionalFormControls) {
             this.personalInfoForm.controls[`guest`].valueChanges.subscribe(value => {
                 if (value) {
-                    this.personalInfoForm.get(`home_committee_id`).setValue(null);
-                }
-            });
-            this.personalInfoForm.controls[`home_committee_id`].valueChanges.subscribe(value => {
-                if (value) {
-                    this.personalInfoForm.get(`guest`).setValue(false);
+                    this.personalInfoForm.get(`home_committee_id`).disable();
+                } else {
+                    this.personalInfoForm.get(`home_committee_id`).enable();
                 }
             });
         }
