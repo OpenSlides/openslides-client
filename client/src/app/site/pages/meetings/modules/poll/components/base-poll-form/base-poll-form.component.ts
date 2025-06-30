@@ -221,7 +221,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
-            if (this.allowToSetMinMax) {
+            if (this.allowToSetMinMax && !this.data.id) {
                 this.updatePollMethod(PollMethod.Y);
             }
         }
