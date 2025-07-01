@@ -45,7 +45,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         vote_delegated_to_id: [``],
         is_present: [``],
         locked_out: [``],
-        home_committe_id: [``],
+        home_committee_id: [``],
         guest: [``]
     };
 
