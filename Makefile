@@ -1,42 +1,30 @@
 # Helpers
 override SERVICE=client
 override MAKEFILE_PATH=../dev/scripts/makefile
-override docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
-
-# Parameters
-
-ATTACH=false
-STANDALONE=false
-DETACH=false
-LOG=$(SERVICE)
-CONTEXT=dev
+override DOCKER_COMPOSE_FILE=
+override DOCKER-RUN=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
 
 # Build images for different contexts
 
-build:
-	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) $(CONTEXT)
-
-build-dev:
-	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) dev
-
-build-prod:
-	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) prod
-
-build-test:
-	bash ../dev/scripts/makefile/build-service.sh $(SERVICE) tests
+build build-prod build-dev build-tests:
+	bash $(MAKEFILE_PATH)/make-build-service.sh $@ $(SERVICE)
 
 # Development tools
 
+run-dev run-dev-standalone run-dev-attached run-dev-detached run-dev-help run-dev-stop run-dev-clean run-dev-exec run-dev-enter:
+	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)"
+
+run-dev-standalone:
+	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)"
+	$(DOCKER-RUN) npm run cleanup
+
 run-dev: | build-dev
-	$(docker-run)
+	$(DOCKER-RUN)
 
 run-dev-interactive: | build-dev
-	$(docker-run) sh
+	$(DOCKER-RUN) sh
 
 # Testing tools
-
-run-cleanup-standalone: | build-dev
-	$(docker-run) npm run cleanup
 
 run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
