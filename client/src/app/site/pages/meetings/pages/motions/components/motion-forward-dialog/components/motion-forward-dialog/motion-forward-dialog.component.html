@@ -30,7 +30,7 @@
         </div>
     }
 
-    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'meeting', 'attachments']">
+    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'attachments', 'meeting']">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
             <td *matCellDef="let rowName" mat-cell>
