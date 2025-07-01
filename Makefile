@@ -1,7 +1,7 @@
 # Helpers
-
-SERVICE=client
-docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
+override SERVICE=client
+override MAKEFILE_PATH=../dev/scripts/makefile
+override docker-run=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
 
 # Parameters
 
@@ -41,7 +41,7 @@ run-cleanup-standalone: | build-dev
 run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
-run-tests: 
+run-tests:
 	bash dev/run-tests.sh
 
 run-karma-tests: | build-dev
@@ -56,3 +56,15 @@ run-check-prettifying: | build-dev
 run-playwright:
 	docker compose -f client/tests/docker-compose.test.yml build
 	docker compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright
+
+
+########################## Deprecation List ##########################
+
+deprecation-warning:
+	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh
+
+stop-dev:
+	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh "run-dev-stop"
+	$(DC_DEV) down --volumes --remove-orphans
+
+########################## Replacement List ##########################
