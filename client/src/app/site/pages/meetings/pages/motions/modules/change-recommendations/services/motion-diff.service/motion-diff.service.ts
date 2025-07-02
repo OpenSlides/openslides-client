@@ -2128,16 +2128,15 @@ export class MotionDiffService {
         html: LineNumberedString,
         change: ViewUnifiedChange,
         lineLength: number,
-        highlight?: number,
-        getError?: boolean
+        highlight?: number
     ): string {
-        if (!getError && this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
+        if (this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
             throw new Error(`Invalid call - The change is outside of the motion`);
         }
         let oldText: string;
 
-        const to = !getError ? change.getLineTo() : this.lineNumberingService.getLineNumberRange(html).to;
-        const from = getError && this.isMoreThanTwoLines(html, change.getLineFrom() + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
+        const to = change.getLineTo();
+        const from = this.isMoreThanTwoLines(html, change.getLineFrom() + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
         oldText =
@@ -2152,7 +2151,7 @@ export class MotionDiffService {
             lineLength,
             firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom()
         });
-        let diff = !getError ? this.diff(oldText, change.getChangeNewText()) : oldText;
+        let diff = this.diff(oldText, change.getChangeNewText());
 
         // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
         // - First, for the official line numbers, ignoring insertions (that's been done some lines before)

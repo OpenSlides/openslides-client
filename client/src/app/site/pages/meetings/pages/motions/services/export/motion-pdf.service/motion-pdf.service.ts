@@ -672,7 +672,15 @@ export class MotionPdfService {
             // lead motion or normal amendments
 
             const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-            const textChanges = changes.filter(change => !change.isTitleChange());
+            const baseText = this.linenumberingService.insertLineNumbers({
+            html: motion!.text,
+                lineLength: lineLength,
+                firstLine: motion.firstLine
+            });
+            const lastLineNr = this.linenumberingService.getLineNumberRange(baseText).to;
+            const workingTextChanges = changes.filter(change => !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr);
+            const brokenTextChangesAmount = changes.filter(change => !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr).length;
+
             const titleChange = changes.find(change => change.isTitleChange());
 
             if (crMode === ChangeRecoMode.Diff && titleChange) {
@@ -687,10 +695,12 @@ export class MotionPdfService {
             let formattedText = this.motionFormatService.formatMotion({
                 targetMotion: motion,
                 crMode,
-                changes: textChanges,
+                changes: workingTextChanges,
                 lineLength,
                 firstLine: motion.firstLine,
-                showAllChanges: showAllChanges
+                showAllChanges: showAllChanges,
+                brokenTextChangesAmount: brokenTextChangesAmount
+
             });
             formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF

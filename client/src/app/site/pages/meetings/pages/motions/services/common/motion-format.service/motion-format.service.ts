@@ -44,6 +44,7 @@ interface DifferedViewArguments extends Arguments {
      */
     firstLine: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -60,6 +61,7 @@ interface FormatMotionConfig extends Arguments {
      */
     firstLine?: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number
 }
 
 @Injectable({
@@ -75,6 +77,10 @@ export class MotionFormatService {
         private settings: MeetingSettingsService,
         private translate: TranslateService
     ) {}
+
+    public lastLineNr (baseText) {
+        return this.lineNumberingService.getLineNumberRange(baseText).to
+    }
 
     /**
      * Format the motion text using the line numbering and change
@@ -227,7 +233,7 @@ export class MotionFormatService {
     };
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine, firstLine, showAllChanges }: DifferedViewArguments = args;
+        const { changes, lineLength, highlightedLine, firstLine, showAllChanges, brokenTextChangesAmount }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
@@ -254,36 +260,24 @@ export class MotionFormatService {
                 );
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
-            try {
-                text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
-            } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-                const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is a change recommendation, please delete the change recommendation.`
-                );
-                const textBeforeError = this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine, true);
-                text.push(textBeforeError + `<em style="color: red; font-weight: bold;">` + msg + `</em>`);
-            }
+            text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
+        if (brokenTextChangesAmount > 0 ) {
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                brokenTextChangesAmount +
+                this.translate.instant(
+                    `change recommendation(s) refer to a nonexistent line number.`
+                )
+            text.push(`<em style="color: red; font-weight: bold;">` + msg + `</em>`);
+        }
         return this.adjustDiffClasses(text).join(``);
     };
 
