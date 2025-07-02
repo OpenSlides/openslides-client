@@ -679,7 +679,7 @@ export class MotionPdfService {
             });
             const lastLineNr = this.linenumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(change => !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr);
-            const brokenTextChangesAmount = changes.filter(change => !change.isTitleChange() && change.getLineFrom() > lastLineNr || change.getLineTo() > lastLineNr).length;
+            const brokenTextChangesAmount = changes.filter(change => !change.isTitleChange() && (change.getLineFrom() > lastLineNr || change.getLineTo() > lastLineNr).length);
 
             const titleChange = changes.find(change => change.isTitleChange());
 
