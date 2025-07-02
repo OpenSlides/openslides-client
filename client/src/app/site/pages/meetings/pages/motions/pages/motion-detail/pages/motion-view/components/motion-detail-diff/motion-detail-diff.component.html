@@ -165,17 +165,15 @@
     @if (brokenTextChangingObjects.length > 0) {
         <div class="broken-motion-text">
             <div>
-                <div class="broken-box"
-                    >
+                <div class="broken-box">
                     <div class="motion-text motion-text-diff" [innerHTML]="getBrokenDiff() | trust: 'html'">
                         {{ getBrokenDiff() }}
                     </div>
-                </div> </div>
+                </div>
+            </div>
             @for (change of brokenTextChangingObjects; track change.getChangeId(); let i = $index) {
                 <div>
-                    <div
-                        class="broken-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
-                    >
+                    <div class="broken-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border">
                         <div class="broken-action-row">
                             <button
                                 *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode"
@@ -187,7 +185,7 @@
                                 <mat-icon>more_horiz</mat-icon>
                             </button>
                         </div>
-                        <div class="broken-motion-text"> 
+                        <div class="broken-motion-text">
                             <div>
                                 {{ 'Inconsistent data. Please delete them.' | translate }}
                             </div>

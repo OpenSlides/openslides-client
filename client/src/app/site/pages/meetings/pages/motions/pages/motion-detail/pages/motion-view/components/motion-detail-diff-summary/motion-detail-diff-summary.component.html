@@ -23,16 +23,16 @@
                                 @if (isAmendment(change)) {
                                     <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
                                     @if (isAmendmentMarkedForwarded(change)) {
-                                    <mat-icon
-                                        class="pointer-icon"
-                                        color="primary"
-                                        inline
-                                        [matTooltip]="originMeetingName(change)"
-                                        [matTooltipPosition]="position.value!"
-                                    >
-                                        info
-                                    </mat-icon>
-                                }
+                                        <mat-icon
+                                            class="pointer-icon"
+                                            color="primary"
+                                            inline
+                                            [matTooltip]="originMeetingName(change)"
+                                            [matTooltipPosition]="position.value!"
+                                        >
+                                            info
+                                        </mat-icon>
+                                    }
                                 } @else {
                                     <span>&ensp;({{ 'Change recommendation' | translate }})</span>
                                 }

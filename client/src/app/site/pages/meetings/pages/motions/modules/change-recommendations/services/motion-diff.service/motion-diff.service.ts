@@ -627,13 +627,13 @@ export class MotionDiffService {
      * @returns {string}
      */
     public serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
+        if (toChildTrace.length === 0) {
+            throw new Error(`Inconsistency or invalid call of this function detected (to)`);
+        }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
         if (node.nodeName === `OS-LINEBREAK`) {
-            return ``;
-        }
-        if (toChildTrace.length === 0) {
             return ``;
         }
 
@@ -646,7 +646,7 @@ export class MotionDiffService {
                 const childElement = node.childNodes[i] as Element;
                 const remainingTrace = toChildTrace;
                 remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                if (!this.lineNumberingService.isOsLineNumberNode(childElement) && remainingTrace.length > 0) {
                     html += this.serializePartialDomToChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (node.childNodes[i].nodeType === TEXT_NODE) {
@@ -681,13 +681,13 @@ export class MotionDiffService {
      * @returns {string}
      */
     public serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
+        if (fromChildTrace.length === 0) {
+            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+        }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
         if (node.nodeName === `OS-LINEBREAK`) {
-            return ``;
-        }
-        if (fromChildTrace.length === 0) {
             return ``;
         }
 
@@ -699,7 +699,7 @@ export class MotionDiffService {
                 const childElement = child as Element;
                 const remainingTrace = fromChildTrace;
                 remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                if (!this.lineNumberingService.isOsLineNumberNode(childElement) && remainingTrace.length > 0) {
                     html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (found) {
@@ -801,10 +801,16 @@ export class MotionDiffService {
         let followingHtmlStartSnippet = ``;
 
         fromChildTraceAbs.shift();
-        const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
+        let previousHtml = ``;
+        if (fromChildTraceAbs.length > 0) {
+            previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
+        }
 
         toChildTraceAbs.shift();
-        const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+        let followingHtml = ``;
+        if (toChildTraceAbs.length > 0) {
+            followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+        }
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
@@ -890,11 +896,15 @@ export class MotionDiffService {
                 if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
                     found = true;
                     fromChildTraceRel.shift();
-                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                    if (fromChildTraceRel.length > 0) {
+                        htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+                    }
                 } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
                     found = false;
                     toChildTraceRel.shift();
-                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                    if (toChildTraceRel.length > 0) {
+                        htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+                    }
                 } else if (found === true) {
                     htmlOut += this.serializeDom(ancestor.childNodes[i], true);
                 }

@@ -88,9 +88,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public set changes(changes: ViewUnifiedChange[]) {
         for (const change of changes) {
             if (change.getLineFrom() <= this.lastLineNr && change.getLineTo() <= this.lastLineNr) {
-                this._changes.push(change)
+                this._changes.push(change);
             } else {
-                this._brokenChanges.push(change)
+                this._brokenChanges.push(change);
             }
         }
         this._changes = changes || [];
@@ -267,14 +267,14 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         }
     }
 
-    public getBrokenDiff() {
+    public getBrokenDiff(): string {
         const msg =
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
-                this.brokenTextChangingObjects.length + 
+                this.brokenTextChangingObjects.length +
                 ` ` +
-                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`)
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`);
+        return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
     }
 
     /**
@@ -398,9 +398,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this._brokenTextChangingObjects = this.changes.filter(
             (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo()) && (obj.getLineFrom() > this.lastLineNr || obj.getLineTo() > this.lastLineNr)
         );
-
-        console.log(this._workingTextChangingObjects)
-        console.log(this._brokenTextChangingObjects)
     }
 
     private _workingTextChangingObjects: ViewUnifiedChange[] = [];
