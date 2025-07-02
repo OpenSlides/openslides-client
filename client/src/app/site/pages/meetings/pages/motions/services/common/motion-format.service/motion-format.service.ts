@@ -269,6 +269,7 @@ export class MotionFormatService {
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 brokenTextChangesAmount +
+                ` ` +
                 this.translate.instant(
                     `change recommendation(s) refer to a nonexistent line number.`
                 );

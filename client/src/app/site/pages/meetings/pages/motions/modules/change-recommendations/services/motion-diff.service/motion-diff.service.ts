@@ -891,6 +891,7 @@ export class MotionDiffService {
                 innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
+
         for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
             if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
                 found = true;
@@ -2136,7 +2137,8 @@ export class MotionDiffService {
         let oldText: string;
 
         const to = change.getLineTo();
-        const from = this.isMoreThanTwoLines(html, change.getLineFrom() + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
+
+        const from = change.getLineFrom() > (this.lineNumberingService.getLineNumberRange(html).to + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
         oldText =
@@ -2260,9 +2262,5 @@ export class MotionDiffService {
             });
         }
         return html;
-    }
-
-    private isMoreThanTwoLines(html: LineNumberedString, lineTo: number): boolean {
-        return lineTo > (this.lineNumberingService.getLineNumberRange(html).to + 2);
     }
 }
