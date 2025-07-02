@@ -14,7 +14,7 @@
                 <li *cdkVirtualFor="let change of changes; let i = index">
                     <span class="one-line">
                         <a href="" (click)="scrollToChangeClicked(change, $event)">
-                            @if (!(this.lastLineNr + 1 < change.getLineFrom())) {
+                            @if (!(this.lastLineNr < change.getLineFrom())) {
                                 @if (!change.isTitleChange()) {
                                     <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
                                 } @else {
