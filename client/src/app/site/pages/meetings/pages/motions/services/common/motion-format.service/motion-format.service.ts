@@ -44,7 +44,7 @@ interface DifferedViewArguments extends Arguments {
      */
     firstLine: number;
     showAllChanges?: boolean;
-    brokenTextChangesAmount?: number
+    brokenTextChangesAmount?: number;
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -61,7 +61,7 @@ interface FormatMotionConfig extends Arguments {
      */
     firstLine?: number;
     showAllChanges?: boolean;
-    brokenTextChangesAmount?: number
+    brokenTextChangesAmount?: number;
 }
 
 @Injectable({
@@ -77,10 +77,6 @@ export class MotionFormatService {
         private settings: MeetingSettingsService,
         private translate: TranslateService
     ) {}
-
-    public lastLineNr (baseText) {
-        return this.lineNumberingService.getLineNumberRange(baseText).to
-    }
 
     /**
      * Format the motion text using the line numbering and change
@@ -261,21 +257,21 @@ export class MotionFormatService {
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
-            
+
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        if (brokenTextChangesAmount > 0 ) {
+        if (brokenTextChangesAmount > 0) {
             const msg =
                 this.translate.instant(`Inconsistent data.`) +
                 ` ` +
                 brokenTextChangesAmount +
                 this.translate.instant(
                     `change recommendation(s) refer to a nonexistent line number.`
-                )
+                );
             text.push(`<em style="color: red; font-weight: bold;">` + msg + `</em>`);
         }
         return this.adjustDiffClasses(text).join(``);

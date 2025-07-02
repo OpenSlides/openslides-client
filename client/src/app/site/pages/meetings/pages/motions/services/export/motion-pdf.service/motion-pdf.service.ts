@@ -673,7 +673,7 @@ export class MotionPdfService {
 
             const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
             const baseText = this.linenumberingService.insertLineNumbers({
-            html: motion!.text,
+                html: motion!.text,
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
