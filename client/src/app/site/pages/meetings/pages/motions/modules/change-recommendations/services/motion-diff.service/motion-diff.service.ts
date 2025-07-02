@@ -2134,13 +2134,9 @@ export class MotionDiffService {
         if (this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
             throw new Error(`Invalid call - The change is outside of the motion`);
         }
-        let oldText: string;
+        let oldText = ``;
 
-        const to = change.getLineTo();
-
-        const from = change.getLineFrom() > (this.lineNumberingService.getLineNumberRange(html).to + 1) ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom();
-
-        const data: ExtractedContent = this.extractRangeByLineNumbers(html, from, to);
+        const data: ExtractedContent = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
         oldText =
             data.outerContextStart +
             data.innerContextStart +
@@ -2151,7 +2147,7 @@ export class MotionDiffService {
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
             lineLength,
-            firstLine: this.lineNumberingService.getLineNumberRange(html).to + 1 < change.getLineFrom() ? this.lineNumberingService.getLineNumberRange(html).to : change.getLineFrom()
+            firstLine: change.getLineFrom()
         });
         let diff = this.diff(oldText, change.getChangeNewText());
 
