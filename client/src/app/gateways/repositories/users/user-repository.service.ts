@@ -47,12 +47,12 @@ export interface ShortNameInformation extends NameInformation {
 }
 
 export type UserPatchFn =
-    | Partial<Record<keyof User & MeetingUser, any>>
-    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>);
+    | Partial<Record<keyof User & MeetingUser, any>> |
+    ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>);
 export type ExtendedUserPatchFn =
-    | UserPatchFn
-    | Partial<Record<keyof User & MeetingUser, any>>[]
-    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
+    | UserPatchFn |
+    Partial<Record<keyof User & MeetingUser, any>>[] |
+    ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
 
 export type EmailSentResultType = `user_error` | `settings_error` | `configuration_error` | `other_error`;
 

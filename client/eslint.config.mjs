@@ -87,9 +87,9 @@ export default tseslint.config({
         "@typescript-eslint/explicit-member-accessibility": ["error"],
         "@typescript-eslint/explicit-function-return-type": ["error"],
         "@typescript-eslint/ban-ts-comment": ["error"],
-        "@typescript-eslint/prefer-for-of": ["error"],
+        "@typescript-eslint/prefer-for-of": ["warn"],
         "no-useless-escape": ["error"],
-        "no-case-declarations": ["error"],
+        "no-case-declarations": ["warn"],
 
         "@typescript-eslint/no-empty-object-type": ["warn"],
         "no-async-promise-executor": ["warn"],
