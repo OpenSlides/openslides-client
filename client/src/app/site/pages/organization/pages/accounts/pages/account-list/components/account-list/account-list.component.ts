@@ -153,7 +153,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             choices: committees,
             actions,
             content: this.translate.instant(
-                `Attention: Accounts will overwrite other home committees if possible and remove the external status.`
+                `Attention: Existing home committees and external status will be overwritten.`
             )
         });
         if (result) {
