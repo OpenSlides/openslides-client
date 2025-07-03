@@ -80,6 +80,10 @@ export class OperatorService {
     }
 
     public get canSkipPermissionCheck(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager;
+    }
+
+    public get canSkipPermissionCheckMeetingInternal(): boolean {
         return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
     }
 
@@ -89,14 +93,17 @@ export class OperatorService {
 
     public get isCommitteeManager(): boolean {
         if (this.activeMeeting) {
-            return this._CML && !!this._CML[this.activeMeeting.committee_id];
+            return this.hasCommitteeManagementRights(this.activeMeeting.committee_id);
         }
+        return false;
+    }
 
-        return !!(this._userSubject.value?.committee_management_ids || []).length;
+    public get isAnyCommitteeManager(): boolean {
+        return !!this._CML && !!Object.keys(this._CML).length;
     }
 
     public get isAnyManager(): boolean {
-        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isCommitteeManager : false;
+        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isAnyCommitteeManager : false;
     }
 
     public get knowsMultipleMeetings(): boolean {
@@ -405,6 +412,10 @@ export class OperatorService {
         );
     }
 
+    public hasCommitteeManagementRights(committee_id: number): boolean {
+        return this._CML && !!this._CML[committee_id];
+    }
+
     private updateUser(user: ViewUser): void {
         this.currentCommitteeIds.update(new Set(user.committee_ids));
 
@@ -428,7 +439,7 @@ export class OperatorService {
         const committeeManagementLevel: Record<number, CML> = {};
         for (const committee of user.committee_managements) {
             committeeManagementLevel[committee.id] = CML.can_manage;
-            for (const childId of committee?.child_ids || []) {
+            for (const childId of committee?.all_child_ids || []) {
                 committeeManagementLevel[childId] = CML.can_manage;
             }
         }
@@ -597,7 +608,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
+        if ((this.canSkipPermissionCheck || this.isCommitteeManager) && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -621,7 +632,7 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
+        if ((this.canSkipPermissionCheck || this.hasCommitteePermissions(this.meetingRepo.getViewModel(meetingId).committee_id, CML.can_manage)) && !this.activeMeeting.locked_from_inside) {
             return true;
         }
         const groups = this.user.groups(meetingId);
@@ -674,7 +685,7 @@ export class OperatorService {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
-        if (!this._CML || !committeeId || !this.currentCommitteeIds.has(committeeId)) {
+        if (!this._CML || !committeeId || !(this._CML[committeeId] || this.currentCommitteeIds.has(committeeId))) {
             return false;
         }
 
@@ -682,8 +693,15 @@ export class OperatorService {
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
     }
 
-    public isAnyCommitteeAdmin(): boolean {
-        return !!this._CML && !!Object.keys(this._CML).length;
+    public hasMeetingAccess(meetingId: Id): boolean {
+        if (this.canSkipPermissionCheck) {
+            return true;
+        }
+        const committeeId = this.meetingRepo.getViewModel(meetingId)?.committee_id;
+        if (committeeId && this.hasCommitteePermissions(committeeId, CML.can_manage)) {
+            return true;
+        }
+        return this.isInMeeting(meetingId);
     }
 
     /**
@@ -727,9 +745,13 @@ export class OperatorService {
         return this.isInGroupIds(...groups.map(group => group.id));
     }
 
+    public isCommitteeManagerForMeeting(meetingId: Id): boolean {
+        return this._CML && !!this._CML[this.meetingRepo.getViewModel(meetingId)?.committee_id];
+    }
+
     /**
      * This checks if an operator is in at least one of the given groups. It is also a permission check.
-     * That means, if the operator is an admin, a superadmin or an orgaadmin, this function returns `true`, too.
+     * That means, if the operator is an admin, the committee admin, a superadmin or an orgaadmin, this function returns `true`, too.
      *
      * TODO: what if no active meeting??
      *
@@ -738,10 +760,11 @@ export class OperatorService {
      * @returns `true`, if the operator is in at least one group or they are an admin. a superadmin or a orgaadmin.
      */
     public isInGroupIds(...groupIds: Id[]): boolean {
-        if (!this._groupIds) {
-            return false;
-        }
-        if (this.canSkipPermissionCheck) {
+        const meetingIds = Array.from(new Set(groupIds.map(groupId => {
+            const group = this.groupRepo.getViewModel(groupId);
+            return group?.meeting_id;
+        }))).filter(meetingId => !!meetingId);
+        if (this.canSkipPermissionCheck || !!meetingIds.find(id => this.isCommitteeManagerForMeeting(id))) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
@@ -758,7 +781,7 @@ export class OperatorService {
         if (!this._meetingIds) {
             return false;
         }
-        return meetingIds.some(meetingId => this._meetingIds?.includes(meetingId));
+        return meetingIds.some(meetingId => this._meetingIds?.includes(meetingId) || this.isCommitteeManagerForMeeting(meetingId));
     }
 
     /**
@@ -821,7 +844,7 @@ export class OperatorService {
                     },
                     {
                         idField: `committee_management_ids`,
-                        fieldset: [`child_ids`]
+                        fieldset: [`all_child_ids`]
                     }
                 ]
             };
