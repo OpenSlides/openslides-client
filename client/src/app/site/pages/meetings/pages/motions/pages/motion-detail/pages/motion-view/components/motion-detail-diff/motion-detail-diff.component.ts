@@ -161,7 +161,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public constructor(
         protected override translate: TranslateService,
         private diff: MotionDiffService,
-        private lineNumbering: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private recoRepo: MotionChangeRecommendationControllerService,
         private motionRepo: MotionControllerService,
         private motionLineNumbering: MotionLineNumberingService,
@@ -207,7 +207,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 return ``;
             }
         } else {
-            baseText = this.lineNumbering.insertLineNumbers({
+            baseText = this.lineNumberingService.insertLineNumbers({
                 html: this.motion.text,
                 lineLength: this.lineLength,
                 firstLine: this.motion.firstLine
@@ -241,7 +241,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         } else {
             motionHtml = this.motion.text;
         }
-        const baseHtml = this.lineNumbering.insertLineNumbers({
+        const baseHtml = this.lineNumberingService.insertLineNumbers({
             html: motionHtml,
             lineLength: this.lineLength,
             firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
@@ -277,7 +277,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 return ``;
             }
         } else {
-            baseText = this.lineNumbering.insertLineNumbers({
+            baseText = this.lineNumberingService.insertLineNumbers({
                 html: this.motion.text,
                 lineLength: this.lineLength,
                 firstLine: this.motion.firstLine
@@ -460,7 +460,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this.changeRecommendationMenu.closeMenu();
 
         const recoModel = reco.getModel();
-        const motionText = this.diff.extractMotionLineRange(this.lineNumbering.insertLineNumbers({
+        const motionText = this.diff.extractMotionLineRange(this.lineNumberingService.insertLineNumbers({
             html: this.motion.text,
             lineLength: this.lineLength,
             firstLine: this.motion.firstLine
@@ -532,12 +532,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
-        const baseText = this.lineNumbering.insertLineNumbers({
+        const baseText = this.lineNumberingService.insertLineNumbers({
             html: this.motion!.text,
             lineLength: this.lineLength,
             firstLine: this.motion.firstLine
         });
-        this.lastLineNr = this.lineNumbering.getLineNumberRange(baseText).to;
+        this.lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
     }
 
     /**

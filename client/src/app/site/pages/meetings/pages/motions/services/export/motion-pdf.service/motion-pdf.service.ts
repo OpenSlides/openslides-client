@@ -83,7 +83,7 @@ export class MotionPdfService {
         private meetingSettingsService: MeetingSettingsService,
         private pdfDocumentService: MeetingPdfExportService,
         private htmlToPdfService: MotionHtmlToPdfService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private commentRepo: MotionCommentSectionControllerService,
         private organizationSettingsService: OrganizationSettingsService,
         private motionPollService: MotionPollService,
@@ -672,12 +672,12 @@ export class MotionPdfService {
             // lead motion or normal amendments
 
             const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-            const baseText = this.linenumberingService.insertLineNumbers({
+            const baseText = this.lineNumberingService.insertLineNumbers({
                 html: motion!.text,
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
-            const lastLineNr = this.linenumberingService.getLineNumberRange(baseText).to;
+            const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(change => !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr);
             const brokenTextChangesAmount = changes.filter(change => !change.isTitleChange() && (change.getLineFrom() > lastLineNr || change.getLineTo() > lastLineNr)).length;
 
@@ -704,7 +704,7 @@ export class MotionPdfService {
             });
             formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF
-            htmlText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
+            htmlText += this.lineNumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
         return this.htmlToPdfService.convertHtml({ htmlText, lnMode, lineHeight });
@@ -741,7 +741,7 @@ export class MotionPdfService {
             });
 
             // handling too long hyperlinks by forcing the text to break
-            let reasonHtml = this.linenumberingService.insertLineBreaksWithoutNumbers(
+            let reasonHtml = this.lineNumberingService.insertLineBreaksWithoutNumbers(
                 motion.reason,
                 this.meetingSettingsService.instant(`motions_line_length`) as number
             );
