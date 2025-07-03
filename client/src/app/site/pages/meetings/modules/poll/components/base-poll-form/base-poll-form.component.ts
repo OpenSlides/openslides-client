@@ -473,10 +473,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
         return (formControl: AbstractControl): Record<string, any> | null => {
-            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)) {
-                return null;
-            }
-            if (!this.pollOptionAmount || this.isList) {
+            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`) || !this.pollOptionAmount || this.isList) {
                 return null;
             }
             const min = formControl.get(minCtrlName)!.value;
