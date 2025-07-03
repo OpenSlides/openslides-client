@@ -67,7 +67,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
         super();
@@ -149,7 +149,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     public getAmendmentDiffLines(amendment: ViewMotion): string {
         const diffLines = amendment.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+            return diffLines.map(diffLine => this.lineNumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }

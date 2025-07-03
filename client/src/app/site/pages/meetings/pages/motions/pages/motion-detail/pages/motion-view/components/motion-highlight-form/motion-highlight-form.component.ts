@@ -111,7 +111,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     public constructor(
         protected override translate: TranslateService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private promptService: PromptService,
         private vpService: ViewPortService
     ) {
@@ -194,7 +194,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine
         });
-        finalVersion = this.linenumberingService.stripLineNumbers(finalVersion);
+        finalVersion = this.lineNumberingService.stripLineNumbers(finalVersion);
 
         // Update the motion
         try {

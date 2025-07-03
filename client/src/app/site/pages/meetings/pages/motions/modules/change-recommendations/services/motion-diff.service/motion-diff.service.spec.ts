@@ -254,8 +254,12 @@ describe(`MotionDiffService`, () => {
             const lineNo = service.getLineNumberNode(baseHtmlDom2, 9);
 
             expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
-            expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
-            expect(service.serializePartialDomFromChild(lineNo, [], true)).toBe(``);
+            expect(() =>
+                service.serializePartialDomToChild(lineNo, [], true)
+            ).toThrow(); ;
+            expect(() =>
+                service.serializePartialDomFromChild(lineNo, [], true)
+            ).toThrow(); ;
         }));
 
         it(`extracts a single line`, inject([MotionDiffService], (service: MotionDiffService) => {
@@ -1793,6 +1797,38 @@ describe(`MotionDiffService`, () => {
                 `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
             );
         }));
+
+        it(`throws error if change is out of scope`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                () => service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 4,
+                        line_to: 4,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20
+                )
+            ).toThrow();
+        }));
+
+        it(`throws error if change is partially out of scope`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                () => service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 3,
+                        line_to: 4,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20
+                )
+            ).toThrow();
+        }));
     });
 
     describe(`getTextRemainderAfterLastChange`, () => {
@@ -1838,6 +1874,74 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(service.getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
+        }));
+
+        it(`ignores out of scope change recommendations (from)`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 4,
+                            line_to: 4,
+                            text: `<p>Test 2x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
+        }));
+
+        it(`ignores out of scope change recommendations (to)`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p><p><span contenteditable="false" class="os-line-number line-number-5" data-line-number="5">&nbsp;</span>Test 5</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 1,
+                            line_to: 1,
+                            text: `<p>Test 1x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(``);
+        }));
+
+        it(`ignores partial out of scope change recommendations`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 3,
+                            line_to: 6,
+                            text: `<p>Test 2x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
         }));
     });
 

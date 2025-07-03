@@ -64,6 +64,9 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     public position = new FormControl(`above` as TooltipPosition);
 
+    @Input()
+    public lastLineNr: number;
+
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
      *
