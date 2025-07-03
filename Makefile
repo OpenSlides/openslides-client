@@ -12,15 +12,14 @@ build build-prod build-dev build-tests:
 
 # Development tools
 
-run-dev run-dev-attached run-dev-detached run-dev-help run-dev-stop run-dev-clean run-dev-exec run-dev-enter:
-	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)"
+.PHONY: run-dev%
+
+run-dev%:
+	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
 
 run-dev-standalone:
-	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)"
+	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
 	$(DOCKER-RUN) npm run cleanup
-
-run-dev-attached:
-	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS) sh"
 
 # Testing tools
 
