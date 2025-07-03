@@ -11,7 +11,7 @@ env:
   NG_CLI_ANALYTICS: ci
 
 jobs:
-  build-and-test-prod-image:    
+  build-and-test-prod-image:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -78,6 +78,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Test
-        uses: Janmtbehrens/OpenSlides/dev/actions/build-and-test-service@all-in-one
+        uses: OpenSlides/OpenSlides/dev/actions/build-and-test-service@main
         with:
           service: client
