@@ -30,7 +30,7 @@
         </div>
     }
 
-    <table mat-table [dataSource]="['motion_version', 'submitter', 'identifier', 'attachments', 'meeting']">
+    <table mat-table [dataSource]="tableRows">
         <!-- Label in front-->
         <ng-container matColumnDef="label">
             <td *matCellDef="let rowName" mat-cell>
@@ -151,9 +151,7 @@
                     </span>
                 } @else if (rowName === 'attachments') {
                     <span>
-                        @if (data.motion.length > 1 || (data.motion.length === 1 && data.motion[0].hasAttachments())) {
-                            <mat-checkbox [(ngModel)]="withAttachments"></mat-checkbox>
-                        }
+                        <mat-checkbox [(ngModel)]="withAttachments"></mat-checkbox>
                     </span>
                 } @else if (rowName === 'meeting') {
                     <span class="motion-forward-meeting-list">

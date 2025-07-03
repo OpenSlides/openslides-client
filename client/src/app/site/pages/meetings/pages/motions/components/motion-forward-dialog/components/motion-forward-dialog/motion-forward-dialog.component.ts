@@ -45,6 +45,14 @@ export class MotionForwardDialogComponent implements OnInit {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
     }
 
+    public get tableRows(): string[] {
+        if (this.data.motion.length > 1 || (this.data.motion.length === 1 && this.data.motion[0].hasAttachments())) {
+            return [`motion_version`, `submitter`, `identifier`, `attachments`, `meeting`];
+        } else {
+            return [`motion_version`, `submitter`, `identifier`, `meeting`];
+        }
+    }
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
