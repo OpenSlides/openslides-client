@@ -27,7 +27,7 @@ run-tests:
 	bash dev/run-tests.sh
 
 run-lint:
-	bash dev/run-tests.sh
+	bash dev/run-lint.sh -l
 
 run-karma-tests: | build-dev
 	docker run -t openslides-client-dev /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
