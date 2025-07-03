@@ -66,16 +66,26 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
      * @returns {boolean}
      */
     public isAccepted(): boolean {
-        if (this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES) {
-            return true;
-        } else if (this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.NO) {
-            return false;
-        } else {
-            if (this.amendment.recommendation && this.amendment.recommendation.merge_amendment_into_final === MergeAmendment.YES) {
+        const mergeState = this.amendment.state
+            ? this.amendment.state.merge_amendment_into_final
+            : MergeAmendment.UNDEFINED;
+        switch (mergeState) {
+            case MergeAmendment.YES:
                 return true;
-            } else {
+            case MergeAmendment.NO:
                 return false;
-            }
+            default:
+                const mergeRecommendation = this.amendment.recommendation
+                    ? this.amendment.recommendation.merge_amendment_into_final
+                    : MergeAmendment.UNDEFINED;
+                switch (mergeRecommendation) {
+                    case MergeAmendment.YES:
+                        return true;
+                    case MergeAmendment.NO:
+                        return false;
+                    default:
+                        return false;
+                }
         }
     }
 
@@ -91,16 +101,26 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
     }
 
     public showInDiffView(): boolean {
-        if (this.amendment.recommendation && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES) {
-            return true;
-        } else if (this.amendment.recommendation && this.amendment.state.merge_amendment_into_final === MergeAmendment.NO) {
-            return false;
-        } else {
-            if (this.amendment.recommendation && this.amendment.recommendation.merge_amendment_into_final === MergeAmendment.YES) {
+        const mergeState = this.amendment.state
+            ? this.amendment.state.merge_amendment_into_final
+            : MergeAmendment.UNDEFINED;
+        switch (mergeState) {
+            case MergeAmendment.YES:
                 return true;
-            } else {
+            case MergeAmendment.NO:
                 return false;
-            }
+            default:
+                const mergeRecommendation = this.amendment.recommendation
+                    ? this.amendment.recommendation.merge_amendment_into_final
+                    : MergeAmendment.UNDEFINED;
+                switch (mergeRecommendation) {
+                    case MergeAmendment.YES:
+                        return true;
+                    case MergeAmendment.NO:
+                        return false;
+                    default:
+                        return false;
+                }
         }
     }
 
