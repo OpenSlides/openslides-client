@@ -271,13 +271,13 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                         follow: [
                             {
                                 idField: `meeting_user_id`,
+                                fieldset: `participantListMinimal`,
                                 follow: [
                                     {
                                         idField: `user_id`,
                                         fieldset: `participantList`
                                     }
-                                ],
-                                fieldset: `participantListMinimal`
+                                ]
                             }
                         ]
                     }
@@ -356,6 +356,7 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
     modelRequest: {
         ids,
         viewModelCtor: ViewMotion,
+        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`],
         follow: [
             {
                 idField: `amendment_ids`,
@@ -363,8 +364,7 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
                 follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }
-        ],
-        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`]
+        ]
     },
     subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
 });
