@@ -111,6 +111,7 @@ export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = 
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: [],
         follow: [{ idField: `motion_workflow_ids`, fieldset: FULL_FIELDSET }]
     },
     subscriptionName: MOTION_WORKFLOW_SUBSCRIPTION
@@ -123,7 +124,8 @@ export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenera
         fieldset: [],
         follow: [
             {
-                idField: `state_ids`
+                idField: `state_ids`,
+                fieldset: []
             }
         ]
     },
@@ -265,6 +267,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     { idField: `state_id`, fieldset: FULL_FIELDSET },
                     {
                         idField: `submitter_ids`,
+                        fieldset: FULL_FIELDSET,
                         follow: [
                             {
                                 idField: `meeting_user_id`,

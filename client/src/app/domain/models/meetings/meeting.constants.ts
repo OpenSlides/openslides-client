@@ -1,3 +1,4 @@
+import { FULL_FIELDSET } from '../../fieldsets/misc';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '../mediafiles/mediafile.constants';
 import { PROJECTIONDEFAULTS, ProjectiondefaultValue } from '../projector/projection-default';
 
@@ -25,8 +26,10 @@ export const MEETING_MEDIAFILE_USAGE_ID_KEYS = [
 export type MeetingDefaultProjectorIdsKey = `default_projector_${ProjectiondefaultValue}_ids`;
 
 export const MEETING_DEFAULT_PROJECTOR_IDS_KEYS = PROJECTIONDEFAULTS.map(
-    place => `default_projector_${place}_ids`
-) as MeetingDefaultProjectorIdsKey[];
+    place => {
+        return { idField: `default_projector_${place}_ids` as MeetingDefaultProjectorIdsKey, fieldset: FULL_FIELDSET };
+    }
+);
 
 export type ViewMeetingDefaultProjectorsKey = `default_projectors_${ProjectiondefaultValue}`;
 
