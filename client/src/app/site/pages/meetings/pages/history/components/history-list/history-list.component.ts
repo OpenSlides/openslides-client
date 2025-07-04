@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { Selectable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
@@ -19,7 +20,6 @@ import {
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
@@ -294,7 +294,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                 modelRequest: {
                     viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
                     ids,
-                    fieldset: DEFAULT_FIELDSET
+                    fieldset: FULL_FIELDSET
                 },
                 subscriptionName
             });

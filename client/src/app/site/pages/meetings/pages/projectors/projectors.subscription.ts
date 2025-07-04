@@ -3,7 +3,6 @@ import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { MEETING_DEFAULT_PROJECTOR_IDS_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewProjector } from './view-models';
 
@@ -90,7 +89,7 @@ export const getProjectorSubscriptionConfig: SubscriptionConfigGenerator = (id: 
     modelRequest: {
         viewModelCtor: ViewProjector,
         ids: [id],
-        fieldset: DEFAULT_FIELDSET,
+        fieldset: FULL_FIELDSET,
         follow: [
             {
                 idField: `current_projection_ids`,

@@ -7,8 +7,6 @@ import {
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
-import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
-
 export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
 
 export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
@@ -32,7 +30,7 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
         additionalFields: [`committee_ids`, `organization_tag_ids`],
         follow: [
             { idField: `mediafile_ids`, fieldset: `organizationDetail` },
-            { idField: `theme_id`, fieldset: DEFAULT_FIELDSET }
+            { idField: `theme_id`, fieldset: FULL_FIELDSET }
         ]
     },
     subscriptionName: ORGANIZATION_SUBSCRIPTION

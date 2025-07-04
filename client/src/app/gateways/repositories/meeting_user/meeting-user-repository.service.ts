@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
+import { Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
@@ -40,7 +41,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
         const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields,
+            [FULL_FIELDSET]: detailFields,
             groups: groupFields,
             participantListMinimal: participantListFieldsMinimal,
             all: detailFields.concat(participantListFieldsMinimal)

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import {
     FieldDescriptor,
     Fields,
@@ -122,7 +123,7 @@ export class ModelRequestBuilderService {
 
     // fields is modified as a side effect
     private addDataFields(modelRequestObject: ModelRequestObject): void {
-        const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
+        const fieldset = modelRequestObject.simplifiedRequest.fieldset || FULL_FIELDSET;
         let fieldsetFields: AdditionalField[];
         if (!modelRequestObject.simplifiedRequest.fieldset) {
             console.warn(`Non explicit use of default fieldset`, [modelRequestObject], modelRequestObject.collection);
