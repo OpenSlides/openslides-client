@@ -23,7 +23,7 @@ export enum DuplicateStatus {
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
+export const PERSONAL_FORM_CONTROLS = [`gender_id`, `username`, `email`, `about_me`, `pronoun`];
 
 export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;

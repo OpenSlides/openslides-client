@@ -104,8 +104,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private userService: UserService,
         private snackbar: MatSnackBar,
         private authService: AuthService,
-        private translate: TranslateService,
-        private store: StorageService
+        private translate: TranslateService
     ) {
         super();
     }
