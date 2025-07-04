@@ -17,6 +17,7 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
         follow: [
             {
                 idField: `assignment_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `attachment_meeting_mediafile_ids`,
@@ -29,6 +30,7 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             },
             {
                 idField: `assignment_candidate_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
             }
         ]
