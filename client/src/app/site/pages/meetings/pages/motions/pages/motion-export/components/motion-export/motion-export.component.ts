@@ -311,6 +311,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             headerFooter: [],
             comments: []
         });
+        this.dialogForm.patchValue(this.pdfDefaults);
         this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
             if (!value) {
                 this.deselectOption(`content`, `text`);
