@@ -96,7 +96,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private pdfDefaults = {
         format: ExportFileFormat.PDF,
-        lnMode: [],
+        lnMode: [this.lnMode.Outside],
         crMode: [this.crMode.Diff],
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
@@ -311,7 +311,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             headerFooter: [],
             comments: []
         });
-        this.dialogForm.patchValue(this.pdfDefaults);
         this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
             if (!value) {
                 this.deselectOption(`content`, `text`);
@@ -396,9 +395,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         if (chipOption) {
             if (nextState) {
                 chipOption.disabled = nextState;
+                chipOption.value = false;
                 this.disabledControls.push(value);
             } else {
                 chipOption.disabled = nextState;
+                chipOption.value = false;
                 this.disabledControls.filter(obj => !obj.includes(value));
             }
         }
