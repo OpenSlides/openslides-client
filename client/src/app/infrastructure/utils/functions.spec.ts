@@ -583,6 +583,10 @@ describe(`utils: functions`, () => {
         it(`test with null`, () => {
             expect(filterObject(null, keyVal => !!keyVal.value)).toEqual(null);
         });
+
+        it(`test with all filtered out`, () => {
+            expect(filterObject({ a: [], b: [] }, keyVal => keyVal.value.length > 0)).toEqual({});
+        });
     });
 
     describe(`partitionModelsForUpdate function`, () => {
