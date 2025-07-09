@@ -19,7 +19,7 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `email`,
     `member_number`,
     `home_committee`,
-    `guest`,
+    `external`,
     `structure_level`,
     `groups`,
     `number`,

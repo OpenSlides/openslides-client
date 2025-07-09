@@ -83,7 +83,7 @@
                     }
                     @if (user.home_committee) {
                         &middot; {{ user.home_committee.getTitle() }}
-                    } @else if (user.guest) {
+                    } @else if (user.external) {
                         &middot; {{ 'external' | translate }}
                     }
                 </div>

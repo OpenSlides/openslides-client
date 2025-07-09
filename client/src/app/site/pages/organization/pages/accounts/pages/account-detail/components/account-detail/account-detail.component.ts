@@ -71,7 +71,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         organization_management_level: [],
         committee_management_ids: [],
         home_committee_id: [],
-        guest: []
+        external: []
     };
 
     public isFormValid = false;

@@ -53,7 +53,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         vote_delegated_to_id: [``],
         is_present: [``],
         locked_out: [``],
-        guest: [``],
+        external: [``],
         home_committee_id: [``]
     };
 

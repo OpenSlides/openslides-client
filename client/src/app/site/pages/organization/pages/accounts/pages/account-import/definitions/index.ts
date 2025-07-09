@@ -15,7 +15,7 @@ export const userHeadersAndVerboseNames: Partial<Record<keyof ViewUser, any>> = 
     is_physical_person: _(`Natural person`),
     saml_id: _(`SSO identification`),
     home_committee: _(`Home committee`),
-    guest: _(`External`)
+    external: _(`External`)
 };
 
 export const accountHeadersAndVerboseNames: Partial<Record<keyof ViewUser, any>> = {
@@ -38,5 +38,5 @@ export const accountColumns: (keyof ViewUser)[] = [
     `is_physical_person`,
     `saml_id`,
     `home_committee`,
-    `guest`
+    `external`
 ];
