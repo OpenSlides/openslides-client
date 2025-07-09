@@ -679,7 +679,7 @@ export class MotionPdfService {
             });
             const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(change => !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr);
-            const brokenTextChangesAmount = changes.filter(change => !change.isTitleChange() && !motion.isAmendment() && (change.getLineFrom() > lastLineNr || change.getLineTo() > lastLineNr)).length;
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length;
 
             const titleChange = changes.find(change => change.isTitleChange());
 
@@ -700,7 +700,6 @@ export class MotionPdfService {
                 firstLine: motion.firstLine,
                 showAllChanges: showAllChanges,
                 brokenTextChangesAmount: brokenTextChangesAmount
-
             });
             formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF

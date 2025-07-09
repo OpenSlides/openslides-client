@@ -82,17 +82,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public motion!: ViewMotion;
 
     private _changes: ViewUnifiedChange[] = [];
-    private _brokenChanges: ViewUnifiedChange[] = [];
 
     @Input()
     public set changes(changes: ViewUnifiedChange[]) {
-        for (const change of changes) {
-            if (change.getLineFrom() <= this.lastLineNr && change.getLineTo() <= this.lastLineNr) {
-                this._changes.push(change);
-            } else {
-                this._brokenChanges.push(change);
-            }
-        }
         this._changes = changes || [];
         this.updateAllTextChangingObjects();
     }
@@ -382,16 +374,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         );
     }
 
-    private setLastNumber(): void {
-        const baseText = this.lineNumberingService.insertLineNumbers({
-            html: this.motion!.text,
-            lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
-        });
-        this.lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
-        this.updateAllTextChangingObjects();
-    }
-
     private _workingTextChangingObjects: ViewUnifiedChange[] = [];
     public get workingTextChangingObjects(): ViewUnifiedChange[] {
         return this._workingTextChangingObjects;
@@ -543,6 +525,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 this.scrollToChangeElement(this.scrollToChange!);
             }, 50);
         }
+    }
+
+    private setLastNumber(): void {
+        const baseText = this.lineNumberingService.insertLineNumbers({
+            html: this.motion!.text,
+            lineLength: this.lineLength,
+            firstLine: this.motion.firstLine
+        });
+        this.lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
+        this.updateAllTextChangingObjects();
     }
 
     /**

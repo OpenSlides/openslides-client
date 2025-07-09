@@ -628,7 +628,7 @@ export class MotionDiffService {
      */
     public serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
         if (toChildTrace.length === 0) {
-            throw new Error(`Inconsistency or invalid call of this function detected (to)`);
+            return ``;
         }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
@@ -682,7 +682,7 @@ export class MotionDiffService {
      */
     public serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
         if (fromChildTrace.length === 0) {
-            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
+            return ``;
         }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
@@ -2134,10 +2134,8 @@ export class MotionDiffService {
         if (this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
             throw new Error(`Invalid call - The change is outside of the motion`);
         }
-        let oldText = ``;
-
         const data: ExtractedContent = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
-        oldText =
+        let oldText =
             data.outerContextStart +
             data.innerContextStart +
             data.html +
@@ -2193,17 +2191,11 @@ export class MotionDiffService {
 
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
         const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
-        let hasRemainederOneChangedLine = false;
 
-        changes.forEach((change: ViewUnifiedChange) => {
-            if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
+        for (const change of changes) {
+            if (change.getLineTo() > maxFromLine) {
                 maxFromLine = change.getLineTo();
-                hasRemainederOneChangedLine = true;
             }
-        }, 0);
-
-        if (!hasRemainederOneChangedLine) {
-            return ``;
         }
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(
@@ -2213,7 +2205,7 @@ export class MotionDiffService {
         );
 
         let html = ``;
-        if (data?.html !== ``) {
+        if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
                 DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +

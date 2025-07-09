@@ -254,12 +254,8 @@ describe(`MotionDiffService`, () => {
             const lineNo = service.getLineNumberNode(baseHtmlDom2, 9);
 
             expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
-            expect(() =>
-                service.serializePartialDomToChild(lineNo, [], true)
-            ).toThrow(); ;
-            expect(() =>
-                service.serializePartialDomFromChild(lineNo, [], true)
-            ).toThrow(); ;
+            expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
+            expect(service.serializePartialDomFromChild(lineNo, [], true)).toBe(``);
         }));
 
         it(`extracts a single line`, inject([MotionDiffService], (service: MotionDiffService) => {
