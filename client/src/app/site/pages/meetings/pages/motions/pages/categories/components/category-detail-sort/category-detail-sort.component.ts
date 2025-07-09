@@ -152,7 +152,6 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
             const selectedChoice = await this.choiceService.open(content, choices, false, actions);
             if (selectedChoice) {
                 const newIndex = selectedChoice.firstId;
-
                 this.sortSelector.drop(
                     {
                         currentIndex: newIndex,
