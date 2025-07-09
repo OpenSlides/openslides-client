@@ -2191,11 +2191,17 @@ export class MotionDiffService {
 
         let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
         const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+        let hasRemainederOneChangedLine = false;
 
         for (const change of changes) {
-            if (change.getLineTo() > maxFromLine) {
+            if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
                 maxFromLine = change.getLineTo();
+                hasRemainederOneChangedLine = true;
             }
+        };
+
+        if (!hasRemainederOneChangedLine) {
+            return ``;
         }
 
         const data: ExtractedContent = this.extractRangeByLineNumbers(
