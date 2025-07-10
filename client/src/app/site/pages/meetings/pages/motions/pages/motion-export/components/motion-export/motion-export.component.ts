@@ -80,10 +80,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public fileFormat = ExportFileFormat;
 
     /**
-     * The form that contains the export information.
-     */
-    public exportForm!: UntypedFormGroup;
-    /**
      * The form that contains the export information in the shape needed
      * for the view.
      */
@@ -96,8 +92,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private pdfDefaults = {
         format: ExportFileFormat.PDF,
-        lnMode: [this.lnMode.Outside],
-        crMode: [this.crMode.Diff],
+        lnMode: this.lnMode.Outside,
+        crMode: this.crMode.Diff,
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
@@ -112,7 +108,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     private csvDefaults = {
         format: ExportFileFormat.CSV,
         lnMode: [],
-        crMode: [this.crMode.Original],
+        crMode: this.crMode.Original,
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `speakers`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
@@ -483,7 +479,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     // Transform form of motion export to MotionExportInfo for further processing
-    public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {
+    public dialogToExportInfo(dialogForm: UntypedFormGroup): MotionExportInfo {
         const exportInfo = {};
 
         exportInfo[`format`] = dialogForm.value[`format`] as ExportFileFormat;
@@ -537,19 +533,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     public async exportMotions(): Promise<void> {
         this.repoSub.unsubscribe();
-        this.exportForm = this.formBuilder.group({
-            format: [],
-            lnMode: [],
-            crMode: [],
-            content: [],
-            metaInfo: [],
-            pdfOptions: [],
-            comments: []
-        });
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
-        this.exportForm.patchValue(this.dialogToExportForm(this.dialogForm));
-        const exportInfo = this.exportForm.value;
-
+        const exportInfo = this.dialogToExportInfo(this.dialogForm);
         if (exportInfo) {
             await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
             const amendments = this.amendmentRepo.getViewModelList();
