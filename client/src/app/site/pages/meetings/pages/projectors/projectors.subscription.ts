@@ -3,7 +3,6 @@ import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { MEETING_DEFAULT_PROJECTOR_IDS_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewProjector } from './view-models';
 
@@ -28,6 +27,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
         follow: [
             {
                 idField: `projector_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `current_projection_ids`,
@@ -42,6 +42,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     },
                     {
                         idField: `preview_projection_ids`,
+                        fieldset: FULL_FIELDSET,
                         follow: [
                             {
                                 idField: `content_object_id`,
@@ -52,6 +53,7 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     },
                     {
                         idField: `history_projection_ids`,
+                        fieldset: FULL_FIELDSET,
                         follow: [
                             {
                                 idField: `content_object_id`,
@@ -62,10 +64,10 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                     }
                 ]
             },
-            { idField: `projector_countdown_ids` },
-            { idField: `projector_message_ids` },
-            { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
-            { idField: `list_of_speakers_ids` },
+            { idField: `projector_countdown_ids`, fieldset: FULL_FIELDSET },
+            { idField: `projector_message_ids`, fieldset: FULL_FIELDSET },
+            { idField: `speaker_ids`, fieldset: FULL_FIELDSET, additionalFields: [`meeting_user_id`] },
+            { idField: `list_of_speakers_ids`, fieldset: FULL_FIELDSET },
             { idField: `agenda_item_ids`, fieldset: [`item_number`, `content_object_id`] },
             ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS
         ]
@@ -87,7 +89,7 @@ export const getProjectorSubscriptionConfig: SubscriptionConfigGenerator = (id: 
     modelRequest: {
         viewModelCtor: ViewProjector,
         ids: [id],
-        fieldset: DEFAULT_FIELDSET,
+        fieldset: FULL_FIELDSET,
         follow: [
             {
                 idField: `current_projection_ids`,

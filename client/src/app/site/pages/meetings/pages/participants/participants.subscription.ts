@@ -3,7 +3,6 @@ import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/
 import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewUser } from '../../view-models/view-user';
 
@@ -120,11 +119,10 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
     modelRequest: {
         viewModelCtor: ViewUser,
         ids: [id],
-        fieldset: DEFAULT_FIELDSET,
         follow: [
             {
                 idField: `meeting_user_ids`,
-                fieldset: DEFAULT_FIELDSET
+                fieldset: FULL_FIELDSET
             },
             {
                 idField: `gender_id`,
@@ -142,7 +140,7 @@ export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerato
         follow: [
             {
                 idField: `structure_level_ids`,
-                fieldset: DEFAULT_FIELDSET
+                fieldset: [`color`, `id`, `meeting_id`, `name`]
             }
         ]
     },
