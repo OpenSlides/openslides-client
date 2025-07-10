@@ -12,10 +12,21 @@
     }
 }
 
+@media (width > 1080px) {
+    .result-grid-layout {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (width <= 1080px) {
+    .result-grid-layout {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
 .result-wrapper {
     display: grid;
     grid-gap: 0 2em;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     justify-items: center;
     align-items: center;
 
