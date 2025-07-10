@@ -147,6 +147,23 @@
                 </div>
             </div>
         }
+        @if (workingTextChangingObjects.length === 0 && brokenTextChangingObjects.length > 0) {
+            <div>
+                <div
+                    class="motion-text"
+                    [class.line-numbers-inline]="isLineNumberingInline()"
+                    [class.line-numbers-none]="isLineNumberingNone()"
+                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                >
+                    <os-motion-detail-original-change-recommendations
+                        [changeRecommendations]="[]"
+                        [html]="getTextBetweenChanges(brokenTextChangingObjects[-1], brokenTextChangingObjects[0])"
+                        [motionId]="motion.id"
+                        (createChangeRecommendation)="onCreateChangeRecommendation($event)"
+                    ></os-motion-detail-original-change-recommendations>
+                </div>
+            </div>
+        }
 
         <div
             class="motion-text"

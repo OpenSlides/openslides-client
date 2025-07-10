@@ -179,9 +179,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
         const lineRange: LineRange = {
-            to: change2 ? ((this.motion.isAmendment() || change2.getLineFrom() <= this.lastLineNr) ? change2.getLineFrom() - 1 : this.lastLineNr - 1) : (this.lineRange?.to ?? null),
-            from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine)
+            from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine),
+            to: change2 ? ((change2.getLineFrom() <= this.lastLineNr) ? change2.getLineFrom() - 1 : this.lastLineNr - 1) : (this.lineRange?.to ?? null)
         };
+
+        if ( this.motion.isAmendment() && this.workingTextChangingObjects.length === 0 && this.brokenTextChangingObjects.length > 0) {
+            lineRange.to = lineRange.to + 1;
+        }
 
         if (lineRange.from > lineRange.to && change1 && change2) {
             // Empty space between two amendments, or between colliding amendments
@@ -366,11 +370,11 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         };
 
         this._workingTextChangingObjects = this.changes.filter(
-            (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo()) && (this.motion?.isAmendment() || (obj.getLineFrom() <= this.lastLineNr && obj.getLineTo() <= this.lastLineNr))
+            (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo()) && (obj.getLineFrom() <= this.lastLineNr && obj.getLineTo() <= this.lastLineNr)
         );
 
         this._brokenTextChangingObjects = this.changes.filter(
-            (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo()) && !this.motion?.isAmendment() && (obj.getLineFrom() > this.lastLineNr || obj.getLineTo() > this.lastLineNr)
+            (obj: ViewUnifiedChange) => !obj.isTitleChange() && (obj.getLineFrom() > this.lastLineNr || obj.getLineTo() > this.lastLineNr)
         );
     }
 
@@ -528,12 +532,21 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     private setLastNumber(): void {
-        const baseText = this.lineNumberingService.insertLineNumbers({
-            html: this.motion!.text,
-            lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
-        });
-        this.lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
+        if (this.motion.isAmendment()) {
+            this.lastLineNr = this.lineNumberingService.getLineNumberRange(
+                this.lineNumberingService.insertLineNumbers({
+                    html: this.motion?.lead_motion.text,
+                    lineLength: this.lineLength,
+                    firstLine: this.motion?.lead_motion.firstLine
+            })).to ;
+        } else {
+            this.lastLineNr = this.lineNumberingService.getLineNumberRange(
+                    this.lineNumberingService.insertLineNumbers({
+                    html: this.motion!.text,
+                    lineLength: this.lineLength,
+                    firstLine: this.motion.firstLine
+            })).to;
+        }
         this.updateAllTextChangingObjects();
     }
 

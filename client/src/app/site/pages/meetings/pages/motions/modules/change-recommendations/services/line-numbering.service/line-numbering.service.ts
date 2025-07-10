@@ -825,6 +825,10 @@ export class LineNumberingService {
         let newHtml: string;
         let newRoot: Element;
 
+        if (html === undefined) {
+            html = ``;
+        }
+
         const firstLineStr = !firstLine ? `` : firstLine.toString();
         const cacheKey = djb2hash(firstLineStr + `-` + lineLength.toString() + html);
         newHtml = this.lineNumberCache.get(cacheKey);
