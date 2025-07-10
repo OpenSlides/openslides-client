@@ -13,6 +13,7 @@ export interface MotionForwardDialogReturnData {
     useOriginalSubmitter: boolean;
     useOriginalNumber: boolean;
     useOriginalVersion: boolean;
+    withAttachments: boolean;
     markAmendmentsAsForwarded: boolean;
 }
 
@@ -37,10 +38,19 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalSubmitter = false;
     public useOriginalNumber = false;
     public useOriginalVersion = false;
+    public withAttachments = false;
     public markAmendmentsAsForwarded = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
+    }
+
+    public get tableRows(): string[] {
+        if (this.data.motion.length > 1 || (this.data.motion.length === 1 && this.data.motion[0].hasAttachments())) {
+            return [`motion_version`, `submitter`, `identifier`, `attachments`, `meeting`];
+        } else {
+            return [`motion_version`, `submitter`, `identifier`, `meeting`];
+        }
     }
 
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
@@ -84,6 +94,7 @@ export class MotionForwardDialogComponent implements OnInit {
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
             useOriginalVersion: this.useOriginalVersion,
+            withAttachments: this.withAttachments,
             markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
