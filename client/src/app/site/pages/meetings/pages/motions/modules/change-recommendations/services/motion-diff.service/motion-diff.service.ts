@@ -627,6 +627,9 @@ export class MotionDiffService {
      * @returns {string}
      */
     public serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
+        if (toChildTrace.length === 0) {
+            return ``;
+        }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
@@ -643,7 +646,7 @@ export class MotionDiffService {
                 const childElement = node.childNodes[i] as Element;
                 const remainingTrace = toChildTrace;
                 remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                if (!this.lineNumberingService.isOsLineNumberNode(childElement) && remainingTrace.length > 0) {
                     html += this.serializePartialDomToChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (node.childNodes[i].nodeType === TEXT_NODE) {
@@ -678,6 +681,9 @@ export class MotionDiffService {
      * @returns {string}
      */
     public serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
+        if (fromChildTrace.length === 0) {
+            return ``;
+        }
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
             return ``;
         }
@@ -693,7 +699,7 @@ export class MotionDiffService {
                 const childElement = child as Element;
                 const remainingTrace = fromChildTrace;
                 remainingTrace.shift();
-                if (!this.lineNumberingService.isOsLineNumberNode(childElement)) {
+                if (!this.lineNumberingService.isOsLineNumberNode(childElement) && remainingTrace.length > 0) {
                     html += this.serializePartialDomFromChild(childElement, remainingTrace, stripLineNumbers);
                 }
             } else if (found) {
@@ -2115,34 +2121,16 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        let data: ExtractedContent;
-        let oldText: string;
-
-        try {
-            data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
-            oldText =
-                data.outerContextStart +
-                data.innerContextStart +
-                data.html +
-                data.innerContextEnd +
-                data.outerContextEnd;
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                ) +
-                ` ` +
-                this.translate.instant(
-                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+        if (this.lineNumberingService.getLineNumberRange(html).to < change.getLineTo()) {
+            throw new Error(`Invalid call - The change is outside of the motion`);
         }
+        const data: ExtractedContent = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
+        let oldText =
+            data.outerContextStart +
+            data.innerContextStart +
+            data.html +
+            data.innerContextEnd +
+            data.outerContextEnd;
 
         oldText = this.lineNumberingService.insertLineNumbers({
             html: oldText,
@@ -2187,38 +2175,30 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        let maxLine = lineRange?.from || 0;
-        changes.forEach((change: ViewUnifiedChange) => {
-            if (change.getLineTo() > maxLine) {
-                maxLine = change.getLineTo();
-            }
-        }, 0);
-
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
 
-        let data: ExtractedContent;
+        let maxFromLine = lineRange?.from || this.lineNumberingService.getLineNumberRange(motionHtml).from - 1;
+        const maxToLine = lineRange?.to || this.lineNumberingService.getLineNumberRange(motionHtml).to;
+        let hasRemainederOneChangedLine = false;
 
-        try {
-            data = this.extractRangeByLineNumbers(
-                motionHtml,
-                Math.max(maxLine + 1, lineRange?.from || 1),
-                lineRange?.to ?? null
-            );
-        } catch (e) {
-            // This only happens (as far as we know) when the motion text has been altered (shortened)
-            // without modifying the change recommendations accordingly.
-            // That's a pretty serious inconsistency that should not happen at all,
-            // we're just doing some basic damage control here.
-            const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.translate.instant(
-                    `A change recommendation or amendment is probably referring to a nonexistent line number.`
-                );
-            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
+        for (const change of changes) {
+            if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
+                maxFromLine = change.getLineTo();
+                hasRemainederOneChangedLine = true;
+            }
+        };
+
+        if (!hasRemainederOneChangedLine) {
+            return ``;
         }
+
+        const data: ExtractedContent = this.extractRangeByLineNumbers(
+            motionHtml,
+            Math.max(maxFromLine + 1, lineRange?.from || 1),
+            lineRange?.to ? maxToLine : null
+        );
 
         let html = ``;
         if (data.html !== ``) {
@@ -2228,7 +2208,7 @@ export class MotionDiffService {
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxFromLine + 1 });
         }
         return html;
     }

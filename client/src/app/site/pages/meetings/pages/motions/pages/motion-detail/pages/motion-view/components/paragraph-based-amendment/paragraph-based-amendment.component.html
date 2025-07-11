@@ -21,6 +21,7 @@
                     <os-motion-detail-diff-summary
                         [changes]="changesForDiffMode"
                         [elContainer]="nativeElement"
+                        [lastLineNr]="getLastNumber()"
                         [motion]="motion"
                         [scrollToChange]="scrollToChange"
                     ></os-motion-detail-diff-summary>

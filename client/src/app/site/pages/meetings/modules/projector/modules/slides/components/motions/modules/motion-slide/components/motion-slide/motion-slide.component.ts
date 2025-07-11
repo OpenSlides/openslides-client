@@ -160,7 +160,7 @@ export class MotionSlideComponent
         protected override translate: TranslateService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
-        private lineNumbering: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private diff: MotionDiffService,
         private meetingSettings: MeetingSettingsService
     ) {
@@ -207,12 +207,12 @@ export class MotionSlideComponent
         }
 
         let baseHtml = this.data.data.text;
-        baseHtml = this.lineNumbering.insertLineNumbers({
+        baseHtml = this.lineNumberingService.insertLineNumbers({
             html: baseHtml,
             lineLength: this.lineLength,
             firstLine: this.data.data.lead_motion?.start_line_number ?? this.data.data.start_line_number ?? 1
         });
-        const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
+        const baseParagraphs = this.lineNumberingService.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
             .map(x => +x)
@@ -242,7 +242,7 @@ export class MotionSlideComponent
     }
 
     public getTextBasedAmendmentLines(): string {
-        return this.lineNumbering.insertLineNumbers({
+        return this.lineNumberingService.insertLineNumbers({
             html: this.data.data.text,
             lineLength: this.lineLength,
             firstLine: 1
@@ -373,7 +373,7 @@ export class MotionSlideComponent
             extracted.innerContextEnd +
             extracted.outerContextEnd;
         if (lineNumbers) {
-            html = this.lineNumbering.insertLineNumbers({ html, lineLength, firstLine: lineRange.from });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: lineRange.from });
         }
         return html;
     }
@@ -406,12 +406,12 @@ export class MotionSlideComponent
             return [];
         }
 
-        const baseHtml = this.lineNumbering.insertLineNumbers({
+        const baseHtml = this.lineNumberingService.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
             firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
         });
-        const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
+        const baseParagraphs = this.lineNumberingService.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
             .map(x => +x)
@@ -464,7 +464,7 @@ export class MotionSlideComponent
      */
     public getAmendmentDiff(change: ViewUnifiedChange): string {
         const motion = this.data.data;
-        const baseHtml = this.lineNumbering.insertLineNumbers({
+        const baseHtml = this.lineNumberingService.insertLineNumbers({
             html: motion.lead_motion?.text,
             lineLength: this.lineLength,
             firstLine: motion.lead_motion?.start_line_number ?? motion.start_line_number
