@@ -183,8 +183,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             to: change2 ? ((change2.getLineFrom() <= this.lastLineNr) ? change2.getLineFrom() - 1 : this.lastLineNr - 1) : (this.lineRange?.to ?? null)
         };
 
+        // Ensures the return of the last line if an amendment has no working but broken change recommendations
         if (this.motion.isAmendment() && this.workingTextChangingObjects.length === 0 && this.brokenTextChangingObjects.length > 0) {
-            lineRange.to = lineRange.to + 1;
+            lineRange.to = this.lastLineNr;
         }
 
         if (lineRange.from > lineRange.to && change1 && change2) {
@@ -243,16 +244,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
-    }
-
-    public getBrokenDiff(): string {
-        const msg =
-                this.translate.instant(`Inconsistent data.`) +
-                ` ` +
-                this.brokenTextChangingObjects.length +
-                ` ` +
-                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`);
-        return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
     }
 
     /**
@@ -532,21 +523,18 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     private setLastNumber(): void {
+        let html = this.motion!.text;
+        let firstLine = this.motion!.firstLine;
         if (this.motion.isAmendment()) {
-            this.lastLineNr = this.lineNumberingService.getLineNumberRange(
-                this.lineNumberingService.insertLineNumbers({
-                    html: this.motion?.lead_motion.text,
-                    lineLength: this.lineLength,
-                    firstLine: this.motion?.lead_motion.firstLine
-                })).to;
-        } else {
-            this.lastLineNr = this.lineNumberingService.getLineNumberRange(
-                this.lineNumberingService.insertLineNumbers({
-                    html: this.motion!.text,
-                    lineLength: this.lineLength,
-                    firstLine: this.motion.firstLine
-                })).to;
+            html = this.motion?.lead_motion.text || ``;
+            firstLine = this.motion?.lead_motion.firstLine;
         }
+        this.lastLineNr = this.lineNumberingService.getLineNumberRange(
+            this.lineNumberingService.insertLineNumbers({
+                html,
+                lineLength: this.lineLength,
+                firstLine
+            })).to;
         this.updateAllTextChangingObjects();
     }
 

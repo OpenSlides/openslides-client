@@ -182,8 +182,18 @@
     @if (brokenTextChangingObjects.length > 0) {
         <div class="broken-motion-text">
             <div>
-                <div class="broken-box">
-                    <div class="motion-text motion-text-diff" [innerHTML]="getBrokenDiff() | trust: 'html'"></div>
+                <div class="broken-box broken-box-title">
+                    <div class="motion-text motion-text-diff">
+                        <span>
+                            {{ 'Inconsistent data.' | translate }}
+                        </span>
+                        <span>
+                            {{ this.brokenTextChangingObjects.length }}
+                        </span>
+                        <span>
+                            {{ 'change recommendation(s) refer to a nonexistent line number.' | translate }}
+                        </span>
+                    </div>
                 </div>
             </div>
             @for (change of brokenTextChangingObjects; track change.getChangeId(); let i = $index) {

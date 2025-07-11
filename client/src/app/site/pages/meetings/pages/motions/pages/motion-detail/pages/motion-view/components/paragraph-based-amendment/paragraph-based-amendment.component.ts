@@ -112,7 +112,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         return this.motion?.getParagraphTitleByParagraph(paragraph) || ``;
     }
 
-    public setLastNumber(): number {
+    public getLastNumber(): number {
         return this.lineNumberingService.getLineNumberRange(
             this.lineNumberingService.insertLineNumbers({
                 html: this.motion?.lead_motion.text,
