@@ -312,6 +312,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return strucutreLevelTime > 0;
     }
 
+    public welcomeMessageBuildDesc(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: `meeting/${this.activeMeetingId}`,
+            type: MeetingProjectionType.Home,
+            projectionDefault: null,
+            getDialogTitle: () => this.translate.instant(`Meeting home`)
+        };
+    }
+
     public wifiDataBuildDesc(): ProjectionBuildDescriptor {
         return {
             content_object_id: `meeting/${this.activeMeetingId}`,
