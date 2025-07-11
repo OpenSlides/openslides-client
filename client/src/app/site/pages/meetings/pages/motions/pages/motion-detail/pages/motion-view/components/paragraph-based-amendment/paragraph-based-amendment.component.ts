@@ -6,8 +6,8 @@ import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
 import { DiffLinesInParagraph } from '../../../../../../definitions/index';
-import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { LineNumberingService } from '../../../../../../modules/change-recommendations/services';
+import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 
 @Component({
     selector: `os-paragraph-based-amendment`,
@@ -118,6 +118,6 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
                 html: this.motion?.lead_motion.text,
                 lineLength: this.lineLength,
                 firstLine: this.motion?.lead_motion.firstLine
-        })).to ;
+            })).to;
     }
 }

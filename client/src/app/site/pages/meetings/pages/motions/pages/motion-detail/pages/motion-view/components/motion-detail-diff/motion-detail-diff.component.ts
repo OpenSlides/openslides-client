@@ -183,7 +183,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             to: change2 ? ((change2.getLineFrom() <= this.lastLineNr) ? change2.getLineFrom() - 1 : this.lastLineNr - 1) : (this.lineRange?.to ?? null)
         };
 
-        if ( this.motion.isAmendment() && this.workingTextChangingObjects.length === 0 && this.brokenTextChangingObjects.length > 0) {
+        if (this.motion.isAmendment() && this.workingTextChangingObjects.length === 0 && this.brokenTextChangingObjects.length > 0) {
             lineRange.to = lineRange.to + 1;
         }
 
@@ -538,14 +538,14 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                     html: this.motion?.lead_motion.text,
                     lineLength: this.lineLength,
                     firstLine: this.motion?.lead_motion.firstLine
-            })).to ;
+                })).to;
         } else {
             this.lastLineNr = this.lineNumberingService.getLineNumberRange(
-                    this.lineNumberingService.insertLineNumbers({
+                this.lineNumberingService.insertLineNumbers({
                     html: this.motion!.text,
                     lineLength: this.lineLength,
                     firstLine: this.motion.firstLine
-            })).to;
+                })).to;
         }
         this.updateAllTextChangingObjects();
     }
