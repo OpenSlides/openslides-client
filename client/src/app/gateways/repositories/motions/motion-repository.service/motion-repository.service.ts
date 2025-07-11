@@ -62,6 +62,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         useOriginalSubmitter: boolean,
         useOriginalNumber: boolean,
         useOriginalVersion: boolean,
+        withAttachments: boolean,
+        markAmendmentsAsForwarded: boolean,
         ...motions: MotionFormatResult[]
     ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
@@ -74,6 +76,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                         use_original_number: useOriginalNumber,
                         with_amendments: useOriginalVersion,
                         with_change_recommendations: useOriginalVersion,
+                        with_attachments: withAttachments,
+                        mark_amendments_as_forwarded: markAmendmentsAsForwarded,
                         ...motion
                     };
                 })

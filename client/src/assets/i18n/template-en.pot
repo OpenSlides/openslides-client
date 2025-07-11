@@ -39,8 +39,8 @@ msgid "<unknown>"
 msgstr ""
 
 msgid ""
-"A change recommendation or amendment is probably referring to a "
-"nonexistent line number."
+"A change recommendation or amendment is probably referring to a nonexistent "
+"line number."
 msgstr ""
 
 msgid "A client error occurred. Please contact your system administrator."
@@ -107,6 +107,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Account admin"
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Account created"
 msgstr ""
 
 #: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-add-to-meetings/account-add-to-meetings.component.html
@@ -713,6 +717,10 @@ msgid ""
 "Attention: Accounts will add to the default group of each meeting only. If "
 "another group is intended please use the 'Add to meetings' dialog in "
 "account detail view."
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "Attention: Existing home committees and external status will be overwritten."
 msgstr ""
 
 msgid "Attention: First enter the wifi data in [Settings > General]"
@@ -2226,6 +2234,10 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
+#: app/src/app/domain/models/users/user.constants.ts
+msgid "External"
+msgstr ""
+
 msgid "External ID"
 msgstr ""
 
@@ -2441,6 +2453,10 @@ msgstr ""
 msgid "Has SSO identification"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has a home committee"
+msgstr ""
+
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Has a membership number"
 msgstr ""
@@ -2476,6 +2492,10 @@ msgstr ""
 
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "Has no email address"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Has no home committee"
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/services/list/motion-list-filter.service/motion-list-filter.service.ts
@@ -2579,6 +2599,10 @@ msgid "History"
 msgstr ""
 
 msgid "Home"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Home committee"
 msgstr ""
 
 msgid "How to create new amendments"
@@ -2800,6 +2824,10 @@ msgstr ""
 msgid "Is committee admin"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is external"
+msgstr ""
+
 msgid "Is favorite"
 msgstr ""
 
@@ -2840,6 +2868,10 @@ msgid "Is not an amendment"
 msgstr ""
 
 msgid "Is not archived"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
+msgid "Is not external"
 msgstr ""
 
 msgid "Is not favorite"
@@ -3901,6 +3933,14 @@ msgstr ""
 msgid "Parent agenda item"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-edit/components/committee-detail-edit/committee-detail-edit.component.html
+msgid "Parent committee"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-import/definitions/index.ts
+msgid "Parent committee name"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
 msgid "Parent motion text changed"
 msgstr ""
@@ -3913,6 +3953,14 @@ msgid "Participant"
 msgstr ""
 
 msgid "Participant added to group {} in meeting {}"
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant added to group {} in meeting {}."
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant added to meeting {}."
 msgstr ""
 
 msgid "Participant added to multiple groups in meeting {}"
@@ -3943,6 +3991,10 @@ msgid "Participant number"
 msgstr ""
 
 msgid "Participant removed from group {} in meeting {}"
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "Participant removed from meeting {}"
 msgstr ""
 
 msgid "Participant removed from multiple groups in meeting {}"
@@ -4595,6 +4647,14 @@ msgstr ""
 msgid "Set category"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.html
+msgid "Set external"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "Set external status for selected accounts"
+msgstr ""
+
 msgid "Set favorite"
 msgstr ""
 
@@ -4663,6 +4723,10 @@ msgid "Set tags"
 msgstr ""
 
 msgid "Set workflow"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.html
+msgid "Set/remove home committee"
 msgstr ""
 
 msgid "Set/remove meeting"
@@ -4952,6 +5016,10 @@ msgstr ""
 msgid "Subcategory"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "Subcommittees"
+msgstr ""
+
 msgid "Submission date"
 msgstr ""
 
@@ -5210,9 +5278,6 @@ msgid ""
 "meeting and is not manager of any committee"
 msgstr ""
 
-msgid "This action will diminish your organization management level"
-msgstr ""
-
 msgid "This action will remove you from one or more groups."
 msgstr ""
 
@@ -5302,9 +5367,10 @@ msgstr ""
 msgid "This will add or remove the selected accounts to following meetings:"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
 msgid ""
-"This will diminish your ability to do things on the organization level and "
-"you will not be able to revert this yourself."
+"This will add or remove the selected accounts to the selected home "
+"committee:"
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -6031,6 +6097,10 @@ msgstr ""
 msgid "example"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-detail/components/account-detail/account-detail.component.html
+msgid "external"
+msgstr ""
+
 msgid "female"
 msgstr ""
 
@@ -6066,6 +6136,10 @@ msgid "hidden"
 msgstr ""
 
 msgid "inactive"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "incl. subcommittees"
 msgstr ""
 
 msgid "inline"
@@ -6114,6 +6188,10 @@ msgstr ""
 msgid "male"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "mark amendments as original"
+msgstr ""
+
 msgid "max. 32 characters allowed"
 msgstr ""
 
@@ -6148,11 +6226,19 @@ msgstr ""
 msgid "none"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/accounts/pages/account-list/components/account-list/account-list.component.ts
+msgid "not external"
+msgstr ""
+
 #: /app/src/app/site/pages/organization/pages/accounts/services/common/account-filter.service.ts
 msgid "not specified"
 msgstr ""
 
 msgid "of"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "of which"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-meta-data/motion-meta-data.component.ts
@@ -6241,6 +6327,10 @@ msgstr ""
 msgid "today"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "total"
+msgstr ""
+
 msgid "undocumented"
 msgstr ""
 
@@ -6273,6 +6363,10 @@ msgstr ""
 
 #: /app/src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component.ts
 msgid "will be updated"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-detail/modules/committee-detail-view/components/committee-detail-view/committee-detail-view.component.html
+msgid "with"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html

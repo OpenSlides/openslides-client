@@ -119,7 +119,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public alsoFilterByProperties: string[] = [`id`];
 
     @Input()
-    public searchFieldValue = ``;
+    public searchFieldInput = ``;
 
     @Input()
     public addBottomSpacer = false;

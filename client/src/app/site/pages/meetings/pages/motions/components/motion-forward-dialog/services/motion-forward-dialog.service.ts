@@ -78,6 +78,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
         return this.dialog.open(module.getComponent(), {
             ...mediumDialogSettings,
+            autoFocus: false,
             data: {
                 motion: data,
                 forwardingMeetings: this._forwardingMeetings
@@ -111,6 +112,8 @@ export class MotionForwardDialogService extends BaseDialogService<
                     dialogData.useOriginalSubmitter,
                     dialogData.useOriginalNumber,
                     dialogData.useOriginalVersion,
+                    dialogData.withAttachments,
+                    dialogData.markAmendmentsAsForwarded,
                     ...forwardMotions
                 );
 

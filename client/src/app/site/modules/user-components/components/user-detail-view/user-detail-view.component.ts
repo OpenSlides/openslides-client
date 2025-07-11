@@ -265,6 +265,15 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             { emitEvent: false }
         );
         this._initialState = personalInfoPatch;
+        if (this._additionalFormControls) {
+            this.subscriptions.push(this.personalInfoForm.controls[`guest`].valueChanges.subscribe(value => {
+                if (value) {
+                    this.personalInfoForm.get(`home_committee_id`).disable();
+                } else {
+                    this.personalInfoForm.get(`home_committee_id`).enable();
+                }
+            }));
+        }
     }
 
     private performSelfUpdate(): void {
