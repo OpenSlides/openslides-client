@@ -48,7 +48,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     standalone: false
 })
 export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy, OnInit {
-    @ViewChild(`searchField`, { static: true })
+    @ViewChild(`searchField`)
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
     /**
