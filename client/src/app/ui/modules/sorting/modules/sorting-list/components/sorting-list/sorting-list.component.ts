@@ -168,10 +168,11 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
         event: CdkDragDrop<T[]> | { currentIndex: number; previousIndex: number },
         dropBehind?: boolean
     ): Promise<void> {
-        if (!this.draggingUnlockFnPromise) {
+        if (!this.draggingUnlockFnPromise && typeof event?.currentIndex !== `number`) {
             throw new Error(`Drop was called without previous drag call`);
         }
         const unlock = await this.draggingUnlockFnPromise;
+
         this.draggingUnlockFnPromise = undefined;
         let multiSelectedIndex = this.multiSelectedIndex;
         if (this.sortingChanged) {
@@ -188,7 +189,9 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
             this.sortEvent.emit(this.sortedItems);
             this.multiSelectedIndex = [];
         }
-        unlock();
+        if (typeof unlock === `function`) {
+            unlock();
+        }
     }
 
     /**
