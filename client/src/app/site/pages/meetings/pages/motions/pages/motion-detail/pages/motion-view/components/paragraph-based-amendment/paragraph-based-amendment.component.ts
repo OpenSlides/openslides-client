@@ -7,6 +7,7 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 
 import { DiffLinesInParagraph } from '../../../../../../definitions/index';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
+import { LineNumberingService } from '../../../../../../modules/change-recommendations/services';
 
 @Component({
     selector: `os-paragraph-based-amendment`,
@@ -68,7 +69,8 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public constructor(
         protected override translate: TranslateService,
-        private el: ElementRef
+        private el: ElementRef,
+        private lineNumberingService: LineNumberingService
     ) {
         super();
     }
@@ -108,5 +110,14 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         return this.motion?.getParagraphTitleByParagraph(paragraph) || ``;
+    }
+
+    public setLastNumber(): number {
+        return this.lineNumberingService.getLineNumberRange(
+            this.lineNumberingService.insertLineNumbers({
+                html: this.motion?.lead_motion.text,
+                lineLength: this.lineLength,
+                firstLine: this.motion?.lead_motion.firstLine
+        })).to ;
     }
 }
