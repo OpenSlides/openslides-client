@@ -801,16 +801,10 @@ export class MotionDiffService {
         let followingHtmlStartSnippet = ``;
 
         fromChildTraceAbs.shift();
-        let previousHtml = ``;
-        if (fromChildTraceAbs.length > 0) {
-            previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
-        }
+        const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
 
         toChildTraceAbs.shift();
-        let followingHtml = ``;
-        if (toChildTraceAbs.length > 0) {
-            followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
-        }
+        const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
@@ -896,15 +890,11 @@ export class MotionDiffService {
             if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
                 found = true;
                 fromChildTraceRel.shift();
-                if (fromChildTraceRel.length > 0) {
-                    htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-                }
+                htmlOut += this.serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
             } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
                 found = false;
                 toChildTraceRel.shift();
-                if (toChildTraceRel.length > 0) {
-                    htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
-                }
+                htmlOut += this.serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
             } else if (found === true) {
                 htmlOut += this.serializeDom(ancestor.childNodes[i], true);
             }
