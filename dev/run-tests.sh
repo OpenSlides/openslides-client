@@ -19,12 +19,11 @@ IMAGE_TAG=openslides-client-tests
 LOCAL_PWD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Safe Exit
-trap 'docker stop $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}") && \
-    docker rm $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}")' EXIT
+trap 'docker stop client-test && docker rm client-test' EXIT
 
 # Execution
 if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
-docker run -t ${IMAGE_TAG} /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
+docker run -t ${IMAGE_TAG} --name client-test /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
 
 # Linters
 bash "$LOCAL_PWD"/run-lint.sh -s -c
