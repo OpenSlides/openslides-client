@@ -7,8 +7,14 @@ override CONTAINER_ARGS=-ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/ap
 
 # Build images for different contexts
 
-build build-prod build-dev build-tests:
-	bash $(MAKEFILE_PATH)/make-build-service.sh $@ $(SERVICE)
+build-prod:
+	docker build ./ --tag "openslides-$(SERVICE)" --build-arg CONTEXT="prod" --target "prod"
+
+build-dev:
+	docker build ./ --tag "openslides-$(SERVICE)-dev" --build-arg CONTEXT="dev" --target "dev"
+
+build-test:
+	docker build ./ --tag "openslides-$(SERVICE)-tests" --build-arg CONTEXT="tests" --target "tests"
 
 # Development tools
 
