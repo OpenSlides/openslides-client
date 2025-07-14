@@ -11,7 +11,7 @@ env:
   NG_CLI_ANALYTICS: ci
 
 jobs:
-  build-and-test-prod-image:    
+  build-and-test-prod-image:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -70,14 +70,20 @@ jobs:
         working-directory: "./dev/localprod"
         run: docker compose down --volumes --remove-orphans
 
-  # This setups and runs the dev/run-tests.sh script
-  run-test-script:
+  build-and-test-dev-image:
     name: Run-tests.sh Script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Test
-        uses: Janmtbehrens/OpenSlides/dev/actions/build-and-test-service@all-in-one
-        with:
-          service: client
+      - name: create docker dev image
+        run: make build-dev
+
+      - name: Check linting
+        run: make run-check-linting
+
+      - name: Check prettifying
+        run: make run-check-prettifying
+
+      - name: Run karma tests
+        run: make run-karma-tests

@@ -14,12 +14,6 @@ RUN npm ci
 
 COPY client ./
 
-## External Information
-LABEL org.opencontainers.image.title="OpenSlides Client"
-LABEL org.opencontainers.image.description="Web client for OpenSlides which serves as the users main interaction point while using the OpenSlides system. "
-LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.source="https://github.com/OpenSlides/openslides-client"
-
 ## Command
 COPY ./dev/command.sh ./
 RUN chmod +x command.sh
@@ -46,8 +40,9 @@ RUN npm run build
 # Prod wants nginx as base image for some reason
 FROM nginx:1.28.0 as prod
 
-WORKDIR /
-
+## Setup
+ARG CONTEXT
+ENV APP_CONTEXT=prod
 # User is given by nginx image
 
 LABEL org.opencontainers.image.title="OpenSlides Client"

@@ -13,7 +13,7 @@ build-prod:
 build-dev:
 	docker build ./ --tag "openslides-$(SERVICE)-dev" --build-arg CONTEXT="dev" --target "dev"
 
-build-test:
+build-tests:
 	docker build ./ --tag "openslides-$(SERVICE)-tests" --build-arg CONTEXT="tests" --target "tests"
 
 # Development tools
@@ -28,6 +28,12 @@ run-dev-standalone:
 	$(DOCKER-RUN) npm run cleanup
 
 # Testing tools
+
+run-cleanup-standalone: | build-dev
+	$(docker-run) npm run cleanup
+
+run-cleanup:
+	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
 run-tests:
 	bash dev/run-tests.sh

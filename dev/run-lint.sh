@@ -19,22 +19,20 @@ done
 
 # Setup
 IMAGE_TAG=openslides-client-tests
-CATCH=0
 
 # Helpers
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 DC="CONTEXT=tests USER_ID=$USER_ID GROUP_ID=$GROUP_ID docker compose -f dev/docker-compose.dev.yml"
 
+# Safe Exit
+trap 'if [ -z "$PERSIST_CONTAINERS" ] && [ -z "$SKIP_CONTAINER_UP" ]; then docker stop $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}")' EXIT
+
 # Optionally build & start
-if [ -z "$SKIP_BUILD" ]; then make build-tests || CATCH=1; fi
+if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
 
 # Execution
 
 # No difference between local and container mode
-docker run -t ${IMAGE_TAG} npm run lint || CATCH=1
-docker run -t ${IMAGE_TAG} npm run prettify-check || CATCH=1
-
-if [ -z "$PERSIST_CONTAINERS" ] && [ -z "$SKIP_BUILD" ]; then docker stop $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}") || CATCH=1; fi
-
-exit $CATCH
+docker run -t ${IMAGE_TAG} npm run lint
+docker run -t ${IMAGE_TAG} npm run prettify-check
