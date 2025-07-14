@@ -18,13 +18,13 @@ build-tests:
 
 # Development tools
 
-.PHONY: run-dev%
+.PHONY: dev%
 
-run-dev%:
-	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
+dev%:
+	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
 
-run-dev-standalone:
-	bash $(MAKEFILE_PATH)/make-run-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
+dev-standalone:
+	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
 	$(DOCKER-RUN) npm run cleanup
 
 # Testing tools
@@ -32,7 +32,7 @@ run-dev-standalone:
 run-tests:
 	bash dev/run-tests.sh
 
-run-lint:
+lint:
 	bash dev/run-lint.sh -l
 
 run-karma-tests: | build-dev
@@ -57,7 +57,7 @@ deprecation-warning:
 	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh
 
 stop-dev:
-	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh "run-dev-stop"
+	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh "dev-stop"
 	$(DC_DEV) down --volumes --remove-orphans
 
 run-check-linting: | deprecation-warning build-dev

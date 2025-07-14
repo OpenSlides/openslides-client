@@ -26,7 +26,7 @@ trap 'docker stop "$CONTAINER_NAME" && docker rm "$CONTAINER_NAME"' EXIT
 
 # Execution
 if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
-docker run -t --name "$CONTAINER_NAME" ${IMAGE_TAG}
+docker run -d --name "$CONTAINER_NAME" ${IMAGE_TAG}
 docker exec "$CONTAINER_NAME" /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
 
 # Linters
