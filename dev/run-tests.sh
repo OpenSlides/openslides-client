@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Executes all tests. Should errors occur, CATCH will be set to 1, causing an erroneous exit code.
 
 echo "########################################################################"
@@ -15,15 +17,17 @@ while getopts "s" FLAG; do
 done
 
 # Setup
+CONTAINER_NAME="client-test"
 IMAGE_TAG=openslides-client-tests
 LOCAL_PWD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Safe Exit
-trap 'docker stop client-test && docker rm client-test' EXIT
+trap 'docker stop "$CONTAINER_NAME" && docker rm "$CONTAINER_NAME"' EXIT
 
 # Execution
 if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
-docker run -t ${IMAGE_TAG} --name client-test /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
+docker run -t --name "$CONTAINER_NAME" ${IMAGE_TAG}
+docker exec "$CONTAINER_NAME" /bin/sh -c "apk add chromium && npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox"
 
 # Linters
-bash "$LOCAL_PWD"/run-lint.sh -s -c
+bash "$LOCAL_PWD"/run-lint.sh

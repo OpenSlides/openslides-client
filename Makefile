@@ -29,12 +29,6 @@ run-dev-standalone:
 
 # Testing tools
 
-run-cleanup-standalone: | build-dev
-	$(docker-run) npm run cleanup
-
-run-cleanup:
-	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
-
 run-tests:
 	bash dev/run-tests.sh
 
@@ -53,6 +47,9 @@ run-playwright:
 run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
+run-cleanup-standalone: | build-dev
+	$(docker-run) npm run cleanup
+
 
 ########################## Deprecation List ##########################
 
@@ -68,5 +65,3 @@ run-check-linting: | deprecation-warning build-dev
 
 run-check-prettifying: | deprecation-warning build-dev
 	docker run -t openslides-client-dev npm run prettify-check
-
-########################## Replacement List ##########################

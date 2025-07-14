@@ -7,17 +7,16 @@ echo "###################### Run Linters #####################################"
 echo "########################################################################"
 
 # Parameters
-while getopts "lscp" FLAG; do
+while getopts "ls" FLAG; do
     case "${FLAG}" in
     l) LOCAL=true ;;
-    s) SKIP_BUILD=true ;;
-    c) SKIP_CONTAINER_UP=true ;;
-    p) PERSIST_CONTAINERS=true ;;
+    s) SKIP_SETUP=true ;;
     *) echo "Can't parse flag ${FLAG}" && break ;;
     esac
 done
 
 # Setup
+CONTAINER_NAME="client-tests"
 IMAGE_TAG=openslides-client-tests
 
 # Helpers
@@ -26,13 +25,23 @@ GROUP_ID=$(id -g)
 DC="CONTEXT=tests USER_ID=$USER_ID GROUP_ID=$GROUP_ID docker compose -f dev/docker-compose.dev.yml"
 
 # Safe Exit
-trap 'if [ -z "$PERSIST_CONTAINERS" ] && [ -z "$SKIP_CONTAINER_UP" ]; then docker stop $(docker ps -a -q --filter ancestor=${IMAGE_TAG} --format="{{.ID}}"); fi' EXIT
-
-# Optionally build & start
-if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
+trap 'if [ -z "$LOCAL" ]; then docker stop "$CONTAINER_NAME" && docker rm "$CONTAINER_NAME"; fi' EXIT
 
 # Execution
+if [ -z "$LOCAL" ]
+then
+    # Setup
+    if [ -z "$SKIP_SETUP" ]
+    then
+        make build-tests
+        docker run -d --name "$CONTAINER_NAME" ${IMAGE_TAG}
+    fi
 
-# No difference between local and container mode
-docker run -t ${IMAGE_TAG} npm run lint
-docker run -t ${IMAGE_TAG} npm run prettify-check
+    # Container Mode
+    docker exec "$CONTAINER_NAME" npm run lint
+    docker exec "$CONTAINER_NAME" npm run prettify-check
+else
+    # Local Mode
+    npm run lint
+    npm run prettify-check
+fi
