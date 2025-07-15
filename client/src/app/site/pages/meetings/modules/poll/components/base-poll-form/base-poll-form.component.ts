@@ -144,6 +144,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return !this.data.state || this.data.isCreated; // no state means, its under creation
     }
 
+    public get isNamedVotingSelected(): boolean {
+        return this.pollTypeControl?.value === PollType.Named || false;
+    }
+
     public get isEVotingSelected(): boolean {
         return this.pollTypeControl?.value !== PollType.Analog || false;
     }
@@ -502,7 +506,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             backend: [],
             global_yes: [false],
             global_no: [false],
-            global_abstain: [false]
+            global_abstain: [false],
+            live_voting_enabled: [false]
         });
     }
 

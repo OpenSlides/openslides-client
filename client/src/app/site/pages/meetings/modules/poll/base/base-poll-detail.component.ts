@@ -316,7 +316,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     const entries: EntitledUsersTableEntry[] = [];
                     for (const user of users || []) {
                         const delegateToId = user.vote_delegated_to_id();
-                        const voted = (this.poll.has_voted_user_ids ?? []).includes(user.id);
+                        const voted = this.poll.live_votes[user.id];
                         entries.push({
                             id: user.id,
                             user: user,
