@@ -275,6 +275,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             baseText,
             this.workingTextChangingObjects,
             this.lineLength,
+            this.brokenTextChangingObjects.length,
             this.highlightedLine,
             this.lineRange
         );

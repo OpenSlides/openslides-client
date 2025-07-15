@@ -2172,10 +2172,11 @@ export class MotionDiffService {
         motionHtml: LineNumberedString,
         changes: ViewUnifiedChange[],
         lineLength: number,
+        brokenTextAmount: number,
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        if (changes.length === 0 && !lineRange) {
+        if (changes.length === 0 && brokenTextAmount === 0 && !lineRange ) {
             return motionHtml;
         }
 
