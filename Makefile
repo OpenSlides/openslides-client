@@ -3,7 +3,7 @@ override SERVICE=client
 override MAKEFILE_PATH=../dev/scripts/makefile
 override DOCKER_COMPOSE_FILE=
 override DOCKER-RUN=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
-override CONTAINER_ARGS=-ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp
+override CONTAINER_ARGS=-v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp
 
 # Build images for different contexts
 
@@ -18,9 +18,7 @@ build-tests:
 
 # Development tools
 
-.PHONY: dev%
-
-dev%:
+dev dev-help dev-detached dev-attached dev-stop dev-exec dev-enter:
 	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
 
 dev-standalone:
