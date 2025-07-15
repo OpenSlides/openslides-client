@@ -158,7 +158,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         });
         if (result) {
             if (result.action === ADD) {
-                this.userController.update({ home_committee_id: result.firstId, guest: false }, ...this.selectedRows).resolve();
+                this.userController.update({ home_committee_id: result.firstId, external: false }, ...this.selectedRows).resolve();
             } else if (result.action === REMOVE) {
                 this.userController.update({ home_committee_id: null }, ...this.selectedRows).resolve();
             }
@@ -171,8 +171,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const SET_NOT_EXTERNAL = _(`not external`);
         const result = await this.choiceService.open({ title, actions: [SET_EXTERNAL, SET_NOT_EXTERNAL] });
         if (result) {
-            const isGuest = result.action === SET_EXTERNAL;
-            this.userController.update({ guest: isGuest, home_committee_id: isGuest ? null : undefined }, ...this.selectedRows).resolve();
+            const isExternal = result.action === SET_EXTERNAL;
+            this.userController.update({ external: isExternal, home_committee_id: isExternal ? null : undefined }, ...this.selectedRows).resolve();
         }
     }
 
