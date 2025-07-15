@@ -160,7 +160,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private _user: ViewUser | null = null;
     private _additionalValidators: ValidatorFn[] = [];
-    private _additionalFormControls: any = {};
+    private _additionalFormControls: any = null;
     private _formValueChangeSubscription: Subscription | null = null;
 
     private _checkIfDeletedProperties = [`pronoun`, `default_password`];
@@ -337,7 +337,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             member_number: [``],
             is_active: [true],
             is_physical_person: [true],
-            ...this._additionalFormControls
+            ...(this._additionalFormControls ?? {})
         };
     }
 
