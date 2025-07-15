@@ -266,7 +266,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         );
         this._initialState = personalInfoPatch;
         if (this._additionalFormControls) {
-            this.subscriptions.push(this.personalInfoForm.controls[`guest`].valueChanges.subscribe(value => {
+            this.subscriptions.push(this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
                 if (value) {
                     this.personalInfoForm.get(`home_committee_id`).disable();
                 } else {

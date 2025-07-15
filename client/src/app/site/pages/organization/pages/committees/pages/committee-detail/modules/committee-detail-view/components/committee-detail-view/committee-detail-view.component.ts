@@ -212,7 +212,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     private calcGuestIds(committee: ViewCommittee): Set<number> {
         const result = new Set<number>([]);
         for (const user of committee.users) {
-            if (user.guest) {
+            if (user.external) {
                 result.add(user.id);
             }
         }
