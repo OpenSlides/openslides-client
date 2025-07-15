@@ -223,6 +223,11 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             this.updateFormControls(this.data);
             if (this.allowToSetMinMax && !this.data.id) {
                 this.updatePollMethod(PollMethod.Y);
+            } else if (this.allowToSetMinMax) {
+                const controls = this.getVotesAmountControl();
+                this.contentForm.get(`votes_amount`).get(`min_votes_amount`).setValidators(controls.get(`min_votes_amount`).validator);
+                this.contentForm.get(`votes_amount`).get(`max_votes_amount`).setValidators(controls.get(`max_votes_amount`).validator);
+                this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValidators(controls.get(`max_votes_per_option`).validator);
             }
         }
 
