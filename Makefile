@@ -3,7 +3,7 @@ override SERVICE=client
 override MAKEFILE_PATH=../dev/scripts/makefile
 override DOCKER_COMPOSE_FILE=
 override DOCKER-RUN=docker run -ti -v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp openslides-client-dev
-override CONTAINER_ARGS=-v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp
+override CONTAINER_VOLUMES=-v `pwd`/client/src:/app/src -v `pwd`/client/cli:/app/cli -p 127.0.0.1:9001:9001/tcp
 
 # Build images for different contexts
 
@@ -18,11 +18,13 @@ build-tests:
 
 # Development tools
 
+.PHONY: dev
+
 dev dev-help dev-detached dev-attached dev-stop dev-exec dev-enter:
-	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
+	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)" "sh" "$(CONTAINER_VOLUMES)"
 
 dev-standalone:
-	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(CONTAINER_ARGS)" "sh"
+	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)" "sh" "$(CONTAINER_VOLUMES)"
 	$(DOCKER-RUN) npm run cleanup
 
 # Testing tools
@@ -46,7 +48,7 @@ run-cleanup:
 	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
 run-cleanup-standalone: | build-dev
-	$(docker-run) npm run cleanup
+	$(DOCKER-RUN) npm run cleanup
 
 
 ########################## Deprecation List ##########################
