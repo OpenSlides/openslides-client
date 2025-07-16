@@ -1841,8 +1841,7 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 2x</p>`
                         })
                     ],
-                    20,
-                    0
+                    20
                 )
             ).toBe(
                 `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
@@ -1862,8 +1861,7 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 3x</p>`
                         })
                     ],
-                    20,
-                    0
+                    20
                 )
             ).toBe(``);
         }));
@@ -1871,7 +1869,7 @@ describe(`MotionDiffService`, () => {
         it(`test with no changes`, inject([MotionDiffService], (service: MotionDiffService) => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
-            expect(service.getTextRemainderAfterLastChange(inHtml, [], 20, 0)).toBe(inHtml);
+            expect(service.getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
         }));
 
         it(`ignores out of scope change recommendations (from)`, inject([MotionDiffService], (service: MotionDiffService) => {
@@ -1892,8 +1890,7 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 2x</p>`
                         })
                     ],
-                    20,
-                    1
+                    20
                 )
             ).toBe(
                 `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
@@ -1913,9 +1910,7 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 1x</p>`
                         })
                     ],
-                    20,
-                    0
-
+                    20
                 )
             ).toBe(``);
         }));
@@ -1938,8 +1933,7 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 2x</p>`
                         })
                     ],
-                    20,
-                    1
+                    20
                 )
             ).toBe(
                 `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
