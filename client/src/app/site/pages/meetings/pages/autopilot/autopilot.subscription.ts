@@ -36,6 +36,29 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
     subscriptionName: AUTOPILOT_SUBSCRIPTION
 });
 
+const speakersFields = {
+    idField: `speaker_ids`,
+    fieldset: FULL_FIELDSET,
+    follow: [
+        mergeSubscriptionFollow(
+            {
+                idField: `meeting_user_id`,
+                follow: [
+                    {
+                        idField: `structure_level_ids`,
+                        fieldset: [`name`, `color`]
+                    }
+                ]
+            },
+            { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
+        ),
+        {
+            idField: `structure_level_list_of_speakers_id`,
+            fieldset: FULL_FIELDSET
+        }
+    ]
+};
+
 export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfig<any> => ({
     modelRequest: {
         viewModelCtor: ViewProjection,
@@ -53,54 +76,12 @@ export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfi
                         idField: `poll_ids`,
                         ...pollModelRequest
                     },
-                    {
-                        idField: `speaker_ids`,
-                        fieldset: FULL_FIELDSET,
-                        follow: [
-                            mergeSubscriptionFollow(
-                                {
-                                    idField: `meeting_user_id`,
-                                    follow: [
-                                        {
-                                            idField: `structure_level_ids`,
-                                            fieldset: [`name`, `color`]
-                                        }
-                                    ]
-                                },
-                                { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                            ),
-                            {
-                                idField: `structure_level_list_of_speakers_id`,
-                                fieldset: FULL_FIELDSET
-                            }
-                        ]
-                    },
+                    speakersFields,
                     {
                         idField: `list_of_speakers_id`,
                         fieldset: [`closed`, `moderator_notes`, ...MEETING_ROUTING_FIELDS],
                         follow: [
-                            {
-                                idField: `speaker_ids`,
-                                fieldset: FULL_FIELDSET,
-                                follow: [
-                                    mergeSubscriptionFollow(
-                                        {
-                                            idField: `meeting_user_id`,
-                                            follow: [
-                                                {
-                                                    idField: `structure_level_ids`,
-                                                    fieldset: [`name`, `color`]
-                                                }
-                                            ]
-                                        },
-                                        { idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }
-                                    ),
-                                    {
-                                        idField: `structure_level_list_of_speakers_id`,
-                                        fieldset: FULL_FIELDSET
-                                    }
-                                ]
-                            },
+                            speakersFields,
                             {
                                 idField: `structure_level_list_of_speakers_ids`,
                                 fieldset: FULL_FIELDSET
