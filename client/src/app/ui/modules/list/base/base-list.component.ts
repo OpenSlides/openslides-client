@@ -262,4 +262,8 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     public deselectAll(): void {
         this.scrollingTableManager.currentScrollingTableComponent?.deselectAll();
     }
+
+    public clearSearchField(): void {
+        this._viewListComponent?.clearSearchField();
+    }
 }
