@@ -470,8 +470,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
                 const votes = votedFor[this.poll.id] || [];
                 if (
-                    ((!this.poll.has_voted_user_ids && votes.length > 0) ||
-                        votes.filter(m => this.poll.has_voted_user_ids?.includes(m)).length > 0) &&
+                    ((!this.poll.live_votes && votes.length > 0) ||
+                        votes.filter(m => Object.keys(this.poll.live_votes).map(Number)?.includes(m)).length > 0) &&
                         this.poll.hasVoted
                 ) {
                     return;
