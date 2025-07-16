@@ -390,13 +390,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
+            chipOption.disabled = nextState;
+            chipOption.value = false;
             if (nextState) {
-                chipOption.disabled = nextState;
-                chipOption.value = false;
                 this.disabledControls.push(value);
             } else {
-                chipOption.disabled = nextState;
-                chipOption.value = false;
                 this.disabledControls.filter(obj => !obj.includes(value));
             }
         }
