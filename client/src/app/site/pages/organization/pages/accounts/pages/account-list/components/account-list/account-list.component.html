@@ -81,6 +81,11 @@
                     @if (user.member_number) {
                         &middot; {{ user.member_number }}
                     }
+                    @if (user.home_committee) {
+                        &middot; {{ user.home_committee.getTitle() }}
+                    } @else if (user.guest) {
+                        &middot; {{ 'external' | translate }}
+                    }
                 </div>
             </div>
         </div>

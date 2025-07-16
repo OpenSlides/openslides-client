@@ -221,8 +221,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
-            if (this.allowToSetMinMax) {
+            if (this.allowToSetMinMax && !this.data.id) {
                 this.updatePollMethod(PollMethod.Y);
+            } else if (this.allowToSetMinMax) {
+                const controls = this.getVotesAmountControl();
+                this.contentForm.get(`votes_amount`).get(`min_votes_amount`).setValidators(controls.get(`min_votes_amount`).validator);
+                this.contentForm.get(`votes_amount`).get(`max_votes_amount`).setValidators(controls.get(`max_votes_amount`).validator);
+                this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValidators(controls.get(`max_votes_per_option`).validator);
             }
         }
 
@@ -473,10 +478,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
         return (formControl: AbstractControl): Record<string, any> | null => {
-            if (!this.pollOptionAmount || this.isList) {
+            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`) || !this.pollOptionAmount || this.isList) {
                 return null;
             }
-
             const min = formControl.get(minCtrlName)!.value;
             const votesPerOption = formControl.get(perOptionCtrlNam)!.value || 1;
             if (this.pollOptionAmount * votesPerOption < min) {
@@ -511,10 +515,17 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
         };
         if (this.allowToSetMinMax) {
-            config.max_votes_amount = [
-                maxVotesPreselect,
-                [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
-            ];
+            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)) {
+                config.max_votes_amount = [
+                    maxVotesPreselect,
+                    [Validators.required, Validators.min(1)]
+                ];
+            } else {
+                config.max_votes_amount = [
+                    maxVotesPreselect,
+                    [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
+                ];
+            }
         }
         return this.fb.group(config, {
             validators: [
