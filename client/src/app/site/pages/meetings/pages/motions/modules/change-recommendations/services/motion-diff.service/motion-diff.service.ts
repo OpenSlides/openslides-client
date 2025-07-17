@@ -2175,7 +2175,6 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        // if nothing was changed atthe motion
         if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
