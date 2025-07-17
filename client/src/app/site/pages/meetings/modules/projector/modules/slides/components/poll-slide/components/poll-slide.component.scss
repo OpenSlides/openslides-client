@@ -101,5 +101,13 @@
         .vote-entry:has(+ h3) {
             border-bottom: 0;
         }
+
+        h3.structure-level {
+            margin-top: 2px;
+            margin-bottom: 0 !important;
+            line-height: 28px;
+            font-size: 25px;
+            font-weight: normal;
+        }
     }
 }

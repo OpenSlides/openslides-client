@@ -74,7 +74,7 @@
                                 <div class="votes-column" [ngStyle]="columnStyle">
                                     @for (user of column; track user[0]) {
                                         @if (typeof user === 'string') {
-                                            <h3>{{ user }}</h3>
+                                            <h3 class="structure-level">{{ user }}</h3>
                                         } @else {
                                             <div class="vote-entry">
                                                 @if (user[1] === 'Y') {
