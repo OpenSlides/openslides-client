@@ -88,10 +88,18 @@
             min-height: 29px;
             display: flex;
             align-items: center;
+            .not-present {
+                text-decoration: line-through;
+                color: #AAA;
+            }
         }
 
-        :not(:last-child) {
+        :not(:last-child):not(h3) {
             border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        }
+
+        .vote-entry:has(+ h3) {
+            border-bottom: 0;
         }
     }
 }

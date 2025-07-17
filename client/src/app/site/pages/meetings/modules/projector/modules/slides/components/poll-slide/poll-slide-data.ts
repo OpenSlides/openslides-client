@@ -62,6 +62,7 @@ export interface PollSlideData {
     description: string;
     type: PollType;
     state: PollState;
+    live_voting_enabled: boolean;
     global_yes: boolean;
     global_no: boolean;
     global_abstain: boolean;
