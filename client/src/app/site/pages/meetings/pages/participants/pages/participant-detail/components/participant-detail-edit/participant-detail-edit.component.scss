@@ -5,8 +5,13 @@
     .form100 {
         width: 100%;
     }
+
     .form70 {
         width: 70%;
+    }
+
+    .form50 {
+        width: 50%;
     }
 
     .form37 {
@@ -48,4 +53,14 @@ os-user-detail-view h2 {
 
 .padding-left-12 {
     padding-left: 12px;
+}
+
+.home-committee-area {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+}
+
+.external-margin-top {
+    margin-top: 16px;
 }
