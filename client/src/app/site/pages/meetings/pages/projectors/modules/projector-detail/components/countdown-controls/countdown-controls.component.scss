@@ -1,4 +1,4 @@
-@use 'src/assets/styles/custom-button-styles.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
 .grid-wrapper {
     display: grid;
@@ -29,6 +29,10 @@
     grid-area: buttons;
     text-align: right;
     display: flex;
+
+    .timer-action-button {
+        margin-left: 16px; /* Increased spacing for better touch targets */
+    }
 }
 
 .timer {
@@ -40,4 +44,12 @@
 .larger-countdown {
     font-size: 150%;
     min-width: 60px;
+}
+
+.timer-action-button {
+    @include button.custom-size-button(20px, 20px);
+}
+
+.timer-control-button {
+    @include button.custom-size-button(46px, 42px);
 }
