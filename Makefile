@@ -20,12 +20,8 @@ build-tests:
 
 .PHONY: dev
 
-dev dev-help dev-detached dev-attached dev-stop dev-exec dev-enter:
+dev dev-help dev-detached dev-attached dev-stop dev-exec dev-enter dev-standalone:
 	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)" "sh" "$(CONTAINER_VOLUMES)"
-
-dev-standalone:
-	bash $(MAKEFILE_PATH)/make-dev.sh "$@" "$(SERVICE)" "$(DOCKER_COMPOSE_FILE)" "$(ARGS)" "sh" "$(CONTAINER_VOLUMES)"
-	$(DOCKER-RUN) npm run cleanup
 
 # Testing tools
 
@@ -54,10 +50,13 @@ run-cleanup-standalone: | build-dev
 ########################## Deprecation List ##########################
 
 deprecation-warning:
-	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh
+	@echo "\033[1;33m DEPRECATION WARNING: This make command is deprecated and will be removed soon! \033[0m"
+
+deprecation-warning-alternative: | deprecation-warning
+	@echo "\033[1;33m Please use the following command instead: $(ALTERNATIVE) \033[0m"
 
 stop-dev:
-	bash $(MAKEFILE_PATH)/make-deprecation-warning.sh "dev-stop"
+	@make deprecation-warning-alternative ALTERNATIVE="dev-stop"
 	$(DC_DEV) down --volumes --remove-orphans
 
 run-check-linting: | deprecation-warning build-dev
