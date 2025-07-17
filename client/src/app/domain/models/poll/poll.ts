@@ -27,6 +27,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public votesinvalid!: number;
     public votescast!: number;
     public live_votes: Record<number, any>;
+    public live_voting_enabled: number[];
     public onehundred_percent_base!: PollPercentBase;
 
     /**
@@ -169,6 +170,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         `votesinvalid`,
         `votescast`,
         `entitled_users_at_stop`,
+        `live_voting_enabled`,
         `live_votes`,
         `sequential_number`,
         `content_object_id`,

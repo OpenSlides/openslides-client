@@ -127,8 +127,13 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             content_object_id: poll.content_object_id,
             entitled_group_ids: poll.entitled_group_ids,
             backend: poll.backend,
-            live_voting_enabled: true
+            live_voting_enabled: poll.live_voting_enabled
         };
+
+        if (poll.type !== PollType.Named) {
+            delete payload.live_voting_enabled;
+        }
+
         return this.sendActionToBackend(PollAction.CREATE, payload);
     }
 

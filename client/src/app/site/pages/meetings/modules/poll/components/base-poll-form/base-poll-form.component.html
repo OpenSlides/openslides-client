@@ -45,6 +45,14 @@
                 }
             </div>
             <div class="flex-info-grid">
+                <!-- Groups entitled to Vote -->
+                @if (isEVotingSelected && isNamedVotingSelected) {
+                    <mat-checkbox formControlName="live_voting_enabled">
+                        {{ PollPropertyVerbose.live_voting_enabled | translate }}
+                    </mat-checkbox>
+                }
+            </div>
+            <div class="flex-info-grid">
                 <!-- Poll Methods -->
                 @if (!isCreatedList && filteredPollMethods && !hideSelects.pollMethod) {
                     <mat-form-field class="first">
