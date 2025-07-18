@@ -205,7 +205,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     public onItemClick(event: MouseEvent | Event, indx: number): void {
         if (event.type === `click` || (event as KeyboardEvent).key === ` `) {
             event.preventDefault();
-            if ((event as MouseEvent).ctrlKey) {
+            if ((event as MouseEvent).ctrlKey || (event as MouseEvent).metaKey) {
                 const ind = this.multiSelectedIndex.findIndex(i => i === indx);
                 if (ind === -1) {
                     this.multiSelectedIndex.push(indx);
