@@ -38,6 +38,7 @@ export enum PollContentObjectType {
 type VoteResult = `Y` | `N` | `A` | `X`;
 const ENTRY_HEIGHT = 30;
 const TITLE_HEIGHT = 55;
+const PROGRESS_HEIGHT = 22;
 const POLL_BAR_HEIGHT = 91;
 const HEADER_FOOTER_HEIGHT = 125;
 const NO_HEADER_TOP_MARGIN = 40;
@@ -70,8 +71,15 @@ export class PollSlideComponent
     };
 
     public get showContent(): boolean {
-        return this.data.data.state === PollState.Published ||
-            (this.data.data.live_voting_enabled && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started));
+        return this.data.data.state === PollState.Published || (this.isLiveVote && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started));
+    }
+
+    public get isRunningLiveVote(): boolean {
+        return this.isLiveVote && this.data.data.state === PollState.Started;
+    }
+
+    public get isLiveVote(): boolean {
+        return this.data.data.live_voting_enabled;
     }
 
     public get numEntitledUsers(): number {
@@ -435,12 +443,15 @@ export class PollSlideComponent
     }
 
     private newGetUserVotesFormat(): [number, number] {
-        const visibleHeight =
+        let visibleHeight =
             (this.projector.height -
                 TITLE_HEIGHT -
                 POLL_BAR_HEIGHT -
                 (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN)) /
                 this._actualScale;
+        if (this.isRunningLiveVote) {
+            visibleHeight -= PROGRESS_HEIGHT;
+        }
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
         const columns = Math.min(Math.ceil(this._userVotes.length / visibleRows), this._maxColumns);
         return [columns, Math.max(visibleRows, Math.ceil(this._userVotes.length / columns))];

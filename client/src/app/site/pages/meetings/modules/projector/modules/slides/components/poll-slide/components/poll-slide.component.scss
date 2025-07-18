@@ -49,6 +49,18 @@
         }
     }
 
+    .poll-progress {
+        --color: var(--theme-accent-500);
+    }
+
+    .poll-progress::-moz-progress-bar {
+        background: var(--color);
+    }
+
+    .poll-progress::-webkit-progress-value {
+        background: var(--color);
+    }
+
     .data-area {
         display: inline-flex;
         width: 100%;
@@ -58,13 +70,23 @@
         margin-top: 5px;
 
         .general-data {
-            flex: 1 0 auto;
+            flex: 1 0 0;
             font-size: 14px;
             color: gray;
         }
         os-icon-container {
             width: fit-content;
             margin-right: -5px;
+        }
+        .vote-now {
+            flex: 1 1 0;
+            text-align: center;
+            color: var(--theme-accent-500);
+            font-weight: bold;
+            font-size: 25px;
+        }
+        .spacer {
+            flex: 1 1 0;
         }
     }
 }

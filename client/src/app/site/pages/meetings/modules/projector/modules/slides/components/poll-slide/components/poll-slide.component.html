@@ -21,10 +21,20 @@
                         <div class="bg-abstain" [ngStyle]="{ flex: polldata.options[0].abstain + ' 0 auto' }"></div>
                     }
                 </div>
+
+                @if (isRunningLiveVote) {
+                    <progress class="vote-progress" max="{{ numEntitledUsers }}" value="{{ results.valid }}"></progress>
+                }
+
                 <div class="data-area">
                     <div class="general-data">
                         <div>
-                            {{ 'Valid votes' | translate }}: {{ polldata.votesvalid ?? results.valid }}
+                            @if (isRunningLiveVote) {
+                                {{ 'Received votes' | translate }}:
+                            } @else {
+                                {{ 'Valid votes' | translate }}:
+                            }
+                            {{ polldata.votesvalid ?? results.valid }}
                             @if (polldata.onehundred_percent_base !== 'YN') {
                                 {{ polldata.votesvalid ?? results.valid | pollPercentBase: polldata }}
                             }
@@ -36,31 +46,36 @@
                             }
                         </div>
                     </div>
-                    @if (polldata.pollmethod.includes('Y')) {
-                        <os-icon-container icon="check_circle" iconClass="yes" size="large">
-                            <span class="yes">
-                                {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? results.Y }}
-                                {{ polldata.options[0]?.yes ?? results.Y | pollPercentBase: polldata }}
-                            </span>
-                        </os-icon-container>
-                    }
-                    @if (polldata.pollmethod.includes('N')) {
-                        <os-icon-container icon="cancel" iconClass="no" size="large">
-                            <span class="no">
-                                {{ 'No' | translate }}: {{ polldata.options[0]?.no ?? results.N }}
-                                {{ polldata.options[0]?.no ?? results.N | pollPercentBase: polldata }}
-                            </span>
-                        </os-icon-container>
-                    }
-                    @if (polldata.pollmethod.includes('A')) {
-                        <os-icon-container icon="circle" iconClass="abstain" size="large">
-                            <span class="abstain">
-                                {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? results.A }}
-                                @if (polldata.onehundred_percent_base !== 'YN') {
-                                    {{ polldata.options[0]?.abstain ?? results.A | pollPercentBase: polldata }}
-                                }
-                            </span>
-                        </os-icon-container>
+                    @if (!isRunningLiveVote) {
+                        @if (polldata.pollmethod.includes('Y')) {
+                            <os-icon-container icon="check_circle" iconClass="yes" size="large">
+                                <span class="yes">
+                                    {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? results.Y }}
+                                    {{ polldata.options[0]?.yes ?? results.Y | pollPercentBase: polldata }}
+                                </span>
+                            </os-icon-container>
+                        }
+                        @if (polldata.pollmethod.includes('N')) {
+                            <os-icon-container icon="cancel" iconClass="no" size="large">
+                                <span class="no">
+                                    {{ 'No' | translate }}: {{ polldata.options[0]?.no ?? results.N }}
+                                    {{ polldata.options[0]?.no ?? results.N | pollPercentBase: polldata }}
+                                </span>
+                            </os-icon-container>
+                        }
+                        @if (polldata.pollmethod.includes('A')) {
+                            <os-icon-container icon="circle" iconClass="abstain" size="large">
+                                <span class="abstain">
+                                    {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? results.A }}
+                                    @if (polldata.onehundred_percent_base !== 'YN') {
+                                        {{ polldata.options[0]?.abstain ?? results.A | pollPercentBase: polldata }}
+                                    }
+                                </span>
+                            </os-icon-container>
+                        }
+                    } @else {
+                        <div class="vote-now">{{ 'Please vote now!' | translate }}</div>
+                        <div class="spacer"></div>
                     }
                 </div>
             </div>
