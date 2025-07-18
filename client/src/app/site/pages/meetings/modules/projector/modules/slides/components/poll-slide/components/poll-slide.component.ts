@@ -71,7 +71,7 @@ export class PollSlideComponent
     };
 
     public get showContent(): boolean {
-        return this.data.data.state === PollState.Published || (this.isLiveVote && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started));
+        return this.data.data.state === PollState.Published || (this.isLiveVote && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started || this.data.data.state === PollState.Finished));
     }
 
     public get isRunningLiveVote(): boolean {

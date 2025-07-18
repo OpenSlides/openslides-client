@@ -46,7 +46,7 @@
                             }
                         </div>
                     </div>
-                    @if (!isRunningLiveVote) {
+                    @if (!isLiveVote) {
                         @if (polldata.pollmethod.includes('Y')) {
                             <os-icon-container icon="check_circle" iconClass="yes" size="large">
                                 <span class="yes">
@@ -73,7 +73,7 @@
                                 </span>
                             </os-icon-container>
                         }
-                    } @else {
+                    } @else if (isRunningLiveVote) {
                         <div class="vote-now">{{ 'Please vote now!' | translate }}</div>
                         <div class="spacer"></div>
                     }
