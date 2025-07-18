@@ -388,6 +388,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
             !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
             !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
+        viewModel._translatedExternal = (): string => this.translate.instant(`external`);
         return viewModel;
     }
 
