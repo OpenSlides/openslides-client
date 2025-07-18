@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ListComponent } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
@@ -23,6 +24,9 @@ import { CommitteeSortService } from '../../../../../committee-list/services/com
     standalone: false
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent implements OnDestroy {
+    @ViewChild(`subcommittees`)
+    private readonly _subcommitteeList: ListComponent<ViewCommittee> | undefined;
+
     public readonly OML = OML;
 
     public committeeId: Id | null = null;
@@ -78,6 +82,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
                         this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
                         this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
                     });
+                    this._subcommitteeList?.clearSearchField();
                 }
             })
         );
@@ -207,7 +212,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     private calcGuestIds(committee: ViewCommittee): Set<number> {
         const result = new Set<number>([]);
         for (const user of committee.users) {
-            if (user.guest) {
+            if (user.external) {
                 result.add(user.id);
             }
         }

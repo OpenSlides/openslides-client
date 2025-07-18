@@ -182,6 +182,7 @@
                     @if (!!(childCommitteesObservable | async).length) {
                         <mat-tab [label]="'Subcommittees' | translate">
                             <os-list
+                                #subcommittees
                                 [filterProps]="['name']"
                                 [fullScreen]="false"
                                 [listObservable]="childCommitteesObservable"
