@@ -60,8 +60,8 @@
                     <div class="timer-buttons">
                         <button
                             class="timer-control-button"
-                            mat-icon-button
                             color="accent"
+                            mat-icon-button
                             type="button"
                             [disabled]="!canStop()"
                             (click)="stop($event)"
@@ -69,12 +69,24 @@
                             <mat-icon>stop_circle</mat-icon>
                         </button>
                         @if (!countdown.running) {
-                            <button class="timer-control-button" mat-icon-button color="accent" type="button" (click)="start($event)">
+                            <button
+                                class="timer-control-button"
+                                color="accent"
+                                mat-icon-button
+                                type="button"
+                                (click)="start($event)"
+                            >
                                 <mat-icon>play_circle_outline</mat-icon>
                             </button>
                         }
                         @if (countdown.running) {
-                            <button class="timer-control-button" mat-icon-button color="accent" type="button" (click)="pause($event)">
+                            <button
+                                class="timer-control-button"
+                                color="accent"
+                                mat-icon-button
+                                type="button"
+                                (click)="pause($event)"
+                            >
                                 <mat-icon>pause_circle_outline</mat-icon>
                             </button>
                         }
