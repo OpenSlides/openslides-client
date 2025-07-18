@@ -303,6 +303,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         const title = motion.getTitle();
         super.setTitle(title, true);
         this.motion = motion;
+        this.onMotionSet();
         this.cd.markForCheck();
     }
 
@@ -591,5 +592,12 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             return ChangeRecoMode.Original;
         }
         return mode;
+    }
+
+    private onMotionSet(): void {
+        this.subscriptions.updateSubscription(
+            `sorted-changes`,
+            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
+        );
     }
 }
