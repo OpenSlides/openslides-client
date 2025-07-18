@@ -126,7 +126,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get externalString(): string {
-        return this.external ? this._translatedExternal() : ``;
+        return this.external ? this.getTranslatedExternal() : ``;
     }
 
     // Will be set by the repository
@@ -135,7 +135,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
-    public _translatedExternal!: () => string;
+    public getTranslatedExternal!: () => string;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.
