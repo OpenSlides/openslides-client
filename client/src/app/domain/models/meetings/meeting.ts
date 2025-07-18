@@ -198,6 +198,7 @@ export class Settings {
     public poll_default_onehundred_percent_base: PollPercentBase;
     public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_default_backend: PollBackendDurationType;
+    public poll_default_live_voting_enabled: boolean;
 
     // SSO
     public external_id!: string;
@@ -448,6 +449,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_default_onehundred_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `poll_default_live_voting_enabled`,
         `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,

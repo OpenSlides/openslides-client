@@ -797,6 +797,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
+                        key: `poll_default_live_voting_enabled`,
+                        label: _(`Set live voting enabled by default`),
+                        type: `boolean`,
+                        helpText: _(`Only available for nominal voting`)
+                    },
+                    {
                         key: `motion_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
