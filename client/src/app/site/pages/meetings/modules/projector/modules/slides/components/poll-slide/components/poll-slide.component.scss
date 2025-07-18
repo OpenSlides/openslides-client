@@ -125,11 +125,16 @@
         }
 
         h3.structure-level {
-            margin-top: 2px;
+            margin-top: 9px;
             margin-bottom: 0 !important;
             line-height: 28px;
-            font-size: 25px;
-            font-weight: normal;
+            font-size: 18px;
+            font-weight: 500;
+
+            // setting for the ellipsis for long structure levels
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
