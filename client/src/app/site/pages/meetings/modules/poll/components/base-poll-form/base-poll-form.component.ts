@@ -194,6 +194,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
     }
 
+    public get isMotionPoll(): boolean {
+        return this.pollClassType === PollClassType.Motion;
+    }
+
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(VotingPrivacyWarningDialogService);

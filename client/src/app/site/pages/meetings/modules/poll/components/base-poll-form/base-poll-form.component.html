@@ -46,7 +46,7 @@
             </div>
             <div class="flex-info-grid">
                 <!-- Groups entitled to Vote -->
-                @if (isEVotingSelected && isNamedVotingSelected) {
+                @if (isEVotingSelected && isNamedVotingSelected && isMotionPoll) {
                     <mat-checkbox formControlName="live_voting_enabled">
                         {{ PollPropertyVerbose.live_voting_enabled | translate }}
                     </mat-checkbox>
