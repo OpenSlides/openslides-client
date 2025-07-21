@@ -8,6 +8,7 @@ COPY client/package-lock.json .
 RUN npm ci
 
 COPY client /app/
+COPY packages /packages
 
 ARG VERSION=dev
 RUN if [ -n "$VERSION" ]; then echo "$VERSION ($(date +%Y-%m-%d))" > src/assets/version.txt; fi

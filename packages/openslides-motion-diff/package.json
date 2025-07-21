@@ -1,0 +1,24 @@
+{
+  "name": "@openslides/motion-diff",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "karma start --browsers jsdom"
+  },
+  "devDependencies": {
+    "jasmine-core": "^5.9.0",
+    "jsdom": "^26.1.0",
+    "karma": "^6.4.4",
+    "karma-jasmine": "^5.1.0",
+    "karma-jsdom-launcher": "^18.0.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/tinycolor2": "^1.4.6",
+    "tinycolor2": "^1.6.0"
+  }
+}

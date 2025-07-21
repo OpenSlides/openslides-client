@@ -49,6 +49,7 @@
     "@ngx-pwa/local-storage": "^19.0.0",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
+    "@openslides/motion-diff": "file:../packages/openslides-motion-diff",
     "@tiptap/core": "^2.25.0",
     "@tiptap/extension-color": "^2.25.0",
     "@tiptap/extension-highlight": "^2.25.0",
