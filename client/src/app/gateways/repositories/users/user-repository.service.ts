@@ -47,12 +47,12 @@ export interface ShortNameInformation extends NameInformation {
 }
 
 export type UserPatchFn =
-    | Partial<Record<keyof User & MeetingUser, any>>
-    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>);
+    | Partial<Record<keyof User & MeetingUser, any>> |
+    ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>);
 export type ExtendedUserPatchFn =
-    | UserPatchFn
-    | Partial<Record<keyof User & MeetingUser, any>>[]
-    | ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
+    | UserPatchFn |
+    Partial<Record<keyof User & MeetingUser, any>>[] |
+    ((user: ViewUser) => Partial<Record<keyof User & MeetingUser, any>>[]);
 
 export type EmailSentResultType = `user_error` | `settings_error` | `configuration_error` | `other_error`;
 
@@ -112,7 +112,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `meeting_ids`,
             `saml_id`,
             `member_number`,
-            `guest`
+            `external`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -133,7 +133,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`, `home_committee_id`, `guest`]);
+            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`, `home_committee_id`, `external`]);
 
         const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
@@ -278,7 +278,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             organization_management_level: partialUser.organization_management_level,
             committee_management_ids: partialUser.committee_management_ids,
             home_committee_id: partialUser.home_committee_id,
-            guest: partialUser.guest
+            external: partialUser.external
         };
 
         return partialPayload;
@@ -388,6 +388,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
             !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
             !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
+        viewModel.getTranslatedExternal = (): string => this.translate.instant(`external`);
         return viewModel;
     }
 
@@ -571,7 +572,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `structure_level`,
             `locked_out`,
             `home_committee_id`,
-            `guest`
+            `external`
         ];
         if (!create) {
             fields.push(`member_number`);

@@ -160,7 +160,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private _user: ViewUser | null = null;
     private _additionalValidators: ValidatorFn[] = [];
-    private _additionalFormControls: any = {};
+    private _additionalFormControls: any = null;
     private _formValueChangeSubscription: Subscription | null = null;
 
     private _checkIfDeletedProperties = [`pronoun`, `default_password`];
@@ -270,16 +270,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         );
         this._initialState = personalInfoPatch;
         if (this._additionalFormControls) {
-            this.personalInfoForm.controls[`guest`].valueChanges.subscribe(value => {
+            this.subscriptions.push(this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
                 if (value) {
-                    this.personalInfoForm.get(`home_committee_id`).setValue(null);
+                    this.personalInfoForm.get(`home_committee_id`).disable();
+                } else {
+                    this.personalInfoForm.get(`home_committee_id`).enable();
                 }
-            });
-            this.personalInfoForm.controls[`home_committee_id`].valueChanges.subscribe(value => {
-                if (value) {
-                    this.personalInfoForm.get(`guest`).setValue(false);
-                }
-            });
+            }));
         }
     }
 
@@ -344,7 +341,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             member_number: [``],
             is_active: [true],
             is_physical_person: [true],
-            ...this._additionalFormControls
+            ...(this._additionalFormControls ?? {})
         };
     }
 

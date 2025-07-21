@@ -48,7 +48,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     standalone: false
 })
 export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy, OnInit {
-    @ViewChild(`searchField`, { static: true })
+    @ViewChild(`searchField`)
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
     /**
@@ -299,8 +299,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this.searchEdit = !this.searchEdit;
     }
 
+    public clearSearchField(): void {
+        this._searchFieldComponent?.clear();
+    }
+
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === `f`) {
+        if ((event.ctrlKey || event.metaKey) && event.key === `f`) {
             event.preventDefault();
             event.stopPropagation();
             this._searchFieldComponent.focus();

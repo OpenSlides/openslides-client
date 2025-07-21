@@ -81,6 +81,11 @@
                     @if (user.member_number) {
                         &middot; {{ user.member_number }}
                     }
+                    @if (user.home_committee) {
+                        &middot; {{ user.home_committee.getTitle() }}
+                    } @else if (user.external) {
+                        &middot; {{ 'external' | translate }}
+                    }
                 </div>
             </div>
         </div>
@@ -212,7 +217,7 @@
                 </button>
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeGuest()">
                     <mat-icon>outbound</mat-icon>
-                    <span>{{ 'Enable/disable external' | translate }} ...</span>
+                    <span>{{ 'Set external' | translate }} ...</span>
                 </button>
                 <button
                     *osOmlPerms="OML.can_manage_users"
