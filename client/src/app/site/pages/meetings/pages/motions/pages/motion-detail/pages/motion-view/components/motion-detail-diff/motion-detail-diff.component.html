@@ -127,16 +127,16 @@
                             </div>
                         }
                     </div>
-                    @if (
-                        isAmendment(change) &&
-                        showAllAmendments &&
-                        originMotionDisplay &&
-                        originMotionsLoadedIds.includes(change.amendment.lead_motion.origin_id)
-                    ) {
-                        <div class="amendment-origin">
-                            {{ change.amendment.origin_meeting }}:
-                            {{ change.amendment.origin.state }}
-                        </div>
+
+                    @if (isAmendment(change) && showAllAmendments && originMotionDisplay) {
+                        @for (origin of change.amendment.all_origins; track origin.id) {
+                            @if (originMotionsLoadedIds.includes(origin.lead_motion_id)) {
+                                <div class="amendment-origin">
+                                    {{ origin.meeting.name }}:
+                                    {{ origin.state }}
+                                </div>
+                            }
+                        }
                     }
                     <div
                         class="motion-text motion-text-diff"
