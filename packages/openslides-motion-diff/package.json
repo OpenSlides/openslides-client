@@ -10,11 +10,13 @@
     "test": "karma start --browsers jsdom"
   },
   "devDependencies": {
+    "@types/jasmine": "^5.1.8",
     "jasmine-core": "^5.9.0",
     "jsdom": "^26.1.0",
     "karma": "^6.4.4",
     "karma-jasmine": "^5.1.0",
     "karma-jsdom-launcher": "^18.0.0",
+    "karma-typescript": "^5.5.4",
     "typescript": "^5.8.3"
   },
   "dependencies": {

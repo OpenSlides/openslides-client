@@ -40,17 +40,17 @@ describe(`utils: dom helpers`, () => {
 
         it(`get first span match`, () => {
             const res = getNodeByName(dummyEl3Span, `span`);
-            expect(res.innerHTML).toBe(`test-span1`);
+            expect(res?.innerHTML).toBe(`test-span1`);
         });
 
         it(`get span match case should not matter`, () => {
             const res = getNodeByName(dummyEl3Span, `SpAn`);
-            expect(res.innerHTML).toBe(`test-span1`);
+            expect(res?.innerHTML).toBe(`test-span1`);
         });
 
         it(`get last span match`, () => {
             const res = getNodeByName(dummyEl3Span, `span`, true);
-            expect(res.innerHTML).toBe(`test-span3`);
+            expect(res?.innerHTML).toBe(`test-span3`);
         });
 
         it(`search not existing`, () => {
@@ -95,24 +95,19 @@ describe(`utils: dom helpers`, () => {
             expect(res.length).toBe(1);
             expect(res[0]).toBe(parent);
         });
-
-        it(`empty node`, () => {
-            const res = getNodeContextTrace(null);
-            expect(res.length).toBe(0);
-        });
     });
 
     describe(`isFirstNonemptyChild function`, () => {
         it(`passed element is first non empty child`, () => {
             const container = document.createElement(`div`);
             container.innerHTML = `<el1></el1><el2></el2><el3></el3>`;
-            expect(isFirstNonemptyChild(container, container.firstChild)).toBe(true);
+            expect(isFirstNonemptyChild(container, container.firstChild!)).toBe(true);
         });
 
         it(`passed element is not first non empty child`, () => {
             const container = document.createElement(`div`);
             container.innerHTML = `<el1></el1><el2></el2><el3></el3>`;
-            expect(isFirstNonemptyChild(container, container.lastChild)).toBe(false);
+            expect(isFirstNonemptyChild(container, container.lastChild!)).toBe(false);
         });
 
         it(`passed element is not a child`, () => {
@@ -131,13 +126,13 @@ describe(`utils: dom helpers`, () => {
         it(`get correct number of list item`, () => {
             const container = document.createElement(`ul`);
             container.innerHTML = `<li>1</li><li>2</li><li>3</li>`;
-            expect(getNthOfListItem(container, container.lastChild)).toBe(3);
+            expect(getNthOfListItem(container, container.lastChild!)).toBe(3);
         });
 
         it(`get correct number of child node in list item`, () => {
             const container = document.createElement(`ul`);
             container.innerHTML = `<li>1</li><li>2</li><li><span>3</span></li>`;
-            expect(getNthOfListItem(container, container.lastChild.firstChild)).toBe(3);
+            expect(getNthOfListItem(container, container.lastChild!.firstChild!)).toBe(3);
         });
 
         it(`get correct number of non existing list item`, () => {
@@ -171,7 +166,6 @@ describe(`utils: dom helpers`, () => {
 
     describe(`nodesToHtml function`, () => {
         it(`can handle empty input`, () => {
-            expect(nodesToHtml(null)).toBe(``);
             expect(nodesToHtml([])).toBe(``);
         });
 
@@ -417,10 +411,6 @@ describe(`utils: dom helpers`, () => {
 
         it(`recognizes non inline element`, () => {
             expect(isInlineElement(document.createElement(`p`))).toBe(false);
-        });
-
-        it(`fails on empty input`, () => {
-            expect(isInlineElement(null)).toBe(false);
         });
     });
 });
