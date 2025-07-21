@@ -132,8 +132,15 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public noEditMode = false;
 
+    private _originMotionsLoaded: Id[] = [];
+    public get originMotionsLoaded(): Id[] {
+        return this._originMotionsLoaded;
+    }
+
     @Input()
-    public originMotionsLoaded: ViewMotion[] = [];
+    public set originMotionsLoaded(value: ViewMotion[]) {
+        this._originMotionsLoaded = value.map(motion => motion.id);
+    }
 
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
@@ -153,10 +160,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     public get nativeElement(): any {
         return this.el.nativeElement;
-    }
-
-    public get originMotionsLoadedIds(): Id[] {
-        return this.originMotionsLoaded.map(motion => motion.id);
     }
 
     public constructor(

@@ -130,7 +130,7 @@
 
                     @if (isAmendment(change) && showAllAmendments && originMotionDisplay) {
                         @for (origin of change.amendment.all_origins; track origin.id) {
-                            @if (originMotionsLoadedIds.includes(origin.lead_motion_id)) {
+                            @if (originMotionsLoaded.includes(origin.lead_motion_id)) {
                                 <div class="amendment-origin">
                                     {{ origin.meeting.name }}:
                                     {{ origin.state }}
