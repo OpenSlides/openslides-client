@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-and-test-prod-image:
-    name: Test Prod Image
+    name: build-and-test-prod-image
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
         run: docker compose down --volumes --remove-orphans
 
   build-and-test-dev-image:
-    name: Test Dev Image
+    name: build-and-test-dev-image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
