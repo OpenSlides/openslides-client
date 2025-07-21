@@ -199,7 +199,6 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         private userService: UserService,
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
-
     ) {
         super();
         this.getUserByUrl();
