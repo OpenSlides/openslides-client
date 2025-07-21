@@ -139,10 +139,15 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                             ? currentProjections[0]
                             : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
+                    if (this.projectedViewModel?.collection === `list_of_speakers`) {
+                        this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
+                    }
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
-                this.listOfSpeakers = clos;
+                if (this.projectedViewModel?.collection !== `list_of_speakers`) {
+                    this.listOfSpeakers = clos;
+                }
             }),
             this.meetingSettingsService
                 .get(`list_of_speakers_default_structure_level_time`)

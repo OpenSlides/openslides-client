@@ -304,7 +304,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === `f`) {
+        if ((event.ctrlKey || event.metaKey) && event.key === `f`) {
             event.preventDefault();
             event.stopPropagation();
             this._searchFieldComponent.focus();
