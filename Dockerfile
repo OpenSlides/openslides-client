@@ -1,9 +1,8 @@
-ARG CONTEXT=prod
-FROM node:22.16-alpine as base
+FROM node:22.17 as base
 
 ## Setup
 ARG CONTEXT
-ENV NODE_VERSION=22.16.0
+ENV NODE_VERSION=22.17.0
 WORKDIR /app
 ENV APP_CONTEXT=${CONTEXT}
 

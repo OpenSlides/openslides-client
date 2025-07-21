@@ -18,8 +18,6 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `last_name`,
     `email`,
     `member_number`,
-    `home_committee`,
-    `guest`,
     `structure_level`,
     `groups`,
     `number`,
@@ -33,5 +31,7 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `is_present`,
     `locked_out`,
     `saml_id`,
+    `home_committee`,
+    `external`,
     `comment`
 ];
