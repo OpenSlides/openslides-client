@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { UserComponentsModule } from 'src/app/site/modules/user-components';
+import { CommitteeCommonServiceModule } from 'src/app/site/pages/organization/pages/committees/services/committee-common-service.module';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { EditorModule } from 'src/app/ui/modules/editor';
@@ -47,7 +48,8 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         ReactiveFormsModule,
         DirectivesModule,
         PipesModule,
-        ExpandableContentWrapperComponent
+        ExpandableContentWrapperComponent,
+        CommitteeCommonServiceModule
     ]
 })
 export class ParticipantDetailModule {}
