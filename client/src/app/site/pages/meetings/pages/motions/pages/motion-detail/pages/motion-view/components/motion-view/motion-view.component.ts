@@ -20,7 +20,8 @@ import {
     Observable,
     startWith,
     Subject,
-    Subscription
+    Subscription,
+    switchMap
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -303,7 +304,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         const title = motion.getTitle();
         super.setTitle(title, true);
         this.motion = motion;
-        this.onMotionSet();
         this.cd.markForCheck();
     }
 
@@ -437,21 +437,21 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
         this.subscriptions.updateSubscription(
             `sorted-changes`,
-            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
+            this.sortedChangesSubscription(this.motion.id, this.unifiedChanges$)
         );
     }
 
-    private sortedChangesSubscription(motion: ViewMotion, subject: Subject<ViewUnifiedChange[]>): Subscription {
+    private sortedChangesSubscription(motionId: Id, subject: Subject<ViewUnifiedChange[]>): Subscription {
         let previousAmendments: ViewMotion[] = null;
 
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
-            this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
-            motion.amendments$.pipe(startWith([]))
+            this.changeRecoRepo.getChangeRecosOfMotionObservable(motionId).pipe(filter(value => !!value)),
+            this.repo.getViewModelObservable(motionId).pipe(filter(m => !!m), switchMap(m => m.amendments$.pipe(startWith([]))))
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {
-                if (motion.id === this.motion.id) {
+                if (motionId === this.motion.id) {
                     if (previousAmendments !== amendments) {
                         this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
                         previousAmendments = amendments;
@@ -465,7 +465,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                         amendments
                     )
                 );
-                if (motion.id === this.motion.id) {
+                if (motionId === this.motion.id) {
                     this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
                 }
                 this.cd.markForCheck();
@@ -592,12 +592,5 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             return ChangeRecoMode.Original;
         }
         return mode;
-    }
-
-    private onMotionSet(): void {
-        this.subscriptions.updateSubscription(
-            `sorted-changes`,
-            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
-        );
     }
 }
