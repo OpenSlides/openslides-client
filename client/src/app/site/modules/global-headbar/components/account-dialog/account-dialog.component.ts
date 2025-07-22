@@ -3,7 +3,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -104,8 +103,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private userService: UserService,
         private snackbar: MatSnackBar,
         private authService: AuthService,
-        private translate: TranslateService,
-        private store: StorageService
+        private translate: TranslateService
     ) {
         super();
     }
