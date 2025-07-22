@@ -406,10 +406,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public hideOriginMotion(id: Id): void {
-        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
-        if (idx !== -1) {
-            this.originMotionsLoaded.splice(idx, 1);
-        }
+        this.originMotionsLoaded = this.originMotionsLoaded.filter(m => m.id !== id);
     }
 
     private addOriginMotionTab(id: Id): void {
@@ -418,8 +415,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
             originMotion.meeting = meeting;
 
-            this.originMotionsLoaded.push(originMotion);
-            this.originMotionsLoaded.sort((a, b) => b.id - a.id);
+            this.originMotionsLoaded = [...this.originMotionsLoaded, originMotion].sort((a, b) => b.id - a.id);
             this.originUnifiedChanges[id] = this.motionLineNumbering.recalcUnifiedChanges(
                 originMotion.meeting?.motions_line_length || this.meetingSettingsService.instant(`motions_line_length`),
                 originMotion.change_recommendations,

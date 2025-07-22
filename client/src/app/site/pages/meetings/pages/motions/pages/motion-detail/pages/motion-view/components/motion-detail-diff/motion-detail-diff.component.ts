@@ -132,6 +132,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public noEditMode = false;
 
+    private _originMotionsLoaded: Id[] = [];
+    public get originMotionsLoaded(): Id[] {
+        return this._originMotionsLoaded;
+    }
+
+    @Input()
+    public set originMotionsLoaded(value: ViewMotion[]) {
+        this._originMotionsLoaded = value.map(motion => motion.id);
+    }
+
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
 
@@ -145,6 +155,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public preamble!: string;
 
     private _showPreamble = true;
+
+    public originMotionDisplay = false;
 
     public get nativeElement(): any {
         return this.el.nativeElement;
@@ -167,7 +179,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             this.meetingSettingsService
                 .get(`motions_line_length`)
                 .subscribe(lineLength => (this.lineLength = lineLength)),
-            this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble))
+            this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble)),
+            this.meetingSettingsService.get(`motions_enable_origin_motion_display`).subscribe(display => (this.originMotionDisplay = display))
         );
     }
 
