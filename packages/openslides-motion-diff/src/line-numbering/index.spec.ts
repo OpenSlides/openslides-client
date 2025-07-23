@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brMarkup, longstr, noMarkup } from "./test-utils";
+import { brMarkup, longstr, noMarkup } from "../utils/tests";
 import { getRange, highlightLine, insert, insertLineBreaks, splitInlineElementsAtLineBreaks, splitToParagraphs, strip } from ".";
 
 describe(`getting line number range`, () => {
