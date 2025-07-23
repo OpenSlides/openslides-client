@@ -1,7 +1,8 @@
-import { splitInlineElementsAtLineBreak, splitNodeToParagraphs } from "./internal";
+import { highlightUntilNextLine, splitInlineElementsAtLineBreak, splitNodeToParagraphs, stripLineNumbersFromNode } from "./internal";
 import { fragmentToHtml, htmlToFragment } from "../utils/dom-helpers";
 import { InsertLineNumbersConfig, LineNumberedString, LineNumberRange } from "./definitions";
-import { LineNumberRangeRegexp } from "./utils";
+import { getLineNumberNode, LineNumberRangeRegexp } from "./utils";
+import { LineNumbering } from "./line-numbering";
 
 /**
   * Given a HTML string augmented with line number nodes, this function detects the line number range of this text.
@@ -36,7 +37,8 @@ export function insert({
     highlight,
     firstLine = 1
 }: InsertLineNumbersConfig): LineNumberedString {
-    throw new Error(`TODO`);
+    const ln = new LineNumbering(html, lineLength, firstLine, highlight ?? null);
+    return ln.run().innerHTML;
 }
 
 /**
@@ -51,7 +53,8 @@ export function insert({
   * @returns {string}
   */
 export function insertLineBreaks(html: string, lineLength: number, countInserted: boolean = false): string {
-    throw new Error(`TODO`);
+    const ln = new LineNumbering(html, lineLength, null, null, !countInserted);
+    return ln.run().innerHTML;
 }
 
 /**
@@ -61,7 +64,10 @@ export function insertLineBreaks(html: string, lineLength: number, countInserted
   * @returns {string}
   */
 export function strip(html: string): string {
-    throw new Error(`TODO`);
+    const root = document.createElement(`div`);
+    root.innerHTML = html;
+    stripLineNumbersFromNode(root);
+    return root.innerHTML;
 }
 
 /**
@@ -100,4 +106,23 @@ export function splitInlineElementsAtLineBreaks(html: string): string {
     });
 
     return fragmentToHtml(fragment);
+}
+
+/**
+  * Highlights (span[class=highlight]) a specific line.
+  *
+  * @param {string} html
+  * @param {number} lineNumber
+  * @return {string}
+  */
+export function highlightLine(html: string, lineNumber: number): string {
+    const fragment = htmlToFragment(html);
+    const lineNumberNode = getLineNumberNode(fragment, lineNumber);
+
+    if (lineNumberNode) {
+        highlightUntilNextLine(lineNumberNode);
+        html = fragmentToHtml(fragment);
+    }
+
+    return html;
 }

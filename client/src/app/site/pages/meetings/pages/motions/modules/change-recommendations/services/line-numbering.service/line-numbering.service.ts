@@ -120,7 +120,21 @@ export class LineNumberingService {
      * TODO: Update type
      */
     public insertLineNumbers(config: InsertLineNumbersConfig): LineNumberedString {
-        return LineNumbering.insert(config);
+        let newHtml: string;
+
+        const firstLineStr = !config.firstLine ? `` : config.firstLine.toString();
+        const cacheKey = djb2hash(firstLineStr + `-` + config.lineLength.toString() + config.html);
+        newHtml = this.lineNumberCache.get(cacheKey);
+        if (!newHtml) {
+            newHtml = LineNumbering.insert(config);
+            this.lineNumberCache.put(cacheKey, newHtml);
+        }
+
+        if ((config.highlight as number) > 0) {
+            return LineNumbering.highlightLine(newHtml, config.highlight);
+        }
+
+        return newHtml;
     }
 
     /**

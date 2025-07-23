@@ -7,7 +7,7 @@ export type LineNumberedString = string;
  * Specifies a point within a HTML Text Node where a line break might be possible, if the following word
  * exceeds the maximum line length.
  */
-interface BreakablePoint {
+export interface BreakablePoint {
     /**
      * The Text node which is a candidate to be split into two.
      */

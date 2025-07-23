@@ -8,6 +8,7 @@ export const brMarkup = (no: number): string => {
         `">&nbsp;</span>`
     );
 };
+
 export const noMarkup = (no: number): string => {
     return (
         `<span contenteditable="false" class="os-line-number line-number-` +
@@ -17,6 +18,7 @@ export const noMarkup = (no: number): string => {
         `">&nbsp;</span>`
     );
 };
+
 export const longstr = (length: number): string => {
     let outstr = ``;
     for (let i = 0; i < length; i++) {
