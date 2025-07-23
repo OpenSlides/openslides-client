@@ -7,17 +7,14 @@
   "type": "commonjs",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "karma start --browsers jsdom"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/jasmine": "^5.1.8",
-    "jasmine-core": "^5.9.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "jsdom": "^26.1.0",
-    "karma": "^6.4.4",
-    "karma-jasmine": "^5.1.0",
-    "karma-jsdom-launcher": "^18.0.0",
-    "karma-typescript": "^5.5.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@types/tinycolor2": "^1.4.6",

@@ -1,3 +1,4 @@
+import { describe, test as it, expect } from 'vitest';
 import {
     addClassToHtmlTag,
     addCSSClass,
@@ -178,6 +179,7 @@ describe(`utils: dom helpers`, () => {
         });
     });
 
+    /*
     xdescribe(`getAllNextSiblings function`, () => {
         it(``, () => {
             // expect(``).toBe(``);
@@ -189,6 +191,7 @@ describe(`utils: dom helpers`, () => {
             // expect(``).toBe(``);
         });
     });
+    */
 
     describe(`addCSSClass function`, () => {
         it(`adds a class`, () => {
