@@ -1,27 +1,13 @@
 import { Injectable } from '@angular/core';
+import { LineNumbering } from '@openslides/motion-diff';
+import { djb2hash } from 'src/app/infrastructure/utils';
 
-const ELEMENT_NODE = Node.ELEMENT_NODE;
-const TEXT_NODE = Node.TEXT_NODE;
+import { DiffCache } from '../../../../definitions';
 
 /**
  * A helper to indicate that certain functions expect the provided HTML strings to contain line numbers
  */
 export type LineNumberedString = string;
-
-/**
- * Specifies a point within a HTML Text Node where a line break might be possible, if the following word
- * exceeds the maximum line length.
- */
-interface BreakablePoint {
-    /**
-     * The Text node which is a candidate to be split into two.
-     */
-    node: Node;
-    /**
-     * The exact offset of the found breakable point.
-     */
-    offset: number;
-}
 
 /**
  * An object specifying a range of line numbers.
@@ -38,24 +24,6 @@ export interface LineNumberRange {
      * `from` and `to`.
      */
     to: number | null;
-}
-
-/**
- * Specifies a heading element (H1, H2, H3, H4, H5, H6) within a HTML document.
- */
-interface SectionHeading {
-    /**
-     * The first line number of this element.
-     */
-    lineNumber: number;
-    /**
-     * The nesting level. H1 = 1, H2 = 2, etc.
-     */
-    level: number;
-    /**
-     * The text content of this heading.
-     */
-    text: string;
 }
 
 interface InsertLineNumbersConfig {
@@ -106,6 +74,14 @@ interface InsertLineNumbersConfig {
 })
 export class LineNumberingService {
     /**
+     * @TODO Decide on a more sophisticated implementation
+     * This is just a stub for a caching system. The original code from Angular1 was:
+     * var lineNumberCache = $cacheFactory('linenumbering.service');
+     * This should be replaced by a real cache once we have decided on a caching service for OpenSlides 3
+     */
+    private lineNumberCache = new DiffCache();
+
+    /**
      * Given a HTML string augmented with line number nodes, this function detects the line number range of this text.
      * This method assumes that the line number node indicating the beginning of the next line is not included anymore.
      *
@@ -113,7 +89,7 @@ export class LineNumberingService {
      * @returns {LineNumberRange}
      */
     public getLineNumberRange(html: string): LineNumberRange {
-        return null;
+        return LineNumbering.getRange(html);
     }
 
     /**
@@ -128,19 +104,23 @@ export class LineNumberingService {
      * @return {string[]}
      */
     public splitToParagraphs(html: string): string[] {
-        return null;
+        const cacheKey = djb2hash(html);
+        let cachedParagraphs = this.lineNumberCache.get(cacheKey);
+        if (!cachedParagraphs) {
+            cachedParagraphs = LineNumbering.splitToParagraphs(html);
+
+            this.lineNumberCache.put(cacheKey, cachedParagraphs);
+        }
+
+        return cachedParagraphs;
     }
 
     /**
      * Adds line number nodes to the given html string.
+     * TODO: Update type
      */
-    public insertLineNumbers({
-        html,
-        lineLength,
-        highlight,
-        firstLine = 1
-    }: InsertLineNumbersConfig): LineNumberedString {
-        return null;
+    public insertLineNumbers(config: InsertLineNumbersConfig): LineNumberedString {
+        return LineNumbering.insert(config);
     }
 
     /**
@@ -155,7 +135,7 @@ export class LineNumberingService {
      * @returns {string}
      */
     public insertLineBreaksWithoutNumbers(html: string, lineLength: number, countInserted = false): string {
-        return null;
+        return LineNumbering.insertLineBreaks(html, lineLength, countInserted);
     }
 
     /**
@@ -165,7 +145,7 @@ export class LineNumberingService {
      * @returns {string}
      */
     public stripLineNumbers(html: string): string {
-        return null;
+        return LineNumbering.strip(html);
     }
 
     /**
@@ -181,6 +161,6 @@ export class LineNumberingService {
      * @returns {string}
      */
     public splitInlineElementsAtLineBreaks(html: string): string {
-        return null;
+        return LineNumbering.splitInlineElementsAtLineBreaks(html);
     }
 }

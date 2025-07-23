@@ -7,6 +7,7 @@
   "type": "commonjs",
   "main": "./dist/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

@@ -1,0 +1,87 @@
+import { TEXT_NODE } from "../utils/definitions";
+import { isInlineElement } from "../utils/dom-helpers";
+import { isOsLineBreakNode } from "./utils";
+
+/**
+  * Given a big element containing a whole document, this method splits it into editable paragraphs.
+  * Each first-level LI element gets its own paragraph, as well as all root-level block elements (except for lists).
+  *
+  * @param {Element|DocumentFragment} node
+  * @returns {Element[]}
+  * @private
+  */
+export function splitNodeToParagraphs(node: Element | DocumentFragment): Element[] {
+    const elements = [];
+    for (let i = 0; i < node.childNodes.length; i++) {
+        const childNode = node.childNodes.item(i);
+
+        if (childNode.nodeType === TEXT_NODE) {
+            continue;
+        }
+        if (childNode.nodeName === `UL` || childNode.nodeName === `OL`) {
+            const childElement = childNode as Element;
+            let start = 1;
+            if (childElement.getAttribute(`start`) !== null) {
+                start = parseInt(childElement.getAttribute(`start`) as string, 10);
+            }
+            for (let j = 0; j < childElement.childNodes.length; j++) {
+                if (childElement.childNodes.item(j).nodeType === TEXT_NODE) {
+                    continue;
+                }
+                const newParent = childElement.cloneNode(false) as Element;
+                if (childElement.nodeName === `OL`) {
+                    newParent.setAttribute(`start`, start.toString());
+                }
+                newParent.appendChild(childElement.childNodes.item(j).cloneNode(true));
+                elements.push(newParent);
+                start++;
+            }
+        } else {
+            elements.push(childNode);
+        }
+    }
+    return elements as Element[];
+}
+
+
+/**
+  * Helper function that does the actual work for `splitInlineElementsAtLineBreaks`
+  *
+  * @param {Element} lineNumber
+  */
+export function splitInlineElementsAtLineBreak(lineNumber: Element): void {
+    const parentIsInline = (el: Element): boolean => isInlineElement(el.parentElement!);
+    while (parentIsInline(lineNumber)) {
+        const parent: Element = lineNumber.parentElement as Element;
+        const beforeParent: Element = parent.cloneNode(false) as Element;
+
+        // If the node right before the line number is a line break, move it outside along with the line number
+        let lineBreak: Element | null = null;
+        if (isOsLineBreakNode(lineNumber.previousSibling!)) {
+            lineBreak = lineNumber.previousSibling as Element;
+            lineBreak.remove();
+        }
+
+        // All nodes before the line break / number are moved into beforeParent
+        while (lineNumber.previousSibling) {
+            const previousSibling = lineNumber.previousSibling;
+            parent.removeChild(previousSibling);
+            if (beforeParent.childNodes.length > 0) {
+                beforeParent.insertBefore(previousSibling, beforeParent.firstChild);
+            } else {
+                beforeParent.appendChild(previousSibling);
+            }
+        }
+
+        // Insert beforeParent before the parent
+        if (beforeParent.childNodes.length > 0) {
+            parent.parentElement!.insertBefore(beforeParent, parent);
+        }
+
+        // Add the line number and (if found) the line break inbetween
+        if (lineBreak) {
+            parent.parentElement!.insertBefore(lineBreak, parent);
+        }
+        parent.parentElement!.insertBefore(lineNumber, parent);
+    }
+}
