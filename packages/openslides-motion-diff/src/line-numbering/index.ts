@@ -36,7 +36,7 @@ export function insert({
     highlight,
     firstLine = 1
 }: InsertLineNumbersConfig): LineNumberedString {
-    return ``;
+    throw new Error(`TODO`);
 }
 
 /**
@@ -51,7 +51,7 @@ export function insert({
   * @returns {string}
   */
 export function insertLineBreaks(html: string, lineLength: number, countInserted: boolean = false): string {
-    return ``;
+    throw new Error(`TODO`);
 }
 
 /**
@@ -61,7 +61,7 @@ export function insertLineBreaks(html: string, lineLength: number, countInserted
   * @returns {string}
   */
 export function strip(html: string): string {
-    return ``;
+    throw new Error(`TODO`);
 }
 
 /**

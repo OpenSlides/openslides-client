@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { HtmlDiff } from '@openslides/motion-diff';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
@@ -130,9 +131,10 @@ export class MotionDiffService {
             return cached;
         }
 
-        // TODO
+        const extractedRange = HtmlDiff.extractRangeByLineNumbers(html, fromLine, toLine);
+        this.diffCache.put(cacheKey, extractedRange);
 
-        return null;
+        return extractedRange;
     }
 
     /**
@@ -142,9 +144,7 @@ export class MotionDiffService {
      * @param {ExtractedContent} diff
      */
     public formatDiff(diff: ExtractedContent): string {
-        return (
-            diff.outerContextStart + diff.innerContextStart + diff.html + diff.innerContextEnd + diff.outerContextEnd
-        );
+        return HtmlDiff.formatDiff(diff);
     }
 
     /**
@@ -158,7 +158,15 @@ export class MotionDiffService {
      * @returns {LineRange}
      */
     public detectAffectedLineRange(diffHtml: string): LineRange | null {
-        return null;
+        const cacheKey = djb2hash(diffHtml);
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const range = HtmlDiff.detectAffectedLineRange(diffHtml);
+        this.diffCache.put(cacheKey, range);
+        return range;
     }
 
     /**
@@ -169,7 +177,7 @@ export class MotionDiffService {
      * @returns {string}
      */
     public diffHtmlToFinalText(html: string): string {
-        return null;
+        return HtmlDiff.diffHtmlToFinalText(html);
     }
 
     /**
@@ -186,7 +194,7 @@ export class MotionDiffService {
      * @param {number} toLine
      */
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-        return null;
+        return HtmlDiff.replaceLines(oldHtml, newHTML, fromLine, toLine);
     }
 
     /**
@@ -205,19 +213,28 @@ export class MotionDiffService {
         lineLength: number | null = null,
         firstLineNumber: number | null = null
     ): string {
-        return null;
+        const cacheKey = lineLength + ` ` + firstLineNumber + ` ` + djb2hash(htmlOld) + djb2hash(htmlNew);
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const diff = HtmlDiff.diff(htmlOld, htmlNew, lineLength, firstLineNumber);
+        this.diffCache.put(cacheKey, diff);
+
+        return diff;
     }
 
     public readdOsSplit(diff: string, versions: string[], before = false): string {
-        return null;
+        return HtmlDiff.readdOsSplit(diff, versions, before);
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return null;
+        return HtmlDiff.changeHasCollissions(change, changes);
     }
 
     public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return null;
+        return HtmlDiff.sortChangeRequests(changes) as ViewUnifiedChange[];
     }
 
     /**
@@ -238,14 +255,14 @@ export class MotionDiffService {
         highlightLine?: number,
         firstLine = 1
     ): string {
-        return null;
+        return HtmlDiff.getTextWithChanges(motionHtml, changes, lineLength, showAllCollisions, highlightLine, firstLine);
     }
 
     public formatOsCollidingChanges(
         html: string,
         formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
     ): string {
-        return null;
+        return HtmlDiff.formatOsCollidingChanges(html, formatter);
     }
 
     public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {
@@ -355,7 +372,7 @@ export class MotionDiffService {
         lineLength: number,
         changeRecos?: ViewUnifiedChange[]
     ): DiffLinesInParagraph | null {
-        return null;
+        return HtmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changeRecos);
     }
 
     /**
@@ -374,7 +391,7 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        return null;
+        return HtmlDiff.getChangeDiff(html, change, lineLength, highlight);
     }
 
     /**
@@ -394,7 +411,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        return null;
+        return HtmlDiff.getTextRemainderAfterLastChange(motionHtml, changes, lineLength, highlight, lineRange);
     }
 
     /**
@@ -413,6 +430,6 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
-        return null;
+        return HtmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
     }
 }
