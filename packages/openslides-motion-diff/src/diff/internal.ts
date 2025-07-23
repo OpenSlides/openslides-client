@@ -213,3 +213,43 @@ export function serializeDom(node: Node, stripLineNumbers: boolean): string {
 
     return html;
 }
+
+export function recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before = false): void {
+    const className = before ? `os-split-before` : `os-split-after`;
+    let containsSplit = false;
+    for (const v of versions) {
+        if (v?.classList.contains(className)) {
+            containsSplit = true;
+        }
+    }
+
+    if (!containsSplit) {
+        return;
+    }
+
+    const nextVersions: HTMLElement[] = [];
+    for (const v of versions) {
+        const s = v?.querySelector(`& > .${className}`) as HTMLElement;
+        if (s) {
+            nextVersions.push(s);
+        }
+    }
+
+    diff?.classList?.add(className);
+    const nextDiffNode = diff?.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+    if (nextDiffNode) {
+        recAddOsSplit(nextDiffNode, nextVersions, before);
+    }
+
+    if (
+        diff.nextElementSibling &&
+        ((diff.classList.contains(`delete`) && diff.nextElementSibling.classList.contains(`insert`)) ||
+            (diff.classList.contains(`insert`) && diff.nextElementSibling.classList.contains(`delete`)))
+    ) {
+        diff.nextElementSibling.classList?.add(className);
+        const nextSibDiffNode = diff.nextElementSibling.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+        if (nextSibDiffNode) {
+            recAddOsSplit(nextSibDiffNode, nextVersions, before);
+        }
+    }
+}

@@ -108,5 +108,7 @@ export interface DiffLinesInParagraph {
  * An object representing a change to a text
  */
 export interface UnifiedChange {
+    getIdentifier(): string;
     getLineTo(): number;
+    getLineFrom(): number;
 }

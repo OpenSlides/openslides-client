@@ -1,9 +1,9 @@
 import { LineNumbering } from "..";
 import { LineNumberedString } from "../line-numbering/definitions";
-import { addCSSClass, addCSSClassToFirstTag, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild } from "../utils/dom-helpers";
+import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange } from "./definitions";
-import { insertInternalLineMarkers, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { getLineNumberNode, serializeTagDiff } from "./utils";
+import { insertInternalLineMarkers, recAddOsSplit, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -228,7 +228,41 @@ export function formatDiff(diff: ExtractedContent): string {
   * @returns {LineRange}
   */
 export function detectAffectedLineRange(diffHtml: string): LineRange | null {
-    throw new Error(`TODO`);
+    const fragment = htmlToFragment(diffHtml);
+
+    insertInternalLineMarkers(fragment);
+
+    const changes = fragment.querySelectorAll(`ins, del, .insert, .delete`);
+    const firstChange = changes.item(0);
+    const lastChange = changes.item(changes.length - 1);
+
+    if (!firstChange || !lastChange) {
+        // There are no changes
+        return null;
+    }
+
+    const firstTrace = getNodeContextTrace(firstChange);
+    let lastLineNumberBefore = null;
+    for (let j = firstTrace.length - 1; j >= 0 && lastLineNumberBefore === null; j--) {
+        const prevSiblings = getAllPrevSiblingsReversed(firstTrace[j]);
+        for (let i = 0; i < prevSiblings.length && lastLineNumberBefore === null; i++) {
+            lastLineNumberBefore = getLastLineNumberNode(prevSiblings[i]);
+        }
+    }
+
+    const lastTrace = getNodeContextTrace(lastChange);
+    let firstLineNumberAfter = null;
+    for (let j = lastTrace.length - 1; j >= 0 && firstLineNumberAfter === null; j--) {
+        const nextSiblings = getAllNextSiblings(lastTrace[j]);
+        for (let i = 0; i < nextSiblings.length && firstLineNumberAfter === null; i++) {
+            firstLineNumberAfter = getFirstLineNumberNode(nextSiblings[i]);
+        }
+    }
+
+    return {
+        from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
+        to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
+    };
 }
 
 /**
@@ -279,15 +313,52 @@ export function diff(
 }
 
 export function readdOsSplit(diff: string, versions: string[], before = false): string {
-    throw new Error(`TODO`);
+    const className = before ? `os-split-before` : `os-split-after`;
+
+    const diffEl = document.createElement(`template`);
+    diffEl.innerHTML = diff;
+    const diffNode = (before ? diffEl.content.firstChild : diffEl.content.lastChild) as HTMLElement;
+
+    const versionNodes: HTMLElement[] = [];
+    let found = false;
+    for (const v of versions) {
+        const el = document.createElement(`template`);
+        el.innerHTML = v;
+        versionNodes.push((before ? el.content.firstChild : el.content.lastChild) as HTMLElement);
+        found = found || !!el.content.querySelector(`.${className}`);
+    }
+
+    if (!found) {
+        return diff;
+    }
+
+    recAddOsSplit(diffNode, versionNodes, before);
+
+    return diffEl.innerHTML;
 }
 
 export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChange[]): boolean {
-    throw new Error(`TODO`);
+    return (
+        changes.filter(
+            (otherChange) =>
+                otherChange.getIdentifier() !== change.getIdentifier() &&
+                ((otherChange.getLineFrom() >= change.getLineFrom() &&
+                    otherChange.getLineFrom() <= change.getLineTo()) ||
+                    (otherChange.getLineTo() >= change.getLineFrom() &&
+                        otherChange.getLineTo() <= change.getLineTo()) ||
+                        (otherChange.getLineFrom() <= change.getLineFrom() &&
+                            otherChange.getLineTo() >= change.getLineTo()))
+        ).length > 0
+    );
 }
 
 export function sortChangeRequests(changes: UnifiedChange[]): UnifiedChange[] {
-    throw new Error(`TODO`);
+    return changes.sort((change1, change2): number => {
+        if (change1.getLineFrom() === change2.getLineFrom()) {
+            return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
+        }
+        return change1.getLineFrom() - change2.getLineFrom();
+    });
 }
 
 /**

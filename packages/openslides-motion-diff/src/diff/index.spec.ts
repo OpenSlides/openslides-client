@@ -15,6 +15,10 @@ describe(`MotionDiffService`, () => {
             text: string;
         }) {}
 
+        getIdentifier(): string {
+            return ``;
+        }
+
         getLineTo(): number {
             return this.obj.line_to;
         }
@@ -1447,6 +1451,7 @@ describe(`MotionDiffService`, () => {
             const affected = service.detectAffectedLineRange(diff);
             expect(affected).toEqual({ from: 3, to: 4 });
         });
+
         it(`detects changed line numbers at the beginning`, () => {
                 let before = `<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat</p>`;
                 const after = `<p>sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat</p>`;
