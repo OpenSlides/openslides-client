@@ -45,9 +45,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public get showPollCollection(): boolean {
-        return (
-            this._currentProjection?.type !== `agenda_item_list` && this._currentProjection?.type !== `wifi_access_data`
-        );
+        return this._currentProjection?.type !== `wifi_access_data`;
     }
 
     public get projectorTitle(): string {
