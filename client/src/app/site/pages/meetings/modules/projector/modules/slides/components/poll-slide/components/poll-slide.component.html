@@ -46,7 +46,7 @@
                             }
                         </div>
                     </div>
-                    @if (!isLiveVote) {
+                    @if (showResult) {
                         @if (polldata.pollmethod.includes('Y')) {
                             <os-icon-container icon="check_circle" iconClass="yes" size="large">
                                 <span class="yes">
