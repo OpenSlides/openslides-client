@@ -38,11 +38,6 @@ msgstr ""
 msgid "<unknown>"
 msgstr ""
 
-msgid ""
-"A change recommendation or amendment is probably referring to a nonexistent "
-"line number."
-msgstr ""
-
 msgid "A client error occurred. Please contact your system administrator."
 msgstr ""
 
@@ -384,6 +379,10 @@ msgid "Allow verbose error messages for reset password process"
 msgstr ""
 
 msgid "Allowed access groups for this directory"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component.html
+msgid "Allows single votes projection during voting process"
 msgstr ""
 
 msgid "Always"
@@ -2639,11 +2638,6 @@ msgstr ""
 msgid "If empty, everyone can access."
 msgstr ""
 
-msgid ""
-"If it is an amendment, you can back up its content when editing it and "
-"delete it afterwards."
-msgstr ""
-
 #: /app/src/app/site/pages/meetings/pages/projectors/components/projector-countdown-dialog/components/projector-countdown-dialog/projector-countdown-dialog.component.html
 msgid "If the value is set to 0 the time counts up as stopwatch."
 msgstr ""
@@ -2707,6 +2701,10 @@ msgid "Inactive"
 msgstr ""
 
 msgid "Inconsistent data."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-detail-diff/motion-detail-diff.component.html
+msgid "Inconsistent data. Please delete this change recommendation."
 msgstr ""
 
 msgid "Information"
@@ -3044,6 +3042,10 @@ msgid "Lists of speakers"
 msgstr ""
 
 msgid "Live conference"
+msgstr ""
+
+#: app/src/app/domain/models/poll/poll-constants.ts
+msgid "Live voting enabled"
 msgstr ""
 
 msgid "Livestream"
@@ -3753,6 +3755,10 @@ msgstr ""
 msgid "One email was send sucessfully."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Only available for nominal voting"
+msgstr ""
+
 msgid "Only for internal notes."
 msgstr ""
 
@@ -4124,6 +4130,10 @@ msgid ""
 msgstr ""
 
 msgid "Please update your browser or contact your system administration."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/projector/modules/slides/components/poll-slide/components/poll-slide.component.html
+msgid "Please vote now!"
 msgstr ""
 
 msgid "Point of order"
@@ -4676,6 +4686,10 @@ msgstr ""
 msgid "Set it manually"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Set live voting enabled by default"
+msgstr ""
+
 #: /app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.html
 msgid "Set lock out ..."
 msgstr ""
@@ -4997,6 +5011,10 @@ msgid "Stop voting"
 msgstr ""
 
 msgid "Stop waiting"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/base/base-poll.component.ts
+msgid "Stop, publish & anonymize"
 msgstr ""
 
 msgid "Strikethrough"
@@ -5739,10 +5757,12 @@ msgid ""
 "this motion regardless?"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-form/components/motion-form/motion-form.component.ts
 msgid ""
-"Warning: Amendments exist for this motion. Editing this text will likely "
-"impact them negatively. Particularily, amendments might become unusable if "
-"the paragraph they affect is deleted."
+"Warning: Amendments or change recommendations exist for this motion. "
+"Editing this text will likely impact them negatively. Particularily, "
+"amendments might become unusable if the paragraph they affect is deleted, "
+"or change recommendations might lose their reference line completely."
 msgstr ""
 
 #: /app/src/app/site/pages/meetings/pages/motions/components/motion-multiselect/services/motion-multiselect.service.ts
@@ -6036,6 +6056,10 @@ msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
 msgid "change recommendation"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/services/common/motion-format.service/motion-format.service.ts
+msgid "change recommendation(s) refer to a nonexistent line number."
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
