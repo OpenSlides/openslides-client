@@ -74,6 +74,10 @@ export class PollSlideComponent
         return this.data.data.state === PollState.Published || (this.isLiveVote && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started));
     }
 
+    public get showResult(): boolean {
+        return !this.isLiveVote || (this.isLiveVote && this.data.data.state === PollState.Published);
+    }
+
     public get isRunningLiveVote(): boolean {
         return this.isLiveVote && this.data.data.state === PollState.Started;
     }
