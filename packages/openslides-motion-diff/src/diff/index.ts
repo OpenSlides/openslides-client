@@ -1,5 +1,9 @@
+import { LineNumbering } from "..";
 import { LineNumberedString } from "../line-numbering/definitions";
+import { addCSSClass, addCSSClassToFirstTag, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange } from "./definitions";
+import { insertInternalLineMarkers, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { getLineNumberNode, serializeTagDiff } from "./utils";
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -34,7 +38,171 @@ export function extractRangeByLineNumbers(
     fromLine: number,
     toLine: number | null
 ): ExtractedContent {
-    throw new Error(`TODO`);
+    if (typeof html !== `string`) {
+        throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
+    }
+
+    const fragment = htmlToFragment(html);
+    insertInternalLineMarkers(fragment);
+
+    let toLineNumber: number;
+    if (toLine === null) {
+        const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
+        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+    } else {
+        toLineNumber = toLine + 1;
+    }
+
+    const fromLineNumberNode = getLineNumberNode(fragment, fromLine);
+    const toLineNumberNode = toLineNumber ? getLineNumberNode(fragment, toLineNumber) : null;
+    const ancestorData = getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
+
+    const fromChildTraceRel = ancestorData.trace1;
+    const fromChildTraceAbs = getNodeContextTrace(fromLineNumberNode as Element);
+    const toChildTraceRel = ancestorData.trace2;
+    const toChildTraceAbs = getNodeContextTrace(toLineNumberNode as Element);
+    const ancestor = ancestorData.commonAncestor;
+    let htmlOut = ``;
+    let outerContextStart = ``;
+    let outerContextEnd = ``;
+    let innerContextStart = ``;
+    let innerContextEnd = ``;
+    let previousHtmlEndSnippet = ``;
+    let followingHtmlStartSnippet = ``;
+
+    fromChildTraceAbs.shift();
+    const previousHtml = serializePartialDomToChild(fragment, fromChildTraceAbs, false);
+
+    toChildTraceAbs.shift();
+    const followingHtml = serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+
+    let currNode: Node = fromLineNumberNode as Element;
+    let isSplit = false;
+    while (currNode.parentNode) {
+        if (!isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            isSplit = true;
+        }
+        if (isSplit) {
+            addCSSClass(currNode.parentNode, `os-split-before`);
+        }
+        if (currNode.nodeName !== `OS-LINEBREAK`) {
+            previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
+        }
+        currNode = currNode.parentNode;
+    }
+
+    currNode = toLineNumberNode as Element;
+    isSplit = false;
+    while (currNode.parentNode) {
+        if (!isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            isSplit = true;
+        }
+        if (isSplit) {
+            addCSSClass(currNode.parentNode, `os-split-after`);
+        }
+        if (currNode.parentNode.nodeName === `OL`) {
+            const parentElement = currNode.parentNode as Element;
+            const fakeOl = parentElement.cloneNode(false) as any;
+            const offset = parentElement.getAttribute(`start`)
+                ? parseInt(parentElement.getAttribute(`start`) as string, 10) - 1
+                : 0;
+            fakeOl.setAttribute(
+                `start`,
+                (
+                    (getNthOfListItem(parentElement, toLineNumberNode as Element) as number) + offset
+                ).toString()
+            );
+            followingHtmlStartSnippet = serializeTagDiff(fakeOl) + followingHtmlStartSnippet;
+        } else {
+            followingHtmlStartSnippet = serializeTagDiff(currNode.parentNode) + followingHtmlStartSnippet;
+        }
+        currNode = currNode.parentNode;
+    }
+
+    isSplit = false;
+    for (let i = 0, found = false; i < fromChildTraceRel.length && !found; i++) {
+        if (fromChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
+            found = true;
+        } else {
+            if (!isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
+                isSplit = true;
+            }
+            if (fromChildTraceRel[i].nodeName === `OL`) {
+                const element = fromChildTraceRel[i] as Element;
+                const fakeOl = element.cloneNode(false) as any;
+                const offset = element.getAttribute(`start`)
+                    ? parseInt(element.getAttribute(`start`) as string, 10) - 1
+                    : 0;
+                fakeOl.setAttribute(
+                    `start`,
+                    (
+                        offset + (getNthOfListItem(element, fromLineNumberNode as Element) as number)
+                    ).toString()
+                );
+                innerContextStart += serializeTagDiff(fakeOl);
+            } else {
+                if (i < fromChildTraceRel.length - 1 && isSplit) {
+                    addCSSClass(fromChildTraceRel[i], `os-split-before`);
+                }
+                innerContextStart += serializeTagDiff(fromChildTraceRel[i]);
+            }
+        }
+    }
+    for (let i = 0, found = false; i < toChildTraceRel.length && !found; i++) {
+        if (toChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
+            found = true;
+        } else {
+            innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
+        }
+    }
+
+    for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
+        if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+            found = true;
+            fromChildTraceRel.shift();
+            htmlOut += serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
+        } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+            found = false;
+            toChildTraceRel.shift();
+            htmlOut += serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+        } else if (found === true) {
+            htmlOut += serializeDom(ancestor.childNodes[i], true);
+        }
+    }
+
+    currNode = ancestor;
+    while (currNode.parentNode) {
+        if (currNode.nodeName === `OL`) {
+            const currElement = currNode as Element;
+            const fakeOl = currElement.cloneNode(false) as any;
+            const offset = currElement.getAttribute(`start`)
+                ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
+                : 0;
+            fakeOl.setAttribute(
+                `start`,
+                ((getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
+            );
+            outerContextStart = serializeTagDiff(fakeOl) + outerContextStart;
+        } else {
+            outerContextStart = serializeTagDiff(currNode) + outerContextStart;
+        }
+        outerContextEnd += `</` + currNode.nodeName + `>`;
+        currNode = currNode.parentNode;
+    }
+
+    return {
+        html: htmlOut,
+        ancestor,
+        outerContextStart,
+        outerContextEnd,
+        innerContextStart,
+        innerContextEnd,
+        previousHtml,
+        previousHtmlEndSnippet,
+        followingHtml,
+        followingHtmlStartSnippet
+    };
 }
 
 /**
@@ -207,7 +375,42 @@ export function getTextRemainderAfterLastChange(
     highlight?: number,
     lineRange?: LineRange
 ): string {
-    throw new Error(`TODO`);
+    if (changes.length === 0 && !lineRange) {
+        return motionHtml;
+    }
+
+    let maxFromLine = lineRange?.from || (LineNumbering.getRange(motionHtml).from || 0) - 1;
+    const maxToLine = lineRange?.to || LineNumbering.getRange(motionHtml).to || 0;
+    let hasRemainederOneChangedLine = false;
+
+    for (const change of changes) {
+        if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
+            maxFromLine = change.getLineTo();
+            hasRemainederOneChangedLine = true;
+        }
+    };
+
+    if (!hasRemainederOneChangedLine) {
+        return ``;
+    }
+
+    const data: ExtractedContent = extractRangeByLineNumbers(
+        motionHtml,
+        Math.max(maxFromLine + 1, lineRange?.from || 1),
+        lineRange?.to ? maxToLine : null
+    );
+
+    let html = ``;
+    if (data.html !== ``) {
+        // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
+        html =
+            addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
+            data.html +
+            data.innerContextEnd +
+            data.outerContextEnd;
+        html = LineNumbering.insert({ html, lineLength, highlight, firstLine: maxFromLine + 1 });
+    }
+    return html;
 }
 
 /**

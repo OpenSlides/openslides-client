@@ -4,6 +4,7 @@ import {
     addCSSClass,
     addCSSClassToFirstTag,
     fragmentToHtml,
+    getCommonAncestor,
     getNodeByName,
     getNodeContextTrace,
     getNthOfListItem,
@@ -416,4 +417,12 @@ describe(`utils: dom helpers`, () => {
             expect(isInlineElement(document.createElement(`p`))).toBe(false);
         });
     });
+
+    // TODO: Write test for getCommonAncestor
+    /*
+    it(`getCommonAncestor function`, () => {
+        commonAncestor = getCommonAncestor(fromLineNode, toLineNode);
+        expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
+    });
+    */
 });

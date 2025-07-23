@@ -459,3 +459,66 @@ export function isInlineElement(element: Element): boolean {
 
     return false;
 }
+
+/**
+ * This data structure is used when determining the most specific common ancestor of two HTML node
+ * (`node1` and `node2`)
+ * within the same Document Fragment.
+ */
+export interface CommonAncestorData {
+    /**
+     * The most specific common ancestor node.
+     */
+    commonAncestor: Node;
+    /**
+     * The nodes inbetween `commonAncestor` and the `node1` in the DOM hierarchy.
+     * Empty, if node1 is a direct descendant.
+     */
+    trace1: Node[];
+    /**
+     * The nodes inbetween `commonAncestor` and the `node2` in the DOM hierarchy.
+     * Empty, if node2 is a direct descendant.
+     */
+    trace2: Node[];
+    /**
+     * Starting the root node, this indicates the depth level of the `commonAncestor`.
+     */
+    index: number;
+}
+
+
+/**
+  * Returns information about the common ancestors of two given nodes.
+  *
+  * @param {Node} node1
+  * @param {Node} node2
+  * @returns {CommonAncestorData}
+  */
+export function getCommonAncestor(node1: Node, node2: Node): CommonAncestorData {
+    const trace1 = getNodeContextTrace(node1);
+    const trace2 = getNodeContextTrace(node2);
+    const childTrace1 = [];
+    const childTrace2 = [];
+    let commonAncestor: Node | null = null;
+    let commonIndex = 0;
+
+    for (let i = 0; i < trace1.length && i < trace2.length; i++) {
+        if (trace1[i] === trace2[i]) {
+            commonAncestor = trace1[i];
+            commonIndex = i;
+        }
+    }
+    for (let i = commonIndex + 1; i < trace1.length; i++) {
+        childTrace1.push(trace1[i]);
+    }
+    for (let i = commonIndex + 1; i < trace2.length; i++) {
+        childTrace2.push(trace2[i]);
+    }
+    return {
+        commonAncestor: commonAncestor!,
+        trace1: childTrace1,
+        trace2: childTrace2,
+        index: commonIndex
+    };
+}
+

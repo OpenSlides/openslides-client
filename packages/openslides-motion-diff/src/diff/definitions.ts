@@ -1,30 +1,4 @@
 /**
- * This data structure is used when determining the most specific common ancestor of two HTML node
- * (`node1` and `node2`)
- * within the same Document Fragment.
- */
-export interface CommonAncestorData {
-    /**
-     * The most specific common ancestor node.
-     */
-    commonAncestor: Node;
-    /**
-     * The nodes inbetween `commonAncestor` and the `node1` in the DOM hierarchy.
-     * Empty, if node1 is a direct descendant.
-     */
-    trace1: Node[];
-    /**
-     * The nodes inbetween `commonAncestor` and the `node2` in the DOM hierarchy.
-     * Empty, if node2 is a direct descendant.
-     */
-    trace2: Node[];
-    /**
-     * Starting the root node, this indicates the depth level of the `commonAncestor`.
-     */
-    index: number;
-}
-
-/**
  * An object produced by `extractRangeByLineNumbers``. It contains both the extracted lines as well as
  * information about the context in which these lines occur.
  * This additional information is meant to render the snippet correctly without producing broken HTML
@@ -134,5 +108,5 @@ export interface DiffLinesInParagraph {
  * An object representing a change to a text
  */
 export interface UnifiedChange {
-
+    getLineTo(): number;
 }

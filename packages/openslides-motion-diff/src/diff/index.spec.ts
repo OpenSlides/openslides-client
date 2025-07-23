@@ -3,8 +3,26 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment } from "../utils/dom-helpers";
 import { LineNumbering } from "..";
 import { insertInternalLineMarkers } from "./internal";
+import { getTextRemainderAfterLastChange } from ".";
+import { UnifiedChange } from "./definitions";
 
 describe(`MotionDiffService`, () => {
+    class TestChangeRecommendation implements UnifiedChange {
+        constructor(private obj: {
+            line_from: number;
+            line_to: number;
+            text: string;
+        }) {}
+
+        getLineTo(): number {
+            return this.obj.line_to;
+        }
+
+        getLineFrom(): number {
+            return this.obj.line_from;
+        }
+    }
+
     const baseHtml1 =
         `<p>` +
         noMarkup(1) +
@@ -167,25 +185,6 @@ describe(`MotionDiffService`, () => {
 
             lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 15);
             expect(lineNumberNode).toBe(null);
-        });
-
-        it(`finds the common ancestor`, () => {
-            let fromLineNode, toLineNode, commonAncestor;
-
-            fromLineNode = service.getLineNumberNode(baseHtmlDom1, 6);
-            toLineNode = service.getLineNumberNode(baseHtmlDom1, 7);
-            commonAncestor = service.getCommonAncestor(fromLineNode, toLineNode);
-            expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
-
-            fromLineNode = service.getLineNumberNode(baseHtmlDom1, 6);
-            toLineNode = service.getLineNumberNode(baseHtmlDom1, 8);
-            commonAncestor = service.getCommonAncestor(fromLineNode, toLineNode);
-            expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
-
-            fromLineNode = service.getLineNumberNode(baseHtmlDom1, 6);
-            toLineNode = service.getLineNumberNode(baseHtmlDom1, 10);
-            commonAncestor = service.getCommonAncestor(fromLineNode, toLineNode);
-            expect(commonAncestor.commonAncestor.nodeName).toBe(`#document-fragment`);
         });
 
         it(`renders DOMs correctly (1)`, () => {
@@ -1695,13 +1694,14 @@ describe(`MotionDiffService`, () => {
             ).toThrow();
         });
     });
+    */
 
     describe(`getTextRemainderAfterLastChange`, () => {
         it(`test with simple change`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getTextRemainderAfterLastChange(
+                getTextRemainderAfterLastChange(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1721,7 +1721,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getTextRemainderAfterLastChange(
+                getTextRemainderAfterLastChange(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1738,14 +1738,14 @@ describe(`MotionDiffService`, () => {
         it(`test with no changes`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
-            expect(service.getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
+            expect(getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
         });
 
         it(`ignores out of scope change recommendations (from)`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getTextRemainderAfterLastChange(
+                getTextRemainderAfterLastChange(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1770,7 +1770,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p><p><span contenteditable="false" class="os-line-number line-number-5" data-line-number="5">&nbsp;</span>Test 5</p>`;
 
             expect(
-                service.getTextRemainderAfterLastChange(
+                getTextRemainderAfterLastChange(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1788,7 +1788,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getTextRemainderAfterLastChange(
+                getTextRemainderAfterLastChange(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1810,6 +1810,7 @@ describe(`MotionDiffService`, () => {
         });
     });
 
+    /*
     describe(`extractMotionLineRange`, () => {
         it(`test with no line numbers in result`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
