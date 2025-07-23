@@ -2,9 +2,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment } from "../utils/dom-helpers";
 import { LineNumbering } from "..";
-import { insertInternalLineMarkers } from "./internal";
-import { getTextRemainderAfterLastChange } from ".";
+import { insertInternalLineMarkers, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { extractRangeByLineNumbers, getTextRemainderAfterLastChange } from ".";
 import { UnifiedChange } from "./definitions";
+import { getLineNumberNode } from "./utils";
 
 describe(`MotionDiffService`, () => {
     class TestChangeRecommendation implements UnifiedChange {
@@ -172,31 +173,28 @@ describe(`MotionDiffService`, () => {
 
             expect(fragment).toEqual(baseHtmlDom1);
         });
-    });
 
-    /*
-    describe(`extraction of lines`, () => {
         it(`locates line number nodes`, () => {
-            let lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 4);
-            expect(lineNumberNode.parentNode.nodeName).toBe(`STRONG`);
+            let lineNumberNode = getLineNumberNode(baseHtmlDom1, 4)!;
+            expect(lineNumberNode.parentNode!.nodeName).toBe(`STRONG`);
 
-            lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 9);
-            expect(lineNumberNode.parentNode.nodeName).toBe(`UL`);
+            lineNumberNode = getLineNumberNode(baseHtmlDom1, 9)!;
+            expect(lineNumberNode.parentNode!.nodeName).toBe(`UL`);
 
-            lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 15);
+            lineNumberNode = getLineNumberNode(baseHtmlDom1, 15)!;
             expect(lineNumberNode).toBe(null);
         });
 
         it(`renders DOMs correctly (1)`, () => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom1, 7),
-                greatParent = lineNo.parentNode.parentNode;
-            let lineTrace = [lineNo.parentNode, lineNo];
+            const lineNo = getLineNumberNode(baseHtmlDom1, 7)!,
+                greatParent = lineNo.parentNode!.parentNode!;
+            let lineTrace = [lineNo.parentNode!, lineNo];
 
-            const pre = service.serializePartialDomToChild(greatParent, lineTrace, true);
+            const pre = serializePartialDomToChild(greatParent, lineTrace, true);
             expect(pre).toBe(`<UL class="ul-class"><LI class="li-class">Line 6 `);
 
-            lineTrace = [lineNo.parentNode, lineNo];
-            const post = service.serializePartialDomFromChild(greatParent, lineTrace, true);
+            lineTrace = [lineNo.parentNode!, lineNo];
+            const post = serializePartialDomFromChild(greatParent, lineTrace, true);
             expect(post).toBe(
                 `Line 7` +
                 `</LI>` +
@@ -209,31 +207,31 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`renders DOMs correctly (2)`, () => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom1, 9),
-                greatParent = lineNo.parentNode.parentNode,
-                lineTrace = [lineNo.parentNode, lineNo];
+            const lineNo = getLineNumberNode(baseHtmlDom1, 9)!,
+                greatParent = lineNo.parentNode!.parentNode!,
+                lineTrace = [lineNo.parentNode!, lineNo];
 
-            const pre = service.serializePartialDomToChild(greatParent, lineTrace, true);
+            const pre = serializePartialDomToChild(greatParent, lineTrace, true);
             expect(pre).toBe(`<LI class="li-class"><UL><LI>Level 2 LI 8</LI>`);
         });
 
         it(`renders DOMs correctly (3)`, () => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom2, 9);
+            const lineNo = getLineNumberNode(baseHtmlDom2, 9)!;
 
             expect(lineNo.nodeName).toBe(`OS-LINEBREAK`);
-            expect(service.serializePartialDomToChild(lineNo, [], true)).toBe(``);
-            expect(service.serializePartialDomFromChild(lineNo, [], true)).toBe(``);
+            expect(serializePartialDomToChild(lineNo, [], true)).toBe(``);
+            expect(serializePartialDomFromChild(lineNo, [], true)).toBe(``);
         });
 
         it(`extracts a single line`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml1, 1, 1);
+            const diff = extractRangeByLineNumbers(baseHtml1, 1, 1);
             expect(diff.html).toBe(`<P class="os-split-after">Line 1 `);
             expect(diff.outerContextStart).toBe(``);
             expect(diff.outerContextEnd).toBe(``);
         });
 
         it(`extracts lines from nested UL/LI-structures`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml1, 7, 8);
+            const diff = extractRangeByLineNumbers(baseHtml1, 7, 8);
             expect(diff.html).toBe(
                 `Line 7</LI><LI class="li-class os-split-after"><UL class="os-split-after"><LI>Level 2 LI 8</LI>`
             );
@@ -260,7 +258,7 @@ describe(`MotionDiffService`, () => {
                     `Line 3` +
                     brMarkup(4) +
                     `Line 5</p></li></ul>`;
-                const diff = service.extractRangeByLineNumbers(html, 3, 3);
+                const diff = extractRangeByLineNumbers(html, 3, 3);
                 expect(diff.html).toBe(`Line 3`);
                 expect(diff.ancestor.nodeName).toBe(`P`);
                 expect(diff.outerContextStart).toBe(
@@ -288,7 +286,7 @@ describe(`MotionDiffService`, () => {
                     `Line 3` +
                     brMarkup(4) +
                     `</p></li></ul>`;
-                const diff = service.extractRangeByLineNumbers(html, 2, 2);
+                const diff = extractRangeByLineNumbers(html, 2, 2);
                 expect(diff.html).toBe(
                     `<UL class="os-split-after"><LI class="os-split-after"><P class="os-split-after">Line 2`
                 );
@@ -313,13 +311,13 @@ describe(`MotionDiffService`, () => {
                     lineLength: 80,
                     firstLine: 1
                 });
-                const diff = service.extractRangeByLineNumbers(html, 2, 2);
+                const diff = extractRangeByLineNumbers(html, 2, 2);
                 expect(diff.html).toBe(`<P>Another line</P>\n`);
             }
         );
 
         it(`extracts lines from a more complex example`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml2, 6, 10);
+            const diff = extractRangeByLineNumbers(baseHtml2, 6, 10);
 
             expect(diff.html).toBe(
                 `owe. Dahoam gscheckate middn Spuiratz des is a gmahde Wiesn. Des is schee so Obazda san da, Haferl pfenningguat schoo griasd eich midnand.</P><UL class="os-split-after"><LI>Auffi Gamsbart nimma de Sepp Ledahosn Ohrwaschl um Godds wujn Wiesn Deandlgwand Mongdratzal! Jo leck mi Mamalad i daad mechad?</LI><LI>Do nackata Wurscht i hob di narrisch gean, Diandldrahn Deandlgwand vui huift vui woaß?</LI>`
@@ -334,7 +332,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`extracts the end of a section`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml2, 29, null);
+            const diff = extractRangeByLineNumbers(baseHtml2, 29, null);
 
             expect(diff.html).toBe(
                 `Diandldrahn nix Gwiass woass ma ned hod boarischer: Samma sammawiedaguad wos, i hoam Brodzeid. Jo mei Sepp Gaudi, is ma Wuascht do Hendl Xaver Prosd eana an a bravs. Sauwedda an Brezn, abfieseln.</P>`
@@ -350,7 +348,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`preserves the numbering of OLs (1)`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml3, 5, 6);
+            const diff = extractRangeByLineNumbers(baseHtml3, 5, 6);
 
             expect(diff.html).toBe(`<LI>Line 3.3</LI></OL></LI><LI> Line 4</LI></OL>`);
             expect(diff.ancestor.nodeName).toBe(`#document-fragment`);
@@ -362,7 +360,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`preserves the numbering of OLs (2)`, () => {
-            const diff = service.extractRangeByLineNumbers(baseHtml3, 3, 4);
+            const diff = extractRangeByLineNumbers(baseHtml3, 3, 4);
 
             expect(diff.html).toBe(
                 `<LI class="os-split-after"><OL class="os-split-after"><LI>Line 3.1</LI><LI>Line 3.2</LI>`
@@ -379,19 +377,19 @@ describe(`MotionDiffService`, () => {
                 `Looks like a &lt;p&gt; tag &lt;/p&gt;</h2><p>` +
                 noMarkup(2) +
                 `Another line</p>`;
-            const diff = service.extractRangeByLineNumbers(inHtml, 1, 1);
+            const diff = extractRangeByLineNumbers(inHtml, 1, 1);
             expect(diff.html).toBe(`<H2>Looks like a &lt;p&gt; tag &lt;/p&gt;</H2>`);
         });
 
         it(`marks split list items`, () => {
             const html =
                 `<ol><li>` + noMarkup(1) + `Line 1` + brMarkup(2) + `Line 2` + brMarkup(3) + `Line 3</li></ol>`;
-            let diff = service.extractRangeByLineNumbers(html, 2, 2);
+            let diff = extractRangeByLineNumbers(html, 2, 2);
             expect(diff.outerContextStart.toLowerCase()).toBe(
                 `<ol class="os-split-before os-split-after" start="1"><li class="os-split-before os-split-after">`
             );
 
-            diff = service.extractRangeByLineNumbers(html, 3, null);
+            diff = extractRangeByLineNumbers(html, 3, null);
             expect(diff.innerContextStart.toLowerCase()).toBe(
                 `<ol class="os-split-before" start="1"><li class="os-split-before">`
             );
@@ -406,7 +404,7 @@ describe(`MotionDiffService`, () => {
                     `Line 2` +
                     brMarkup(3) +
                     `Line 3</li></ol>`;
-                const diff = service.extractRangeByLineNumbers(html, 2, 2);
+                const diff = extractRangeByLineNumbers(html, 2, 2);
                 expect(diff.outerContextStart.toLowerCase()).toBe(
                     `<ol class="os-split-before os-split-after" start="2">`
                 );
@@ -427,13 +425,14 @@ describe(`MotionDiffService`, () => {
                 `<li>` +
                 noMarkup(4) +
                 `Line 4</li></ol>`;
-            const diff = service.extractRangeByLineNumbers(html, 3, 3);
+            const diff = extractRangeByLineNumbers(html, 3, 3);
             expect(diff.previousHtml.toLowerCase()).toContain(`start="10"`);
             expect(diff.outerContextStart.toLowerCase()).toContain(`start="11"`);
             expect(diff.followingHtmlStartSnippet.toLowerCase()).toContain(`start="12"`);
         });
     });
 
+    /*
     describe(`merging two sections`, () => {
         it(`merges OLs recursively, ignoring whitespaces between OL and LI`, () => {
                 const node1 = document.createElement(`DIV`);
