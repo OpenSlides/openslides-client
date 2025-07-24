@@ -500,7 +500,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private initContentForm(): void {
-        const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
+        const liveVotingDefault = (this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) && this.isMotionPoll) ?? false;
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
             type: [``, Validators.required],
