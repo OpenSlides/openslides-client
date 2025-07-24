@@ -193,7 +193,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * Sets up the form for this settings field.
      */
     public ngOnInit(): void {
-        super.setTitle(`Settings`);
         // filter out empty results in group observable. We never have no groups and it messes up
         // the settings change detection
         this.groupObservable = this.groupRepo.getViewModelListWithoutSystemGroupsObservable().pipe(

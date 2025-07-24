@@ -76,7 +76,6 @@ export class MeetingSettingsGroupDetailComponent
      * Sets the title, inits the table and calls the repo
      */
     public ngOnInit(): void {
-        super.setTitle(`Settings`);
         const settings = this.translate.instant(`Settings`);
 
         this.subscriptions.push(
