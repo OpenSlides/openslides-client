@@ -21,46 +21,61 @@
                         <div class="bg-abstain" [ngStyle]="{ flex: polldata.options[0].abstain + ' 0 auto' }"></div>
                     }
                 </div>
+
+                @if (isRunningLiveVote) {
+                    <progress class="vote-progress" max="{{ numEntitledUsers }}" value="{{ results.valid }}"></progress>
+                }
+
                 <div class="data-area">
                     <div class="general-data">
                         <div>
-                            {{ 'Valid votes' | translate }}: {{ polldata.votesvalid }}
+                            @if (isRunningLiveVote) {
+                                {{ 'Received votes' | translate }}:
+                            } @else {
+                                {{ 'Valid votes' | translate }}:
+                            }
+                            {{ polldata.votesvalid ?? results.valid }}
                             @if (polldata.onehundred_percent_base !== 'YN') {
-                                {{ polldata.votesvalid | pollPercentBase: polldata }}
+                                {{ polldata.votesvalid ?? results.valid | pollPercentBase: polldata }}
                             }
                         </div>
                         <div>
-                            {{ 'Entitled users' | translate }}: {{ polldata.entitled_users_at_stop.length }}
+                            {{ 'Entitled users' | translate }}: {{ numEntitledUsers }}
                             @if (polldata.onehundred_percent_base === 'entitled') {
-                                {{ polldata.entitled_users_at_stop.length | pollPercentBase: polldata }}
+                                {{ numEntitledUsers | pollPercentBase: polldata }}
                             }
                         </div>
                     </div>
-                    @if (polldata.pollmethod.includes('Y')) {
-                        <os-icon-container icon="check_circle" iconClass="yes" size="large">
-                            <span class="yes">
-                                {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? 0 }}
-                                {{ polldata.options[0]?.yes ?? 0 | pollPercentBase: polldata }}
-                            </span>
-                        </os-icon-container>
-                    }
-                    @if (polldata.pollmethod.includes('N')) {
-                        <os-icon-container icon="cancel" iconClass="no" size="large">
-                            <span class="no">
-                                {{ 'No' | translate }}: {{ polldata.options[0]?.no ?? 0 }}
-                                {{ polldata.options[0]?.no ?? 0 | pollPercentBase: polldata }}
-                            </span>
-                        </os-icon-container>
-                    }
-                    @if (polldata.pollmethod.includes('A')) {
-                        <os-icon-container icon="circle" iconClass="abstain" size="large">
-                            <span class="abstain">
-                                {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? 0 }}
-                                @if (polldata.onehundred_percent_base !== 'YN') {
-                                    {{ polldata.options[0]?.abstain ?? 0 | pollPercentBase: polldata }}
-                                }
-                            </span>
-                        </os-icon-container>
+                    @if (showResult) {
+                        @if (polldata.pollmethod.includes('Y')) {
+                            <os-icon-container icon="check_circle" iconClass="yes" size="large">
+                                <span class="yes">
+                                    {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? results.Y }}
+                                    {{ polldata.options[0]?.yes ?? results.Y | pollPercentBase: polldata }}
+                                </span>
+                            </os-icon-container>
+                        }
+                        @if (polldata.pollmethod.includes('N')) {
+                            <os-icon-container icon="cancel" iconClass="no" size="large">
+                                <span class="no">
+                                    {{ 'No' | translate }}: {{ polldata.options[0]?.no ?? results.N }}
+                                    {{ polldata.options[0]?.no ?? results.N | pollPercentBase: polldata }}
+                                </span>
+                            </os-icon-container>
+                        }
+                        @if (polldata.pollmethod.includes('A')) {
+                            <os-icon-container icon="circle" iconClass="abstain" size="large">
+                                <span class="abstain">
+                                    {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? results.A }}
+                                    @if (polldata.onehundred_percent_base !== 'YN') {
+                                        {{ polldata.options[0]?.abstain ?? results.A | pollPercentBase: polldata }}
+                                    }
+                                </span>
+                            </os-icon-container>
+                        }
+                    } @else if (isRunningLiveVote) {
+                        <div class="vote-now">{{ 'Please vote now!' | translate }}</div>
+                        <div class="spacer"></div>
                     }
                 </div>
             </div>
@@ -73,29 +88,49 @@
                             @for (column of userVotesFormatted; track column) {
                                 <div class="votes-column" [ngStyle]="columnStyle">
                                     @for (user of column; track user[0]) {
-                                        <div class="vote-entry">
-                                            @if (user[1] === 'Y') {
-                                                <os-icon-container icon="check_circle" iconClass="yes" [noWrap]="true">
-                                                    {{ user[0] }}
-                                                </os-icon-container>
-                                            } @else if (user[1] === 'N') {
-                                                <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
-                                                    {{ user[0] }}
-                                                </os-icon-container>
-                                            } @else if (user[1] === 'A') {
-                                                <os-icon-container icon="circle" iconClass="abstain" [noWrap]="true">
-                                                    {{ user[0] }}
-                                                </os-icon-container>
-                                            } @else {
-                                                <os-icon-container
-                                                    icon="radio_button_unchecked"
-                                                    iconClass="no-content"
-                                                    [noWrap]="true"
-                                                >
-                                                    {{ user[0] }}
-                                                </os-icon-container>
-                                            }
-                                        </div>
+                                        @if (typeof user === 'string') {
+                                            <h3 class="structure-level">{{ user }}</h3>
+                                        } @else {
+                                            <div class="vote-entry">
+                                                @if (user[1] === 'Y') {
+                                                    <os-icon-container
+                                                        icon="check_circle"
+                                                        iconClass="yes"
+                                                        [noWrap]="true"
+                                                    >
+                                                        {{ user[0] }}
+                                                    </os-icon-container>
+                                                } @else if (user[1] === 'N') {
+                                                    <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
+                                                        {{ user[0] }}
+                                                    </os-icon-container>
+                                                } @else if (user[1] === 'A') {
+                                                    <os-icon-container
+                                                        icon="circle"
+                                                        iconClass="abstain"
+                                                        [noWrap]="true"
+                                                    >
+                                                        {{ user[0] }}
+                                                    </os-icon-container>
+                                                } @else if (user[1] === 'X') {
+                                                    <os-icon-container
+                                                        icon="radio_button_unchecked"
+                                                        iconClass="no-content"
+                                                        [noWrap]="true"
+                                                    >
+                                                        {{ user[0] }}
+                                                    </os-icon-container>
+                                                } @else if (user[1] === 'x') {
+                                                    <os-icon-container
+                                                        icon="radio_button_unchecked"
+                                                        iconClass="no-content"
+                                                        [noWrap]="true"
+                                                    >
+                                                        <span class="not-present">{{ user[0] }}</span>
+                                                    </os-icon-container>
+                                                }
+                                            </div>
+                                        }
                                     }
                                 </div>
                             }
