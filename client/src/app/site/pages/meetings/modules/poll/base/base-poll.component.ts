@@ -65,12 +65,20 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
             const title = this.translate.instant(`Are you sure you want to stop this voting?`);
             const STOP_LABEL = this.translate.instant(`Stop`);
             const STOP_PUBLISH_LABEL = this.translate.instant(`Stop & publish`);
+            const STOP_PUBLISH_ANONYMIZE_LABEL = this.translate.instant(`Stop, publish & anonymize`);
             const actions = [STOP_LABEL, STOP_PUBLISH_LABEL];
+            if (this._poll.live_voting_enabled) {
+                actions.push(STOP_PUBLISH_ANONYMIZE_LABEL);
+            }
             const choice = await this.choiceService.open({ title, multiSelect: false, actions });
 
             if (choice?.action === STOP_LABEL) {
                 await this.changeState(PollState.Finished);
             } else if (choice?.action === STOP_PUBLISH_LABEL) {
+                await this.changeState(PollState.Published);
+            } else if (choice?.action === STOP_PUBLISH_ANONYMIZE_LABEL) {
+                await this.changeState(PollState.Finished);
+                this.repo.anonymize(this.poll).catch(this.raiseError);
                 await this.changeState(PollState.Published);
             }
         }
