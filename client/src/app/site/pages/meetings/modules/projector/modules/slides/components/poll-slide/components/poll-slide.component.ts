@@ -19,6 +19,9 @@ import {
     PollSlideData,
     PollSlideDataFields,
     PollSlideEntitledUsersEntry,
+    PollSlideLiveEntitledStructureLevels,
+    PollSlideLiveEntitledUsers,
+    PollSlideLiveEntitledUsersEntry,
     SlidePollOption,
     SlidePollOptionFields,
     SlidePollUser,
@@ -35,6 +38,7 @@ export enum PollContentObjectType {
 type VoteResult = `Y` | `N` | `A` | `X`;
 const ENTRY_HEIGHT = 30;
 const TITLE_HEIGHT = 55;
+const PROGRESS_HEIGHT = 22;
 const POLL_BAR_HEIGHT = 91;
 const HEADER_FOOTER_HEIGHT = 125;
 const NO_HEADER_TOP_MARGIN = 40;
@@ -59,8 +63,35 @@ export class PollSlideComponent
 
     public polldata!: PollData;
 
+    public results = {
+        Y: 0,
+        N: 0,
+        A: 0,
+        valid: 0
+    };
+
     public get showContent(): boolean {
-        return this.data.data.state === PollState.Published;
+        return this.data.data.state === PollState.Published || (this.isLiveVote && (this.data.data.state === PollState.Created || this.data.data.state === PollState.Started));
+    }
+
+    public get showResult(): boolean {
+        return !this.isLiveVote || (this.isLiveVote && this.data.data.state === PollState.Published);
+    }
+
+    public get isRunningLiveVote(): boolean {
+        return this.isLiveVote && this.data.data.state === PollState.Started;
+    }
+
+    public get isLiveVote(): boolean {
+        return this.data.data.live_voting_enabled;
+    }
+
+    public get numEntitledUsers(): number {
+        if (this._entitledLiveUsers !== null) {
+            return Object.keys(this._entitledLiveUsers).length;
+        }
+
+        return Object.keys(this._entitledUsers).length;
     }
 
     public override get projector(): ViewProjector {
@@ -143,15 +174,17 @@ export class PollSlideComponent
     public columnStyle: Record<string, any> = {};
 
     public bufferUp: number;
-    public userVotesFormatted: [string, VoteResult][][];
+    public userVotesFormatted: ([string, VoteResult] | string)[][];
 
     private _maxColumns = 6;
     private _orderBy: keyof User = `last_name`;
-    private _userVotes: [string, VoteResult][] = [];
+    private _userVotes: ([string, VoteResult ] | string)[] = [];
 
     private _votes: Record<string, SlidePollVote> = {};
 
     private _entitledUsers: Record<string, PollSlideEntitledUsersEntry> = {};
+    private _entitledLiveUsers: PollSlideLiveEntitledUsers = null;
+    private _structureLevels: PollSlideLiveEntitledStructureLevels = {};
 
     private _meetingSettingsSubscriptions: Subscription[];
 
@@ -198,6 +231,8 @@ export class PollSlideComponent
                 value.data.entitled_users_at_stop?.mapToObject(user => ({
                     [user.user_merged_into_id ?? user.user_id]: user
                 })) || {};
+            this._entitledLiveUsers = value.data.entitled_users ?? null;
+            this._structureLevels = value.data.entitled_structure_levels ?? {};
             this.calculateUserVotes();
             this._invalidSingleVotesData = false;
         } else {
@@ -228,7 +263,7 @@ export class PollSlideComponent
             });
         });
 
-        if (value.data.state === PollState.Published) {
+        if (this.showContent) {
             this.polldata = this.createPollData(value.data);
         }
 
@@ -309,17 +344,50 @@ export class PollSlideComponent
 
     private calculateUserVotes(): void {
         if (this._isSingleVotes) {
-            this._userVotes = Array.from(new Set([...Object.keys(this._votes), ...Object.keys(this._entitledUsers)]))
-                .map(id => [
-                    ...(this.getNameAndSortValue(
-                        this._entitledUsers[id]?.user || this._votes[id]?.user,
-                        this._orderBy
-                    ) || [`User`, `${id}`]),
-                    this._votes[id] ? this._votes[id].value : `X`
-                ])
-                .sort((a, b) => a[1].localeCompare(b[1]))
-                .map(([user, _, vote]) => [user, vote as VoteResult]);
-            this.formatUserVotes();
+            if (this._entitledUsers && this._entitledLiveUsers === null) {
+                this._userVotes = Array.from(new Set([...Object.keys(this._votes), ...Object.keys(this._entitledUsers)]))
+                    .map(id => [
+                        ...(this.getNameAndSortValue(
+                            this._entitledUsers[id]?.user || this._votes[id]?.user,
+                            this._orderBy
+                        ) || [`User`, `${id}`]),
+                        this._votes[id] ? this._votes[id].value : `X`
+                    ])
+                    .sort((a, b) => a[1].localeCompare(b[1]))
+                    .map(([user, _, vote]) => [user, vote as VoteResult]);
+                this.formatUserVotes();
+            } else if (this._entitledLiveUsers !== null) {
+                const users = Object.entries(this._entitledLiveUsers);
+                const splitUsers: Record<number, [string, PollSlideLiveEntitledUsersEntry][]> = {};
+                for (const entry of users) {
+                    const str_lvl_id = entry[1].structure_level_id ?? 0;
+                    if (!(str_lvl_id in splitUsers)) {
+                        splitUsers[str_lvl_id] = [];
+                    }
+                    splitUsers[str_lvl_id].push(entry);
+                }
+                const splitUserVotes = Object.entries(splitUsers).mapToObject<[string, VoteResult][]>(
+                    date => ({ [date[0]]: date[1].map(val => {
+                        const username = (this.getNameAndSortValue(
+                            val[1].user_data, this._orderBy
+                        ) || [`User`, `${val[0]}`]);
+
+                        const notVotedVal = val[1].present ? `X` : `x`;
+                        return [
+                            ...username, val[1].votes ? Object.values(val[1].votes)[0] as string : notVotedVal
+                        ];
+                    }).sort((a, b) => a[1].localeCompare(b[1])).map(([user, _, vote]) => [user, vote as VoteResult]) })
+                );
+                this._userVotes = Object.entries(splitUserVotes).flatMap(str_lvl_list => {
+                    const str_lvl = Number(str_lvl_list[0]);
+                    if (str_lvl > 0) {
+                        return [this._structureLevels[str_lvl], ...str_lvl_list[1]];
+                    }
+                    return str_lvl_list[1];
+                });
+                this.updateResults();
+                this.formatUserVotes();
+            }
         }
     }
 
@@ -353,6 +421,15 @@ export class PollSlideComponent
         return null;
     }
 
+    private updateResults(): void {
+        this.results = {
+            Y: this._userVotes.filter(e => typeof e !== `string` && e[1] === `Y`).length,
+            N: this._userVotes.filter(e => typeof e !== `string` && e[1] === `N`).length,
+            A: this._userVotes.filter(e => typeof e !== `string` && e[1] === `A`).length,
+            valid: this._userVotes.filter(e => typeof e !== `string` && e[1].toUpperCase() !== `X`).length
+        };
+    }
+
     private formatUserVotes(): void {
         if (!this.projector || !this._userVotes || !this._isSingleVotes) {
             return;
@@ -370,12 +447,15 @@ export class PollSlideComponent
     }
 
     private newGetUserVotesFormat(): [number, number] {
-        const visibleHeight =
+        let visibleHeight =
             (this.projector.height -
                 TITLE_HEIGHT -
                 POLL_BAR_HEIGHT -
                 (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN)) /
                 this._actualScale;
+        if (this.isRunningLiveVote) {
+            visibleHeight -= PROGRESS_HEIGHT;
+        }
         const visibleRows = Math.floor(visibleHeight / ENTRY_HEIGHT);
         const columns = Math.min(Math.ceil(this._userVotes.length / visibleRows), this._maxColumns);
         return [columns, Math.max(visibleRows, Math.ceil(this._userVotes.length / columns))];
@@ -383,7 +463,7 @@ export class PollSlideComponent
 
     private newCalculateFormattedUserVotes(columns: number, rows: number): void {
         let nextIndex = 0;
-        const votesFormatted: [string, VoteResult][][] = [];
+        const votesFormatted: ([string, VoteResult] | string)[][] = [];
         for (let i = 0; i < columns; i++) {
             const [stop, untilIndex] = this.newCalcStopAndActualUntilIndex(nextIndex + rows);
             votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));

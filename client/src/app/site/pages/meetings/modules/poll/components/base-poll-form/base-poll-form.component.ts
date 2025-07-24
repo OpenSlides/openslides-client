@@ -144,6 +144,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return !this.data.state || this.data.isCreated; // no state means, its under creation
     }
 
+    public get isNamedVotingSelected(): boolean {
+        return this.pollTypeControl?.value === PollType.Named || false;
+    }
+
     public get isEVotingSelected(): boolean {
         return this.pollTypeControl?.value !== PollType.Analog || false;
     }
@@ -188,6 +192,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     public get pollMethodChangedToListObservable(): Observable<boolean> {
         return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
+    }
+
+    public get isMotionPoll(): boolean {
+        return this.pollClassType === PollClassType.Motion;
     }
 
     private fb = inject(UntypedFormBuilder);
@@ -492,6 +500,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private initContentForm(): void {
+        const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
             type: [``, Validators.required],
@@ -502,7 +511,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             backend: [],
             global_yes: [false],
             global_no: [false],
-            global_abstain: [false]
+            global_abstain: [false],
+            live_voting_enabled: [liveVotingDefault]
         });
     }
 
