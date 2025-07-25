@@ -13,16 +13,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from '../../../../view-models';
 
 @Component({
@@ -92,6 +94,9 @@ export class SpeakingTimesComponent implements OnDestroy {
         }
     }
 
+    @Input()
+    public listOfSpeakers: ViewListOfSpeakers;
+
     public constructor(
         private durationService: DurationService,
         private speakingTimesRepo: StructureLevelListOfSpeakersRepositoryService,
@@ -102,7 +107,8 @@ export class SpeakingTimesComponent implements OnDestroy {
         private promptService: PromptService,
         private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
         private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
-        private translateService: TranslateService
+        private translateService: TranslateService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         this.totalTimeForm = this.formBuilder.group({
             totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
@@ -284,5 +290,28 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public getCurrentStructureLevel(): ProjectionBuildDescriptor {
         return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
+    }
+
+    public getSpeakerCountdown(): any {
+        if (this.listOfSpeakers) {
+            const interventionSpeakers = this.listOfSpeakers.speakers
+                .filter(speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time)
+                .sort((a, b) => a.weight - b.weight);
+            if (interventionSpeakers.length) {
+                const speaker = interventionSpeakers[0];
+                const default_time = this.meetingSettingsService.instant(`list_of_speakers_intervention_time`) || 0;
+                const total_pause = speaker.total_pause || 0;
+                const end = speaker.pause_time || speaker.end_time || 0;
+                const countdown_time = speaker.isSpeaking
+                    ? speaker.begin_time + total_pause + default_time
+                    : (end - (speaker.begin_time + total_pause + default_time)) * -1;
+                return {
+                    running: speaker.isSpeaking,
+                    default_time,
+                    countdown_time: speaker.begin_time ? countdown_time : default_time
+                };
+            }
+        }
+        return null;
     }
 }
