@@ -1,4 +1,3 @@
-export enum ViewUnifiedChangeType {
-    TYPE_CHANGE_RECOMMENDATION,
-    TYPE_AMENDMENT
-}
+import { UnifiedChangeType } from "@openslides/motion-diff/dist/diff";
+
+export import ViewUnifiedChangeType = UnifiedChangeType;

@@ -104,11 +104,21 @@ export interface DiffLinesInParagraph {
     textPost: string;
 }
 
+export enum UnifiedChangeType {
+    TYPE_CHANGE_RECOMMENDATION,
+    TYPE_AMENDMENT
+}
+
 /**
  * An object representing a change to a text
  */
 export interface UnifiedChange {
+    isTitleChange(): boolean;
+    getChangeId(): string;
     getIdentifier(): string;
+    getTitle(): string;
     getLineTo(): number;
     getLineFrom(): number;
+    getChangeType(): UnifiedChangeType;
+    getChangeNewText(): string;
 }

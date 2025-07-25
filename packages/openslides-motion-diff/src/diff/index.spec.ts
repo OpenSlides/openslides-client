@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { brMarkup, noMarkup } from "../utils/tests";
-import { htmlToFragment } from "../utils/dom-helpers";
+import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "..";
-import { insertInternalLineMarkers, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { extractRangeByLineNumbers, getTextRemainderAfterLastChange } from ".";
-import { UnifiedChange } from "./definitions";
+import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { extractRangeByLineNumbers, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
 describe(`MotionDiffService`, () => {
@@ -13,10 +13,44 @@ describe(`MotionDiffService`, () => {
             line_from: number;
             line_to: number;
             text: string;
+            id?: string | number;
+            paragraph_no?: string | number;
+            number?: string;
+            title?: string;
+            title_change?: boolean;
+            change_type?: UnifiedChangeType;
         }) {}
 
+        isTitleChange(): boolean {
+            return this.obj.title_change ?? false;
+        }
+
+        getChangeId(): string {
+            if (this.getChangeType() === UnifiedChangeType.TYPE_AMENDMENT) {
+                return `amendment-${this.obj.id}-${this.obj.paragraph_no}`;
+            }
+
+            return `recommendation-${this.obj.id}`;
+        }
+
+        getTitle(): string {
+            if (this.getChangeType() === UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
+                return `Recommendation`;
+            }
+
+            return this.obj.title ?? ``;
+        }
+
+        getChangeType(): UnifiedChangeType {
+            return this.obj.change_type ?? UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
+        }
+
+        getChangeNewText(): string {
+            return this.obj.text;
+        }
+
         getIdentifier(): string {
-            return ``;
+            return this.obj.number ?? String(this.obj.id);
         }
 
         getLineTo(): number {
@@ -436,7 +470,6 @@ describe(`MotionDiffService`, () => {
         });
     });
 
-    /*
     describe(`merging two sections`, () => {
         it(`merges OLs recursively, ignoring whitespaces between OL and LI`, () => {
                 const node1 = document.createElement(`DIV`);
@@ -447,7 +480,7 @@ describe(`MotionDiffService`, () => {
  <LI>Punkt 4.2</LI>\
 <LI>Punkt 4.3</LI>\
 </OL></LI></OL>`;
-                const out = service.replaceLinesMergeNodeArrays([node1.childNodes[0]], [node2.childNodes[0]]);
+                const out = replaceLinesMergeNodeArrays([node1.childNodes[0]], [node2.childNodes[0]]);
                 const outHtml = nodesToHtml([out[0] as Element]);
                 expect(outHtml).toBe(
                     `<ol><li><ol><li>Punkt 4.1</li><li>Punkt 4.2</li><li>Punkt 4.3</li></ol></li></ol>`
@@ -458,28 +491,28 @@ describe(`MotionDiffService`, () => {
 
     describe(`replacing lines in the original motion`, () => {
         it(`replaces LIs by a P`, () => {
-            const merged = service.replaceLines(baseHtml1, `<p>Replaced a UL by a P</p>`, 6, 8);
+            const merged = replaceLines(baseHtml1, `<p>Replaced a UL by a P</p>`, 6, 8);
             expect(merged).toBe(
                 `<P>Line 1 Line 2 Line <STRONG>3<BR>Line 4 Line</STRONG> 5</P><P>Replaced a UL by a P</P><UL class="ul-class"><LI class="li-class"><UL><LI>Level 2 LI 9</LI></UL></LI></UL><P>Line 10 Line 11</P>`
             );
         });
 
         it(`replaces LIs by another LI`, () => {
-            const merged = service.replaceLines(baseHtml1, `<UL class="ul-class"><LI>A new LI</LI></UL>`, 6, 8);
+            const merged = replaceLines(baseHtml1, `<UL class="ul-class"><LI>A new LI</LI></UL>`, 6, 8);
             expect(merged).toBe(
                 `<P>Line 1 Line 2 Line <STRONG>3<BR>Line 4 Line</STRONG> 5</P><UL class="ul-class"><LI>A new LI<UL><LI>Level 2 LI 9</LI></UL></LI></UL><P>Line 10 Line 11</P>`
             );
         });
 
         it(`breaks up a paragraph into two`, () => {
-            const merged = service.replaceLines(baseHtml1, `<P>Replaced Line 10</P><P>Inserted Line 11 </P>`, 10, 10);
+            const merged = replaceLines(baseHtml1, `<P>Replaced Line 10</P><P>Inserted Line 11 </P>`, 10, 10);
             expect(merged).toBe(
                 `<P>Line 1 Line 2 Line <STRONG>3<BR>Line 4 Line</STRONG> 5</P><UL class="ul-class"><LI class="li-class">Line 6 Line 7</LI><LI class="li-class"><UL><LI>Level 2 LI 8</LI><LI>Level 2 LI 9</LI></UL></LI></UL><P>Replaced Line 10</P><P>Inserted Line 11 Line 11</P>`
             );
         });
 
         it(`does not accidently merge two separate words`, () => {
-            const merged = service.replaceLines(baseHtml1, `<p>Line 1INSERTION</p>`, 1, 1),
+            const merged = replaceLines(baseHtml1, `<p>Line 1INSERTION</p>`, 1, 1),
                 containsError = merged.indexOf(`Line 1INSERTIONLine 2`),
                 containsCorrectVersion = merged.indexOf(`Line 1INSERTION Line 2`);
             expect(containsError).toBe(-1);
@@ -488,7 +521,7 @@ describe(`MotionDiffService`, () => {
 
         it(`does not accidently merge two separate words, even in lists`, () => {
                 // The newlines between UL and LI are the problem here
-                const merged = service.replaceLines(
+                const merged = replaceLines(
                         baseHtml1,
                         `<ul class="ul-class">` + `\n` + `<li class="li-class">Line 6Inserted</li>` + `\n` + `</ul>`,
                         6,
@@ -504,7 +537,7 @@ describe(`MotionDiffService`, () => {
         it(`keeps ampersands escaped`, () => {
             const pre = `<p>` + noMarkup(1) + `foo &amp; bar</p>`,
                 after = `<p>` + noMarkup(1) + `foo &amp; bar ins</p>`;
-            const merged = service.replaceLines(pre, after, 1, 1);
+            const merged = replaceLines(pre, after, 1, 1);
             expect(merged).toBe(`<P>foo &amp; bar ins</P>`);
         });
     });
@@ -512,7 +545,7 @@ describe(`MotionDiffService`, () => {
     describe(`diff normalization`, () => {
         it(`uppercases normal HTML tags`, () => {
             const unnormalized = `The <strong>brown</strong> fox`,
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+                normalized = normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe(`The <STRONG>brown</STRONG> fox`);
         });
 
@@ -520,7 +553,7 @@ describe(`MotionDiffService`, () => {
                 const unnormalized =
                         `This is our cool <a href="https://www.openslides.de/">home page</a> - have a look! ` +
                         `<input type="checkbox" checked title='A title with "s'>`,
-                    normalized = service.normalizeHtmlForDiff(unnormalized);
+                    normalized = normalizeHtmlForDiff(unnormalized);
                 expect(normalized).toBe(
                     `This is our cool <A HREF="https://www.openslides.de/">home page</A> - have a look! ` +
                     `<INPUT CHECKED TITLE='A title with "s' TYPE="checkbox">`
@@ -530,29 +563,28 @@ describe(`MotionDiffService`, () => {
 
         it(`strips unnecessary spaces`, () => {
             const unnormalized = `<ul> <li>Test</li>\n</ul>`,
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+                normalized = normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe(`<UL><LI>Test</LI></UL>`);
         });
 
         it(`normalizes html entities`, () => {
             const unnormalized = `German characters like &szlig; or &ouml;`,
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+                normalized = normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe(`German characters like ß or ö`);
         });
 
         it(`sorts css classes`, () => {
             const unnormalized = `<P class='os-split-before os-split-after'>Test</P>`,
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+                normalized = normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe(`<P CLASS='os-split-after os-split-before'>Test</P>`);
         });
 
         it(`treats newlines like spaces`, () => {
             const unnormalized = `<P>Test line\n\t 2</P>`,
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+                normalized = normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe(`<P>Test line 2</P>`);
         });
     });
-    */
 
     describe(`the core diff algorithm`, () => {
         it(`acts as documented by the official documentation`, () => {
@@ -1144,7 +1176,6 @@ describe(`MotionDiffService`, () => {
         );
     });
 
-    /*
     describe(`diff os-split-* handling`, () => {
         it(`nested split before in list`, () => {
                 const inHtml = `<ul class="os-split-before"><li class="os-split-before">` +
@@ -1349,8 +1380,8 @@ describe(`MotionDiffService`, () => {
                     `eirmod tempor.</LI></UL>` +
                     `<UL class="insert">\n<LI>\n<P>At vero eos et accusam et justo duo dolores et ea rebum.</P>\n</LI>\n</UL>`;
             const diff = HtmlDiff.diff(before, after, 80, 1);
-            const diffNormalized = service.normalizeHtmlForDiff(diff).toLowerCase();
-            const expectedNormalized = service.normalizeHtmlForDiff(expected).toLowerCase();
+            const diffNormalized = normalizeHtmlForDiff(diff).toLowerCase();
+            const expectedNormalized = normalizeHtmlForDiff(expected).toLowerCase();
             expect(diffNormalized).toBe(expectedNormalized);
         });
 
@@ -1414,6 +1445,7 @@ describe(`MotionDiffService`, () => {
         );
     });
 
+    /*
     describe(`removeDuplicateClassesInsertedByCkeditor`, () => {
         it(`removes additional classes`, () => {
             const strIn = `<ul class="os-split-before os-split-after"><li class="os-split-before"><ul class="os-split-before os-split-after"><li class="os-split-before">...here it goes on</li><li class="os-split-before">This has been added</li></ul></li></ul>`,
@@ -1470,6 +1502,7 @@ describe(`MotionDiffService`, () => {
             }
         );
     });
+    */
 
     describe(`stripping ins/del-styles/tags`, () => {
         it(`deletes to be deleted nodes`, () => {
@@ -1500,7 +1533,7 @@ describe(`MotionDiffService`, () => {
     describe(`apply unified changes to text: getTextWithChanges`, () => {
         it(`test with no changes`, () => {
                 const inHtml = `<p>Test 1</p><p>Test 2</p>`;
-                const out = service.getTextWithChanges(inHtml, [], 20, false);
+                const out = getTextWithChanges(inHtml, [], 20, false);
                 expect(out).toBe(
                     LineNumbering.insert({
                         html: inHtml,
@@ -1514,7 +1547,7 @@ describe(`MotionDiffService`, () => {
         it(`test changes in random order`, () => {
                 const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p><p>Test 4</p>`;
 
-                const out = service.getTextWithChanges(
+                const out = getTextWithChanges(
                     inHtml,
                     [
                         new TestChangeRecommendation({
@@ -1557,30 +1590,38 @@ describe(`MotionDiffService`, () => {
         it(`renders colliding lines`, () => {
             // This test is with accepted amendments
             const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p>`;
-            const amendment1 = new ViewMotionAmendedParagraph(
-                { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
-                0,
-                `<p>Test 1x</p>`,
-                { from: 1, to: 1 }
-            );
-            const amendment3 = new ViewMotionAmendedParagraph(
-                { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
-                1,
-                `<p>Test 2x</p>`,
-                { from: 2, to: 2 }
-            );
-            const changeRec = new ChangeRecommendationUnifiedChange({
+            const amendment1 = new TestChangeRecommendation({
+                id: 1,
+                paragraph_no: 0,
+                number: `Ä1`,
+                title: `Amendment 1`,
+                line_from: 1,
+                line_to: 1,
+                text: `<p>Test 1x</p>`,
+                change_type: UnifiedChangeType.TYPE_AMENDMENT
+            });
+            const amendment3 = new TestChangeRecommendation({
+                id: 3,
+                paragraph_no: 1,
+                number: `Ä3`,
+                title: `Amendment 3`,
+                line_from: 2,
+                line_to: 2,
+                text: `<p>Test 2x</p>`,
+                change_type: UnifiedChangeType.TYPE_AMENDMENT
+            });
+            const changeRec = new TestChangeRecommendation({
                 id: 2,
-                rejected: false,
+                // rejected: false,
                 line_from: 1,
                 line_to: 1,
                 text: `<p>Test 1y</p>`,
-                type: ModificationType.TYPE_REPLACEMENT,
-                other_description: ``,
-                creation_time: 0
+                // type: ModificationType.TYPE_REPLACEMENT,
+                // other_description: ``,
+                // creation_time: 0
             });
 
-            const out = service.getTextWithChanges(
+            const out = getTextWithChanges(
                 inHtml,
                 [
                     amendment1,
@@ -1593,15 +1634,16 @@ describe(`MotionDiffService`, () => {
 
             expect(out).toBe(
                 `<div class="os-colliding-change os-colliding-change-holder" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
-                `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
+                `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
                 `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
-                `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
-                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 2x</p>` +
-                `<p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 3</p>`
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
+                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 2x</p>` +
+                `<p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 3</p>`
             );
         });
     });
 
+    /*
     describe(`getAmendmentParagraphsLines`, () => {
         it(`test identical inputs`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;

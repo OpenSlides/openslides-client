@@ -1,5 +1,6 @@
+import { replaceLines } from ".";
 import { isOsLineBreakNode, isOsLineNumberNode } from "../line-numbering/utils";
-import { DOCUMENT_FRAGMENT_NODE, TEXT_NODE } from "../utils/definitions";
+import { DOCUMENT_FRAGMENT_NODE, ELEMENT_NODE, TEXT_NODE } from "../utils/definitions";
 import { isFirstNonemptyChild, normalizeStyleAttributes, replaceHtmlEntities, sortHtmlAttributes, htmlToUppercase } from "../utils/dom-helpers";
 import { serializeTagDiff } from "./utils";
 
@@ -247,7 +248,7 @@ export function recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before
             (diff.classList.contains(`insert`) && diff.nextElementSibling.classList.contains(`delete`)))
     ) {
         diff.nextElementSibling.classList?.add(className);
-        const nextSibDiffNode = diff.nextElementSibling.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+        const nextSibDiffNode = diff.nextElementSibling.querySelector(`:scope > *:not(.os-line-number)`) as HTMLElement;
         if (nextSibDiffNode) {
             recAddOsSplit(nextSibDiffNode, nextVersions, before);
         }
@@ -285,4 +286,111 @@ export function normalizeHtmlForDiff(html: string): string {
     html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
     return html;
+}
+
+/**
+ * This is a workardoun to prevent the last word of the inserted text from accidently being merged with the
+ * first word of the following line.
+ *
+ * This happens as trailing spaces in the change recommendation's text are frequently stripped,
+ * which is pretty nasty if the original text goes on after the affected line. So we insert a space
+ * if the original line ends with one.
+ *
+ * @param {Element|DocumentFragment} element
+ */
+export function insertDanglingSpace(element: Element | DocumentFragment): void {
+    if (element.childNodes.length > 0) {
+        let lastChild = element.childNodes[element.childNodes.length - 1];
+        if (
+            lastChild.nodeType === TEXT_NODE &&
+            !lastChild.nodeValue!.match(/[\S]/) &&
+            element.childNodes.length > 1
+        ) {
+            // If the text node only contains whitespaces, chances are high it's just space between block elmeents,
+            // like a line break between </LI> and </UL>
+            lastChild = element.childNodes[element.childNodes.length - 2];
+        }
+        if (lastChild.nodeType === TEXT_NODE) {
+            if (lastChild.nodeValue === `` || lastChild.nodeValue!.substr(-1) !== ` `) {
+                lastChild.nodeValue += ` `;
+            }
+        } else {
+            insertDanglingSpace((lastChild as Element));
+        }
+    }
+}
+
+/**
+ * This functions merges two arrays of nodes. The last element of nodes1 and the first element of nodes2
+ * are merged, if they are of the same type.
+ *
+ * This is done recursively until a TEMPLATE-Tag is found, which was inserted in this.replaceLines.
+ * Using a TEMPLATE-Tag is a rather dirty hack, as it is allowed inside any other element, including <ul>.
+ *
+ * @param {Node[]} nodes1
+ * @param {Node[]} nodes2
+ * @returns {Node[]}
+ */
+export function replaceLinesMergeNodeArrays(nodes1: Node[], nodes2: Node[]): Node[] {
+    if (nodes1.length === 0 || nodes2.length === 0) {
+        return nodes1.length ? nodes1 : nodes2;
+    }
+
+    const out: Node[] = nodes1.slice(0, -1);
+    const lastNode: Node = nodes1[nodes1.length - 1];
+    const firstNode: Node = nodes2[0];
+    if (lastNode.nodeType === TEXT_NODE && firstNode.nodeType === TEXT_NODE) {
+        const newTextNode: Text = lastNode.ownerDocument!.createTextNode(lastNode.nodeValue! + firstNode.nodeValue);
+        out.push(newTextNode);
+    } else if (lastNode.nodeName === firstNode.nodeName) {
+        const lastElement: Element = lastNode as Element;
+        const newNode: HTMLElement = lastNode.ownerDocument!.createElement(lastNode.nodeName);
+
+        for (const attr of Array.from(lastElement.attributes)) {
+            newNode.setAttribute(attr.name, attr.value);
+        }
+
+        // Remove #text nodes inside of List elements (OL/UL), as they are confusing
+        let lastChildren: Node[];
+        let firstChildren: Node[];
+        if (lastElement.nodeName === `OL` || lastElement.nodeName === `UL`) {
+            lastChildren = Array.from(lastElement.childNodes).filter(child => child.nodeType === ELEMENT_NODE);
+            firstChildren = Array.from(firstNode.childNodes).filter(child => child.nodeType === ELEMENT_NODE);
+        } else {
+            lastChildren = Array.from(lastElement.childNodes);
+            firstChildren = Array.from(firstNode.childNodes);
+        }
+
+        const children = replaceLinesMergeNodeArrays(lastChildren, firstChildren) as Node[];
+        for (const child of children) {
+            newNode.appendChild(child);
+        }
+
+        out.push(newNode);
+    } else {
+        if (lastNode.nodeName !== `TEMPLATE`) {
+            out.push(lastNode);
+        }
+        if (firstNode.nodeName !== `TEMPLATE`) {
+            out.push(firstNode);
+        }
+    }
+
+    return out.concat(nodes2.slice(1, nodes2.length));
+}
+
+/**
+ * Hint: as replaceLines does not work with specific points in the text anymore, but full lines, inserting
+ * only works by using the workaround of selecting a "negative line", which results in no removal.
+ *
+ * Only mind that the inserted HTML needs to be wrapped in similar tags to the preceding text; that is, if the
+ * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
+ * it needs to be wrapped accordingly.
+ */
+export function insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+    return replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
+}
+
+export function removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+    return replaceLines(oldHtml, ``, fromLine, toLine);
 }

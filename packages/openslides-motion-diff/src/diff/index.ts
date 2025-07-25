@@ -1,8 +1,8 @@
 import { LineNumbering } from "..";
 import { LineNumberedString } from "../line-numbering/definitions";
-import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml } from "../utils/dom-helpers";
-import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange } from "./definitions";
-import { insertInternalLineMarkers, recAddOsSplit, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
+import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange, UnifiedChangeType } from "./definitions";
+import { insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
 import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
@@ -275,7 +275,29 @@ export function detectAffectedLineRange(diffHtml: string): LineRange | null {
   * @returns {string}
   */
 export function diffHtmlToFinalText(html: string): string {
-    throw new Error(`TODO`);
+    const fragment = htmlToFragment(html);
+
+    const delNodes = fragment.querySelectorAll(`.delete, del`);
+    for (const del of delNodes) {
+        del.parentNode!.removeChild(del);
+    }
+
+    const insNodes = fragment.querySelectorAll(`ins`);
+    for (const ins of insNodes) {
+        while (ins.childNodes.length > 0) {
+            const child = ins.childNodes.item(0);
+            ins.removeChild(child);
+            ins.parentNode!.insertBefore(child, ins);
+        }
+        ins.parentNode!.removeChild(ins);
+    }
+
+    const insertNodes = fragment.querySelectorAll(`.insert`);
+    for (const insert of insertNodes) {
+        removeCSSClass(insert, `insert`);
+    }
+
+    return serializeDom(fragment, false);
 }
 
 /**
@@ -292,7 +314,41 @@ export function diffHtmlToFinalText(html: string): string {
   * @param {number} toLine
   */
 export function replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-    throw new Error(`TODO`);
+    const data = extractRangeByLineNumbers(oldHtml, fromLine, toLine);
+    const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
+    const previousFragment = htmlToFragment(previousHtml);
+    const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
+    const followingFragment = htmlToFragment(followingHtml);
+    const newFragment = htmlToFragment(newHTML);
+
+    if (data.html.length > 0 && data.html.substr(-1) === ` `) {
+        insertDanglingSpace(newFragment);
+    }
+
+    let merged = replaceLinesMergeNodeArrays(
+        Array.prototype.slice.call(previousFragment.childNodes),
+        Array.prototype.slice.call(newFragment.childNodes)
+    );
+    merged = replaceLinesMergeNodeArrays(merged, Array.prototype.slice.call(followingFragment.childNodes));
+
+    const mergedFragment = document.createDocumentFragment();
+    for (const merge of merged) {
+        mergedFragment.appendChild(merge);
+    }
+
+    const forgottenTemplates = mergedFragment.querySelectorAll(`TEMPLATE`);
+    for (const forgottenTemp of forgottenTemplates) {
+        const el = forgottenTemp;
+        el.parentNode!.removeChild(el);
+    }
+
+    const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
+    for (const forgottenSplit of forgottenSplitClasses) {
+        removeCSSClass(forgottenSplit, `os-split-before`);
+        removeCSSClass(forgottenSplit, `os-split-after`);
+    }
+
+    return serializeDom(mergedFragment, true);
 }
 
 /**
@@ -827,7 +883,68 @@ export function getTextWithChanges(
     highlightLine?: number,
     firstLine: number = 1
 ): string {
-    throw new Error(`TODO`);
+    let html = motionHtml;
+
+    changes = changes.filter(change => !change.isTitleChange());
+    // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
+    changes = sortChangeRequests(changes).reverse();
+
+    if (showAllCollisions) {
+        let lastReplacedLine: number | null = null;
+
+        changes.forEach(change => {
+            html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
+
+            if (changeHasCollissions(change, changes)) {
+                // In case of colliding amendments, we remove the original text first before inserting the amendments one by one.
+                // Note: if amendment 1 affects line 3-5, we remove 3-5. If amendment 2 affects line 2-4, we only need to remove
+                // line 2, as 3-5 is already removed. If Amendment 3 affects 2-4 too, we don't have to remove anything anymore.
+
+                let removeUntil = change.getLineTo();
+                if (lastReplacedLine !== null && lastReplacedLine <= removeUntil) {
+                    removeUntil = lastReplacedLine - 1;
+                }
+                if (removeUntil >= change.getLineFrom()) {
+                    html = removeLines(html, change.getLineFrom(), removeUntil);
+                    html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
+                }
+
+                const changeTypeName = {
+                    [UnifiedChangeType.TYPE_AMENDMENT]: `amendment`,
+                    [UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION]: `recommendation`,
+                }[change.getChangeType()] ?? `unknown`;
+                const type =` data-change-type="${changeTypeName}"`;
+                const changeId = ` data-change-id="` + replaceHtmlEntities(change.getChangeId()) + `"`;
+                const title = ` data-title="` + replaceHtmlEntities(change.getTitle()) + `"`;
+                const ident = ` data-identifier="` + replaceHtmlEntities(change.getIdentifier()) + `"`;
+                const lineFrom = ` data-line-from="` + change.getLineFrom().toString(10) + `"`;
+                const lineTo = ` data-line-to="` + change.getLineTo().toString(10) + `"`;
+                const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
+                const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
+                const insertingHtml = opTag + change.getChangeNewText() + `</div>`;
+
+                html = insertLines(html, change.getLineFrom(), insertingHtml);
+
+                lastReplacedLine = change.getLineFrom();
+            } else {
+                html = replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
+            }
+        });
+    } else {
+        changes.forEach((change: UnifiedChange) => {
+            html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
+            html = replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
+        });
+    }
+
+    html = LineNumbering.insert({
+        html,
+        lineLength,
+        highlight: highlightLine,
+        firstLine: firstLine
+    });
+
+    return html;
 }
 
 export function formatOsCollidingChanges(
@@ -950,3 +1067,5 @@ export function extractMotionLineRange(
 ): string {
     throw new Error(`TODO`);
 }
+
+export { UnifiedChangeType, UnifiedChange };
