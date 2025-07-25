@@ -86,7 +86,7 @@
                             }
                             @if (forwardingExpanded) {
                                 <mat-icon class="icon-text">expand_less</mat-icon>
-                                {{ 'Less' | translate }}
+                                <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
                     }
@@ -114,8 +114,6 @@
                     </ul>
                     @if (committee.receive_forwardings_from_committees.length > 1) {
                         <button mat-button (click)="toggleReceiveList()">
-                            @if (!receiveExpanded) {}
-                            @if (receiveExpanded) {}
                             @if (!receiveExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
                                 <span>{{ 'More' | translate }}</span>
