@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment } from "../utils/dom-helpers";
-import { LineNumbering } from "..";
+import { HtmlDiff, LineNumbering } from "..";
 import { insertInternalLineMarkers, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { extractRangeByLineNumbers, getTextRemainderAfterLastChange } from ".";
 import { UnifiedChange } from "./definitions";
@@ -552,12 +552,13 @@ describe(`MotionDiffService`, () => {
             expect(normalized).toBe(`<P>Test line 2</P>`);
         });
     });
+    */
 
     describe(`the core diff algorithm`, () => {
         it(`acts as documented by the official documentation`, () => {
                 const before = `The red brown fox jumped over the rolling log.`,
                     after = `The brown spotted fox leaped over the rolling log.`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `The <del>red </del>brown <ins>spotted </ins>fox <del>jum</del><ins>lea</ins>ped over the rolling log.`
                 );
@@ -567,7 +568,7 @@ describe(`MotionDiffService`, () => {
         it(`ignores changing cases in HTML tags`, () => {
             const before = `The <strong>brown</strong> spotted fox jumped over the rolling log.`,
                 after = `The <STRONG>brown</STRONG> spotted fox leaped over the rolling log.`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
                 `The <strong>brown</strong> spotted fox <del>jum</del><ins>lea</ins>ped over the rolling log.`
@@ -577,7 +578,7 @@ describe(`MotionDiffService`, () => {
         it(`does not insert spaces after a unchanged BR tag`, () => {
                 const before = `<p>` + noMarkup(1) + `Hendl Kirwa hod Maßkruag<br>` + noMarkup(2) + `gmahde Wiesn</p>`,
                     after = `<p>Hendl Kirwa hod Maßkruag<br>\ngmahde Wiesn</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(before);
             }
@@ -589,7 +590,7 @@ describe(`MotionDiffService`, () => {
                         `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
                         `\n` +
                         `<p>Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
                     `<p class="insert">Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`
@@ -600,7 +601,7 @@ describe(`MotionDiffService`, () => {
         it(`does not result in separate paragraphs when only the first word has changed`, () => {
                 const before = `<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>`,
                     after = `<p class="os-split-after">Bla ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p class="os-split-after"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span><del>Lorem</del><ins>Bla</ins> ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`
@@ -611,7 +612,7 @@ describe(`MotionDiffService`, () => {
         it(`merges multiple inserts and deletes`, () => {
             const before = `Some additional text to circumvent the threshold Test1 Test2 Test3 Test4 Test5 Test9`,
                 after = `Some additional text to circumvent the threshold Test1 Test6 Test7 Test8 Test9`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
                 `Some additional text to circumvent the threshold Test1 <del>Test2 Test3 Test4 Test5</del><ins>Test6 Test7 Test8</ins> Test9`
@@ -621,7 +622,7 @@ describe(`MotionDiffService`, () => {
         it(`detects insertions and deletions in a word (1)`, () => {
                 const before = `Test1 Test2 Test3 Test4 Test5 Test6 Test7`,
                     after = `Test1 Test Test3 Test4addon Test5 Test6 Test7`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(`Test1 Test<del>2</del> Test3 Test4<ins>addon</ins> Test5 Test6 Test7`);
             }
@@ -630,7 +631,7 @@ describe(`MotionDiffService`, () => {
         it(`detects insertions and deletions in a word (2)`, () => {
                 const before = `Test Test`,
                     after = `Test Testappend`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(`Test Test<ins>append</ins>`);
             }
@@ -639,7 +640,7 @@ describe(`MotionDiffService`, () => {
         it(`recognizes commas as a word separator`, () => {
             const before = `Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat`,
                 after = `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
                 `Lorem ipsum dolor sit amet, consetetur sadipscing elitr<del> sed</del><ins>,</ins> diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat`
@@ -649,7 +650,7 @@ describe(`MotionDiffService`, () => {
         it(`cannot handle changing CSS-classes`, () => {
             const before = `<p class='p1'>Test1 Test2</p>`,
                 after = `<p class='p2'>Test1 Test2</p>`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(`<P class="p1 delete">Test1 Test2</P><P class="p2 insert">Test1 Test2</P>`);
         });
@@ -667,7 +668,7 @@ describe(`MotionDiffService`, () => {
                     `<P class="insert">Der Wolf hatte danach richtig schlechte laune, trank eine Flasche Rum,</P>` +
                     `<P class="insert">machte eine Weltreise und kam danach wieder um die Ziegen zu fressen. Da ging der</P>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -681,7 +682,7 @@ describe(`MotionDiffService`, () => {
                     `<p>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid<ins> Noch</ins></p>` +
                     `<p class="insert">Test 123</p>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -696,7 +697,7 @@ describe(`MotionDiffService`, () => {
                     `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,<ins> sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</ins></p>\n` +
                     `<p class="insert os-split-after">Stet clita kasd gubergren, no sea takimata sanctus est.</p>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -711,7 +712,7 @@ describe(`MotionDiffService`, () => {
                     `<p style="text-align: justify;" class="insert"><span style="color: rgb(0, 0, 0);">Inserting this line should not make any troubles, especially not affect the first line</span></p>` +
                     `<p style="text-align: justify;" class="insert"><span style="color: rgb(0, 0, 0);">Neither should this line</span></p>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -720,7 +721,7 @@ describe(`MotionDiffService`, () => {
                 after = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`,
                 expected = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p class="insert">NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -730,7 +731,7 @@ describe(`MotionDiffService`, () => {
                 after = `<p>Add before UL</p><ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
                 expected = `<p class="insert"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Add before UL</p><ul><li>Lorem ipsum</li></ul>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -753,7 +754,7 @@ describe(`MotionDiffService`, () => {
                         `<li class="insert">e</li>` +
                         `</ol></li></ul>`;
 
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(expected);
             }
         );
@@ -780,7 +781,7 @@ describe(`MotionDiffService`, () => {
                     `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
         });
 
@@ -800,7 +801,7 @@ describe(`MotionDiffService`, () => {
                         `Test <del>1</del><ins>2</ins></li>` +
                         `</ol></li></ul></li></ul>`;
 
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(expected);
             }
         );
@@ -808,7 +809,7 @@ describe(`MotionDiffService`, () => {
         it(`handles completely deleted paragraphs`, () => {
             const before = `<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>`,
                 after = ``;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(
                 `<p class="delete">Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</p>`
             );
@@ -817,7 +818,7 @@ describe(`MotionDiffService`, () => {
         it(`does not like splitting paragraphs too much, but respects line breaks between paragraphs`, () => {
                 const before = `<P>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher. Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>`,
                     after = `<p>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher.</p>\n<p>Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<P class="delete">Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher. Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>` +
@@ -831,7 +832,7 @@ describe(`MotionDiffService`, () => {
         it(`does not repeat the last word (1)`, () => {
             const before = `<P>sem. Nulla consequat massa quis enim. </P>`,
                 after = `<p>sem. Nulla consequat massa quis enim. TEST<br>\nTEST</p>`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(`<p>sem. Nulla consequat massa quis enim.<ins> TEST<br>TEST</ins></p>`);
         });
@@ -839,7 +840,7 @@ describe(`MotionDiffService`, () => {
         it(`does not repeat the last word (2)`, () => {
             const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>`,
                 after = `<p>...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
                 `<p>...so frißt er Euch alle mit Haut und Haar<ins> und Augen und Därme und alles</ins>.</p>`
@@ -849,7 +850,7 @@ describe(`MotionDiffService`, () => {
         it(`does handle insertions at the end of a paragraph correctly`, () => {
                 const before = `<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`,
                     after = `<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, NEU NEU NEU.</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, <del>augue velit cursus nunc,</del><ins>NEU NEU NEU.</ins></p>`
@@ -860,7 +861,7 @@ describe(`MotionDiffService`, () => {
         it(`does not break when an insertion follows a beginning tag occurring twice`, () => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>\n<p>Test</p>`,
                     after = `<p>Einfügung 1 ...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>\n<p>Test</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p><ins>Einfügung 1 </ins>...so frißt er Euch alle mit Haut und Haar<ins> und Augen und Därme und alles</ins>.</p>\n<p>Test</p>`
@@ -876,7 +877,7 @@ describe(`MotionDiffService`, () => {
                         `<P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Insertion 1</P>\n` +
                         `<P>Insertion 2 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</P>`;
 
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.<ins> Insertion 1</ins></p>\n` +
@@ -893,7 +894,7 @@ describe(`MotionDiffService`, () => {
                         brMarkup(14) +
                         `gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>`,
                     after = `<p>Test</p>`;
-                const diff = service.diff(before, after).toLowerCase(),
+                const diff = HtmlDiff.diff(before, after).toLowerCase(),
                     expected =
                         `<p>` +
                         noMarkup(13) +
@@ -909,7 +910,7 @@ describe(`MotionDiffService`, () => {
         it(`removed inline colors in inserted/deleted parts (1)`, () => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>`,
                     after = `<P>...so frißt er <span style='color: rgb(0, 0, 0);'>Euch alle</span> mit Haut und Haar.</P>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>...so frißt er <del>Euch alle</del><ins><span style="color: rgb(0, 0, 0);">Euch alle</span></ins> mit Haut und Haar.</p>`
@@ -920,7 +921,7 @@ describe(`MotionDiffService`, () => {
         it(`removed inline colors in inserted/deleted parts (2)`, () => {
                 const before = `<P>...so frißt er Euch alle mit Haut und Haar.</P>`,
                     after = `<P>...so frißt er <span style='font-size: 2em; color: rgb(0, 0, 0); opacity: 0.5'>Euch alle</span> mit Haut und Haar.</P>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>...so frißt er <del>Euch alle</del><ins><span style="font-size: 2em; color: rgb(0, 0, 0); opacity: 0.5">Euch alle</span></ins> mit Haut und Haar.</p>`
@@ -931,7 +932,7 @@ describe(`MotionDiffService`, () => {
         it(`marks a single moved word as deleted and inserted again`, () => {
                 const before = `<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren bla, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>`,
                     after = `<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd bla, no sea takimata sanctus est Lorem ipsum dolor gubergren sit amet.</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd <del>gubergren </del>bla, no sea takimata sanctus est Lorem ipsum dolor <ins>gubergren </ins>sit amet.</p>`
@@ -942,7 +943,7 @@ describe(`MotionDiffService`, () => {
         it(`works with style-tags in spans`, () => {
             const before = `<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 255);" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`,
                 after = `<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
                 `<p class="os-split-after os-split-before"><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. <ins>Test </ins>Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`
@@ -953,7 +954,7 @@ describe(`MotionDiffService`, () => {
                 const before = `elitr. einsetzt. VERSCHLUCKT noch die sog. Gleichbleibend (Wird gelöscht).`,
                     after = `elitr, Einfügung durch Änderung der Gleichbleibend, einsetzt.`;
 
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `elitr<del>. einsetzt. VERSCHLUCKT noch die sog.</del><ins>, Einfügung durch Änderung der</ins> Gleichbleibend<del> (Wird gelöscht).</del><ins>, einsetzt.</ins>`
                 );
@@ -966,7 +967,7 @@ describe(`MotionDiffService`, () => {
                         `<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr. Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..<br>\n` +
                         `Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br>\n` +
                         `Autonomie erfährt ihre Grenzen</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>Lorem ipsum dolor sit amet, consetetur <del><br></del>sadipscing elitr.<ins> Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..</ins><br>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br><del>kummt nia hoam i hob di narrisch gean</del><ins>Autonomie erfährt ihre Grenzen</ins></p>`
                 );
@@ -976,7 +977,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when only a formatting is inserted`, () => {
                 const before = `<p>This is a text with a word that will be formatted</p>`,
                     after = `<p>This is a text with a <span class="testclass">word</span> that will be formatted</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del>word</del><ins><span class="testclass">word</span></ins> that will be formatted</p>`
                 );
@@ -986,7 +987,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when only a formatting is deleted`, () => {
                 const before = `<p>This is a text with a <strong>word</strong> that is formatted</p>`,
                     after = `<p>This is a text with a word that is formatted</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del><strong>word</strong></del><ins>word</ins> that is formatted</p>`
                 );
@@ -996,7 +997,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when replacement and tag insertion overlap (1)`, () => {
                 const before = `<p>This is a text with a unformatted word and some more text</p>`,
                     after = `<p>This is a text with a <strong>formatted word</strong> and some more text</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del>unformatted word</del><ins><strong>formatted word</strong></ins> and some more text</p>`
                 );
@@ -1006,7 +1007,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when replacement and tag insertion overlap (2)`, () => {
                 const before = `<p>This is a text with a unformatted word and some more text</p>`,
                     after = `<p>This is a text with a <strong>unformatted sentence</strong> and some more text</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>This is a text with a <del>unformatted word</del><ins><strong>unformatted sentence</strong></ins> and some more text</p>`
                 );
@@ -1016,7 +1017,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when replacement and tag insertion overlap (3)`, () => {
                 const before = `<p>es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`,
                     after = `<p>es war ihnen wie eine <strong>Bestätigung NEU</strong> NEU2 ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>es war ihnen wie eine <strong>Bestätigung<ins> NEU</ins></strong> <ins>NEU2 </ins>ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte.</p>`
                 );
@@ -1026,7 +1027,7 @@ describe(`MotionDiffService`, () => {
         it(`does not fall back to block level replacement when replacement and tag insertion overlap (4)`, () => {
                 const before = `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen <strong>Körper</strong> dehnte.</p>`,
                     after = `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen alten <strong>Körpergehülle</strong> dehnte.</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>Und es war ihnen wie eine <strong>Bestätigung</strong> ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen <ins>alten </ins><strong><del>Körper</del><ins>Körpergehülle</ins></strong> dehnte.</p>`
                 );
@@ -1036,7 +1037,7 @@ describe(`MotionDiffService`, () => {
         it(`works with multiple inserted paragraphs`, () => {
             const before = `<p>This is the text before</p>`,
                 after = `<p>This is the text before</p>\n<p>This is one added line</p>\n<p>Another added line</p>`;
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(
                 `<p>This is the text before</p>\n<p class="insert">This is one added line</p>\n<p class="insert">Another added line</p>`
             );
@@ -1051,7 +1052,7 @@ describe(`MotionDiffService`, () => {
                     noMarkup(1487) +
                     `Gegenüber</p>`,
                 outHtml = `<p>Test 123<br>\n` + `wir strikt ab. lehnen wir ab.<br>\n` + `Gegenüber</p>`;
-            const diff = service.diff(inHtml, outHtml);
+            const diff = HtmlDiff.diff(inHtml, outHtml);
             expect(diff).toBe(
                 `<p>Test 123<br>wir strikt ab. lehnen wir ` +
                 brMarkup(1486) +
@@ -1070,7 +1071,7 @@ describe(`MotionDiffService`, () => {
                         `<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n` +
                         `<li class="testclass">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li>\n` +
                         `</ul>`;
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<ul class="os-split-before">` +
                     `<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>` +
@@ -1092,7 +1093,7 @@ describe(`MotionDiffService`, () => {
                         noMarkup(3) +
                         `Aenean commodo ligula eget dolor.</p>`,
                     outHtml = `<p>Lorem ipsum ipsum sit amet, consectetuer adipiscing elit.</p><p>hier neuer Text</p><p>Aenean commodo neu ligula eget dolor.</p>`;
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(1) +
@@ -1119,7 +1120,7 @@ describe(`MotionDiffService`, () => {
                         noMarkup(3) +
                         `Aenean commodo ligula eget dolor.</p>`,
                     outHtml = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p><p>neuer Text</p><p>Aenean commodo ligula eget dolor.</p>`;
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(1) +
@@ -1137,12 +1138,13 @@ describe(`MotionDiffService`, () => {
         it(`detects two words inserted in empty paragraph`, () => {
                 const inHtml = `<p>` + noMarkup(1) + `</p>`,
                     outHtml = `<p>Lorem ipsum</p>`;
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(`<p>` + noMarkup(1) + `<ins>Lorem ipsum</ins></p>`);
             }
         );
     });
 
+    /*
     describe(`diff os-split-* handling`, () => {
         it(`nested split before in list`, () => {
                 const inHtml = `<ul class="os-split-before"><li class="os-split-before">` +
@@ -1155,7 +1157,7 @@ describe(`MotionDiffService`, () => {
                     `</li></ul>`;
                 const outHtml = `<ul><li><ul><li><ul><li>Ebene 3</li><li>Test</li></ul></li></ul></li></ul>`;
 
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(`<ul class="os-split-before"><li class="os-split-before">` +
                     `<ul class="os-split-before"><li class="os-split-before">` +
                     `<ul><li>` +
@@ -1185,7 +1187,7 @@ describe(`MotionDiffService`, () => {
                     `</li></ul>`;
                 const outHtml = `<ul><li><ul><li><ul><li>Ebene 3</li><li>Test</li></ul></li></ul></li></ul>`;
 
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<ul class="delete os-split-before"><li class="os-split-before">` +
                     `<ul class="os-split-before"><li class="os-split-before">` +
@@ -1222,7 +1224,7 @@ describe(`MotionDiffService`, () => {
                     `Foo</p>`;
                 const outHtml = `<p>Bar</p><p>Foo</p>`;
 
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p class="os-split-before">` +
                     noMarkup(3) +
@@ -1245,7 +1247,7 @@ describe(`MotionDiffService`, () => {
                     `Foo</p>`;
                 const outHtml = `<p>Bar</p><p>Foo</p>`;
 
-                const diff = service.diff(inHtml, outHtml);
+                const diff = HtmlDiff.diff(inHtml, outHtml);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(3) +
@@ -1268,7 +1270,7 @@ describe(`MotionDiffService`, () => {
                     lineLength: 15,
                     firstLine: 2
                 });
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
                     `<p>` +
@@ -1293,7 +1295,7 @@ describe(`MotionDiffService`, () => {
                     lineLength: 80,
                     firstLine: 2
                 });
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(2) +
@@ -1320,7 +1322,7 @@ describe(`MotionDiffService`, () => {
                     lineLength: 80,
                     firstLine: 2
                 });
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(2) +
@@ -1346,7 +1348,7 @@ describe(`MotionDiffService`, () => {
                     brMarkup(2) +
                     `eirmod tempor.</LI></UL>` +
                     `<UL class="insert">\n<LI>\n<P>At vero eos et accusam et justo duo dolores et ea rebum.</P>\n</LI>\n</UL>`;
-            const diff = service.diff(before, after, 80, 1);
+            const diff = HtmlDiff.diff(before, after, 80, 1);
             const diffNormalized = service.normalizeHtmlForDiff(diff).toLowerCase();
             const expectedNormalized = service.normalizeHtmlForDiff(expected).toLowerCase();
             expect(diffNormalized).toBe(expectedNormalized);
@@ -1355,7 +1357,7 @@ describe(`MotionDiffService`, () => {
         it(`detects broken HTML and lowercases class names`, () => {
                 const before = `<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 0);">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
                     after = `<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: rgb(0, 0, 0);">Hello</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">World</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>`;
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">\u00A0</SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
                     `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">\u00A0</SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">\u00A0</SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">\u00A0</SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">\u00A0</SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
@@ -1377,7 +1379,7 @@ describe(`MotionDiffService`, () => {
                     lineLength: 90,
                     firstLine: 1
                 });
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<ul><li>` +
                     noMarkup(1) +
@@ -1399,7 +1401,7 @@ describe(`MotionDiffService`, () => {
                     `<P>wuid Brotzeit? Pfenningguat Stubn bitt da, ` +
                     `hog di hi fei nia need nia need Radler gscheid kloan mim`;
 
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
                     `<p>` +
                     noMarkup(1) +
@@ -1447,7 +1449,7 @@ describe(`MotionDiffService`, () => {
                     brMarkup(4) +
                     `End</p>`;
 
-            const diff = service.diff(before, after);
+            const diff = HtmlDiff.diff(before, after);
             const affected = service.detectAffectedLineRange(diff);
             expect(affected).toEqual({ from: 3, to: 4 });
         });
@@ -1461,7 +1463,7 @@ describe(`MotionDiffService`, () => {
                     lineLength: 20,
                     firstLine: 1
                 });
-                const diff = service.diff(before, after);
+                const diff = HtmlDiff.diff(before, after);
 
                 const affected = service.detectAffectedLineRange(diff);
                 expect(affected).toEqual({ from: 1, to: 1 });
@@ -1472,25 +1474,25 @@ describe(`MotionDiffService`, () => {
     describe(`stripping ins/del-styles/tags`, () => {
         it(`deletes to be deleted nodes`, () => {
             const inHtml = `<p>Test <span class="delete">Test 2</span> Another test <del>Test 3</del></p><p class="delete">Test 4</p>`;
-            const stripped = service.diffHtmlToFinalText(inHtml);
+            const stripped = HtmlDiff.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(`<P>Test  Another test </P>`);
         });
 
         it(`produces empty paragraphs, if necessary`, () => {
             const inHtml = `<p class="delete">Test <span class="delete">Test 2</span> Another test <del>Test 3</del></p><p class="delete">Test 4</p>`;
-            const stripped = service.diffHtmlToFinalText(inHtml);
+            const stripped = HtmlDiff.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(``);
         });
 
         it(`Removes INS-tags`, () => {
             const inHtml = `<p>Test <ins>Test <strong>2</strong></ins> Another test</p>`;
-            const stripped = service.diffHtmlToFinalText(inHtml);
+            const stripped = HtmlDiff.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(`<P>Test Test <STRONG>2</STRONG> Another test</P>`);
         });
 
         it(`Removes .insert-classes`, () => {
             const inHtml = `<p class="insert">Test <strong>1</strong></p><p class="insert anotherclass">Test <strong>2</strong></p>`;
-            const stripped = service.diffHtmlToFinalText(inHtml);
+            const stripped = HtmlDiff.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(`<P>Test <STRONG>1</STRONG></P><P class="anotherclass">Test <STRONG>2</STRONG></P>`);
         });
     });
@@ -1717,7 +1719,7 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
             );
         });
 
@@ -1766,7 +1768,7 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
             );
         });
 
@@ -1789,7 +1791,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`ignores partial out of scope change recommendations`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1809,7 +1811,7 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
             );
         });
     });

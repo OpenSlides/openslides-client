@@ -1,21 +1,13 @@
 export const brMarkup = (no: number): string => {
     return (
         `<br class="os-line-break">` +
-        `<span contenteditable="false" class="os-line-number line-number-` +
-        no +
-        `" data-line-number="` +
-        no +
-        `">&nbsp;</span>`
+        `<span class="line-number-${no} os-line-number" contenteditable="false" data-line-number="${no}">&nbsp;</span>`
     );
 };
 
 export const noMarkup = (no: number): string => {
     return (
-        `<span contenteditable="false" class="os-line-number line-number-` +
-        no +
-        `" data-line-number="` +
-        no +
-        `">&nbsp;</span>`
+        `<span class="line-number-${no} os-line-number" contenteditable="false" data-line-number="${no}">&nbsp;</span>`
     );
 };
 

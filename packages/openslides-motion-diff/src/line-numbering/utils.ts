@@ -52,5 +52,5 @@ export function isOsLineNumberNode(node: Node): boolean {
   * @returns {Element}
   */
 export function getLineNumberNode(fragment: DocumentFragment, lineNumber: number): Element | null {
-    return fragment.querySelector(`.os-line-number.line-number-` + lineNumber);
+    return fragment.querySelector(`.line-number-${lineNumber}.os-line-number`);
 }

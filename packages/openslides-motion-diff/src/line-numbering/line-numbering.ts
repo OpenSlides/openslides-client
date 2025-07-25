@@ -438,8 +438,8 @@ export class LineNumbering {
     private getLineNumberElement(lineNumber: number): Element {
         const el = document.createElement(`span`);
         el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
+        el.setAttribute(`class`, `line-number-${lineNumber} os-line-number`);
         el.setAttribute(`contenteditable`, `false`);
-        el.setAttribute(`class`, `os-line-number line-number-` + lineNumber);
         el.setAttribute(`data-line-number`, lineNumber + ``);
 
         return el;

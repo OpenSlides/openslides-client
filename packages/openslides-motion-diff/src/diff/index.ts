@@ -3,6 +3,8 @@ import { LineNumberedString } from "../line-numbering/definitions";
 import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange } from "./definitions";
 import { insertInternalLineMarkers, recAddOsSplit, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { diffString } from "./internal-diff";
+import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
 import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
 
 /**
@@ -309,7 +311,453 @@ export function diff(
     lineLength: number | null = null,
     firstLineNumber: number | null = null
 ): string {
-    throw new Error(`TODO`);
+    // TODO: This is a workaround to make sure the first element of a amendment
+    //       has a line number for correct display of amendments in front of list
+    //       or block elements
+    const htmlOldEl = document.createElement(`template`);
+    const htmlNewEl = document.createElement(`template`);
+    htmlNewEl.innerHTML = htmlNew;
+    htmlOldEl.innerHTML = htmlOld;
+    if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector(`.os-line-number`)) {
+        const ln = htmlNewEl.content.querySelector(`.os-line-number`);
+        if (ln && htmlOldEl.content.querySelector(`.os-line-number`)) {
+            if (htmlNewEl.content.children[0].childNodes.length > 0) {
+                htmlNewEl.content.children[0].childNodes[0].before(ln);
+            } else {
+                htmlNewEl.content.children[0].before(ln);
+            }
+
+            htmlOldEl.content.children[0].querySelector(`.os-line-number`)!.remove();
+
+            htmlNew = htmlNewEl.innerHTML;
+            htmlOld = htmlOldEl.innerHTML;
+        }
+    }
+
+    const origHtmlNew = htmlNew;
+    const origHtmlOld = htmlOld;
+
+    // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
+    // and add it afterwards.
+    // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
+    // information would get lost by this that we will need to recursively merge it again later on.
+    let isSplitAfter = false;
+    let isSplitBefore = false;
+    htmlOld = htmlOld.replace(
+        /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+        (_match: string, beginning: string): string => {
+            isSplitAfter = true;
+            return beginning;
+        }
+    );
+    htmlNew = htmlNew.replace(
+        /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
+        (_match: string, beginning: string): string => {
+            isSplitAfter = true;
+            return beginning;
+        }
+    );
+    htmlOld = htmlOld.replace(
+        /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+        (_match: string, beginning: string): string => {
+            isSplitBefore = true;
+            return beginning;
+        }
+    );
+    htmlNew = htmlNew.replace(
+        /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+        (_match: string, beginning: string): string => {
+            isSplitBefore = true;
+            return beginning;
+        }
+    );
+
+    // Performing the actual diff
+    const str = diffString(htmlOld, htmlNew);
+    let diffUnnormalized = str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
+
+    diffUnnormalized = fixWrongChangeDetection(diffUnnormalized);
+
+    // Handles insertions in empty paragraphs
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>(<SPAN[^>]+os-line-number[^>]+?>)<\/del>(<ins>[\s\S]*?<\/ins>)\s<del><\/SPAN><\/del>/gi,
+        (_whole: string, span: string, insertedText: string): string =>
+            `<del>` + span + ` </SPAN></del>` + insertedText + `<ins> </ins>`
+    );
+
+    // Remove <del> tags that only delete line numbers
+    // We need to do this before removing </del><del> as done in one of the next statements
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
+        (_found: string, _tag: string, _brWithDel: string, plainBr: string, span: string): string =>
+            (plainBr !== undefined ? plainBr : ``) + span + ` </span>`
+    );
+
+    // Merging individual insert/delete statements into bigger blocks
+    diffUnnormalized = diffUnnormalized.replace(/<\/ins><ins>/gi, ``).replace(/<\/del><del>/gi, ``);
+
+    // If we have a <del>deleted word</del>LINEBREAK<ins>new word</ins>, let's assume that the insertion
+    // was actually done in the same line as the deletion.
+    // We don't have the LINEBREAK-markers in the new string, hence we can't be a 100% sure, but
+    // this will probably the more frequent case.
+    // This only really makes a differences for change recommendations anyway, where we split the text into lines
+    // Hint: if there is no deletion before the line break, we have the same issue, but cannot solve this here.
+    diffUnnormalized = diffUnnormalized.replace(
+        /(<\/del>)(<BR CLASS="os-line-break"><span[^>]+os-line-number[^>]+?>\s*<\/span>)(<ins>[\s\S]*?<\/ins>)/gi,
+        (_found: string, del: string, br: string, ins: string): string => del + ins + br
+    );
+
+    // If only a few characters of a word have changed, don't display this as a replacement of the whole word,
+    // but only of these specific characters
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
+        (_found: string, oldText: string, newText: string): string => {
+            let foundDiff = false;
+            let commonStart = ``;
+            let commonEnd = ``;
+            let remainderOld = oldText;
+            let remainderNew = newText;
+
+            while (remainderOld.length > 0 && remainderNew.length > 0 && !foundDiff) {
+                if (remainderOld[0] === remainderNew[0]) {
+                    commonStart += remainderOld[0];
+                    remainderOld = remainderOld.substr(1);
+                    remainderNew = remainderNew.substr(1);
+                } else {
+                    foundDiff = true;
+                }
+            }
+
+            foundDiff = false;
+            while (remainderOld.length > 0 && remainderNew.length > 0 && !foundDiff) {
+                if (remainderOld[remainderOld.length - 1] === remainderNew[remainderNew.length - 1]) {
+                    commonEnd = remainderOld[remainderOld.length - 1] + commonEnd;
+                    remainderNew = remainderNew.substr(0, remainderNew.length - 1);
+                    remainderOld = remainderOld.substr(0, remainderOld.length - 1);
+                } else {
+                    foundDiff = true;
+                }
+            }
+
+            let out = commonStart;
+            if (remainderOld !== ``) {
+                out += `<del>` + remainderOld + `</del>`;
+            }
+            if (remainderNew !== ``) {
+                out += `<ins>` + remainderNew + `</ins>`;
+            }
+            out += commonEnd;
+
+            return out;
+        }
+    );
+
+    // Replace spaces in line numbers by &nbsp;
+    diffUnnormalized = diffUnnormalized.replace(
+        /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
+        (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
+    );
+
+    // The diff algorithm handles insertions in empty paragraphs as inserted in the next one
+    // <del><\/P><P><\/del><span>&nbsp;<\/span><ins>NEUER TEXT<\/P><P><\/ins>
+    // -> <ins>NEUER TEXT<\/ins><\/P><P><span>&nbsp;<\/span>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>(<\/P><P>)<\/del>(<span[^>]+>&nbsp;<\/span>)(<del> <\/del>)?<ins>([\s\S]*?)\1<\/ins>/gi,
+        (_found: string, paragraph: string, span: string, _emptyDel: string, insText: string): string => {
+            return `<ins>` + insText + `</ins>` + paragraph + span;
+        }
+    );
+
+    // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<(p|div|blockquote|li)([^>]*)><(ins|del)>([\s\S]*?)<\/\1>(\s*)<(p|div|blockquote|li)([^>]*)><\/\3>/gi,
+        (
+            _whole: string,
+            block1: string,
+            att1: string,
+            insDel: string,
+            content: string,
+            space: string,
+            block2: string,
+            att2: string
+        ): string =>
+            `<` +
+            insDel +
+            `><` +
+            block1 +
+            att1 +
+            `>` +
+            content +
+            `</` +
+            block1 +
+            `>` +
+            space +
+            `</` +
+            insDel +
+            `><` +
+            block2 +
+            att2 +
+            `>`
+    );
+
+    // If larger inserted HTML text contains block elements, we separate the inserted text into
+    // inline <ins> elements and "insert"-class-based block elements.
+    // <ins>...<div>...</div>...</ins> => <ins>...</ins><div class="insert">...</div><ins>...</ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<(ins|del)>([\s\S]*?)<\/\1>/gi,
+        (whole: string, insDel: string): string => {
+            const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
+            return whole.replace(
+                /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
+                (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
+                    const modifiedTag = addClassToHtmlTag(opening, modificationClass);
+                    return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
+                }
+            );
+        }
+    );
+
+    // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted text</del><ins>inserted.</ins></P>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
+        (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
+            `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white
+    );
+
+    // <ins>...</p><p>...</ins> => <ins>...</ins></p><p><ins>...</ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<(ins|del)>([\s\S]*?)<\/(p|div|blockquote|li)>\s*<(p|div|blockquote|li)([^>]*)>([\s\S]*?)<\/\1>/gi,
+        (
+            whole: string,
+            insDel: string,
+            content1: string,
+            blockEnd: string,
+            blockStart: string,
+            blockAttrs: string,
+            content2: string
+        ): string => {
+            if (isValidInlineHtml(content1) && isValidInlineHtml(content2)) {
+                return (
+                    `<` +
+                    insDel +
+                    `>` +
+                    content1 +
+                    `</` +
+                    insDel +
+                    `></` +
+                    blockEnd +
+                    `>` +
+                    `<` +
+                    blockStart +
+                    blockAttrs +
+                    `><` +
+                    insDel +
+                    `>` +
+                    content2 +
+                    `</` +
+                    insDel +
+                    `>`
+                );
+            } else {
+                return whole;
+            }
+        }
+    );
+
+    // Cleanup leftovers from the operation above, when <ins></ins>-tags ore <ins> </ins>-tags are left
+    // around block tags. It should be safe to remove them and just leave the whitespaces.
+    diffUnnormalized = diffUnnormalized.replace(
+        /<(ins|del)>(\s*)<\/\1>/gi,
+        (_whole: string, _insDel: string, space: string): string => space
+    );
+
+    // <del></p><ins> Added text</p></ins> -> <ins> Added text</ins></p>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del><\/(p|div|blockquote|li)><\/del><ins>([\s\S]*?)<\/\1>(\s*)<\/ins>/gi,
+        (_whole: string, blockTag: string, content: string, space: string): string =>
+            `<ins>` + content + `</ins></` + blockTag + `>` + space
+    );
+
+    // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
+        (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            `<del>` +
+            content +
+            `</del>` +
+            `<ins><` +
+            inlineTag +
+            (tagAttributes ? tagAttributes : ``) +
+            `>` +
+            content +
+            `</` +
+            inlineTag +
+            `></ins>`
+    );
+
+    // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
+        (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            `<del><` +
+            inlineTag +
+            (tagAttributes ? tagAttributes : ``) +
+            `>` +
+            content +
+            `</` +
+            inlineTag +
+            `></del>` +
+            `<ins>` +
+            content +
+            `</ins>`
+    );
+
+    // <del><STRONG>Körper</del><ins>alten <STRONG>Körpergehülle</ins></STRONG> => <ins>alten </ins><STRONG><del>Körper</del><ins>Körpergehülle</ins></STRONG>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/del><ins>([^<]*)<\1>([^<]*)<\/ins><\/\1>/gi,
+        (
+            _whole: string,
+            inlineTag: string,
+            tagAttributes: string,
+            delContent: string,
+            insContent1: string,
+            insContent2: string
+        ): string =>
+            `<ins>` +
+            insContent1 +
+            `</ins><` +
+            inlineTag +
+            (tagAttributes ? tagAttributes : ``) +
+            `><del>` +
+            delContent +
+            `</del>` +
+            `<ins>` +
+            insContent2 +
+            `</ins></` +
+            inlineTag +
+            `>`
+    );
+
+    // <del>with a </del><ins>a <STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+    // <del>unformatted word</del><ins><STRONG>formatted word</STRONG></ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>([^<]*)<\/del><ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?>([^<]*)<\/ins>([^<]*)<ins><\/\2><\/ins>/gi,
+        (
+            _whole: string,
+            delContent: string,
+            inlineTag: string,
+            tagAttributes: string,
+            insContent: string,
+            unchangedContent: string
+        ): string =>
+            `<del>` +
+            delContent +
+            unchangedContent +
+            `</del><ins><` +
+            inlineTag +
+            (tagAttributes ? tagAttributes : ``) +
+            `>` +
+            insContent +
+            unchangedContent +
+            `</` +
+            inlineTag +
+            `></ins>`
+    );
+
+    // <ins><STRONG></ins>unformatted <del>word</del><ins>sentence</STRONG></ins> ->
+    // <del>unformatted word</del><ins><STRONG>unformatted sentence</STRONG></ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<del>([^<]*)<\/del><ins>([^<]*)<\/\1><\/ins>/gi,
+        (
+            _whole: string,
+            inlineTag: string,
+            tagAttributes: string,
+            unchangedContent: string,
+            delContent: string,
+            insContent: string
+        ): string =>
+            `<del>` +
+            unchangedContent +
+            delContent +
+            `</del><ins><` +
+            inlineTag +
+            (tagAttributes ? tagAttributes : ``) +
+            `>` +
+            unchangedContent +
+            insContent +
+            `</` +
+            inlineTag +
+            `></ins>`
+    );
+
+    // <STRONG>Bestätigung<del></STRONG></del><ins> NEU</STRONG> NEU2</ins> -->
+    // <STRONG>Bestätigung<ins> NEU</ins></STRONG><ins> NEU2</ins>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>(<\/(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)>)<\/del><ins>([^>]*)<\/\2>([^>]*)<\/ins>/gi,
+        (
+            _whole: string,
+            closingTag: string,
+            closingTagInner: string,
+            insertedText1: string,
+            insertedText2: string
+        ): string => `<ins>` + insertedText1 + `</ins>` + closingTag + `<ins>` + insertedText2 + `</ins>`
+    );
+
+    // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
+    // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>([^<]+)((?:<(?:ul|ol|li)>)+)<\/del>(<span[^>]*os-line-number[^>]*>(?:&nbsp;|\s)<\/span>)?<ins>([^<]+)\2<\/ins>/gi,
+        (_whole: string, del: string, block: string, ln: string, ins: string): string =>
+            `<del>` + del + `</del><ins>` + ins + `</ins>` + block + ln
+    );
+
+    // </p> </ins> -> </ins></p>
+    diffUnnormalized = diffUnnormalized.replace(
+        /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
+        (_whole: string, ending: string, _blockTag: string, space: string, insdel: string): string =>
+            `</` + insdel + `>` + ending + space
+    );
+
+    // <ul><li><ul><li>...</li><del></UL></LI></UL></del><LI class="insert">d</LI><LI class="insert">e</LI><ins></UL></LI></UL></ins>
+    // => <ul><li><ul><li>...</li><LI class="insert">d</LI><LI class="insert">e</LI></UL></LI></UL>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>((<\/(li|ul|ol)>)+)<\/del>((<li class="insert">.*?<\/li>)*)<ins>\1<\/ins>/i,
+        (_whole: string, ending: string, _e1: string, _e2: string, insertedLis: string, _e3: string) =>
+            insertedLis + ending
+    );
+
+    // <UL><LI><UL><LI><UL><LI><del>Ebene 4</LI></UL></LI></UL></LI></UL></del><ins>Ebene 5</LI></UL></LI></UL></LI></UL></ins>
+    // => <UL><LI><UL><LI><UL><LI><del>Ebene 4</del><ins>Ebene 5</ins></LI></UL></LI></UL></LI></UL>
+    diffUnnormalized = diffUnnormalized.replace(
+        /<del>([^<>]*)((<\/(li|ul|ol)>)+)<\/del><ins>([^<>]*)\2<\/ins>/i,
+        (_whole, del, end, _ul, _u2, ins) => `<del>` + del + `</del><ins>` + ins + `</ins>` + end
+    );
+
+    let diff: string;
+    if (diffDetectBrokenDiffHtml(diffUnnormalized)) {
+        diff = diffParagraphs(htmlOld, htmlNew, lineLength!, firstLineNumber!);
+    } else {
+        let node: Element = document.createElement(`div`);
+        node.innerHTML = diffUnnormalized;
+        diff = node.innerHTML;
+
+        if (lineLength !== null && firstLineNumber !== null) {
+            diff = LineNumbering.insert({
+                html: diff,
+                lineLength,
+                firstLine: firstLineNumber
+            });
+        }
+    }
+
+    if (isSplitAfter) {
+        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
+    }
+    if (isSplitBefore) {
+        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
+    }
+
+    return diff;
 }
 
 export function readdOsSplit(diff: string, versions: string[], before = false): string {

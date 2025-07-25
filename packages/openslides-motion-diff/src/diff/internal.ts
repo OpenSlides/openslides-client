@@ -1,6 +1,6 @@
 import { isOsLineBreakNode, isOsLineNumberNode } from "../line-numbering/utils";
 import { DOCUMENT_FRAGMENT_NODE, TEXT_NODE } from "../utils/definitions";
-import { isFirstNonemptyChild } from "../utils/dom-helpers";
+import { isFirstNonemptyChild, normalizeStyleAttributes, replaceHtmlEntities, sortHtmlAttributes, htmlToUppercase } from "../utils/dom-helpers";
 import { serializeTagDiff } from "./utils";
 
 /**
@@ -229,14 +229,14 @@ export function recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before
 
     const nextVersions: HTMLElement[] = [];
     for (const v of versions) {
-        const s = v?.querySelector(`& > .${className}`) as HTMLElement;
+        const s = v?.querySelector(`:scope > .${className}`) as HTMLElement;
         if (s) {
             nextVersions.push(s);
         }
     }
 
     diff?.classList?.add(className);
-    const nextDiffNode = diff?.querySelector(`& > *:not(.os-line-number)`) as HTMLElement;
+    const nextDiffNode = diff?.querySelector(`:scope > *:not(.os-line-number)`) as HTMLElement;
     if (nextDiffNode) {
         recAddOsSplit(nextDiffNode, nextVersions, before);
     }
@@ -252,4 +252,37 @@ export function recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before
             recAddOsSplit(nextSibDiffNode, nextVersions, before);
         }
     }
+}
+
+/**
+ * This performs HTML normalization to prevent the Diff-Algorithm from detecting changes when there are actually
+ * none. Common problems covered by this method are differently ordered Attributes of HTML elements or HTML-encoded
+ * special characters.
+ *
+ * @param {string} html
+ * @returns {string}
+ * @private
+ */
+export function normalizeHtmlForDiff(html: string): string {
+    html = sortHtmlAttributes(html);
+    html = normalizeStyleAttributes(html);
+    html = htmlToUppercase(html);
+
+    // remove whitespaces infront of closing tags
+    html = html
+        .replace(/\s+<\/P>/gi, `</P>`)
+        .replace(/\s+<\/DIV>/gi, `</DIV>`)
+        .replace(/\s+<\/LI>/gi, `</LI>`);
+    html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
+
+    html = html.replace(/\u00A0/g, ` `); // replace no break space
+    html = html.replace(/\u2013/g, `-`);
+    html = replaceHtmlEntities(html);
+
+    // Newline characters: after closing block-level-elements, but not after BR (which is inline)
+    html = html.replace(/(<br *\/?>)\n/gi, `$1`);
+    html = html.replace(/[ \n\t]+/gi, ` `);
+    html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
+
+    return html;
 }
