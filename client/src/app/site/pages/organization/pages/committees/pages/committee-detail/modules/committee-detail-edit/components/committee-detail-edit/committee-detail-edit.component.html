@@ -53,6 +53,7 @@
                     <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="forward_to_committee_ids"
+                        [disableOptionWhenFn]="getDisableOptionWhenNotComAdmin()"
                         [multiple]="true"
                         [repo]="committeeRepo"
                         [showChips]="false"
