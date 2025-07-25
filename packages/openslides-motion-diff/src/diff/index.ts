@@ -1,8 +1,8 @@
 import { LineNumbering } from "..";
-import { LineNumberedString } from "../line-numbering/definitions";
-import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
+import { LineNumberedString, LineNumberRange } from "../line-numbering/definitions";
+import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, fragmentToHtml, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange, UnifiedChangeType } from "./definitions";
-import { insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
 import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
@@ -947,13 +947,6 @@ export function getTextWithChanges(
     return html;
 }
 
-export function formatOsCollidingChanges(
-    html: string,
-    formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
-): string {
-    throw new Error(`TODO`);
-}
-
 /**
   * This is used to extract affected lines of a paragraph with the possibility to show the context (lines before
   * and after) the changed lines and displaying the line numbers.
@@ -972,7 +965,56 @@ export function getAmendmentParagraphsLines(
     lineLength: number,
     changeRecos?: UnifiedChange[]
 ): DiffLinesInParagraph | null {
-    throw new Error(`TODO`);
+    const paragraph_line_range: LineNumberRange = LineNumbering.getRange(origText);
+    let diffText = diff(origText, newText);
+    const affected_lines = detectAffectedLineRange(diffText) as LineRange;
+
+    /**
+        * If the affect line has change recos, overwirte the diff with the change reco
+        */
+    if (changeRecos && changeRecos.length) {
+        const recoToThisLine = changeRecos.find(reco => reco.getLineFrom() === affected_lines.from);
+        if (recoToThisLine) {
+            diffText = diff(origText, recoToThisLine.getChangeNewText());
+        }
+    }
+
+    if (affected_lines === null) {
+        return null;
+    }
+
+    let textPre = ``;
+    let textPost = ``;
+    if (affected_lines.from > paragraph_line_range.from!) {
+        textPre = formatDiffWithLineNumbers(
+            extractRangeByLineNumbers(diffText, paragraph_line_range.from!, affected_lines.from - 1),
+            lineLength,
+            paragraph_line_range.from!
+        );
+    }
+    if (paragraph_line_range.to! > affected_lines.to) {
+        textPost = formatDiffWithLineNumbers(
+            extractRangeByLineNumbers(diffText, affected_lines.to + 1, paragraph_line_range.to!),
+            lineLength,
+            affected_lines.to + 1
+        );
+    }
+    const text = formatDiffWithLineNumbers(
+        extractRangeByLineNumbers(diffText, affected_lines.from, affected_lines.to),
+        lineLength,
+        affected_lines.from
+    );
+
+    return {
+        paragraphNo,
+        paragraphLineFrom: paragraph_line_range.from,
+        paragraphLineTo: paragraph_line_range.to,
+        diffLineFrom: affected_lines.from,
+        diffLineTo: affected_lines.to,
+        textPre,
+        text,
+        textPost
+    } as DiffLinesInParagraph;
 }
 
 /**
@@ -991,7 +1033,41 @@ export function getChangeDiff(
     lineLength: number,
     highlight?: number
 ): string {
-    throw new Error(`TODO`);
+    if ((LineNumbering.getRange(html).to || 0) < change.getLineTo()) {
+        throw new Error(`Invalid call - The change is outside of the motion`);
+    }
+    const data: ExtractedContent = extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
+    let oldText =
+        data.outerContextStart +
+        data.innerContextStart +
+        data.html +
+        data.innerContextEnd +
+        data.outerContextEnd;
+
+    oldText = LineNumbering.insert({
+        html: oldText,
+        lineLength,
+        firstLine: change.getLineFrom()
+    });
+    let diffText = diff(oldText, change.getChangeNewText());
+
+    // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
+    // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
+    // - Second, another one to prevent the displayed including insertions to exceed the page width
+    diffText = LineNumbering.insertLineBreaks(diffText, lineLength, true);
+
+    if (highlight && highlight > 0) {
+        diffText = LineNumbering.highlightLine(diffText, highlight);
+    }
+
+    const origBeginning = data.outerContextStart + data.innerContextStart;
+    if (diffText.toLowerCase().indexOf(origBeginning.toLowerCase()) === 0) {
+        // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
+        diffText =
+            addCSSClassToFirstTag(origBeginning, `merge-before`) + diffText.substring(origBeginning.length);
+    }
+
+    return diffText;
 }
 
 /**
@@ -1065,7 +1141,23 @@ export function extractMotionLineRange(
     lineLength: number,
     highlightedLine?: number
 ): string {
-    throw new Error(`TODO`);
+    let html = ``;
+    const extracted = extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
+    html =
+        extracted.outerContextStart +
+        extracted.innerContextStart +
+        extracted.html +
+        extracted.innerContextEnd +
+        extracted.outerContextEnd;
+    if (lineNumbers) {
+        html = LineNumbering.insert({
+            html,
+            lineLength,
+            highlight: highlightedLine,
+            firstLine: lineRange.from
+        });
+    }
+    return html;
 }
 
-export { UnifiedChangeType, UnifiedChange };
+export { UnifiedChangeType, UnifiedChange, fragmentToHtml, htmlToFragment };

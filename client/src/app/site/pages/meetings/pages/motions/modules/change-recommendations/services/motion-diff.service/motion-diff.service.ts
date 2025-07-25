@@ -262,7 +262,13 @@ export class MotionDiffService {
         html: string,
         formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
     ): string {
-        return HtmlDiff.formatOsCollidingChanges(html, formatter);
+        const frag = HtmlDiff.htmlToFragment(html);
+
+        frag.querySelectorAll(`.os-colliding-change`).forEach((el: HTMLElement): void => {
+            formatter.bind(this)(el as HTMLDivElement);
+        });
+
+        return HtmlDiff.fragmentToHtml(frag);
     }
 
     public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {

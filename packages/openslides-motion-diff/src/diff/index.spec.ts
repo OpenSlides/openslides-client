@@ -3,7 +3,7 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "..";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { extractRangeByLineNumbers, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
@@ -1445,17 +1445,6 @@ describe(`MotionDiffService`, () => {
         );
     });
 
-    /*
-    describe(`removeDuplicateClassesInsertedByCkeditor`, () => {
-        it(`removes additional classes`, () => {
-            const strIn = `<ul class="os-split-before os-split-after"><li class="os-split-before"><ul class="os-split-before os-split-after"><li class="os-split-before">...here it goes on</li><li class="os-split-before">This has been added</li></ul></li></ul>`,
-                cleaned = service.removeDuplicateClassesInsertedByCkeditor(strIn);
-            expect(cleaned).toBe(
-                `<UL class="os-split-before os-split-after"><LI class="os-split-before"><UL class="os-split-before os-split-after"><LI class="os-split-before">...here it goes on</LI><LI>This has been added</LI></UL></LI></UL>`
-            );
-        });
-    });
-
     describe(`detecting changed line number range`, () => {
         it(`detects changed line numbers in the middle`, () => {
             const before =
@@ -1482,7 +1471,7 @@ describe(`MotionDiffService`, () => {
                     `End</p>`;
 
             const diff = HtmlDiff.diff(before, after);
-            const affected = service.detectAffectedLineRange(diff);
+            const affected = detectAffectedLineRange(diff);
             expect(affected).toEqual({ from: 3, to: 4 });
         });
 
@@ -1497,12 +1486,11 @@ describe(`MotionDiffService`, () => {
                 });
                 const diff = HtmlDiff.diff(before, after);
 
-                const affected = service.detectAffectedLineRange(diff);
+                const affected = detectAffectedLineRange(diff);
                 expect(affected).toEqual({ from: 1, to: 1 });
             }
         );
     });
-    */
 
     describe(`stripping ins/del-styles/tags`, () => {
         it(`deletes to be deleted nodes`, () => {
@@ -1643,28 +1631,27 @@ describe(`MotionDiffService`, () => {
         });
     });
 
-    /*
     describe(`getAmendmentParagraphsLines`, () => {
         it(`test identical inputs`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
-            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
+            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`;
+            const outHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`;
 
-            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toBe(null);
+            expect(getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toBe(null);
         });
 
         it(`test without change recos`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
-            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2x</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const outHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2x</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
 
-            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toEqual({
+            expect(getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toEqual({
                 diffLineFrom: 2,
                 diffLineTo: 2,
                 paragraphLineFrom: 1,
                 paragraphLineTo: 4,
                 paragraphNo: 2,
-                text: `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`,
-                textPost: `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`,
-                textPre: `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`
+                text: `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`,
+                textPost: `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p><p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 4</p>`,
+                textPre: `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`
             });
         });
 
@@ -1676,7 +1663,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getChangeDiff(
+                getChangeDiff(
                     inHtml,
                     new TestChangeRecommendation({
                         line_from: 2,
@@ -1695,7 +1682,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                service.getChangeDiff(
+                getChangeDiff(
                     inHtml,
                     new TestChangeRecommendation({
                         line_from: 2,
@@ -1714,7 +1701,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                () => service.getChangeDiff(
+                () => getChangeDiff(
                     inHtml,
                     new TestChangeRecommendation({
                         line_from: 4,
@@ -1730,7 +1717,7 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
 
             expect(
-                () => service.getChangeDiff(
+                () => getChangeDiff(
                     inHtml,
                     new TestChangeRecommendation({
                         line_from: 3,
@@ -1742,7 +1729,6 @@ describe(`MotionDiffService`, () => {
             ).toThrow();
         });
     });
-    */
 
     describe(`getTextRemainderAfterLastChange`, () => {
         it(`test with simple change`, () => {
@@ -1858,13 +1844,12 @@ describe(`MotionDiffService`, () => {
         });
     });
 
-    /*
     describe(`extractMotionLineRange`, () => {
         it(`test with no line numbers in result`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
 
             expect(
-                service.extractMotionLineRange(
+                extractMotionLineRange(
                     inHtml,
                     {
                         from: 2,
@@ -1877,10 +1862,10 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`test with line numbers in result`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
 
             expect(
-                service.extractMotionLineRange(
+                extractMotionLineRange(
                     inHtml,
                     {
                         from: 2,
@@ -1890,51 +1875,9 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2</p><p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
             );
         });
     });
-
-    describe(`formatOsCollidingChanges`, () => {
-        it(`converts collision HTML to WYSIWYG-editor-compatible styles for P elements`, () => {
-                const inHtml =
-                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                    `<p><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
-                    `</div>`;
-
-                const processedHtml = service.formatOsCollidingChanges(
-                    inHtml,
-                    service.formatOsCollidingChanges_wysiwyg_cb
-                );
-                expect(processedHtml).toBe(
-                    `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                    `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
-                    `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
-                    `<span>==============</span></div>`
-                );
-            }
-        );
-
-        it(`converts collision HTML to WYSIWYG-editor-compatible styles for UL elements`, () => {
-                const inHtml =
-                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
-                    `</div>`;
-
-                const processedHtml = service.formatOsCollidingChanges(
-                    inHtml,
-                    service.formatOsCollidingChanges_wysiwyg_cb
-                );
-                expect(processedHtml).toBe(
-                    `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                    `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
-                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
-                    `<div>==============</div>` +
-                    `</div>`
-                );
-            }
-        );
-    });
-    */
 });
 
