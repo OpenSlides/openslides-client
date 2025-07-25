@@ -73,14 +73,14 @@ export class OnlyNumberDirective implements OnInit {
         if (this.osOnlyNumber) {
             if (
                 this.allowedKeys.includes(event.key) ||
-                // Allow: Ctrl+A
-                (event.key === `a` && event.ctrlKey) ||
-                // Allow: Ctrl+C
-                (event.key === `c` && event.ctrlKey) ||
-                // Allow: Ctrl+V
-                (event.key === `v` && event.ctrlKey) ||
-                // Allow: Ctrl+X
-                (event.key === `x` && event.ctrlKey) ||
+                // Allow: Ctrl+A and command+A
+                (event.key === `a` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+C and command+C
+                (event.key === `c` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+V and command+V
+                (event.key === `v` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+X and command+X
+                (event.key === `x` && (event.ctrlKey || event.metaKey)) ||
                 this.regExp.test(nextValue)
             ) {
                 return;
