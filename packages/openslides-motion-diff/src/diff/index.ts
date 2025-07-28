@@ -1,7 +1,8 @@
-import { LineNumbering } from "..";
+import { LineNumbering } from "../index";
 import { LineNumberedString, LineNumberRange } from "../line-numbering/definitions";
 import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, fragmentToHtml, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
-import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChange, UnifiedChangeType } from "./definitions";
+import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChangeType } from "./definitions";
+import type { UnifiedChange } from "./definitions";
 import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";

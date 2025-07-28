@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
-import { HtmlDiff, LineNumbering } from "..";
+import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";

@@ -1,3 +1,3 @@
-import { UnifiedChangeType } from "@openslides/motion-diff/dist/diff";
+import { HtmlDiff } from '@openslides/motion-diff';
 
-export import ViewUnifiedChangeType = UnifiedChangeType;
+export import ViewUnifiedChangeType = HtmlDiff.UnifiedChangeType;
