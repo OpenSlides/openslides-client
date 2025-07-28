@@ -822,6 +822,10 @@ export class OperatorService {
                     {
                         idField: `committee_management_ids`,
                         fieldset: [`child_ids`]
+                    },
+                    {
+                        idField: `gender_id`,
+                        fieldset: [`name`]
                     }
                 ]
             };

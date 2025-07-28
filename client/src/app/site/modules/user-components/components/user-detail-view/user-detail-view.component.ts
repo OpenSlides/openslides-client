@@ -118,6 +118,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     @Input()
     public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
 
+    @Input()
+    public replaceGenderField = false;
+
     @Output()
     public changeEvent = new EventEmitter();
 
@@ -145,6 +148,10 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
         return newItems;
     });
+
+    public get genderName(): string {
+        return this.genderRepo.getViewModel(this.personalInfoForm.get(`gender_id`).value)?.name;
+    }
 
     private set _initialState(state: any | null) {
         this._initialStateString = JSON.stringify(state);
