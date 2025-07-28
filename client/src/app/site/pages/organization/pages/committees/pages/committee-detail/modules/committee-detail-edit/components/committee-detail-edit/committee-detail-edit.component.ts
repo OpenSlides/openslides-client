@@ -89,11 +89,11 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
      * @returns A function that will return a boolean
      */
     public getDisableOptionWhenFn(): (value: Selectable) => boolean {
-        return value => value.id === this.committeeId || !(this.isOrgaManager || this.committeeRepo.getViewModel(value.id).manager_ids?.includes(this.operator.user.id));
+        return value => (value.id === this.committeeId || this.isNotCommitteeAdminFor()(value));
     }
 
-    public getDisableOptionWhenNotComAdmin(): (value: Selectable) => boolean {
-        return value => !(this.isOrgaManager || this.committeeRepo.getViewModel(value.id).manager_ids?.includes(this.operator.user.id));
+    public isNotCommitteeAdminFor(): (value: Selectable) => boolean {
+        return value => !(this.isOrgaManager || this.operator.committeeCanManageNoOrgaCheck(value.id));
     }
 
     public getDisableOptionForCommitteeParentFn(): (value: Selectable) => boolean {
