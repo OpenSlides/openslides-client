@@ -121,7 +121,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get isAdminNotInMeeting(): boolean {
-        return this.operator.canSkipPermissionCheck && !this.operator.user.getMeetingUser();
+        return (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManager) && !this.operator.user.getMeetingUser();
     }
 
     @Input()

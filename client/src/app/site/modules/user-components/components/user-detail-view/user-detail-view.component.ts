@@ -190,6 +190,10 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this.cd.detectChanges();
     }
 
+    public update(): void {
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+    }
+
     public isAllowed(permission: string): boolean {
         return this.isAllowedFn(permission);
     }
