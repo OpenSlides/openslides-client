@@ -7,17 +7,19 @@ export class LineNumbering {
     private root: HTMLDivElement = document.createElement(`div`);
     private currentInlineOffset = 0;
     private lastInlineBreakablePoint: BreakablePoint | null = null;
-    private currentLineNumber = this.firstLine;
+    private currentLineNumber: number | null;
     private prependLineNumberToFirstText = true;
     private ignoreNextRegularLineNumber = false;
 
     constructor(
         html: string,
         private lineLength: number,
-        private firstLine: number | null = 1,
+        firstLine: number | null = 1,
         private highlightLine: number | null = null,
         private ignoreInsertedText = true
     ) {
+        this.currentLineNumber = firstLine;
+
         // Removing newlines after BRs, as they lead to problems like #3410
         if (html) {
             html = html.replace(/(<br[^>]*>)[\n\r]+/gi, `$1`);
