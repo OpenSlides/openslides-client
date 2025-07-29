@@ -82,7 +82,7 @@
         <!-- Second line -->
         <div class="personal-info-area">
             <!-- Gender -->
-            @if (replaceGenderField) {
+            @if (disableGenderField) {
                 <mat-form-field class="form58 force-min-width">
                     <mat-label>{{ 'Gender' | translate }}</mat-label>
                     <input matInput readonly value="{{ genderName | translate }}" />

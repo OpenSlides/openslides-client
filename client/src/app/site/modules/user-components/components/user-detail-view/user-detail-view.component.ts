@@ -119,7 +119,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
 
     @Input()
-    public replaceGenderField = false;
+    public disableGenderField = false;
 
     @Output()
     public changeEvent = new EventEmitter();
