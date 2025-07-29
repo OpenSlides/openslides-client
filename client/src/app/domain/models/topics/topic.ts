@@ -21,16 +21,7 @@ export class Topic extends BaseModel<Topic> {
         super(Topic.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Topic)[] = [
-        `id`,
-        `title`,
-        `text`,
-        `sequential_number`,
-        `attachment_meeting_mediafile_ids`,
-        `agenda_item_id`,
-        `list_of_speakers_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Topic)[] = [`id`, `title`, `text`, `sequential_number`, `attachment_meeting_mediafile_ids`, `agenda_item_id`, `list_of_speakers_id`, `meeting_id`];
 }
 export interface Topic
     extends HasMeetingId,

@@ -22,17 +22,6 @@ export class MotionCategory extends BaseModel<MotionCategory> {
         super(MotionCategory.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionCategory)[] = [
-        `id`,
-        `name`,
-        `prefix`,
-        `weight`,
-        `level`,
-        `sequential_number`,
-        `parent_id`,
-        `child_ids`,
-        `motion_ids`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionCategory)[] = [`id`, `name`, `prefix`, `weight`, `level`, `sequential_number`, `parent_id`, `child_ids`, `motion_ids`, `meeting_id`];
 }
 export interface MotionCategory extends HasMeetingId, HasSequentialNumber {}

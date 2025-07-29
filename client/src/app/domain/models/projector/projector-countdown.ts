@@ -23,17 +23,6 @@ export class ProjectorCountdown extends BaseModel<ProjectorCountdown> {
         super(ProjectorCountdown.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorCountdown)[] = [
-        `id`,
-        `title`,
-        `description`,
-        `default_time`,
-        `countdown_time`,
-        `running`,
-        `projection_ids`,
-        `used_as_list_of_speakers_countdown_meeting_id`,
-        `used_as_poll_countdown_meeting_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorCountdown)[] = [`id`, `title`, `description`, `default_time`, `countdown_time`, `running`, `projection_ids`, `used_as_list_of_speakers_countdown_meeting_id`, `used_as_poll_countdown_meeting_id`, `meeting_id`];
 }
 export interface ProjectorCountdown extends HasMeetingId, HasProjectionIds {}

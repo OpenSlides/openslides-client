@@ -47,26 +47,6 @@ export class Group extends BaseModel<Group> {
         super(Group.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
-        `id`,
-        `external_id`,
-        `name`,
-        `permissions`,
-        `weight`,
-        `meeting_user_ids`,
-        `default_group_for_meeting_id`,
-        `admin_group_for_meeting_id`,
-        `anonymous_group_for_meeting_id`,
-        `meeting_mediafile_access_group_ids`,
-        `meeting_mediafile_inherited_access_group_ids`,
-        `read_comment_section_ids`,
-        `write_comment_section_ids`,
-        `read_chat_group_ids`,
-        `write_chat_group_ids`,
-        `used_as_motion_poll_default_id`,
-        `used_as_assignment_poll_default_id`,
-        `used_as_topic_poll_default_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [`id`, `external_id`, `name`, `permissions`, `weight`, `meeting_user_ids`, `default_group_for_meeting_id`, `admin_group_for_meeting_id`, `anonymous_group_for_meeting_id`, `meeting_mediafile_access_group_ids`, `meeting_mediafile_inherited_access_group_ids`, `read_comment_section_ids`, `write_comment_section_ids`, `read_chat_group_ids`, `write_chat_group_ids`, `used_as_motion_poll_default_id`, `used_as_assignment_poll_default_id`, `used_as_topic_poll_default_id`, `meeting_id`];
 }
 export interface Group extends HasMeetingId {}

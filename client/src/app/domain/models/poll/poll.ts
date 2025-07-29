@@ -150,37 +150,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         return Poll.DECIMAL_FIELDS;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
-        `id`,
-        `description`,
-        `title`,
-        `type`,
-        `backend`,
-        `is_pseudoanonymized`,
-        `pollmethod`,
-        `state`,
-        `min_votes_amount`,
-        `max_votes_amount`,
-        `max_votes_per_option`,
-        `global_yes`,
-        `global_no`,
-        `global_abstain`,
-        `onehundred_percent_base`,
-        `votesvalid`,
-        `votesinvalid`,
-        `votescast`,
-        `entitled_users_at_stop`,
-        `live_voting_enabled`,
-        `live_votes`,
-        `sequential_number`,
-        `content_object_id`,
-        `option_ids`,
-        `global_option_id`,
-        `voted_ids`,
-        `entitled_group_ids`,
-        `projection_ids`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [`id`, `description`, `title`, `type`, `backend`, `is_pseudoanonymized`, `pollmethod`, `state`, `min_votes_amount`, `max_votes_amount`, `max_votes_per_option`, `global_yes`, `global_no`, `global_abstain`, `onehundred_percent_base`, `votesvalid`, `votesinvalid`, `votescast`, `entitled_users_at_stop`, `live_voting_enabled`, `live_votes`, `sequential_number`, `content_object_id`, `option_ids`, `global_option_id`, `voted_ids`, `entitled_group_ids`, `projection_ids`, `meeting_id`];
 }
 
 export interface Poll extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}

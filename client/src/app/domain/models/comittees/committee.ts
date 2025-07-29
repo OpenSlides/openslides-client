@@ -28,23 +28,5 @@ export class Committee extends BaseModel<Committee> {
         super(Committee.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Committee)[] = [
-        `id`,
-        `name`,
-        `description`,
-        `external_id`,
-        `parent_id`,
-        `child_ids`,
-        `meeting_ids`,
-        `default_meeting_id`,
-        `user_ids`,
-        `manager_ids`,
-        `forward_to_committee_ids`,
-        `receive_forwardings_from_committee_ids`,
-        `organization_tag_ids`,
-        `organization_id`,
-        `native_user_ids`,
-        `all_parent_ids`,
-        `all_child_ids`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Committee)[] = [`id`, `name`, `description`, `external_id`, `meeting_ids`, `default_meeting_id`, `user_ids`, `manager_ids`, `parent_id`, `child_ids`, `all_parent_ids`, `all_child_ids`, `native_user_ids`, `forward_to_committee_ids`, `receive_forwardings_from_committee_ids`, `organization_tag_ids`, `organization_id`];
 }

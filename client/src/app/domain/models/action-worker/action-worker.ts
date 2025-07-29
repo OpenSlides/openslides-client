@@ -18,14 +18,7 @@ export class ActionWorker extends BaseModel {
         super(ActionWorker.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ActionWorker)[] = [
-        `id`,
-        `name`,
-        `state`,
-        `created`,
-        `timestamp`,
-        `result`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof ActionWorker)[] = [`id`, `name`, `state`, `created`, `timestamp`, `result`];
 }
 
 export interface ActionWorker {}

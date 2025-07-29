@@ -14,12 +14,6 @@ export class MotionEditor extends BaseModel<MotionEditor> {
         super(MotionEditor.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionEditor)[] = [
-        `id`,
-        `weight`,
-        `meeting_user_id`,
-        `motion_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionEditor)[] = [`id`, `weight`, `meeting_user_id`, `motion_id`, `meeting_id`];
 }
 export interface MotionEditor extends HasMeetingId {}

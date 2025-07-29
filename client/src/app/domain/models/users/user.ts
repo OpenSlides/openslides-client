@@ -55,6 +55,9 @@ export class User extends BaseDecimalModel<User> {
     public home_committee_id: Id; // committee/navive_user_ids;
     public gender_id: Id; // (gender/user_ids)[];
 
+    public history_position_ids: Id[];
+    public history_entry_ids: Id[];
+
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
     }
@@ -63,38 +66,6 @@ export class User extends BaseDecimalModel<User> {
         return [`default_vote_weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
-        `id`,
-        `username`,
-        `member_number`,
-        `saml_id`,
-        `pronoun`,
-        `title`,
-        `first_name`,
-        `last_name`,
-        `is_active`,
-        `is_physical_person`,
-        `default_password`,
-        `can_change_own_password`,
-        `email`,
-        `default_vote_weight`,
-        `last_email_sent`,
-        `is_demo_user`,
-        `last_login`,
-        `gender_id`,
-        `organization_management_level`,
-        `is_present_in_meeting_ids`,
-        `committee_ids`,
-        `committee_management_ids`,
-        `home_committee_id`,
-        `meeting_user_ids`,
-        `poll_voted_ids`,
-        `option_ids`,
-        `vote_ids`,
-        `poll_candidate_ids`,
-        `meeting_ids`,
-        `organization_id`,
-        `external`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [`id`, `username`, `member_number`, `saml_id`, `pronoun`, `title`, `first_name`, `last_name`, `is_active`, `is_physical_person`, `default_password`, `can_change_own_password`, `email`, `default_vote_weight`, `last_email_sent`, `is_demo_user`, `last_login`, `external`, `gender_id`, `organization_management_level`, `is_present_in_meeting_ids`, `committee_ids`, `committee_management_ids`, `meeting_user_ids`, `poll_voted_ids`, `option_ids`, `vote_ids`, `poll_candidate_ids`, `home_committee_id`, `history_position_ids`, `history_entry_ids`, `meeting_ids`, `organization_id`];
 }
 export interface User {}

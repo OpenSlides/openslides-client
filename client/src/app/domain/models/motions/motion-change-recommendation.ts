@@ -25,18 +25,6 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
         super(MotionChangeRecommendation.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation)[] = [
-        `id`,
-        `rejected`,
-        `internal`,
-        `type`,
-        `other_description`,
-        `line_from`,
-        `line_to`,
-        `text`,
-        `creation_time`,
-        `motion_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation)[] = [`id`, `rejected`, `internal`, `type`, `other_description`, `line_from`, `line_to`, `text`, `creation_time`, `motion_id`, `meeting_id`];
 }
 export interface MotionChangeRecommendation extends HasMeetingId {}

@@ -14,12 +14,6 @@ export class MotionWorkingGroupSpeaker extends BaseModel<MotionWorkingGroupSpeak
         super(MotionWorkingGroupSpeaker.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionWorkingGroupSpeaker)[] = [
-        `id`,
-        `weight`,
-        `meeting_user_id`,
-        `motion_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionWorkingGroupSpeaker)[] = [`id`, `weight`, `meeting_user_id`, `motion_id`, `meeting_id`];
 }
 export interface MotionWorkingGroupSpeaker extends HasMeetingId {}

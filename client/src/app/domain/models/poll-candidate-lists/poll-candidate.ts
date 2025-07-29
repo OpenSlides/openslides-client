@@ -14,12 +14,6 @@ export class PollCandidate extends BaseModel<PollCandidate> {
         super(PollCandidate.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollCandidate)[] = [
-        `id`,
-        `poll_candidate_list_id`,
-        `user_id`,
-        `weight`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof PollCandidate)[] = [`id`, `poll_candidate_list_id`, `user_id`, `weight`, `meeting_id`];
 }
 export interface PollCandidate extends HasMeetingId {}

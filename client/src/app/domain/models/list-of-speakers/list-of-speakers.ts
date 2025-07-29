@@ -24,16 +24,6 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         super(ListOfSpeakers.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ListOfSpeakers)[] = [
-        `id`,
-        `closed`,
-        `sequential_number`,
-        `moderator_notes`,
-        `content_object_id`,
-        `speaker_ids`,
-        `structure_level_list_of_speakers_ids`,
-        `projection_ids`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof ListOfSpeakers)[] = [`id`, `closed`, `sequential_number`, `moderator_notes`, `content_object_id`, `speaker_ids`, `structure_level_list_of_speakers_ids`, `projection_ids`, `meeting_id`];
 }
 export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}
