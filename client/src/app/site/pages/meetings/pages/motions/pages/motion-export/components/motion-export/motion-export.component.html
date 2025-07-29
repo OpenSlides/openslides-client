@@ -131,6 +131,16 @@
                         >
                             <span>{{ 'Attachments' | translate }}</span>
                         </mat-chip-option>
+                        <mat-chip-option
+                            #PdfChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="PDFinPDF"
+                            [matBadgeHidden]="PdfChip.selected ? 'false' : 'true'"
+                            (click)="deselectAndSelectNeededOption()"
+                        >
+                            <span>{{ 'PDFs in between the motion (changes Page layout)' | translate }}</span>
+                        </mat-chip-option>
                     }
                 </mat-chip-listbox>
             </div>
@@ -359,6 +369,7 @@
                             matBadgeOverlap="true"
                             value="page"
                             [matBadgeHidden]="pageChip.selected ? 'false' : 'true'"
+                            (click)="deselectPdfOption()"
                         >
                             <span>{{ 'Page numbers' | translate }}</span>
                         </mat-chip-option>
