@@ -57,7 +57,7 @@ class MockOperatorService {
         this._operatorUpdatedSubject.next();
     }
 
-    public isAnyCommitteeAdmin(): boolean {
+    public get isAnyCommitteeManager(): boolean {
         return this._isCommitteeAdmin;
     }
 }

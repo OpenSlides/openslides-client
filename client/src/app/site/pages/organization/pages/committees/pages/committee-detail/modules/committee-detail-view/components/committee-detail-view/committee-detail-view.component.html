@@ -71,8 +71,7 @@
                                     <a [routerLink]="['/', 'committees', forwarding.id]">
                                         {{ forwarding.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(forwarding)) {
+                                } @else {
                                     {{ forwarding.name }}
                                 }
                             </li>
@@ -109,8 +108,7 @@
                                     <a [routerLink]="['/', 'committees', receive.id]">
                                         {{ receive.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(receive)) {
+                                } @else {
                                     <span>{{ receive.name }}</span>
                                 }
                             </li>
