@@ -92,9 +92,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         value.id === this.committeeId || this.isNotCommitteeAdminFor(value)
     );
 
-
     public isNotCommitteeAdminFor: (value: Selectable) => boolean = value => !(
-       this.isOrgaManager || this.operator.committeeCanManageNoOrgaCheck(value.id)
+        this.isOrgaManager || this.operator.committeeCanManageNoOrgaCheck(value.id)
     );
 
     public getDisableOptionForCommitteeParentFn(): (value: Selectable) => boolean {
