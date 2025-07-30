@@ -12,6 +12,10 @@ export class HistoryPosition extends BaseModel {
         super(HistoryPosition.COLLECTION, input);
     }
 
+    public get date(): Date {
+        return new Date(this.timestamp * 1000);
+    }
+
     public static readonly REQUESTABLE_FIELDS: (keyof HistoryPosition)[] = [
         `id`,
         `timestamp`

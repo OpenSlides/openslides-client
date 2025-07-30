@@ -1,4 +1,6 @@
 import { User } from 'src/app/domain/models/users/user';
+import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
+import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
@@ -407,6 +409,8 @@ interface IUserRelations {
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
     gender?: ViewGender;
+    history_positions: ViewHistoryPosition[];
+    history_entries: ViewHistoryEntry[];
 }
 
 export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}
