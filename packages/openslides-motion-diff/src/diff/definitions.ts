@@ -112,13 +112,13 @@ export enum UnifiedChangeType {
 /**
  * An object representing a change to a text
  */
-export interface UnifiedChange {
-    isTitleChange(): boolean;
-    getChangeId(): string;
-    getIdentifier(): string;
-    getTitle(): string;
-    getLineTo(): number;
-    getLineFrom(): number;
-    getChangeType(): UnifiedChangeType;
-    getChangeNewText(): string;
+export type UnifiedChange = {
+    isTitleChange: boolean;
+    changeId: string;
+    identifier: string;
+    title: string;
+    lineTo: number;
+    lineFrom: number;
+    changeType: UnifiedChangeType;
+    changeNewText: string;
 }

@@ -51,8 +51,8 @@ export function extractRangeByLineNumbers(
     let toLineNumber: number;
     if (toLine === null) {
         const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
-        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1] as Element;
-        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
+        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`)!, 10);
     } else {
         toLineNumber = toLine + 1;
     }
@@ -80,7 +80,7 @@ export function extractRangeByLineNumbers(
     toChildTraceAbs.shift();
     const followingHtml = serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
-    let currNode: Node = fromLineNumberNode as Element;
+    let currNode: Node = fromLineNumberNode!;
     let isSplit = false;
     while (currNode.parentNode) {
         if (!isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -95,7 +95,7 @@ export function extractRangeByLineNumbers(
         currNode = currNode.parentNode;
     }
 
-    currNode = toLineNumberNode as Element;
+    currNode = toLineNumberNode!;
     isSplit = false;
     while (currNode.parentNode) {
         if (!isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -846,23 +846,23 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
     return (
         changes.filter(
             (otherChange) =>
-                otherChange.getIdentifier() !== change.getIdentifier() &&
-                ((otherChange.getLineFrom() >= change.getLineFrom() &&
-                    otherChange.getLineFrom() <= change.getLineTo()) ||
-                    (otherChange.getLineTo() >= change.getLineFrom() &&
-                        otherChange.getLineTo() <= change.getLineTo()) ||
-                        (otherChange.getLineFrom() <= change.getLineFrom() &&
-                            otherChange.getLineTo() >= change.getLineTo()))
+                otherChange.identifier !== change.identifier &&
+                ((otherChange.lineFrom >= change.lineFrom &&
+                    otherChange.lineFrom <= change.lineTo) ||
+                    (otherChange.lineTo >= change.lineFrom &&
+                        otherChange.lineTo <= change.lineTo) ||
+                        (otherChange.lineFrom <= change.lineFrom &&
+                            otherChange.lineTo >= change.lineTo))
         ).length > 0
     );
 }
 
 export function sortChangeRequests(changes: UnifiedChange[]): UnifiedChange[] {
     return changes.sort((change1, change2): number => {
-        if (change1.getLineFrom() === change2.getLineFrom()) {
-            return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
+        if (change1.lineFrom === change2.lineFrom) {
+            return change1.identifier < change2.identifier ? -1 : 1;
         }
-        return change1.getLineFrom() - change2.getLineFrom();
+        return change1.lineFrom - change2.lineFrom;
     });
 }
 
@@ -886,7 +886,7 @@ export function getTextWithChanges(
 ): string {
     let html = motionHtml;
 
-    changes = changes.filter(change => !change.isTitleChange());
+    changes = changes.filter(change => !change.isTitleChange);
     // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
     changes = sortChangeRequests(changes).reverse();
 
@@ -901,40 +901,40 @@ export function getTextWithChanges(
                 // Note: if amendment 1 affects line 3-5, we remove 3-5. If amendment 2 affects line 2-4, we only need to remove
                 // line 2, as 3-5 is already removed. If Amendment 3 affects 2-4 too, we don't have to remove anything anymore.
 
-                let removeUntil = change.getLineTo();
+                let removeUntil = change.lineTo;
                 if (lastReplacedLine !== null && lastReplacedLine <= removeUntil) {
                     removeUntil = lastReplacedLine - 1;
                 }
-                if (removeUntil >= change.getLineFrom()) {
-                    html = removeLines(html, change.getLineFrom(), removeUntil);
+                if (removeUntil >= change.lineFrom) {
+                    html = removeLines(html, change.lineFrom, removeUntil);
                     html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
                 }
 
                 const changeTypeName = {
                     [UnifiedChangeType.TYPE_AMENDMENT]: `amendment`,
                     [UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION]: `recommendation`,
-                }[change.getChangeType()] ?? `unknown`;
+                }[change.changeType] ?? `unknown`;
                 const type =` data-change-type="${changeTypeName}"`;
-                const changeId = ` data-change-id="` + replaceHtmlEntities(change.getChangeId()) + `"`;
-                const title = ` data-title="` + replaceHtmlEntities(change.getTitle()) + `"`;
-                const ident = ` data-identifier="` + replaceHtmlEntities(change.getIdentifier()) + `"`;
-                const lineFrom = ` data-line-from="` + change.getLineFrom().toString(10) + `"`;
-                const lineTo = ` data-line-to="` + change.getLineTo().toString(10) + `"`;
+                const changeId = ` data-change-id="` + replaceHtmlEntities(change.changeId) + `"`;
+                const title = ` data-title="` + replaceHtmlEntities(change.title) + `"`;
+                const ident = ` data-identifier="` + replaceHtmlEntities(change.identifier) + `"`;
+                const lineFrom = ` data-line-from="` + change.lineFrom.toString(10) + `"`;
+                const lineTo = ` data-line-to="` + change.lineTo.toString(10) + `"`;
                 const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
                 const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
-                const insertingHtml = opTag + change.getChangeNewText() + `</div>`;
+                const insertingHtml = opTag + change.changeNewText + `</div>`;
 
-                html = insertLines(html, change.getLineFrom(), insertingHtml);
+                html = insertLines(html, change.lineFrom, insertingHtml);
 
-                lastReplacedLine = change.getLineFrom();
+                lastReplacedLine = change.lineFrom;
             } else {
-                html = replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
+                html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
             }
         });
     } else {
         changes.forEach((change: UnifiedChange) => {
             html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
-            html = replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
+            html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
         });
     }
 
@@ -974,9 +974,9 @@ export function getAmendmentParagraphsLines(
         * If the affect line has change recos, overwirte the diff with the change reco
         */
     if (changeRecos && changeRecos.length) {
-        const recoToThisLine = changeRecos.find(reco => reco.getLineFrom() === affected_lines.from);
+        const recoToThisLine = changeRecos.find(reco => reco.lineFrom === affected_lines.from);
         if (recoToThisLine) {
-            diffText = diff(origText, recoToThisLine.getChangeNewText());
+            diffText = diff(origText, recoToThisLine.changeNewText);
         }
     }
 
@@ -1034,10 +1034,10 @@ export function getChangeDiff(
     lineLength: number,
     highlight?: number
 ): string {
-    if ((LineNumbering.getRange(html).to || 0) < change.getLineTo()) {
+    if ((LineNumbering.getRange(html).to || 0) < change.lineTo) {
         throw new Error(`Invalid call - The change is outside of the motion`);
     }
-    const data: ExtractedContent = extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
+    const data: ExtractedContent = extractRangeByLineNumbers(html, change.lineFrom, change.lineTo);
     let oldText =
         data.outerContextStart +
         data.innerContextStart +
@@ -1048,9 +1048,9 @@ export function getChangeDiff(
     oldText = LineNumbering.insert({
         html: oldText,
         lineLength,
-        firstLine: change.getLineFrom()
+        firstLine: change.lineFrom
     });
-    let diffText = diff(oldText, change.getChangeNewText());
+    let diffText = diff(oldText, change.changeNewText);
 
     // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
     // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
@@ -1097,8 +1097,8 @@ export function getTextRemainderAfterLastChange(
     let hasRemainederOneChangedLine = false;
 
     for (const change of changes) {
-        if (change.getLineTo() > maxFromLine && change.getLineTo() <= maxToLine) {
-            maxFromLine = change.getLineTo();
+        if (change.lineTo > maxFromLine && change.lineTo <= maxToLine) {
+            maxFromLine = change.lineTo;
             hasRemainederOneChangedLine = true;
         }
     };

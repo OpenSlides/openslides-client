@@ -13,6 +13,7 @@ export default defineConfig({
       name: 'OpenSlides MotionDiff',
       fileName: 'motion-diff',
     },
+    sourcemap: true
   },
   plugins: [dts()],
   test: {

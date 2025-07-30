@@ -247,7 +247,7 @@ export class MotionFormatService {
                         motionText,
                         {
                             from: i === 0 ? firstLine : changeFrom,
-                            to: changesToShow[i].getLineFrom() - 1
+                            to: changesToShow[i].getLineFrom() - 1 || null
                         },
                         true,
                         lineLength,

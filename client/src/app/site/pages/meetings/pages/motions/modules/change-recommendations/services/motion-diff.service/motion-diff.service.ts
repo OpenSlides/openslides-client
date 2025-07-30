@@ -230,11 +230,11 @@ export class MotionDiffService {
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return HtmlDiff.changeHasCollissions(change, changes);
+        return HtmlDiff.changeHasCollissions(this.convertViewUnifiedChange(change), this.convertViewUnifiedChanges(changes));
     }
 
     public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return HtmlDiff.sortChangeRequests(changes) as ViewUnifiedChange[];
+        return HtmlDiff.sortChangeRequests(changes);
     }
 
     /**
@@ -378,7 +378,8 @@ export class MotionDiffService {
         lineLength: number,
         changeRecos?: ViewUnifiedChange[]
     ): DiffLinesInParagraph | null {
-        return HtmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changeRecos);
+        const changes = this.convertViewUnifiedChanges(changeRecos || []);
+        return HtmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changes);
     }
 
     /**
@@ -397,7 +398,7 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        return HtmlDiff.getChangeDiff(html, change, lineLength, highlight);
+        return HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
     }
 
     /**
@@ -417,7 +418,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        return HtmlDiff.getTextRemainderAfterLastChange(motionHtml, changes, lineLength, highlight, lineRange);
+        return HtmlDiff.getTextRemainderAfterLastChange(motionHtml, this.convertViewUnifiedChanges(changes), lineLength, highlight, lineRange);
     }
 
     /**
@@ -437,5 +438,22 @@ export class MotionDiffService {
         highlightedLine?: number
     ): string {
         return HtmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
+    }
+
+    private convertViewUnifiedChanges(changes: ViewUnifiedChange[]): HtmlDiff.UnifiedChange[] {
+        return changes.map(c => this.convertViewUnifiedChange(c));
+    }
+
+    private convertViewUnifiedChange(change: ViewUnifiedChange): HtmlDiff.UnifiedChange {
+        return {
+            isTitleChange: change.isTitleChange(),
+            changeId: change.getChangeId(),
+            identifier: change.getIdentifier(),
+            title: change.getTitle(),
+            lineTo: change.getLineTo(),
+            lineFrom: change.getLineFrom(),
+            changeType: change.getChangeType(),
+            changeNewText: change.getChangeNewText()
+        };
     }
 }

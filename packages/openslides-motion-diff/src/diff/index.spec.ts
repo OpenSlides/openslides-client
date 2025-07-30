@@ -21,43 +21,43 @@ describe(`MotionDiffService`, () => {
             change_type?: UnifiedChangeType;
         }) {}
 
-        isTitleChange(): boolean {
+        get isTitleChange(): boolean {
             return this.obj.title_change ?? false;
         }
 
-        getChangeId(): string {
-            if (this.getChangeType() === UnifiedChangeType.TYPE_AMENDMENT) {
+        get changeId(): string {
+            if (this.changeType === UnifiedChangeType.TYPE_AMENDMENT) {
                 return `amendment-${this.obj.id}-${this.obj.paragraph_no}`;
             }
 
             return `recommendation-${this.obj.id}`;
         }
 
-        getTitle(): string {
-            if (this.getChangeType() === UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
+        get title(): string {
+            if (this.changeType === UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
                 return `Recommendation`;
             }
 
             return this.obj.title ?? ``;
         }
 
-        getChangeType(): UnifiedChangeType {
+        get changeType(): UnifiedChangeType {
             return this.obj.change_type ?? UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
         }
 
-        getChangeNewText(): string {
+        get changeNewText(): string {
             return this.obj.text;
         }
 
-        getIdentifier(): string {
+        get identifier(): string {
             return this.obj.number ?? String(this.obj.id);
         }
 
-        getLineTo(): number {
+        get lineTo(): number {
             return this.obj.line_to;
         }
 
-        getLineFrom(): number {
+        get lineFrom(): number {
             return this.obj.line_from;
         }
     }
