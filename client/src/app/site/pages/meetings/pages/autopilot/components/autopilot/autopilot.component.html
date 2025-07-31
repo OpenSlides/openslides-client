@@ -155,7 +155,7 @@
             ) {
                 <os-poll-collection
                     [currentProjection]="projectedViewModel"
-                    [disableFinished]="disabledContentElements['poll-finished'] === true"
+                    [disableFinished]="disabledContentElements['poll-finished'] === true || isAgendaListProjection"
                     [disableRunning]="disabledContentElements['poll-running'] === true"
                     [displayInAutopilot]="true"
                 ></os-poll-collection>
