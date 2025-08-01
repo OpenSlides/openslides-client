@@ -234,7 +234,12 @@ export class MotionDiffService {
     }
 
     public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return HtmlDiff.sortChangeRequests(changes);
+        return changes.sort((change1, change2): number => {
+            if (change1.getIdentifier() === change2.getIdentifier()) {
+                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
+            }
+            return change1.getLineFrom() - change2.getLineFrom();
+        });
     }
 
     /**
@@ -255,7 +260,7 @@ export class MotionDiffService {
         highlightLine?: number,
         firstLine = 1
     ): string {
-        return HtmlDiff.getTextWithChanges(motionHtml, changes, lineLength, showAllCollisions, highlightLine, firstLine);
+        return HtmlDiff.getTextWithChanges(motionHtml, this.convertViewUnifiedChanges(changes), lineLength, showAllCollisions, highlightLine, firstLine);
     }
 
     public formatOsCollidingChanges(
