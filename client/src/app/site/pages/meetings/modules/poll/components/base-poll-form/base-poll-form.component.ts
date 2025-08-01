@@ -219,6 +219,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         if (this.data) {
             this.checkPollState();
             this.checkPollBackend();
+            this.patchLiveVotingEnabled();
 
             if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
                 // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
@@ -308,6 +309,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             } else {
                 this.data.backend = this.meetingSettingsService.instant(`poll_default_backend`);
             }
+        }
+    }
+
+    private patchLiveVotingEnabled(): void {
+        if (!this.isMotionPoll) {
+            this.contentForm.get(`live_voting_enabled`).setValue(false);
         }
     }
 
@@ -500,7 +507,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private initContentForm(): void {
-        const liveVotingDefault = (this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) && this.isMotionPoll) ?? false;
+        const liveVotingDefault = (this.meetingSettingsService.instant(`poll_default_live_voting_enabled`)) ?? false;
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
             type: [``, Validators.required],
