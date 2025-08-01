@@ -313,8 +313,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private patchLiveVotingEnabled(): void {
-        if (!this.isMotionPoll) {
-            this.contentForm.get(`live_voting_enabled`).setValue(false);
+        if (this.isMotionPoll) {
+            const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
+            this.contentForm.get(`live_voting_enabled`).setValue(liveVotingDefault);
         }
     }
 
@@ -507,7 +508,6 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private initContentForm(): void {
-        const liveVotingDefault = (this.meetingSettingsService.instant(`poll_default_live_voting_enabled`)) ?? false;
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
             type: [``, Validators.required],
@@ -519,7 +519,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             global_yes: [false],
             global_no: [false],
             global_abstain: [false],
-            live_voting_enabled: [liveVotingDefault]
+            live_voting_enabled: [false]
         });
     }
 
