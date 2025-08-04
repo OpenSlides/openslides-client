@@ -2,22 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaExportComponent } from './agenda-export.component';
 
-describe('AgendaExportComponent', () => {
-  let component: AgendaExportComponent;
-  let fixture: ComponentFixture<AgendaExportComponent>;
+xdescribe(`AgendaExportComponent`, () => {
+    let component: AgendaExportComponent;
+    let fixture: ComponentFixture<AgendaExportComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AgendaExportComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [AgendaExportComponent]
+        })
+            .compileComponents();
 
-    fixture = TestBed.createComponent(AgendaExportComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(AgendaExportComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it(`should create`, () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -1,1 +1,23 @@
-<p>agenda-export works!</p>
+<os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportAgenda()">
+    <div class="title-slot">
+        <h2>{{ 'Agenda Export' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<div class="motion-export-card">
+    <mat-tab-group
+        #tabGroup
+        mat-stretch-tabs="false"
+        (animationDone)="afterTabChanged()"
+        (selectedTabChange)="tabChanged($event)"
+    >
+        <mat-tab label="PDF">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+        <mat-tab label="CSV">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #exportPdf>ng-template works</ng-template>
