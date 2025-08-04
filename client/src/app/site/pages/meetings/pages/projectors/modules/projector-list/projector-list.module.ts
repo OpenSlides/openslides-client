@@ -13,6 +13,7 @@ import { ActionCardComponent } from 'src/app/ui/modules/action-card';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
+import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
 import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
 import { AssignmentPollServiceModule } from '../../../assignments/modules/assignment-poll/services/assignment-poll-service.module';
@@ -36,6 +37,7 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         ReactiveFormsModule,
         HeadBarModule,
         ProjectorModule,
+        ProjectorComponent,
         ActionCardComponent,
         DirectivesModule,
         ProjectorEditDialogModule,
