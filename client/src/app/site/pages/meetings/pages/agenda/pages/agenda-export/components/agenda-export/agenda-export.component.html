@@ -20,4 +20,78 @@
     </mat-tab-group>
 </div>
 
-<ng-template #exportPdf>ng-template works</ng-template>
+<ng-template #exportPdf>
+    <form [formGroup]="dialogForm">
+        <div class="agenda-export-wrapper">
+            <div>
+                <p class="toggle-group-head">{{ 'Content' | translate }}</p>
+                <mat-chip-listbox formControlName="content" multiple>
+                    <mat-chip-option #itemNumberChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                        <span>{{ 'Item Number' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #titleChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                        <span>{{ 'Title' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #textChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                        <span>{{ 'Text' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option #attachmentsChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                        <span>{{ 'Attachments' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+        </div>
+        @if (isPDFFormat) {
+            <div>
+                <p class="toggle-group-head">{{ 'Page Layout' | translate }}</p>
+                <mat-chip-listbox formControlName="pageLayout" multiple>
+                    <mat-chip-option
+                        #tableOfContentChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Table of content' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #lineBreakChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Enforce line break' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+            <div>
+                <p class="toggle-group-head">{{ 'Header and Footer' | translate }}</p>
+                <mat-chip-listbox formControlName="headerFooter" multiple>
+                    <mat-chip-option
+                        #headerChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        [matBadgeHidden]="headerChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Header' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #footerChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        [matBadgeHidden]="footerChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Footer' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #currentDateChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        [matBadgeHidden]="currentDateChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Current date' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+        }
+    </form>
+</ng-template>
