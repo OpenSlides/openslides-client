@@ -57,11 +57,22 @@ export class SpeakingTimesComponent implements OnDestroy {
     // if some speaker has spoken.
     public hasSpokenFlag = false;
 
+    private _listOfSpeakers: ViewListOfSpeakers;
+
     @Input()
     public showProjectionMenu = false;
 
     @Input()
-    public set currentSpeakingTimes(speakingTimes: Id[]) {
+    public set listOfSpeakers(los: ViewListOfSpeakers) {
+        this._listOfSpeakers = los;
+        this.currentSpeakingTimes = los.structure_level_list_of_speakers_ids;
+    }
+
+    public get listOfSpeakers(): ViewListOfSpeakers {
+        return this._listOfSpeakers;
+    }
+
+    private set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
         const subscribedIds = new Set(this.subscriptions.keys());
 
@@ -93,9 +104,6 @@ export class SpeakingTimesComponent implements OnDestroy {
             );
         }
     }
-
-    @Input()
-    public listOfSpeakers: ViewListOfSpeakers;
 
     public constructor(
         private durationService: DurationService,
