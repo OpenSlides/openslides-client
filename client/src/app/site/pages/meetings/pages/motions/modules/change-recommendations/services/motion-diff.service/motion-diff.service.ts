@@ -450,14 +450,23 @@ export class MotionDiffService {
     }
 
     private convertViewUnifiedChange(change: ViewUnifiedChange): HtmlDiff.UnifiedChange {
+        let title = ``;
+        try {
+            title = change.getTitle();
+        } catch (_) {}
+
+        let changeType = `unknown`;
+        try {
+            changeType = change.getChangeType();
+        } catch (_) {}
         return {
             isTitleChange: change.isTitleChange(),
             changeId: change.getChangeId(),
             identifier: change.getIdentifier(),
-            title: change.getTitle(),
+            title,
             lineTo: change.getLineTo(),
             lineFrom: change.getLineFrom(),
-            changeType: change.getChangeType(),
+            changeType,
             changeNewText: change.getChangeNewText()
         };
     }
