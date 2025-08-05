@@ -58,8 +58,14 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         return this.fileFormats[this.tabIndex] === ExportFileFormat.CSV;
     }
 
-    private pdfDefaults = {};
-    private csvDefaults = {};
+    private pdfDefaults = {
+        content: [`item_number`, `title`, `text`, `attachments`, `moderation_notes`]
+    };
+
+    private csvDefaults = {
+        content: [`item_number`, `title`, `text`, `attachments`, `moderation_notes`],
+        metaInfo: [`duration`]
+    };
 
     private tabIndex = 0;
     private agendaItems = [];
