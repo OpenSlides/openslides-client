@@ -87,6 +87,10 @@ export class OperatorService {
         return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
     }
 
+    public committeeCanManageNoOrgaCheck(committeeId: number): boolean {
+        return this._CML[committeeId] === CML.can_manage;
+    }
+
     public get isAccountAdmin(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
