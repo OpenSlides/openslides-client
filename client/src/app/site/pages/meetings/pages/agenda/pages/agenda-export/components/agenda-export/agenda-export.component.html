@@ -62,6 +62,42 @@
                     >
                         <span>{{ 'Attachments' | translate }}</span>
                     </mat-chip-option>
+                    <mat-chip-option
+                        #moderationNotesChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="moderation-notes"
+                        [matBadgeHidden]="moderationNotesChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Moderation notes' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #listOfSpeakersChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="list-of-speakers"
+                        [matBadgeHidden]="listOfSpeakersChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'List of speakers' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #pollsChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="polls"
+                        [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Polls' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #internalCommentaryChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="internal-commentary"
+                        [matBadgeHidden]="internalCommentaryChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Internal commentary' | translate }}</span>
+                    </mat-chip-option>
                 </mat-chip-listbox>
             </div>
             @if (isPDFFormat) {
