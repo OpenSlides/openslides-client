@@ -57,8 +57,7 @@ const appConfigs: AppConfig[] = [
     ChatAppConfig,
     ActionWorkerAppConfig,
     MeetingUserAppConfig,
-    GendersAppConfig,
-    HistoryAppConfig
+    GendersAppConfig
 ];
 
 @Injectable({

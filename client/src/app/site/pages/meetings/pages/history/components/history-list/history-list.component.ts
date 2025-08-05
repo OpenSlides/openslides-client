@@ -3,13 +3,18 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { Motion } from 'src/app/domain/models/motions';
+import { User } from 'src/app/domain/models/users/user';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
+import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import {
     collectionIdFromFqid,
@@ -92,6 +97,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             return this.modelsRepoMap[value].getVerboseName();
         }
     }
+
+    private _historySubscription: Subscription;
 
     public constructor(
         protected override translate: TranslateService,
@@ -180,9 +187,88 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      */
     private async queryByFqid(fqid: Fqid): Promise<void> {
         try {
-            const response = await this.historyPresenter.call(fqid);
-            this.dataSource.data = this.filterHistoryData(response, fqid);
-            this.updateModelRequest();
+            const [collection, id] = collectionIdFromFqid(fqid);
+            const subscriptionName = this.getSubscriptionName(fqid);
+            this.modelRequestService.updateSubscribeTo({
+                modelRequest: {
+                    viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
+                    ids: [id],
+                    fieldset: DEFAULT_FIELDSET,
+                    follow: [{
+                        idField: `history_entry_ids`,
+                        fieldset: `detail`,
+                        follow: [{
+                            idField: `position_id`,
+                            fieldset: `detail`,
+                            follow: [
+                                { idField: `user_id`, fieldset: `participantListMinimal` }
+                            ]
+                        }]
+                    }]
+                },
+                subscriptionName
+            });
+            let repo: MotionRepositoryService | AssignmentRepositoryService | ParticipantControllerService;
+            switch (collection) {
+                case Motion.COLLECTION:
+                    repo = this.motionRepo;
+                    break;
+                case Assignment.COLLECTION:
+                    repo = this.assignmentRepo;
+                    break;
+                case User.COLLECTION:
+                    repo = this.userRepo;
+                    break;
+                default:
+                    throw Error(`History for collection ${collection} not implemented.`);
+            }
+            if (this._historySubscription) {
+                this._historySubscription.unsubscribe();
+            }
+            const model = repo.getViewModel(id);
+            this._historySubscription = model.history_entries$.subscribe(entries => {
+                const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
+                const isOrgaManager = this.operator.isOrgaManager;
+                for (const entry of entries) {
+                    if (entry.original_model_id === fqid) {
+                        if (!positions[entry.position_id]) {
+                            positions[entry.position_id] = [entry.position, []];
+                        }
+                        positions[entry.position_id][1].push(entry);
+                    }
+                }
+                const newPositions = [];
+                for (const hist_date of Object.values(positions).sort((a, b) => a[0].timestamp - b[0].timestamp)) {
+                    const position = new HistoryPosition({
+                        position: id,
+                        timestamp: hist_date[0].timestamp,
+                        information: hist_date[1].flatMap(entry => entry.entries),
+                        user_id: hist_date[0].original_user_id,
+                        fqid,
+                        user: hist_date[0].user?.getFullName() || `User ${hist_date[0].original_user_id}`
+                    });
+                    const newInformation = [];
+                    if (!isOrgaManager) {
+                        while (position.information.length) {
+                            const replacementCount = position.information[0].match(/ \{\}/g)?.length || 0;
+                            const information = position.information.splice(0, replacementCount + 1);
+                            if (!this.findForbiddenMeeting(information.slice(1))) {
+                                newInformation.push(...information);
+                            }
+                        }
+                        position.information = newInformation;
+                    }
+                    // only keep positions with information
+                    if (newInformation.length > 0) {
+                        newPositions.push(position);
+                    }
+                }
+                this.dataSource.data = newPositions;
+                this.updateModelRequest();
+            });
+            // const response = await this.historyPresenter.call(fqid);
+            // this.dataSource.data = this.filterHistoryData(response, fqid);
+            // this.updateModelRequest();
         } catch (e) {
             this.raiseError(e);
         }
@@ -278,7 +364,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private updateModelRequest(): void {
         const modelRequests: Record<Collection, Id[]> = {};
         this.dataSource.data.forEach(position => {
-            position.information.forEach(information => {
+            position[1].filter(entry => entry.model_id === entry.original_model_id).flatMap(entry => entry.entries).forEach(information => {
                 if (isFqid(information)) {
                     const [collection, id] = collectionIdFromFqid(information);
                     if (!modelRequests[collection]) {

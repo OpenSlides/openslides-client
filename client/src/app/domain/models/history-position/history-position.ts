@@ -16,10 +16,7 @@ export class HistoryPosition extends BaseModel {
         return new Date(this.timestamp * 1000);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof HistoryPosition)[] = [
-        `id`,
-        `timestamp`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof HistoryPosition)[] = [`id`, `timestamp`, `original_user_id`, `user_id`, `entry_ids`];
 }
 
 export interface HistoryPosition {}
