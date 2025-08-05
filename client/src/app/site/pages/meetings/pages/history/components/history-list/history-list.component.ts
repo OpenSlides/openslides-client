@@ -3,14 +3,13 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { Motion } from 'src/app/domain/models/motions';
 import { User } from 'src/app/domain/models/users/user';
-import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
@@ -19,6 +18,7 @@ import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import {
     collectionIdFromFqid,
     fqidFromCollectionAndId,
+    idFromFqid,
     isFqid
 } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -28,10 +28,42 @@ import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
-import { ViewMotionState } from '../../../motions';
+import { ViewUser } from '../../../../view-models/view-user';
+import { ViewAssignment } from '../../../assignments';
+import { ViewMotion, ViewMotionState } from '../../../motions';
 import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service';
 
 const HISTORY_SUBSCRIPTION_PREFIX = `history`;
+const HISTORY_DETAIL_SUBSCRIPTION = `history_detail`;
+
+class HistoryListDate {
+    public position: number;
+    public timestamp: number;
+    public information: string[];
+    public user_id: Id;
+    public fqid: Fqid;
+    public user: string;
+
+    public get date(): Date {
+        return new Date(this.timestamp * 1000);
+    }
+
+    public constructor(input?: Partial<HistoryListDate>) {
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
+
+    /**
+     * Converts the date (this.now) to a time and date string.
+     *
+     * @param locale locale indicator, i.e 'de-DE'
+     * @returns a human readable kind of time and date representation
+     */
+    public getLocaleString(locale: string): string {
+        return this.date.toLocaleString(locale);
+    }
+}
 
 /**
  * A list view for the history.
@@ -50,7 +82,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      */
     public customTimestampChanged: Subject<number> = new Subject<number>();
 
-    public dataSource: MatTableDataSource<HistoryPosition> = new MatTableDataSource<HistoryPosition>();
+    public dataSource: MatTableDataSource<HistoryListDate> = new MatTableDataSource<HistoryListDate>();
 
     /**
      * The form for the selection of the model
@@ -105,7 +137,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private viewModelStore: ViewModelStoreService,
         private formBuilder: UntypedFormBuilder,
         private activatedRoute: ActivatedRoute,
-        private historyPresenter: HistoryPresenterService,
         private operator: OperatorService,
         private motionRepo: MotionRepositoryService,
         private assignmentRepo: AssignmentRepositoryService,
@@ -143,7 +174,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public ngOnInit(): void {
         super.setTitle(`History`);
 
-        this.dataSource.filterPredicate = (position: HistoryPosition, filter: string): boolean => {
+        this.dataSource.filterPredicate = (position: HistoryListDate, filter: string): boolean => {
             filter = filter ? filter.toLowerCase() : ``;
 
             if (!position) {
@@ -188,115 +219,21 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private async queryByFqid(fqid: Fqid): Promise<void> {
         try {
             const [collection, id] = collectionIdFromFqid(fqid);
-            const subscriptionName = this.getSubscriptionName(fqid);
-            this.modelRequestService.updateSubscribeTo({
-                modelRequest: {
-                    viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
-                    ids: [id],
-                    fieldset: DEFAULT_FIELDSET,
-                    follow: [{
-                        idField: `history_entry_ids`,
-                        fieldset: `detail`,
-                        follow: [{
-                            idField: `position_id`,
-                            fieldset: `detail`,
-                            follow: [
-                                { idField: `user_id`, fieldset: `participantListMinimal` }
-                            ]
-                        }]
-                    }]
-                },
-                subscriptionName
-            });
-            let repo: MotionRepositoryService | AssignmentRepositoryService | ParticipantControllerService;
-            switch (collection) {
-                case Motion.COLLECTION:
-                    repo = this.motionRepo;
-                    break;
-                case Assignment.COLLECTION:
-                    repo = this.assignmentRepo;
-                    break;
-                case User.COLLECTION:
-                    repo = this.userRepo;
-                    break;
-                default:
-                    throw Error(`History for collection ${collection} not implemented.`);
-            }
+            this.subscribeToModelHistory(collection, id);
+            const repo = this.getCollectionRepository(collection);
             if (this._historySubscription) {
                 this._historySubscription.unsubscribe();
             }
-            const model = repo.getViewModel(id);
-            this._historySubscription = model.history_entries$.subscribe(entries => {
-                const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
-                const isOrgaManager = this.operator.isOrgaManager;
-                for (const entry of entries) {
-                    if (entry.original_model_id === fqid) {
-                        if (!positions[entry.position_id]) {
-                            positions[entry.position_id] = [entry.position, []];
-                        }
-                        positions[entry.position_id][1].push(entry);
-                    }
-                }
-                const newPositions = [];
-                for (const hist_date of Object.values(positions).sort((a, b) => a[0].timestamp - b[0].timestamp)) {
-                    const position = new HistoryPosition({
-                        position: id,
-                        timestamp: hist_date[0].timestamp,
-                        information: hist_date[1].flatMap(entry => entry.entries),
-                        user_id: hist_date[0].original_user_id,
-                        fqid,
-                        user: hist_date[0].user?.getFullName() || `User ${hist_date[0].original_user_id}`
-                    });
-                    const newInformation = [];
-                    if (!isOrgaManager) {
-                        while (position.information.length) {
-                            const replacementCount = position.information[0].match(/ \{\}/g)?.length || 0;
-                            const information = position.information.splice(0, replacementCount + 1);
-                            if (!this.findForbiddenMeeting(information.slice(1))) {
-                                newInformation.push(...information);
-                            }
-                        }
-                        position.information = newInformation;
-                    }
-                    // only keep positions with information
-                    if (newInformation.length > 0) {
-                        newPositions.push(position);
-                    }
-                }
-                this.dataSource.data = newPositions;
-                this.updateModelRequest();
-            });
-            // const response = await this.historyPresenter.call(fqid);
-            // this.dataSource.data = this.filterHistoryData(response, fqid);
-            // this.updateModelRequest();
+            this._historySubscription = (
+                repo.getViewModelObservable(id) as Observable<ViewUser | ViewMotion | ViewAssignment>
+            ).pipe(
+                switchMap(
+                    m => m.history_entries$
+                )
+            ).subscribe(entries => this.processNewHistoryEntries(fqid, entries));
         } catch (e) {
             this.raiseError(e);
         }
-    }
-
-    private filterHistoryData(positions: HistoryPosition[], fqid: Fqid): HistoryPosition[] {
-        return positions.filter(position => {
-            const newInformation = [];
-            if (position.information && !Array.isArray(position.information)) {
-                position.information = position.information[fqid];
-            }
-            if (!position.information) {
-                return false;
-            }
-            if (this.operator.isOrgaManager) {
-                return true;
-            }
-            while (position.information.length) {
-                const replacementCount = position.information[0].match(/ \{\}/g)?.length || 0;
-                const information = position.information.splice(0, replacementCount + 1);
-                if (!this.findForbiddenMeeting(information.slice(1))) {
-                    newInformation.push(...information);
-                }
-            }
-            position.information = newInformation;
-            // only keep positions with information
-            return newInformation.length > 0;
-        });
     }
 
     /**
@@ -323,16 +260,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         return [`time`, `info`, `user`];
     }
 
-    public refresh(): void {
-        if (this.currentFqid) {
-            this.queryByFqid(this.currentFqid);
-        }
-    }
-
     /**
      * Returns a translated history information string which contains optional (translated) arguments.
      */
-    public parseInformation(position: HistoryPosition): string[] {
+    public parseInformation(position: HistoryListDate): string[] {
         const informations = [...position.information];
         const result = [];
         while (informations.length) {
@@ -404,5 +335,82 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         if (event && this.currentCollection) {
             this.models = this.modelsRepoMap[this.currentCollection].getViewModelListObservable();
         }
+    }
+
+    private subscribeToModelHistory(collection: string, id: Id): void {
+        this.modelRequestService.updateSubscribeTo({
+            modelRequest: {
+                viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
+                ids: [id],
+                fieldset: DEFAULT_FIELDSET,
+                follow: [{
+                    idField: `history_entry_ids`,
+                    fieldset: `detail`,
+                    follow: [{
+                        idField: `position_id`,
+                        fieldset: `detail`,
+                        follow: [
+                            { idField: `user_id`, fieldset: `participantListMinimal` }
+                        ]
+                    }]
+                }]
+            },
+            subscriptionName: HISTORY_DETAIL_SUBSCRIPTION
+        });
+    }
+
+    private getCollectionRepository(collection: string): MotionRepositoryService | AssignmentRepositoryService | ParticipantControllerService {
+        switch (collection) {
+            case Motion.COLLECTION:
+                return this.motionRepo;
+            case Assignment.COLLECTION:
+                return this.assignmentRepo;
+            case User.COLLECTION:
+                return this.userRepo;
+            default:
+                throw Error(`History for collection ${collection} not implemented.`);
+        }
+    }
+
+    private processNewHistoryEntries(fqid: Fqid, entries: ViewHistoryEntry[]): void {
+        const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
+        const id: Id = idFromFqid(fqid);
+        const isOrgaManager = this.operator.isOrgaManager;
+        for (const entry of entries) {
+            if (entry.original_model_id === fqid) {
+                if (!positions[entry.position_id]) {
+                    positions[entry.position_id] = [entry.position, []];
+                }
+                positions[entry.position_id][1].push(entry);
+            }
+        }
+        const newPositions = [];
+        for (const hist_date of Object.values(positions).sort((a, b) => a[0].timestamp - b[0].timestamp)) {
+            const position = new HistoryListDate({
+                position: id,
+                timestamp: hist_date[0].timestamp,
+                information: hist_date[1].flatMap(entry => entry.entries),
+                user_id: hist_date[0].original_user_id,
+                fqid,
+                user: hist_date[0].user?.getFullName() || `User ${hist_date[0].original_user_id}`
+            });
+            const newInformation = [];
+            if (!isOrgaManager) {
+                while (position.information.length) {
+                    const replacementCount = position.information[0].match(/ \{\}/g)?.length || 0;
+                    const information = position.information.splice(0, replacementCount + 1);
+                    if (!this.findForbiddenMeeting(information.slice(1))) {
+                        newInformation.push(...information);
+                    }
+                }
+                position.information = newInformation;
+            }
+            // only keep positions with information
+            if (isOrgaManager || newInformation.length > 0) {
+                newPositions.push(position);
+            }
+        }
+        this.dataSource.data = newPositions;
+        this.updateModelRequest();
     }
 }
