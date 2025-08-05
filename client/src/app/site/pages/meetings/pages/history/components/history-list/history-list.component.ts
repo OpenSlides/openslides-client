@@ -373,17 +373,9 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     private processNewHistoryEntries(fqid: Fqid, entries: ViewHistoryEntry[]): void {
-        const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
+        const positions = this.gatherPositionDataFromEntries(fqid, entries);
         const id: Id = idFromFqid(fqid);
         const isOrgaManager = this.operator.isOrgaManager;
-        for (const entry of entries) {
-            if (entry.original_model_id === fqid) {
-                if (!positions[entry.position_id]) {
-                    positions[entry.position_id] = [entry.position, []];
-                }
-                positions[entry.position_id][1].push(entry);
-            }
-        }
         const newPositions = [];
         for (const hist_date of Object.values(positions).sort((a, b) => a[0].timestamp - b[0].timestamp)) {
             const position = new HistoryListDate({
@@ -412,5 +404,18 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         }
         this.dataSource.data = newPositions;
         this.updateModelRequest();
+    }
+
+    private gatherPositionDataFromEntries(fqid: Fqid, entries: ViewHistoryEntry[]): Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> {
+        const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
+        for (const entry of entries) {
+            if (entry.original_model_id === fqid) {
+                if (!positions[entry.position_id]) {
+                    positions[entry.position_id] = [entry.position, []];
+                }
+                positions[entry.position_id][1].push(entry);
+            }
+        }
+        return positions;
     }
 }
