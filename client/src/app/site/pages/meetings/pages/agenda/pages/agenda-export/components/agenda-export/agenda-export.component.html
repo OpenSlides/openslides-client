@@ -4,7 +4,7 @@
     </div>
 </os-head-bar>
 
-<div class="motion-export-card">
+<div class="agenda-export-card">
     <mat-tab-group
         #tabGroup
         mat-stretch-tabs="false"
@@ -26,72 +26,153 @@
             <div>
                 <p class="toggle-group-head">{{ 'Content' | translate }}</p>
                 <mat-chip-listbox formControlName="content" multiple>
-                    <mat-chip-option #itemNumberChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                    <mat-chip-option
+                        #itemNumberChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="item_number"
+                        [matBadgeHidden]="itemNumberChip.selected ? 'false' : 'true'"
+                    >
                         <span>{{ 'Item Number' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option #titleChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                    <mat-chip-option
+                        #titleChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="title"
+                        [matBadgeHidden]="titleChip.selected ? 'false' : 'true'"
+                    >
                         <span>{{ 'Title' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option #textChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                    <mat-chip-option
+                        #textChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="text"
+                        [matBadgeHidden]="textChip.selected ? 'false' : 'true'"
+                    >
                         <span>{{ 'Text' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option #attachmentsChip matBadge="&check;" matBadgeOverlap="true" value="title">
+                    <mat-chip-option
+                        #attachmentsChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="attachments"
+                        [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
+                    >
                         <span>{{ 'Attachments' | translate }}</span>
                     </mat-chip-option>
                 </mat-chip-listbox>
             </div>
+            @if (isPDFFormat) {
+                <div>
+                    <p class="toggle-group-head">{{ 'Page Layout' | translate }}</p>
+                    <mat-chip-listbox formControlName="pageLayout" multiple>
+                        <mat-chip-option
+                            #tableOfContentChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="table_of_content"
+                            [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Table of content' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #lineBreakChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="line_break"
+                            [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Enforce line break' | translate }}</span>
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div>
+                    <p class="toggle-group-head">{{ 'Header and Footer' | translate }}</p>
+                    <mat-chip-listbox formControlName="headerFooter" multiple>
+                        <mat-chip-option
+                            #headerChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="header"
+                            [matBadgeHidden]="headerChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Header' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #footerChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="footer"
+                            [matBadgeHidden]="footerChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Footer' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #currentDateChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="current_date"
+                            [matBadgeHidden]="currentDateChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Current date' | translate }}</span>
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+            }
+            @if (isCSVFormat) {
+                <div>
+                    <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
+                    <mat-chip-listbox formControlName="metaInfo" multiple>
+                        <mat-chip-option
+                            #durationChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="duration"
+                            [matBadgeHidden]="durationChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Duration' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #tagsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="tags"
+                            [matBadgeHidden]="tagsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Tags' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #agendaVisibilityChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="agenda_visibility"
+                            [matBadgeHidden]="agendaVisibilityChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Agenda visibility' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #doneChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="done"
+                            [matBadgeHidden]="doneChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Done' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #noteChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="note"
+                            [matBadgeHidden]="noteChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Note' | translate }}</span>
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+            }
         </div>
-        @if (isPDFFormat) {
-            <div>
-                <p class="toggle-group-head">{{ 'Page Layout' | translate }}</p>
-                <mat-chip-listbox formControlName="pageLayout" multiple>
-                    <mat-chip-option
-                        #tableOfContentChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Table of content' | translate }}</span>
-                    </mat-chip-option>
-                    <mat-chip-option
-                        #lineBreakChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Enforce line break' | translate }}</span>
-                    </mat-chip-option>
-                </mat-chip-listbox>
-            </div>
-            <div>
-                <p class="toggle-group-head">{{ 'Header and Footer' | translate }}</p>
-                <mat-chip-listbox formControlName="headerFooter" multiple>
-                    <mat-chip-option
-                        #headerChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        [matBadgeHidden]="headerChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Header' | translate }}</span>
-                    </mat-chip-option>
-                    <mat-chip-option
-                        #footerChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        [matBadgeHidden]="footerChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Footer' | translate }}</span>
-                    </mat-chip-option>
-                    <mat-chip-option
-                        #currentDateChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        [matBadgeHidden]="currentDateChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Current date' | translate }}</span>
-                    </mat-chip-option>
-                </mat-chip-listbox>
-            </div>
-        }
     </form>
 </ng-template>
