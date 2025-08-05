@@ -202,10 +202,7 @@
 <ng-template #speakingTimes>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-speaking-times
-                [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
-                [showProjectionMenu]="false"
-            />
+            <os-speaking-times [listOfSpeakers]="listOfSpeakers" [showProjectionMenu]="false" />
         </mat-card-content>
     </mat-card>
 </ng-template>
