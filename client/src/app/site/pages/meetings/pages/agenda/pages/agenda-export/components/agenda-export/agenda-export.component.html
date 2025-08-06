@@ -53,15 +53,17 @@
                     >
                         <span>{{ 'Text' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option
-                        #attachmentsChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        value="attachments"
-                        [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Attachments' | translate }}</span>
-                    </mat-chip-option>
+                    @if (this.isPDFFormat) {
+                        <mat-chip-option
+                            #attachmentsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="attachments"
+                            [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Attachments' | translate }}</span>
+                        </mat-chip-option>
+                    }
                     <mat-chip-option
                         #moderationNotesChip
                         matBadge="&check;"
@@ -80,15 +82,17 @@
                     >
                         <span>{{ 'List of speakers' | translate }}</span>
                     </mat-chip-option>
-                    <mat-chip-option
-                        #pollsChip
-                        matBadge="&check;"
-                        matBadgeOverlap="true"
-                        value="polls"
-                        [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
-                    >
-                        <span>{{ 'Polls' | translate }}</span>
-                    </mat-chip-option>
+                    @if (this.isPDFFormat) {
+                        <mat-chip-option
+                            #pollsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="polls"
+                            [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Polls' | translate }}</span>
+                        </mat-chip-option>
+                    }
                     <mat-chip-option
                         #internalCommentaryChip
                         matBadge="&check;"
