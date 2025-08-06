@@ -193,7 +193,6 @@ export class PdfCreator {
             }
         };
 
-
         return blob;
     }
 
@@ -577,7 +576,9 @@ export class PdfDocumentService {
     /**
      * Downloads a pdf with the standard page definitions.
      */
-    public async download(file: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
+    public async download(
+        file: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }
+    ): Promise<void> {
         (await this.create(file)).download();
     }
 

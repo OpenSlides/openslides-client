@@ -171,7 +171,8 @@ export class MotionPdfService {
         if (
             exportInfo &&
             exportInfo.pdfOptions &&
-            (exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) || exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.PDFinPDF)) &&
+            (exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) ||
+                exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.PDFinPDF)) &&
             motion.attachment_meeting_mediafiles.length > 0
         ) {
             motionPdfContent.push(this.createAttachments(motion));

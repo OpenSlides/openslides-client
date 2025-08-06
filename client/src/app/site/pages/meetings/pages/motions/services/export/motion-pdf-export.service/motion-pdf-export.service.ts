@@ -137,10 +137,16 @@ export class MotionPdfExportService {
         const metadata = {
             title: filename
         };
-        return await this.pdfDocumentService.turnIntoUint8Array((await this.pdfDocumentService.create({ docDefinition: doc, filename, metadata })));
+        return await this.pdfDocumentService.turnIntoUint8Array(
+            await this.pdfDocumentService.create({ docDefinition: doc, filename, metadata })
+        );
     }
 
-    private async exportMergedPDFs(motions: ViewMotion[], exportInfo: MotionExportInfo, filename: string): Promise<void> {
+    private async exportMergedPDFs(
+        motions: ViewMotion[],
+        exportInfo: MotionExportInfo,
+        filename: string
+    ): Promise<void> {
         const pdfDoc = await PDFDocument.create();
         for (const motion of motions) {
             const srcDoc = await PDFDocument.load(await this.loadSingleMotion(motion, exportInfo));
