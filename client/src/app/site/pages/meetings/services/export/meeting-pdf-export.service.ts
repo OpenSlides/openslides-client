@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Content, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import {
+    PdfCreator,
     PdfDocumentService,
     PdfFontDescription,
     PdfVirtualFileSystem,
@@ -58,14 +59,22 @@ export class MeetingPdfExportService {
         private mediaManageService: MediaManageService
     ) {}
 
-    public download(config: MeetingDownloadConfig): void {
+    public async turnIntoUint8Array(file: PdfCreator): Promise<Uint8Array> {
+        return this.pdfExportService.turnIntoUint8Array(file);
+    }
+
+    public create(config: MeetingDownloadConfig): Promise<PdfCreator> {
         const pageMargins: [number, number, number, number] = [
             this.pageMarginPointsLeft,
             this.pageMarginPointsTop,
             this.pageMarginPointsRight,
             this.pageMarginPointsBottom
         ];
-        this.pdfExportService.download({ ...config, ...this.createDownloadConfig(), pageMargins });
+        return this.pdfExportService.create({ ...config, ...this.createDownloadConfig(), pageMargins });
+    }
+
+    public async download(config: MeetingDownloadConfig): Promise<void> {
+        (await this.create(config)).download();
     }
 
     public downloadLandscape(config: MeetingDownloadConfig): void {
