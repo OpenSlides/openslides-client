@@ -88,9 +88,8 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
     ) {
         super();
         this.subscriptions.push(
-            this.route.queryParams.subscribe(params => {
-                this.agendaItems =
-                    typeof params[`agenda-items`] !== `string` ? params[`agenda-items`] : [params[`agenda-items`]];
+            this.route.queryParamMap.subscribe(paramMap => {
+                this.agendaItems = paramMap.getAll(`agenda-items`).map(value => Number(value));
             })
         );
         this.initForm();

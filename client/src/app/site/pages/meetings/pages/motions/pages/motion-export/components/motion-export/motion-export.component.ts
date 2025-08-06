@@ -237,8 +237,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     ) {
         super();
         this.subscriptions.push(
-            this.route.queryParams.subscribe(params => {
-                this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
+            this.route.queryParamMap.subscribe(paramMap => {
+                this.motions = paramMap.getAll(`motions`).map(value => Number(value));
             })
         );
         // wait either for all viewmodels of motions to be loaded or for the view
