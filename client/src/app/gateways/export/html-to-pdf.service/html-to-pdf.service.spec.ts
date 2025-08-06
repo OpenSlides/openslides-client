@@ -39,36 +39,36 @@ describe(`HtmlToPdfService`, () => {
     describe(`convertHtml`, () => {
         it(`should handle empty input`, () => {
             const result = service.convertHtml({ htmlText: `` });
-            expect(result).toEqual(([] as Content[]));
+            expect(result).toEqual([] as Content[]);
         });
 
         it(`should handle single main nodes`, () => {
             const result = service.convertHtml({ htmlText: `<p>Row 1</p>` });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 { text: [{ text: `Row 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
-            ] as Content[]));
+            ] as Content[]);
         });
 
         it(`should handle multiple main nodes`, () => {
             const result = service.convertHtml({ htmlText: `<p>Row 1</p><p>Row 2</p>` });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 { text: [{ text: `Row 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] },
                 { text: [{ text: `Row 2` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
-            ] as Content[]));
+            ] as Content[]);
         });
     });
 
     describe(`convert lists`, () => {
         it(`should handle single main nodes`, () => {
             const result = service.convertHtml({ htmlText: `<ul><li>Line 1</li><li>Line 2</li></ul>` });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 {
                     ul: [
                         { text: [{ text: `Line 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] },
                         { text: [{ text: `Line 2` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
                     ]
                 }
-            ] as Content[]));
+            ] as Content[]);
         });
     });
 
@@ -77,25 +77,25 @@ describe(`HtmlToPdfService`, () => {
             const result = service.convertHtml({
                 htmlText: `<span style="text-decoration: underline">Underlined</span>`
             });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 { text: [{ text: `Underlined`, decoration: `underline` }], decoration: `underline` }
-            ] as Content[]));
+            ] as Content[]);
         });
 
         it(`struck span`, () => {
             const result = service.convertHtml({
                 htmlText: `<span style="text-decoration: line-through">Struck</span>`
             });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 { text: [{ text: `Struck`, decoration: `lineThrough` }], decoration: `lineThrough` }
-            ] as Content[]));
+            ] as Content[]);
         });
 
         it(`nested underlined and struck spans`, () => {
             const result = service.convertHtml({
                 htmlText: `<span style="text-decoration: line-through"><span style="text-decoration: underline">Both</span></span>`
             });
-            expect(result).toEqual((([
+            expect(result).toEqual([
                 {
                     text: [
                         {
@@ -105,14 +105,14 @@ describe(`HtmlToPdfService`, () => {
                     ],
                     decoration: `lineThrough`
                 }
-            ] as unknown) as Content[]));
+            ] as unknown as Content[]);
         });
 
         it(`nested underlined and struck spans 2`, () => {
             const result = service.convertHtml({
                 htmlText: `<span style="text-decoration: underline"><span style="text-decoration: line-through">Both</span></span>`
             });
-            expect(result).toEqual((([
+            expect(result).toEqual([
                 {
                     text: [
                         {
@@ -122,16 +122,16 @@ describe(`HtmlToPdfService`, () => {
                     ],
                     decoration: `underline`
                 }
-            ] as unknown) as Content[]));
+            ] as unknown as Content[]);
         });
     });
 
     describe(`convert format tags`, () => {
         it(`url`, () => {
             const result = service.convertHtml({ htmlText: `<a href="http://example.test">Link</a>` });
-            expect(result).toEqual(([
+            expect(result).toEqual([
                 { text: [{ text: `Link`, decoration: `underline`, color: `blue`, link: `http://example.test/` }] }
-            ] as Content[]));
+            ] as Content[]);
         });
     });
 });

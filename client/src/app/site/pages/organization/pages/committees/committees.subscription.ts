@@ -56,7 +56,15 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewCommittee,
         ids: [id],
-        fieldset: [`description`, `forward_to_committee_ids`, `id`, `manager_ids`, `native_user_ids`, `all_parent_ids`, `all_child_ids`],
+        fieldset: [
+            `description`,
+            `forward_to_committee_ids`,
+            `id`,
+            `manager_ids`,
+            `native_user_ids`,
+            `all_parent_ids`,
+            `all_child_ids`
+        ],
         follow: [
             {
                 idField: `user_ids`,

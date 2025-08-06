@@ -33,11 +33,14 @@ interface AutoupdateConnectConfig {
     compress?: number;
 }
 
-type AutoupdateSubscriptionMap = Record<number, {
-    modelRequest: ModelRequestObject;
-    modelSubscription: ModelSubscription;
-    description: string;
-}>;
+type AutoupdateSubscriptionMap = Record<
+    number,
+    {
+        modelRequest: ModelRequestObject;
+        modelSubscription: ModelSubscription;
+        description: string;
+    }
+>;
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;
@@ -259,7 +262,10 @@ export class AutoupdateService {
         );
 
         const fullListUpdateCollections: Record<string, Ids> = {};
-        const exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }> = {};
+        const exclusiveListUpdateCollections: Record<
+            string,
+            { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }
+        > = {};
 
         for (const id of requestIds) {
             const modelRequest = this._activeRequestObjects[id]?.modelRequest;
@@ -295,7 +301,10 @@ export class AutoupdateService {
     private async prepareCollectionUpdates(
         modelData: ModelData,
         fullListUpdateCollections: Record<string, Ids>,
-        exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }>,
+        exclusiveListUpdateCollections: Record<
+            string,
+            { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }
+        >,
         requestIds: number[]
     ): Promise<void> {
         const unlock = await this._mutex.lock();

@@ -128,7 +128,6 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                             fieldset: [`name`]
                                         }
                                     ]
-
                                 }
                             ]
                         }

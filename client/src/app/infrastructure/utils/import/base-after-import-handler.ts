@@ -12,7 +12,8 @@ export interface AfterImportHandler<ToCreate = any, ToImport = any> extends Side
 
 export abstract class BaseAfterImportHandler<ToCreate = any, ToImport = any>
     extends BaseSideImportHandler<ToCreate, ToImport>
-    implements AfterImportHandler<ToCreate, ToImport> {
+    implements AfterImportHandler<ToCreate, ToImport>
+{
     public readonly name = AFTER_IMPORT_HANDLER_NAME;
 
     public constructor(config: BaseSideImportHandlerConfig<ToCreate, ToImport>) {

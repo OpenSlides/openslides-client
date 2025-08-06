@@ -91,16 +91,17 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(private meetingSettingsService: MeetingSettingsService, private cd: ChangeDetectorRef) {
+    public constructor(
+        private meetingSettingsService: MeetingSettingsService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
         this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
 
-        this.meetingSettingsService
-            .get(`motions_block_slide_columns`)
-            .subscribe(value => {
-                this.maxColumns = value > 0 ? value : MAX_COLUMNS;
-                this.cd.markForCheck();
-            });
+        this.meetingSettingsService.get(`motions_block_slide_columns`).subscribe(value => {
+            this.maxColumns = value > 0 ? value : MAX_COLUMNS;
+            this.cd.markForCheck();
+        });
     }
 
     /**
