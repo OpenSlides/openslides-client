@@ -55,9 +55,7 @@ export default tseslint.config({
             format: ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
         }],
 
-        "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "@stylistic/arrow-parens": ["error", "as-needed"],
-        "@stylistic/operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" } }],
 
         "@typescript-eslint/no-unused-vars": ["error", {
             argsIgnorePattern: "^_",
@@ -123,6 +121,7 @@ export default tseslint.config({
         "no-restricted-globals": ["error", "fdescribe", "fit"],
         "@typescript-eslint/explicit-member-accessibility": ["off"],
         "@typescript-eslint/explicit-function-return-type": ["off"],
+        "max-len": ["off"],
     },
 }, {
     files: ["**/*.html"],

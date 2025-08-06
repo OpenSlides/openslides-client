@@ -118,6 +118,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
                 html: this.motion?.lead_motion.text,
                 lineLength: this.lineLength,
                 firstLine: this.motion?.lead_motion.firstLine
-            })).to;
+            })
+        ).to;
     }
 }

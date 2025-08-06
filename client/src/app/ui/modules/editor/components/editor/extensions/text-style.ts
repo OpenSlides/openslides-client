@@ -10,7 +10,12 @@ export const TextStyle = OriginalTextStyle.extend({
                         return false;
                     }
 
-                    if (element.style?.color || element.style?.fontSize || element.style?.backgroundColor || element.style?.lineHeight) {
+                    if (
+                        element.style?.color ||
+                        element.style?.fontSize ||
+                        element.style?.backgroundColor ||
+                        element.style?.lineHeight
+                    ) {
                         return {};
                     }
 

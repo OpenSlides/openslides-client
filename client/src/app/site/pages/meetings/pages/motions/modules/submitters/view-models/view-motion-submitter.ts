@@ -18,5 +18,5 @@ interface IMotionSubmitterRelations {
 }
 export interface ViewMotionSubmitter
     extends MotionSubmitter,
-    ViewModelRelations<IMotionSubmitterRelations>,
-    HasMeeting {}
+        ViewModelRelations<IMotionSubmitterRelations>,
+        HasMeeting {}

@@ -532,6 +532,6 @@ export class Meeting extends BaseModel<Meeting> {
 }
 export interface Meeting
     extends Settings,
-    HasProjectionIds,
-    HasProperties<MeetingMediafileUsageIdKey, number>,
-    HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}
+        HasProjectionIds,
+        HasProperties<MeetingMediafileUsageIdKey, number>,
+        HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

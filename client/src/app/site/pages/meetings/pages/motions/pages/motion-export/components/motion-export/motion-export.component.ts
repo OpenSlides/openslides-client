@@ -27,7 +27,12 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
-import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
+import {
+    ExportFileFormat,
+    InfoToExport,
+    motionImportExportHeaderOrder,
+    noMetaData
+} from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
 
 interface SavedSelections {
