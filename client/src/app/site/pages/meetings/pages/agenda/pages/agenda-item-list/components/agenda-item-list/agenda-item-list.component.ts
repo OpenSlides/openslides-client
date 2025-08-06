@@ -315,7 +315,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public exportAgendaItem(itemId: Id): void {
         this.componentServiceCollector.router.navigate([`agenda-export`], {
             relativeTo: this.route,
-            queryParams: { "agenda-items": itemId }
+            queryParams: { 'agenda-items': itemId }
         });
     }
 
@@ -327,7 +327,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         const ids = agendaItems.map(motion => motion.id);
         this.componentServiceCollector.router.navigate([`agenda-export`], {
             relativeTo: this.route,
-            queryParams: { "agenda-items": ids }
+            queryParams: { 'agenda-items': ids }
         });
     }
 

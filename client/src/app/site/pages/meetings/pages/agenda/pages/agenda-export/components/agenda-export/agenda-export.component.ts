@@ -17,7 +17,10 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { AgendaItemListModule } from '../../../agenda-item-list/agenda-item-list.module';
-import { AgendaItemExportService, ExportFileFormat } from '../../../agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
+import {
+    AgendaItemExportService,
+    ExportFileFormat
+} from '../../../agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
 
 interface SavedSelections {
     tab_index: number;
@@ -85,7 +88,8 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         super();
         this.subscriptions.push(
             this.route.queryParams.subscribe(params => {
-                this.agendaItems = typeof params[`agenda-items`] !== `string` ? params[`agenda-items`] : [params[`agenda-items`]];
+                this.agendaItems =
+                    typeof params[`agenda-items`] !== `string` ? params[`agenda-items`] : [params[`agenda-items`]];
             })
         );
         this.initForm();
@@ -107,7 +111,11 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         if (this.isPDFFormat) {
             this.agendaExportService.exportAsPdf(views);
         } else if (this.isCSVFormat) {
-            this.agendaExportService.exportAsCsv(views, this.dialogForm.get(`content`).value, this.dialogForm.get(`metaInfo`).value);
+            this.agendaExportService.exportAsCsv(
+                views,
+                this.dialogForm.get(`content`).value,
+                this.dialogForm.get(`metaInfo`).value
+            );
         }
     }
 

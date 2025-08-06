@@ -9,8 +9,7 @@ xdescribe(`AgendaExportComponent`, () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AgendaExportComponent]
-        })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(AgendaExportComponent);
         component = fixture.componentInstance;
