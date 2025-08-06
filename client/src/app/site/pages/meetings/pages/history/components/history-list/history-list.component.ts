@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, Subscription, switchMap } from 'rxjs';
+import { filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
@@ -231,7 +231,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             this._historySubscription = (
                 repo.getViewModelObservable(id) as Observable<ViewUser | ViewMotion | ViewAssignment>
             )
-                .pipe(switchMap(m => m.history_entries$))
+                .pipe(
+                    filter(m => !!m),
+                    switchMap(m => m?.history_entries$)
+                )
                 .subscribe(entries => this.processNewHistoryEntries(fqid, entries));
         } catch (e) {
             this.raiseError(e);
@@ -297,18 +300,15 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private updateModelRequest(): void {
         const modelRequests: Record<Collection, Id[]> = {};
         this.dataSource.data.forEach(position => {
-            position[1]
-                .filter(entry => entry.model_id === entry.original_model_id)
-                .flatMap(entry => entry.entries)
-                .forEach(information => {
-                    if (isFqid(information)) {
-                        const [collection, id] = collectionIdFromFqid(information);
-                        if (!modelRequests[collection]) {
-                            modelRequests[collection] = [];
-                        }
-                        modelRequests[collection].push(id);
+            position.information.forEach(information => {
+                if (isFqid(information)) {
+                    const [collection, id] = collectionIdFromFqid(information);
+                    if (!modelRequests[collection]) {
+                        modelRequests[collection] = [];
                     }
-                });
+                    modelRequests[collection].push(id);
+                }
+            });
         });
         for (const [collection, ids] of Object.entries(modelRequests)) {
             const subscriptionName = this.getSubscriptionName(collection);
