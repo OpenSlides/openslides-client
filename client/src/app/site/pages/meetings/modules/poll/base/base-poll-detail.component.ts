@@ -30,7 +30,8 @@ export interface BaseVoteData extends Identifiable {
 @Directive()
 export abstract class BasePollDetailComponent<V extends PollContentObject, S extends PollService>
     extends BaseMeetingComponent
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     public readonly COLLECTION = ViewPoll.COLLECTION;
 
     /**
@@ -275,13 +276,13 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                                 : null,
                             user_merged_into: entry.user_merged_into_id
                                 ? `${this.translate.instant(`Old account of`)} ${users
-                                    .find(user => user.id === entry.user_merged_into_id)
-                                    ?.getShortName()}`
+                                      .find(user => user.id === entry.user_merged_into_id)
+                                      ?.getShortName()}`
                                 : null,
                             delegation_user_merged_into: entry.delegation_user_merged_into_id
                                 ? `(${this.translate.instant(`represented by old account of`)}) ${users
-                                    .find(user => user.id === entry.delegation_user_merged_into_id)
-                                    ?.getShortName()}`
+                                      .find(user => user.id === entry.delegation_user_merged_into_id)
+                                      ?.getShortName()}`
                                 : null
                         });
                     }

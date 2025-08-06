@@ -74,9 +74,37 @@ export class Projector extends BaseModel<Projector> {
         return (this[`used_as_default_${projectiondefault}_in_meeting_id` as keyof Projector] as Id) || null;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Projector)[] = [`id`, `name`, `is_internal`, `scale`, `scroll`, `width`, `aspect_ratio_numerator`, `aspect_ratio_denominator`, `color`, `background_color`, `header_background_color`, `header_font_color`, `header_h1_color`, `chyron_background_color`, `chyron_background_color_2`, `chyron_font_color`, `chyron_font_color_2`, `show_header_footer`, `show_title`, `show_logo`, `show_clock`, `sequential_number`, `current_projection_ids`, `preview_projection_ids`, `history_projection_ids`, `used_as_reference_projector_meeting_id`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof Projector)[] = [
+        `id`,
+        `name`,
+        `is_internal`,
+        `scale`,
+        `scroll`,
+        `width`,
+        `aspect_ratio_numerator`,
+        `aspect_ratio_denominator`,
+        `color`,
+        `background_color`,
+        `header_background_color`,
+        `header_font_color`,
+        `header_h1_color`,
+        `chyron_background_color`,
+        `chyron_background_color_2`,
+        `chyron_font_color`,
+        `chyron_font_color_2`,
+        `show_header_footer`,
+        `show_title`,
+        `show_logo`,
+        `show_clock`,
+        `sequential_number`,
+        `current_projection_ids`,
+        `preview_projection_ids`,
+        `history_projection_ids`,
+        `used_as_reference_projector_meeting_id`,
+        `meeting_id`
+    ];
 }
 export interface Projector
     extends HasMeetingId,
-    HasSequentialNumber,
-    HasProperties<ProjectorMeetingUsageIdKey, number> {}
+        HasSequentialNumber,
+        HasProperties<ProjectorMeetingUsageIdKey, number> {}

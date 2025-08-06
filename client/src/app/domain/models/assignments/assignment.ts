@@ -32,14 +32,32 @@ export class Assignment extends BaseModel<Assignment> {
         super(Assignment.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Assignment)[] = [`id`, `title`, `description`, `open_posts`, `phase`, `default_poll_description`, `number_poll_candidates`, `sequential_number`, `candidate_ids`, `poll_ids`, `agenda_item_id`, `list_of_speakers_id`, `tag_ids`, `attachment_meeting_mediafile_ids`, `projection_ids`, `meeting_id`, `history_entry_ids`];
+    public static readonly REQUESTABLE_FIELDS: (keyof Assignment)[] = [
+        `id`,
+        `title`,
+        `description`,
+        `open_posts`,
+        `phase`,
+        `default_poll_description`,
+        `number_poll_candidates`,
+        `sequential_number`,
+        `candidate_ids`,
+        `poll_ids`,
+        `agenda_item_id`,
+        `list_of_speakers_id`,
+        `tag_ids`,
+        `attachment_meeting_mediafile_ids`,
+        `projection_ids`,
+        `meeting_id`,
+        `history_entry_ids`
+    ];
 }
 export interface Assignment
     extends HasMeetingId,
-    HasProjectionIds,
-    HasAttachmentMeetingMediafileIds,
-    HasTagIds,
-    HasAgendaItemId,
-    HasListOfSpeakersId,
-    HasSequentialNumber,
-    HasPollIds {}
+        HasProjectionIds,
+        HasAttachmentMeetingMediafileIds,
+        HasTagIds,
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasSequentialNumber,
+        HasPollIds {}

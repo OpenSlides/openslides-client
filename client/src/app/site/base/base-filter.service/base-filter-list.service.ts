@@ -307,9 +307,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 skipTranslate: true,
                                 children: model.children?.length
                                     ? model.children.map((child: any) => ({
-                                            label: child.getTitle(),
-                                            condition: child.id
-                                        }))
+                                          label: child.getTitle(),
+                                          condition: child.id
+                                      }))
                                     : undefined
                             }))
                             .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));

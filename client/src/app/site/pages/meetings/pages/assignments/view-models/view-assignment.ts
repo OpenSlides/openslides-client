@@ -76,11 +76,11 @@ interface IAssignmentRelations extends HasPolls<ViewAssignment> {
 }
 export interface ViewAssignment
     extends Assignment,
-    ViewModelRelations<IAssignmentRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasHistoryEntries,
-    HasSequentialNumber {}
+        ViewModelRelations<IAssignmentRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasHistoryEntries,
+        HasSequentialNumber {}

@@ -22,6 +22,14 @@ export class StructureLevel extends BaseModel<StructureLevel> {
         super(StructureLevel.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof StructureLevel)[] = [`id`, `name`, `color`, `default_time`, `meeting_user_ids`, `structure_level_list_of_speakers_ids`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof StructureLevel)[] = [
+        `id`,
+        `name`,
+        `color`,
+        `default_time`,
+        `meeting_user_ids`,
+        `structure_level_list_of_speakers_ids`,
+        `meeting_id`
+    ];
 }
 export interface StructureLevel extends HasMeetingId {}

@@ -16,7 +16,7 @@ export class ViewHistoryEntry extends BaseViewModel<HistoryEntry> {
 }
 interface IHistoryEntryRelations {
     position: ViewHistoryPosition;
-    model?: (ViewUser | ViewMotion | ViewAssignment);
+    model?: ViewUser | ViewMotion | ViewAssignment;
     meeting?: ViewMeeting;
 }
 export interface ViewHistoryEntry extends HistoryEntry, ViewModelRelations<IHistoryEntryRelations> {}

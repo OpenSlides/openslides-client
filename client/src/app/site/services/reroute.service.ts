@@ -68,9 +68,9 @@ export class RerouteService {
             {
                 queryParams: meetingId
                     ? {
-                            meetingId,
-                            ...queryParams
-                        }
+                          meetingId,
+                          ...queryParams
+                      }
                     : queryParams
             }
         );

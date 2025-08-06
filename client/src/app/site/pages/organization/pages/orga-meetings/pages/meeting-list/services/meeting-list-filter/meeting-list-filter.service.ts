@@ -77,9 +77,9 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
         return this.operator.canSkipPermissionCheck
             ? rawInputData
             : rawInputData.filter(
-                    meeting =>
-                        this.operator.isInMeeting(meeting.id) ||
-                        this.operator.hasCommitteeManagementRights(meeting.committee_id)
-                );
+                  meeting =>
+                      this.operator.isInMeeting(meeting.id) ||
+                      this.operator.hasCommitteeManagementRights(meeting.committee_id)
+              );
     }
 }

@@ -22,6 +22,16 @@ export class StructureLevelListOfSpeakers extends BaseModel<StructureLevelListOf
         super(StructureLevelListOfSpeakers.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof StructureLevelListOfSpeakers)[] = [`id`, `structure_level_id`, `list_of_speakers_id`, `speaker_ids`, `initial_time`, `additional_time`, `remaining_time`, `current_start_time`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof StructureLevelListOfSpeakers)[] = [
+        `id`,
+        `structure_level_id`,
+        `list_of_speakers_id`,
+        `speaker_ids`,
+        `initial_time`,
+        `additional_time`,
+        `remaining_time`,
+        `current_start_time`,
+        `meeting_id`
+    ];
 }
 export interface StructureLevelListOfSpeakers extends HasMeetingId {}

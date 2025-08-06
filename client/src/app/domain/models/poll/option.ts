@@ -26,5 +26,17 @@ export class Option extends BaseDecimalModel<Option> {
         return Option.DECIMAL_FIELDS;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Option)[] = [`id`, `weight`, `text`, `yes`, `no`, `abstain`, `poll_id`, `used_as_global_option_in_poll_id`, `vote_ids`, `content_object_id`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof Option)[] = [
+        `id`,
+        `weight`,
+        `text`,
+        `yes`,
+        `no`,
+        `abstain`,
+        `poll_id`,
+        `used_as_global_option_in_poll_id`,
+        `vote_ids`,
+        `content_object_id`,
+        `meeting_id`
+    ];
 }

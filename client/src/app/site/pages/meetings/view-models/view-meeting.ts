@@ -218,8 +218,8 @@ interface IMeetingRelations {
 }
 export interface ViewMeeting
     extends Meeting,
-    ViewModelRelations<IMeetingRelations>,
-    HasProjectorTitle,
-    HasOrganizationTags,
-    HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
-    HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
+        ViewModelRelations<IMeetingRelations>,
+        HasProjectorTitle,
+        HasOrganizationTags,
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

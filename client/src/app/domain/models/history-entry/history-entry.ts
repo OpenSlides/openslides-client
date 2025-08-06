@@ -13,7 +13,14 @@ export class HistoryEntry extends BaseModel {
         super(HistoryEntry.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof HistoryEntry)[] = [`id`, `entries`, `original_model_id`, `model_id`, `position_id`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof HistoryEntry)[] = [
+        `id`,
+        `entries`,
+        `original_model_id`,
+        `model_id`,
+        `position_id`,
+        `meeting_id`
+    ];
 }
 
 export interface HistoryEntry {}

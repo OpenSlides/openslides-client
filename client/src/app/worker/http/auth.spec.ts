@@ -30,7 +30,7 @@ describe(`shared worker auth singleton`, () => {
         fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
-                "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
+                authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
             },
             body: AUTH_BODY
         });
@@ -44,7 +44,7 @@ describe(`shared worker auth singleton`, () => {
         fetchMock.route(`end:/${environment.authUrlPrefix}/who-am-i/`, {
             headers: {
                 'Content-Type': `application/json`,
-                "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
+                authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
             },
             body: AUTH_BODY
         });
@@ -60,7 +60,7 @@ describe(`shared worker auth singleton`, () => {
             {
                 headers: {
                     'Content-Type': `application/json`,
-                    "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
+                    authentication: `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
                 },
                 body: AUTH_BODY
             },
@@ -76,7 +76,7 @@ describe(`shared worker auth singleton`, () => {
             response: {
                 headers: {
                     'Content-Type': `application/json`,
-                    "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
+                    authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
                 },
                 body: AUTH_BODY
             }
@@ -92,7 +92,7 @@ describe(`shared worker auth singleton`, () => {
             {
                 headers: {
                     'Content-Type': `application/json`,
-                    "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
+                    authentication: `bearer ${AUTH_TOKENS.VALID_TILL_59_UID_2}`
                 },
                 body: AUTH_BODY
             },
@@ -109,7 +109,7 @@ describe(`shared worker auth singleton`, () => {
             response: {
                 headers: {
                     'Content-Type': `application/json`,
-                    "authentication": `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
+                    authentication: `bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`
                 },
                 body: JSON.parse(AUTH_BODY)
             }

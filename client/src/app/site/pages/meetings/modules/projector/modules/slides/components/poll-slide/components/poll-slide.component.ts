@@ -52,7 +52,8 @@ const NO_HEADER_TOP_MARGIN = 40;
 })
 export class PollSlideComponent
     extends BaseSlideComponent<PollSlideData>
-    implements BaseScaleScrollSlideComponent<PollSlideData>, OnDestroy {
+    implements BaseScaleScrollSlideComponent<PollSlideData>, OnDestroy
+{
     public PollState = PollState;
     public PollContentObjectType = PollContentObjectType;
 
@@ -120,12 +121,12 @@ export class PollSlideComponent
     } = { [`margin-top`]: `50px` };
 
     public textDivStyles: {
-        "width"?: string;
+        width?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'transform-origin'?: string;
-        "transform"?: string;
+        transform?: string;
     } = { [`transform-origin`]: `0 0` };
 
     private _scroll = 0;
@@ -463,7 +464,7 @@ export class PollSlideComponent
                 TITLE_HEIGHT -
                 POLL_BAR_HEIGHT -
                 (this.projector.show_header_footer ? HEADER_FOOTER_HEIGHT : NO_HEADER_TOP_MARGIN)) /
-                this._actualScale;
+            this._actualScale;
         if (this.isRunningLiveVote) {
             visibleHeight -= PROGRESS_HEIGHT;
         }

@@ -14,6 +14,12 @@ export class MotionComment extends BaseModel<MotionComment> {
         super(MotionComment.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionComment)[] = [`id`, `comment`, `motion_id`, `section_id`, `meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionComment)[] = [
+        `id`,
+        `comment`,
+        `motion_id`,
+        `section_id`,
+        `meeting_id`
+    ];
 }
 export interface MotionComment extends HasMeetingId {}

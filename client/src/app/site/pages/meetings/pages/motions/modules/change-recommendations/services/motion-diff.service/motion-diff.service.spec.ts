@@ -24,9 +24,9 @@ describe(`MotionDiffService`, () => {
             const processedHtml = service.formatOsCollidingChanges(inHtml, service.formatOsCollidingChanges_wysiwyg_cb);
             expect(processedHtml).toBe(
                 `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
-                `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
-                `<span>==============</span></div>`
+                    `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
+                    `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
+                    `<span>==============</span></div>`
             );
         });
 
@@ -39,10 +39,10 @@ describe(`MotionDiffService`, () => {
             const processedHtml = service.formatOsCollidingChanges(inHtml, service.formatOsCollidingChanges_wysiwyg_cb);
             expect(processedHtml).toBe(
                 `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
-                `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
-                `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
-                `<div>==============</div>` +
-                `</div>`
+                    `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
+                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
+                    `<div>==============</div>` +
+                    `</div>`
             );
         });
     });

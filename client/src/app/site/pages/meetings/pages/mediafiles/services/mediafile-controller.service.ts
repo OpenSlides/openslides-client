@@ -58,8 +58,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
                         if (
                             (meetingMediafile?.access_group_ids?.length &&
                                 !this.operator.isInGroupIds(...meetingMediafile.access_group_ids)) ||
-                                (meetingMediafile?.inherited_access_group_ids?.length &&
-                                    !this.operator.isInGroupIds(...meetingMediafile.inherited_access_group_ids))
+                            (meetingMediafile?.inherited_access_group_ids?.length &&
+                                !this.operator.isInGroupIds(...meetingMediafile.inherited_access_group_ids))
                         ) {
                             return false;
                         }

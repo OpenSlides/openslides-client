@@ -33,12 +33,12 @@ export class ParticipantImportService extends BaseBackendImportService {
     };
 
     public override readonly verboseSummaryTitles: Record<string, string> = {
-        "total": _(`Total participants`),
-        "created": _(`Participants created`),
-        "updated": _(`Participants updated`),
-        "omitted": _(`Participants skipped`),
-        "warning": _(`Participants with warnings: affected cells will be skipped`),
-        "error": _(`Participants with errors`),
+        total: _(`Total participants`),
+        created: _(`Participants created`),
+        updated: _(`Participants updated`),
+        omitted: _(`Participants skipped`),
+        warning: _(`Participants with warnings: affected cells will be skipped`),
+        error: _(`Participants with errors`),
         'structure levels created': _(`Structure levels created`)
     };
 

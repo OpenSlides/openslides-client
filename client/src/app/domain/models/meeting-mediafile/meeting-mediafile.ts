@@ -88,10 +88,36 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
         return this[path] as Id;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MeetingMediafile)[] = [`id`, `mediafile_id`, `meeting_id`, `is_public`, `inherited_access_group_ids`, `access_group_ids`, `list_of_speakers_id`, `projection_ids`, `attachment_ids`, `used_as_logo_projector_main_in_meeting_id`, `used_as_logo_projector_header_in_meeting_id`, `used_as_logo_web_header_in_meeting_id`, `used_as_logo_pdf_header_l_in_meeting_id`, `used_as_logo_pdf_header_r_in_meeting_id`, `used_as_logo_pdf_footer_l_in_meeting_id`, `used_as_logo_pdf_footer_r_in_meeting_id`, `used_as_logo_pdf_ballot_paper_in_meeting_id`, `used_as_font_regular_in_meeting_id`, `used_as_font_italic_in_meeting_id`, `used_as_font_bold_in_meeting_id`, `used_as_font_bold_italic_in_meeting_id`, `used_as_font_monospace_in_meeting_id`, `used_as_font_chyron_speaker_name_in_meeting_id`, `used_as_font_projector_h1_in_meeting_id`, `used_as_font_projector_h2_in_meeting_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof MeetingMediafile)[] = [
+        `id`,
+        `mediafile_id`,
+        `meeting_id`,
+        `is_public`,
+        `inherited_access_group_ids`,
+        `access_group_ids`,
+        `list_of_speakers_id`,
+        `projection_ids`,
+        `attachment_ids`,
+        `used_as_logo_projector_main_in_meeting_id`,
+        `used_as_logo_projector_header_in_meeting_id`,
+        `used_as_logo_web_header_in_meeting_id`,
+        `used_as_logo_pdf_header_l_in_meeting_id`,
+        `used_as_logo_pdf_header_r_in_meeting_id`,
+        `used_as_logo_pdf_footer_l_in_meeting_id`,
+        `used_as_logo_pdf_footer_r_in_meeting_id`,
+        `used_as_logo_pdf_ballot_paper_in_meeting_id`,
+        `used_as_font_regular_in_meeting_id`,
+        `used_as_font_italic_in_meeting_id`,
+        `used_as_font_bold_in_meeting_id`,
+        `used_as_font_bold_italic_in_meeting_id`,
+        `used_as_font_monospace_in_meeting_id`,
+        `used_as_font_chyron_speaker_name_in_meeting_id`,
+        `used_as_font_projector_h1_in_meeting_id`,
+        `used_as_font_projector_h2_in_meeting_id`
+    ];
 }
 export interface MeetingMediafile
     extends HasProjectionIds,
-    HasListOfSpeakersId,
-    HasMeetingId,
-    HasProperties<MediafileMeetingUsageIdKey, number> {}
+        HasListOfSpeakersId,
+        HasMeetingId,
+        HasProperties<MediafileMeetingUsageIdKey, number> {}

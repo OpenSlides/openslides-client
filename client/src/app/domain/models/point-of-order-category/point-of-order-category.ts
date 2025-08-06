@@ -17,6 +17,12 @@ export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
         super(PointOfOrderCategory.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PointOfOrderCategory)[] = [`id`, `text`, `rank`, `meeting_id`, `speaker_ids`];
+    public static readonly REQUESTABLE_FIELDS: (keyof PointOfOrderCategory)[] = [
+        `id`,
+        `text`,
+        `rank`,
+        `meeting_id`,
+        `speaker_ids`
+    ];
 }
 export interface PointOfOrderCategory extends HasMeetingId {}

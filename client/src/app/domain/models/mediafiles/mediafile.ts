@@ -48,6 +48,21 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [`id`, `title`, `is_directory`, `filesize`, `filename`, `mimetype`, `pdf_information`, `create_timestamp`, `token`, `published_to_meetings_in_organization_id`, `parent_id`, `child_ids`, `owner_id`, `meeting_mediafile_ids`];
+    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [
+        `id`,
+        `title`,
+        `is_directory`,
+        `filesize`,
+        `filename`,
+        `mimetype`,
+        `pdf_information`,
+        `create_timestamp`,
+        `token`,
+        `published_to_meetings_in_organization_id`,
+        `parent_id`,
+        `child_ids`,
+        `owner_id`,
+        `meeting_mediafile_ids`
+    ];
 }
 export interface Mediafile extends HasOwnerId {}

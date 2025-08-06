@@ -911,7 +911,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                     nextNeighborAbove.isExpanded =
                         (!!this.getParentNode(nextNeighborAbove) &&
                             this.getParentNode(nextNeighborAbove)!.isExpanded) ||
-                            noChildren;
+                        noChildren;
                 }
             }
 

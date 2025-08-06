@@ -138,10 +138,10 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
                 this.useIds
                     ? value
                     : value.mapToObject(entry => ({
-                            [entry.entry]: entry.id
-                                ? [this.formatAllocationValue(entry.allocation), entry.id]
-                                : this.formatAllocationValue(entry.allocation)
-                        }))
+                          [entry.entry]: entry.id
+                              ? [this.formatAllocationValue(entry.allocation), entry.id]
+                              : this.formatAllocationValue(entry.allocation)
+                      }))
             );
         });
     }
@@ -179,8 +179,8 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         const isNotValid = !this.allocationBoxes.valid;
         return isNotValid
             ? {
-                    invalid: true
-                }
+                  invalid: true
+              }
             : null;
     }
 
@@ -248,15 +248,15 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         this.allocationBoxes.push(
             this.isNumberAllocation
                 ? this.formBuilder.group({
-                        entry: [entry, Validators.required],
-                        allocation: [this.getNumber(allocation), Validators.required],
-                        ...(id ? { id: [id] } : {})
-                    })
+                      entry: [entry, Validators.required],
+                      allocation: [this.getNumber(allocation), Validators.required],
+                      ...(id ? { id: [id] } : {})
+                  })
                 : this.formBuilder.group({
-                        entry: [entry, Validators.required],
-                        allocation: [String(allocation), Validators.required],
-                        ...(id ? { id: [id] } : {})
-                    }),
+                      entry: [entry, Validators.required],
+                      allocation: [String(allocation), Validators.required],
+                      ...(id ? { id: [id] } : {})
+                  }),
             ...(emitEvent === false ? [{ emitEvent }] : [])
         );
         if (this.disabled) {

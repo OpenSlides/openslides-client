@@ -14,14 +14,14 @@ export type State = `start` | `search` | `waitForResponse` | `ownMove` | `oppone
  * All events that can be handled by the statemachine.
  */
 export type StateEvent =
-    | `searchClicked` |
-    `receivedSearchRequest` |
-    `receivedSearchResponse` |
-    `receivedACK` |
-    `waitTimeout` |
-    `executedMove` |
-    `receivedMove` |
-    `receivedRagequit`;
+    | `searchClicked`
+    | `receivedSearchRequest`
+    | `receivedSearchResponse`
+    | `receivedACK`
+    | `waitTimeout`
+    | `executedMove`
+    | `receivedMove`
+    | `receivedRagequit`;
 
 /**
  * An action in one state.

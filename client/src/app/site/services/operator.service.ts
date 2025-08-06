@@ -116,8 +116,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                    ? this.user?.hasMultipleMeetings
-                    : false)
+                  ? this.user?.hasMultipleMeetings
+                  : false)
         );
     }
 
@@ -637,7 +637,7 @@ export class OperatorService {
         if (
             (this.canSkipPermissionCheck ||
                 this.hasCommitteePermissions(this.meetingRepo.getViewModel(meetingId).committee_id, CML.can_manage)) &&
-                !this.activeMeeting.locked_from_inside
+            !this.activeMeeting.locked_from_inside
         ) {
             return true;
         }

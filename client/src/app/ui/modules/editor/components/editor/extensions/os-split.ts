@@ -34,14 +34,14 @@ export const OsSplit = Extension.create({
         return {
             osSplitLift:
                 name =>
-                    ({ commands, tr }): boolean => {
-                        const head = tr.selection.$head;
-                        const classNames: string = head.node(head.depth - 3).attrs[`class`] ?? ``;
-                        if (classNames.indexOf(`os-split-`) !== -1) {
-                            return false;
-                        }
-                        return commands.liftListItem(name);
+                ({ commands, tr }): boolean => {
+                    const head = tr.selection.$head;
+                    const classNames: string = head.node(head.depth - 3).attrs[`class`] ?? ``;
+                    if (classNames.indexOf(`os-split-`) !== -1) {
+                        return false;
                     }
+                    return commands.liftListItem(name);
+                }
         };
     }
 });
@@ -69,18 +69,18 @@ export const OsSplitBulletList = BulletList.extend({
         return {
             toggleBulletList:
                 () =>
-                    (args: CommandProps): boolean => {
-                        const { tr } = args;
-                        const head = tr.selection.$head;
-                        if (head) {
-                            const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
-                            if (classNames.indexOf(`os-split-`) !== -1) {
-                                return false;
-                            }
+                (args: CommandProps): boolean => {
+                    const { tr } = args;
+                    const head = tr.selection.$head;
+                    if (head) {
+                        const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
+                        if (classNames.indexOf(`os-split-`) !== -1) {
+                            return false;
                         }
-
-                        return this.parent().toggleBulletList()(args);
                     }
+
+                    return this.parent().toggleBulletList()(args);
+                }
         };
     }
 });
@@ -94,18 +94,18 @@ export const OsSplitOrderedList = OrderedList.extend({
         return {
             toggleOrderedList:
                 () =>
-                    (args: CommandProps): boolean => {
-                        const { tr } = args;
-                        const head = tr.selection.$head;
-                        if (head) {
-                            const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
-                            if (classNames.indexOf(`os-split-`) !== -1) {
-                                return false;
-                            }
+                (args: CommandProps): boolean => {
+                    const { tr } = args;
+                    const head = tr.selection.$head;
+                    if (head) {
+                        const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
+                        if (classNames.indexOf(`os-split-`) !== -1) {
+                            return false;
                         }
-
-                        return this.parent().toggleOrderedList()(args);
                     }
+
+                    return this.parent().toggleOrderedList()(args);
+                }
         };
     }
 });

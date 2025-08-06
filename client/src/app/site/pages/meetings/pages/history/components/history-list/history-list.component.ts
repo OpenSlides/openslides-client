@@ -226,11 +226,9 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             }
             this._historySubscription = (
                 repo.getViewModelObservable(id) as Observable<ViewUser | ViewMotion | ViewAssignment>
-            ).pipe(
-                switchMap(
-                    m => m.history_entries$
-                )
-            ).subscribe(entries => this.processNewHistoryEntries(fqid, entries));
+            )
+                .pipe(switchMap(m => m.history_entries$))
+                .subscribe(entries => this.processNewHistoryEntries(fqid, entries));
         } catch (e) {
             this.raiseError(e);
         }
@@ -295,15 +293,18 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private updateModelRequest(): void {
         const modelRequests: Record<Collection, Id[]> = {};
         this.dataSource.data.forEach(position => {
-            position[1].filter(entry => entry.model_id === entry.original_model_id).flatMap(entry => entry.entries).forEach(information => {
-                if (isFqid(information)) {
-                    const [collection, id] = collectionIdFromFqid(information);
-                    if (!modelRequests[collection]) {
-                        modelRequests[collection] = [];
+            position[1]
+                .filter(entry => entry.model_id === entry.original_model_id)
+                .flatMap(entry => entry.entries)
+                .forEach(information => {
+                    if (isFqid(information)) {
+                        const [collection, id] = collectionIdFromFqid(information);
+                        if (!modelRequests[collection]) {
+                            modelRequests[collection] = [];
+                        }
+                        modelRequests[collection].push(id);
                     }
-                    modelRequests[collection].push(id);
-                }
-            });
+                });
         });
         for (const [collection, ids] of Object.entries(modelRequests)) {
             const subscriptionName = this.getSubscriptionName(collection);
@@ -343,23 +344,27 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                 viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
                 ids: [id],
                 fieldset: DEFAULT_FIELDSET,
-                follow: [{
-                    idField: `history_entry_ids`,
-                    fieldset: `detail`,
-                    follow: [{
-                        idField: `position_id`,
+                follow: [
+                    {
+                        idField: `history_entry_ids`,
                         fieldset: `detail`,
                         follow: [
-                            { idField: `user_id`, fieldset: `participantListMinimal` }
+                            {
+                                idField: `position_id`,
+                                fieldset: `detail`,
+                                follow: [{ idField: `user_id`, fieldset: `participantListMinimal` }]
+                            }
                         ]
-                    }]
-                }]
+                    }
+                ]
             },
             subscriptionName: HISTORY_DETAIL_SUBSCRIPTION
         });
     }
 
-    private getCollectionRepository(collection: string): MotionRepositoryService | AssignmentRepositoryService | ParticipantControllerService {
+    private getCollectionRepository(
+        collection: string
+    ): MotionRepositoryService | AssignmentRepositoryService | ParticipantControllerService {
         switch (collection) {
             case Motion.COLLECTION:
                 return this.motionRepo;
@@ -406,7 +411,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         this.updateModelRequest();
     }
 
-    private gatherPositionDataFromEntries(fqid: Fqid, entries: ViewHistoryEntry[]): Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> {
+    private gatherPositionDataFromEntries(
+        fqid: Fqid,
+        entries: ViewHistoryEntry[]
+    ): Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> {
         const positions: Record<number, [ViewHistoryPosition, ViewHistoryEntry[]]> = {};
         for (const entry of entries) {
             if (entry.original_model_id === fqid) {
