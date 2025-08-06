@@ -192,7 +192,9 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public exportPollResults(): void {
         this.pollPdfService.exportSinglePoll(this.poll, {
             votesData: this._votesDataSubject.value,
-            entitledUsersData: this.poll.isStarted ? this._liveRegisterObservable.value : this._entitledUsersSubject.value
+            entitledUsersData: this.poll.isStarted
+                ? this._liveRegisterObservable.value
+                : this._entitledUsersSubject.value
         });
     }
 
@@ -336,8 +338,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this.countVoteAllowed = entries.length;
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
-                })
-            ));
+                }))
+        );
     }
 
     public hasUserVoteDelegation(user: ViewUser): boolean {

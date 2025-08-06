@@ -1,7 +1,4 @@
-import {
-    replaceHtmlEntities,
-    unwrapNode
-} from './dom-helpers';
+import { replaceHtmlEntities, unwrapNode } from './dom-helpers';
 
 describe(`utils: dom helpers`, () => {
     describe(`replaceHtmlEntities function`, () => {

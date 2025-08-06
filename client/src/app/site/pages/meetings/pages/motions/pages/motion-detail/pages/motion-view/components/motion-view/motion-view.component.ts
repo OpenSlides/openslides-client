@@ -443,7 +443,10 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
             this.changeRecoRepo.getChangeRecosOfMotionObservable(motionId).pipe(filter(value => !!value)),
-            this.repo.getViewModelObservable(motionId).pipe(filter(m => !!m), switchMap(m => m.amendments$.pipe(startWith([]))))
+            this.repo.getViewModelObservable(motionId).pipe(
+                filter(m => !!m),
+                switchMap(m => m.amendments$.pipe(startWith([])))
+            )
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {

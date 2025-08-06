@@ -126,7 +126,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public shouldEnableFormControl(): boolean {
-        if (!this.userOML && (!this.home_committee_id || this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage))) {
+        if (
+            !this.userOML &&
+            (!this.home_committee_id || this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage))
+        ) {
             return true;
         }
         return this.operator.hasOrganizationPermissions(this.userOML);
@@ -281,7 +284,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 is_public: meeting.publicAccessPossible(),
                 is_accessible:
                     (meeting.canAccess() && this.operator.isInMeeting(meeting.id)) ||
-                    (!meeting.locked_from_inside && (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManagerForMeeting(meeting.id)))
+                    (!meeting.locked_from_inside &&
+                        (this.operator.canSkipPermissionCheck ||
+                            this.operator.isCommitteeManagerForMeeting(meeting.id)))
             };
         });
         this._tableData = tableData;

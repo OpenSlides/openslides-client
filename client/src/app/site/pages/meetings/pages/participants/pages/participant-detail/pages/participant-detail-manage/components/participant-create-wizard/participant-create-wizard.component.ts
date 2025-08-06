@@ -368,9 +368,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     private cleanUpGroups(group_ids: number[]): number[] {
         const meeting_group_ids = this.activeMeetingService.meeting.group_ids;
-        group_ids = group_ids.filter(group_id =>
-            meeting_group_ids.includes(group_id)
-        );
+        group_ids = group_ids.filter(group_id => meeting_group_ids.includes(group_id));
         return group_ids;
     }
 }

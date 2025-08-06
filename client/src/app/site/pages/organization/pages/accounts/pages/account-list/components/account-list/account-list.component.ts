@@ -119,7 +119,12 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             title,
             choices: this.operator.canSkipPermissionCheck
                 ? meetings.filter(meeting => !meeting.locked_from_inside)
-                : meetings.filter(meeting => (this.operator.isInMeeting(meeting.id) || this.operator.isCommitteeManagerForMeeting(meeting.id)) && !meeting.locked_from_inside),
+                : meetings.filter(
+                        meeting =>
+                            (this.operator.isInMeeting(meeting.id) ||
+                                this.operator.isCommitteeManagerForMeeting(meeting.id)) &&
+                                !meeting.locked_from_inside
+                    ),
             multiSelect: true,
             actions,
             content: this.translate.instant(
@@ -143,7 +148,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public async assignHomeCommitteeToUsers(): Promise<void> {
-        const title = this.translate.instant(`This will add or remove the selected accounts to the selected home committee:`);
+        const title = this.translate.instant(
+            `This will add or remove the selected accounts to the selected home committee:`
+        );
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const actions = [ADD, REMOVE];
@@ -158,7 +165,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         });
         if (result) {
             if (result.action === ADD) {
-                this.userController.update({ home_committee_id: result.firstId, external: false }, ...this.selectedRows).resolve();
+                this.userController
+                    .update({ home_committee_id: result.firstId, external: false }, ...this.selectedRows)
+                    .resolve();
             } else if (result.action === REMOVE) {
                 this.userController.update({ home_committee_id: null }, ...this.selectedRows).resolve();
             }
@@ -172,7 +181,12 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open({ title, actions: [SET_EXTERNAL, SET_NOT_EXTERNAL] });
         if (result) {
             const isExternal = result.action === SET_EXTERNAL;
-            this.userController.update({ external: isExternal, home_committee_id: isExternal ? null : undefined }, ...this.selectedRows).resolve();
+            this.userController
+                .update(
+                    { external: isExternal, home_committee_id: isExternal ? null : undefined },
+                    ...this.selectedRows
+                )
+                .resolve();
         }
     }
 

@@ -4,12 +4,7 @@ import { HtmlDiff } from '@openslides/motion-diff';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
-import {
-    DiffCache,
-    DiffLinesInParagraph,
-    ExtractedContent,
-    LineRange
-} from '../../../../definitions';
+import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString } from '../line-numbering.service';
 
@@ -83,9 +78,7 @@ import { LineNumberedString } from '../line-numbering.service';
 export class MotionDiffService {
     private diffCache = new DiffCache();
 
-    public constructor(
-        private translate: TranslateService
-    ) {}
+    public constructor(private translate: TranslateService) {}
 
     /**
      * Returns the HTML snippet between two given line numbers.
@@ -230,7 +223,10 @@ export class MotionDiffService {
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return HtmlDiff.changeHasCollissions(this.convertViewUnifiedChange(change), this.convertViewUnifiedChanges(changes));
+        return HtmlDiff.changeHasCollissions(
+            this.convertViewUnifiedChange(change),
+            this.convertViewUnifiedChanges(changes)
+        );
     }
 
     public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
@@ -260,7 +256,14 @@ export class MotionDiffService {
         highlightLine?: number,
         firstLine = 1
     ): string {
-        return HtmlDiff.getTextWithChanges(motionHtml, this.convertViewUnifiedChanges(changes), lineLength, showAllCollisions, highlightLine, firstLine);
+        return HtmlDiff.getTextWithChanges(
+            motionHtml,
+            this.convertViewUnifiedChanges(changes),
+            lineLength,
+            showAllCollisions,
+            highlightLine,
+            firstLine
+        );
     }
 
     public formatOsCollidingChanges(
@@ -423,7 +426,13 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        return HtmlDiff.getTextRemainderAfterLastChange(motionHtml, this.convertViewUnifiedChanges(changes), lineLength, highlight, lineRange);
+        return HtmlDiff.getTextRemainderAfterLastChange(
+            motionHtml,
+            this.convertViewUnifiedChanges(changes),
+            lineLength,
+            highlight,
+            lineRange
+        );
     }
 
     /**

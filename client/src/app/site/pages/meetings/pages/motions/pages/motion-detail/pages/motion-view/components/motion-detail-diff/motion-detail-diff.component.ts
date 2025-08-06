@@ -180,7 +180,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 .get(`motions_line_length`)
                 .subscribe(lineLength => (this.lineLength = lineLength)),
             this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble)),
-            this.meetingSettingsService.get(`motions_enable_origin_motion_display`).subscribe(display => (this.originMotionDisplay = display))
+            this.meetingSettingsService
+                .get(`motions_enable_origin_motion_display`)
+                .subscribe(display => (this.originMotionDisplay = display))
         );
     }
 
@@ -193,11 +195,19 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         // @TODO Highlighting
         const lineRange: LineRange = {
             from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine),
-            to: change2 ? ((change2.getLineFrom() <= this.lastLineNr) ? change2.getLineFrom() - 1 : this.lastLineNr - 1) : (this.lineRange?.to ?? null)
+            to: change2
+                ? change2.getLineFrom() <= this.lastLineNr
+                    ? change2.getLineFrom() - 1
+                    : this.lastLineNr - 1
+                : (this.lineRange?.to ?? null)
         };
 
         // Ensures the return of the last line if an amendment has no working but broken change recommendations
-        if (this.motion.isAmendment() && this.workingTextChangingObjects.length === 0 && this.brokenTextChangingObjects.length > 0) {
+        if (
+            this.motion.isAmendment() &&
+            this.workingTextChangingObjects.length === 0 &&
+            this.brokenTextChangingObjects.length > 0
+        ) {
             lineRange.to = this.lastLineNr;
         }
 
@@ -374,11 +384,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         };
 
         this._workingTextChangingObjects = this.changes.filter(
-            (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo()) && (obj.getLineFrom() <= this.lastLineNr && obj.getLineTo() <= this.lastLineNr)
+            (obj: ViewUnifiedChange) =>
+                !obj.isTitleChange() &&
+                inRange(obj.getLineFrom(), obj.getLineTo()) &&
+                obj.getLineFrom() <= this.lastLineNr &&
+                obj.getLineTo() <= this.lastLineNr
         );
 
         this._brokenTextChangingObjects = this.changes.filter(
-            (obj: ViewUnifiedChange) => !obj.isTitleChange() && (obj.getLineFrom() > this.lastLineNr || obj.getLineTo() > this.lastLineNr)
+            (obj: ViewUnifiedChange) =>
+                !obj.isTitleChange() && (obj.getLineFrom() > this.lastLineNr || obj.getLineTo() > this.lastLineNr)
         );
     }
 
@@ -460,14 +475,19 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this.changeRecommendationMenu.closeMenu();
 
         const recoModel = reco.getModel();
-        const motionText = this.diff.extractMotionLineRange(this.lineNumberingService.insertLineNumbers({
-            html: this.motion.text,
-            lineLength: this.lineLength,
-            firstLine: this.motion.firstLine
-        }), {
-            from: reco.getLineFrom(),
-            to: reco.getLineTo()
-        }, false, this.lineLength);
+        const motionText = this.diff.extractMotionLineRange(
+            this.lineNumberingService.insertLineNumbers({
+                html: this.motion.text,
+                lineLength: this.lineLength,
+                firstLine: this.motion.firstLine
+            }),
+            {
+                from: reco.getLineFrom(),
+                to: reco.getLineTo()
+            },
+            false,
+            this.lineLength
+        );
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText]);
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText], true);
 
@@ -547,7 +567,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 html,
                 lineLength: this.lineLength,
                 firstLine
-            })).to;
+            })
+        ).to;
         this.updateAllTextChangingObjects();
     }
 

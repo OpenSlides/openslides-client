@@ -495,7 +495,9 @@ export abstract class BasePollPdfService {
                 },
                 ...template.value.map(value => {
                     return {
-                        text: this.translate.instant(value.vote ? this.pollService.pollKeyVerbose(value.vote) : `Votes`),
+                        text: this.translate.instant(
+                            value.vote ? this.pollService.pollKeyVerbose(value.vote) : `Votes`
+                        ),
                         style: `tableHeader`
                     };
                 })

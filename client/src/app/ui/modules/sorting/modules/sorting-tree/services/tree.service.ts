@@ -15,7 +15,7 @@ export class TreeService {
      * @returns the weight of the model
      */
     private getAttributeAsNumber<T extends Identifiable & Displayable>(item: T, key: keyof T): number {
-        return (item[key] as any) as number;
+        return item[key] as any as number;
     }
 
     /**

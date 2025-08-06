@@ -9,12 +9,15 @@ import { AUTOUPDATE_DEFAULT_ENDPOINT } from 'src/app/site/services/autoupdate';
 export interface CountUserStatistics {
     activeUserHandles: number;
     activeUsers: Record<number, number>;
-    groups: Record<number, {
-        name: string;
-        users: Record<number, number>;
-        userHandleCount: number;
-        meeting_id?: number;
-    }>;
+    groups: Record<
+        number,
+        {
+            name: string;
+            users: Record<number, number>;
+            userHandleCount: number;
+            meeting_id?: number;
+        }
+    >;
 }
 
 const CONNECTION_COUNT_PATH = `/system/${AUTOUPDATE_DEFAULT_ENDPOINT}/connection_count`;

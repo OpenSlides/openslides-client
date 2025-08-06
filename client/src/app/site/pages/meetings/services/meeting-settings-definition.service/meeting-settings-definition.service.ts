@@ -77,7 +77,11 @@ export class MeetingSettingsDefinitionService {
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
         }
-        if (setting.type === `choice` && setting.choices && !Object.prototype.hasOwnProperty.call(setting.choices, defaultValue)) {
+        if (
+            setting.type === `choice` &&
+            setting.choices &&
+            !Object.prototype.hasOwnProperty.call(setting.choices, defaultValue)
+        ) {
             throw new Error(
                 `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
             );

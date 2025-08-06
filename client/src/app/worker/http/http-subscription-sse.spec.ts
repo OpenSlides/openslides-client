@@ -93,8 +93,8 @@ xdescribe(`http subscription polling`, () => {
         subscr.start();
         await expectAsync(receivedError).toBeResolved();
         expectAsync(receivedData).toBePending();
-        expect((await receivedError as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
-        expect((await receivedError as ErrorDescription)?.error?.type).toEqual(`mock-error`);
+        expect(((await receivedError) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect(((await receivedError) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -104,8 +104,8 @@ xdescribe(`http subscription polling`, () => {
         const subscr = getHttpSubscriptionSSEInstance(`/error400-expected-format`, (d: any) => resolver(d));
         subscr.start();
         await expectAsync(receivedData).toBeResolved();
-        expect((await receivedData as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
-        expect((await receivedData as ErrorDescription)?.error?.type).toEqual(`mock-error`);
+        expect(((await receivedData) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect(((await receivedData) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 

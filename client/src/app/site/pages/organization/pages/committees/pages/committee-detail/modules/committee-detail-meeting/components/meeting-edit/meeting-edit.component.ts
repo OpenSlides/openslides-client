@@ -281,7 +281,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        const canSkip = this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId);
+        const canSkip =
+            this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId);
         if (!canSkip && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
@@ -352,7 +353,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private async doUpdateMeeting(): Promise<void> {
         const options =
-            (this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId)) && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+            (this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId)) &&
+            !this.isMeetingAdmin &&
+            this.editMeeting?.locked_from_inside
                 ? {}
                 : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {

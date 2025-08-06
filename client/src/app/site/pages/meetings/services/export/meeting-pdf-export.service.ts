@@ -165,7 +165,7 @@ export class MeetingPdfExportService {
             fontSize: this.fontSize!,
             loadFonts: () => this.getFonts(),
             createVfs: () => this.createVirtualFileSystem(),
-            pageSize: this.meetingSettingsService.instant(`export_pdf_pagesize`) as PageSize ?? `A4`
+            pageSize: (this.meetingSettingsService.instant(`export_pdf_pagesize`) as PageSize) ?? `A4`
         };
     }
 }

@@ -39,7 +39,7 @@ export class ParticipantImportService extends BaseBackendImportService {
         "omitted": _(`Participants skipped`),
         "warning": _(`Participants with warnings: affected cells will be skipped`),
         "error": _(`Participants with errors`),
-        "structure levels created": _(`Structure levels created`)
+        'structure levels created': _(`Structure levels created`)
     };
 
     public constructor(

@@ -299,7 +299,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                 condition: model.id,
                                 label: model.getTitle(),
                                 isChild: !!model.parent,
-                                isActive: (filter.options.find(f => (f as OsFilterOption)?.condition === model.id) as OsFilterOption)?.isActive,
+                                isActive: (
+                                    filter.options.find(
+                                        f => (f as OsFilterOption)?.condition === model.id
+                                    ) as OsFilterOption
+                                )?.isActive,
                                 skipTranslate: true,
                                 children: model.children?.length
                                     ? model.children.map((child: any) => ({
@@ -519,7 +523,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 filter =>
                     // Interfaces do not exist at runtime. Manually check if the
                     // Required information of the interface are present
-                    Object.prototype.hasOwnProperty.call(filter, `options`) && Object.prototype.hasOwnProperty.call(filter, `property`) && !!filter.property
+                    Object.prototype.hasOwnProperty.call(filter, `options`) &&
+                    Object.prototype.hasOwnProperty.call(filter, `property`) &&
+                    !!filter.property
             );
         } else {
             return false;
