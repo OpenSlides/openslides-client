@@ -124,7 +124,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
-    fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+    fieldset: [`closed`, `moderator_notes`, ...MEETING_ROUTING_FIELDS],
     follow: [
         {
             idField: `speaker_ids`,

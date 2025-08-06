@@ -17,6 +17,35 @@ interface AgendaTreePdfEntry {
     columns: { width?: number; text: string }[];
 }
 
+export enum ExportFileFormat {
+    PDF = 0,
+    CSV
+}
+
+export type InfoToExport =
+    | `item_number` |
+    `title` |
+    `text` |
+    `attachments` |
+    `moderation_notes` |
+    `list_of_speakers` |
+    `polls` |
+    `internal_commentary`;
+
+export type pdfMetaInfo =
+    | `table_of_content` |
+    `line_break` |
+    `header` |
+    `footer` |
+    `current_date`;
+
+export type csvMetaInfo =
+    | `duration` |
+    `tags` |
+    `agenda_visibility` |
+    `done` |
+    `note`;
+
 @Injectable({
     providedIn: AgendaItemListServiceModule
 })
@@ -28,20 +57,47 @@ export class AgendaItemExportService {
         private treeService: TreeService
     ) {}
 
-    public exportAsCsv(source: ViewAgendaItem[]): void {
+    public exportAsCsv(source: ViewAgendaItem[], info: InfoToExport[], csvMeta: csvMetaInfo): void {
+        const config = [];
+        if (info.includes(`item_number`)) {
+            config.push({ label: `item_number`, property: `item_number` });
+        }
+        if (info.includes(`title`)) {
+            config.push({ label: `title`, map: (viewItem): string => viewItem.getTitle() });
+        }
+        if (info.includes(`text`)) {
+            config.push({ label: `text`, map: (viewItem): string => viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : `` });
+        }
+        if (info.includes(`moderation_notes`)) {
+            config.push({ label: `moderation_notes`, map: (viewItem): string => viewItem.content_object?.list_of_speakers?.moderator_notes ?? `` });
+        }
+        if (info.includes(`list_of_speakers`)) {
+            config.push({ label: `list_of_speakers`, map: (viewItem): string => {
+                if (viewItem.content_object?.list_of_speakers && viewItem.content_object.list_of_speakers.waitingSpeakerAmount > 0) {
+                    return viewItem.content_object?.list_of_speakers.waitingSpeakerAmount.toString();
+                }
+                return ``;
+            } });
+        }
+        if (csvMeta.includes(`duration`)) {
+            config.push({ label: `agenda_duration`, property: `duration` });
+        }
+        if (csvMeta.includes(`agenda_visibility`)) {
+            config.push({ label: `agenda_type`, property: `verboseCsvType` });
+        }
+        if (csvMeta.includes(`tags`)) {
+            config.push({ label: `tags`, map: (viewItem): string => viewItem.tags?.map(tag => tag.getTitle()).join(`,`) ?? `` });
+        }
+        if (csvMeta.includes(`done`)) {
+            config.push({ label: `agenda_closed`, property: `closed` });
+        }
+        if (csvMeta.includes(`note`)) {
+            config.push({ label: `agenda_comment`, property: `comment` });
+        }
+
         this.csvExportService.export(
             source,
-            [
-                { label: `title`, map: (viewItem): string => viewItem.getTitle() },
-                {
-                    label: `text`,
-                    map: (viewItem): string =>
-                        viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : ``
-                },
-                { label: `agenda_duration`, property: `duration` },
-                { label: `agenda_comment`, property: `comment` },
-                { label: `agenda_type`, property: `verboseCsvType` }
-            ],
+            config,
             this.translate.instant(`Agenda`) + `.csv`
         );
     }

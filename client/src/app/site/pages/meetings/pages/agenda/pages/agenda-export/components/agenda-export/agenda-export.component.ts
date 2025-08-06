@@ -15,10 +15,9 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
-import { ExportFileFormat } from '../../../../../motions/services/export/definitions';
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { AgendaItemListModule } from '../../../agenda-item-list/agenda-item-list.module';
-import { AgendaItemExportService } from '../../../agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
+import { AgendaItemExportService, ExportFileFormat } from '../../../agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
 
 interface SavedSelections {
     tab_index: number;
@@ -108,7 +107,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         if (this.isPDFFormat) {
             this.agendaExportService.exportAsPdf(views);
         } else if (this.isCSVFormat) {
-            this.agendaExportService.exportAsCsv(views);
+            this.agendaExportService.exportAsCsv(views, this.dialogForm.get(`content`).value, this.dialogForm.get(`metaInfo`).value);
         }
     }
 
