@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +30,7 @@ interface SavedSelections {
     selector: `os-agenda-export`,
     templateUrl: `./agenda-export.component.html`,
     styleUrl: `./agenda-export.component.scss`,
+    encapsulation: ViewEncapsulation.None,
     imports: [
         CommonModule,
         ReactiveFormsModule,
