@@ -68,20 +68,35 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
                 if (params) {
                     this.committeeId = Number(params[`committeeId`]);
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
-                    this.childCommitteesObservable = this.committeeRepo.getViewModelListObservable().pipe(map(arr => arr.filter(comm =>
-                        comm.parent?.id === this.committeeId
-                    ).sort((a, b) => a.name.localeCompare(b.name))));
+                    this.childCommitteesObservable = this.committeeRepo
+                        .getViewModelListObservable()
+                        .pipe(
+                            map(arr =>
+                                arr
+                                    .filter(comm => comm.parent?.id === this.committeeId)
+                                    .sort((a, b) => a.name.localeCompare(b.name))
+                            )
+                        );
                     if (this._numberSubscription) {
                         this._numberSubscription.unsubscribe();
                     }
-                    this._numberSubscription = combineLatest(this.committeeRepo.getViewModelListObservable(), this.currentCommitteeObservable).pipe(map(([commRepo, currentComm]) =>
-                        commRepo.filter(comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm?.id === comm.id)
-                    )).subscribe(committees => {
-                        this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
-                        this.accountActiveNumber = this.calculateIds(committees, this.calcAccountActiveIds);
-                        this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
-                        this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
-                    });
+                    this._numberSubscription = combineLatest(
+                        this.committeeRepo.getViewModelListObservable(),
+                        this.currentCommitteeObservable
+                    )
+                        .pipe(
+                            map(([commRepo, currentComm]) =>
+                                commRepo.filter(
+                                    comm => currentComm?.all_child_ids?.includes(comm.id) || currentComm?.id === comm.id
+                                )
+                            )
+                        )
+                        .subscribe(committees => {
+                            this.accountNumber = this.calculateIds(committees, this.calcAccountIds);
+                            this.accountActiveNumber = this.calculateIds(committees, this.calcAccountActiveIds);
+                            this.accountHomeCommitteeNumber = this.calculateIds(committees, this.calcHomeComitteeIds);
+                            this.accountGuestNumber = this.calculateIds(committees, this.calcGuestIds);
+                        });
                     this._subcommitteeList?.clearSearchField();
                 }
             })
@@ -171,10 +186,15 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
     }
 
     public getIndex(committee: ViewCommittee): number {
-        return committee.meetings.length > 0 || (committee.meetings.length === 0 && committee.all_childs.length === 0) ? 1 : 0;
+        return committee.meetings.length > 0 || (committee.meetings.length === 0 && committee.all_childs.length === 0)
+            ? 1
+            : 0;
     }
 
-    private calculateIds(committees: ViewCommittee[], perCommitteeFct: (commitee: ViewCommittee) => Set<number>): number {
+    private calculateIds(
+        committees: ViewCommittee[],
+        perCommitteeFct: (commitee: ViewCommittee) => Set<number>
+    ): number {
         const result = new Set<number>([]);
         for (const c of committees) {
             result.update(perCommitteeFct(c));

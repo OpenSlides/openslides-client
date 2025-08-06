@@ -20,7 +20,7 @@ export class CopyrightSignComponent {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout((this.clickTimeout as any));
+            clearTimeout(this.clickTimeout as any);
         }
 
         if (this.clickCounter === 5) {

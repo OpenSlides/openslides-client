@@ -15,7 +15,7 @@ export class TreeService {
      * @returns the weight of the model
      */
     private getAttributeAsNumber<T extends Identifiable & Displayable>(item: T, key: keyof T): number {
-        return (item[key] as any) as number;
+        return item[key] as any as number;
     }
 
     /**
@@ -110,7 +110,7 @@ export class TreeService {
     public makeTreeFromFlatTree<T extends Identifiable & Displayable>(nodes: FlatNode<T>[]): TreeIdNode[] {
         const basicTree: TreeIdNode[] = [];
 
-        for (let i = 0; i < nodes.length;) {
+        for (let i = 0; i < nodes.length; ) {
             // build the next node inclusive its children
             const nextNode = this.buildBranchFromFlatTree(nodes[i], nodes, 0);
             // append this node to the tree
@@ -309,7 +309,7 @@ export class TreeService {
         tree = tree.sort((a, b) =>
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
-        for (let i = 0; i < tree.length;) {
+        for (let i = 0; i < tree.length; ) {
             const node = tree[i];
             if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
                 tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(

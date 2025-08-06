@@ -2,9 +2,9 @@ import { Settings } from '../models/meetings/meeting';
 
 export type DelegationSetting = Extract<
     keyof Settings,
-    | `users_forbid_delegator_in_list_of_speakers` |
-    `users_forbid_delegator_as_submitter` |
-    `users_forbid_delegator_as_supporter`
+    | `users_forbid_delegator_in_list_of_speakers`
+    | `users_forbid_delegator_as_submitter`
+    | `users_forbid_delegator_as_supporter`
 >;
 
 export const delegationSettings: Record<string, DelegationSetting> = {

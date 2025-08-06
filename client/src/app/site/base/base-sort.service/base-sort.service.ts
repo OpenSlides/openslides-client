@@ -94,7 +94,10 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                         return this.intl.compare(propertyA, propertyB as any);
                     }
                 case `function`:
-                    return this.intl.compare(propertyA.bind(itemA)(), (propertyB as unknown as () => any).bind(itemB)());
+                    return this.intl.compare(
+                        propertyA.bind(itemA)(),
+                        (propertyB as unknown as () => any).bind(itemB)()
+                    );
                 case `object`:
                     if (propertyA instanceof Date) {
                         return propertyA > propertyB ? 1 : -1;

@@ -14,7 +14,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { HeadToolbarComponent } from 'src/app/ui/modules/head-toolbar/head-toolbar.component';
 import { ListModule } from 'src/app/ui/modules/list';
 
-import { IconContainerComponent } from "../../../../../../../../../ui/modules/icon-container/icon-container.component";
+import { IconContainerComponent } from '../../../../../../../../../ui/modules/icon-container/icon-container.component';
 import { CommitteeComponentsModule } from '../../../../modules/committee-components.module';
 import { CommitteeListServiceModule } from '../../../committee-list/services/committee-list-service.module';
 import { CommitteeDetailViewRoutingModule } from './committee-detail-view-routing.module';

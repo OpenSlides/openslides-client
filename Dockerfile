@@ -3,10 +3,17 @@ FROM node:22.17-alpine as base
 ## Setup
 ARG CONTEXT
 ENV NODE_VERSION=22.17.0
-WORKDIR /app
 ENV APP_CONTEXT=${CONTEXT}
 
+## Packages
+COPY packages /packages
+
+WORKDIR /packages/openslides-motion-diff
+RUN npm ci
+RUN npm run build
+
 ## Installs
+WORKDIR /app
 COPY client/package.json .
 COPY client/package-lock.json .
 RUN npm ci

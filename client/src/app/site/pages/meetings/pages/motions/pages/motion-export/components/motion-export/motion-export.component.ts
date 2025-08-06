@@ -27,7 +27,12 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
-import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
+import {
+    ExportFileFormat,
+    InfoToExport,
+    motionImportExportHeaderOrder,
+    noMetaData
+} from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
 
 interface SavedSelections {
@@ -391,11 +396,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             chipOption.disabled = nextState;
-            chipOption.value = false;
+            chipOption.selected = false;
             if (nextState) {
                 this.disabledControls.push(value);
             } else {
-                this.disabledControls.filter(obj => !obj.includes(value));
+                this.disabledControls = this.disabledControls.filter(obj => !obj.includes(value));
             }
         }
     }

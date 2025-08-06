@@ -1,8 +1,8 @@
-import { CommandProps, Extension } from "@tiptap/core";
+import { CommandProps, Extension } from '@tiptap/core';
 import BulletList from '@tiptap/extension-bullet-list';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
-import { NodeType } from "@tiptap/pm/model";
+import { NodeType } from '@tiptap/pm/model';
 
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
@@ -21,17 +21,20 @@ declare module '@tiptap/core' {
  */
 export const OsSplit = Extension.create({
     addGlobalAttributes() {
-        return [{
-            types: [`paragraph`, `orderedList`, `bulletList`, `listItem`],
-            attributes: {
-                class: {}
+        return [
+            {
+                types: [`paragraph`, `orderedList`, `bulletList`, `listItem`],
+                attributes: {
+                    class: {}
+                }
             }
-        }];
+        ];
     },
     addCommands() {
         return {
             osSplitLift:
-                name => ({ commands, tr }): boolean => {
+                name =>
+                ({ commands, tr }): boolean => {
                     const head = tr.selection.$head;
                     const classNames: string = head.node(head.depth - 3).attrs[`class`] ?? ``;
                     if (classNames.indexOf(`os-split-`) !== -1) {
@@ -64,18 +67,20 @@ export const OsSplitBulletList = BulletList.extend({
 
     addCommands() {
         return {
-            toggleBulletList: () => (args: CommandProps): boolean => {
-                const { tr } = args;
-                const head = tr.selection.$head;
-                if (head) {
-                    const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
-                    if (classNames.indexOf(`os-split-`) !== -1) {
-                        return false;
+            toggleBulletList:
+                () =>
+                (args: CommandProps): boolean => {
+                    const { tr } = args;
+                    const head = tr.selection.$head;
+                    if (head) {
+                        const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
+                        if (classNames.indexOf(`os-split-`) !== -1) {
+                            return false;
+                        }
                     }
-                }
 
-                return this.parent().toggleBulletList()(args);
-            }
+                    return this.parent().toggleBulletList()(args);
+                }
         };
     }
 });
@@ -87,18 +92,20 @@ export const OsSplitOrderedList = OrderedList.extend({
 
     addCommands() {
         return {
-            toggleOrderedList: () => (args: CommandProps): boolean => {
-                const { tr } = args;
-                const head = tr.selection.$head;
-                if (head) {
-                    const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
-                    if (classNames.indexOf(`os-split-`) !== -1) {
-                        return false;
+            toggleOrderedList:
+                () =>
+                (args: CommandProps): boolean => {
+                    const { tr } = args;
+                    const head = tr.selection.$head;
+                    if (head) {
+                        const classNames: string = head.node(head.depth - 3)?.attrs[`class`] ?? ``;
+                        if (classNames.indexOf(`os-split-`) !== -1) {
+                            return false;
+                        }
                     }
-                }
 
-                return this.parent().toggleOrderedList()(args);
-            }
+                    return this.parent().toggleOrderedList()(args);
+                }
         };
     }
 });
