@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
@@ -45,11 +46,16 @@ export class MotionPdfExportService {
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         const docDefinition = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
-        const filename = this.translate.instant(`Motions`);
+        const filename: string = this.translate.instant(`Motions`);
         const metadata = {
             title: filename
         };
-        this.pdfDocumentService.download({ docDefinition, filename, metadata, exportInfo });
+
+        if (exportInfo.content.includes(`PDFinPDF`)) {
+            this.exportMergedPDFs(motions, exportInfo, filename);
+        } else {
+            this.pdfDocumentService.download({ docDefinition, filename, metadata, exportInfo });
+        }
     }
 
     /**
@@ -118,5 +124,47 @@ export class MotionPdfExportService {
             title: filename
         };
         this.pdfDocumentService.downloadLandscape({ docDefinition, filename, metadata });
+    }
+
+    /**
+     * loads a single motions to PDFnumberOrTitle
+     *
+     * @param motion The motion to export
+     */
+    private async loadSingleMotion(motion: ViewMotion, exportInfo?: MotionExportInfo): Promise<Uint8Array> {
+        const doc = this.motionPdfService.motionToDocDef({ motion, exportInfo });
+        const filename = `${this.translate.instant(`Motion`)} ${motion.numberOrTitle}`;
+        const metadata = {
+            title: filename
+        };
+        return await this.pdfDocumentService.turnIntoUint8Array((await this.pdfDocumentService.create({ docDefinition: doc, filename, metadata })));
+    }
+
+    private async exportMergedPDFs(motions: ViewMotion[], exportInfo: MotionExportInfo, filename: string): Promise<void> {
+        const pdfDoc = await PDFDocument.create();
+        for (const motion of motions) {
+            const srcDoc = await PDFDocument.load(await this.loadSingleMotion(motion, exportInfo));
+            const copiedPages = await pdfDoc.copyPages(srcDoc, [0, srcDoc.getPageCount() - 1]);
+            for (const page of copiedPages) {
+                pdfDoc.addPage(page);
+            }
+
+            if (motion.hasAttachments()) {
+                for (let i = 0; i < motion.attachment_meeting_mediafile_ids.length; i++) {
+                    const file = motion.attachment_meeting_mediafiles[i];
+                    if (file.mediafile.mimetype === `application/pdf`) {
+                        const sourcePdf = await fetch(file.url).then(res => res.arrayBuffer());
+                        const attDoc = await PDFDocument.load(sourcePdf);
+                        const copiedPages = await pdfDoc.copyPages(attDoc, [0, attDoc.getPageCount() - 1]);
+                        for (const page of copiedPages) {
+                            pdfDoc.addPage(page);
+                        }
+                    }
+                }
+            }
+        }
+        // TODO: Download file
+        const pdfBytes = await pdfDoc.save();
+        console.log(pdfBytes);
     }
 }

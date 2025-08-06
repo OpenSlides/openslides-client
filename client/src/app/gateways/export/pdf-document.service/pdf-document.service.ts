@@ -154,7 +154,7 @@ interface PdfCreatorConfig {
     createVfs?: Functionable<PdfVirtualFileSystem>;
 }
 
-class PdfCreator {
+export class PdfCreator {
     private readonly _document: TDocumentDefinitions;
     private readonly _filename: string;
     private readonly _loadFonts: Functionable<PdfFontDescription>;
@@ -175,6 +175,26 @@ class PdfCreator {
         this._progressService = config.progressService;
         this._progressSnackBarService = config.progressSnackBarService;
         this._settings = config.settings;
+    }
+
+    public createPDF(): ArrayBuffer {
+        let blob = new ArrayBuffer(64);
+        this._pdfWorker = new Worker(new URL(`./pdf-worker.worker`, import.meta.url), {
+            type: `module`
+        });
+
+        // the result of the worker
+        this._pdfWorker.onmessage = async ({ data }): Promise<void> => {
+            // if the worker returns an object, it's always the document
+            if (typeof data === `object`) {
+                this._progressSnackBarService.dismiss();
+                blob = new Int8Array((await data).arrayBuffer);
+                this._pdfWorker = null;
+            }
+        };
+
+
+        return blob;
     }
 
     public download(): void {
@@ -520,35 +540,45 @@ export class PdfDocumentService {
         ];
     }
 
+    public turnIntoUint8Array(file: PdfCreator): Uint8Array {
+        return new Uint8Array(file.createPDF());
+    }
+
     /**
-     * Downloads a pdf with the standard page definitions.
+     * Create a pdf with the standard page definitions.
      */
-    public async download({
+    public async create({
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
-        await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]).then(_ => {
-            this.showProgress();
-            const imageUrls = this.pdfImagesService.getImageUrls();
-            this.pdfImagesService.clearImageUrls();
-            new PdfCreator({
+    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<PdfCreator> {
+        await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]);
+        this.showProgress();
+        const imageUrls = this.pdfImagesService.getImageUrls();
+        this.pdfImagesService.clearImageUrls();
+        return new PdfCreator({
+            ...config,
+            document: this.getStandardPaper({
                 ...config,
-                document: this.getStandardPaper({
-                    ...config,
-                    documentContent: docDefinition,
-                    pageMargins: config.pageMargins,
-                    pageSize: config.pageSize,
-                    landscape: false,
-                    imageUrls: imageUrls
-                }),
-                filename: `${filetitle}.pdf`,
-                settings: this.settings,
-                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
-                progressService: this.progressService,
-                progressSnackBarService: this.progressSnackBarService
-            }).download();
+                documentContent: docDefinition,
+                pageMargins: config.pageMargins,
+                pageSize: config.pageSize,
+                landscape: false,
+                imageUrls: imageUrls
+            }),
+            filename: `${filetitle}.pdf`,
+            settings: this.settings,
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
+            progressService: this.progressService,
+            progressSnackBarService: this.progressSnackBarService
         });
+    }
+
+    /**
+     * Downloads a pdf with the standard page definitions.
+     */
+    public async download(file: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
+        (await this.create(file)).download();
     }
 
     /**
