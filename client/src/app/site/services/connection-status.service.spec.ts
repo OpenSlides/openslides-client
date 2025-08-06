@@ -34,7 +34,7 @@ describe(`ConnectionStatusService`, () => {
 
     it(
         `check defer check still offline with goOffline`,
-        (fakeAsync(() => {
+        fakeAsync(() => {
             let status = false;
             service.goOffline({ reason: `test`, isOnlineFn: () => status });
             expect(service.isOffline()).toBe(true);
@@ -44,7 +44,7 @@ describe(`ConnectionStatusService`, () => {
             tick(6000);
             expect(service.isOffline()).toBe(false);
             expect((bannerService as unknown as MockBannerService).removed?.icon).toEqual(`cloud_off`);
-        }) as any)
+        }) as any
     );
 
     it(`offlineGone`, () => {

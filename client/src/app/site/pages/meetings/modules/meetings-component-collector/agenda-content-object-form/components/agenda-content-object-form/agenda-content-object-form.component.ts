@@ -19,7 +19,8 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
 })
 export class AgendaContentObjectFormComponent
     extends BaseMeetingModelRequestHandler
-    implements AfterViewInit, OnDestroy {
+    implements AfterViewInit, OnDestroy
+{
     @Input()
     public form!: UntypedFormGroup;
 

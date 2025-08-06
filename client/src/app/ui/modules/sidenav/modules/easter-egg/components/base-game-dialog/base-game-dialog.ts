@@ -14,14 +14,14 @@ export type State = `start` | `search` | `waitForResponse` | `ownMove` | `oppone
  * All events that can be handled by the statemachine.
  */
 export type StateEvent =
-    | `searchClicked` |
-    `receivedSearchRequest` |
-    `receivedSearchResponse` |
-    `receivedACK` |
-    `waitTimeout` |
-    `executedMove` |
-    `receivedMove` |
-    `receivedRagequit`;
+    | `searchClicked`
+    | `receivedSearchRequest`
+    | `receivedSearchResponse`
+    | `receivedACK`
+    | `waitTimeout`
+    | `executedMove`
+    | `receivedMove`
+    | `receivedRagequit`;
 
 /**
  * An action in one state.
@@ -229,7 +229,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
 
     protected setTimeout(): void {
         if (this.waitTimout) {
-            clearTimeout((this.waitTimout as any));
+            clearTimeout(this.waitTimout as any);
         }
         this.waitTimout = setTimeout(() => {
             this.handleEvent(`waitTimeout`);

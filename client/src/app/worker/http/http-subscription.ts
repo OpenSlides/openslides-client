@@ -64,10 +64,10 @@ export abstract class HttpSubscription {
             error: isCommunicationError(errorContent)
                 ? errorContent
                 : {
-                        type: `Communication error`,
-                        msg: `Received non ok HTTP status ${response.status}`,
-                        data: errorContent as unknown
-                    }
+                      type: `Communication error`,
+                      msg: `Received non ok HTTP status ${response.status}`,
+                      data: errorContent as unknown
+                  }
         };
     }
 }

@@ -155,7 +155,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         if (index === 1) {
             this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
                 if (
-                    this.contentForm.value.selectedParagraphs.find((para: ParagraphToChoose) => para.paragraphNo === paraNo)
+                    this.contentForm.value.selectedParagraphs.find(
+                        (para: ParagraphToChoose) => para.paragraphNo === paraNo
+                    )
                 ) {
                     this.contentForm.controls[`text_` + paraNo].valueChanges.subscribe(value => {
                         this.canSave = value === this.paragraphs[paraNo].html ? false : true;
