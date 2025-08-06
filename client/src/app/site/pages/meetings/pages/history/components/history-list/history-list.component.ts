@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -76,7 +76,7 @@ class HistoryListDate {
     styleUrls: [`./history-list.component.scss`],
     standalone: false
 })
-export class HistoryListComponent extends BaseMeetingComponent implements OnInit {
+export class HistoryListComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     /**
      * Subject determine when the custom timestamp subject changes
      */
@@ -197,6 +197,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
         // If an element id is given, validate it and update the view.
         this.loadFromParams();
+    }
+
+    public override ngOnDestroy(): void {
+        this._historySubscription.unsubscribe();
     }
 
     private loadFromParams(): void {
