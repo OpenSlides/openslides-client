@@ -26,7 +26,8 @@ import { OsHideSortingOptionSetting, OsSortingDefinition, OsSortingOption, OsSor
 @Directive()
 export abstract class BaseSortListService<V extends BaseViewModel>
     extends BaseSortService<V>
-    implements SortListService<V> {
+    implements SortListService<V>
+{
     /**
      * The models own keys that the current sort option depends upon
      */

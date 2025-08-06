@@ -3,9 +3,11 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import angular from "angular-eslint";
 import prettier from "eslint-plugin-prettier/recommended";
+import eslintConfigPrettier from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import unusedImports from "eslint-plugin-unused-imports";
 import stylistic from "@stylistic/eslint-plugin";
+import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config({
     files: ["**/*.ts"],
@@ -19,7 +21,9 @@ export default tseslint.config({
         }),
         ...tseslint.configs.recommended,
         ...tseslint.configs.stylistic,
-        ...angular.configs.tsRecommended
+        ...angular.configs.tsRecommended,
+        eslintPluginPrettier,
+        eslintConfigPrettier
     ],
     plugins: {
         "@stylistic": stylistic,
@@ -53,9 +57,7 @@ export default tseslint.config({
             format: ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
         }],
 
-        "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "@stylistic/arrow-parens": ["error", "as-needed"],
-        "@stylistic/operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" } }],
 
         "@typescript-eslint/no-unused-vars": ["error", {
             argsIgnorePattern: "^_",
@@ -76,6 +78,10 @@ export default tseslint.config({
 
         "lines-between-class-members": ["error", "always", {
             exceptAfterSingleLine: true,
+        }],
+        "max-len": ["warn", {
+            code: 120,
+            comments: 160,
         }],
 
         "no-debugger": ["error"],
@@ -117,6 +123,7 @@ export default tseslint.config({
         "no-restricted-globals": ["error", "fdescribe", "fit"],
         "@typescript-eslint/explicit-member-accessibility": ["off"],
         "@typescript-eslint/explicit-function-return-type": ["off"],
+        "max-len": ["off"],
     },
 }, {
     files: ["**/*.html"],

@@ -277,13 +277,15 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         );
         this._initialState = personalInfoPatch;
         if (this._additionalFormControls) {
-            this.subscriptions.push(this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
-                if (value) {
-                    this.personalInfoForm.get(`home_committee_id`).disable();
-                } else {
-                    this.personalInfoForm.get(`home_committee_id`).enable();
-                }
-            }));
+            this.subscriptions.push(
+                this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
+                    if (value) {
+                        this.personalInfoForm.get(`home_committee_id`).disable();
+                    } else {
+                        this.personalInfoForm.get(`home_committee_id`).enable();
+                    }
+                })
+            );
         }
     }
 
@@ -382,8 +384,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         const data = this.useAdditionalEditTemplate
             ? formData
             : Object.keys(formData).mapToObject(key =>
-                    Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
-                );
+                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+              );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

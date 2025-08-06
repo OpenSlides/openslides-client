@@ -143,9 +143,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         this.propagateChanges();
     }
 
-    public set paragraphBasedAmendmentContent(content: {
-        amendment_paragraphs: Record<number, UnsafeHtml>;
-    }) {
+    public set paragraphBasedAmendmentContent(content: { amendment_paragraphs: Record<number, UnsafeHtml> }) {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
@@ -613,7 +611,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             this.motion.change_recommendations.length > 0
         ) {
             const msg = this.translate.instant(
-                `Warning: Amendments or change recommendations exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted, or change recommendations might lose their reference line completely.`);
+                `Warning: Amendments or change recommendations exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted, or change recommendations might lose their reference line completely.`
+            );
             this.raiseWarning(msg);
         }
     }

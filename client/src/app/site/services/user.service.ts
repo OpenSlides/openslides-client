@@ -100,9 +100,7 @@ export class UserService {
                     hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }
                 if (!hasPerms && toCompare.collection === UserScope.MEETING) {
-                    hasPerms =
-                        hasPerms ||
-                        this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage);
+                    hasPerms = hasPerms || this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage);
                 }
                 return hasPerms;
             });

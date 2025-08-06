@@ -229,7 +229,14 @@ export class MotionFormatService {
     };
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine, firstLine, showAllChanges, brokenTextChangesAmount }: DifferedViewArguments = args;
+        const {
+            changes,
+            lineLength,
+            highlightedLine,
+            firstLine,
+            showAllChanges,
+            brokenTextChangesAmount
+        }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
@@ -247,7 +254,7 @@ export class MotionFormatService {
                         motionText,
                         {
                             from: i === 0 ? firstLine : changeFrom,
-                            to: changesToShow[i].getLineFrom() - 1
+                            to: changesToShow[i].getLineFrom() - 1 || null
                         },
                         true,
                         lineLength,
@@ -270,9 +277,7 @@ export class MotionFormatService {
                 ` ` +
                 brokenTextChangesAmount +
                 ` ` +
-                this.translate.instant(
-                    `change recommendation(s) refer to a nonexistent line number.`
-                );
+                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`);
             text.push(`<em style="color: red; font-weight: bold;">` + msg + `</em>`);
         }
         return this.adjustDiffClasses(text).join(``);

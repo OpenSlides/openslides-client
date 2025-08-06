@@ -417,11 +417,11 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
 
 export interface ViewMotion
     extends Motion,
-    ViewModelRelations<IMotionRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasPersonalNote,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasReferencedMotionsInExtension {}
+        ViewModelRelations<IMotionRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasReferencedMotionsInExtension {}

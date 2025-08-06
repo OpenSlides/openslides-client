@@ -37,7 +37,7 @@ class ScrollingTableCellHandler implements Iterable<ScrollingTableCellDefinition
         this._registeredDefinitions = [];
     }
 
-    public* [Symbol.iterator](): Iterator<ScrollingTableCellDefinition, any, undefined> {
+    public *[Symbol.iterator](): Iterator<ScrollingTableCellDefinition, any, undefined> {
         for (const definition of this._registeredDefinitions) {
             yield definition;
         }
