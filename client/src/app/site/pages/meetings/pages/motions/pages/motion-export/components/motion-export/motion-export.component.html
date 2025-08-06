@@ -139,7 +139,12 @@
                             [matBadgeHidden]="PdfChip.selected ? 'false' : 'true'"
                             (click)="deselectAndSelectNeededOption()"
                         >
-                            <span>{{ 'PDFs in between the motion (changes Page layout)' | translate }}</span>
+                            <span>
+                                {{
+                                    'PDFs in between the motion (changes "Page layout" and "Header and footer")'
+                                        | translate
+                                }}
+                            </span>
                         </mat-chip-option>
                     }
                 </mat-chip-listbox>

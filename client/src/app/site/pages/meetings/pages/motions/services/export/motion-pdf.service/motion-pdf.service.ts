@@ -15,6 +15,7 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
+import { ViewMeetingMediafile } from '../../../../mediafiles';
 import { getRecommendationTypeName } from '../../../definitions';
 import { ViewUnifiedChangeType } from '../../../modules';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
@@ -170,7 +171,7 @@ export class MotionPdfService {
         if (
             exportInfo &&
             exportInfo.pdfOptions &&
-            exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
+            (exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) || exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.PDFinPDF)) &&
             motion.attachment_meeting_mediafiles.length > 0
         ) {
             motionPdfContent.push(this.createAttachments(motion));
@@ -779,9 +780,10 @@ export class MotionPdfService {
         });
 
         for (const key of Object.keys(motion.attachment_meeting_mediafiles)) {
-            const attachment = motion.attachment_meeting_mediafiles[key];
-            const fileUrl = attachment.getDetailStateUrl();
-            if (this.pdfImagesService.isImageUsableForPdf(attachment.mimetype)) {
+            const attachment: ViewMeetingMediafile = motion.attachment_meeting_mediafiles[key];
+
+            const fileUrl: string = attachment.getDetailStateUrl();
+            if (this.pdfImagesService.isImageUsableForPdf(attachment.mediafile.mimetype)) {
                 this.pdfImagesService.addImageUrl(fileUrl);
                 attachments.push({
                     image: fileUrl,
@@ -795,7 +797,8 @@ export class MotionPdfService {
                         {
                             text: attachment.getTitle() + `: ` + link,
                             link: link,
-                            margin: [0, 0, 0, 5]
+                            margin: [0, 0, 0, 5],
+                            mimetype: attachment.mediafile.mimetype
                         }
                     ]
                 });

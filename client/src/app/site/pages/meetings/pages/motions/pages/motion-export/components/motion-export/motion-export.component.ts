@@ -549,6 +549,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             `page`,
             `date`,
             `attachments`,
+            `PDFinPDF`,
             `addBreaks`,
             `continuousText`,
             `onlyChangedLines`
