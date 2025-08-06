@@ -7,6 +7,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import unusedImports from "eslint-plugin-unused-imports";
 import stylistic from "@stylistic/eslint-plugin";
+import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config({
     files: ["**/*.ts"],
@@ -21,6 +22,7 @@ export default tseslint.config({
         ...tseslint.configs.recommended,
         ...tseslint.configs.stylistic,
         ...angular.configs.tsRecommended,
+        eslintPluginPrettier,
         eslintConfigPrettier
     ],
     plugins: {
