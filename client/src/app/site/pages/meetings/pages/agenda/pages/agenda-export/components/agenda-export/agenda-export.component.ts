@@ -9,6 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
@@ -71,7 +72,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
     };
 
     private tabIndex = 0;
-    private agendaItems = [];
+    private agendaItems: Id[] = [];
     // Store fileformats with corresponding tab group index
     private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV];
     private savedSelections: SavedSelections = {
