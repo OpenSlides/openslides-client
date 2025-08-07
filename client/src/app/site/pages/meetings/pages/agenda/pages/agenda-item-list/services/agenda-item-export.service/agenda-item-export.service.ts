@@ -34,7 +34,7 @@ export type InfoToExport =
 
 export type pdfMetaInfo = `table_of_content` | `line_break` | `header` | `footer` | `current_date`;
 
-export type csvMetaInfo = `duration` | `tags` | `agenda_visibility` | `done` | `note`;
+export type csvMetaInfo = `duration` | `tags` | `agenda_visibility` | `done`;
 
 @Injectable({
     providedIn: AgendaItemListServiceModule
