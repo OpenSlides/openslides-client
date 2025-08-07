@@ -104,7 +104,7 @@ export class AgendaItemExportService {
         this.csvExportService.export(source, config, this.translate.instant(`Agenda`) + `.csv`);
     }
 
-    public exportAsPdf(source: ViewAgendaItem[]): void {
+    public exportAsPdf(source: ViewAgendaItem[], _info: InfoToExport[], _meta: pdfMetaInfo[]): void {
         const filename = this.translate.instant(`Agenda`);
         this.pdfExportService.download({ docDefinition: this.agendaListToDocDef(source), filename });
     }

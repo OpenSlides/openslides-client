@@ -110,7 +110,10 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
         console.log(`isSelected `, this.isSelected(`metaInfo`, `done`));
         if (this.isPDFFormat) {
-            this.agendaExportService.exportAsPdf(views);
+            this.agendaExportService.exportAsPdf(views, this.dialogForm.get(`content`).value, [
+                ...(this.dialogForm.get(`pageLayout`).value as string[]),
+                ...this.dialogForm.get(`headerFooter`).value
+            ]);
         } else if (this.isCSVFormat) {
             this.agendaExportService.exportAsCsv(
                 views,
