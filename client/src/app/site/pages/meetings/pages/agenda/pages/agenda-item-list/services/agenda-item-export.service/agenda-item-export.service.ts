@@ -82,6 +82,9 @@ export class AgendaItemExportService {
                 }
             });
         }
+        if (info.includes(`internal_commentary`)) {
+            config.push({ label: `agenda_comment`, property: `comment` });
+        }
         if (csvMeta.includes(`duration`)) {
             config.push({ label: `agenda_duration`, property: `duration` });
         }
@@ -96,9 +99,6 @@ export class AgendaItemExportService {
         }
         if (csvMeta.includes(`done`)) {
             config.push({ label: `agenda_closed`, property: `closed` });
-        }
-        if (csvMeta.includes(`note`)) {
-            config.push({ label: `agenda_comment`, property: `comment` });
         }
 
         this.csvExportService.export(source, config, this.translate.instant(`Agenda`) + `.csv`);
