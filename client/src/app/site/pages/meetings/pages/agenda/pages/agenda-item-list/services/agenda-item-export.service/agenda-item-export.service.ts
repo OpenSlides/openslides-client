@@ -7,8 +7,8 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MeetingCsvExportForBackendService } from 'src/app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
-import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 import { AgendaPdfCatalogExportService } from '../../../../services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service';
+import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 
 /**
  * pdfMake structure for a content line in the pdf document.

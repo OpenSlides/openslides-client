@@ -324,7 +324,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      */
     public exportAgendaItems(): void {
         const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
-        const ids = agendaItems.map(motion => motion.id);
+        const ids = agendaItems.filter(item => this.isTopic(item.content_object)).map(item => item.id);
         this.componentServiceCollector.router.navigate([`agenda-export`], {
             relativeTo: this.route,
             queryParams: { 'agenda-items': ids }

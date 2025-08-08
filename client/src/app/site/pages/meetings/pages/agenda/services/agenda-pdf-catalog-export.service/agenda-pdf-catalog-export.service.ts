@@ -6,7 +6,6 @@ import { PdfError } from 'src/app/gateways/export/pdf-document.service';
 import { MeetingPdfExportService } from '../../../../services/export';
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
-import { info } from 'console';
 
 const AGENDA_PDF_OPTIONS = {
     Toc: `table_of_content`,
@@ -72,8 +71,34 @@ export class AgendaPdfCatalogExportService {
         return doc;
     }
 
-    private agendaItemToDoc(agendaItem: ViewAgendaItem, _info: any, _meta: any): Content[] {
-        const level = 0;
+    private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any, _meta: any): Content[] {
+        const agendaItemDoc = [];
+        if (info.includes(`title`) || info.includes(`item_number`)) {
+            agendaItemDoc.push(...this.createNumberTitleDoc(agendaItem, info));
+        }
+        if (info.includes(`text`)) {
+            agendaItemDoc.push(...this.createTextDoc(agendaItem));
+        }
+        if (info.includes(`attachments`)) {
+            agendaItemDoc.push(...this.createAttachmentsDoc(agendaItem));
+        }
+        if (info.includes(`moderation_notes`)) {
+            agendaItemDoc.push(...this.createModerationNotesDoc(agendaItem));
+        }
+        if (info.includes(`list_of_speakers`)) {
+            agendaItemDoc.push(...this.createListOfSpeakersDoc(agendaItem));
+        }
+        if (info.includes(`polls`)) {
+            agendaItemDoc.push(...this.createPollsDoc(agendaItem));
+        }
+        if (info.includes(`internal_commentary`)) {
+            agendaItemDoc.push(...this.createCommentDoc(agendaItem));
+        }
+        return agendaItemDoc;
+    }
+
+    private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): Content[] {
+        const level = agendaItem.level ?? 0;
         const entry = {
             style: level ? `listChild` : `listParent`,
             columns: [
@@ -83,13 +108,51 @@ export class AgendaPdfCatalogExportService {
                 },
                 {
                     width: 60,
-                    text: agendaItem.item_number || ``
+                    text: info.includes(`item_number`) ? agendaItem.item_number || `` : ``
                 },
                 {
-                    text: agendaItem.content_object!.getTitle()
+                    text: info.includes(`title`) ? agendaItem.content_object!.getTitle() : ``
                 }
             ]
         };
         return [entry];
+    }
+
+    private createTextDoc(agendaItem: ViewAgendaItem): Content[] {
+        // TODO add subscription to topic.text
+        const entry = {
+            text: agendaItem.content_object?.getCSVExportText ? agendaItem.content_object.getCSVExportText() : ``
+        };
+        return [entry];
+    }
+
+    private createAttachmentsDoc(_agendaItem: ViewAgendaItem): Content[] {
+        // TODO add the links, add subscription to attachments
+        // TODO add check for attachments length
+        return [{ text: `Attachments` }];
+    }
+
+    private createModerationNotesDoc(agendaItem: ViewAgendaItem): Content[] {
+        // TODO use document html to pdf here
+        const entry = { text: agendaItem.content_object?.list_of_speakers?.moderator_notes ?? `` };
+        if (entry.text) {
+            return [{ text: `Moderation Notes` }, entry];
+        } else {
+            return [];
+        }
+    }
+
+    private createListOfSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
+        // TODO add los component
+        return [{ text: `List of Speakers` }];
+    }
+
+    private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
+        // TODO add polls part of AgendaItemExport
+        return [{ text: `Polls` }];
+    }
+
+    private createCommentDoc(agendaItem: ViewAgendaItem): Content[] {
+        return [{ text: agendaItem.comment ?? `` }];
     }
 }

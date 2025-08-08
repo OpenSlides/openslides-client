@@ -149,8 +149,4 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
             this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
         });
     }
-
-    private isSelected(field: string, value: string): boolean {
-        return this.dialogForm.get(field).value?.includes(value);
-    }
 }
