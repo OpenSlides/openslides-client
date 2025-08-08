@@ -8,6 +8,7 @@ import { MeetingCsvExportForBackendService } from 'src/app/site/pages/meetings/s
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
+import { AgendaPdfCatalogExportService } from '../../../../services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service';
 
 /**
  * pdfMake structure for a content line in the pdf document.
@@ -44,7 +45,8 @@ export class AgendaItemExportService {
         private translate: TranslateService,
         private csvExportService: MeetingCsvExportForBackendService,
         private pdfExportService: MeetingPdfExportService,
-        private treeService: TreeService
+        private treeService: TreeService,
+        private agendaPdfExportService: AgendaPdfCatalogExportService
     ) {}
 
     public exportAsCsv(source: ViewAgendaItem[], info: InfoToExport[], csvMeta: csvMetaInfo): void {
@@ -104,9 +106,12 @@ export class AgendaItemExportService {
         this.csvExportService.export(source, config, this.translate.instant(`Agenda`) + `.csv`);
     }
 
-    public exportAsPdf(source: ViewAgendaItem[], _info: InfoToExport[], _meta: pdfMetaInfo[]): void {
+    public exportAsPdf(source: ViewAgendaItem[], info: InfoToExport[], meta: pdfMetaInfo[]): void {
         const filename = this.translate.instant(`Agenda`);
-        this.pdfExportService.download({ docDefinition: this.agendaListToDocDef(source), filename });
+        this.pdfExportService.download({
+            docDefinition: this.agendaPdfExportService.agendaListToDocDef(source, info, meta),
+            filename
+        });
     }
 
     /**

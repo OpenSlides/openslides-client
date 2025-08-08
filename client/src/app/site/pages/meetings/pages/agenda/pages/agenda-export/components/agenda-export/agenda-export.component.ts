@@ -63,7 +63,9 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
     }
 
     private pdfDefaults = {
-        content: [`item_number`, `title`, `text`, `attachments`, `moderation_notes`]
+        content: [`item_number`, `title`, `text`, `attachments`, `moderation_notes`],
+        pageLayout: [],
+        footerHeader: []
     };
 
     private csvDefaults = {
@@ -108,18 +110,16 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
 
     public exportAgenda(): void {
         const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
-        console.log(`isSelected `, this.isSelected(`metaInfo`, `done`));
+        const info = this.dialogForm.get(`content`).value ?? [];
         if (this.isPDFFormat) {
-            this.agendaExportService.exportAsPdf(views, this.dialogForm.get(`content`).value, [
-                ...(this.dialogForm.get(`pageLayout`).value as string[]),
-                ...this.dialogForm.get(`headerFooter`).value
-            ]);
+            const pdfMeta = [
+                ...((this.dialogForm.get(`pageLayout`).value as string[]) ?? []),
+                ...(this.dialogForm.get(`headerFooter`).value ?? [])
+            ];
+            this.agendaExportService.exportAsPdf(views, info, pdfMeta);
         } else if (this.isCSVFormat) {
-            this.agendaExportService.exportAsCsv(
-                views,
-                this.dialogForm.get(`content`).value,
-                this.dialogForm.get(`metaInfo`).value
-            );
+            const csvMetaInfo = this.dialogForm.get(`metaInfo`).value ?? [];
+            this.agendaExportService.exportAsCsv(views, info, csvMetaInfo);
         }
     }
 
