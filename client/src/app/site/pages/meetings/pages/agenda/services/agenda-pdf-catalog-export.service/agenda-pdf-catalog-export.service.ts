@@ -53,7 +53,7 @@ export class AgendaPdfCatalogExportService {
                     agendaDocList.push(this.pdfService.getSpacer());
                 }
             } catch (err) {
-                const errorText = `${this.translate.instant(`Error during PDF creation of motion:`)} ${
+                const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${
                     agendaItems[agendaItemIndex].item_number
                 }`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
@@ -119,17 +119,22 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content[] {
-        // TODO add subscription to topic.text
         const entry = {
             text: agendaItem.content_object?.getCSVExportText ? agendaItem.content_object.getCSVExportText() : ``
         };
         return [entry];
     }
 
-    private createAttachmentsDoc(_agendaItem: ViewAgendaItem): Content[] {
-        // TODO add the links, add subscription to attachments
-        // TODO add check for attachments length
-        return [{ text: `Attachments` }];
+    private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
+        // TODO add complete url as link
+        const attachments = agendaItem.content_object?.attachment_meeting_mediafiles ?? [];
+        const entries = attachments.map(a => {
+            return { text: `${a.url}` };
+        });
+        if (entries.length) {
+            return [{ text: `Attachments` }, ...entries];
+        }
+        return [];
     }
 
     private createModerationNotesDoc(agendaItem: ViewAgendaItem): Content[] {
