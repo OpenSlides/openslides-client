@@ -38,7 +38,6 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
@@ -60,6 +59,7 @@ import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
 import { OsSplit, OsSplitBulletList, OsSplitListItem, OsSplitOrderedList } from './extensions/os-split';
+import { TextStyle } from './extensions/text-style';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,

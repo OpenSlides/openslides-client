@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-export interface AccountMergeDialogData { choices: ViewUser[] }
+export interface AccountMergeDialogData {
+    choices: ViewUser[];
+}
 export type AccountMergeDialogAnswer = number | null;
 
 @Component({

@@ -118,6 +118,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     @Input()
     public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
 
+    @Input()
+    public disableGenderField = false;
+
     @Output()
     public changeEvent = new EventEmitter();
 
@@ -145,6 +148,10 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
         return newItems;
     });
+
+    public get genderName(): string {
+        return this.genderRepo.getViewModel(this.personalInfoForm.get(`gender_id`).value)?.name;
+    }
 
     private set _initialState(state: any | null) {
         this._initialStateString = JSON.stringify(state);
@@ -188,6 +195,10 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public ngAfterViewInit(): void {
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
         this.cd.detectChanges();
+    }
+
+    public update(): void {
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
     }
 
     public isAllowed(permission: string): boolean {
@@ -266,13 +277,15 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         );
         this._initialState = personalInfoPatch;
         if (this._additionalFormControls) {
-            this.subscriptions.push(this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
-                if (value) {
-                    this.personalInfoForm.get(`home_committee_id`).disable();
-                } else {
-                    this.personalInfoForm.get(`home_committee_id`).enable();
-                }
-            }));
+            this.subscriptions.push(
+                this.personalInfoForm.controls[`external`].valueChanges.subscribe(value => {
+                    if (value) {
+                        this.personalInfoForm.get(`home_committee_id`).disable();
+                    } else {
+                        this.personalInfoForm.get(`home_committee_id`).enable();
+                    }
+                })
+            );
         }
     }
 
@@ -371,8 +384,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         const data = this.useAdditionalEditTemplate
             ? formData
             : Object.keys(formData).mapToObject(key =>
-                    Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
-                );
+                  Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }
+              );
         const newData = {};
         if (this.user) {
             Object.keys(data).forEach(key => {

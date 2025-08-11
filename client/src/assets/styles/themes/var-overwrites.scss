@@ -3,16 +3,19 @@
         --mdc-linear-progress-track-color: var(--theme-primary-100);
     }
 
-    .mat-mdc-fab, .mat-mdc-mini-fab {
+    .mat-mdc-fab,
+    .mat-mdc-mini-fab {
         --mat-icon-color: var(--mdc-fab-icon-color, inherit);
     }
 
-    .mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
+    .mat-mdc-fab.mat-primary,
+    .mat-mdc-mini-fab.mat-primary {
         --mdc-fab-icon-color: var(--theme-primary-contrast-500);
         --mat-mdc-fab-color: var(--theme-primary-contrast-500);
     }
 
-    .mat-mdc-fab.mat-accent, .mat-mdc-mini-fab.mat-accent {
+    .mat-mdc-fab.mat-accent,
+    .mat-mdc-mini-fab.mat-accent {
         --mdc-fab-icon-color: var(--theme-accent-contrast-500);
         --mat-mdc-fab-color: var(--theme-accent-contrast-500);
     }
@@ -46,7 +49,8 @@
 
     --mdc-checkbox-selected-checkmark-color: var(--theme-primary-contrast-500);
 
-    .mat-mdc-chip, .mat-mdc-basic-chip {
+    .mat-mdc-chip,
+    .mat-mdc-basic-chip {
         font-weight: 500;
     }
 }

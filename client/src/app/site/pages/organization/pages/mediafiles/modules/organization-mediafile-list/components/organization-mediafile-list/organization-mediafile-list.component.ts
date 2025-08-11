@@ -35,7 +35,8 @@ import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles
 })
 export class OrganizationMediafileListComponent
     extends BaseListViewComponent<ViewMediafile>
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 

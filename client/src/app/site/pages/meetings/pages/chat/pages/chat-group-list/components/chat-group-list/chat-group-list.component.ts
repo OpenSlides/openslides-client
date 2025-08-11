@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -19,7 +19,7 @@ import { ChatGroupControllerService, ChatNotificationService } from '../../../..
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
-export class ChatGroupListComponent extends BaseMeetingComponent {
+export class ChatGroupListComponent extends BaseMeetingComponent implements OnInit {
     public get chatGroupsObservable(): Observable<ViewChatGroup[]> {
         return this.chatGroupRepo.getViewModelListObservable();
     }
@@ -43,6 +43,10 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
         private operator: OperatorService
     ) {
         super();
+    }
+
+    public ngOnInit(): void {
+        super.setTitle(`Chat`);
     }
 
     public getNotificationsObservableForChatId(chatGroupId: Id): Observable<number> {

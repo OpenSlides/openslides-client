@@ -8,14 +8,16 @@ $openslides-primary: mat.m2-define-palette(colors.$dynamic-theme-primary);
 $openslides-accent: mat.m2-define-palette(colors.$dynamic-theme-accent);
 $openslides-warn: mat.m2-define-palette(colors.$dynamic-theme-warn);
 
-$openslides-dark-theme: mat.m2-define-dark-theme((
-    color: (
-        primary: $openslides-primary,
-        accent: $openslides-accent,
-        warn: $openslides-warn,
-    ),
-    typography: $default-typography
-));
+$openslides-dark-theme: mat.m2-define-dark-theme(
+    (
+        color: (
+            primary: $openslides-primary,
+            accent: $openslides-accent,
+            warn: $openslides-warn
+        ),
+        typography: $default-typography
+    )
+);
 
 /** This is the workaround to set a custom background-color
  *  In the first step the color must be merged, in order to have to a map.

@@ -198,9 +198,7 @@ export class MotionXlsxExportService {
                         } else {
                             const section = this.commentRepo.getViewModel(commentId)!;
                             const motionComment = motion.getCommentForSection(section);
-                            return motionComment?.comment
-                                ? reconvertChars(stripHtmlTags(motionComment.comment))
-                                : ``;
+                            return motionComment?.comment ? reconvertChars(stripHtmlTags(motionComment.comment)) : ``;
                         }
                     })
                 );
