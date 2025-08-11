@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
+import { distinctUntilChanged, filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
@@ -150,6 +150,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             id: []
         });
         this.modelSelectForm.controls[`collection`].valueChanges.subscribe((collection: Collection) => {
+            console.log(`MODEL SELECT SUBSCRIPTION`, collection);
             this.models = this.modelsRepoMap[collection].getViewModelListObservable();
             this.modelSelectForm.controls[`id`].setValue(null);
         });
@@ -200,6 +201,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     public override ngOnDestroy(): void {
+        console.log(`NG ON DESTROY`);
         this._historySubscription.unsubscribe();
     }
 
@@ -233,7 +235,14 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             )
                 .pipe(
                     filter(m => !!m),
-                    switchMap(m => m?.history_entries$)
+                    switchMap(m => m?.history_entries$),
+                    distinctUntilChanged(
+                        (prev, curr) =>
+                            prev.length === curr.length &&
+                            prev.every(
+                                (val, i) => val.id === curr[i].id && val.position?.user_id === curr[i].position?.user_id
+                            )
+                    )
                 )
                 .subscribe(entries => this.processNewHistoryEntries(fqid, entries));
         } catch (e) {
@@ -298,6 +307,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     private updateModelRequest(): void {
+        console.log(`UPDATE MODEL REQUEST`);
         const modelRequests: Record<Collection, Id[]> = {};
         this.dataSource.data.forEach(position => {
             position.information.forEach(information => {
@@ -311,6 +321,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             });
         });
         for (const [collection, ids] of Object.entries(modelRequests)) {
+            console.log(`UPDATE SUBSCRIBE TO ${collection} SUBSCRIPTION`, ids);
             const subscriptionName = this.getSubscriptionName(collection);
             this.modelRequestService.updateSubscribeTo({
                 modelRequest: {
@@ -338,6 +349,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public resetListValues(event: boolean): void {
         if (event && this.currentCollection) {
+            console.log(`RESET LIST VALUES`, event, this.currentCollection);
             this.models = this.modelsRepoMap[this.currentCollection].getViewModelListObservable();
         }
     }
@@ -382,6 +394,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     private processNewHistoryEntries(fqid: Fqid, entries: ViewHistoryEntry[]): void {
+        console.log(`process new history entries`, fqid, entries);
         const positions = this.gatherPositionDataFromEntries(fqid, entries);
         const id: Id = idFromFqid(fqid);
         const isOrgaManager = this.operator.isOrgaManager;
