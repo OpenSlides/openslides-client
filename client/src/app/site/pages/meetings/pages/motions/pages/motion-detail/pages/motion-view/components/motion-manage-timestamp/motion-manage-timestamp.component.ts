@@ -121,9 +121,9 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
         const date = timestamp
             ? this.getTimes(timestamp)
             : {
-                    date: ``,
-                    time: ``
-                };
+                  date: ``,
+                  time: ``
+              };
         this.form.patchValue(date);
         this.isEditMode = true;
     }

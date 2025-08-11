@@ -10,11 +10,12 @@ import { BaseMeetingRelatedRepository } from './base-meeting-related-repository'
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
-    V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,
-    M extends BaseModel & HasListOfSpeakersId & HasAgendaItemId
->
+        V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,
+        M extends BaseModel & HasListOfSpeakersId & HasAgendaItemId
+    >
     extends BaseMeetingRelatedRepository<V, M>
-    implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M> {
+    implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M>
+{
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         baseModelCtor: ModelConstructor<M>,

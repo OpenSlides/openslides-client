@@ -169,7 +169,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout((this.clickTimeout as any));
+            clearTimeout(this.clickTimeout as any);
         }
 
         if (this.clickCounter === 4) {

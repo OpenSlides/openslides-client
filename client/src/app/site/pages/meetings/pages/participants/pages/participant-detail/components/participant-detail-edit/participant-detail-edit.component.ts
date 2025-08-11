@@ -322,8 +322,8 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
                     : null,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                            .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                            .filter(id => !!id)
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
                     : []
             };
             if (payload.member_number === ``) {

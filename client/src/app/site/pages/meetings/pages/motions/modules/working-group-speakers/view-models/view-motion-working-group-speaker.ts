@@ -18,5 +18,5 @@ interface IMotionWorkingGroupSpeakerRelations {
 }
 export interface ViewMotionWorkingGroupSpeaker
     extends MotionWorkingGroupSpeaker,
-    ViewModelRelations<IMotionWorkingGroupSpeakerRelations>,
-    HasMeeting {}
+        ViewModelRelations<IMotionWorkingGroupSpeakerRelations>,
+        HasMeeting {}

@@ -1,4 +1,3 @@
-export enum ViewUnifiedChangeType {
-    TYPE_CHANGE_RECOMMENDATION,
-    TYPE_AMENDMENT
-}
+import { HtmlDiff } from '@openslides/motion-diff';
+
+export import ViewUnifiedChangeType = HtmlDiff.UnifiedChangeType;

@@ -116,8 +116,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                    ? this.user?.hasMultipleMeetings
-                    : false)
+                  ? this.user?.hasMultipleMeetings
+                  : false)
         );
     }
 
@@ -411,9 +411,7 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (
-            (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds.includes(meetingId)
-        );
+        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds.includes(meetingId);
     }
 
     public hasCommitteeManagementRights(committee_id: number): boolean {
@@ -636,7 +634,11 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if ((this.canSkipPermissionCheck || this.hasCommitteePermissions(this.meetingRepo.getViewModel(meetingId).committee_id, CML.can_manage)) && !this.activeMeeting.locked_from_inside) {
+        if (
+            (this.canSkipPermissionCheck ||
+                this.hasCommitteePermissions(this.meetingRepo.getViewModel(meetingId).committee_id, CML.can_manage)) &&
+            !this.activeMeeting.locked_from_inside
+        ) {
             return true;
         }
         const groups = this.user.groups(meetingId);
@@ -764,10 +766,14 @@ export class OperatorService {
      * @returns `true`, if the operator is in at least one group or they are an admin. a superadmin or a orgaadmin.
      */
     public isInGroupIds(...groupIds: Id[]): boolean {
-        const meetingIds = Array.from(new Set(groupIds.map(groupId => {
-            const group = this.groupRepo.getViewModel(groupId);
-            return group?.meeting_id;
-        }))).filter(meetingId => !!meetingId);
+        const meetingIds = Array.from(
+            new Set(
+                groupIds.map(groupId => {
+                    const group = this.groupRepo.getViewModel(groupId);
+                    return group?.meeting_id;
+                })
+            )
+        ).filter(meetingId => !!meetingId);
         if (this.canSkipPermissionCheck || !!meetingIds.find(id => this.isCommitteeManagerForMeeting(id))) {
             return true;
         }
@@ -785,7 +791,9 @@ export class OperatorService {
         if (!this._meetingIds) {
             return false;
         }
-        return meetingIds.some(meetingId => this._meetingIds?.includes(meetingId) || this.isCommitteeManagerForMeeting(meetingId));
+        return meetingIds.some(
+            meetingId => this._meetingIds?.includes(meetingId) || this.isCommitteeManagerForMeeting(meetingId)
+        );
     }
 
     /**
