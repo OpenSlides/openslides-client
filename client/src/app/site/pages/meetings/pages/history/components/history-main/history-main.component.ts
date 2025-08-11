@@ -14,7 +14,6 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../participants/p
 })
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
     protected override onShouldCreateModelRequests(_params: any, id: Id | null): void {
-        console.log(`ON SHOULD CREATE MODEL REQUESTS`, _params, id);
         if (id) {
             this.subscribeTo(getMotionListMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
             this.subscribeTo(getParticipantMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
