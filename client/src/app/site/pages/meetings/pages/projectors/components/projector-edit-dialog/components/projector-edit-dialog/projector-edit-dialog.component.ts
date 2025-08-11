@@ -321,9 +321,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         const payload = {};
         // All defaults that are set to true should be set to the current projectors id
         for (const key of projectiondefaultKeys) {
-            payload[key] = [
-                ...new Set([this.projector.id, ...this.getDefaultProjectorIds(key)])
-            ];
+            payload[key] = [...new Set([this.projector.id, ...this.getDefaultProjectorIds(key)])];
         }
         // All defaults that were set to false should be set to standard, if they were previously set to current projector
         const notSelectedKeys = Object.keys(this.projectiondefaultVerbose).filter(
@@ -333,9 +331,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             const key = this.projectiondefaultKeys[notSelKeys];
             if (this.isCurrentProjectorDefault(key)) {
                 if (this.getDefaultProjectorIds(key).length === 1) {
-                    payload[PROJECTIONDEFAULT[notSelKeys]] = [
-                        this.activeMeeting.meeting!.reference_projector_id
-                    ];
+                    payload[PROJECTIONDEFAULT[notSelKeys]] = [this.activeMeeting.meeting!.reference_projector_id];
                 } else {
                     payload[PROJECTIONDEFAULT[notSelKeys]] = this.getDefaultProjectorIds(key).filter(
                         id => id !== this.projector.id

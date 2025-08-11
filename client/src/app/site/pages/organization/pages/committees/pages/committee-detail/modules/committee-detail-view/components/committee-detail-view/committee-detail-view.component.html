@@ -71,8 +71,7 @@
                                     <a [routerLink]="['/', 'committees', forwarding.id]">
                                         {{ forwarding.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(forwarding)) {
+                                } @else {
                                     {{ forwarding.name }}
                                 }
                             </li>
@@ -81,16 +80,12 @@
                     @if (committee.forward_to_committees.length > 1) {
                         <button mat-button (click)="toggleForwardingList()">
                             @if (!forwardingExpanded) {
-                                {{ 'More' | translate }}
-                            }
-                            @if (!forwardingExpanded) {
-                                <mat-icon>expand_more</mat-icon>
+                                <mat-icon class="icon-text">expand_more</mat-icon>
+                                <span>{{ 'More' | translate }}</span>
                             }
                             @if (forwardingExpanded) {
-                                {{ 'Less' | translate }}
-                            }
-                            @if (forwardingExpanded) {
-                                <mat-icon>expand_less</mat-icon>
+                                <mat-icon class="icon-text">expand_less</mat-icon>
+                                <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
                     }
@@ -109,8 +104,7 @@
                                     <a [routerLink]="['/', 'committees', receive.id]">
                                         {{ receive.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(receive)) {
+                                } @else {
                                     <span>{{ receive.name }}</span>
                                 }
                             </li>
@@ -119,16 +113,12 @@
                     @if (committee.receive_forwardings_from_committees.length > 1) {
                         <button mat-button (click)="toggleReceiveList()">
                             @if (!receiveExpanded) {
-                                {{ 'More' | translate }}
+                                <mat-icon class="icon-text">expand_more</mat-icon>
+                                <span>{{ 'More' | translate }}</span>
                             }
                             @if (receiveExpanded) {
-                                {{ 'Less' | translate }}
-                            }
-                            @if (!receiveExpanded) {
-                                <mat-icon>expand_more</mat-icon>
-                            }
-                            @if (receiveExpanded) {
-                                <mat-icon>expand_less</mat-icon>
+                                <mat-icon class="icon-text">expand_less</mat-icon>
+                                <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
                     }

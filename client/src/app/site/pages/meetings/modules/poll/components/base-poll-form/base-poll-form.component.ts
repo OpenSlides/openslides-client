@@ -219,6 +219,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         if (this.data) {
             this.checkPollState();
             this.checkPollBackend();
+            this.patchLiveVotingEnabled();
 
             if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
                 // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
@@ -233,9 +234,18 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 this.updatePollMethod(PollMethod.Y);
             } else if (this.allowToSetMinMax) {
                 const controls = this.getVotesAmountControl();
-                this.contentForm.get(`votes_amount`).get(`min_votes_amount`).setValidators(controls.get(`min_votes_amount`).validator);
-                this.contentForm.get(`votes_amount`).get(`max_votes_amount`).setValidators(controls.get(`max_votes_amount`).validator);
-                this.contentForm.get(`votes_amount`).get(`max_votes_per_option`).setValidators(controls.get(`max_votes_per_option`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`min_votes_amount`)
+                    .setValidators(controls.get(`min_votes_amount`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`max_votes_amount`)
+                    .setValidators(controls.get(`max_votes_amount`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`max_votes_per_option`)
+                    .setValidators(controls.get(`max_votes_per_option`).validator);
             }
         }
 
@@ -311,6 +321,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
     }
 
+    private patchLiveVotingEnabled(): void {
+        if (this.isMotionPoll) {
+            const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
+            this.contentForm.get(`live_voting_enabled`).setValue(liveVotingDefault);
+        }
+    }
+
     private checkPollState(): void {
         if (this.data.state) {
             this.disablePollType();
@@ -326,7 +343,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return (
             (selectedPollMethod === FormPollMethod.Y ||
                 (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
-                (!data || !data.state || data.isCreated)
+            (!data || !data.state || data.isCreated)
         );
     }
 
@@ -486,7 +503,11 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
         return (formControl: AbstractControl): Record<string, any> | null => {
-            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`) || !this.pollOptionAmount || this.isList) {
+            if (
+                this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`) ||
+                !this.pollOptionAmount ||
+                this.isList
+            ) {
                 return null;
             }
             const min = formControl.get(minCtrlName)!.value;
@@ -500,7 +521,6 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private initContentForm(): void {
-        const liveVotingDefault = (this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) && this.isMotionPoll) ?? false;
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
             type: [``, Validators.required],
@@ -512,7 +532,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             global_yes: [false],
             global_no: [false],
             global_abstain: [false],
-            live_voting_enabled: [liveVotingDefault]
+            live_voting_enabled: [false]
         });
     }
 
@@ -526,10 +546,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         };
         if (this.allowToSetMinMax) {
             if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)) {
-                config.max_votes_amount = [
-                    maxVotesPreselect,
-                    [Validators.required, Validators.min(1)]
-                ];
+                config.max_votes_amount = [maxVotesPreselect, [Validators.required, Validators.min(1)]];
             } else {
                 config.max_votes_amount = [
                     maxVotesPreselect,

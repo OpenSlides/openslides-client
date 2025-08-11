@@ -41,8 +41,8 @@ export class SpeakerCsvExportService {
         begin_time: (speaker: ViewSpeaker): string =>
             speaker.begin_time
                 ? format(fromUnixTime(speaker.begin_time), `Ppp`, {
-                        locale: this.dfnsConfig.locale()
-                    })
+                      locale: this.dfnsConfig.locale()
+                  })
                 : ``,
         speakingTime: (speaker: ViewSpeaker): string => this.durationService.durationToString(speaker.speakingTime, ``)
     };

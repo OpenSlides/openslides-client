@@ -12,6 +12,7 @@ export interface AdditionalImportHandler<MainModel = any, SideModel = any> exten
 
 export abstract class BaseAdditionalImportHandler<MainModel, SideModel>
     extends BaseImportHandler<MainModel, SideModel>
-    implements AdditionalImportHandler<MainModel, SideModel> {
+    implements AdditionalImportHandler<MainModel, SideModel>
+{
     public pipeImportedSideModels(_models: CsvMapping<SideModel>[]): void {}
 }

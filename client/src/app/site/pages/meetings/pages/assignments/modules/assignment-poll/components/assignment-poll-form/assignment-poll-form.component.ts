@@ -17,7 +17,11 @@ import { ViewAssignment } from '../../../../view-models';
     standalone: false
 })
 export class AssignmentPollFormComponent extends BasePollFormComponent implements OnInit {
-    public override PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = { ...this.PollPropertyVerbose, pollmethod: _(`Election method`) };
+    public override PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = {
+        ...this.PollPropertyVerbose,
+        pollmethod: _(`Election method`)
+    };
+
     public get hideSelects(): PollFormHideSelectsData {
         return {
             globalOptions: false
