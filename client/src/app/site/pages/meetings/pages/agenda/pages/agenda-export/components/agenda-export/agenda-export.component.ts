@@ -13,6 +13,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
@@ -82,17 +83,21 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         tab_selections: [this.pdfDefaults, this.csvDefaults]
     };
 
+    private backNr: string;
+
     public constructor(
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
         private storeService: StorageService,
         private agendaRepo: AgendaItemControllerService,
-        private agendaExportService: AgendaItemExportService
+        private agendaExportService: AgendaItemExportService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super();
         this.subscriptions.push(
             this.route.queryParamMap.subscribe(paramMap => {
                 this.agendaItems = paramMap.getAll(`agenda-items`).map(value => Number(value));
+                this.backNr = paramMap.get(`back`);
             })
         );
         this.initForm();
@@ -105,7 +110,11 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
     }
 
     public cancelExport(): void {
-        this.router.navigate([`..`], { relativeTo: this.route });
+        if (this.backNr) {
+            this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`, `topics`, this.backNr]);
+        } else {
+            this.router.navigate([`..`], { relativeTo: this.route });
+        }
     }
 
     public exportAgenda(): void {
