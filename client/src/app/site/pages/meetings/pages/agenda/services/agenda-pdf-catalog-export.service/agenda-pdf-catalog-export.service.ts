@@ -10,7 +10,7 @@ import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.mod
 
 const AGENDA_PDF_OPTIONS = {
     Toc: `table_of_content`,
-    AddBreaks: `line_breaks`,
+    AddBreaks: `line_break`,
     Header: `header`,
     Footer: `footer`
 };
@@ -40,9 +40,8 @@ export class AgendaPdfCatalogExportService {
         const printToc = pdfMeta?.includes(AGENDA_PDF_OPTIONS.Toc);
         const enforcePageBreaks = pdfMeta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
 
-        doc.push({ text: this.translate.instant(`Agenda`), style: `listParent` });
-        // TODO: Add separate line
-        doc.push(this.pdfService.getSpacer());
+        doc.push({ text: this.translate.instant(`Agenda`), style: this.getStyle(`header1`) });
+        doc.push(this.getDivLine());
 
         for (let agendaItemIndex = 0; agendaItemIndex < agendaItems.length; ++agendaItemIndex) {
             try {
@@ -56,7 +55,7 @@ export class AgendaPdfCatalogExportService {
                 if (agendaItemIndex < agendaItems.length - 1 && enforcePageBreaks) {
                     agendaDocList.push(this.pdfService.getPageBreak());
                 } else if (agendaItemIndex < agendaItems.length - 1 && !enforcePageBreaks) {
-                    agendaDocList.push(this.pdfService.getSpacer());
+                    agendaDocList.push(this.getDivLine());
                 }
             } catch (err) {
                 const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${
@@ -69,6 +68,7 @@ export class AgendaPdfCatalogExportService {
 
         if (agendaItems.length > 1 && printToc) {
             // doc.push(this.createToc(agendaItems));
+            // TODO: add toc
             console.log(`XXX create Toc`);
         }
 
@@ -182,5 +182,30 @@ export class AgendaPdfCatalogExportService {
             default:
                 return {};
         }
+    }
+
+    private getDivLine(): Content[] {
+        return [
+            {
+                text: ``,
+                marginTop: 5
+            },
+            {
+                canvas: [
+                    {
+                        type: `line`,
+                        lineWidth: 2,
+                        x1: 0,
+                        y1: 0,
+                        x2: 500,
+                        y2: 0
+                    }
+                ]
+            },
+            {
+                text: ``,
+                marginTop: 5
+            }
+        ];
     }
 }
