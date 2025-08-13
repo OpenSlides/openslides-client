@@ -38,6 +38,10 @@ export class AgendaPdfCatalogExportService {
         const printToc = pdfMeta?.includes(AGENDA_PDF_OPTIONS.Toc);
         const enforcePageBreaks = pdfMeta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
 
+        doc.push({ text: this.translate.instant(`Agenda`), style: `listParent` });
+        // TODO: Add separate line
+        doc.push(this.pdfService.getSpacer());
+
         for (let agendaItemIndex = 0; agendaItemIndex < agendaItems.length; ++agendaItemIndex) {
             try {
                 const agendaDocDef: any[] = this.agendaItemToDoc(agendaItems[agendaItemIndex], exportInfo, pdfMeta);
@@ -99,6 +103,17 @@ export class AgendaPdfCatalogExportService {
 
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): Content[] {
         const level = agendaItem.level ?? 0;
+        const useItemNumber = info.includes(`item_number`);
+        const useTitle = info.includes(`title`);
+        let numberOrTitle = ``;
+        if (useItemNumber && useTitle) {
+            numberOrTitle = (agendaItem.item_number + `: ` || ``) + agendaItem.content_object!.getTitle();
+        } else if (useItemNumber) {
+            numberOrTitle = agendaItem.item_number || ``;
+        } else if (useTitle) {
+            numberOrTitle = agendaItem.content_object!.getTitle();
+        }
+
         const entry = {
             style: level ? `listChild` : `listParent`,
             columns: [
@@ -107,15 +122,14 @@ export class AgendaPdfCatalogExportService {
                     text: ``
                 },
                 {
-                    width: 60,
-                    text: info.includes(`item_number`) ? agendaItem.item_number || `` : ``
-                },
-                {
-                    text: info.includes(`title`) ? agendaItem.content_object!.getTitle() : ``
+                    text: numberOrTitle
                 }
             ]
         };
-        return [entry];
+        if (useItemNumber || useTitle) {
+            return [entry];
+        }
+        return [];
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content[] {
