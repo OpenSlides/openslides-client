@@ -84,6 +84,15 @@
                     </mat-chip-option>
                     @if (this.isPDFFormat) {
                         <mat-chip-option
+                            #lastSpeakersChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="last_speakers"
+                            [matBadgeHidden]="lastSpeakersChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Last speakers' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
                             #pollsChip
                             matBadge="&check;"
                             matBadgeOverlap="true"

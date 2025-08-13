@@ -99,6 +99,9 @@ export class AgendaPdfCatalogExportService {
         if (info.includes(`list_of_speakers`)) {
             agendaItemDoc.push(...this.createListOfSpeakersDoc(agendaItem));
         }
+        if (info.includes(`last_speakers`)) {
+            agendaItemDoc.push(...this.createLastSpeakersDoc(agendaItem));
+        }
         if (info.includes(`polls`)) {
             agendaItemDoc.push(...this.createPollsDoc(agendaItem));
         }
@@ -154,7 +157,12 @@ export class AgendaPdfCatalogExportService {
 
     private createListOfSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
         // TODO add los component
-        return [{ text: this.translate.instant(`List of Speakers`), style: this.getStyle(`header2`) }];
+        return [{ text: this.translate.instant(`List of speakers`), style: this.getStyle(`header2`) }];
+    }
+
+    private createLastSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
+        // TODO add last speakers
+        return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }];
     }
 
     private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
