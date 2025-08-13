@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
+import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
 
 import { MeetingPdfExportService } from '../../../../services/export';
@@ -20,7 +21,8 @@ const AGENDA_PDF_OPTIONS = {
 export class AgendaPdfCatalogExportService {
     public constructor(
         private translate: TranslateService,
-        private pdfService: MeetingPdfExportService
+        private pdfService: MeetingPdfExportService,
+        private htmlToPdfService: HtmlToPdfService
     ) {}
 
     /**
@@ -83,9 +85,6 @@ export class AgendaPdfCatalogExportService {
         if (info.includes(`text`)) {
             agendaItemDoc.push(...this.createTextDoc(agendaItem));
         }
-        if (info.includes(`attachments`)) {
-            agendaItemDoc.push(...this.createAttachmentsDoc(agendaItem));
-        }
         if (info.includes(`moderation_notes`)) {
             agendaItemDoc.push(...this.createModerationNotesDoc(agendaItem));
         }
@@ -98,11 +97,13 @@ export class AgendaPdfCatalogExportService {
         if (info.includes(`internal_commentary`)) {
             agendaItemDoc.push(...this.createCommentDoc(agendaItem));
         }
+        if (info.includes(`attachments`)) {
+            agendaItemDoc.push(...this.createAttachmentsDoc(agendaItem));
+        }
         return agendaItemDoc;
     }
 
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): Content[] {
-        const level = agendaItem.level ?? 0;
         const useItemNumber = info.includes(`item_number`);
         const useTitle = info.includes(`title`);
         let numberOrTitle = ``;
@@ -115,28 +116,22 @@ export class AgendaPdfCatalogExportService {
         }
 
         const entry = {
-            style: level ? `listChild` : `listParent`,
+            style: this.getStyle(`header1`),
             columns: [
-                {
-                    width: level * 15,
-                    text: ``
-                },
                 {
                     text: numberOrTitle
                 }
             ]
         };
-        if (useItemNumber || useTitle) {
-            return [entry];
-        }
-        return [];
+        return [entry];
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content[] {
-        const entry = {
-            text: agendaItem.content_object?.getCSVExportText ? agendaItem.content_object.getCSVExportText() : ``
-        };
-        return [entry];
+        if (agendaItem.content_object?.getCSVExportText) {
+            const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
+            return [entry];
+        }
+        return [];
     }
 
     private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
@@ -146,16 +141,16 @@ export class AgendaPdfCatalogExportService {
             return { text: `${a.url}` };
         });
         if (entries.length) {
-            return [{ text: `Attachments` }, ...entries];
+            return [{ text: this.translate.instant(`Attachments`), style: this.getStyle(`header2`) }, ...entries];
         }
         return [];
     }
 
     private createModerationNotesDoc(agendaItem: ViewAgendaItem): Content[] {
-        // TODO use document html to pdf here
-        const entry = { text: agendaItem.content_object?.list_of_speakers?.moderator_notes ?? `` };
-        if (entry.text) {
-            return [{ text: `Moderation Notes` }, entry];
+        const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
+        const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
+        if (moderationNotes) {
+            return [{ text: this.translate.instant(`Moderation note`), style: this.getStyle(`header2`) }, entry];
         } else {
             return [];
         }
@@ -163,15 +158,29 @@ export class AgendaPdfCatalogExportService {
 
     private createListOfSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
         // TODO add los component
-        return [{ text: `List of Speakers` }];
+        return [{ text: this.translate.instant(`List of Speakers`), style: this.getStyle(`header2`) }];
     }
 
     private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
         // TODO add polls part of AgendaItemExport
-        return [{ text: `Polls` }];
+        return [{ text: this.translate.instant(`Polls`), style: this.getStyle(`header2`) }];
     }
 
     private createCommentDoc(agendaItem: ViewAgendaItem): Content[] {
-        return [{ text: agendaItem.comment ?? `` }];
+        return [
+            { text: this.translate.instant(`Internal Commentary`), style: this.getStyle(`header2`) },
+            { text: agendaItem.comment ?? `` }
+        ];
+    }
+
+    private getStyle(name: string): any {
+        switch (name) {
+            case `header1`:
+                return { bold: true, fontSize: 14 };
+            case `header2`:
+                return { bold: true, fontSize: 12 };
+            default:
+                return {};
+        }
     }
 }
