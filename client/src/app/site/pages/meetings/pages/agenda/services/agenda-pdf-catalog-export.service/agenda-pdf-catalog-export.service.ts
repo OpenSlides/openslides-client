@@ -1,12 +1,18 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
+import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
+
+const PDF_A4_POINTS_WIDTH = 595.296;
+const PDF_A5_POINTS_WIDTH = 419.544;
 
 const AGENDA_PDF_OPTIONS = {
     Toc: `table_of_content`,
@@ -22,7 +28,9 @@ export class AgendaPdfCatalogExportService {
     public constructor(
         private translate: TranslateService,
         private pdfService: MeetingPdfExportService,
-        private htmlToPdfService: HtmlToPdfService
+        private htmlToPdfService: HtmlToPdfService,
+        private organizationSettingsService: OrganizationSettingsService,
+        private pdfImagesService: PdfImagesService
     ) {}
 
     /**
@@ -134,18 +142,6 @@ export class AgendaPdfCatalogExportService {
         return [];
     }
 
-    private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
-        // TODO add complete url as link
-        const attachments = agendaItem.content_object?.attachment_meeting_mediafiles ?? [];
-        const entries = attachments.map(a => {
-            return { text: `${a.url}` };
-        });
-        if (entries.length) {
-            return [{ text: this.translate.instant(`Attachments`), style: this.getStyle(`header2`) }, ...entries];
-        }
-        return [];
-    }
-
     private createModerationNotesDoc(agendaItem: ViewAgendaItem): Content[] {
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
@@ -207,5 +203,44 @@ export class AgendaPdfCatalogExportService {
                 marginTop: 5
             }
         ];
+    }
+
+    private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
+        let width = this.pdfService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
+        width = (width - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight) / 4;
+        const instanceUrl = this.organizationSettingsService.instant(`url`);
+
+        const attachments = [];
+        attachments.push({
+            text: this.translate.instant(`Attachments`),
+            style: this.getStyle(`header2`),
+            margin: [0, 10, 0, 10]
+        });
+
+        for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
+            const attachment = agendaItem.content_object?.attachment_meeting_mediafiles[key];
+            const fileUrl = attachment.getDetailStateUrl();
+            if (this.pdfImagesService.isImageUsableForPdf(attachment.mediafile.mimetype)) {
+                this.pdfImagesService.addImageUrl(fileUrl);
+                attachments.push({
+                    image: fileUrl,
+                    width: width,
+                    margin: [0, 0, 0, 10]
+                });
+            } else {
+                const link = Location.joinWithSlash(instanceUrl, fileUrl);
+                attachments.push({
+                    ul: [
+                        {
+                            text: attachment.getTitle() + `: ` + link,
+                            link: link,
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                });
+            }
+        }
+
+        return attachments;
     }
 }

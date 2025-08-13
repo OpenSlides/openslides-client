@@ -62,7 +62,8 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                             },
                             {
                                 idField: `attachment_meeting_mediafile_ids`,
-                                fieldset: FULL_FIELDSET
+                                fieldset: FULL_FIELDSET,
+                                follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
                             }
                         ]
                     }
