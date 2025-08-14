@@ -53,7 +53,41 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
-                                ...listOfSpeakersSpeakerCountSubscription
+                                fieldset: FULL_FIELDSET,
+                                follow: [
+                                    {
+                                        idField: `speaker_ids`,
+                                        fieldset: FULL_FIELDSET,
+                                        follow: [
+                                            {
+                                                idField: `meeting_user_id`,
+                                                fieldset: [`number`, `vote_weight`],
+                                                follow: [
+                                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                                                    { idField: `structure_level_ids`, fieldset: [`name`, `color`] }
+                                                ]
+                                            },
+                                            {
+                                                idField: `structure_level_list_of_speakers_id`,
+                                                fieldset: FULL_FIELDSET
+                                            },
+                                            {
+                                                idField: `point_of_order_category_id`,
+                                                fieldset: FULL_FIELDSET
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        idField: `structure_level_list_of_speakers_ids`,
+                                        fieldset: FULL_FIELDSET,
+                                        follow: [
+                                            {
+                                                idField: `structure_level_id`,
+                                                fieldset: [`name`, `color`]
+                                            }
+                                        ]
+                                    }
+                                ]
                             },
                             {
                                 idField: `submitter_ids`,

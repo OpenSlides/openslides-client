@@ -6,8 +6,10 @@ import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { DurationService } from 'src/app/site/services/duration.service';
 
 import { MeetingPdfExportService } from '../../../../services/export';
+import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
@@ -30,7 +32,8 @@ export class AgendaPdfCatalogExportService {
         private pdfService: MeetingPdfExportService,
         private htmlToPdfService: HtmlToPdfService,
         private organizationSettingsService: OrganizationSettingsService,
-        private pdfImagesService: PdfImagesService
+        private pdfImagesService: PdfImagesService,
+        private durationService: DurationService
     ) {}
 
     /**
@@ -155,18 +158,48 @@ export class AgendaPdfCatalogExportService {
         }
     }
 
-    private createListOfSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
+    private createListOfSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
         // TODO add los component
-        return [{ text: this.translate.instant(`List of speakers`), style: this.getStyle(`header2`) }];
+        const entries = [];
+        let i = 1;
+        for (const speaker of agendaItem.content_object?.list_of_speakers.speakers ?? []) {
+            entries.push({ text: `${i}. ${speaker.name}` });
+            i++;
+        }
+        return [{ text: this.translate.instant(`List of speakers`), style: this.getStyle(`header2`) }, ...entries];
     }
 
-    private createLastSpeakersDoc(_agendaItem: ViewAgendaItem): Content[] {
-        // TODO add last speakers
-        return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }];
+    private createLastSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
+        // TODO this needs to be finished, table display and missing fields.
+        const entries = [];
+        const finishedSpeakers = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
+        finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
+            const aTime = new Date(a.end_time).getTime();
+            const bTime = new Date(b.end_time).getTime();
+            if (aTime === bTime) {
+                return a.weight - b.weight;
+            }
+            return aTime - bTime;
+        });
+        let i = 1;
+        for (const speaker of finishedSpeakers) {
+            entries.push({
+                columns: [
+                    { text: `${i}. ${speaker.name}`, width: 180 },
+                    // TODO add structure level
+                    // { text: speaker.getLOSStructureLevels(true), width: 60 },
+                    // TODO add speaker state
+                    { text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang), width: 110 },
+                    { text: this.durationService.durationToString(speaker.speakingTime, `m`), width: 30 }
+                ]
+            });
+            i++;
+        }
+        return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }, ...entries];
     }
 
     private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
-        // TODO add polls part of AgendaItemExport
+        // TODO add polls part from motion export(?)
         return [{ text: this.translate.instant(`Polls`), style: this.getStyle(`header2`) }];
     }
 
