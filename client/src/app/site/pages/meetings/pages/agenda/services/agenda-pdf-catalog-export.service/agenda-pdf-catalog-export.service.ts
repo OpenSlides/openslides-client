@@ -102,9 +102,6 @@ export class AgendaPdfCatalogExportService {
         if (info.includes(`list_of_speakers`)) {
             agendaItemDoc.push(...this.createListOfSpeakersDoc(agendaItem));
         }
-        if (info.includes(`last_speakers`)) {
-            agendaItemDoc.push(...this.createLastSpeakersDoc(agendaItem));
-        }
         if (info.includes(`polls`)) {
             agendaItemDoc.push(...this.createPollsDoc(agendaItem));
         }
@@ -165,20 +162,10 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createListOfSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
-        // TODO add los component
-        const entries = [];
-        let i = 1;
-        for (const speaker of agendaItem.content_object?.list_of_speakers.speakers ?? []) {
-            entries.push({ text: `${i}. ${speaker.name}` });
-            i++;
-        }
-        return [{ text: this.translate.instant(`List of speakers`), style: this.getStyle(`header2`) }, ...entries];
-    }
-
-    private createLastSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
         // TODO this needs to be finished, table display and missing fields.
         const entries = [];
         const finishedSpeakers = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
+        const speakers = agendaItem.content_object.list_of_speakers.speakers;
         finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
             const aTime = new Date(a.end_time).getTime();
             const bTime = new Date(b.end_time).getTime();
@@ -187,21 +174,69 @@ export class AgendaPdfCatalogExportService {
             }
             return aTime - bTime;
         });
+        // table header
+        entries.push({
+            style: { bold: true },
+            columns: [
+                { text: this.translate.instant(`Speaker`), width: 180 },
+                { text: this.translate.instant(`Structure level`), width: 110 },
+                { text: this.translate.instant(`State`), width: 60 },
+                { text: this.translate.instant(`Start time`), width: 110 },
+                { text: this.translate.instant(`Duration`), width: 50 }
+            ]
+        });
+        // separate line
+        entries.push({
+            style: { color: `lightgrey` },
+            canvas: [
+                {
+                    type: `line`,
+                    lineWidth: 0.5,
+                    x1: 0,
+                    y1: 0,
+                    x2: 500,
+                    y2: 0
+                }
+            ]
+        });
+
+        // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
+            // const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
             entries.push({
                 columns: [
                     { text: `${i}. ${speaker.name}`, width: 180 },
-                    // TODO add structure level
-                    // { text: speaker.getLOSStructureLevels(true), width: 60 },
-                    // TODO add speaker state
-                    { text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang), width: 110 },
-                    { text: this.durationService.durationToString(speaker.speakingTime, `m`), width: 30 }
+                    { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
+                    { text: this.translate.instant(`Finished`), width: 60 },
+                    {
+                        text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
+                        width: 110
+                    },
+                    { text: this.durationService.durationToString(speaker.speakingTime, `m`), width: 50 }
                 ]
             });
             i++;
         }
-        return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }, ...entries];
+        // second rest of the speakers
+        for (const speaker of speakers.filter(sp => !sp.isFinished)) {
+            // const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
+            entries.push({
+                columns: [
+                    { text: `${i}. ${speaker.name}`, width: 180 },
+                    { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
+                    { text: `?`, width: 60 },
+                    { text: ``, width: 110 },
+                    { text: ``, width: 50 }
+                ]
+            });
+            i++;
+        }
+
+        if (speakers.length > 0) {
+            return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }, ...entries];
+        }
+        return [];
     }
 
     private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
@@ -222,6 +257,8 @@ export class AgendaPdfCatalogExportService {
                 return { bold: true, fontSize: 14 };
             case `header2`:
                 return { bold: true, fontSize: 12 };
+            case `grey`:
+                return { background: `lightgrey` };
             default:
                 return {};
         }
