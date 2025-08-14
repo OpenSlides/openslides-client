@@ -122,7 +122,13 @@ export class AgendaPdfCatalogExportService {
         const useTitle = info.includes(`title`);
         let numberOrTitle = ``;
         if (useItemNumber && useTitle) {
-            numberOrTitle = (agendaItem.item_number + `: ` || ``) + agendaItem.content_object!.getTitle();
+            const item_number = agendaItem.item_number ?? ``;
+            const title = agendaItem.content_object!.getTitle();
+            if (item_number) {
+                numberOrTitle = `${item_number}: ${title}`;
+            } else {
+                numberOrTitle = title;
+            }
         } else if (useItemNumber) {
             numberOrTitle = agendaItem.item_number || ``;
         } else if (useTitle) {
