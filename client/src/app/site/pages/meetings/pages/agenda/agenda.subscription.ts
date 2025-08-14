@@ -49,55 +49,16 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     {
                         idField: `content_object_id`,
-                        fieldset: [`number`, `title`, `agenda_item_id`, `text`, ...MEETING_ROUTING_FIELDS],
+                        fieldset: [`number`, `title`, `agenda_item_id`, ...MEETING_ROUTING_FIELDS],
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
-                                fieldset: FULL_FIELDSET,
-                                follow: [
-                                    {
-                                        idField: `speaker_ids`,
-                                        fieldset: FULL_FIELDSET,
-                                        follow: [
-                                            {
-                                                idField: `meeting_user_id`,
-                                                fieldset: [`number`, `vote_weight`],
-                                                follow: [
-                                                    { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
-                                                    { idField: `structure_level_ids`, fieldset: [`name`, `color`] }
-                                                ]
-                                            },
-                                            {
-                                                idField: `structure_level_list_of_speakers_id`,
-                                                fieldset: FULL_FIELDSET
-                                            },
-                                            {
-                                                idField: `point_of_order_category_id`,
-                                                fieldset: FULL_FIELDSET
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        idField: `structure_level_list_of_speakers_ids`,
-                                        fieldset: FULL_FIELDSET,
-                                        follow: [
-                                            {
-                                                idField: `structure_level_id`,
-                                                fieldset: [`name`, `color`]
-                                            }
-                                        ]
-                                    }
-                                ]
+                                ...listOfSpeakersSpeakerCountSubscription
                             },
                             {
                                 idField: `submitter_ids`,
                                 fieldset: FULL_FIELDSET,
                                 follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
-                            },
-                            {
-                                idField: `attachment_meeting_mediafile_ids`,
-                                fieldset: FULL_FIELDSET,
-                                follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
                             }
                         ]
                     }
@@ -163,7 +124,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
-    fieldset: [`closed`, `moderator_notes`, ...MEETING_ROUTING_FIELDS],
+    fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
     follow: [
         {
             idField: `speaker_ids`,
