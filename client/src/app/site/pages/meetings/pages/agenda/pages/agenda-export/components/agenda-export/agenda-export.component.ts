@@ -17,6 +17,7 @@ import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/act
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
+import { getAgendaExportSubscriptionConfig } from '../../../../agenda.subscription';
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { AgendaItemListModule } from '../../../agenda-item-list/agenda-item-list.module';
 import {
@@ -117,7 +118,8 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         }
     }
 
-    public exportAgenda(): void {
+    public async exportAgenda(): Promise<void> {
+        await this.modelRequestService.fetch(getAgendaExportSubscriptionConfig(...this.agendaItems));
         const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
         const info = this.dialogForm.get(`content`).value ?? [];
         if (this.isPDFFormat) {
