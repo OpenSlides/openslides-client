@@ -368,11 +368,7 @@ export class PollSlideComponent
                             ];
 
                             const notVotedVal = val[1].present ? `X` : `x`;
-                            return [
-                                ...username,
-                                // val[1].votes ? (Object.values(val[1].votes)[0] as string) : notVotedVal
-                                this._votes[val[0]] ? this._votes[val[0]].value : notVotedVal
-                            ];
+                            return [...username, this._votes[val[0]] ? this._votes[val[0]].value : notVotedVal];
                         })
                         .sort((a, b) => a[1].localeCompare(b[1]))
                         .map(([user, _, vote]) => [user, vote as VoteResult])
