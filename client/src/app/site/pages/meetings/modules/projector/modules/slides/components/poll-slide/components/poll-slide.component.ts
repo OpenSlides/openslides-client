@@ -350,18 +350,41 @@ export class PollSlideComponent
     private calculateUserVotes(): void {
         if (this._isSingleVotes) {
             if (this._entitledUsers && this._entitledLiveUsers === null) {
-                this._userVotes = Array.from(
-                    new Set([...Object.keys(this._votes), ...Object.keys(this._entitledUsers)])
-                )
-                    .map(id => [
-                        ...(this.getNameAndSortValue(
-                            this._entitledUsers[id]?.user || this._votes[id]?.user,
-                            this._orderBy
-                        ) || [`User`, `${id}`]),
-                        this._votes[id] ? this._votes[id].value : `X`
-                    ])
-                    .sort((a, b) => a[1].localeCompare(b[1]))
-                    .map(([user, _, vote]) => [user, vote as VoteResult]);
+                const users = Object.entries(this._entitledUsers);
+                const splitUsers: Record<number, [string, PollSlideEntitledUsersEntry][]> = {};
+                for (const entry of users) {
+                    const str_lvl_id = entry[1].structure_level_id ?? 0;
+                    if (!(str_lvl_id in splitUsers)) {
+                        splitUsers[str_lvl_id] = [];
+                    }
+                    splitUsers[str_lvl_id].push(entry);
+                }
+                const splitUserVotes = Object.entries(splitUsers).mapToObject<[string, VoteResult][]>(date => ({
+                    [date[0]]: date[1]
+                        .map(val => {
+                            const username = this.getNameAndSortValue(val[1].user, this._orderBy) || [
+                                `User`,
+                                `${val[0]}`
+                            ];
+
+                            const notVotedVal = val[1].present ? `X` : `x`;
+                            return [
+                                ...username,
+                                // val[1].votes ? (Object.values(val[1].votes)[0] as string) : notVotedVal
+                                this._votes[val[0]] ? this._votes[val[0]].value : notVotedVal
+                            ];
+                        })
+                        .sort((a, b) => a[1].localeCompare(b[1]))
+                        .map(([user, _, vote]) => [user, vote as VoteResult])
+                }));
+                this._userVotes = Object.entries(splitUserVotes).flatMap(str_lvl_list => {
+                    const str_lvl = Number(str_lvl_list[0]);
+                    if (str_lvl > 0) {
+                        return [this._structureLevels[str_lvl], ...str_lvl_list[1]];
+                    }
+                    return str_lvl_list[1];
+                });
+                this.updateResults();
                 this.formatUserVotes();
             } else if (this._entitledLiveUsers !== null) {
                 const users = Object.entries(this._entitledLiveUsers);
