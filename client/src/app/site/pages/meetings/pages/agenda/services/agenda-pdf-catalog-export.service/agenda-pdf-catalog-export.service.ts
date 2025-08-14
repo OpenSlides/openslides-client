@@ -120,19 +120,19 @@ export class AgendaPdfCatalogExportService {
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): Content[] {
         const useItemNumber = info.includes(`item_number`);
         const useTitle = info.includes(`title`);
+        const itemNumber = agendaItem.item_number ?? ``;
+        const title = agendaItem.content_object!.getTitle();
         let numberOrTitle = ``;
         if (useItemNumber && useTitle) {
-            const itemNumber = agendaItem.item_number ?? ``;
-            const title = agendaItem.content_object!.getTitle();
             if (itemNumber) {
                 numberOrTitle = `${itemNumber}: ${title}`;
             } else {
                 numberOrTitle = title;
             }
         } else if (useItemNumber) {
-            numberOrTitle = agendaItem.item_number || ``;
+            numberOrTitle = itemNumber;
         } else if (useTitle) {
-            numberOrTitle = agendaItem.content_object!.getTitle();
+            numberOrTitle = title;
         }
 
         const entry = {
