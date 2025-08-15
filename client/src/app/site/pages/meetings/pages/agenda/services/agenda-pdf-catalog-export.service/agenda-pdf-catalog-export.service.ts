@@ -133,7 +133,7 @@ export class AgendaPdfCatalogExportService {
         }
 
         const entry = {
-            style: this.getStyle(`header1`),
+            style: this.getStyle(`header2`),
             columns: [
                 {
                     text: numberOrTitle
@@ -155,7 +155,7 @@ export class AgendaPdfCatalogExportService {
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
         if (moderationNotes) {
-            return [{ text: this.translate.instant(`Moderation note`), style: this.getStyle(`header2`) }, entry];
+            return [{ text: this.translate.instant(`Moderation note`), style: this.getStyle(`header3`) }, entry];
         } else {
             return [];
         }
@@ -176,7 +176,7 @@ export class AgendaPdfCatalogExportService {
         });
         // table header
         entries.push({
-            style: { bold: true },
+            style: this.getStyle(`table-header`),
             columns: [
                 { text: this.translate.instant(`Speaker`), width: 180 },
                 { text: this.translate.instant(`Structure level`), width: 110 },
@@ -203,8 +203,9 @@ export class AgendaPdfCatalogExportService {
         // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
-            // const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
+            const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
             entries.push({
+                style: style,
                 columns: [
                     { text: `${i}. ${speaker.name}`, width: 180 },
                     { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
@@ -220,8 +221,9 @@ export class AgendaPdfCatalogExportService {
         }
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
-            // const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
+            const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
             entries.push({
+                style: style,
                 columns: [
                     { text: `${i}. ${speaker.name}`, width: 180 },
                     { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
@@ -234,19 +236,19 @@ export class AgendaPdfCatalogExportService {
         }
 
         if (speakers.length > 0) {
-            return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header2`) }, ...entries];
+            return [{ text: this.translate.instant(`Last speakers`), style: this.getStyle(`header3`) }, ...entries];
         }
         return [];
     }
 
     private createPollsDoc(_agendaItem: ViewAgendaItem): Content[] {
         // TODO add polls part from motion export(?)
-        return [{ text: this.translate.instant(`Polls`), style: this.getStyle(`header2`) }];
+        return [{ text: this.translate.instant(`Polls`), style: this.getStyle(`header3`) }];
     }
 
     private createCommentDoc(agendaItem: ViewAgendaItem): Content[] {
         return [
-            { text: this.translate.instant(`Internal Commentary`), style: this.getStyle(`header2`) },
+            { text: this.translate.instant(`Internal Commentary`), style: this.getStyle(`header3`) },
             { text: agendaItem.comment ?? `` }
         ];
     }
@@ -254,11 +256,15 @@ export class AgendaPdfCatalogExportService {
     private getStyle(name: string): any {
         switch (name) {
             case `header1`:
-                return { bold: true, fontSize: 14 };
+                return { bold: true, fontSize: 24, marginBottom: 5 };
             case `header2`:
+                return { bold: true, fontSize: 20 };
+            case `header3`:
+                return { bold: true, fontSize: 14 };
+            case `table-header`:
                 return { bold: true, fontSize: 12 };
             case `grey`:
-                return { background: `lightgrey` };
+                return { color: `grey` };
             default:
                 return {};
         }
@@ -297,7 +303,7 @@ export class AgendaPdfCatalogExportService {
         const attachments = [];
         attachments.push({
             text: this.translate.instant(`Attachments`),
-            style: this.getStyle(`header2`),
+            style: this.getStyle(`header3`),
             margin: [0, 10, 0, 10]
         });
 
