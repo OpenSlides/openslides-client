@@ -7,9 +7,11 @@ import { FollowList } from 'src/app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewListOfSpeakers, ViewTopic } from './modules';
+import { ViewAgendaItem } from './view-models';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
+export const AGENDA_EXPORT_SUBSCRIPTION = `agenda_export`;
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
 export const TOPIC_ITEM_DUPLICATE_SUBSCRIPTION = `topic_detail`;
 export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
@@ -180,4 +182,69 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
         ]
     },
     subscriptionName: LIST_OF_SPEAKERS_SUBSCRIPTION
+});
+
+export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        viewModelCtor: ViewAgendaItem,
+        ids: [...ids],
+        fieldset: FULL_FIELDSET,
+        follow: [
+            {
+                idField: `content_object_id`,
+                fieldset: [`number`, `title`, `agenda_item_id`, `text`, ...MEETING_ROUTING_FIELDS],
+                follow: [
+                    {
+                        idField: `list_of_speakers_id`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [
+                            {
+                                idField: `speaker_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [
+                                    {
+                                        idField: `meeting_user_id`,
+                                        fieldset: [`number`, `vote_weight`],
+                                        follow: [
+                                            { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
+                                            { idField: `structure_level_ids`, fieldset: [`name`, `color`] }
+                                        ]
+                                    },
+                                    {
+                                        idField: `structure_level_list_of_speakers_id`,
+                                        fieldset: FULL_FIELDSET
+                                    },
+                                    {
+                                        idField: `point_of_order_category_id`,
+                                        fieldset: FULL_FIELDSET
+                                    }
+                                ]
+                            },
+                            {
+                                idField: `structure_level_list_of_speakers_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [
+                                    {
+                                        idField: `structure_level_id`,
+                                        fieldset: [`name`, `color`]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        idField: `submitter_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
+                    },
+                    {
+                        idField: `attachment_meeting_mediafile_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AGENDA_EXPORT_SUBSCRIPTION
 });
