@@ -9,8 +9,8 @@ ENV APP_CONTEXT=${CONTEXT}
 COPY packages /packages
 
 WORKDIR /packages/openslides-motion-diff
-RUN npm ci
-RUN npm run build
+RUN npm ci && \
+    npm run build
 
 ## Installs
 WORKDIR /app
