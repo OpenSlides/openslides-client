@@ -131,10 +131,11 @@
 
         .vote-entry:has(+ .structure-level) {
             border-bottom: 0;
+            margin-bottom: 1px;
         }
 
         .structure-level {
-            margin-bottom: 2px !important;
+            margin-bottom: 1px !important;
             height: 29px;
             display: flex;
             align-items: end;
