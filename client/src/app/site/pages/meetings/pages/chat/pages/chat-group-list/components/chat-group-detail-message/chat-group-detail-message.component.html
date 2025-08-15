@@ -12,7 +12,7 @@
             'background-primary-darkest': isOwnMessage
         }"
     >
-        {{ text }}
+        <div [innerText]="text"></div>
         <div class="timestamp">{{ date | localizedDate }}</div>
         @if (isOwnMessage || canBeDeleted) {
             @if (isMobile) {
