@@ -112,7 +112,7 @@
         min-width: 0;
 
         .vote-entry {
-            min-height: 29px;
+            height: 29px;
             display: flex;
             align-items: center;
             .not-present {
@@ -135,7 +135,7 @@
 
         .structure-level {
             margin-bottom: 2px !important;
-            min-height: 29px;
+            height: 29px;
             display: flex;
             align-items: end;
             border-bottom: 0 !important;
