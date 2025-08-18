@@ -475,19 +475,24 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this.changeRecommendationMenu.closeMenu();
 
         const recoModel = reco.getModel();
-        const motionText = this.diff.extractMotionLineRange(
-            this.lineNumberingService.insertLineNumbers({
-                html: this.motion.text,
-                lineLength: this.lineLength,
-                firstLine: this.motion.firstLine
-            }),
-            {
-                from: reco.getLineFrom(),
-                to: reco.getLineTo()
-            },
-            false,
-            this.lineLength
-        );
+        const lineNumberedText = this.lineNumberingService.insertLineNumbers({
+            html: this.motion.text,
+            lineLength: this.lineLength,
+            firstLine: this.motion.firstLine
+        });
+        const availableLineRange = this.lineNumberingService.getLineNumberRange(lineNumberedText);
+        const motionText =
+            availableLineRange.to >= reco.getLineFrom()
+                ? this.diff.extractMotionLineRange(
+                      lineNumberedText,
+                      {
+                          from: reco.getLineFrom(),
+                          to: reco.getLineTo()
+                      },
+                      false,
+                      this.lineLength
+                  )
+                : ``;
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText]);
         recoModel.text = this.diff.readdOsSplit(recoModel.text, [motionText], true);
 
