@@ -1,3 +1,4 @@
+import { getLineNumberElement } from ".";
 import { ELEMENT_NODE, TEXT_NODE } from "../utils/definitions";
 import { isInlineElement } from "../utils/dom-helpers";
 import { BreakablePoint } from "./definitions";
@@ -434,17 +435,7 @@ export class LineNumbering {
         const lineNumber = this.currentLineNumber;
         (this.currentLineNumber as number)++;
 
-        return this.getLineNumberElement(lineNumber);
-    }
-
-    private getLineNumberElement(lineNumber: number): Element {
-        const el = document.createElement(`span`);
-        el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
-        el.setAttribute(`class`, `line-number-${lineNumber} os-line-number`);
-        el.setAttribute(`contenteditable`, `false`);
-        el.setAttribute(`data-line-number`, lineNumber + ``);
-
-        return el;
+        return getLineNumberElement(lineNumber);
     }
 
     /**

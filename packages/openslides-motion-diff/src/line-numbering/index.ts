@@ -126,3 +126,19 @@ export function highlightLine(html: string, lineNumber: number): string {
 
     return html;
 }
+
+/**
+  * Returns a line number element for the specified line number
+  *
+  * @param {number} lineNumber
+  * @return {Element}
+  */
+export function getLineNumberElement(lineNumber: number): Element {
+    const el = document.createElement(`span`);
+    el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
+    el.setAttribute(`class`, `line-number-${lineNumber} os-line-number`);
+    el.setAttribute(`contenteditable`, `false`);
+    el.setAttribute(`data-line-number`, lineNumber + ``);
+
+    return el;
+}
