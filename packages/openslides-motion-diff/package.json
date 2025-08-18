@@ -1,6 +1,6 @@
 {
   "name": "@openslides/motion-diff",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OpenSlides 4 motion diff algorithm",
   "license": "MIT",
   "type": "module",
@@ -9,6 +9,13 @@
   ],
   "main": "./dist/motion-diff.umd.cjs",
   "module": "./dist/motion-diff.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/motion-diff.js",
+      "require": "./dist/motion-diff.umd.cjs"
+    }
+  },
   "scripts": {
     "build": "vite build",
     "test": "vitest",
