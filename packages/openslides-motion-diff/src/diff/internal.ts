@@ -2,7 +2,7 @@ import { formatDiff, replaceLines } from ".";
 import { LineNumbering } from "..";
 import { isOsLineBreakNode, isOsLineNumberNode } from "../line-numbering/utils";
 import { DOCUMENT_FRAGMENT_NODE, ELEMENT_NODE, TEXT_NODE } from "../utils/definitions";
-import { isFirstNonemptyChild, normalizeStyleAttributes, replaceHtmlEntities, sortHtmlAttributes, htmlToUppercase } from "../utils/dom-helpers";
+import { isFirstNonemptyChild, normalizeStyleAttributes, replaceHtmlEntities, htmlToUppercase, sortPruneHtmlAttributes } from "../utils/dom-helpers";
 import { ExtractedContent } from "./definitions";
 import { serializeTagDiff } from "./utils";
 
@@ -267,7 +267,7 @@ export function recAddOsSplit(diff: HTMLElement, versions: HTMLElement[], before
  * @private
  */
 export function normalizeHtmlForDiff(html: string): string {
-    html = sortHtmlAttributes(html);
+    html = sortPruneHtmlAttributes(html);
     html = normalizeStyleAttributes(html);
     html = htmlToUppercase(html);
 
