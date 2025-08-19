@@ -464,7 +464,7 @@ export class MotionDiffService {
             title = change.getTitle();
         } catch (_) {}
 
-        let changeType = `unknown`;
+        let changeType: any = `unknown`;
         try {
             changeType = change.getChangeType();
         } catch (_) {}
