@@ -181,6 +181,21 @@
                     </button>
                 }
             }
+            @if (addSelf && interventionEnabled) {
+                <!-- Intervention -->
+                <button
+                    *osPerms="permission.listOfSpeakersCanManage"
+                    mat-stroked-button
+                    [disabled]="closed"
+                    (click)="addIntervention()"
+                >
+                    <mat-icon>error_outline</mat-icon>
+                    &nbsp;
+                    <span>
+                        {{ 'Intervention' | translate }}
+                    </span>
+                </button>
+            }
         </div>
     </mat-card-content>
 </mat-card>
