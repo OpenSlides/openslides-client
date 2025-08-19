@@ -188,7 +188,7 @@ export class PdfCreator {
             // if the worker returns an object, it's always the document
             if (typeof data === `object`) {
                 this._progressSnackBarService.dismiss();
-                blob = new Int8Array((await data).arrayBuffer);
+                blob = (await data).arrayBuffer;
                 this._pdfWorker = null;
             }
         };

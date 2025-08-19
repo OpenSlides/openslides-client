@@ -9,6 +9,7 @@ import { AmendmentListPdfService } from '../amendment-list-pdf.service';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionPdfService } from '../motion-pdf.service';
 import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
+import { saveAs } from 'file-saver';
 
 /**
  * Export service to handle various kind of exporting necessities.
@@ -149,6 +150,7 @@ export class MotionPdfExportService {
     ): Promise<void> {
         const pdfDoc = await PDFDocument.create();
         for (const motion of motions) {
+            //TODO: make load work
             const srcDoc = await PDFDocument.load(await this.loadSingleMotion(motion, exportInfo));
             const copiedPages = await pdfDoc.copyPages(srcDoc, [0, srcDoc.getPageCount() - 1]);
             for (const page of copiedPages) {
@@ -171,6 +173,7 @@ export class MotionPdfExportService {
         }
         // TODO: Download file
         const pdfBytes = await pdfDoc.save();
-        console.log(pdfBytes);
+        console.log(pdfBytes)
+        //saveAs(new Blob([pdfBytes]), filename, { autoBom: true });
     }
 }
