@@ -14,7 +14,6 @@ import {
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { LineNumbering } from '@openslides/motion-diff';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -205,7 +204,7 @@ export class MotionLineNumberingService {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
                 const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
-                paragraph = this.diffService.diffHtmlToFinalText(diff);
+                paragraph = this.diffService.diffHtmlToFinalText(diff, true);
                 paragraphHasChanges = true;
             }
 
@@ -409,22 +408,7 @@ export class MotionLineNumberingService {
             if (withDiff) {
                 return diff;
             } else {
-                let changedText = this.diffService.diffHtmlToFinalText(diff);
-                const newRange = this.lineNumberingService.getLineNumberRange(changedText);
-                const origRange = this.lineNumberingService.getLineNumberRange(origText);
-                if (newRange.to < origRange.to) {
-                    let lineNumbers = ``;
-                    for (let n = Math.max(newRange.to, origRange.from); n <= origRange.to; n++) {
-                        lineNumbers += LineNumbering.getLineNumberElement(n).outerHTML;
-                    }
-                    if (changedText === ``) {
-                        changedText = `<p>${lineNumbers}</p>`;
-                    } else {
-                        changedText = `${changedText}${lineNumbers}`;
-                    }
-                }
-
-                return changedText;
+                return this.diffService.diffHtmlToFinalText(diff, true);
             }
         });
     }
