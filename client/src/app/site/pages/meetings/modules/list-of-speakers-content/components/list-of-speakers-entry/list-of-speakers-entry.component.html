@@ -270,7 +270,7 @@
         @if (canManage) {
             @if (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionButton()) {
                 <button mat-menu-item (click)="onInterventionAnswerButton(speaker.id)">
-                    <mat-icon>keyboard_return</mat-icon>
+                    <mat-icon>warning</mat-icon>
                     <span>{{ 'Answer to intervention' | translate }}</span>
                 </button>
             }
@@ -454,7 +454,7 @@
     <!-- Intervention answer -->
     @if (speaker.speech_state === SpeechState.INTERVENTION_ANSWER) {
         <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">keyboard_return</mat-icon>
+            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">warning</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ 'Answer to intervention' | translate }}
             </i>
