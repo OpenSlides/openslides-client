@@ -46,9 +46,13 @@ export class HttpSubscriptionSSE extends HttpSubscription {
 
             const LINE_BREAK = `\n`.charCodeAt(0);
             const reader = response.body.getReader();
+            this.abortCtrl.signal.addEventListener(`abort`, () => {
+                reader.cancel();
+            });
+
             let next: Uint8Array = null;
             let result: ReadableStreamReadResult<Uint8Array>;
-            while (!(result = await reader.read()).done) {
+            while (!this.abortCtrl.signal.aborted && !(result = await reader.read()).done) {
                 const lines = splitTypedArray(LINE_BREAK, result.value);
                 for (let line of lines) {
                     if (line[line.length - 1] === LINE_BREAK && response.ok) {

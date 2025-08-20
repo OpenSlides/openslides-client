@@ -34,6 +34,7 @@ function getValidStream(req: NormalizedRequestOptions, interval: number, resolve
                 const err = new Error(`AbortError`);
                 err.name = `AbortError`;
                 controller.error(err);
+                controller.close();
             }
 
             await new Promise(r => setTimeout(r, interval));
@@ -46,8 +47,7 @@ function getValidStream(req: NormalizedRequestOptions, interval: number, resolve
     return new Response(stream);
 }
 
-// TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-xdescribe(`http subscription polling`, () => {
+describe(`http subscription polling`, () => {
     beforeEach(() => {
         fetchMock.mockGlobal();
         fetchMock.route(`end:/does-not-resolve`, args => getValidStream(args.options, 100));
@@ -68,8 +68,7 @@ xdescribe(`http subscription polling`, () => {
         expect(fetchMock.callHistory.called(`/does-not-resolve`)).toBeFalse();
     });
 
-    // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-    xit(`receives data once`, async () => {
+    it(`receives data once`, async () => {
         let resolver: CallableFunction;
         const receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, (d: any) => resolver(d));
@@ -122,8 +121,7 @@ xdescribe(`http subscription polling`, () => {
             expect(subscr.active).toBeFalsy();
         });
 
-        // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-        xit(`stop after data received`, async () => {
+        it(`stop after data received`, async () => {
             let resolver: CallableFunction;
             const receivedData = new Promise(resolve => (resolver = resolve));
             const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, () => resolver());
@@ -133,8 +131,7 @@ xdescribe(`http subscription polling`, () => {
             return expectAsync(start).toBeResolved();
         });
 
-        // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-        xit(`instant stop`, async () => {
+        it(`instant stop`, async () => {
             const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`);
             const start = subscr.start();
             await subscr.stop();
