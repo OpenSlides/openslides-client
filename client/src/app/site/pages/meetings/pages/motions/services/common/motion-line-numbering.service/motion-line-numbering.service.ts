@@ -217,7 +217,7 @@ export class MotionLineNumberingService {
 
                     // Reapply relative line numbers
                     const diff = this.diffService.diff(baseParagraphs[paraNo], paragraph);
-                    paragraph = this.diffService.diffHtmlToFinalText(diff);
+                    paragraph = this.diffService.diffHtmlToFinalText(diff, true);
 
                     paragraphHasChanges = true;
                 }
@@ -365,7 +365,7 @@ export class MotionLineNumberingService {
                 const affectedDiff = this.diffService.formatDiff(
                     this.diffService.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
                 );
-                const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff);
+                const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff, true);
 
                 return new ViewMotionAmendedParagraph(amendment, paragraphNumber, affectedConsolidated, affectedLines);
             })
