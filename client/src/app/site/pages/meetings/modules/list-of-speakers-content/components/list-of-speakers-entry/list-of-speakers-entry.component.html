@@ -268,11 +268,12 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         @if (canManage) {
-            @if (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionButton()) {
+            @if (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionAnswerButton()) {
                 <button mat-menu-item (click)="onInterventionAnswerButton(speaker.id)">
                     <mat-icon>warning</mat-icon>
                     <span>{{ 'Answer to intervention' | translate }}</span>
                 </button>
+                <mat-divider />
             }
             @if (enableSpeechStateControls()) {
                 <!-- pro button -->

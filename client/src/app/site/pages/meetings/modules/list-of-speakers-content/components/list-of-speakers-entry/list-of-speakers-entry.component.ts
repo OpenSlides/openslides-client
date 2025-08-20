@@ -236,6 +236,10 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.interventionEnabled && !this.speaker.isSpeaking;
     }
 
+    public enableInterventionAnswerButton(): boolean {
+        return this.interventionEnabled;
+    }
+
     public enablePointOfOrderButton(): boolean {
         return (
             this.pointOfOrderEnabled &&
