@@ -18,7 +18,7 @@ import {
     removeCSSClass,
     replaceHtmlEntities,
     serializeTag,
-    sortHtmlAttributes
+    sortPruneHtmlAttributes
 } from './dom-helpers';
 
 describe(`utils: dom helpers`, () => {
@@ -328,17 +328,21 @@ describe(`utils: dom helpers`, () => {
         });
     });
 
-    describe(`sortHtmlAttributes function`, () => {
+    describe(`sortPruneHtmlAttributes function`, () => {
         it(`sorts attributes`, () => {
-            expect(sortHtmlAttributes(`<t foo="bar" example="1"></t>`)).toBe(`<t example="1" foo="bar"></t>`);
+            expect(sortPruneHtmlAttributes(`<t foo="bar" example="1"></t>`)).toBe(`<t example="1" foo="bar"></t>`);
         });
 
         it(`sorts empty attributes`, () => {
-            expect(sortHtmlAttributes(`<t foo="bar" bar example="1"></t>`)).toBe(`<t bar example="1" foo="bar"></t>`);
+            expect(sortPruneHtmlAttributes(`<t foo="bar" bar example="1"></t>`)).toBe(`<t bar example="1" foo="bar"></t>`);
         });
 
         it(`sorts css classes`, () => {
-            expect(sortHtmlAttributes(`<t class="example bar foo"></t>`)).toBe(`<t class="bar example foo"></t>`);
+            expect(sortPruneHtmlAttributes(`<t class="example bar foo"></t>`)).toBe(`<t class="bar example foo"></t>`);
+        });
+
+        it(`removes obsolete list start value`, () => {
+            expect(sortPruneHtmlAttributes(`<ol start="1"></ol>`)).toBe(`<ol></ol>`);
         });
     });
 
