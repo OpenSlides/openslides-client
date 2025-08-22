@@ -196,6 +196,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     @ViewChild(`textChip`)
     public textChip!: MatChipOption;
 
+    @ViewChild(`pageChip`)
+    public pageChip!: MatChipOption;
+
+    @ViewChild(`PdfChip`)
+    public PdfChip!: MatChipOption;
+
     public isCSVExport = false;
     public isXLSXExport = false;
 
@@ -436,14 +442,29 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`pageLayout`, `toc`);
             this.deselectOption(`pageLayout`, `addBreaks`);
         }
-        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
-            this.deselectOption(`pageLayout`, `continuousText`);
-        }
+        this.deselectPdfOption();
     }
 
     public deselectContinuousTextOption(): void {
         if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
             this.deselectOption(`pageLayout`, `continuousText`);
+        }
+        this.deselectPdfOption();
+    }
+
+    public deselectAndSelectNeededOption(): void {
+        if (this.PdfChip.selected) {
+            this.deselectOption(`pageLayout`, `continuousText`);
+            this.deselectOption(`pageLayout`, `toc`);
+            this.deselectOption(`headerFooter`, `page`);
+
+            this.selectOption(`pageLayout`, `addBreaks`, this.addBreaksChip);
+        }
+    }
+
+    public deselectPdfOption(): void {
+        if (this.continuousTextChipOption.selected || this.tableOfContentChip.selected || this.pageChip.selected) {
+            this.deselectOption(`content`, `PDFinPDF`);
         }
     }
 
@@ -452,6 +473,19 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.dialogForm
             .get(formGroup)
             .setValue(this.dialogForm.get(formGroup).value?.filter(obj => !obj.includes(value)));
+    }
+
+    /**
+     * Make sure to only call this function with a value from the given formGroup
+     * @param formGroup
+     * @param value
+     * @param chip = this.valueChip
+     */
+    private selectOption(formGroup: string, value: string, chip: MatChipOption): void {
+        if (!this.dialogForm.get(formGroup).value?.includes(value)) {
+            this.dialogForm.get(formGroup).value.push(value);
+            chip.selected = true;
+        }
     }
 
     // Helper function to determine if mat-chip-option should be selected
@@ -520,6 +554,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             `page`,
             `date`,
             `attachments`,
+            `PDFinPDF`,
             `addBreaks`,
             `continuousText`,
             `onlyChangedLines`
