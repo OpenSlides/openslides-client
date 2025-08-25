@@ -200,7 +200,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     public override ngOnDestroy(): void {
-        this._historySubscription.unsubscribe();
+        this._historySubscription?.unsubscribe();
     }
 
     private loadFromParams(): void {
