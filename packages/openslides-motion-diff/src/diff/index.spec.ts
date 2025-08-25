@@ -1728,6 +1728,24 @@ describe(`MotionDiffService`, () => {
                 )
             ).toThrow();
         });
+
+        it(`test with leading line breaks`, () => {
+            const inHtml = `<p>${noMarkup(1)}<br>${noMarkup(2)}first</p><p>${noMarkup(3)}<br>${noMarkup(4)}secoond</p>`;
+
+            expect(
+                getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p class="os-split-before">first as</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<P class="os-split-before merge-before">${noMarkup(2)}first<ins> as</ins></p>`
+            );
+        });
     });
 
     describe(`getTextRemainderAfterLastChange`, () => {
