@@ -236,6 +236,10 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.interventionEnabled && !this.speaker.isSpeaking;
     }
 
+    public enableInterventionAnswerButton(): boolean {
+        return this.interventionEnabled;
+    }
+
     public enablePointOfOrderButton(): boolean {
         return (
             this.pointOfOrderEnabled &&
@@ -245,7 +249,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public enableUpdateUserButton(): boolean {
-        return this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !this.speaker.meeting_user_id;
+        return SPECIAL_SPEECH_STATES.includes(this.speaker.speech_state) && !this.speaker.meeting_user_id;
     }
 
     public showStructureLevels(): boolean {
@@ -311,6 +315,19 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         } else {
             await this.speakerRepo.setContraSpeech(this.speaker);
         }
+    }
+
+    public async onInterventionAnswerButton(answer_to_id: Id): Promise<void> {
+        await this.speakerRepo.create(
+            this.speaker.list_of_speakers,
+            this.operator.hasPerms(this.permission.listOfSpeakersCanManage)
+                ? undefined
+                : this.operator.user.getMeetingUser().id,
+            {
+                speechState: SpeechState.INTERVENTION_ANSWER,
+                answer_to_id
+            }
+        );
     }
 
     public async onPointOfOrderButton(): Promise<void> {

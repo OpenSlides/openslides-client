@@ -120,6 +120,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.canManage && this.isCallEnabled;
     }
 
+    public get interventionEnabled(): boolean {
+        return this._interventionEnabled;
+    }
+
     public get isAdminNotInMeeting(): boolean {
         return (
             (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManager) &&
@@ -178,6 +182,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
+
+    private _interventionEnabled = false;
 
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
@@ -304,6 +310,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async addInterposedQuestion(): Promise<void> {
         await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
             speechState: SpeechState.INTERPOSED_QUESTION
+        });
+    }
+
+    public async addIntervention(): Promise<void> {
+        await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
+            speechState: SpeechState.INTERVENTION
         });
     }
 
@@ -571,6 +583,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
                 this.forbidDelegatorToAddSelf = enabled;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
+                this._interventionEnabled = time > 0;
             })
         );
     }

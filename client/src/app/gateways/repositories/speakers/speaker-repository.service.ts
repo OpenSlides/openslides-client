@@ -38,6 +38,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
             structure_level_id?: Id;
+            answer_to_id?: Id;
         } = {}
     ): Promise<Identifiable> {
         const payload: any = {
@@ -49,7 +50,8 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             point_of_order_category_id: optionalInformation.pointOfOrder
                 ? optionalInformation.point_of_order_category_id
                 : undefined,
-            note: optionalInformation.note
+            note: optionalInformation.note,
+            answer_to_id: optionalInformation.answer_to_id
         };
         return this.sendActionToBackend(SpeakerAction.CREATE, payload);
     }
