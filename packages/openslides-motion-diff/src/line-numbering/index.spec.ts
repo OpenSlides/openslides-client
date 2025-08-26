@@ -700,6 +700,12 @@ describe(`handling of manual line breaks`, () => {
         const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
         expect(outHtml).toBe(`<p>${noMarkup(1)}<br>${noMarkup(2)}Test 123<br>${noMarkup(3)}Test 456</p>`);
     });
+
+    it(`adds newlines if no content between br`, () => {
+        const inHtml = `<p>Test 123<br>\n<br>\nTest 456</p>`;
+        const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
+        expect(outHtml).toBe(`<p>${noMarkup(1)}Test 123<br>${noMarkup(2)}<br>${noMarkup(3)}Test 456</p>`);
+    });
 });
 
 // TODO: Testing some internals
