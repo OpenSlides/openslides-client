@@ -11,7 +11,7 @@ COPY packages /packages
 WORKDIR /packages/openslides-motion-diff
 RUN npm ci && \
     npm run build && \
-    npm i --prefix /app
+    npm i -g
 
 ## Installs
 WORKDIR /app
