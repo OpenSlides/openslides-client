@@ -114,7 +114,7 @@ export class AssignmentPollDetailComponent
     }
 
     protected hasPerms(): boolean {
-        return this.operator.hasPerms(Permission.assignmentCanManage);
+        return this.operator.hasPerms(Permission.assignmentCanManagePolls);
     }
 
     protected onDeleted(): void {
