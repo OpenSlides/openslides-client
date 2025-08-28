@@ -30,7 +30,8 @@ export interface BaseVoteData extends Identifiable {
 @Directive()
 export abstract class BasePollDetailComponent<V extends PollContentObject, S extends PollService>
     extends BaseMeetingComponent
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     public readonly COLLECTION = ViewPoll.COLLECTION;
 
     /**
@@ -192,7 +193,9 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public exportPollResults(): void {
         this.pollPdfService.exportSinglePoll(this.poll, {
             votesData: this._votesDataSubject.value,
-            entitledUsersData: this.poll.isStarted ? this._liveRegisterObservable.value : this._entitledUsersSubject.value
+            entitledUsersData: this.poll.isStarted
+                ? this._liveRegisterObservable.value
+                : this._entitledUsersSubject.value
         });
     }
 
@@ -273,13 +276,13 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                                 : null,
                             user_merged_into: entry.user_merged_into_id
                                 ? `${this.translate.instant(`Old account of`)} ${users
-                                    .find(user => user.id === entry.user_merged_into_id)
-                                    ?.getShortName()}`
+                                      .find(user => user.id === entry.user_merged_into_id)
+                                      ?.getShortName()}`
                                 : null,
                             delegation_user_merged_into: entry.delegation_user_merged_into_id
                                 ? `(${this.translate.instant(`represented by old account of`)}) ${users
-                                    .find(user => user.id === entry.delegation_user_merged_into_id)
-                                    ?.getShortName()}`
+                                      .find(user => user.id === entry.delegation_user_merged_into_id)
+                                      ?.getShortName()}`
                                 : null
                         });
                     }
@@ -316,7 +319,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     const entries: EntitledUsersTableEntry[] = [];
                     for (const user of users || []) {
                         const delegateToId = user.vote_delegated_to_id();
-                        const voted = (this.poll.has_voted_user_ids ?? []).includes(user.id);
+                        const voted = this.poll.live_votes && this.poll.live_votes[user.id] !== undefined;
                         entries.push({
                             id: user.id,
                             user: user,
@@ -336,8 +339,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     this.countVoteAllowed = entries.length;
                     this._liveRegisterObservable.next(entries);
                     this.cd.markForCheck();
-                })
-            ));
+                }))
+        );
     }
 
     public hasUserVoteDelegation(user: ViewUser): boolean {

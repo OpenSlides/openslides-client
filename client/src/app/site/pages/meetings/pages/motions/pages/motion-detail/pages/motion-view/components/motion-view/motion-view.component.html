@@ -151,7 +151,7 @@
                     <!-- Comments -->
                     <os-motion-comments [motion]="motion"></os-motion-comments>
                     <!-- Personal note -->
-                    @if (!operator.isAnonymous) {
+                    @if (!operator.isAnonymous && operator.isInMeeting(activeMeetingId)) {
                         <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                     }
                 </div>
@@ -161,7 +161,7 @@
                         <!-- Meta Info -->
                         <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
                         <os-motion-comments [motion]="motion"></os-motion-comments>
-                        @if (!operator.isAnonymous) {
+                        @if (!operator.isAnonymous && operator.isInMeeting(activeMeetingId)) {
                             <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                         }
                     </div>
@@ -262,6 +262,7 @@
                 [changeRecoMode]="changeRecoMode"
                 [lineNumberingMode]="lineNumberingMode"
                 [motion]="motion"
+                [originMotionsLoaded]="originMotionsLoaded"
                 [showAllAmendments]="showAllAmendments"
                 [unifiedChanges]="unifiedChanges$"
                 (updateCrMode)="changeRecoMode = $event"

@@ -23,7 +23,7 @@ export enum DuplicateStatus {
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
+export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
 
 export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
@@ -121,12 +121,21 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.gender?.name ?? ``;
     }
 
+    public get homeCommitteeName(): string {
+        return this.home_committee?.name ?? ``;
+    }
+
+    public get externalString(): string {
+        return this.external ? this.getTranslatedExternal() : ``;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
     public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
+    public getTranslatedExternal!: () => string;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.

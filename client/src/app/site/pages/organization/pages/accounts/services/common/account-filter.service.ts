@@ -109,23 +109,23 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         const nonStaticFilterDefinitions = [
             ...((this.operator.hasOrganizationPermissions(OML.can_manage_organization)
                 ? [
-                        {
-                            property: `isInActiveMeeting`,
-                            label: _(`Active meetings`),
-                            options: [
-                                { condition: true, label: _(`Is in active meetings`) },
-                                { condition: [false, null], label: _(`Is not in active meetings`) }
-                            ]
-                        },
-                        {
-                            property: `isInArchivedMeeting`,
-                            label: _(`Archived meetings`),
-                            options: [
-                                { condition: true, label: _(`Is in archived meetings`) },
-                                { condition: [false, null], label: _(`Is not in archived meetings`) }
-                            ]
-                        }
-                    ]
+                      {
+                          property: `isInActiveMeeting`,
+                          label: _(`Active meetings`),
+                          options: [
+                              { condition: true, label: _(`Is in active meetings`) },
+                              { condition: [false, null], label: _(`Is not in active meetings`) }
+                          ]
+                      },
+                      {
+                          property: `isInArchivedMeeting`,
+                          label: _(`Archived meetings`),
+                          options: [
+                              { condition: true, label: _(`Is in archived meetings`) },
+                              { condition: [false, null], label: _(`Is not in archived meetings`) }
+                          ]
+                      }
+                  ]
                 : []) as OsFilter<ViewUser>[])
         ];
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
@@ -235,7 +235,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: `guest`,
+                property: `external`,
                 label: _(`External`),
                 options: [
                     { condition: true, label: _(`Is external`) },

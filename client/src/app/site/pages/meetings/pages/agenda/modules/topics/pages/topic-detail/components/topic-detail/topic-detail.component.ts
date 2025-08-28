@@ -353,7 +353,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     public async applyTopicContent(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
         this.applyFeedback = true;
-        setTimeout(() => this.applyFeedback = false, 2000);
+        setTimeout(() => (this.applyFeedback = false), 2000);
     }
 
     private async createTopic(): Promise<void> {

@@ -1,6 +1,6 @@
 {
   "scripts": {},
   "devDependencies": {
-    "@playwright/test": "^1.53.2"
+    "@playwright/test": "^1.55.0"
   }
 }

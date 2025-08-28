@@ -403,7 +403,10 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                         const pageHeight = page.view[3];
                         const scale_factor = this.projector.width / pageWidth;
                         this.pdfStep = pageHeight * scale_factor + 10;
-                        this.pdfPage = this.projector.scroll === 0 ? 0 : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
+                        this.pdfPage =
+                            this.projector.scroll === 0
+                                ? 0
+                                : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
                         this.loadedPdf = true;
                     });
             }

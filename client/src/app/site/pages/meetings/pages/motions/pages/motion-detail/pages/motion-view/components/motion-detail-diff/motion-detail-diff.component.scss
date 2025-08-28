@@ -3,6 +3,32 @@
 :host ::ng-deep .underlined-links {
     @include detail-view-appearance.detail-view-appearance;
 }
+.broken-box {
+    position: relative;
+    margin-bottom: 15px;
+    padding-top: 0;
+    padding-right: 0;
+
+    .broken-action-row {
+        position: absolute;
+        right: 0;
+        font-size: 0.8em;
+        opacity: 0.5;
+        overflow: hidden;
+    }
+
+    .broken-motion-text {
+        padding-left: 40px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+.broken-box-title {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+}
 
 .diff-box {
     position: relative;
@@ -63,6 +89,12 @@
             }
         }
     }
+}
+
+.amendment-origin {
+    margin-left: 30px;
+    font-style: italic;
+    color: gray;
 }
 
 .change-recommendation-summary {

@@ -27,7 +27,8 @@ import { ParentErrorStateMatcher } from '../../validators';
 @Directive()
 export abstract class BaseSearchSelectorComponent
     extends BaseFormFieldControlComponent<Selectable>
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
 

@@ -64,13 +64,13 @@ export class RerouteService {
             msg: routeDataArray
         };
         return this.router.createUrlTree(
-            meetingId && this.operator.isInMeeting(meetingId) ? [meetingId, `error`] : [`error`],
+            meetingId && this.operator.hasMeetingAccess(meetingId) ? [meetingId, `error`] : [`error`],
             {
                 queryParams: meetingId
                     ? {
-                            meetingId,
-                            ...queryParams
-                        }
+                          meetingId,
+                          ...queryParams
+                      }
                     : queryParams
             }
         );
