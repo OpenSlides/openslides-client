@@ -178,6 +178,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     @ViewChild(`continuousText`)
     public continuousTextChipOption!: MatChipOption;
 
+    @ViewChild(`pageChip`)
+    public pageChip!: MatChipOption;
+
+    @ViewChild(`includePdfAttachmentsChip`)
+    public includePdfAttachmentsChip!: MatChipOption;
+
     @ViewChild(`spokespersonChip`)
     public spokespersonChip!: MatChipOption;
 
@@ -439,11 +445,20 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
             this.deselectOption(`pageLayout`, `continuousText`);
         }
+        if (this.tableOfContentChip.selected || this.continuousTextChipOption.selected) {
+            this.deselectOption(`content`, `includePdfAttachments`);
+        }
     }
 
     public deselectContinuousTextOption(): void {
         if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
             this.deselectOption(`pageLayout`, `continuousText`);
+        }
+    }
+
+    public deselectIncludePdfAttachmentsOption(): void {
+        if (this.tableOfContentChip.selected || this.pageChip.selected) {
+            this.deselectOption(`content`, `includePdfAttachments`);
         }
     }
 
@@ -520,6 +535,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             `page`,
             `date`,
             `attachments`,
+            `includePdfAttachments`,
             `addBreaks`,
             `continuousText`,
             `onlyChangedLines`
