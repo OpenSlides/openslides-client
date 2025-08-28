@@ -344,8 +344,13 @@ export function serializeTag(node: Node): string {
 /**
  * Sorts element attributes and CSS class names of a given html string
  * alphabetically
+ * Also prunes attributes which are set to the default value
  */
-export function sortHtmlAttributes(html: string): string {
+export function sortPruneHtmlAttributes(html: string): string {
+    const defaultValues: { [key: string]: { [key: string]: string } } = {
+        OL: { START: `1` }
+    };
+
     return html.replace(/<(\/?[a-z]*)( [^>]*)?>/gi, (_fullHtml: string, tag: string, attributes: string): string => {
         if (attributes === undefined) {
             attributes = ``;
@@ -362,6 +367,10 @@ export function sortHtmlAttributes(html: string): string {
                     attrValue = attrValue.split(` `).sort().join(` `);
                 }
                 attr += `=` + match[4] + attrValue + match[4];
+            }
+
+            if (defaultValues[tag.toUpperCase()] && defaultValues[tag.toUpperCase()][match[1].trim().toUpperCase()] === attrValue.trim()) {
+                attrValue = ``;
             }
 
             if (attrValue !== ``) {
