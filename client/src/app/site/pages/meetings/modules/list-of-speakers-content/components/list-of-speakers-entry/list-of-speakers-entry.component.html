@@ -433,7 +433,7 @@
     }
 
     <!-- Interposed question -->
-    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.answer) {
         <span>
             <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">help</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
@@ -443,7 +443,7 @@
     }
 
     <!-- Intervention -->
-    @if (speaker.speech_state === SpeechState.INTERVENTION) {
+    @if (speaker.speech_state === SpeechState.INTERVENTION && !speaker.answer) {
         <span>
             <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">error</mat-icon>
             <i [class.user-subtitle]="!!showcolor">
