@@ -81,10 +81,13 @@
                         <button mat-button (click)="toggleForwardingList()">
                             @if (!forwardingExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
-                                <span>{{ 'More' | translate }}</span>
-                            }
-                            @if (forwardingExpanded) {
+                            } @else {
                                 <mat-icon class="icon-text">expand_less</mat-icon>
+                            }
+
+                            @if (!forwardingExpanded) {
+                                <span>{{ 'More' | translate }}</span>
+                            } @else {
                                 <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
@@ -114,10 +117,13 @@
                         <button mat-button (click)="toggleReceiveList()">
                             @if (!receiveExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
-                                <span>{{ 'More' | translate }}</span>
-                            }
-                            @if (receiveExpanded) {
+                            } @else {
                                 <mat-icon class="icon-text">expand_less</mat-icon>
+                            }
+
+                            @if (!receiveExpanded) {
+                                <span>{{ 'More' | translate }}</span>
+                            } @else {
                                 <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
