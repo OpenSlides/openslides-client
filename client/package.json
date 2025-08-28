@@ -44,6 +44,7 @@
     "@angular/platform-browser-dynamic": "^19.2.14",
     "@angular/router": "^19.2.14",
     "@angular/service-worker": "^19.2.14",
+    "@cantoo/pdf-lib": "^2.4.3",
     "@intevation/tiptap-extension-office-paste": "^0.1.1",
     "@material/typography": "^14.0.0",
     "@ngx-pwa/local-storage": "^19.0.0",

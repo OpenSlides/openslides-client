@@ -131,6 +131,17 @@
                         >
                             <span>{{ 'Attachments' | translate }}</span>
                         </mat-chip-option>
+                        <mat-chip-option
+                            #includePdfAttachmentsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="includePdfAttachments"
+                            [matBadgeHidden]="includePdfAttachmentsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>
+                                {{ 'Include attached PDFs' | translate }}
+                            </span>
+                        </mat-chip-option>
                     }
                 </mat-chip-listbox>
             </div>
