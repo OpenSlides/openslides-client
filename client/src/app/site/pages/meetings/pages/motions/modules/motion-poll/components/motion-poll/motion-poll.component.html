@@ -77,7 +77,7 @@
             <!-- Results -->
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll" />
+                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
                 }
                 @if (poll.canBeVotedFor()) {
                     <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll" />

@@ -11,7 +11,7 @@
                     </mat-card-title>
                     <!-- Type and State -->
                     <div class="type-and-state italic spacer-bottom-20">
-                        <span *osPerms="permission.assignmentCanManage; and: poll.isEVoting">
+                        <span *osPerms="permission.assignmentCanManagePolls; and: poll.isEVoting">
                             <os-icon-container
                                 class="poll-type"
                                 color="primary"
@@ -40,7 +40,7 @@
                     <div class="poll-menu">
                         <!-- Buttons -->
                         <button
-                            *osPerms="[permission.projectorCanManage, permission.assignmentCanManage]"
+                            *osPerms="[permission.projectorCanManage, permission.assignmentCanManagePolls]"
                             mat-icon-button
                             [matMenuTriggerFor]="pollItemMenu"
                             (click)="$event.stopPropagation()"
@@ -49,7 +49,7 @@
                         </button>
                     </div>
                     <!-- Change state button -->
-                    <div *osPerms="permission.assignmentCanManage; and: !hideChangeState">
+                    <div *osPerms="permission.assignmentCanManagePolls; and: !hideChangeState">
                         @if (pollStateActions[poll.state]) {
                             <button
                                 mat-stroked-button
@@ -70,7 +70,7 @@
                         }
                     </div>
                     <!-- Enter Votes Hint -->
-                    <div *osPerms="permission.assignmentCanManage; and: poll.isAnalog && !poll.stateHasVotes">
+                    <div *osPerms="permission.assignmentCanManagePolls; and: poll.isAnalog && !poll.stateHasVotes">
                         {{ 'Edit to enter votes.' | translate }}
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                 }
                 <!-- Poll progress bar -->
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
                 }
                 <!-- The Vote -->
                 @if (poll.canBeVotedFor()) {
@@ -103,7 +103,7 @@
 }
 
 <mat-menu #pollItemMenu="matMenu">
-    <div *osPerms="permission.assignmentCanManage">
+    <div *osPerms="permission.assignmentCanManagePolls">
         <button mat-menu-item (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
@@ -112,7 +112,7 @@
     <div *osPerms="permission.projectorCanManage">
         <os-projector-button [menuItem]="true" [object]="poll"></os-projector-button>
     </div>
-    <div *osPerms="permission.assignmentCanManage">
+    <div *osPerms="permission.assignmentCanManagePolls">
         <button mat-menu-item (click)="printBallot()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Ballot papers' | translate }}</span>

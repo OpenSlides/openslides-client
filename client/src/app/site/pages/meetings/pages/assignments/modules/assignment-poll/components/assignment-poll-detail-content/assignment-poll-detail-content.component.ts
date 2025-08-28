@@ -109,7 +109,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     public get canSeeResults(): boolean {
-        return this.operator.hasPerms(Permission.assignmentCanManage) || this.isPublished;
+        return this.operator.hasPerms(Permission.assignmentCanManagePolls) || this.isPublished;
     }
 
     public get isPercentBaseEntitled(): boolean {

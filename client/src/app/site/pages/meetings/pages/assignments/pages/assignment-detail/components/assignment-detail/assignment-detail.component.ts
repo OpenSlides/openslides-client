@@ -252,7 +252,10 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 }
             case `createPoll`:
                 return (
-                    isManager && this.assignment && !this.assignment.isFinished && this.assignment.candidateAmount > 0
+                    this.operator.hasPerms(Permission.assignmentCanManagePolls) &&
+                    this.assignment &&
+                    !this.assignment.isFinished &&
+                    this.assignment.candidateAmount > 0
                 );
             case `manage`:
                 return isManager;

@@ -204,6 +204,11 @@ Note: The right to vote is defined directly in the ballot.`
                 value: Permission.assignmentCanManage
             },
             {
+                display_name: _(`Can manage ballots`),
+                help_text: _(`Can create, modify, start/stop and delete ballots.`),
+                value: Permission.assignmentCanManagePolls
+            },
+            {
                 display_name: _(`Can nominate another participant`),
                 help_text: _(`Can nominate other participants as candidates.
 
