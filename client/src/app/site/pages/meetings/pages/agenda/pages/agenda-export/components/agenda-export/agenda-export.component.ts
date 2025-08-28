@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipOption, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
@@ -50,11 +50,34 @@ interface SavedSelections {
         AgendaItemListModule
     ]
 })
-export class AgendaExportComponent extends BaseComponent implements OnDestroy {
+export class AgendaExportComponent extends BaseComponent implements OnDestroy, AfterViewInit {
     public dialogForm!: UntypedFormGroup;
 
     @ViewChild(`tabGroup`)
     public tabGroup!: MatTabGroup;
+
+    @ViewChild(`itemNumberChip`)
+    public itemNumberChip!: MatChipOption;
+
+    @ViewChild(`textChip`)
+    public textChip!: MatChipOption;
+
+    @ViewChild(`attachmentsChip`)
+    public attachmentsChip!: MatChipOption;
+
+    @ViewChild(`moderationNotesChip`)
+    public moderationNotesChip!: MatChipOption;
+
+    @ViewChild(`listOfSpeakersChip`)
+    public listOfSpeakersChip!: MatChipOption;
+
+    @ViewChild(`pollsChip`)
+    public pollsChip!: MatChipOption;
+
+    @ViewChild(`internalCommentaryChip`)
+    public internalCommentaryChip!: MatChipOption;
+
+    public disabledControls: string[] = [];
 
     public get isPDFFormat(): boolean {
         return this.fileFormats[this.tabIndex] === ExportFileFormat.PDF;
@@ -104,6 +127,12 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         this.initForm();
     }
 
+    public ngAfterViewInit(): void {
+        if (!this.agendaItems.includes(null)) {
+            this.hasAvailableVariables();
+        }
+    }
+
     public override ngOnDestroy(): void {
         this.savedSelections.tab_selections.splice(this.tabIndex, 1, this.dialogForm.value);
         this.storeService.set(`agenda-export-selection`, this.savedSelections);
@@ -144,6 +173,95 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
         this.tabIndex = _event.index;
     }
 
+    // Helper function to determine if mat-chip-option should be selected
+    // Needed, because using the binding with formControl does not disable mat-chip-option
+    public isDisabled(value: string): boolean {
+        return this.disabledControls.includes(value);
+    }
+
+    /**
+     * Function to change the state of the property `disabled` of a given ChipOption.
+     *
+     * Ensures, that the ChipOption exists.
+     *
+     * @param chipOption The ChipOption whose state will change.
+     * @param nextState The next state the ChipOption will assume.
+     */
+    private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
+        if (chipOption) {
+            chipOption.disabled = nextState;
+            chipOption.selected = false;
+            if (nextState) {
+                this.disabledControls.push(value);
+            } else {
+                this.disabledControls = this.disabledControls.filter(obj => !obj.includes(value));
+            }
+        }
+    }
+
+    // Function to determine whioch options are available, set as defaults and disabled
+    // (based on property binding with the formgroup)
+    private hasAvailableVariables(): void {
+        let hasNumber = false;
+        let hasText = false;
+        let hasAttchments = false;
+        let hasPolls = false;
+        let hasLoS = false;
+        let hasModerationNote = false;
+        let hasInternalComment = false;
+
+        const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
+        for (const item of views) {
+            if (item) {
+                //console.log(item.list_of_speakers);
+                console.log(item.moderator_notes);
+                if (item.item_number !== undefined && item.item_number !== ``) {
+                    hasNumber = true;
+                }
+                if (false) {
+                    hasText = true;
+                }
+                if (false) {
+                    hasAttchments = true;
+                }
+                if (false) {
+                    hasPolls = true;
+                }
+                if (false) {
+                    hasLoS = true;
+                }
+                if (false) {
+                    hasModerationNote = true;
+                }
+                if (item.comment !== undefined && item.comment !== ``) {
+                    hasInternalComment = true;
+                }
+            }
+        }
+        console.log(hasLoS);
+        if (this.itemNumberChip && !hasNumber) {
+            this.changeStateOfChipOption(this.itemNumberChip, true, `item_number`);
+        }
+        if (this.textChip && !hasText) {
+            this.changeStateOfChipOption(this.textChip, true, `text`);
+        }
+        if (this.attachmentsChip && !hasAttchments) {
+            this.changeStateOfChipOption(this.attachmentsChip, true, `attachments`);
+        }
+        if (this.pollsChip && !hasPolls) {
+            this.changeStateOfChipOption(this.pollsChip, true, `polls`);
+        }
+        if (this.listOfSpeakersChip && !hasLoS) {
+            this.changeStateOfChipOption(this.listOfSpeakersChip, true, `list_of_speakers`);
+        }
+        if (this.modelRequestService && !hasModerationNote) {
+            this.changeStateOfChipOption(this.moderationNotesChip, true, `moderation_notes`);
+        }
+        if (this.internalCommentaryChip && !hasInternalComment) {
+            this.changeStateOfChipOption(this.internalCommentaryChip, true, `referring_motions`);
+        }
+    }
+
     private async initForm(): Promise<void> {
         this.dialogForm = this.formBuilder.group({
             format: [],
@@ -159,5 +277,13 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy {
             this.tabGroup.selectedIndex = this.savedSelections.tab_index;
             this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
         });
+
+        if (!this.agendaItems.includes(null)) {
+            this.hasAvailableVariables();
+        }
+        // disable pageLayout if only one topic is selected
+        if (this.agendaItems.length === 1) {
+            this.dialogForm.get(`pageLayout`)!.disable();
+        }
     }
 }

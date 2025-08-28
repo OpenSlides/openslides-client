@@ -31,6 +31,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="item_number"
+                        [disabled]="isDisabled(itemNumberChip.value)"
                         [matBadgeHidden]="itemNumberChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Item Number' | translate }}</span>
@@ -49,6 +50,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="text"
+                        [disabled]="isDisabled(textChip.value)"
                         [matBadgeHidden]="textChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Text' | translate }}</span>
@@ -59,6 +61,7 @@
                             matBadge="&check;"
                             matBadgeOverlap="true"
                             value="attachments"
+                            [disabled]="isDisabled(attachmentsChip.value)"
                             [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
                         >
                             <span>{{ 'Attachments' | translate }}</span>
@@ -69,6 +72,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="moderation_notes"
+                        [disabled]="isDisabled(moderationNotesChip.value)"
                         [matBadgeHidden]="moderationNotesChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Moderation notes' | translate }}</span>
@@ -78,6 +82,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="list_of_speakers"
+                        [disabled]="isDisabled(listOfSpeakersChip.value)"
                         [matBadgeHidden]="listOfSpeakersChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'List of speakers' | translate }}</span>
@@ -88,6 +93,7 @@
                             matBadge="&check;"
                             matBadgeOverlap="true"
                             value="polls"
+                            [disabled]="isDisabled(pollsChip.value)"
                             [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
                         >
                             <span>{{ 'Polls' | translate }}</span>
@@ -98,6 +104,7 @@
                         matBadge="&check;"
                         matBadgeOverlap="true"
                         value="internal_commentary"
+                        [disabled]="isDisabled(internalCommentaryChip.value)"
                         [matBadgeHidden]="internalCommentaryChip.selected ? 'false' : 'true'"
                     >
                         <span>{{ 'Internal commentary' | translate }}</span>
