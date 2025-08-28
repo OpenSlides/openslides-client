@@ -74,7 +74,7 @@
                 }
                 <!-- Poll progress bar -->
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
                 }
                 <!-- The Vote -->
                 @if (poll.canBeVotedFor()) {

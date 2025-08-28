@@ -60,6 +60,10 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
     }
 
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.pollCanManage);
+    }
+
     public constructor(
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,

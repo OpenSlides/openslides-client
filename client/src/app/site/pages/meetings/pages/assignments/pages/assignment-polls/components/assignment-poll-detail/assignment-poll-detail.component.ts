@@ -43,6 +43,10 @@ export class AssignmentPollDetailComponent
 
     public displayDelegation: boolean;
 
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.assignmentCanManagePolls);
+    }
+
     public constructor(
         pollService: AssignmentPollService,
         private pollDialog: AssignmentPollDialogService,
