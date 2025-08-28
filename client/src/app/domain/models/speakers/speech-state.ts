@@ -3,12 +3,7 @@ export enum SpeechState {
     CONTRA = `contra`,
     CONTRIBUTION = `contribution`,
     INTERPOSED_QUESTION = `interposed_question`,
-    INTERVENTION = `intervention`,
-    INTERVENTION_ANSWER = `intervention_answer`
+    INTERVENTION = `intervention`
 }
 
-export const SPECIAL_SPEECH_STATES = [
-    SpeechState.INTERPOSED_QUESTION,
-    SpeechState.INTERVENTION,
-    SpeechState.INTERVENTION_ANSWER
-];
+export const SPECIAL_SPEECH_STATES = [SpeechState.INTERPOSED_QUESTION, SpeechState.INTERVENTION];

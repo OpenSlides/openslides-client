@@ -324,7 +324,8 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
                 ? undefined
                 : this.operator.user.getMeetingUser().id,
             {
-                speechState: SpeechState.INTERVENTION_ANSWER,
+                // TODO: Add meeting_user_id
+                speechState: SpeechState.INTERVENTION,
                 answer_to_id
             }
         );
