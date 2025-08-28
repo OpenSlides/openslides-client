@@ -80,7 +80,7 @@ export class AgendaPdfCatalogExportService {
             {
                 text: this.translate.instant(`Agenda`),
                 style: this.getStyle(`header1`),
-                margin: [0, 0, 0, 20]
+                margin: this.getStyle(`margin-header1`)
             }
         ]);
         // doc.push(this.getDivLine());
@@ -92,8 +92,6 @@ export class AgendaPdfCatalogExportService {
         }
 
         doc = doc.concat(agendaDocList);
-
-        console.log(`End of creation`);
 
         return doc;
     }
@@ -231,7 +229,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`Moderation note`),
                     style: this.getStyle(`header3`),
-                    margin: [0, 10, 0, 0]
+                    margin: this.getStyle(`margin-header3`)
                 },
                 entry
             ];
@@ -321,7 +319,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`List of speakers`),
                     style: this.getStyle(`header3`),
-                    margin: [0, 0, 0, 10]
+                    margin: this.getStyle(`margin-header3`)
                 },
                 ...entries
             ];
@@ -339,7 +337,11 @@ export class AgendaPdfCatalogExportService {
         if (agendaItem.content_object?.poll_ids) {
             for (let i = 0; i < agendaItem.content_object?.polls.length; i++) {
                 const poll: ViewPoll = agendaItem.content_object?.polls[i];
-                entries.push({ text: poll.title, style: this.getStyle(`header3`), margin: [0, 0, 0, 5] });
+                entries.push({
+                    text: poll.title,
+                    style: this.getStyle(`header3`),
+                    margin: this.getStyle(`margin-item`)
+                });
                 entries.push({
                     style: this.getStyle(`table-header`),
                     columns: [
@@ -383,15 +385,19 @@ export class AgendaPdfCatalogExportService {
                 entries.push({
                     columns: [
                         { text: ``, width: firstPlaceWidth },
-                        { text: this.translate.instant(`Cast votes`), width: optionWidth },
+                        { text: this.translate.instant(`Valid votes	`), width: optionWidth },
                         { text: amount, width: votesWidth }
                     ],
-                    margin: [0, 0, 0, 10]
+                    margin: this.getStyle(`margin-text`)
                 });
-                entries.push({ text: ``, margin: [0, 0, 0, 10] });
+                entries.push({ text: ``, margin: this.getStyle(`margin-text`) });
             }
             return [
-                { text: this.translate.instant(`Polls`), style: this.getStyle(`header3`), margin: [0, 0, 0, 10] },
+                {
+                    text: this.translate.instant(`Polls`),
+                    style: this.getStyle(`header3`),
+                    margin: this.getStyle(`margin-header3`)
+                },
                 ...entries
             ];
         }
@@ -404,7 +410,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`Internal Commentary`),
                     style: this.getStyle(`header3`),
-                    margin: [0, 10, 0, 10]
+                    margin: this.getStyle(`margin-header3`)
                 },
                 { text: agendaItem.comment }
             ];
@@ -423,7 +429,15 @@ export class AgendaPdfCatalogExportService {
             case `table-header`:
                 return { bold: true, fontSize: 12 };
             case `grey`:
-                return { color: `grey` };
+                return { layout: `#EEEEEE` };
+            case `margin-header1`:
+                return [0, 0, 0, 20];
+            case `margin-header3`:
+                return [0, 15, 0, 10];
+            case `margin-type-text`:
+                return [0, 0, 0, 10];
+            case `margin-item`:
+                return [0, 0, 0, 5];
             default:
                 return {};
         }
@@ -465,7 +479,7 @@ export class AgendaPdfCatalogExportService {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
                 style: this.getStyle(`header3`),
-                margin: [0, 0, 0, 10]
+                margin: this.getStyle(`margin-header3`)
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
                 const attachment = agendaItem.content_object?.attachment_meeting_mediafiles[key];
@@ -475,7 +489,7 @@ export class AgendaPdfCatalogExportService {
                     attachments.push({
                         image: fileUrl,
                         width: width,
-                        margin: [0, 0, 0, 10]
+                        margin: this.getStyle(`margin-text`)
                     });
                 } else {
                     const link = Location.joinWithSlash(instanceUrl, fileUrl);
@@ -484,7 +498,7 @@ export class AgendaPdfCatalogExportService {
                             {
                                 text: attachment.getTitle() + `: ` + link,
                                 link: link,
-                                margin: [0, 0, 0, 5]
+                                margin: this.getStyle(`margin-item`)
                             }
                         ]
                     });
