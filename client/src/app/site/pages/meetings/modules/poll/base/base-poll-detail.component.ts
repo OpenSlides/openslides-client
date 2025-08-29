@@ -319,7 +319,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     const entries: EntitledUsersTableEntry[] = [];
                     for (const user of users || []) {
                         const delegateToId = user.vote_delegated_to_id();
-                        const voted = this.poll.live_votes[user.id] !== undefined;
+                        const voted = this.poll.live_votes && this.poll.live_votes[user.id] !== undefined;
                         entries.push({
                             id: user.id,
                             user: user,

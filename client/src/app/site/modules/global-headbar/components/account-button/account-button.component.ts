@@ -179,7 +179,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             if (match) {
                 config.data = { userId: +match[1] };
             }
-            this.dialog.open(ChessDialogComponent, config);
+            this.dialog.open(ChessDialogComponent, { ...config, disableClose: true });
         } else {
             this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;
