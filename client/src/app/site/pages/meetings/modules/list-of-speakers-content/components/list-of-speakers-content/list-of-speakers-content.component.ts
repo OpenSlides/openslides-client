@@ -18,7 +18,7 @@ import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
@@ -120,6 +120,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.canManage && this.isCallEnabled;
     }
 
+    public get interventionEnabled(): boolean {
+        return this._interventionEnabled;
+    }
+
     public get isAdminNotInMeeting(): boolean {
         return (
             (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManager) &&
@@ -169,6 +173,33 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public structureLevelCountdownEnabled = false;
 
+    public findFinishedPredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (speaker: ViewSpeaker) =>
+        this.finishedSpeakers
+            .slice()
+            .reverse()
+            .find(spkr => spkr.end_time < speaker.end_time && !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
+
+    public findActivePredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (_speaker: ViewSpeaker) =>
+        this.finishedSpeakers
+            .slice()
+            .reverse()
+            .find(spkr => !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
+
+    public getActiveSpeaker: (speaker: ViewSpeaker) => ViewSpeaker = (_: ViewSpeaker) => this.activeSpeaker;
+
+    public findWaitingPredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (speaker: ViewSpeaker) => {
+        const waitingPredecessor = this.waitingSpeakers
+            .slice()
+            .reverse()
+            .find(spkr => spkr.weight < speaker.weight && !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
+        return (
+            waitingPredecessor ||
+            (this.activeSpeaker && !SPECIAL_SPEECH_STATES.includes(this.activeSpeaker?.speech_state)
+                ? this.activeSpeaker
+                : this.findActivePredecessorFunction(speaker))
+        );
+    };
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -178,6 +209,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
+
+    private _interventionEnabled = false;
 
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
@@ -304,6 +337,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async addInterposedQuestion(): Promise<void> {
         await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
             speechState: SpeechState.INTERPOSED_QUESTION
+        });
+    }
+
+    public async addIntervention(): Promise<void> {
+        await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
+            speechState: SpeechState.INTERVENTION
         });
     }
 
@@ -571,6 +610,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
                 this.forbidDelegatorToAddSelf = enabled;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
+                this._interventionEnabled = time > 0;
             })
         );
     }

@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Speaker } from 'src/app/domain/models/speakers/speaker';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import {
     PointOfOrderInformation,
     SpeakerRepositoryService
@@ -40,12 +40,13 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
             point_of_order_category_id?: Id;
             meeting_user_id?: Id;
             structure_level_id?: Id;
+            answer_to_id?: Id;
         }
     ): Promise<Identifiable> {
         const meetingUserId =
             optionalInformation.meeting_user_id ??
             this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
-        if (!meetingUserId && optionalInformation.speechState !== SpeechState.INTERPOSED_QUESTION) {
+        if (!meetingUserId && !SPECIAL_SPEECH_STATES.includes(optionalInformation.speechState)) {
             throw new Error(`Speaker creation failed: Selected user may not be in meeting`);
         }
         return this.repo.create(listOfSpeakers, meetingUserId, optionalInformation);
@@ -79,6 +80,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
 
     public setIntervention(speaker: ViewSpeaker): Promise<void> {
         return this.repo.setIntervention(speaker);
+    }
+
+    public setAnswer(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.setAnswer(speaker);
     }
 
     public setPointOfOrder(speaker: ViewSpeaker, data: PointOfOrderInformation): Promise<void> {

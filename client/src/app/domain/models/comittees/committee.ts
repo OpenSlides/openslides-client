@@ -33,18 +33,18 @@ export class Committee extends BaseModel<Committee> {
         `name`,
         `description`,
         `external_id`,
-        `parent_id`,
-        `child_ids`,
         `meeting_ids`,
         `default_meeting_id`,
         `user_ids`,
         `manager_ids`,
+        `parent_id`,
+        `child_ids`,
+        `all_parent_ids`,
+        `all_child_ids`,
+        `native_user_ids`,
         `forward_to_committee_ids`,
         `receive_forwardings_from_committee_ids`,
         `organization_tag_ids`,
-        `organization_id`,
-        `native_user_ids`,
-        `all_parent_ids`,
-        `all_child_ids`
+        `organization_id`
     ];
 }

@@ -81,20 +81,20 @@ export class User extends BaseDecimalModel<User> {
         `last_email_sent`,
         `is_demo_user`,
         `last_login`,
+        `external`,
         `gender_id`,
         `organization_management_level`,
         `is_present_in_meeting_ids`,
         `committee_ids`,
         `committee_management_ids`,
-        `home_committee_id`,
         `meeting_user_ids`,
         `poll_voted_ids`,
         `option_ids`,
         `vote_ids`,
         `poll_candidate_ids`,
+        `home_committee_id`,
         `meeting_ids`,
-        `organization_id`,
-        `external`
+        `organization_id`
     ];
 }
 export interface User {}
