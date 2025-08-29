@@ -61,6 +61,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             speech_state?: SpeechState;
             meeting_user_id?: Id;
             structure_level_id?: Id;
+            answer?: boolean;
         },
         viewModel: ViewSpeaker
     ): Promise<void> {
@@ -78,6 +79,8 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         };
         if (speech_state !== null) {
             payload.point_of_order = false;
+        } else if (viewModel.answer) {
+            payload.answer = false;
         }
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
@@ -143,6 +146,10 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return this.updateSpeechState(speechState, speaker);
     }
 
+    public setAnswer(speaker: ViewSpeaker): Promise<void> {
+        return this.update({ answer: !speaker.answer }, speaker);
+    }
+
     public setPointOfOrder(speaker: ViewSpeaker, data: PointOfOrderInformation): Promise<void> {
         const payload: any = {
             id: speaker.id,
@@ -150,6 +157,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         };
         if (data.point_of_order) {
             payload.speech_state = null;
+            payload.answer = false;
         }
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }

@@ -135,10 +135,14 @@
     @if (speaker.point_of_order) {
         <mat-icon color="warn">warning</mat-icon>
     }
-    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-        <mat-icon>help</mat-icon>
-    }
-    @if (speaker.speech_state === SpeechState.INTERVENTION) {
-        <mat-icon>error</mat-icon>
+    @if (speaker.answer) {
+        <mat-icon>warning</mat-icon>
+    } @else {
+        @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+            <mat-icon>help</mat-icon>
+        }
+        @if (speaker.speech_state === SpeechState.INTERVENTION) {
+            <mat-icon>error</mat-icon>
+        }
     }
 </ng-template>

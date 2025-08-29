@@ -98,6 +98,7 @@
                 canManage &&
                 !speaker.point_of_order &&
                 speaker.speech_state !== 'interposed_question' &&
+                speaker.speech_state !== 'intervention' &&
                 !speaker.isFinished
             ) {
                 <!-- Speaker count -->
@@ -268,12 +269,24 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         @if (canManage) {
-            @if (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionAnswerButton()) {
-                <button mat-menu-item (click)="onInterventionAnswerButton(speaker.id)">
-                    <mat-icon>warning</mat-icon>
-                    <span>{{ 'Answer to intervention' | translate }}</span>
-                </button>
-                <mat-divider />
+            @if (
+                (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionAnswerButton()) ||
+                (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && enableInterposedQuestionAnswerButton())
+            ) {
+                @if (!speaker.answer) {
+                    <button mat-menu-item (click)="onCreateAnswerButton()">
+                        <mat-icon>warning</mat-icon>
+                        <span>{{ 'Create Answer' | translate }}</span>
+                    </button>
+                    <mat-divider />
+                }
+                <!-- answer -->
+                @if (!speaker.isSpeaking) {
+                    <button mat-menu-item (click)="onAnswerButton()">
+                        <mat-icon>warning</mat-icon>
+                        <span>{{ 'Answer' | translate }}</span>
+                    </button>
+                }
             }
             @if (enableSpeechStateControls()) {
                 <!-- pro button -->

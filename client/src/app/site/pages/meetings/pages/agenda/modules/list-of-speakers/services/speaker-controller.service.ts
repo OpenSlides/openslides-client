@@ -82,6 +82,10 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
         return this.repo.setIntervention(speaker);
     }
 
+    public setAnswer(speaker: ViewSpeaker): Promise<void> {
+        return this.repo.setAnswer(speaker);
+    }
+
     public setPointOfOrder(speaker: ViewSpeaker, data: PointOfOrderInformation): Promise<void> {
         return this.repo.setPointOfOrder(speaker, data);
     }

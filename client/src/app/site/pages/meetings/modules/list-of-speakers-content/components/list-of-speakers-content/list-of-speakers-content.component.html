@@ -29,6 +29,7 @@
                     @for (speaker of finishedSpeakers; track speaker.id; let number = $index) {
                         <mat-list-item>
                             <os-list-of-speakers-entry
+                                [findPredecessorFn]="findFinishedPredecessorFunction"
                                 [speaker]="speaker"
                                 [speakerIndex]="number"
                                 (pauseSpeech)="onPauseButton(activeSpeaker)"
@@ -54,6 +55,7 @@
             @if (canManage) {
                 <div class="current-speaker desktop-speaker-indent background-accent">
                     <os-list-of-speakers-entry
+                        [findPredecessorFn]="findActivePredecessorFunction"
                         [showcolor]="false"
                         [speaker]="activeSpeaker"
                         (pauseSpeech)="onPauseButton(activeSpeaker)"
@@ -64,6 +66,7 @@
             } @else {
                 <div class="current-speaker background-accent">
                     <os-list-of-speakers-entry
+                        [findPredecessorFn]="findActivePredecessorFunction"
                         [showcolor]="false"
                         [speaker]="activeSpeaker"
                         (pauseSpeech)="onPauseButton(activeSpeaker)"
@@ -84,6 +87,7 @@
                         }"
                     >
                         <os-list-of-speakers-entry
+                            [findPredecessorFn]="getActiveSpeaker"
                             [speaker]="speaker"
                             (pauseSpeech)="onPauseButton(speaker)"
                             (startSpeech)="onStartButton(speaker)"
@@ -107,6 +111,7 @@
                     <!-- implicit speaker references into the component using ng-template slot -->
                     <ng-template let-index="index" let-speaker>
                         <os-list-of-speakers-entry
+                            [findPredecessorFn]="findWaitingPredecessorFunction"
                             [speaker]="speaker"
                             [speakerIndex]="index"
                             (pauseSpeech)="onPauseButton(speaker)"

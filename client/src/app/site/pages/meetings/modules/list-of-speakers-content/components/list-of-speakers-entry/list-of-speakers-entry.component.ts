@@ -58,6 +58,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     @Input()
+    public findPredecessorFn: (speaker: ViewSpeaker) => ViewSpeaker = (_speaker: ViewSpeaker) => undefined;
+
+    @Input()
     public speakerIndex: number = null;
 
     @Input()
@@ -113,6 +116,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     private pointOfOrderForOthersEnabled = false;
     private interventionEnabled = false;
+    private interposedQuestionEnabled = false;
 
     private canMarkSelf = false;
 
@@ -240,6 +244,10 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.interventionEnabled;
     }
 
+    public enableInterposedQuestionAnswerButton(): boolean {
+        return this.interposedQuestionEnabled;
+    }
+
     public enablePointOfOrderButton(): boolean {
         return (
             this.pointOfOrderEnabled &&
@@ -317,16 +325,20 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         }
     }
 
-    public async onInterventionAnswerButton(answer_to_id: Id): Promise<void> {
+    public async onAnswerButton(): Promise<void> {
+        await this.speakerRepo.setAnswer(this.speaker);
+    }
+
+    public async onCreateAnswerButton(): Promise<void> {
         await this.speakerRepo.create(
             this.speaker.list_of_speakers,
             this.operator.hasPerms(this.permission.listOfSpeakersCanManage)
                 ? undefined
                 : this.operator.user.getMeetingUser().id,
             {
-                // TODO: Add meeting_user_id
-                speechState: SpeechState.INTERVENTION,
-                answer_to_id
+                meeting_user_id: this.findPredecessorFn(this.speaker)?.meeting_user_id,
+                speechState: this.speaker.speech_state,
+                answer_to_id: this.speaker.id
             }
         );
     }
@@ -379,6 +391,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
             speaker =>
                 speaker.state === SpeakerState.FINISHED &&
                 speaker.user_id === this.speaker.user_id &&
+                !SPECIAL_SPEECH_STATES.includes(speaker.speech_state) &&
                 !speaker.point_of_order
         ).length;
     }
@@ -469,6 +482,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
             }),
             this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
                 this.interventionEnabled = time > 0;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_enable_interposed_question`).subscribe(val => {
+                this.interposedQuestionEnabled = val;
             }),
             this.interactionService.showLiveConfObservable.subscribe(show => {
                 this.isCallEnabled = show;
