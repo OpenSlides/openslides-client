@@ -199,38 +199,40 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         }
     }
 
-    // Function to determine whioch options are available, set as defaults and disabled
+    // Function to determine which options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
-    private hasAvailableVariables(): void {
+    private async hasAvailableVariables(): Promise<void> {
         let hasNumber = false;
         let hasText = false;
-        let hasAttchments = false;
+        let hasAttachments = false;
         let hasPolls = false;
         let hasLoS = false;
         let hasModerationNote = false;
         let hasInternalComment = false;
 
+        await this.modelRequestService.fetch(getAgendaExportSubscriptionConfig(...this.agendaItems));
         const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
         for (const item of views) {
             if (item) {
-                //console.log(item.list_of_speakers);
-                console.log(item.moderator_notes);
                 if (item.item_number !== undefined && item.item_number !== ``) {
                     hasNumber = true;
                 }
-                if (false) {
+                if (item.content_object?.text !== undefined && item.content_object?.text !== ``) {
                     hasText = true;
                 }
-                if (false) {
-                    hasAttchments = true;
+                if (item.content_object?.attachment_meeting_mediafiles?.length) {
+                    hasAttachments = true;
                 }
-                if (false) {
+                if (item.content_object?.poll_ids?.length) {
                     hasPolls = true;
                 }
-                if (false) {
+                if (item.content_object?.list_of_speakers?.speakers.length) {
                     hasLoS = true;
                 }
-                if (false) {
+                if (
+                    item.content_object?.list_of_speakers?.moderator_notes !== undefined &&
+                    item.content_object?.list_of_speakers?.moderator_notes !== ``
+                ) {
                     hasModerationNote = true;
                 }
                 if (item.comment !== undefined && item.comment !== ``) {
@@ -238,14 +240,13 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
                 }
             }
         }
-        console.log(hasLoS);
         if (this.itemNumberChip && !hasNumber) {
             this.changeStateOfChipOption(this.itemNumberChip, true, `item_number`);
         }
         if (this.textChip && !hasText) {
             this.changeStateOfChipOption(this.textChip, true, `text`);
         }
-        if (this.attachmentsChip && !hasAttchments) {
+        if (this.attachmentsChip && !hasAttachments) {
             this.changeStateOfChipOption(this.attachmentsChip, true, `attachments`);
         }
         if (this.pollsChip && !hasPolls) {
