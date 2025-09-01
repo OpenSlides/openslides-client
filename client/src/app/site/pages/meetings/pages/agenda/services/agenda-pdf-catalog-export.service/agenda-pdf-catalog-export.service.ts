@@ -75,7 +75,6 @@ export class AgendaPdfCatalogExportService {
             }
         }
 
-        // doc.push(this.pdfService.createTitle(this.translate.instant(`Agenda`)));
         doc.push([
             {
                 text: this.translate.instant(`Agenda`),
@@ -83,12 +82,9 @@ export class AgendaPdfCatalogExportService {
                 margin: this.getStyle(`margin-header1`)
             }
         ]);
-        // doc.push(this.getDivLine());
 
         if (printToc) {
-            // TODO: add toc
-            console.log(`XXX create Toc`);
-            // doc.push(this.createToc(agendaItems));
+            doc.push(this.createToc(agendaItems));
         }
 
         doc = doc.concat(agendaDocList);
@@ -98,9 +94,8 @@ export class AgendaPdfCatalogExportService {
 
     /**
      * Creates the table of contents for the agenda.
-     * Considers sorting by categories and no sorting.
      *
-     * @param motions The motions to add in the TOC
+     * @param agenda The agenda items for the table of content
      * @returns the table of contents as document definition
      */
     private createToc(agenda: ViewAgendaItem[]): Content {
@@ -119,16 +114,9 @@ export class AgendaPdfCatalogExportService {
         const tocBody = [];
         for (const topic of agenda) {
             tocBody.push(
-                /**
                 this.pdfService.createTocLine({
                     identifier: `${topic.item_number ? topic.item_number : ``}`,
-                    title: topic.getTitle(),
-                    pageReference: `${topic.id}`
-                })
-                */
-                this.pdfService.createTocLine({
-                    identifier: `${topic.item_number ? topic.item_number : ``}`,
-                    title: topic.getTitle(),
+                    title: topic.content_object?.title,
                     pageReference: `${topic.id}`,
                     style: StyleType.DEFAULT
                 })
@@ -145,9 +133,8 @@ export class AgendaPdfCatalogExportService {
     }
 
     /**
-     * Function to get the definition for the header
-     * for exporting motion-list as PDF. Needed, if submitters
-     * and recommendation should also be exported to the `Table of contents`.
+     * Function to get the definition for the header of the ToC
+     * for exporting agenda as PDF.
      *
      * @returns {Content} The DocDefinition for `pdfmake.js`.
      */
@@ -156,10 +143,7 @@ export class AgendaPdfCatalogExportService {
             { text: this.translate.instant(`Number`), style: `tocHeaderRow` },
             {
                 style: `tocHeaderRow`,
-                text: [
-                    `${this.translate.instant(`Title`)} · ${this.translate.instant(`Submitters`)} · `,
-                    { text: `${this.translate.instant(`Recommendation`)}`, italics: true }
-                ]
+                text: [`${this.translate.instant(`Title`)}`]
             },
             { text: this.translate.instant(`Page`), style: `tocHeaderRow`, alignment: `right` }
         ];
