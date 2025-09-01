@@ -351,16 +351,14 @@ export class AgendaPdfCatalogExportService {
 
                 for (const option of poll.options) {
                     const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
-                    console.log(option);
-                    console.log(option.votes);
-                    // TODO: The rsult is missing
+                    const votesForOption = option.votes.length;
 
                     entries.push({
                         style: style,
                         columns: [
-                            { text: i, width: firstPlaceWidth },
+                            { text: i + 1, width: firstPlaceWidth },
                             { text: option.getOptionTitle().title, width: optionWidth },
-                            { text: ``, width: votesWidth }
+                            { text: `${votesForOption}`, width: votesWidth }
                         ]
                     });
                     i++;
