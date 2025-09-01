@@ -319,8 +319,8 @@ export class AgendaPdfCatalogExportService {
         const firstPlaceWidth = 10;
 
         if (agendaItem.content_object?.poll_ids) {
-            for (let i = 0; i < agendaItem.content_object?.polls.length; i++) {
-                const poll: ViewPoll = agendaItem.content_object?.polls[i];
+            for (let pollIndex = 0; pollIndex < agendaItem.content_object?.polls.length; pollIndex++) {
+                const poll: ViewPoll = agendaItem.content_object?.polls[pollIndex];
                 entries.push({
                     text: poll.title,
                     style: this.getStyle(`header3`),
@@ -349,19 +349,20 @@ export class AgendaPdfCatalogExportService {
                     ]
                 });
 
+                let optionIndex = 0;
                 for (const option of poll.options) {
-                    const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
-                    const votesForOption = option.votes.length;
+                    const style = (optionIndex + 1) % 2 ? this.getStyle(`grey`) : {};
+                    const votesForOption = poll.stateHasVotes ? option.votes.length : ``;
 
                     entries.push({
                         style: style,
                         columns: [
-                            { text: i + 1, width: firstPlaceWidth },
+                            { text: optionIndex + 1, width: firstPlaceWidth },
                             { text: option.getOptionTitle().title, width: optionWidth },
                             { text: `${votesForOption}`, width: votesWidth }
                         ]
                     });
-                    i++;
+                    optionIndex++;
                 }
                 const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
                 entries.push({
