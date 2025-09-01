@@ -135,8 +135,8 @@ export class MeetingSettingsGroupDetailComponent
      * Saves every field in this config-group.
      */
     public async saveAll(): Promise<void> {
+        this.cd.detach();
         try {
-            this.cd.detach();
             const data = deepCopy(this.changedSettings);
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
@@ -180,6 +180,7 @@ export class MeetingSettingsGroupDetailComponent
             this.cd.reattach();
             this.cd.markForCheck();
         } catch (e: any) {
+            this.cd.reattach();
             this.matSnackBar.open(e, this.translate.instant(`Ok`), {
                 duration: 0
             });
