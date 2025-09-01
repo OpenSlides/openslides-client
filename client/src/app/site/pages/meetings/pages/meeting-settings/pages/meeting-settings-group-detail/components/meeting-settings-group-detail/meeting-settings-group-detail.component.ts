@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
@@ -34,7 +42,8 @@ import {
     selector: `os-meeting-settings-group-detail`,
     templateUrl: `./meeting-settings-group-detail.component.html`,
     styleUrls: [`./meeting-settings-group-detail.component.scss`],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingSettingsGroupDetailComponent
     extends BaseMeetingComponent
@@ -126,8 +135,8 @@ export class MeetingSettingsGroupDetailComponent
      * Saves every field in this config-group.
      */
     public async saveAll(): Promise<void> {
-        this.cd.detach();
         try {
+            this.cd.detach();
             const data = deepCopy(this.changedSettings);
             for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
