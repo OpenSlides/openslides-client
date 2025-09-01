@@ -2,6 +2,7 @@ import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { CountdownData } from 'src/app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
 import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
@@ -168,6 +169,31 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 
     public getEndTimeAsDate(): Date | null {
         return this.speaker.end_time ? new Date(this.speaker.end_time * 1000) : null;
+    }
+
+    public getCountupData(): CountdownData {
+        const total_pause = this.total_pause || 0;
+        const end = this.pause_time || this.end_time || 0;
+        return {
+            running: this.isSpeaking,
+            default_time: 0,
+            countdown_time: this.isSpeaking
+                ? this.begin_time + total_pause
+                : (end - (this.begin_time + total_pause) || 0) * -1
+        };
+    }
+
+    public getCountdownData(default_time: number): CountdownData {
+        const total_pause = this.total_pause || 0;
+        const end = this.pause_time || this.end_time || 0;
+        const countdown_time = this.isSpeaking
+            ? this.begin_time + total_pause + default_time
+            : (end - (this.begin_time + total_pause + default_time)) * -1;
+        return {
+            running: this.isSpeaking,
+            default_time,
+            countdown_time: this.begin_time ? countdown_time : default_time
+        };
     }
 }
 interface ISpeakerRelations {

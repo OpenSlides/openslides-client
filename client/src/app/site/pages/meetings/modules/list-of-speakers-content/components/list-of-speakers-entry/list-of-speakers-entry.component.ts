@@ -25,6 +25,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -415,42 +416,19 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         );
     }
 
-    public getSpeakerCountdown(): any {
-        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-            const total_pause = this.speaker.total_pause || 0;
-            const end = this.speaker.pause_time || this.speaker.end_time || 0;
-            return {
-                running: this.speaker.isSpeaking,
-                default_time: 0,
-                countdown_time: this.speaker.isSpeaking
-                    ? this.speaker.begin_time + total_pause
-                    : (end - (this.speaker.begin_time + total_pause) || 0) * -1
-            };
+    public getSpeakerCountdown(): CountdownData {
+        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION || this.speaker.answer) {
+            return this.speaker.getCountupData();
         } else if (this.interventionEnabled && this.speaker.speech_state === SpeechState.INTERVENTION) {
             const default_time = this.meetingSettingsService.instant(`list_of_speakers_intervention_time`) || 0;
-            const total_pause = this.speaker.total_pause || 0;
-            const end = this.speaker.pause_time || this.speaker.end_time || 0;
-            const countdown_time = this.speaker.isSpeaking
-                ? this.speaker.begin_time + total_pause + default_time
-                : (end - (this.speaker.begin_time + total_pause + default_time)) * -1;
-            return {
-                running: this.speaker.isSpeaking,
-                default_time,
-                countdown_time: this.speaker.begin_time ? countdown_time : default_time
-            };
+            return this.speaker.getCountdownData(default_time);
         } else if (
             this.structureLevelCountdownEnabled &&
             this.speaker.structure_level_list_of_speakers &&
             !this.speaker.point_of_order
         ) {
             const speakingTime = this.speaker.structure_level_list_of_speakers;
-            const remaining = speakingTime.remaining_time;
-            return {
-                running: !!speakingTime.current_start_time,
-                countdown_time: speakingTime.current_start_time
-                    ? speakingTime.current_start_time + remaining
-                    : remaining
-            };
+            return speakingTime.countdownData;
         }
 
         return null;
