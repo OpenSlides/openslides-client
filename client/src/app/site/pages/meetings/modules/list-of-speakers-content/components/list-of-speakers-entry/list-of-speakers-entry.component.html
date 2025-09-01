@@ -413,65 +413,26 @@
 </ng-template>
 
 <ng-template #speechType>
-    <!-- Pro Speech -->
-    @if (speaker.speech_state === SpeechState.PRO) {
+    @if (speaker.speech_state) {
         <span>
-            <mat-icon class="inline-icon-text-align" inline [class.green-text]="!!showcolor">add_circle</mat-icon>
+            @if (speaker.speech_state === SpeechState.PRO) {
+                <!-- Pro Speech -->
+                <mat-icon class="inline-icon-text-align" inline [class.green-text]="!!showcolor">
+                    {{ speaker.stateIcon }}
+                </mat-icon>
+            } @else if (speaker.speech_state === SpeechState.CONTRA) {
+                <!-- Contra Speech -->
+                <mat-icon class="inline-icon-text-align" inline [class.red-warning-text]="!!showcolor">
+                    {{ speaker.stateIcon }}
+                </mat-icon>
+            } @else {
+                <!-- Any other speech state -->
+                <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">
+                    {{ speaker.stateIcon }}
+                </mat-icon>
+            }
             <i [class.user-subtitle]="!!showcolor">
-                {{ 'Forspeech' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Contra Speech -->
-    @if (speaker.speech_state === SpeechState.CONTRA) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.red-warning-text]="!!showcolor">
-                remove_circle
-            </mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Counter speech' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Marked -->
-    @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">star</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Contribution' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Interposed question -->
-    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.answer) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">help</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Interposed question' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Intervention -->
-    @if (speaker.speech_state === SpeechState.INTERVENTION && !speaker.answer) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">error</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Intervention' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Intervention answer -->
-    @if (speaker.answer) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">warning</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                <!-- TODO: Make speech state verbose -->
-                {{ 'Answer to' | translate }} {{ speaker.speech_state }}
+                {{ speaker.verboseState | translate }}
             </i>
         </span>
     }
