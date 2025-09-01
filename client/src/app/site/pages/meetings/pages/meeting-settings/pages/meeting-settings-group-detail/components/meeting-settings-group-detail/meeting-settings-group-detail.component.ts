@@ -177,13 +177,13 @@ export class MeetingSettingsGroupDetailComponent
                 await this.repo.update(data, { meeting: this.meeting });
             }
             this.changedSettings = {};
-            this.cd.reattach();
-            this.cd.markForCheck();
         } catch (e: any) {
-            this.cd.reattach();
             this.matSnackBar.open(e, this.translate.instant(`Ok`), {
                 duration: 0
             });
+        } finally {
+            this.cd.reattach();
+            this.cd.markForCheck();
         }
     }
 
