@@ -1,4 +1,4 @@
-@use "font-variables";
+@use 'font-variables';
 
 #projector {
     * {
@@ -14,11 +14,12 @@
     }
 
     .slidetitle > h1,
-     h1.projector_h1 {
-         &, * {
-             font-family: font-variables.$font-projectorH1;
-         }
-     }
+    h1.projector_h1 {
+        &,
+        * {
+            font-family: font-variables.$font-projectorH1;
+        }
+    }
 
     h2 {
         line-height: 40px;
@@ -27,7 +28,8 @@
 
     .slidetitle > h2,
     h2.projector_h2 {
-        &, * {
+        &,
+        * {
             font-family: font-variables.$font-projectorH2;
         }
     }

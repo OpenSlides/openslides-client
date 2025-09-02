@@ -58,19 +58,19 @@ export class AutoupdateCommunicationService {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
                 switch (msg?.action) {
                     case `receive-data`:
-                        this.handleReceiveData((msg as AutoupdateReceiveData), dataSubscription);
+                        this.handleReceiveData(msg as AutoupdateReceiveData, dataSubscription);
                         break;
                     case `receive-error`:
-                        this.handleReceiveError((msg as AutoupdateReceiveError));
+                        this.handleReceiveError(msg as AutoupdateReceiveError);
                         break;
                     case `set-streamid`:
-                        this.handleSetStreamId((msg as AutoupdateSetStreamId));
+                        this.handleSetStreamId(msg as AutoupdateSetStreamId);
                         break;
                     case `status`:
-                        this.handleStatus((msg as AutoupdateStatus));
+                        this.handleStatus(msg as AutoupdateStatus);
                         break;
                     case `set-connection-mode`:
-                        this.handleSetConnectionMode((msg.content as string));
+                        this.handleSetConnectionMode(msg.content as string);
                         break;
                 }
             });

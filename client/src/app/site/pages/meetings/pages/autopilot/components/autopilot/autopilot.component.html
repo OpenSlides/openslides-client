@@ -2,7 +2,7 @@
     <div class="title-slot">
         <h2>
             {{ 'Autopilot' | translate }}
-            @if (title.toLowerCase() === 'axolotl') {
+            @if ((title || '').toLowerCase() === 'axolotl') {
                 ⚞(⚬___⚬)⚟
             }
         </h2>
@@ -155,7 +155,7 @@
             ) {
                 <os-poll-collection
                     [currentProjection]="projectedViewModel"
-                    [disableFinished]="disabledContentElements['poll-finished'] === true"
+                    [disableFinished]="disabledContentElements['poll-finished'] === true || isAgendaListProjection"
                     [disableRunning]="disabledContentElements['poll-running'] === true"
                     [displayInAutopilot]="true"
                 ></os-poll-collection>
@@ -202,10 +202,7 @@
 <ng-template #speakingTimes>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-speaking-times
-                [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
-                [showProjectionMenu]="false"
-            />
+            <os-speaking-times [listOfSpeakers]="listOfSpeakers" [showProjectionMenu]="false" />
         </mat-card-content>
     </mat-card>
 </ng-template>

@@ -53,7 +53,7 @@ export class OmlPermsDirective extends BasePermsDirective<OML> {
     protected hasPermissions(): boolean {
         return (
             this.operator.hasOrganizationPermissions(...this.permissions) ||
-            (this._checkCML ? this.operator.isAnyCommitteeAdmin() : false)
+            (this._checkCML ? this.operator.isAnyCommitteeManager : false)
         );
     }
 }
