@@ -40,6 +40,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
                         (this.disabled || !items || (!!items && !items.length)) && !this.clickNotFound.observed;
                 }
             });
+            this.subscriptions.push(this._inputListValuesSubscription);
         }
     }
 
