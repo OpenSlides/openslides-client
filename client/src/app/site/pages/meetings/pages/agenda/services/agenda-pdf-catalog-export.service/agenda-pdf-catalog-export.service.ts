@@ -358,7 +358,7 @@ export class AgendaPdfCatalogExportService {
                 const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
                 tableCells.push([
                     { text: ``, width: firstPlaceWidth },
-                    { text: this.translate.instant(`Valid votes	`), width: optionWidth },
+                    { text: this.translate.instant(`Valid votes`) },
                     { text: amount, width: votesWidth }
                 ]);
 
