@@ -42,7 +42,7 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     public get showPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.assignmentCanManage) ||
+                this.operator.hasPerms(Permission.assignmentCanManagePolls) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {
@@ -53,11 +53,15 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     }
 
     public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.assignmentCanManage);
+        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.assignmentCanManagePolls);
     }
 
     public get showCandidatesInMetaInfo(): boolean {
         return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
+    }
+
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.assignmentCanManagePolls);
     }
 
     public get isAnonymous(): boolean {
