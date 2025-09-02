@@ -11,6 +11,7 @@ import { DurationService } from 'src/app/site/services/duration.service';
 import { MeetingPdfExportService } from '../../../../services/export';
 import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
+import { ViewTopic } from '../../modules/topics/view-models';
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
@@ -201,6 +202,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         if (agendaItem.content_object?.getCSVExportText) {
             const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
             return entry;
@@ -209,6 +213,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createModerationNotesDoc(agendaItem: ViewAgendaItem): Content[] {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
         if (moderationNotes) {
@@ -226,6 +233,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createListOfSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         const tableCells: Content[][] = [];
         const finishedSpeakers: ViewSpeaker[] = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
         const speakers: ViewSpeaker[] = agendaItem.content_object.list_of_speakers.speakers;
@@ -307,6 +317,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createPollsDoc(agendaItem: ViewAgendaItem): Content[] {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         const entries: Content[] = [];
 
         const optionWidth = 280;
@@ -376,6 +389,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createCommentDoc(agendaItem: ViewAgendaItem): Content[] {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         if (agendaItem.comment) {
             return [
                 {
@@ -487,5 +503,10 @@ export class AgendaPdfCatalogExportService {
         }
 
         return attachments;
+    }
+
+    private isTopic(obj: any): obj is ViewTopic {
+        const topic = obj as ViewTopic;
+        return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
     }
 }
