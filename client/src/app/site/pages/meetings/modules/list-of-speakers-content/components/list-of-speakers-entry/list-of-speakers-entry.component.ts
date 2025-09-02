@@ -338,6 +338,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
                 : this.operator.user.getMeetingUser().id,
             {
                 meeting_user_id: this.findPredecessorFn(this.speaker)?.meeting_user_id,
+                structure_level_id: this.findPredecessorFn(this.speaker)?.structureLevelId,
                 speechState: this.speaker.speech_state,
                 answer_to_id: this.speaker.id
             }
