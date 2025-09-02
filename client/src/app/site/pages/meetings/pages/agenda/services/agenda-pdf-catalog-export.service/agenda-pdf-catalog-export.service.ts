@@ -17,6 +17,7 @@ import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.mod
 
 const PDF_A4_POINTS_WIDTH = 595.296;
 const PDF_A5_POINTS_WIDTH = 419.544;
+const TABLEROW_GREY = '#eeeeee';
 
 const AGENDA_PDF_OPTIONS = {
     Toc: `table_of_content`,
@@ -121,7 +122,7 @@ export class AgendaPdfCatalogExportService {
                     title: topic.content_object?.title,
                     pageReference: `${topic.id}`,
                     style: StyleType.DEFAULT,
-                    fillColor: (i + 1) % 2 ? this.getColor(`tablerow-grey`) : undefined
+                    fillColor: (i + 1) % 2 ? TABLEROW_GREY : undefined
                 })
             );
             i++;
@@ -260,7 +261,7 @@ export class AgendaPdfCatalogExportService {
         let i = 1;
         for (const speaker of finishedSpeakers) {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
-            const backgroundColor = (i + 1) % 2 ? this.getColor(`tablerow-grey`) : ``;
+            const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
                 {
@@ -279,7 +280,7 @@ export class AgendaPdfCatalogExportService {
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
-            const backgroundColor = (i + 1) % 2 ? this.getColor(`tablerow-grey`) : ``;
+            const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
                 {
@@ -345,7 +346,7 @@ export class AgendaPdfCatalogExportService {
                 let optionIndex = 0;
                 for (const option of poll.options) {
                     const votesForOption = poll.stateHasVotes ? option.votes.length : ``;
-                    const backgroundColor = optionIndex % 2 ? this.getColor(`tablerow-grey`) : undefined;
+                    const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
                     tableCells.push([
                         { text: optionIndex + 1, fillColor: backgroundColor },
                         { text: option.getOptionTitle().title, fillColor: backgroundColor },
@@ -416,7 +417,7 @@ export class AgendaPdfCatalogExportService {
             case `table-header`:
                 return { bold: true, fontSize: 12 };
             case `grey`:
-                return { layout: this.getColor(`tablerow-grey`) };
+                return { layout: TABLEROW_GREY };
             case `margin-header1`:
                 return [0, 0, 0, 20];
             case `margin-header3`:
@@ -427,15 +428,6 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 5];
             default:
                 return {};
-        }
-    }
-
-    private getColor(name): string {
-        switch (name) {
-            case `tablerow-grey`:
-                return `#eeeeee`;
-            default:
-                return ``;
         }
     }
 
