@@ -112,15 +112,18 @@ export class AgendaPdfCatalogExportService {
 
         // all agenda in the same table
         const tocBody = [];
+        let i = 1;
         for (const topic of agenda) {
             tocBody.push(
                 this.pdfService.createTocLine({
                     identifier: `${topic.item_number ? topic.item_number : ``}`,
                     title: topic.content_object?.title,
                     pageReference: `${topic.id}`,
-                    style: StyleType.DEFAULT
+                    style: StyleType.DEFAULT,
+                    fillColor: (i + 1) % 2 ? this.getColor(`tablerow-grey`) : undefined
                 })
             );
+            i++;
         }
         toc.push(
             this.pdfService.createTocTableDef(
@@ -223,8 +226,7 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createListOfSpeakersDoc(agendaItem: ViewAgendaItem): Content[] {
-        // TODO this needs to be finished, table display and missing fields.
-        const entries: Content[] = [];
+        const tableCells: Content[][] = [];
         const finishedSpeakers: ViewSpeaker[] = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
         const speakers: ViewSpeaker[] = agendaItem.content_object.list_of_speakers.speakers;
         finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
@@ -236,65 +238,48 @@ export class AgendaPdfCatalogExportService {
             return aTime - bTime;
         });
         // table header
-        entries.push({
-            style: this.getStyle(`table-header`),
-            columns: [
-                { text: this.translate.instant(`Speaker`), width: 180 },
-                { text: this.translate.instant(`Structure level`), width: 110 },
-                { text: this.translate.instant(`State`), width: 65 },
-                { text: this.translate.instant(`Start time`), width: 110 },
-                { text: this.translate.instant(`Duration`), width: 50 }
-            ]
-        });
-        // separate line
-        entries.push({
-            style: { color: `lightgrey` },
-            canvas: [
-                {
-                    type: `line`,
-                    lineWidth: 0.5,
-                    x1: 0,
-                    y1: 0,
-                    x2: 500,
-                    y2: 0
-                }
-            ]
-        });
+        tableCells.push([
+            { text: this.translate.instant(`Speaker`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`Structure level`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`State`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`Start time`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`Duration`), style: `tocHeaderRow` }
+        ]);
 
         // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
-            const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
-            entries.push({
-                style: style,
-                columns: [
-                    { text: `${i}. ${speaker.name}`, width: 180 },
-                    { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
-                    { text: state, width: 65 },
-                    {
-                        text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
-                        width: 110
-                    },
-                    { text: this.durationService.durationToString(speaker.speakingTime, `m`), width: 50 }
-                ]
-            });
+            const backgroundColor = (i + 1) % 2 ? this.getColor(`tablerow-grey`) : ``;
+            tableCells.push([
+                { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
+                {
+                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
+                    fillColor: backgroundColor
+                },
+                { text: state, fillColor: backgroundColor },
+                {
+                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
+                    fillColor: backgroundColor
+                },
+                { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor }
+            ]);
             i++;
         }
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
-            const style = (i + 1) % 2 ? this.getStyle(`grey`) : {};
-            entries.push({
-                style: style,
-                columns: [
-                    { text: `${i}. ${speaker.name}`, width: 180 },
-                    { text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','), width: 110 },
-                    { text: state, width: 65 },
-                    { text: ``, width: 110 },
-                    { text: ``, width: 50 }
-                ]
-            });
+            const backgroundColor = (i + 1) % 2 ? this.getColor(`tablerow-grey`) : ``;
+            tableCells.push([
+                { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
+                {
+                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
+                    fillColor: backgroundColor
+                },
+                { text: state, fillColor: backgroundColor },
+                { text: ``, fillColor: backgroundColor },
+                { text: ``, fillColor: backgroundColor }
+            ]);
             i++;
         }
 
@@ -305,7 +290,17 @@ export class AgendaPdfCatalogExportService {
                     style: this.getStyle(`header3`),
                     margin: this.getStyle(`margin-header3`)
                 },
-                ...entries
+                {
+                    table: {
+                        headerRows: 1,
+                        keepWithHeaderRows: 1,
+                        dontBreakRows: true,
+                        widths: [140, 60, 65, 110, 50],
+                        body: tableCells
+                    },
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
+                    margin: this.getStyle(`margin-text`)
+                }
             ];
         }
         return [];
@@ -321,58 +316,51 @@ export class AgendaPdfCatalogExportService {
         if (agendaItem.content_object?.poll_ids) {
             for (let pollIndex = 0; pollIndex < agendaItem.content_object?.polls.length; pollIndex++) {
                 const poll: ViewPoll = agendaItem.content_object?.polls[pollIndex];
+                const tableCells: Content[][] = [];
                 entries.push({
                     text: poll.title,
                     style: this.getStyle(`header3`),
                     margin: this.getStyle(`margin-item`)
                 });
-                entries.push({
-                    style: this.getStyle(`table-header`),
-                    columns: [
-                        { text: ``, width: firstPlaceWidth },
-                        { text: this.translate.instant(`Options`), width: optionWidth },
-                        { text: this.translate.instant(`Votes`), width: votesWidth }
-                    ]
-                });
-                // separate line
-                entries.push({
-                    style: { color: `lightgrey` },
-                    canvas: [
-                        {
-                            type: `line`,
-                            lineWidth: 0.5,
-                            x1: 0,
-                            y1: 0,
-                            x2: 500,
-                            y2: 0
-                        }
-                    ]
-                });
-
+                // poll table header
+                tableCells.push([
+                    { text: `` },
+                    { text: this.translate.instant(`Options`), style: `tocHeaderRow` },
+                    { text: this.translate.instant(`Votes`), style: `tocHeaderRow` }
+                ]);
+                // poll table rows
                 let optionIndex = 0;
                 for (const option of poll.options) {
-                    const style = (optionIndex + 1) % 2 ? this.getStyle(`grey`) : {};
                     const votesForOption = poll.stateHasVotes ? option.votes.length : ``;
-
-                    entries.push({
-                        style: style,
-                        columns: [
-                            { text: optionIndex + 1, width: firstPlaceWidth },
-                            { text: option.getOptionTitle().title, width: optionWidth },
-                            { text: `${votesForOption}`, width: votesWidth }
-                        ]
-                    });
+                    const backgroundColor = optionIndex % 2 ? this.getColor(`tablerow-grey`) : undefined;
+                    tableCells.push([
+                        { text: optionIndex + 1, fillColor: backgroundColor },
+                        { text: option.getOptionTitle().title, fillColor: backgroundColor },
+                        { text: `${votesForOption}`, fillColor: backgroundColor }
+                    ]);
                     optionIndex++;
                 }
+                // poll table valid votes line
                 const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
+                tableCells.push([
+                    { text: ``, width: firstPlaceWidth },
+                    { text: this.translate.instant(`Valid votes	`), width: optionWidth },
+                    { text: amount, width: votesWidth }
+                ]);
+
+                // table configuration
                 entries.push({
-                    columns: [
-                        { text: ``, width: firstPlaceWidth },
-                        { text: this.translate.instant(`Valid votes	`), width: optionWidth },
-                        { text: amount, width: votesWidth }
-                    ],
+                    table: {
+                        headerRows: 1,
+                        keepWithHeaderRows: 1,
+                        dontBreakRows: true,
+                        widths: [firstPlaceWidth, optionWidth, votesWidth],
+                        body: tableCells
+                    },
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
                     margin: this.getStyle(`margin-text`)
                 });
+
                 entries.push({ text: ``, margin: this.getStyle(`margin-text`) });
             }
             return [
@@ -412,7 +400,7 @@ export class AgendaPdfCatalogExportService {
             case `table-header`:
                 return { bold: true, fontSize: 12 };
             case `grey`:
-                return { layout: `#EEEEEE` };
+                return { layout: this.getColor(`tablerow-grey`) };
             case `margin-header1`:
                 return [0, 0, 0, 20];
             case `margin-header3`:
@@ -423,6 +411,15 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 5];
             default:
                 return {};
+        }
+    }
+
+    private getColor(name): string {
+        switch (name) {
+            case `tablerow-grey`:
+                return `#eeeeee`;
+            default:
+                return ``;
         }
     }
 
