@@ -65,6 +65,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `additional_submitter`,
                     `tag_ids`,
                     `title`,
+                    `diff_version`,
                     `identical_motion_ids`
                 ],
                 follow: [
