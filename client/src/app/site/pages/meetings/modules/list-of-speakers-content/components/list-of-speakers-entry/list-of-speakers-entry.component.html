@@ -415,14 +415,15 @@
 <ng-template #speechType>
     @if (speaker.speech_state) {
         <span>
-              <mat-icon
+            <mat-icon
                 class="inline-icon-text-align icon"
                 inline
-                [class.icon]="!!showcolor"
                 [class.green-text]="!!showcolor && speaker.speech_state === SpeechState.PRO"
-                [class.red-warning-text]="!!showcolor && speaker.speech_state === SpeechState.CONTRA">
-                  {{ speaker.stateIcon }}
-              </mat-icon>
+                [class.icon]="!!showcolor"
+                [class.red-warning-text]="!!showcolor && speaker.speech_state === SpeechState.CONTRA"
+            >
+                {{ speaker.stateIcon }}
+            </mat-icon>
             <i [class.user-subtitle]="!!showcolor">
                 {{ speaker.verboseState | translate }}
             </i>

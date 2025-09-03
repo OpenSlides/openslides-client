@@ -1,3 +1,4 @@
+import { _ } from '@ngx-translate/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
@@ -12,6 +13,51 @@ import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
+
+export interface SpeakerSpeechStateData {
+    speech_state: SpeechState;
+    answer: boolean;
+}
+
+export function getSpeakerVerboseState(speaker: SpeakerSpeechStateData): string {
+    switch (speaker.speech_state) {
+        case SpeechState.INTERPOSED_QUESTION:
+            if (speaker.answer) {
+                return _(`Answer to interposed question`);
+            }
+            return _(`Interposed question`);
+        case SpeechState.INTERVENTION:
+            if (speaker.answer) {
+                return _(`Answer to intervention`);
+            }
+            return _(`Intervention`);
+        case SpeechState.PRO:
+            return _(`Forspeech`);
+        case SpeechState.CONTRA:
+            return _(`Counter speech`);
+        case SpeechState.CONTRIBUTION:
+            return _(`Contribution`);
+    }
+}
+
+export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
+    if (speaker.answer) {
+        return `warning`;
+    }
+    switch (speaker.speech_state) {
+        case SpeechState.INTERPOSED_QUESTION:
+            return `help`;
+        case SpeechState.INTERVENTION:
+            return `error`;
+        case SpeechState.PRO:
+            return `add_circle`;
+        case SpeechState.CONTRA:
+            return `remove_circle`;
+        case SpeechState.CONTRIBUTION:
+            return `star`;
+    }
+}
+
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -157,6 +203,14 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return this.speaker.end_time
             ? this.speaker.end_time - this.speaker.begin_time - (this.speaker.total_pause || 0)
             : null;
+    }
+
+    public get verboseState(): string {
+        return getSpeakerVerboseState(this);
+    }
+
+    public get stateIcon(): string {
+        return getSpeakerStateIcon(this);
     }
 
     public get hasSpoken(): boolean {

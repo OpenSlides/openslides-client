@@ -1,53 +1,7 @@
-import { _ } from '@ngx-translate/core';
-
 import { Id, UnsafeHtml } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
 import { SpeechState } from './speech-state';
-
-export interface SpeakerSpeechStateData {
-    speech_state: SpeechState;
-    answer: boolean;
-}
-
-export function getSpeakerVerboseState(speaker: SpeakerSpeechStateData): string {
-    switch (speaker.speech_state) {
-        case SpeechState.INTERPOSED_QUESTION:
-            if (speaker.answer) {
-                return _(`Answer to interposed question`);
-            }
-            return _(`Interposed question`);
-        case SpeechState.INTERVENTION:
-            if (speaker.answer) {
-                return _(`Answer to intervention`);
-            }
-            return _(`Intervention`);
-        case SpeechState.PRO:
-            return _(`Forspeech`);
-        case SpeechState.CONTRA:
-            return _(`Counter speech`);
-        case SpeechState.CONTRIBUTION:
-            return _(`Contribution`);
-    }
-}
-
-export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
-    if (speaker.answer) {
-        return `warning`;
-    }
-    switch (speaker.speech_state) {
-        case SpeechState.INTERPOSED_QUESTION:
-            return `help`;
-        case SpeechState.INTERVENTION:
-            return `error`;
-        case SpeechState.PRO:
-            return `add_circle`;
-        case SpeechState.CONTRA:
-            return `remove_circle`;
-        case SpeechState.CONTRIBUTION:
-            return `star`;
-    }
-}
 
 /**
  * Representation of a speaker in a list of speakers.
@@ -83,14 +37,6 @@ export class Speaker extends BaseModel<Speaker> {
 
     public get speakingTime(): number {
         return this.end_time - this.begin_time - (this.total_pause || 0) || 0;
-    }
-
-    public get verboseState(): string {
-        return getSpeakerVerboseState(this);
-    }
-
-    public get stateIcon(): string {
-        return getSpeakerStateIcon(this);
     }
 
     public constructor(input?: any) {
