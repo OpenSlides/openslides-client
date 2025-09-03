@@ -537,7 +537,7 @@ export class PdfDocumentService {
     }
 
     /**
-     * Downloads a pdf with the standard page definitions.
+     * Returns a Blob of a pdf with the standard page definitions.
      */
     public async blob({
         docDefinition,
