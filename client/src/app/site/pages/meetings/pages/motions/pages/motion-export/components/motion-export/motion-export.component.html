@@ -129,7 +129,7 @@
                             value="attachments"
                             [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
                         >
-                            <span>{{ 'Attachments' | translate }}</span>
+                            <span>{{ 'Attachments (URL)' | translate }}</span>
                         </mat-chip-option>
                         <mat-chip-option
                             #includePdfAttachmentsChip
@@ -139,7 +139,7 @@
                             [matBadgeHidden]="includePdfAttachmentsChip.selected ? 'false' : 'true'"
                         >
                             <span>
-                                {{ 'Include attached PDFs' | translate }}
+                                {{ 'Attachments (PDF embedded)' | translate }}
                             </span>
                         </mat-chip-option>
                     }

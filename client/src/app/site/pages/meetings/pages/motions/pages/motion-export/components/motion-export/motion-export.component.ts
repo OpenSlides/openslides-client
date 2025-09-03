@@ -335,10 +335,24 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             pageLayout: {
                 continuousText: [
                     [`pageLayout`, `toc`],
-                    [`pageLayout`, `addBreaks`]
+                    [`pageLayout`, `addBreaks`],
+                    [`content`, `includePdfAttachments`]
                 ],
-                toc: [[`pageLayout`, `continuousText`]],
+                toc: [
+                    [`pageLayout`, `continuousText`],
+                    [`content`, `includePdfAttachments`]
+                ],
                 addBreaks: [[`pageLayout`, `continuousText`]]
+            },
+            headerFooter: {
+                page: [[`content`, `includePdfAttachments`]]
+            },
+            content: {
+                includePdfAttachments: [
+                    [`pageLayout`, `toc`],
+                    [`pageLayout`, `continuousText`],
+                    [`headerFooter`, `page`]
+                ]
             }
         };
 
