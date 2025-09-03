@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, pairwise, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
@@ -319,15 +319,45 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
-        this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
-            if (!value) {
-                this.deselectOption(`content`, `text`);
-                this.changeStateOfChipOption(this.textChip, true, `text`);
-            } else {
-                this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
-                this.changeStateOfChipOption(this.textChip, false, `text`);
+        this.subscriptions.push(
+            this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
+                if (!value) {
+                    this.deselectOption(`content`, `text`);
+                    this.changeStateOfChipOption(this.textChip, true, `text`);
+                } else {
+                    this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                    this.changeStateOfChipOption(this.textChip, false, `text`);
+                }
+            })
+        );
+
+        const incompatibleFields = {
+            pageLayout: {
+                continuousText: [
+                    [`pageLayout`, `toc`],
+                    [`pageLayout`, `addBreaks`]
+                ],
+                toc: [[`pageLayout`, `continuousText`]],
+                addBreaks: [[`pageLayout`, `continuousText`]]
             }
-        });
+        };
+
+        for (const group of Object.keys(incompatibleFields)) {
+            this.subscriptions.push(
+                this.dialogForm.controls[group].valueChanges.pipe(pairwise()).subscribe(val => {
+                    const a = new Set(val[0]);
+                    const b = new Set(val[1]);
+                    const added = b.difference(a);
+                    for (const field of added) {
+                        const incompatible = incompatibleFields[group][field] || [];
+                        for (const def of incompatible) {
+                            this.deselectOption(def[0], def[1]);
+                        }
+                    }
+                })
+            );
+        }
+
         this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
@@ -434,31 +464,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 return this.crMode.Original;
             default:
                 return null;
-        }
-    }
-
-    public deselectPageLayoutOption(): void {
-        if (this.continuousTextChipOption.selected) {
-            this.deselectOption(`pageLayout`, `toc`);
-            this.deselectOption(`pageLayout`, `addBreaks`);
-        }
-        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
-            this.deselectOption(`pageLayout`, `continuousText`);
-        }
-        if (this.tableOfContentChip.selected || this.continuousTextChipOption.selected) {
-            this.deselectOption(`content`, `includePdfAttachments`);
-        }
-    }
-
-    public deselectContinuousTextOption(): void {
-        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
-            this.deselectOption(`pageLayout`, `continuousText`);
-        }
-    }
-
-    public deselectIncludePdfAttachmentsOption(): void {
-        if (this.tableOfContentChip.selected || this.pageChip.selected) {
-            this.deselectOption(`content`, `includePdfAttachments`);
         }
     }
 
