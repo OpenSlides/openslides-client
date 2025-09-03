@@ -12,6 +12,7 @@ import { ViewAgendaItem } from './view-models';
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
 export const AGENDA_EXPORT_SUBSCRIPTION = `agenda_export`;
+export const AGENDA_EXPORT_TREE_SUBSCRIPTION = `agenda_export_tree`;
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
 export const TOPIC_ITEM_DUPLICATE_SUBSCRIPTION = `topic_detail`;
 export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
@@ -251,4 +252,28 @@ export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (.
         ]
     },
     subscriptionName: AGENDA_EXPORT_SUBSCRIPTION
+});
+
+export const getAgendaExportTreeSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `agenda_item_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `content_object_id`,
+                        fieldset: [`number`, `title`, `agenda_item_id`, ...MEETING_ROUTING_FIELDS]
+                    },
+                    {
+                        idField: `parent_id`,
+                        fieldset: FULL_FIELDSET
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AGENDA_EXPORT_TREE_SUBSCRIPTION
 });

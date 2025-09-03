@@ -30,6 +30,8 @@ const AGENDA_PDF_OPTIONS = {
     providedIn: AgendaItemCommonServiceModule
 })
 export class AgendaPdfCatalogExportService {
+    private displayedAgendaItemIds = [];
+
     public constructor(
         private translate: TranslateService,
         private pdfService: MeetingPdfExportService,
@@ -49,6 +51,7 @@ export class AgendaPdfCatalogExportService {
      * @returns pdfmake doc definition as object
      */
     public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: any, pdfMeta: string[]): Content {
+        this.displayedAgendaItemIds = agendaItems.map(view => view.id);
         let doc: Content = [];
         const agendaDocList = [];
         const printToc = pdfMeta?.includes(AGENDA_PDF_OPTIONS.Toc);
@@ -65,8 +68,6 @@ export class AgendaPdfCatalogExportService {
 
                 if (agendaItemIndex < agendaItems.length - 1 && enforcePageBreaks) {
                     agendaDocList.push(this.pdfService.getPageBreak());
-                } else if (agendaItemIndex < agendaItems.length - 1 && !enforcePageBreaks) {
-                    agendaDocList.push(this.getDivLine());
                 }
             } catch (err) {
                 const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${
@@ -154,8 +155,11 @@ export class AgendaPdfCatalogExportService {
         ];
     }
 
-    private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any, _meta: any): Content {
+    private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any, meta: any): Content {
         const agendaItemDoc: any[] = [];
+        const enforcePageBreaks = meta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
+        agendaItemDoc.push(this.getParentItems(agendaItem, info, enforcePageBreaks));
+
         if (info.includes(`title`) || info.includes(`item_number`)) {
             agendaItemDoc.push(this.createNumberTitleDoc(agendaItem, info));
         }
@@ -180,11 +184,33 @@ export class AgendaPdfCatalogExportService {
         return agendaItemDoc;
     }
 
+    // display the parent items, if they are not in the exported items
+    private getParentItems(agendaItem: ViewAgendaItem, info: any, enforcePageBreaks: boolean): Content[] {
+        const parent = agendaItem.parent;
+        const entries = [];
+        if (parent) {
+            if (!this.displayedAgendaItemIds.includes(parent.id)) {
+                entries.push(...this.getParentItems(parent, info, enforcePageBreaks));
+                entries.push(this.createNumberTitleDoc(parent, info), this.createTextDoc(parent));
+                this.displayedAgendaItemIds.push(parent.id);
+            }
+            if (!enforcePageBreaks) {
+                entries.push(this.getDivLine(0.5));
+            }
+        } else {
+            if (!enforcePageBreaks) {
+                entries.push(this.getDivLine());
+            }
+        }
+        return entries;
+    }
+
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): ContentText {
         const useItemNumber: boolean = info.includes(`item_number`);
         const useTitle: boolean = info.includes(`title`);
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
+        const styleName = agendaItem.level ? `header-child` : `header2`;
         let numberOrTitle = ``;
         console.log();
         if (useItemNumber && itemNumber && useTitle) {
@@ -196,8 +222,7 @@ export class AgendaPdfCatalogExportService {
         }
 
         return {
-            style: this.getStyle(`header2`),
-            // style: title,
+            style: this.getStyle(styleName),
             text: numberOrTitle
         };
     }
@@ -414,6 +439,8 @@ export class AgendaPdfCatalogExportService {
                 return { bold: true, fontSize: 20 };
             case `header3`:
                 return { bold: true, fontSize: 14 };
+            case `header-child`:
+                return { bold: true, fontSize: 16 };
             case `table-header`:
                 return { bold: true, fontSize: 12 };
             case `grey`:
@@ -431,7 +458,7 @@ export class AgendaPdfCatalogExportService {
         }
     }
 
-    private getDivLine(): Content[] {
+    private getDivLine(lineWidth?: number): Content[] {
         return [
             {
                 text: ``,
@@ -441,7 +468,7 @@ export class AgendaPdfCatalogExportService {
                 canvas: [
                     {
                         type: `line`,
-                        lineWidth: 2,
+                        lineWidth: lineWidth ?? 2,
                         x1: 0,
                         y1: 0,
                         x2: 500,
@@ -457,6 +484,9 @@ export class AgendaPdfCatalogExportService {
     }
 
     private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
+        if (!this.isTopic(agendaItem.content_object)) {
+            return [];
+        }
         let width = this.pdfService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
         width = (width - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight) / 4;
         const instanceUrl = this.organizationSettingsService.instant(`url`);
