@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
@@ -8,8 +10,6 @@ import { AmendmentListPdfService } from '../amendment-list-pdf.service';
 import { MotionExportInfo } from '../motion-export.service';
 import { MotionPdfService } from '../motion-pdf.service';
 import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
-import { PDFDocument } from '@cantoo/pdf-lib';
-import { saveAs } from 'file-saver';
 
 /**
  * Export service to handle various kind of exporting necessities.
