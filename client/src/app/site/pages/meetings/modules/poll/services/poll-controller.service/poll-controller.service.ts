@@ -63,7 +63,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
         return this.getViewModelList().filter(_poll => _poll.content_object_id === fqid);
     }
 
-    public anonymize(poll: Identifiable): Promise<void> {
-        return this.repo.anonymize(poll);
+    public anonymize(poll: Identifiable, updateState?: PollState): Promise<void> {
+        return this.repo.anonymize(poll, updateState);
     }
 }

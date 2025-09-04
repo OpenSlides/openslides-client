@@ -77,9 +77,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
             } else if (choice?.action === STOP_PUBLISH_LABEL) {
                 await this.changeState(PollState.Published);
             } else if (choice?.action === STOP_PUBLISH_ANONYMIZE_LABEL) {
-                await this.changeState(PollState.Finished);
-                this.repo.anonymize(this.poll).catch(this.raiseError);
-                await this.changeState(PollState.Published);
+                await this.repo.anonymize(this.poll, PollState.Published).catch(this.raiseError);
             }
         }
     }
