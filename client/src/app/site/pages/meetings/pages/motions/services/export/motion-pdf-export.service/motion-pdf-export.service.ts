@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
@@ -44,12 +46,59 @@ export class MotionPdfExportService {
      * @param motions the motions to export
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
+        if (exportInfo.content.includes(`includePdfAttachments`)) {
+            this.exportMotionCatalogWithAttachments(motions, exportInfo);
+            return;
+        }
+
         const docDefinition = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
         const filename = this.translate.instant(`Motions`);
         const metadata = {
             title: filename
         };
         this.pdfDocumentService.download({ docDefinition, filename, metadata, exportInfo });
+    }
+
+    /**
+     * Exports multiple motions to a collection of PDFs including pdf attachments
+     *
+     * @param motions the motions to export
+     */
+    public async exportMotionCatalogWithAttachments(
+        motions: ViewMotion[],
+        exportInfo: MotionExportInfo
+    ): Promise<void> {
+        const motionPdfPromises = [];
+        for (const motion of motions) {
+            const doc = this.motionPdfService.motionToDocDef({ motion, exportInfo });
+            const filename = `${this.translate.instant(`Motion`)} ${motion.numberOrTitle}`;
+            const metadata = {
+                title: filename
+            };
+            motionPdfPromises.push(
+                this.pdfDocumentService.blob({ docDefinition: doc, filename, metadata, exportInfo })
+            );
+
+            for (const file of motion.attachment_meeting_mediafiles) {
+                if (file.mediafile.mimetype === `application/pdf`) {
+                    motionPdfPromises.push(fetch(file.url));
+                }
+            }
+        }
+
+        const motionPdfs: (Blob | Response)[] = await Promise.all(motionPdfPromises);
+        const mergedPdf = await PDFDocument.create();
+        for (const mPdfBlob of motionPdfs) {
+            if (!mPdfBlob) {
+                continue;
+            }
+
+            const mPdf = await PDFDocument.load(await mPdfBlob.arrayBuffer());
+            const copiedPages = await mergedPdf.copyPages(mPdf, mPdf.getPageIndices());
+            copiedPages.forEach(page => mergedPdf.addPage(page));
+        }
+        const mergedPdfFile = await mergedPdf.save();
+        saveAs(new Blob([mergedPdfFile]), `${this.translate.instant(`Motions`)}.pdf`);
     }
 
     /**
