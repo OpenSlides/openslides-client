@@ -4,9 +4,6 @@
             <!-- result table -->
             <table class="result-table">
                 <tbody>
-                    <tr>
-                        <th colspan="2">{{ 'Votes' | translate }}</th>
-                    </tr>
                     @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
                         <div>
                             <tr>
@@ -22,8 +19,11 @@
                                     {{ label }}
                                 </td>
                             </tr>
-                            @if (poll.options.length - 1 > i) {
+                            @if (poll.options.length - 1 === i) {
                                 <mat-divider></mat-divider>
+                                <tr>
+                                    <td colspan="2">{{ 'Valid votes' | translate }}&nbsp;{{ poll.votesvalid }}</td>
+                                </tr>
                             }
                         </div>
                     }
