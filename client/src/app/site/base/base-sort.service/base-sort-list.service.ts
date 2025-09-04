@@ -403,7 +403,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return Array.isArray(a) && Array.isArray(b) ? a.equals(b) : a === b;
     }
 
-    private compareHelperFunction(itemA: V, itemB: V, alternativeProperty: OsSortProperty<V>): number {
+    protected compareHelperFunction(itemA: V, itemB: V, alternativeProperty: OsSortProperty<V>): number {
         return (
             this.sortItems(
                 itemA,

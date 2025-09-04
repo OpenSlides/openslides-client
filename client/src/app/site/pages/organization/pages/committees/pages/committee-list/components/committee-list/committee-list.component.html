@@ -34,7 +34,11 @@
     [sortService]="sortService"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'name'; row as committee"
+        class="cell-slot fill"
+        [style.padding-left]="(committee.all_parent_ids?.length || 0) * 25 + 'px'"
+    >
         @if (!isMultiSelect && committee.canAccess()) {
             <a class="stretch-to-fill-parent" [attr.aria-label]="ariaLabel(committee)" [routerLink]="committee.id"></a>
         }

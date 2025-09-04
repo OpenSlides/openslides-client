@@ -9,7 +9,7 @@ export class Committee extends BaseModel<Committee> {
     public name!: string;
     public description!: string;
     public external_id!: string;
-    public parent_id!: string;
+    public parent_id!: Id;
     public child_ids!: Id[];
 
     public meeting_ids!: Id[]; // (meeting/committee_id)[];
