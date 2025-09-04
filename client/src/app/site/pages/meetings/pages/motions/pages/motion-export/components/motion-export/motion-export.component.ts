@@ -313,15 +313,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
-        this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
-            if (!value) {
-                this.deselectOption(`content`, `text`);
-                this.changeStateOfChipOption(this.textChip, true, `text`);
-            } else {
-                this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
-                this.changeStateOfChipOption(this.textChip, false, `text`);
-            }
-        });
         this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
