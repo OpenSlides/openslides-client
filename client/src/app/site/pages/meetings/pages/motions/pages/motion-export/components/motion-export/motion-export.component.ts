@@ -157,6 +157,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private commentsSubject: Observable<ViewMotionCommentSection[]>;
 
+    @ViewChild(`attachmentsChip`)
+    public attachmentsChip!: MatChipOption;
+
+    @ViewChild(`includePdfAttachmentsChip`)
+    public includePdfAttachments!: MatChipOption;
+
     @ViewChild(`tabGroup`)
     public tabGroup!: MatTabGroup;
 
@@ -418,16 +424,15 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `recommendation`, this.recommendationChipOption);
-        if (
-            this.motions_models.filter(m =>
-                m[`referenced_in_motion_recommendation_extensions`] === null ||
-                m[`referenced_in_motion_recommendation_extensions`]?.length === 0
-                    ? false
-                    : m[`referenced_in_motion_recommendation_extensions`]
-            ).length === 0
-        ) {
+        if (!this.motions_models.some(m => !!m[`referenced_in_motion_recommendation_extensions`]?.length)) {
             this.deselectOption(`metaInfo`, `referring_motions`);
             this.changeStateOfChipOption(this.referringMotionsChip, true, `referring_motions`);
+        }
+        if (!this.motions_models.some(m => !!m[`attachment_meeting_mediafile_ids`]?.length)) {
+            this.deselectOption(`content`, `attachments`);
+            this.changeStateOfChipOption(this.attachmentsChip, true, `attachments`);
+            this.deselectOption(`content`, `includePdfAttachments`);
+            this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }
         if (this.motions_models.filter(m => (m ? m.hasTags() : false)).length === 0) {
             this.deselectOption(`metaInfo`, `tags`);
