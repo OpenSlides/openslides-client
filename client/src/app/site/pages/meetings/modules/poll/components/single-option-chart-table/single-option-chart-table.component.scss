@@ -24,14 +24,12 @@
     display: grid;
     grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    //justify-items: center;
     align-items: center;
 
     .result-table {
         border-collapse: collapse;
         height: fit-content;
-        width: fit-content;
-        // display: block;
+        width: fit-content(60%);
         .right-header {
             font-weight: initial;
             text-align: right;
