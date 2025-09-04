@@ -16,6 +16,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { ProjectionDialogModule } from '../../../../modules/meetings-component-collector/projection-dialog/projection-dialog.module';
+import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
 import { ProjectorCountdownDialogModule } from '../../components/projector-countdown-dialog/projector-countdown-dialog.module';
 import { ProjectorEditDialogModule } from '../../components/projector-edit-dialog/projector-edit-dialog.module';
@@ -42,6 +43,7 @@ import { ProjectorDetailServiceModule } from './services/projector-detail-servic
         ProjectorCountdownDialogModule,
         ProjectorMessageDialogModule,
         ProjectorModule,
+        ProjectorComponent,
         ProjectionDialogModule,
         IconContainerComponent,
         GridModule,
