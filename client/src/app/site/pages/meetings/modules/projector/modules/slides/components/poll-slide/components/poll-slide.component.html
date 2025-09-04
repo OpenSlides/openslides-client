@@ -149,7 +149,10 @@
                         </div>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Assignment) {
-                        <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
+                        <os-assignment-poll-detail-content
+                            [inSlide]="true"
+                            [poll]="polldata"
+                        ></os-assignment-poll-detail-content>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Topic) {
                         <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
