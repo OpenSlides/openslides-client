@@ -12,6 +12,7 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { VoteRepositoryService } from '../vote-repository.service';
 import { PollAction } from './poll.action';
+import { ActionRequest } from 'src/app/gateways/actions/action-utils';
 
 interface AnalogPollVotesValues {
     votescast?: Decimal;
@@ -293,8 +294,15 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.sendActionToBackend(PollAction.RESET, payload);
     }
 
-    public async anonymize(poll: Identifiable): Promise<void> {
+    public async anonymize(poll: Identifiable, updateState?: PollState): Promise<void> {
         const payload: Identifiable = { id: poll.id };
+        if (updateState === PollState.Published) {
+            return this.sendActionsToBackend([
+                { action: PollAction.STOP, data: [payload] },
+                { action: PollAction.ANONYMIZE, data: [payload] },
+                { action: PollAction.PUBLISH, data: [payload] }
+            ]);
+        }
         return this.sendActionToBackend(PollAction.ANONYMIZE, payload);
     }
 
