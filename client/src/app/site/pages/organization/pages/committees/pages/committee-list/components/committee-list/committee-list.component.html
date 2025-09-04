@@ -22,6 +22,20 @@
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
         <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
     </ng-container>
+
+    <div class="extra-controls-slot">
+        <div>
+            @if (selectedView === 'hierarchy') {
+                <button mat-button matTooltip="{{ 'Hierarchy view' | translate }}" (click)="onChangeView('list')">
+                    <mat-icon>format_align_justify</mat-icon>
+                </button>
+            } @else {
+                <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('hierarchy')">
+                    <mat-icon>format_align_right</mat-icon>
+                </button>
+            }
+        </div>
+    </div>
 </os-head-bar>
 
 <os-list
@@ -37,7 +51,7 @@
     <div
         *osScrollingTableCell="'name'; row as committee"
         class="cell-slot fill"
-        [style.padding-left]="(committee.all_parent_ids?.length || 0) * 25 + 'px'"
+        [style.padding-left]="(selectedView === 'hierarchy' ? committee.all_parent_ids?.length || 0 : 0) * 25 + 'px'"
     >
         @if (!isMultiSelect && committee.canAccess()) {
             <a class="stretch-to-fill-parent" [attr.aria-label]="ariaLabel(committee)" [routerLink]="committee.id"></a>
