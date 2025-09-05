@@ -1,5 +1,12 @@
 @if (poll) {
-    <div [ngClass]="{ 'result-wrapper': true, 'result-wrapper-additional': iconSize !== 'medium' }">
+    <div
+        [ngClass]="{
+            'result-wrapper': true,
+            'result-wrapper-additional': iconSize !== 'medium',
+            'justify-items-center': !inSlide,
+            'justify-items-left': inSlide
+        }"
+    >
         <table class="result-table">
             <tbody [ngClass]="textSizeClass">
                 @if (shouldShowHead) {
@@ -9,7 +16,9 @@
                                 {{ title }}
                             }
                         </th>
-                        <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+                        @if (!inSlide) {
+                            <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+                        }
                     </tr>
                 }
                 @for (row of tableData; track row; let i = $index) {
@@ -20,8 +29,7 @@
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </os-icon-container>
-                                }
-                                @if (!row.value[0].icon) {
+                                } @else {
                                     <span>
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </span>
@@ -53,8 +61,7 @@
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </os-icon-container>
-                                }
-                                @if (!row.value[0].icon) {
+                                } @else {
                                     <span>
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </span>
