@@ -65,6 +65,23 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return this.sortDefinition?.sortAscending;
     }
 
+    /**
+     * Set the current sorting order
+     *
+     * @param ascending ascending sorting if true, descending sorting if false
+     */
+    public set additionalInfo(additional: unknown) {
+        this.sortDefinition!.additionalInfo = additional;
+        this.updateSortDefinitions();
+    }
+
+    /**
+     * @returns wether current the sorting is ascending or descending
+     */
+    public get additionalInfo(): unknown {
+        return this.sortDefinition?.additionalInfo;
+    }
+
     public get hasSortOptionSelected(): boolean {
         const defaultDef = this._defaultDefinitionSubject.value;
         const current = this.sortDefinition;
@@ -192,7 +209,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))
             .subscribe(defaultDef => {
                 if (this._isDefaultSorting && defaultDef) {
-                    this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending);
+                    this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending, defaultDef.additionalInfo);
                 } else if (defaultDef && this.sortDefinition?.sortProperty === defaultDef?.sortProperty) {
                     this.updateSortDefinitions();
                 }
@@ -253,12 +270,13 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param property a sorting property of a view model
      * @param ascending ascending or descending
      */
-    public setSorting(property: OsSortProperty<V>, ascending: boolean): void {
+    public setSorting(property: OsSortProperty<V>, ascending: boolean, additionalInfo?: unknown): void {
         if (!this.sortDefinition) {
-            this.sortDefinition = { sortProperty: property, sortAscending: ascending };
+            this.sortDefinition = { sortProperty: property, sortAscending: ascending, additionalInfo };
         } else {
             this.sortDefinition!.sortProperty = property;
             this.sortDefinition!.sortAscending = ascending;
+            this.sortDefinition!.additionalInfo = additionalInfo;
             this.updateSortDefinitions();
         }
         this.hasLoaded.resolve(true);
@@ -368,31 +386,36 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     private async loadDefinition(): Promise<void> {
-        let [sortProperty, sortAscending]: [OsSortProperty<V>, boolean] = await Promise.all([
+        let [sortProperty, sortAscending, additionalInfo]: [OsSortProperty<V>, boolean, any] = await Promise.all([
             this.store.get<OsSortProperty<V>>(this.calcStorageKey(`sorting_property`, this.storageKey)),
-            this.store.get<boolean>(this.calcStorageKey(`sorting_ascending`, this.storageKey))
+            this.store.get<boolean>(this.calcStorageKey(`sorting_ascending`, this.storageKey)),
+            this.store.get<any>(this.calcStorageKey(`sorting_additional_info`, this.storageKey))
         ]);
 
         const defaultDef = await this.getDefaultDefinition();
         sortAscending = sortAscending ?? defaultDef.sortAscending;
         sortProperty = sortProperty ?? defaultDef.sortProperty;
+        additionalInfo = additionalInfo ?? defaultDef.additionalInfo;
         this.sortDefinition = {
             sortAscending,
-            sortProperty
+            sortProperty,
+            additionalInfo
         };
         this.updateSortDefinitions();
         this.hasLoaded.resolve(true);
     }
 
     private async setSortingAfterMeetingChange(meetingId: Id): Promise<void> {
-        let [sortProperty, sortAscending]: [OsSortProperty<V>, boolean] = await Promise.all([
+        let [sortProperty, sortAscending, additionalInfo]: [OsSortProperty<V>, boolean, any] = await Promise.all([
             this.store.get<OsSortProperty<V>>(`sorting_property_${this.storageKey}_${meetingId}`),
-            this.store.get<boolean>(`sorting_ascending_${this.storageKey}_${meetingId}`)
+            this.store.get<boolean>(`sorting_ascending_${this.storageKey}_${meetingId}`),
+            this.store.get<any>(`sorting_additional_info_${this.storageKey}_${meetingId}`)
         ]);
         const defaultDef = await this.getDefaultDefinition();
         sortProperty = sortProperty ?? defaultDef.sortProperty;
         sortAscending = sortAscending ?? defaultDef.sortAscending;
-        this.setSorting(sortProperty, sortAscending);
+        additionalInfo = additionalInfo ?? defaultDef.additionalInfo;
+        this.setSorting(sortProperty, sortAscending, additionalInfo);
     }
 
     /**
@@ -426,6 +449,10 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.store.set(this.calcStorageKey(`sorting_property`, this.storageKey), this.sortDefinition?.sortProperty);
         }
         this.store.set(this.calcStorageKey(`sorting_ascending`, this.storageKey), this.sortDefinition?.sortAscending);
+        this.store.set(
+            this.calcStorageKey(`sorting_additional_info`, this.storageKey),
+            this.sortDefinition?.additionalInfo
+        );
     }
 
     private calculateDefaultStatus(): void {

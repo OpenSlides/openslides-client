@@ -26,11 +26,11 @@
     <div class="extra-controls-slot">
         <div>
             @if (selectedView === 'hierarchy') {
-                <button mat-button matTooltip="{{ 'Hierarchy view' | translate }}" (click)="onChangeView('list')">
+                <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
                     <mat-icon>format_align_justify</mat-icon>
                 </button>
             } @else {
-                <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('hierarchy')">
+                <button mat-button matTooltip="{{ 'Hierarchy view' | translate }}" (click)="onChangeView('hierarchy')">
                     <mat-icon>format_align_right</mat-icon>
                 </button>
             }

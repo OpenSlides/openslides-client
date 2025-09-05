@@ -52,12 +52,15 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
         this.listStorageIndex = COMMITTEE_LIST_STORAGE_INDEX;
-        this.selectedView = this.sortService.hierarchySort ? `hierarchy` : `list`;
+        this.subscriptions.push(
+            this.sortService.hierarchySort.subscribe(active => {
+                this.selectedView = active ? `hierarchy` : `list`;
+            })
+        );
     }
 
     public onChangeView(type: string): void {
-        this.selectedView = type;
-        this.sortService.hierarchySort = this.selectedView === `hierarchy`;
+        this.sortService.hierarchySort = type === `hierarchy`;
     }
 
     public editSingle(committee: ViewCommittee): void {

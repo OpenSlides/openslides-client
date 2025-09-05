@@ -1,10 +1,10 @@
 import { Injectable, ProviderToken } from '@angular/core';
 import { _ } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, withLatestFrom } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewCommittee } from '../../../../view-models';
 
@@ -14,13 +14,14 @@ import { ViewCommittee } from '../../../../view-models';
 export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     protected storageKey = `CommitteeList`;
 
-    private _hierarchySort = new BehaviorSubject(true);
-    public get hierarchySort(): boolean {
-        return this._hierarchySort.value;
+    public get hierarchySort(): Observable<boolean> {
+        return this.sortingUpdatedObservable.pipe(map(sorting => (sorting?.additionalInfo as any)?.hierarchySort));
     }
 
     public set hierarchySort(value: boolean) {
-        this._hierarchySort.next(value);
+        this.additionalInfo = {
+            hierarchySort: value
+        };
     }
 
     protected repositoryToken: ProviderToken<BaseRepository<any, any>> = CommitteeRepositoryService;
@@ -34,7 +35,10 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     public constructor() {
         super({
             sortProperty: `name`,
-            sortAscending: true
+            sortAscending: true,
+            additionalInfo: {
+                hierarchySort: true
+            }
         });
     }
 
@@ -43,20 +47,11 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     }
 
     /**
-     * Updates every time when there's a new sortDefinition. Emits said sortDefinition.
-     */
-    public override get sortingUpdatedObservable(): Observable<OsSortingDefinition<ViewCommittee>> {
-        return super.sortingUpdatedObservable.pipe(
-            withLatestFrom(this._hierarchySort),
-            map(([sort, _]) => sort)
-        );
-    }
-
-    /**
      * Sorts the given array according to this services sort settings and returns it.
      */
     public override async sort(array: ViewCommittee[]): Promise<ViewCommittee[]> {
-        if (this.hierarchySort) {
+        const additionalInfo = (await this.getDefaultDefinition()).additionalInfo;
+        if ((this.additionalInfo as any)?.hierarchySort ?? (additionalInfo as any)?.hierarchySort) {
             const input = [...array];
             return (await this.doHierarchySort(input, null)).flat(Infinity);
         }
