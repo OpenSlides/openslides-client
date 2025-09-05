@@ -98,6 +98,7 @@
                 canManage &&
                 !speaker.point_of_order &&
                 speaker.speech_state !== 'interposed_question' &&
+                speaker.speech_state !== 'intervention' &&
                 !speaker.isFinished
             ) {
                 <!-- Speaker count -->
@@ -268,6 +269,25 @@
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
         @if (canManage) {
+            @if (
+                (speaker.speech_state === SpeechState.INTERVENTION && enableInterventionAnswerButton()) ||
+                (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && enableInterposedQuestionAnswerButton())
+            ) {
+                @if (!speaker.answer) {
+                    <button mat-menu-item (click)="onCreateAnswerButton()">
+                        <mat-icon>warning</mat-icon>
+                        <span>{{ 'Create Answer' | translate }}</span>
+                    </button>
+                    <mat-divider />
+                }
+                <!-- answer -->
+                @if (!speaker.isSpeaking) {
+                    <button mat-menu-item (click)="onAnswerButton()">
+                        <mat-icon>warning</mat-icon>
+                        <span>{{ 'Answer' | translate }}</span>
+                    </button>
+                }
+            }
             @if (enableSpeechStateControls()) {
                 <!-- pro button -->
                 @if (enableProContraButton()) {
@@ -393,54 +413,19 @@
 </ng-template>
 
 <ng-template #speechType>
-    <!-- Pro Speech -->
-    @if (speaker.speech_state === SpeechState.PRO) {
+    @if (speaker.speech_state) {
         <span>
-            <mat-icon class="inline-icon-text-align" inline [class.green-text]="!!showcolor">add_circle</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Forspeech' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Contra Speech -->
-    @if (speaker.speech_state === SpeechState.CONTRA) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.red-warning-text]="!!showcolor">
-                remove_circle
+            <mat-icon
+                class="inline-icon-text-align icon"
+                inline
+                [class.green-text]="!!showcolor && speaker.speech_state === SpeechState.PRO"
+                [class.icon]="!!showcolor"
+                [class.red-warning-text]="!!showcolor && speaker.speech_state === SpeechState.CONTRA"
+            >
+                {{ speaker.stateIcon }}
             </mat-icon>
             <i [class.user-subtitle]="!!showcolor">
-                {{ 'Counter speech' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Marked -->
-    @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">star</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Contribution' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Interposed question -->
-    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">help</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Interposed question' | translate }}
-            </i>
-        </span>
-    }
-
-    <!-- Intervention -->
-    @if (speaker.speech_state === SpeechState.INTERVENTION) {
-        <span>
-            <mat-icon class="inline-icon-text-align" inline [class.icon]="!!showcolor">error</mat-icon>
-            <i [class.user-subtitle]="!!showcolor">
-                {{ 'Intervention' | translate }}
+                {{ speaker.verboseState | translate }}
             </i>
         </span>
     }
