@@ -173,33 +173,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public structureLevelCountdownEnabled = false;
 
-    public findFinishedPredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (speaker: ViewSpeaker) =>
-        this.finishedSpeakers
-            .slice()
-            .reverse()
-            .find(spkr => spkr.end_time < speaker.end_time && !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
-
-    public findActivePredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (_speaker: ViewSpeaker) =>
-        this.finishedSpeakers
-            .slice()
-            .reverse()
-            .find(spkr => !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
-
-    public getActiveSpeaker: (speaker: ViewSpeaker) => ViewSpeaker = (_: ViewSpeaker) => this.activeSpeaker;
-
-    public findWaitingPredecessorFunction: (speaker: ViewSpeaker) => ViewSpeaker = (speaker: ViewSpeaker) => {
-        const waitingPredecessor = this.waitingSpeakers
-            .slice()
-            .reverse()
-            .find(spkr => spkr.weight < speaker.weight && !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
-        return (
-            waitingPredecessor ||
-            (this.activeSpeaker && !SPECIAL_SPEECH_STATES.includes(this.activeSpeaker?.speech_state)
-                ? this.activeSpeaker
-                : this.findActivePredecessorFunction(speaker))
-        );
-    };
-
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -267,6 +240,30 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this._destroyed.emit(true);
+    }
+
+    public async createAnswer(speaker: ViewSpeaker): Promise<void> {
+        const speakers = this.finishedSpeakers.concat(
+            this.activeSpeaker ? [this.activeSpeaker] : [],
+            this.interposedQuestions,
+            this.waitingSpeakers
+        );
+        speakers.reverse();
+        const speakerIndex = speakers.findIndex(listSpeaker => listSpeaker.id === speaker.id);
+        speakers.splice(0, speakerIndex + 1);
+        const predecessor = speakers.find(spkr => !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
+        await this.speakerRepo.create(
+            speaker.list_of_speakers,
+            this.operator.hasPerms(this.permission.listOfSpeakersCanManage)
+                ? undefined
+                : this.operator.user.getMeetingUser().id,
+            {
+                meeting_user_id: predecessor?.meeting_user_id || undefined,
+                structure_level_id: predecessor?.structureLevelId || undefined,
+                speechState: speaker.speech_state,
+                answer_to_id: speaker.id
+            }
+        );
     }
 
     private isListOfSpeakersEmpty(): void {

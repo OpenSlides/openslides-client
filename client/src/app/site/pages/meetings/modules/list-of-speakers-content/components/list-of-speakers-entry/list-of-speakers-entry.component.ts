@@ -59,9 +59,6 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     @Input()
-    public findPredecessorFn: (speaker: ViewSpeaker) => ViewSpeaker = (_speaker: ViewSpeaker) => undefined;
-
-    @Input()
     public speakerIndex: number = null;
 
     @Input()
@@ -75,6 +72,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     @Output()
     public stopSpeech = new EventEmitter<void>();
+
+    @Output()
+    public createAnswer = new EventEmitter<void>();
 
     public meetingUser$: Observable<ViewMeetingUser>;
 
@@ -331,18 +331,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public async onCreateAnswerButton(): Promise<void> {
-        await this.speakerRepo.create(
-            this.speaker.list_of_speakers,
-            this.operator.hasPerms(this.permission.listOfSpeakersCanManage)
-                ? undefined
-                : this.operator.user.getMeetingUser().id,
-            {
-                meeting_user_id: this.findPredecessorFn(this.speaker)?.meeting_user_id,
-                structure_level_id: this.findPredecessorFn(this.speaker)?.structureLevelId,
-                speechState: this.speaker.speech_state,
-                answer_to_id: this.speaker.id
-            }
-        );
+        this.createAnswer.emit();
     }
 
     public async onPointOfOrderButton(): Promise<void> {
