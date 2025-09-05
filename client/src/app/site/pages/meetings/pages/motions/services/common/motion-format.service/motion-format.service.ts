@@ -295,7 +295,7 @@ export class MotionFormatService {
             } else if (lineNumbering === LineNumberingMode.Inside) {
                 iconMargin = 45;
             }
-            warning = `<mat-icon class="margin-right-${iconMargin}">warning</mat-icon>`;
+            warning = `<mat-icon class="margin-left-${iconMargin}">warning</mat-icon>`;
         } else if (lineNumbering === LineNumberingMode.Inside) {
             additionClasses = `margin-left-46`;
         } else if (lineNumbering === LineNumberingMode.None) {
