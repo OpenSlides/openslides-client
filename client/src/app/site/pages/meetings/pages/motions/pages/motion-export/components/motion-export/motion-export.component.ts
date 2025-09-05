@@ -313,6 +313,17 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
+        this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
+            if (!value) {
+                this.deselectOption(`content`, `text`);
+                this.changeStateOfChipOption(this.textChip, true, `text`);
+            } else {
+                if (!this.dialogForm.get(`content`).value.includes('text')) {
+                    this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                }
+                this.changeStateOfChipOption(this.textChip, false, `text`);
+            }
+        });
         this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
@@ -387,9 +398,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             chipOption.disabled = nextState;
-            chipOption.selected = false;
             if (nextState) {
                 this.disabledControls.push(value);
+                chipOption.selected = false;
             } else {
                 this.disabledControls = this.disabledControls.filter(obj => !obj.includes(value));
             }
