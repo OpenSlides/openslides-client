@@ -42,7 +42,7 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     public get shouldShowPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.agendaItemCanManage) ||
+                this.operator.hasPerms(Permission.pollCanManage) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {
@@ -53,11 +53,15 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     }
 
     public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.agendaItemCanManage);
+        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.pollCanManage);
     }
 
     public get showCandidatesInMetaInfo(): boolean {
         return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
+    }
+
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.pollCanManage);
     }
 
     public constructor(

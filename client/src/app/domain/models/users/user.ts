@@ -55,6 +55,9 @@ export class User extends BaseDecimalModel<User> {
     public home_committee_id: Id; // committee/navive_user_ids;
     public gender_id: Id; // (gender/user_ids)[];
 
+    public history_position_ids: Id[];
+    public history_entry_ids: Id[];
+
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
     }
@@ -93,6 +96,8 @@ export class User extends BaseDecimalModel<User> {
         `vote_ids`,
         `poll_candidate_ids`,
         `home_committee_id`,
+        `history_position_ids`,
+        `history_entry_ids`,
         `meeting_ids`,
         `organization_id`
     ];
