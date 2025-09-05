@@ -318,7 +318,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.deselectOption(`content`, `text`);
                 this.changeStateOfChipOption(this.textChip, true, `text`);
             } else {
-                this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                if (!this.dialogForm.get(`content`).value.includes('text')) {
+                    this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                }
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
@@ -396,9 +398,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             chipOption.disabled = nextState;
-            chipOption.selected = false;
             if (nextState) {
                 this.disabledControls.push(value);
+                chipOption.selected = false;
             } else {
                 this.disabledControls = this.disabledControls.filter(obj => !obj.includes(value));
             }
