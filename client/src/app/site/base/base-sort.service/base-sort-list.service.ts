@@ -66,9 +66,9 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * Set the current sorting order
+     * Set the additional infos regarding sorting order
      *
-     * @param ascending ascending sorting if true, descending sorting if false
+     * @param additional info, can be any JSON serializable value
      */
     public set additionalInfo(additional: unknown) {
         this.sortDefinition!.additionalInfo = additional;
@@ -76,7 +76,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * @returns wether current the sorting is ascending or descending
+     * @returns Additional info for sorting order
      */
     public get additionalInfo(): unknown {
         return this.sortDefinition?.additionalInfo;
