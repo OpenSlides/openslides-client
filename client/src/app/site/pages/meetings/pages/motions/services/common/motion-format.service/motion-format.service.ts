@@ -289,13 +289,13 @@ export class MotionFormatService {
         let warning = ``;
         let additionClasses = ``;
         if (this.diffService.changeHasCollissions(current_text, changesToShow)) {
-            let iconMargin = 40;
+            let iconMargin = `margin-left-40`;
             if (lineNumbering === LineNumberingMode.Outside) {
-                iconMargin = 10;
+                iconMargin = `margin-right-10`;
             } else if (lineNumbering === LineNumberingMode.Inside) {
-                iconMargin = 45;
+                iconMargin = `margin-left-45`;
             }
-            warning = `<mat-icon class="margin-left-${iconMargin}">warning</mat-icon>`;
+            warning = `<mat-icon class="${iconMargin}">warning</mat-icon>`;
         } else if (lineNumbering === LineNumberingMode.Inside) {
             additionClasses = `margin-left-46`;
         } else if (lineNumbering === LineNumberingMode.None) {
