@@ -334,7 +334,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: [140, 60, 65, 110, 50],
+                        widths: [120, 60, 65, 55, 33],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
