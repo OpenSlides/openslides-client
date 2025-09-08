@@ -290,7 +290,7 @@ export class AgendaPdfCatalogExportService {
             tableCells.push([
                 { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
                 {
-                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
+                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(', '),
                     fillColor: backgroundColor
                 },
                 { text: state, fillColor: backgroundColor },
@@ -309,7 +309,7 @@ export class AgendaPdfCatalogExportService {
             tableCells.push([
                 { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
                 {
-                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
+                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(', '),
                     fillColor: backgroundColor
                 },
                 { text: state, fillColor: backgroundColor },
