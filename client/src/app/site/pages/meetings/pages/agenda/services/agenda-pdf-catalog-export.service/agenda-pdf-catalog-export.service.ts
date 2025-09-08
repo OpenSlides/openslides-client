@@ -288,7 +288,7 @@ export class AgendaPdfCatalogExportService {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
-                { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
+                { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
                 {
                     text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
                     fillColor: backgroundColor
@@ -307,7 +307,7 @@ export class AgendaPdfCatalogExportService {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
-                { text: `${i}. ${speaker.name}`, fillColor: backgroundColor },
+                { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
                 {
                     text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(','),
                     fillColor: backgroundColor
