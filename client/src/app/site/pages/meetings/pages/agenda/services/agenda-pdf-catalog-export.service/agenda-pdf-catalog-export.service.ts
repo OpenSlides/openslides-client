@@ -61,9 +61,12 @@ export class AgendaPdfCatalogExportService {
             try {
                 const agendaDocDef: any = this.agendaItemToDoc(agendaItems[agendaItemIndex], exportInfo, pdfMeta);
 
-                // add id field to the first page of a motion to make it findable over TOC
-                agendaDocDef[0].id = `${agendaItems[agendaItemIndex].id}`;
-
+                // edge case, toc only selected
+                if (agendaDocDef.length < 2) {
+                    agendaDocDef.push({ text: ` ` });
+                }
+                // add id field to the first page of a agenda item to make it findable over TOC
+                agendaDocDef[1].id = `${agendaItems[agendaItemIndex].id}`;
                 agendaDocList.push(agendaDocDef);
 
                 if (agendaItemIndex < agendaItems.length - 1 && enforcePageBreaks) {
