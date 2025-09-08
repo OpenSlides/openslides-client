@@ -352,7 +352,7 @@ export class AgendaPdfCatalogExportService {
         const votesWidth = 200;
         const firstPlaceWidth = 10;
 
-        if (agendaItem.content_object?.poll_ids) {
+        if (agendaItem.content_object?.polls.length) {
             for (let pollIndex = 0; pollIndex < agendaItem.content_object?.polls.length; pollIndex++) {
                 const poll: ViewPoll = agendaItem.content_object?.polls[pollIndex];
                 const tableCells: Content[][] = [];
