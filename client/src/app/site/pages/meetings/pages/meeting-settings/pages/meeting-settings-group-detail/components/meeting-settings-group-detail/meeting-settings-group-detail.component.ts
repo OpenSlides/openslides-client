@@ -176,6 +176,9 @@ export class MeetingSettingsGroupDetailComponent
             if (Object.keys(data).length) {
                 await this.repo.update(data, { meeting: this.meeting });
             }
+            for (const key in data) {
+                this.originalSettings[key] = data[key];
+            }
             this.changedSettings = {};
         } catch (e: any) {
             this.matSnackBar.open(e, this.translate.instant(`Ok`), {
