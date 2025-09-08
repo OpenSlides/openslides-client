@@ -348,8 +348,8 @@ export class AgendaPdfCatalogExportService {
         }
         const entries: Content[] = [];
 
-        const optionWidth = 280;
-        const votesWidth = 120;
+        const optionWidth = 200;
+        const votesWidth = 200;
         const firstPlaceWidth = 10;
 
         if (agendaItem.content_object?.poll_ids) {
