@@ -7,6 +7,7 @@ import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-doc
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { DurationService } from 'src/app/site/services/duration.service';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { ViewPoll } from '../../../polls';
@@ -38,43 +39,47 @@ export class AgendaPdfCatalogExportService {
         private htmlToPdfService: HtmlToPdfService,
         private organizationSettingsService: OrganizationSettingsService,
         private pdfImagesService: PdfImagesService,
-        private durationService: DurationService
+        private durationService: DurationService,
+        private treeService: TreeService
     ) {}
 
     /**
      * Converts the list of agenda items to pdfmake doc definition.
      * Public entry point to conversion of multiple agenda items.
      *
-     * @param agendaItems the list of view agendaItem to convert
+     * @param sortedAgendaItems the list of view agendaItem to convert
      * @param info
      * @param pdfMeta
      * @returns pdfmake doc definition as object
      */
     public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: any, pdfMeta: string[]): Content {
         this.displayedAgendaItemIds = agendaItems.map(view => view.id);
+        const addedAgendaItems = this.getMissingAgendaItems(agendaItems);
+        const tree = this.treeService.makeSortedTree(agendaItems.concat(addedAgendaItems), `weight`, `parent_id`);
+        const sortedAgendaItems = this.treeService.getFlatItemsFromTree(tree);
         let doc: Content = [];
         const agendaDocList = [];
         const printToc = pdfMeta?.includes(AGENDA_PDF_OPTIONS.Toc);
         const enforcePageBreaks = pdfMeta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
 
-        for (let agendaItemIndex = 0; agendaItemIndex < agendaItems.length; ++agendaItemIndex) {
+        for (let agendaItemIndex = 0; agendaItemIndex < sortedAgendaItems.length; ++agendaItemIndex) {
             try {
-                const agendaDocDef: any = this.agendaItemToDoc(agendaItems[agendaItemIndex], exportInfo, pdfMeta);
+                const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo, pdfMeta);
 
                 // edge case, toc only selected
                 if (agendaDocDef.length < 2) {
                     agendaDocDef.push({ text: ` ` });
                 }
                 // add id field to the first page of a agenda item to make it findable over TOC
-                agendaDocDef[1].id = `${agendaItems[agendaItemIndex].id}`;
+                agendaDocDef[1].id = `${sortedAgendaItems[agendaItemIndex].id}`;
                 agendaDocList.push(agendaDocDef);
 
-                if (agendaItemIndex < agendaItems.length - 1 && enforcePageBreaks) {
+                if (agendaItemIndex < sortedAgendaItems.length - 1 && enforcePageBreaks) {
                     agendaDocList.push(this.pdfService.getPageBreak());
                 }
             } catch (err) {
                 const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${
-                    agendaItems[agendaItemIndex].item_number
+                    sortedAgendaItems[agendaItemIndex].item_number
                 }`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
                 throw new PdfError(errorText);
@@ -90,12 +95,28 @@ export class AgendaPdfCatalogExportService {
         ]);
 
         if (printToc) {
-            doc.push(this.createToc(agendaItems));
+            doc.push(this.createToc(sortedAgendaItems));
         }
 
         doc = doc.concat(agendaDocList);
 
         return doc;
+    }
+
+    private getMissingAgendaItems(agendaItems: ViewAgendaItem[]): ViewAgendaItem[] {
+        const missing = [];
+        const missingIds = [];
+        for (const item of agendaItems) {
+            let pivot = item;
+            while (pivot.parent) {
+                if (!this.displayedAgendaItemIds.includes(pivot.parent.id) && !missingIds.includes(pivot.parent.id)) {
+                    missing.push(pivot.parent);
+                    missingIds.push(pivot.parent.id);
+                }
+                pivot = pivot.parent;
+            }
+        }
+        return missing;
     }
 
     /**
@@ -161,7 +182,7 @@ export class AgendaPdfCatalogExportService {
     private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any, meta: any): Content {
         const agendaItemDoc: any[] = [];
         const enforcePageBreaks = meta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
-        agendaItemDoc.push(this.getParentItems(agendaItem, info, enforcePageBreaks));
+        agendaItemDoc.push(this.getParentLines(agendaItem, info, enforcePageBreaks));
 
         if (info.includes(`title`) || info.includes(`item_number`)) {
             agendaItemDoc.push(this.createNumberTitleDoc(agendaItem, info));
@@ -188,15 +209,10 @@ export class AgendaPdfCatalogExportService {
     }
 
     // display the parent items, if they are not in the exported items
-    private getParentItems(agendaItem: ViewAgendaItem, info: any, enforcePageBreaks: boolean): Content[] {
+    private getParentLines(agendaItem: ViewAgendaItem, info: any, enforcePageBreaks: boolean): Content[] {
         const parent = agendaItem.parent;
         const entries = [];
         if (parent) {
-            if (!this.displayedAgendaItemIds.includes(parent.id)) {
-                entries.push(...this.getParentItems(parent, info, enforcePageBreaks));
-                entries.push(this.createNumberTitleDoc(parent, info), this.createTextDoc(parent));
-                this.displayedAgendaItemIds.push(parent.id);
-            }
             if (!enforcePageBreaks) {
                 entries.push(this.getDivLine(0.5));
             }
