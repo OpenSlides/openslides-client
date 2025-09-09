@@ -287,6 +287,7 @@ export class AgendaPdfCatalogExportService {
         const tableCells: Content[][] = [];
         const finishedSpeakers: ViewSpeaker[] = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
         const speakers: ViewSpeaker[] = agendaItem.content_object.list_of_speakers.speakers;
+        const isA4 = this.pdfService.pageSize === `A4`;
         finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
             const aTime = new Date(a.end_time).getTime();
             const bTime = new Date(b.end_time).getTime();
@@ -354,7 +355,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: [120, 60, 65, 55, 33],
+                        widths: isA4 ? [120, 60, 65, 55, 33] : [60, 60, 65, 55, 33],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
@@ -370,9 +371,9 @@ export class AgendaPdfCatalogExportService {
             return [];
         }
         const entries: Content[] = [];
-
-        const optionWidth = 200;
-        const votesWidth = 200;
+        const isA4 = this.pdfService.pageSize === `A4`;
+        const optionWidth = isA4 ? 200 : 100;
+        const votesWidth = isA4 ? 200 : 100;
         const firstPlaceWidth = 10;
 
         if (agendaItem.content_object?.polls.length) {
