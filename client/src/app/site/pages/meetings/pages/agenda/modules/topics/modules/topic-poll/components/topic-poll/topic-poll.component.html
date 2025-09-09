@@ -9,7 +9,7 @@
                     </mat-card-title>
                     <!-- Type and State -->
                     <div class="type-and-state italic spacer-bottom-20">
-                        <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
+                        <span *osPerms="permission.pollCanManage; and: poll.isEVoting">
                             <os-icon-container
                                 class="poll-type"
                                 color="primary"
@@ -34,7 +34,7 @@
                     <div class="poll-menu">
                         <!-- Buttons -->
                         <button
-                            *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage]"
+                            *osPerms="[permission.projectorCanManage, permission.pollCanManage]"
                             mat-icon-button
                             [matMenuTriggerFor]="pollItemMenu"
                             (click)="$event.stopPropagation()"
@@ -43,7 +43,7 @@
                         </button>
                     </div>
                     <!-- Change state button -->
-                    <div *osPerms="permission.agendaItemCanManage; and: !hideChangeState">
+                    <div *osPerms="permission.pollCanManage; and: !hideChangeState">
                         <button
                             mat-stroked-button
                             [disabled]="stateChangePendingObservable | async"
@@ -62,7 +62,7 @@
                         </button>
                     </div>
                     <!-- Enter Votes Hint -->
-                    <div *osPerms="permission.agendaItemCanManage; and: poll.isAnalog && !poll.stateHasVotes">
+                    <div *osPerms="permission.pollCanManage; and: poll.isAnalog && !poll.stateHasVotes">
                         {{ 'Edit to enter votes.' | translate }}
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                 }
                 <!-- Poll progress bar -->
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll"></os-poll-progress>
+                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
                 }
                 <!-- The Vote -->
                 @if (poll.canBeVotedFor()) {
@@ -90,7 +90,7 @@
 }
 
 <mat-menu #pollItemMenu="matMenu">
-    <div *osPerms="permission.agendaItemCanManage">
+    <div *osPerms="permission.pollCanManage">
         <button mat-menu-item (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
@@ -107,7 +107,7 @@
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>
     </button>
-    <div *osPerms="permission.agendaItemCanManage">
+    <div *osPerms="permission.pollCanManage">
         <mat-divider></mat-divider>
 
         <!-- Reset Button -->
