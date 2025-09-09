@@ -45,14 +45,18 @@ export class SpeakerUserSelectDialogComponent {
     }
 
     public isInterposedQuestion(): boolean {
-        return this.data.state === `interposed_question`;
+        return this.data.state === `interposed_question` && !this.data.answer;
+    }
+
+    public isInterposedQuestionAnswer(): boolean {
+        return this.data.state === `interposed_question` && this.data.answer;
     }
 
     public isIntervention(): boolean {
         return this.data.state === `intervention` && !this.data.answer;
     }
 
-    public isAnswer(): boolean {
+    public isInterventionAnswer(): boolean {
         return this.data.state === `intervention` && this.data.answer;
     }
 
