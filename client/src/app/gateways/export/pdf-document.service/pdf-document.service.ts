@@ -212,7 +212,7 @@ class PdfCreator {
         // the result of the worker
         this._pdfWorker.onmessage = ({ data }): void => {
             // if the worker returns a numbers, is always the progress
-            if (typeof data === `number`) {
+            if (typeof data === `number` && this._progressService) {
                 // update progress
                 const progress = Math.ceil(data * 100);
                 this._progressService.progressAmount = progress;
@@ -543,14 +543,17 @@ export class PdfDocumentService {
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<Blob | null> {
+    }: DownloadConfig & {
+        pageMargins: [number, number, number, number];
+        pageSize: PageSize;
+        progressService?: ProgressSnackBarControlService;
+    }): Promise<Blob | null> {
         await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]);
 
         this.showProgress();
         const imageUrls = this.pdfImagesService.getImageUrls();
         this.pdfImagesService.clearImageUrls();
         return new PdfCreator({
-            ...config,
             document: this.getStandardPaper({
                 ...config,
                 documentContent: docDefinition,
@@ -562,8 +565,9 @@ export class PdfDocumentService {
             filename: `${filetitle}.pdf`,
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
-            progressService: this.progressService,
-            progressSnackBarService: this.progressSnackBarService
+            progressService: null,
+            progressSnackBarService: this.progressSnackBarService,
+            ...config
         }).getFile();
     }
 
@@ -573,7 +577,10 @@ export class PdfDocumentService {
     public async download(
         config: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }
     ): Promise<void> {
-        const file = await this.blob(config);
+        const file = await this.blob({
+            ...config,
+            progressService: this.progressService
+        });
         if (file) {
             saveAs(file, config.filename, { autoBom: true });
         }
