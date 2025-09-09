@@ -112,7 +112,7 @@ export class MeetingSettingsGroupDetailComponent
                             }
                         }
                     }
-                    this.cd.markForCheck()
+                    this.cd.markForCheck();
                 }
             })
         );
