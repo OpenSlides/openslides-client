@@ -32,6 +32,7 @@ const AGENDA_PDF_OPTIONS = {
 })
 export class AgendaPdfCatalogExportService {
     private displayedAgendaItemIds = [];
+    private _addExtraSpace = false;
 
     public constructor(
         private translate: TranslateService,
@@ -221,6 +222,7 @@ export class AgendaPdfCatalogExportService {
                 entries.push(this.getDivLine());
             }
         }
+        this._addExtraSpace = false;
         return entries;
     }
 
@@ -264,6 +266,7 @@ export class AgendaPdfCatalogExportService {
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
         if (moderationNotes) {
+            this._addExtraSpace = true;
             return [
                 {
                     text: this.translate.instant(`Moderation note`),
@@ -339,6 +342,7 @@ export class AgendaPdfCatalogExportService {
         }
 
         if (speakers.length > 0) {
+            this._addExtraSpace = true;
             return [
                 {
                     text: this.translate.instant(`List of speakers`),
@@ -421,6 +425,7 @@ export class AgendaPdfCatalogExportService {
 
                 entries.push({ text: ``, margin: this.getStyle(`margin-text`) });
             }
+            this._addExtraSpace = true;
             return [
                 {
                     text: this.translate.instant(`Polls`),
@@ -438,6 +443,7 @@ export class AgendaPdfCatalogExportService {
             return [];
         }
         if (agendaItem.comment) {
+            this._addExtraSpace = true;
             return [
                 {
                     text: this.translate.instant(`Internal Commentary`),
@@ -480,10 +486,6 @@ export class AgendaPdfCatalogExportService {
     private getDivLine(lineWidth?: number): Content[] {
         return [
             {
-                text: ``,
-                marginTop: 5
-            },
-            {
                 canvas: [
                     {
                         type: `line`,
@@ -493,11 +495,9 @@ export class AgendaPdfCatalogExportService {
                         x2: 500,
                         y2: 0
                     }
-                ]
-            },
-            {
-                text: ``,
-                marginTop: 5
+                ],
+                marginTop: !lineWidth && this._addExtraSpace ? 10 : 5,
+                marginBottom: 5
             }
         ];
     }
