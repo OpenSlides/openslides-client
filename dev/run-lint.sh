@@ -25,7 +25,7 @@ GROUP_ID=$(id -g)
 DC="CONTEXT=tests USER_ID=$USER_ID GROUP_ID=$GROUP_ID docker compose -f dev/docker-compose.dev.yml"
 
 # Safe Exit
-trap 'if [ -z "$LOCAL" ]; then docker stop "$CONTAINER_NAME" && docker rm "$CONTAINER_NAME"; fi' EXIT
+trap 'if [ -z "$LOCAL" ]; then docker stop "$CONTAINER_NAME" &> /dev/null && docker rm "$CONTAINER_NAME" &> /dev/null; fi' EXIT
 
 # Execution
 if [ -z "$LOCAL" ]

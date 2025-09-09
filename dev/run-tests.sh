@@ -19,10 +19,10 @@ done
 # Setup
 CONTAINER_NAME="client-test"
 IMAGE_TAG=openslides-client-tests
-LOCAL_PWD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+LOCAL_PWD=$(dirname "$0")
 
 # Safe Exit
-trap 'docker stop "$CONTAINER_NAME" && docker rm "$CONTAINER_NAME"' EXIT
+trap 'docker stop "$CONTAINER_NAME" &> /dev/null && docker rm "$CONTAINER_NAME" &> /dev/null' EXIT
 
 # Execution
 if [ -z "$SKIP_BUILD" ]; then make build-tests; fi
