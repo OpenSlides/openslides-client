@@ -484,6 +484,10 @@ export class AgendaPdfCatalogExportService {
     }
 
     private getDivLine(lineWidth?: number): Content[] {
+        const width =
+            this.pdfService.pageSize === 'A4'
+                ? PDF_A4_POINTS_WIDTH - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight
+                : PDF_A5_POINTS_WIDTH - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight;
         return [
             {
                 canvas: [
@@ -492,7 +496,7 @@ export class AgendaPdfCatalogExportService {
                         lineWidth: lineWidth ?? 2,
                         x1: 0,
                         y1: 0,
-                        x2: 500,
+                        x2: width,
                         y2: 0
                     }
                 ],
