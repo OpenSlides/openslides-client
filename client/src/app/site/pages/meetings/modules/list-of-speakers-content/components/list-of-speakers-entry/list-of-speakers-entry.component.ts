@@ -198,7 +198,11 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public async updateSpeakerMeetingUser(): Promise<boolean> {
-        const dialogRef = await this.speakerUserSelectDialog.open(this.speaker.list_of_speakers);
+        const dialogRef = await this.speakerUserSelectDialog.open(
+            this.speaker.list_of_speakers,
+            this.speaker.speech_state,
+            this.speaker.answer
+        );
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
