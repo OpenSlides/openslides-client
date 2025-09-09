@@ -167,6 +167,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
             const csvMetaInfo = this.dialogForm.get(`metaInfo`).value ?? [];
             this.agendaExportService.exportAsCsv(views, info, csvMetaInfo);
         }
+        this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
     }
 
     public afterTabChanged(): void {
