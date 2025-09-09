@@ -112,6 +112,7 @@ export class MeetingSettingsGroupDetailComponent
                             }
                         }
                     }
+                    this.cd.markForCheck()
                 }
             })
         );
@@ -175,9 +176,6 @@ export class MeetingSettingsGroupDetailComponent
             }
             if (Object.keys(data).length) {
                 await this.repo.update(data, { meeting: this.meeting });
-            }
-            for (const key in data) {
-                this.originalSettings[key] = data[key];
             }
             this.changedSettings = {};
         } catch (e: any) {
