@@ -4,40 +4,37 @@
             <!-- result table -->
             <table class="result-table">
                 <tbody>
-                    @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
-                        <div>
-                            <tr>
-                                <!-- Votes -->
-                                <td>
-                                    <os-icon-container
-                                        icon="circle"
-                                        [size]="iconSize"
-                                        [style.color]="colors.backgroundColor[i]"
-                                    ></os-icon-container>
-                                </td>
-                                <td>
-                                    {{ label }}
-                                </td>
-                            </tr>
-                            @if (poll.options.length - 1 === i) {
-                                <mat-divider></mat-divider>
-                                <tr>
-                                    <td colspan="2">{{ 'Valid votes' | translate }}&nbsp;{{ poll.votesvalid }}</td>
-                                </tr>
-                            }
-                        </div>
+                    @for (row of pollService.getSortedTableData(poll); track row; let i = $index) {
+                        <tr>
+                            <!-- Votes -->
+                            <td>
+                                <os-icon-container
+                                    icon="circle"
+                                    [size]="iconSize"
+                                    [style.color]="colors.backgroundColor[i]"
+                                >
+                                    {{ row.label }}
+                                </os-icon-container>
+                            </td>
+                            <td class="result-cell-definition">
+                                {{ row.data | pollPercentBase: poll }}
+                            </td>
+                            <td class="result-cell-definition">
+                                {{ row.data | pollParseNumber }}
+                            </td>
+                        </tr>
                     }
+                    <tr>
+                        <td>{{ 'Valid votes' | translate }}</td>
+                        <td class="result-cell-definition"></td>
+                        <td class="result-cell-definition">{{ poll.votesvalid }}</td>
+                    </tr>
                 </tbody>
             </table>
             <!-- Chart -->
             @if (shouldShowChart) {
                 <div class="doughnut-chart">
-                    <os-chart
-                        type="doughnut"
-                        [circleColors]="chartColors"
-                        [data]="chartData"
-                        [labels]="pollService.getSortedChartLabels(poll)"
-                    ></os-chart>
+                    <os-chart type="doughnut" [circleColors]="chartColors" [data]="chartData"></os-chart>
                 </div>
             }
         }
