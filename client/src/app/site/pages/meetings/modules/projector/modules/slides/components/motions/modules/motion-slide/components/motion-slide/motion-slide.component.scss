@@ -32,9 +32,6 @@
     width: 100%;
     font-size: 120%;
 
-    tr.topline td {
-        border-top: 2px solid white;
-    }
     td.min {
         width: 1%;
         white-space: nowrap;
@@ -46,6 +43,9 @@
 
 .metatable-background {
     background-color: #ddd;
+    tr.topline td {
+        border-top: 2px solid white;
+    }
 }
 
 .spacer {
@@ -85,8 +85,13 @@
 .amendment-nr {
     position: relative;
     font-style: italic;
-    background-color: rgb(224, 224, 224);
     padding-right: 4px;
+}
+
+.label-backgrounds {
+    .amendment-nr {
+        background-color: rgb(224, 224, 224);
+    }
 }
 
 .os-linebreak {
