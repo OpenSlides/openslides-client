@@ -257,7 +257,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public ngOnInit(): void {
-        this._languageCollator = new Intl.Collator(this.translate.currentLang);
+        this._languageCollator = new Intl.Collator(this.translate.getCurrentLang());
         this.translate.onLangChange.subscribe(changeEvent => {
             this._languageCollator = getIntlCollatorForLang(changeEvent.lang);
             this.updateView();

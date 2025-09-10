@@ -33,6 +33,7 @@ export default tseslint.config({
     processor: angular.processInlineTemplates,
     rules: {
         "@angular-eslint/prefer-standalone": ["off"],
+        "@angular-eslint/prefer-inject": ["off"],
         "@angular-eslint/component-selector": ["error", {
             type: "element",
             prefix: "os",
@@ -82,6 +83,8 @@ export default tseslint.config({
         "max-len": ["warn", {
             code: 120,
             comments: 160,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true
         }],
 
         "no-debugger": ["error"],
