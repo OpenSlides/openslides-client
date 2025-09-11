@@ -276,7 +276,7 @@ export class MotionPdfService {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporters.length > 0) {
                 const supporters = motion.supporters
-                    .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
+                    .naturalSort(this.translate.getCurrentLang(), [`first_name`, `last_name`])
                     .map(supporter => supporter.full_name)
                     .join(`, `);
 
@@ -366,7 +366,7 @@ export class MotionPdfService {
         ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
-                    .naturalSort(this.translate.currentLang, [`number`, `title`])
+                    .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 
