@@ -29,7 +29,7 @@ export class SpeakerUserSelectDialogService extends BaseDialogService<
     ): Promise<MatDialogRef<SpeakerUserSelectDialogComponent, SpeakerUserSelectResult>> {
         const module = await import(`../speaker-user-select-dialog.module`).then(m => m.SpeakerUserSelectDialogModule);
         return this.dialog.open(module.getComponent(), {
-            data: { listOfSpeakers: los, state: speech_state, answer: answer },
+            data: { listOfSpeakers: los, state: speech_state, answer },
             ...infoDialogSettings,
             disableClose: false
         });
