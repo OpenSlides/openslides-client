@@ -41,9 +41,6 @@ export function getSpeakerVerboseState(speaker: SpeakerSpeechStateData): string 
 }
 
 export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
-    if (speaker.answer) {
-        return `warning`;
-    }
     switch (speaker.speech_state) {
         case SpeechState.INTERPOSED_QUESTION:
             return `help`;
