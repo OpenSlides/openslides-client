@@ -383,7 +383,7 @@ export class AgendaPdfCatalogExportService {
                 entries.push({
                     text: poll.title,
                     style: this.getStyle(`header3`),
-                    margin: this.getStyle(`margin-item`)
+                    margin: pollIndex === 0 ? this.getStyle(`margin-item`) : this.getStyle(`margin-item-2`)
                 });
                 // poll table header
                 tableCells.push([
@@ -479,6 +479,8 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 10];
             case `margin-item`:
                 return [0, 0, 0, 5];
+            case `margin-item-2`:
+                return [0, 10, 0, 5];
             default:
                 return {};
         }
