@@ -32,6 +32,9 @@ const AGENDA_PDF_OPTIONS = {
 })
 export class AgendaPdfCatalogExportService {
     private displayedAgendaItemIds = [];
+    // parent agenda items which are not in the export are handled different
+    // then exported agenda items, collect the ids of the special parent items here
+    private addedAgendaItemIds = [];
     private _addExtraSpace = false;
 
     public constructor(
@@ -56,6 +59,7 @@ export class AgendaPdfCatalogExportService {
     public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: any, pdfMeta: string[]): Content {
         this.displayedAgendaItemIds = agendaItems.map(view => view.id);
         const addedAgendaItems = this.getMissingAgendaItems(agendaItems);
+        this.addedAgendaItemIds = addedAgendaItems.map(item => item.id);
         const tree = this.treeService.makeSortedTree(agendaItems.concat(addedAgendaItems), `weight`, `parent_id`);
         const sortedAgendaItems = this.treeService.getFlatItemsFromTree(tree);
         let doc: Content = [];
@@ -142,16 +146,18 @@ export class AgendaPdfCatalogExportService {
         const tocBody = [];
         let i = 1;
         for (const topic of agenda) {
-            tocBody.push(
-                this.pdfService.createTocLine({
-                    identifier: `${topic.item_number ? topic.item_number : ``}`,
-                    title: topic.content_object?.title,
-                    pageReference: `${topic.id}`,
-                    style: StyleType.DEFAULT,
-                    fillColor: (i + 1) % 2 ? TABLEROW_GREY : undefined
-                })
-            );
-            i++;
+            if (!this.addedAgendaItemIds.includes(topic.id)) {
+                tocBody.push(
+                    this.pdfService.createTocLine({
+                        identifier: `${topic.item_number ? topic.item_number : ``}`,
+                        title: topic.content_object?.title,
+                        pageReference: `${topic.id}`,
+                        style: StyleType.DEFAULT,
+                        fillColor: (i + 1) % 2 ? TABLEROW_GREY : undefined
+                    })
+                );
+                i++;
+            }
         }
         toc.push(
             this.pdfService.createTocTableDef(
@@ -191,20 +197,22 @@ export class AgendaPdfCatalogExportService {
         if (info.includes(`text`)) {
             agendaItemDoc.push(this.createTextDoc(agendaItem));
         }
-        if (info.includes(`moderation_notes`)) {
-            agendaItemDoc.push(this.createModerationNotesDoc(agendaItem));
-        }
-        if (info.includes(`polls`)) {
-            agendaItemDoc.push(this.createPollsDoc(agendaItem));
-        }
-        if (info.includes(`list_of_speakers`)) {
-            agendaItemDoc.push(this.createListOfSpeakersDoc(agendaItem));
-        }
-        if (info.includes(`internal_commentary`)) {
-            agendaItemDoc.push(this.createCommentDoc(agendaItem));
-        }
-        if (info.includes(`attachments`)) {
-            agendaItemDoc.push(this.createAttachmentsDoc(agendaItem));
+        if (!this.addedAgendaItemIds.includes(agendaItem.id)) {
+            if (info.includes(`moderation_notes`)) {
+                agendaItemDoc.push(this.createModerationNotesDoc(agendaItem));
+            }
+            if (info.includes(`polls`)) {
+                agendaItemDoc.push(this.createPollsDoc(agendaItem));
+            }
+            if (info.includes(`list_of_speakers`)) {
+                agendaItemDoc.push(this.createListOfSpeakersDoc(agendaItem));
+            }
+            if (info.includes(`internal_commentary`)) {
+                agendaItemDoc.push(this.createCommentDoc(agendaItem));
+            }
+            if (info.includes(`attachments`)) {
+                agendaItemDoc.push(this.createAttachmentsDoc(agendaItem));
+            }
         }
         return agendaItemDoc;
     }
