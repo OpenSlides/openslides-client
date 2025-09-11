@@ -277,10 +277,10 @@
                 @if (!speaker.answer) {
                     <button mat-menu-item (click)="onCreateAnswerButton()">
                         @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-                            <mat-icon>help</mat-icon>
+                            <mat-icon>contact_support</mat-icon>
                         }
                         @if (speaker.speech_state === SpeechState.INTERVENTION) {
-                            <mat-icon>error</mat-icon>
+                            <mat-icon>feedback</mat-icon>
                         }
                         <div>{{ 'Add Answer' | translate }}</div>
                         <div class="user-subtitle hint">{{ 'Main speaker' | translate }}</div>
@@ -292,12 +292,12 @@
                     <button mat-menu-item (click)="onAnswerButton()">
                         @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
                             <mat-icon>
-                                {{ speaker.answer ? 'help_outline' : 'help' }}
+                                {{ speaker.answer ? 'contact_support_outline' : 'contact_support' }}
                             </mat-icon>
                         }
                         @if (speaker.speech_state === SpeechState.INTERVENTION) {
                             <mat-icon>
-                                {{ speaker.answer ? 'error_outline' : 'error' }}
+                                {{ speaker.answer ? 'feedback_outline' : 'feedback' }}
                             </mat-icon>
                         }
                         @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {

@@ -43,9 +43,9 @@ export function getSpeakerVerboseState(speaker: SpeakerSpeechStateData): string 
 export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
     switch (speaker.speech_state) {
         case SpeechState.INTERPOSED_QUESTION:
-            return `help`;
+            return `contact_support`;
         case SpeechState.INTERVENTION:
-            return `error`;
+            return `feedback`;
         case SpeechState.PRO:
             return `add_circle`;
         case SpeechState.CONTRA:
