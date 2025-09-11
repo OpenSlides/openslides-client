@@ -240,7 +240,6 @@ export class AgendaPdfCatalogExportService {
         const title: string = agendaItem.content_object!.getTitle();
         const styleName = agendaItem.level ? `header-child` : `header2`;
         let numberOrTitle = ``;
-        console.log();
         if (useItemNumber && itemNumber && useTitle) {
             numberOrTitle = `${itemNumber}: ${title}`;
         } else if (useItemNumber && itemNumber) {
@@ -362,7 +361,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: isA4 ? [120, 60, 65, 55, 33] : [60, 60, 65, 55, 33],
+                        widths: isA4 ? [`*`, 60, 65, 110, 33] : [`*`, 60, 65, 55, 30],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
@@ -379,7 +378,7 @@ export class AgendaPdfCatalogExportService {
         }
         const entries: Content[] = [];
         const isA4 = this.pdfService.pageSize === `A4`;
-        const optionWidth = isA4 ? 200 : 100;
+        const optionWidth = `*`;
         const votesWidth = isA4 ? 200 : 100;
         const firstPlaceWidth = 10;
 
@@ -412,11 +411,7 @@ export class AgendaPdfCatalogExportService {
                 }
                 // poll table valid votes line
                 const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
-                tableCells.push([
-                    { text: ``, width: firstPlaceWidth },
-                    { text: this.translate.instant(`Valid votes`) },
-                    { text: amount, width: votesWidth }
-                ]);
+                tableCells.push([{ text: `` }, { text: this.translate.instant(`Valid votes`) }, { text: amount }]);
 
                 // table configuration
                 entries.push({
