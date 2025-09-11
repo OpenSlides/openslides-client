@@ -570,7 +570,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns a time string using the current language setting of the client
      */
     public startTimeToString(speaker: ViewSpeaker): string {
-        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang());
     }
 
     private subscribeToSettings(): void {

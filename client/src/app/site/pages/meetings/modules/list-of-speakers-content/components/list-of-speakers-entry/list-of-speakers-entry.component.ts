@@ -176,7 +176,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      * @returns a time string using the current language setting of the client
      */
     public get startTime(): string {
-        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang());
     }
 
     /**

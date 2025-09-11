@@ -25,7 +25,7 @@ export class RerouteService {
      * returned.
      */
     public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
-        const state = this.router.getCurrentNavigation()?.extras?.state || {};
+        const state = this.router.currentNavigation()?.extras?.state || {};
         if (state[`redirectOnGuardFail`]) {
             return this.router.createUrlTree([`/`]);
         }
