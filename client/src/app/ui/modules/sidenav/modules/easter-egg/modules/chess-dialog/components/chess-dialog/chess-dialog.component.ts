@@ -54,7 +54,7 @@ export class ChessDialogComponent extends BaseGameDialogComponent implements OnI
         if (this.inMeeting) {
             this.board = new Chessboard(this.boardContainer.nativeElement, {
                 position: FEN.start,
-                language: this.translate.currentLang == `de` ? `de` : `en`,
+                language: this.translate.getCurrentLang() == `de` ? `de` : `en`,
                 assetsUrl: `./chess/`,
                 style: {
                     borderType: BORDER_TYPE.frame
