@@ -10,24 +10,36 @@
                             <td>
                                 <os-icon-container
                                     icon="circle"
-                                    [size]="iconSize"
+                                    size="gigantic"
                                     [style.color]="colors.backgroundColor[i]"
                                 >
-                                    {{ row.label }}
+                                    <div class="text-gigantic text-bold">
+                                        {{ row.label }}
+                                    </div>
                                 </os-icon-container>
                             </td>
-                            <td class="result-cell-definition">
-                                {{ row.data | pollPercentBase: poll }}
-                            </td>
-                            <td class="result-cell-definition">
+                            <td
+                                class="result-cell-definition text-gigantic text-bold"
+                                [style.color]="colors.backgroundColor[i]"
+                            >
                                 {{ row.data | pollParseNumber }}
+                            </td>
+                            <td
+                                class="result-cell-definition text-gigantic text-bold"
+                                [style.color]="colors.backgroundColor[i]"
+                            >
+                                {{ row.data | pollPercentBase: poll }}
                             </td>
                         </tr>
                     }
-                    <tr>
-                        <td>{{ 'Valid votes' | translate }}</td>
-                        <td class="result-cell-definition"></td>
-                        <td class="result-cell-definition">{{ poll.votesvalid }}</td>
+                    <tr class="votesvalid">
+                        <td class="text-gigantic text-bold">
+                            {{ 'Valid votes' | translate }}
+                        </td>
+                        <td class="result-cell-definition text-gigantic text-bold">
+                            {{ poll.votesvalid }}
+                        </td>
+                        <td class="result-cell-definition text-gigantic text-bold"></td>
                     </tr>
                 </tbody>
             </table>
