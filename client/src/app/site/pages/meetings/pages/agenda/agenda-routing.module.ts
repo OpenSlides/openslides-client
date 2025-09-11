@@ -28,9 +28,7 @@ const routes: Routes = [
                 loadComponent: () =>
                     import(`./pages/agenda-export/components/agenda-export/agenda-export.component`).then(
                         m => m.AgendaExportComponent
-                    ),
-                data: { meetingPermissions: [Permission.agendaItemCanManage] },
-                canLoad: [PermissionGuard]
+                    )
             }
         ]
     },
