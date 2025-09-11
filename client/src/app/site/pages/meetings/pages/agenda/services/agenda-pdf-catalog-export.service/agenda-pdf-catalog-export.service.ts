@@ -31,7 +31,6 @@ const AGENDA_PDF_OPTIONS = {
     providedIn: AgendaItemCommonServiceModule
 })
 export class AgendaPdfCatalogExportService {
-    private displayedAgendaItemIds = [];
     // parent agenda items which are not in the export are handled different
     // then exported agenda items, collect the ids of the special parent items here
     private addedAgendaItemIds = [];
@@ -57,7 +56,6 @@ export class AgendaPdfCatalogExportService {
      * @returns pdfmake doc definition as object
      */
     public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: any, pdfMeta: string[]): Content {
-        this.displayedAgendaItemIds = agendaItems.map(view => view.id);
         const addedAgendaItems = this.getMissingAgendaItems(agendaItems);
         this.addedAgendaItemIds = addedAgendaItems.map(item => item.id);
         const tree = this.treeService.makeSortedTree(agendaItems.concat(addedAgendaItems), `weight`, `parent_id`);
@@ -111,10 +109,11 @@ export class AgendaPdfCatalogExportService {
     private getMissingAgendaItems(agendaItems: ViewAgendaItem[]): ViewAgendaItem[] {
         const missing = [];
         const missingIds = [];
+        const exported = agendaItems.map(item => item.id);
         for (const item of agendaItems) {
             let pivot = item;
             while (pivot.parent) {
-                if (!this.displayedAgendaItemIds.includes(pivot.parent.id) && !missingIds.includes(pivot.parent.id)) {
+                if (!exported.includes(pivot.parent.id) && !missingIds.includes(pivot.parent.id)) {
                     missing.push(pivot.parent);
                     missingIds.push(pivot.parent.id);
                 }
