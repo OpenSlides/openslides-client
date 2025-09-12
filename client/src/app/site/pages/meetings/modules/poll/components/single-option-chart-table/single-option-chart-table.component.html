@@ -9,16 +9,14 @@
     >
         <table class="result-table" [ngClass]="{ margins: !inSlide }">
             <tbody [ngClass]="textSizeClass">
-                @if (shouldShowHead) {
+                @if (shouldShowHead && !inSlide) {
                     <tr>
                         <th class="left-header">
                             @if (title) {
                                 {{ title }}
                             }
                         </th>
-                        @if (!inSlide) {
-                            <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
-                        }
+                        <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
                     </tr>
                 }
                 @for (row of tableData; track row; let i = $index) {
