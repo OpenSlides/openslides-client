@@ -31,6 +31,7 @@
                             <os-list-of-speakers-entry
                                 [speaker]="speaker"
                                 [speakerIndex]="number"
+                                (createAnswer)="createAnswer(speaker)"
                                 (pauseSpeech)="onPauseButton(activeSpeaker)"
                                 (startSpeech)="onStartButton(activeSpeaker)"
                                 (stopSpeech)="onStopButton(activeSpeaker)"
@@ -56,6 +57,7 @@
                     <os-list-of-speakers-entry
                         [showcolor]="false"
                         [speaker]="activeSpeaker"
+                        (createAnswer)="createAnswer(activeSpeaker)"
                         (pauseSpeech)="onPauseButton(activeSpeaker)"
                         (startSpeech)="onStartButton(activeSpeaker)"
                         (stopSpeech)="onStopButton(activeSpeaker)"
@@ -66,6 +68,7 @@
                     <os-list-of-speakers-entry
                         [showcolor]="false"
                         [speaker]="activeSpeaker"
+                        (createAnswer)="createAnswer(activeSpeaker)"
                         (pauseSpeech)="onPauseButton(activeSpeaker)"
                         (startSpeech)="onStartButton(activeSpeaker)"
                         (stopSpeech)="onStopButton(activeSpeaker)"
@@ -85,6 +88,7 @@
                     >
                         <os-list-of-speakers-entry
                             [speaker]="speaker"
+                            (createAnswer)="createAnswer(speaker)"
                             (pauseSpeech)="onPauseButton(speaker)"
                             (startSpeech)="onStartButton(speaker)"
                             (stopSpeech)="onStopButton(speaker)"
@@ -109,6 +113,7 @@
                         <os-list-of-speakers-entry
                             [speaker]="speaker"
                             [speakerIndex]="index"
+                            (createAnswer)="createAnswer(speaker)"
                             (pauseSpeech)="onPauseButton(speaker)"
                             (startSpeech)="onStartButton(speaker)"
                             (stopSpeech)="onStopButton(speaker)"
@@ -173,13 +178,28 @@
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
                     <button mat-stroked-button [disabled]="closed || !activeSpeaker" (click)="addInterposedQuestion()">
-                        <mat-icon>help</mat-icon>
+                        <mat-icon>contact_support</mat-icon>
                         &nbsp;
                         <span>
                             {{ 'Interposed question' | translate }}
                         </span>
                     </button>
                 }
+            }
+            @if (addSelf && interventionEnabled) {
+                <!-- Intervention -->
+                <button
+                    *osPerms="permission.listOfSpeakersCanManage"
+                    mat-stroked-button
+                    [disabled]="closed"
+                    (click)="addIntervention()"
+                >
+                    <mat-icon>feedback</mat-icon>
+                    &nbsp;
+                    <span>
+                        {{ 'Intervention' | translate }}
+                    </span>
+                </button>
             }
         </div>
     </mat-card-content>

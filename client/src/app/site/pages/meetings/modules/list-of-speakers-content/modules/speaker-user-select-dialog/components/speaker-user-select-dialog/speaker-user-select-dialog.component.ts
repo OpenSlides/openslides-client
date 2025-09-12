@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
@@ -8,6 +9,8 @@ import { UserSelectionData } from '../../../../../participant-search-selector';
 
 interface SpeakerUserSelectDialogComponentData {
     listOfSpeakers: ViewListOfSpeakers;
+    state?: SpeechState;
+    answer: boolean;
 }
 
 @Component({
@@ -39,6 +42,22 @@ export class SpeakerUserSelectDialogComponent {
 
             this.dialogRef.close({ meeting_user_id: meeting_user.id, structure_level_id });
         }
+    }
+
+    public isInterposedQuestion(): boolean {
+        return this.data.state === `interposed_question` && !this.data.answer;
+    }
+
+    public isInterposedQuestionAnswer(): boolean {
+        return this.data.state === `interposed_question` && this.data.answer;
+    }
+
+    public isIntervention(): boolean {
+        return this.data.state === `intervention` && !this.data.answer;
+    }
+
+    public isInterventionAnswer(): boolean {
+        return this.data.state === `intervention` && this.data.answer;
     }
 
     public onCancel(): void {

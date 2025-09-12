@@ -7,6 +7,7 @@ export interface SlideSpeaker {
     speech_state: SpeechState;
     note: string;
     point_of_order: boolean;
+    answer: boolean;
     begin_time: number;
     pause_time: number;
 }
