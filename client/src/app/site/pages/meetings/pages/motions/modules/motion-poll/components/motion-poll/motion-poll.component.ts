@@ -93,4 +93,11 @@ export class MotionPollComponent extends BasePollComponent {
     public getDetailLink(): string {
         return `/${this.activeMeetingId}/motions/polls/${this.poll.sequential_number}`;
     }
+
+    public async pseudoanonymizePoll(): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
+        if (await this.promptService.open(title)) {
+            this.repo.anonymize(this.poll).catch(this.raiseError);
+        }
+    }
 }
