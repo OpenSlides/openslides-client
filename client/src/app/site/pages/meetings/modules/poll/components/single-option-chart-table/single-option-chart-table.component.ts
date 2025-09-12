@@ -23,6 +23,9 @@ export class SingleOptionChartTableComponent {
     public shouldShowHead = true;
 
     @Input()
+    public inSlide = false;
+
+    @Input()
     public set tableData(tableData: PollTableData[]) {
         this._tableData = tableData;
         if (this._poll) {
