@@ -27,9 +27,9 @@
                             <td>
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        <span [class.text-big-bold]="inSlide">
+                                        <div [class.text-big-bold]="inSlide">
                                             {{ row.votingOption | pollKeyVerbose | translate }}
-                                        </span>
+                                        </div>
                                     </os-icon-container>
                                 } @else {
                                     <span [class.text-big-bold]="inSlide">
@@ -64,12 +64,14 @@
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class]="row.votingOption">
+                        <tr [class]="row.votingOption" [class.text-big]="inSlide">
                             <!-- YNA/Valid etc -->
                             <td>
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                        <div [class.text-big]="inSlide">
+                                            {{ row.votingOption | pollKeyVerbose | translate }}
+                                        </div>
                                     </os-icon-container>
                                 } @else {
                                     <span>
