@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
@@ -71,6 +72,8 @@ export class MotionPollComponent extends BasePollComponent {
     public get canManagePoll(): boolean {
         return this.operator.hasPerms(Permission.motionCanManagePolls);
     }
+
+    public settings = inject(MeetingSettingsService);
 
     public constructor(
         protected override translate: TranslateService,
