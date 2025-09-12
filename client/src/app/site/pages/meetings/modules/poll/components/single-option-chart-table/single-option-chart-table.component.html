@@ -3,11 +3,11 @@
         [ngClass]="{
             'result-wrapper': true,
             'result-wrapper-additional': iconSize !== 'medium',
-            'justify-items-center': !inSlide,
-            'justify-items-left': inSlide
+            'items-center': !inSlide,
+            'items-left': inSlide
         }"
     >
-        <table class="result-table">
+        <table class="result-table" [ngClass]="{'margins': !inSlide}">
             <tbody [ngClass]="textSizeClass">
                 @if (shouldShowHead) {
                     <tr>

@@ -12,19 +12,24 @@
     }
 }
 
-.justify-items-center {
+.items-center {
     justify-items: center;
+    align-items: center;
 }
 
-.justify-items-left {
+.items-left {
     justify-items: start;
+    align-items: start;
 }
 
 .result-wrapper {
     display: grid;
     grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    align-items: center;
+
+    .margins {
+        margin-left: 80px;
+    }
 
     .result-table {
         border-collapse: collapse;
