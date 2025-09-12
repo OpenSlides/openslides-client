@@ -178,7 +178,7 @@
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
                     <button mat-stroked-button [disabled]="closed || !activeSpeaker" (click)="addInterposedQuestion()">
-                        <mat-icon fontIcon="contact_support"></mat-icon>
+                        <mat-icon>contact_support</mat-icon>
                         &nbsp;
                         <span>
                             {{ 'Interposed question' | translate }}
@@ -194,7 +194,7 @@
                     [disabled]="closed"
                     (click)="addIntervention()"
                 >
-                    <mat-icon fontIcon="feedback"></mat-icon>
+                    <mat-icon>feedback</mat-icon>
                     &nbsp;
                     <span>
                         {{ 'Intervention' | translate }}
