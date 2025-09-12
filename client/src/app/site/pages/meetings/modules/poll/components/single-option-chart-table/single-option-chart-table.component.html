@@ -39,7 +39,11 @@
                                 <div class="result-cell-definition">
                                     @if (row.value[0].showPercent) {
                                         <span>
-                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                            @if (inSlide) {
+                                                {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                            } @else {
+                                                {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                            }
                                         </span>
                                     }
                                 </div>
@@ -47,7 +51,11 @@
                             <td>
                                 <div class="result-cell-definition">
                                     <span>
-                                        {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        @if (inSlide) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                        } @else {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        }
                                     </span>
                                 </div>
                             </td>
@@ -69,18 +77,33 @@
                             </td>
                             <!-- Percent numbers -->
                             <td class="result-cell-definition">
-                                @if (
-                                    row.value[0].showPercent ||
-                                    (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
-                                ) {
-                                    <span>
-                                        {{ row.value[0].amount! | pollPercentBase: poll }}
-                                    </span>
+                                @if (inSlide) {
+                                    {{ row.value[0].amount | pollParseNumber }}
+                                } @else {
+                                    @if (
+                                        row.value[0].showPercent ||
+                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                    ) {
+                                        <span>
+                                            {{ row.value[0].amount! | pollPercentBase: poll }}
+                                        </span>
+                                    }
                                 }
                             </td>
                             <!-- Voices -->
                             <td class="result-cell-definition">
-                                {{ row.value[0].amount | pollParseNumber }}
+                                @if (inSlide) {
+                                    @if (
+                                        row.value[0].showPercent ||
+                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                    ) {
+                                        <span>
+                                            {{ row.value[0].amount! | pollPercentBase: poll }}
+                                        </span>
+                                    }
+                                } @else {
+                                    {{ row.value[0].amount | pollParseNumber }}
+                                }
                             </td>
                         </tr>
                     }
