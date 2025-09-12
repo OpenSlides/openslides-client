@@ -23,14 +23,16 @@
                 }
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
-                        <tr [ngClass]="row.votingOption">
+                        <tr [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <td>
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                        <span [class.text-big-bold]="inSlide">
+                                            {{ row.votingOption | pollKeyVerbose | translate }}
+                                        </span>
                                     </os-icon-container>
                                 } @else {
-                                    <span>
+                                    <span [class.text-big-bold]="inSlide">
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </span>
                                 }
