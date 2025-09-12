@@ -17,3 +17,45 @@
     flex-flow: column;
     width: 75px;
 }
+
+.committee-hierarchy {
+    .cell-title:not(.is-child) {
+        &:after,
+        &:before {
+            content: '';
+            display: inline-block;
+            width: 27px;
+            height: 50%;
+            border: solid #ddd;
+            border-width: 0 0 2px 2px;
+            margin-right: 8px;
+        }
+        &:after {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-width: 0 0 0 2px;
+        }
+    }
+
+    .cell-title.is-child {
+        padding-left: calc(var(--committee-level) * 25px);
+
+        &:before,
+        &:after {
+            content: '';
+            display: inline-block;
+            width: 27px;
+            height: 50%;
+            border: solid #ddd;
+            border-width: 0 0 2px 2px;
+            margin-right: 8px;
+        }
+        &:after {
+            position: absolute;
+            left: calc(var(--committee-level) * 25px);
+            bottom: 0;
+            border-width: 0 0 0 2px;
+        }
+    }
+}
