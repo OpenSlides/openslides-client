@@ -316,7 +316,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                 .sort((a, b) => a.weight - b.weight);
             if (interventionAnswerSpeakers.length) {
                 const speaker = interventionAnswerSpeakers[0];
-                countdowns.push([_(`Intervention answer`), speaker.getCountupData()]);
+                countdowns.push([_(`Answer to intervention`), speaker.getCountupData()]);
             }
         }
         return countdowns;
