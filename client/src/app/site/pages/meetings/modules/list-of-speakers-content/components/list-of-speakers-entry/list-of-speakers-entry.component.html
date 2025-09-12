@@ -296,11 +296,17 @@
                         @if (speaker.speech_state === SpeechState.INTERVENTION) {
                             <mat-icon>feedback</mat-icon>
                         }
-                        @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
+                        @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !speaker.answer) {
                             <span>{{ 'Answer to interposed question' | translate }}</span>
-                        }
-                        @if (speaker.speech_state === SpeechState.INTERVENTION) {
+                        } 
+                        @if (speaker.speech_state === SpeechState.INTERVENTION && !speaker.answer) {
                             <span>{{ 'Answer to intervention' | translate }}</span>
+                        }
+                        @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION && speaker.answer) {
+                            <span>{{ 'Interposed question' | translate }}</span>
+                        }
+                        @if (speaker.speech_state === SpeechState.INTERVENTION && speaker.answer) {
+                            <span>{{ 'Intervention' | translate }}</span>
                         }
                     </button>
                 }
