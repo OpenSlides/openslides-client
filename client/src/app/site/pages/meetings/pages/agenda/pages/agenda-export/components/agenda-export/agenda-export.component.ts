@@ -132,7 +132,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
 
     public ngAfterViewInit(): void {
         if (!this.agendaItems.includes(null)) {
-            this.hasAvailableVariables();
+            this.updateAvailableExportOptions();
         }
     }
 
@@ -180,8 +180,10 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         this.tabIndex = _event.index;
     }
 
-    // Helper function to determine if mat-chip-option should be selected
-    // Needed, because using the binding with formControl does not disable mat-chip-option
+    /**
+     * Helper function to determine if mat-chip-option should be selected
+     * Needed, because using the binding with formControl does not disable mat-chip-option
+     */
     public isDisabled(value: string): boolean {
         return this.disabledControls.includes(value);
     }
@@ -206,9 +208,11 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         }
     }
 
-    // Function to determine which options are available, set as defaults and disabled
-    // (based on property binding with the formgroup)
-    private async hasAvailableVariables(): Promise<void> {
+    /**
+     *  Function to determine which options are available, set as defaults and disabled
+     *  (based on property binding with the formgroup)
+     */
+    private async updateAvailableExportOptions(): Promise<void> {
         let hasNumber = false;
         let hasText = false;
         let hasAttachments = false;
@@ -287,7 +291,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         });
 
         if (!this.agendaItems.includes(null)) {
-            this.hasAvailableVariables();
+            this.updateAvailableExportOptions();
         }
         // disable pageLayout if only one topic is selected
         if (this.agendaItems.length === 1) {
