@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChipComponent } from 'src/app/ui/modules/chip';
@@ -32,6 +33,7 @@ import { CommitteeListServiceModule } from './services/committee-list-service.mo
         OpenSlidesTranslationModule.forChild(),
         MatDividerModule,
         MatMenuModule,
+        MatTooltipModule,
         MatIconModule,
         MatButtonModule,
         DirectivesModule
