@@ -3,7 +3,9 @@
         <ng-container>
             <h1 [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ title }}</h1>
             @if (subtitle) {
-                <h2 class="poll-title" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ subtitle }}</h2>
+                <h2 class="poll-title padding-top-3" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">
+                    {{ subtitle }}
+                </h2>
             }
         </ng-container>
     </div>
