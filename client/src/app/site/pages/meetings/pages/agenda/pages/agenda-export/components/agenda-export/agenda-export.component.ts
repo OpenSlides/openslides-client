@@ -18,6 +18,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import {
+    AGENDA_LIST_ITEM_SUBSCRIPTION,
     getAgendaExportSubscriptionConfig,
     getAgendaExportTreeSubscriptionConfig
 } from '../../../../agenda.subscription';
@@ -221,7 +222,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         let hasModerationNote = false;
         let hasInternalComment = false;
 
-        await this.modelRequestService.fetch(getAgendaExportSubscriptionConfig(...this.agendaItems));
+        await this.modelRequestService.waitSubscriptionReady(AGENDA_LIST_ITEM_SUBSCRIPTION);
         const views = this.agendaItems.map(id => this.agendaRepo.getViewModel(id));
         for (const item of views) {
             if (item) {
@@ -231,13 +232,13 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
                 if (item.content_object?.text !== undefined && item.content_object?.text !== ``) {
                     hasText = true;
                 }
-                if (item.content_object?.attachment_meeting_mediafiles?.length) {
+                if (item.content_object?.attachment_meeting_mediafile_ids?.length) {
                     hasAttachments = true;
                 }
                 if (item.content_object?.poll_ids?.length) {
                     hasPolls = true;
                 }
-                if (item.content_object?.list_of_speakers?.speakers.length) {
+                if (item.content_object?.list_of_speakers?.speaker_ids?.length) {
                     hasLoS = true;
                 }
                 if (
@@ -290,9 +291,6 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
             this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
         });
 
-        if (!this.agendaItems.includes(null)) {
-            this.updateAvailableExportOptions();
-        }
         // disable pageLayout if only one topic is selected
         if (this.agendaItems.length === 1) {
             this.dialogForm.get(`pageLayout`)!.disable();

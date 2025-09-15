@@ -52,7 +52,15 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     {
                         idField: `content_object_id`,
-                        fieldset: [`number`, `title`, `agenda_item_id`, ...MEETING_ROUTING_FIELDS],
+                        fieldset: [
+                            `number`,
+                            `title`,
+                            `text`,
+                            `poll_ids`,
+                            `attachment_meeting_mediafile_ids`,
+                            `agenda_item_id`,
+                            ...MEETING_ROUTING_FIELDS
+                        ],
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
@@ -127,7 +135,7 @@ export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = 
 });
 
 export const listOfSpeakersSpeakerCountSubscription = {
-    fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+    fieldset: [`closed`, `moderator_notes`, ...MEETING_ROUTING_FIELDS],
     follow: [
         {
             idField: `speaker_ids`,
