@@ -4,7 +4,7 @@
     </div>
 </os-head-bar>
 
-<div class="agenda-export-card">
+<div class="export-card">
     <mat-tab-group
         #tabGroup
         mat-stretch-tabs="false"
@@ -22,7 +22,7 @@
 
 <ng-template #exportPdf>
     <form [formGroup]="dialogForm">
-        <div class="agenda-export-wrapper">
+        <div class="export-wrapper">
             <div>
                 <p class="toggle-group-head">{{ 'Content' | translate }}</p>
                 <mat-chip-listbox formControlName="content" multiple>
