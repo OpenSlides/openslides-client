@@ -176,6 +176,16 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                         fieldset: [`name`, `color`]
                     }
                 ]
+            },
+            {
+                idField: `content_object_id`,
+                fieldset: [`number`, `title`, ...MEETING_ROUTING_FIELDS],
+                follow: [
+                    {
+                        idField: `agenda_item_id`,
+                        fieldset: [`content_object_id`, `item_number`]
+                    }
+                ]
             }
         ]
     },
