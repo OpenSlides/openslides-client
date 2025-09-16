@@ -1,16 +1,5 @@
 <h2 mat-dialog-title>
-    @if (isInterposedQuestion()) {
-        <span translate>Interposed question</span>
-    }
-    @if (isInterposedQuestionAnswer()) {
-        <span translate>Answer to interposed question</span>
-    }
-    @if (isIntervention()) {
-        <span translate>Intervention</span>
-    }
-    @if (isInterventionAnswer()) {
-        <span translate>Answer to intervention</span>
-    }
+    <span translate>{{ verboseState }}</span>
 </h2>
 
 <form class="edit-form">
