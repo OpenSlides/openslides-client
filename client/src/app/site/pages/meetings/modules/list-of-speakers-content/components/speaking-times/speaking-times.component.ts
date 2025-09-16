@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -26,6 +27,7 @@ import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/
 import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from '../../../../view-models';
+import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';
 
 @Component({
     selector: `os-speaking-times`,
@@ -248,16 +250,10 @@ export class SpeakingTimesComponent implements OnDestroy {
             if (speakingTime.isInactive) {
                 this.structureLevels.delete(speakingTime.id);
             } else {
-                const remaining = speakingTime.remaining_time;
                 this.structureLevels.set(speakingTime.id, {
                     name: speakingTime.structure_level.getTitle(),
                     color: speakingTime.structure_level.color,
-                    countdown: {
-                        running: !!speakingTime.current_start_time,
-                        countdown_time: speakingTime.current_start_time
-                            ? speakingTime.current_start_time + remaining
-                            : remaining
-                    },
+                    countdown: speakingTime.countdownData,
                     id: speakingTime.id,
                     speakers: speakingTime.speakers
                 });
@@ -300,26 +296,29 @@ export class SpeakingTimesComponent implements OnDestroy {
         return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
     }
 
-    public getSpeakerCountdown(): any {
+    public getSpeakerCountdowns(): [string, CountdownData][] {
+        const countdowns = [];
         if (this.listOfSpeakers) {
             const interventionSpeakers = this.listOfSpeakers.speakers
-                .filter(speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time)
+                .filter(
+                    speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time && !speaker.answer
+                )
                 .sort((a, b) => a.weight - b.weight);
             if (interventionSpeakers.length) {
                 const speaker = interventionSpeakers[0];
                 const default_time = this.meetingSettingsService.instant(`list_of_speakers_intervention_time`) || 0;
-                const total_pause = speaker.total_pause || 0;
-                const end = speaker.pause_time || speaker.end_time || 0;
-                const countdown_time = speaker.isSpeaking
-                    ? speaker.begin_time + total_pause + default_time
-                    : (end - (speaker.begin_time + total_pause + default_time)) * -1;
-                return {
-                    running: speaker.isSpeaking,
-                    default_time,
-                    countdown_time: speaker.begin_time ? countdown_time : default_time
-                };
+                countdowns.push([_(`Intervention`), speaker.getCountdownData(default_time)]);
+            }
+            const interventionAnswerSpeakers = this.listOfSpeakers.speakers
+                .filter(
+                    speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time && speaker.answer
+                )
+                .sort((a, b) => a.weight - b.weight);
+            if (interventionAnswerSpeakers.length) {
+                const speaker = interventionAnswerSpeakers[0];
+                countdowns.push([_(`Answer to intervention`), speaker.getCountupData()]);
             }
         }
-        return null;
+        return countdowns;
     }
 }

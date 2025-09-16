@@ -123,22 +123,14 @@
             {{ 'Unknown user' | translate }}
         </i>
     }
-    @if (speaker.speech_state === SpeechState.CONTRIBUTION) {
-        <mat-icon>star</mat-icon>
-    }
     @if (speaker.speech_state === SpeechState.PRO) {
-        <mat-icon class="green-text">add_circle</mat-icon>
-    }
-    @if (speaker.speech_state === SpeechState.CONTRA) {
-        <mat-icon class="red-warning-text">remove_circle</mat-icon>
+        <mat-icon class="green-text">{{ getStateIcon(speaker) }}</mat-icon>
+    } @else if (speaker.speech_state === SpeechState.CONTRA) {
+        <mat-icon class="red-warning-text">{{ getStateIcon(speaker) }}</mat-icon>
+    } @else if (speaker.speech_state) {
+        <mat-icon>{{ getStateIcon(speaker) }}</mat-icon>
     }
     @if (speaker.point_of_order) {
         <mat-icon color="warn">warning</mat-icon>
-    }
-    @if (speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-        <mat-icon>help</mat-icon>
-    }
-    @if (speaker.speech_state === SpeechState.INTERVENTION) {
-        <mat-icon>error</mat-icon>
     }
 </ng-template>

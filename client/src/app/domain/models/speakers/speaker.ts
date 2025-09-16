@@ -26,6 +26,7 @@ export class Speaker extends BaseModel<Speaker> {
     public point_of_order!: boolean;
     public speech_state!: SpeechState;
     public note!: UnsafeHtml;
+    public answer: boolean;
 
     public list_of_speakers_id!: Id; // list_of_speakers/speaker_ids;
     public meeting_user_id!: Id; // meeting_user/speaker_ids;
@@ -50,6 +51,7 @@ export class Speaker extends BaseModel<Speaker> {
         `total_pause`,
         `weight`,
         `speech_state`,
+        `answer`,
         `note`,
         `point_of_order`,
         `list_of_speakers_id`,
