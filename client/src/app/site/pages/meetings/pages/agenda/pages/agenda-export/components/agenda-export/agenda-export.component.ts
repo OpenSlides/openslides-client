@@ -271,7 +271,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
             this.changeStateOfChipOption(this.moderationNotesChip, true, `moderation_notes`);
         }
         if (this.internalCommentaryChip && !hasInternalComment) {
-            this.changeStateOfChipOption(this.internalCommentaryChip, true, `referring_motions`);
+            this.changeStateOfChipOption(this.internalCommentaryChip, true, `internal_commentary`);
         }
     }
 
