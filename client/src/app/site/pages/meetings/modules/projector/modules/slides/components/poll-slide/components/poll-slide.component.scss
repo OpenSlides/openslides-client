@@ -138,8 +138,9 @@
             margin-bottom: 1px !important;
             height: 29px;
             display: flex;
+            justify-content: space-between;
             align-items: end;
-            border-bottom: 0 !important;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
             h3 {
                 padding-top: 1.5px;
                 padding-bottom: 1.5px;
@@ -153,6 +154,12 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+            span {
+                display: inline-flex;
+                os-icon-container {
+                    width: fit-content;
+                }
             }
         }
     }

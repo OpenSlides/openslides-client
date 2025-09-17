@@ -93,6 +93,25 @@
                                         @if (typeof user === 'string') {
                                             <div class="structure-level">
                                                 <h3>{{ user }}</h3>
+                                                <span>
+                                                    <os-icon-container
+                                                        icon="check_circle"
+                                                        iconClass="yes"
+                                                        [noWrap]="true"
+                                                    >
+                                                        {{ 1 }}
+                                                    </os-icon-container>
+                                                    <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
+                                                        {{ 1 }}
+                                                    </os-icon-container>
+                                                    <os-icon-container
+                                                        icon="circle"
+                                                        iconClass="abstain"
+                                                        [noWrap]="true"
+                                                    >
+                                                        {{ 1 }}
+                                                    </os-icon-container>
+                                                </span>
                                             </div>
                                         } @else {
                                             <div class="vote-entry">
