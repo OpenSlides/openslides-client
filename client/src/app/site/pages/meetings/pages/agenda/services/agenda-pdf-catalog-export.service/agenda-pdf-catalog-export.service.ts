@@ -305,8 +305,6 @@ export class AgendaPdfCatalogExportService {
         // table header
         tableCells.push([
             { text: this.translate.instant(`Speaker`), style: `tocHeaderRow` },
-            { text: this.translate.instant(`Structure level`), style: `tocHeaderRow` },
-            { text: this.translate.instant(`State`), style: `tocHeaderRow` },
             { text: this.translate.instant(`Start time`), style: `tocHeaderRow` },
             { text: this.translate.instant(`Duration`), style: `tocHeaderRow` }
         ]);
@@ -314,15 +312,10 @@ export class AgendaPdfCatalogExportService {
         // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
-            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const _state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
-                {
-                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(', '),
-                    fillColor: backgroundColor
-                },
-                { text: state, fillColor: backgroundColor },
                 {
                     text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
                     fillColor: backgroundColor
@@ -333,15 +326,10 @@ export class AgendaPdfCatalogExportService {
         }
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
-            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const _state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
-                {
-                    text: speaker.meeting_user.structure_levels?.map(stlvl => stlvl.name).join(', '),
-                    fillColor: backgroundColor
-                },
-                { text: state, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor }
             ]);
@@ -361,7 +349,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: isA4 ? [`*`, 60, 65, 110, 33] : [`*`, 60, 65, 55, 30],
+                        widths: isA4 ? [`*`, 110, 33] : [`*`, 55, 30],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
