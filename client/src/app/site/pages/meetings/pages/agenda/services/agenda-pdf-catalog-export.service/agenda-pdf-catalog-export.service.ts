@@ -304,6 +304,7 @@ export class AgendaPdfCatalogExportService {
         });
         // table header
         tableCells.push([
+            { text: ``, style: `tocHeaderRow` },
             { text: this.translate.instant(`Speaker`), style: `tocHeaderRow` },
             { text: this.translate.instant(`Speaking times`), style: `tocHeaderRow` },
             { text: this.translate.instant(`Start time`), style: `tocHeaderRow` }
@@ -312,27 +313,45 @@ export class AgendaPdfCatalogExportService {
         // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
-            const _state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
-                { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
+                { text: `${i}.`, fillColor: backgroundColor },
+                { text: speaker.user_short_name, fillColor: backgroundColor },
                 { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor },
                 {
                     text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
                     fillColor: backgroundColor
                 }
             ]);
+            if (state) {
+                tableCells.push([
+                    { text: ``, fillColor: backgroundColor },
+                    { text: state, fillColor: backgroundColor, style: this.getStyle(`italics`) },
+                    { text: ``, fillColor: backgroundColor },
+                    { text: ``, fillColor: backgroundColor }
+                ]);
+            }
             i++;
         }
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
-            const _state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
-                { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
+                { text: `${i}.`, fillColor: backgroundColor },
+                { text: speaker.user_short_name, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor }
             ]);
+            if (state) {
+                tableCells.push([
+                    { text: ``, fillColor: backgroundColor },
+                    { text: state, fillColor: backgroundColor, style: this.getStyle(`italics`) },
+                    { text: ``, fillColor: backgroundColor },
+                    { text: ``, fillColor: backgroundColor }
+                ]);
+            }
             i++;
         }
 
@@ -349,7 +368,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: isA4 ? [`*`, 50, 110] : [`*`, 50, 55],
+                        widths: isA4 ? [10, `*`, 50, 110] : [10, `*`, 50, 55],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
@@ -461,6 +480,8 @@ export class AgendaPdfCatalogExportService {
                 return { bold: true, fontSize: 12 };
             case `grey`:
                 return { layout: TABLEROW_GREY };
+            case `italics`:
+                return { italics: true };
             case `margin-header1`:
                 return [0, 0, 0, 20];
             case `margin-header3`:
