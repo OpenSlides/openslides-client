@@ -305,7 +305,7 @@ export class AgendaPdfCatalogExportService {
         // table header
         tableCells.push([
             { text: this.translate.instant(`Speaker`), style: `tocHeaderRow` },
-            { text: this.translate.instant(`Duration`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`Speaking times`), style: `tocHeaderRow` },
             { text: this.translate.instant(`Start time`), style: `tocHeaderRow` }
         ]);
 
@@ -349,7 +349,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: isA4 ? [`*`, 33, 110] : [`*`, 30, 55],
+                        widths: isA4 ? [`*`, 50, 110] : [`*`, 50, 55],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
