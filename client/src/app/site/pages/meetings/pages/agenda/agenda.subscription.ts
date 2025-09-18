@@ -223,7 +223,7 @@ export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (.
                                 follow: [
                                     {
                                         idField: `meeting_user_id`,
-                                        fieldset: [`number`, `vote_weight`],
+                                        fieldset: [`number`, `vote_weight`, `meeting_id`],
                                         follow: [
                                             { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
                                             { idField: `structure_level_ids`, fieldset: [`name`, `color`] }

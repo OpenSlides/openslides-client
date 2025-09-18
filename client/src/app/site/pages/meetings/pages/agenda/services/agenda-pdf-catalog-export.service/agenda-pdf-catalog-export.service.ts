@@ -317,7 +317,7 @@ export class AgendaPdfCatalogExportService {
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}.`, fillColor: backgroundColor },
-                { text: speaker.user_short_name, fillColor: backgroundColor },
+                { text: speaker.name, fillColor: backgroundColor },
                 { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor },
                 {
                     text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
@@ -340,7 +340,7 @@ export class AgendaPdfCatalogExportService {
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}.`, fillColor: backgroundColor },
-                { text: speaker.user_short_name, fillColor: backgroundColor },
+                { text: speaker.name, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor }
             ]);
