@@ -305,8 +305,8 @@ export class AgendaPdfCatalogExportService {
         // table header
         tableCells.push([
             { text: this.translate.instant(`Speaker`), style: `tocHeaderRow` },
-            { text: this.translate.instant(`Start time`), style: `tocHeaderRow` },
-            { text: this.translate.instant(`Duration`), style: `tocHeaderRow` }
+            { text: this.translate.instant(`Duration`), style: `tocHeaderRow` },
+            { text: this.translate.instant(`Start time`), style: `tocHeaderRow` }
         ]);
 
         // first finished speakers (sorted)
@@ -316,11 +316,11 @@ export class AgendaPdfCatalogExportService {
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}. ${speaker.user_short_name}`, fillColor: backgroundColor },
+                { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor },
                 {
                     text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
                     fillColor: backgroundColor
-                },
-                { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor }
+                }
             ]);
             i++;
         }
@@ -349,7 +349,7 @@ export class AgendaPdfCatalogExportService {
                         headerRows: 1,
                         keepWithHeaderRows: 1,
                         dontBreakRows: true,
-                        widths: isA4 ? [`*`, 110, 33] : [`*`, 55, 30],
+                        widths: isA4 ? [`*`, 33, 110] : [`*`, 30, 55],
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
