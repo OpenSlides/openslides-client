@@ -224,14 +224,29 @@ export class AgendaPdfCatalogExportService {
         const title: string = agendaItem.content_object!.getTitle();
         const styleName = agendaItem.level ? `header-child` : `header2`;
         let numberOrTitle = ``;
-        if (useItemNumber && itemNumber && useTitle) {
-            numberOrTitle = `${itemNumber}: ${title}`;
-        } else if (useItemNumber && itemNumber) {
-            numberOrTitle = itemNumber;
-        } else if (useTitle) {
-            numberOrTitle = title;
+        if (agendaItem.content_object?.collection === `motion`) {
+            const motion = agendaItem.content_object;
+            if (useItemNumber && itemNumber) {
+                numberOrTitle = `${itemNumber} ${motion.number} ${this.translate.instant('Motion')}: ${motion.title}`;
+            } else {
+                numberOrTitle = `${motion.number} ${this.translate.instant('Motion')}: ${motion.title}`;
+            }
+        } else if (agendaItem.content_object?.collection === `motion_block`) {
+            const motionBlock = agendaItem.content_object;
+            if (useItemNumber && itemNumber) {
+                numberOrTitle = `${itemNumber} ${this.translate.instant('Motion block')}: ${motionBlock.title}`;
+            } else {
+                numberOrTitle = `${this.translate.instant('Motion block')}: ${motionBlock.title}`;
+            }
+        } else {
+            if (useItemNumber && itemNumber && useTitle) {
+                numberOrTitle = `${itemNumber}: ${title}`;
+            } else if (useItemNumber && itemNumber) {
+                numberOrTitle = itemNumber;
+            } else if (useTitle) {
+                numberOrTitle = title;
+            }
         }
-
         return {
             style: this.getStyle(styleName),
             text: numberOrTitle
