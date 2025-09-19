@@ -220,14 +220,8 @@ export class AgendaPdfCatalogExportService {
     private getParentLines(agendaItem: ViewAgendaItem, info: any, enforcePageBreaks: boolean): Content[] {
         const parent = agendaItem.parent;
         const entries = [];
-        if (parent) {
-            if (!enforcePageBreaks) {
-                entries.push(this.getDivLine(0.5));
-            }
-        } else {
-            if (!enforcePageBreaks) {
-                entries.push(this.getDivLine());
-            }
+        if (!parent && !enforcePageBreaks) {
+            entries.push(this.getDivLine());
         }
         this._addExtraSpace = false;
         return entries;
