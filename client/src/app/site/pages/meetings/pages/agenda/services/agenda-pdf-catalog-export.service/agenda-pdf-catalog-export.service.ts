@@ -221,7 +221,7 @@ export class AgendaPdfCatalogExportService {
         const parent = agendaItem.parent;
         const entries = [];
         if (!parent && !enforcePageBreaks) {
-            entries.push(this.getDivLine());
+            entries.push(this.getDivLine(0.5));
         }
         this._addExtraSpace = false;
         return entries;
@@ -359,8 +359,8 @@ export class AgendaPdfCatalogExportService {
                 },
                 {
                     table: {
-                        headerRows: 1,
-                        keepWithHeaderRows: 1,
+                        headerRows: 0,
+                        keepWithHeaderRows: 0,
                         dontBreakRows: true,
                         widths: isA4 ? [10, `*`, 50, 110] : [10, `*`, 50, 55],
                         body: tableCells
@@ -417,8 +417,8 @@ export class AgendaPdfCatalogExportService {
                 // table configuration
                 entries.push({
                     table: {
-                        headerRows: 1,
-                        keepWithHeaderRows: 1,
+                        headerRows: 0,
+                        keepWithHeaderRows: 0,
                         dontBreakRows: true,
                         widths: [firstPlaceWidth, optionWidth, votesWidth],
                         body: tableCells
