@@ -67,14 +67,17 @@ export class AgendaPdfCatalogExportService {
 
         for (let agendaItemIndex = 0; agendaItemIndex < sortedAgendaItems.length; ++agendaItemIndex) {
             try {
-                const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo, pdfMeta);
-
-                // edge case, toc only selected
-                if (agendaDocDef.length < 2) {
-                    agendaDocDef.push({ text: ` ` });
-                }
+                const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
-                agendaDocDef[1].id = `${sortedAgendaItems[agendaItemIndex].id}`;
+                agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
+                if (
+                    !enforcePageBreaks &&
+                    agendaItemIndex + 1 < sortedAgendaItems.length &&
+                    !sortedAgendaItems[agendaItemIndex + 1].parent
+                ) {
+                    agendaDocDef.push(this.getDivLine(0.5));
+                }
+
                 agendaDocList.push(agendaDocDef);
 
                 if (agendaItemIndex < sortedAgendaItems.length - 1 && enforcePageBreaks) {
@@ -185,10 +188,8 @@ export class AgendaPdfCatalogExportService {
         ];
     }
 
-    private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any, meta: any): Content {
+    private agendaItemToDoc(agendaItem: ViewAgendaItem, info: any): Content {
         const agendaItemDoc: any[] = [];
-        const enforcePageBreaks = meta?.includes(AGENDA_PDF_OPTIONS.AddBreaks);
-        agendaItemDoc.push(this.getParentLines(agendaItem, info, enforcePageBreaks));
 
         if (info.includes(`title`) || info.includes(`item_number`)) {
             agendaItemDoc.push(this.createNumberTitleDoc(agendaItem, info));
@@ -214,17 +215,6 @@ export class AgendaPdfCatalogExportService {
             }
         }
         return agendaItemDoc;
-    }
-
-    // display the parent items, if they are not in the exported items
-    private getParentLines(agendaItem: ViewAgendaItem, info: any, enforcePageBreaks: boolean): Content[] {
-        const parent = agendaItem.parent;
-        const entries = [];
-        if (!parent && !enforcePageBreaks) {
-            entries.push(this.getDivLine(0.5));
-        }
-        this._addExtraSpace = false;
-        return entries;
     }
 
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): ContentText {
@@ -509,7 +499,7 @@ export class AgendaPdfCatalogExportService {
                     }
                 ],
                 marginTop: !lineWidth && this._addExtraSpace ? 10 : 5,
-                marginBottom: 5
+                marginBottom: 15
             }
         ];
     }
