@@ -28,7 +28,11 @@
                                 class="result-cell-definition text-gigantic text-bold"
                                 [style.color]="colors.backgroundColor[i]"
                             >
-                                {{ row.data | pollPercentBase: poll }}
+                                @if (inSlide) {
+                                    {{ row.data | pollPercentBaseAlt: poll }}
+                                } @else {
+                                    {{ row.data | pollPercentBase: poll }}
+                                }
                             </td>
                         </tr>
                     }

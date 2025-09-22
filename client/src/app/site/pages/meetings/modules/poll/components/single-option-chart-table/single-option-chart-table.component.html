@@ -52,7 +52,7 @@
                                 <div class="result-cell-definition">
                                     <span>
                                         @if (inSlide) {
-                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
                                         } @else {
                                             {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
                                         }
@@ -100,7 +100,7 @@
                                         (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
                                     ) {
                                         <span>
-                                            {{ row.value[0].amount! | pollPercentBase: poll }}
+                                            {{ row.value[0].amount! | pollPercentBaseAlt: poll }}
                                         </span>
                                     }
                                 } @else {
