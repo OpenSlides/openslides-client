@@ -133,8 +133,8 @@ export class ViewPoll<C extends PollContentObject = any>
         _meetingSettingsService?: MeetingSettingsService
     ): ProjectionBuildDescriptor {
         const choices = [
-            { value: !!this.live_voting_enabled, displayName: `Standard` },
-            { value: !this.live_voting_enabled, displayName: `Single votes` }
+            { value: false, displayName: `Standard` },
+            { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
             this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
@@ -142,7 +142,7 @@ export class ViewPoll<C extends PollContentObject = any>
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: false,
+                          default: !!this.live_voting_enabled,
                           choices
                       }
                   ]
