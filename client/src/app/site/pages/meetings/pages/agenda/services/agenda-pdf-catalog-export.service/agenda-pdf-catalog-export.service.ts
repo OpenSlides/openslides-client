@@ -337,10 +337,18 @@ export class AgendaPdfCatalogExportService {
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
             const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
+            const remainingTimes =
+                speaker.isWaiting && speaker.structure_level_list_of_speakers
+                    ? this.durationService.durationToString(
+                          speaker.structure_level_list_of_speakers.remaining_time,
+                          'm'
+                      )
+                    : ``;
+
             tableCells.push([
                 { text: `${i}.`, fillColor: backgroundColor },
                 { text: speaker.name, fillColor: backgroundColor },
-                { text: ``, fillColor: backgroundColor },
+                { text: remainingTimes, fillColor: backgroundColor },
                 { text: ``, fillColor: backgroundColor }
             ]);
             if (state) {
