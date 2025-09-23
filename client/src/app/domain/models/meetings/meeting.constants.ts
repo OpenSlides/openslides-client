@@ -24,9 +24,9 @@ export const MEETING_MEDIAFILE_USAGE_ID_KEYS = [
 
 export type MeetingDefaultProjectorIdsKey = `default_projector_${ProjectiondefaultValue}_ids`;
 
-export const MEETING_DEFAULT_PROJECTOR_IDS_KEYS = PROJECTIONDEFAULTS.map(
-    place => `default_projector_${place}_ids`
-) as MeetingDefaultProjectorIdsKey[];
+export const MEETING_DEFAULT_PROJECTOR_IDS_KEYS = PROJECTIONDEFAULTS.map(place => {
+    return { idField: `default_projector_${place}_ids` as MeetingDefaultProjectorIdsKey, fieldset: [] };
+});
 
 export type ViewMeetingDefaultProjectorsKey = `default_projectors_${ProjectiondefaultValue}`;
 
