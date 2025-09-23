@@ -354,7 +354,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             modelRequest: {
                 viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
                 ids: [id],
-                fieldset: DEFAULT_FIELDSET,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `history_entry_ids`,
