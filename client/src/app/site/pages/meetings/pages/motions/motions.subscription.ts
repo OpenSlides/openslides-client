@@ -267,10 +267,10 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     { idField: `state_id`, fieldset: FULL_FIELDSET },
                     {
                         idField: `submitter_ids`,
-                        fieldset: `participantListMinimal`,
                         follow: [
                             {
                                 idField: `meeting_user_id`,
+                                fieldset: `participantListMinimal`,
                                 follow: [
                                     {
                                         idField: `user_id`,
