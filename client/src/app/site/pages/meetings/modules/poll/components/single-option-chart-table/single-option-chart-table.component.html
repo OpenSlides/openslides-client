@@ -8,7 +8,11 @@
         }"
     >
         <table class="result-table" [ngClass]="{ margins: !inSlide }">
-            <tbody [ngClass]="textSizeClass">
+            <tbody
+                [class.inner-column-padding]="!inSlide"
+                [class.inner-column-padding-slide]="inSlide"
+                [ngClass]="textSizeClass"
+            >
                 @if (shouldShowHead && !inSlide) {
                     <tr>
                         <th class="left-header">
