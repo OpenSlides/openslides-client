@@ -1,6 +1,7 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 
@@ -12,11 +13,11 @@ export const getMediafilesSubscriptionConfig: SubscriptionConfigGenerator = (id:
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [
-            { idField: `mediafile_ids`, fieldset: FULL_FIELDSET },
+            { idField: `mediafile_ids`, fieldset: DEFAULT_FIELDSET },
             {
                 idField: `meeting_mediafile_ids`,
-                fieldset: FULL_FIELDSET,
-                follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
+                fieldset: DEFAULT_FIELDSET,
+                follow: [{ idField: `mediafile_id`, fieldset: DEFAULT_FIELDSET }]
             },
             {
                 idField: `committee_id`,
@@ -28,7 +29,7 @@ export const getMediafilesSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `published_mediafile_ids`,
-                                fieldset: FULL_FIELDSET
+                                fieldset: DEFAULT_FIELDSET
                             }
                         ]
                     }

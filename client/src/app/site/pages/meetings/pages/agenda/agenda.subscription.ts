@@ -98,7 +98,6 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
         follow: [
             {
                 idField: `attachment_meeting_mediafile_ids`,
-                fieldset: FULL_FIELDSET,
                 follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             {
