@@ -78,6 +78,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
         return this.dialog.open(module.getComponent(), {
             ...mediumDialogSettings,
+            autoFocus: false,
             data: {
                 motion: data,
                 forwardingMeetings: this._forwardingMeetings
@@ -111,6 +112,7 @@ export class MotionForwardDialogService extends BaseDialogService<
                     dialogData.useOriginalSubmitter,
                     dialogData.useOriginalNumber,
                     dialogData.useOriginalVersion,
+                    dialogData.withAttachments,
                     dialogData.markAmendmentsAsForwarded,
                     ...forwardMotions
                 );
@@ -118,12 +120,26 @@ export class MotionForwardDialogService extends BaseDialogService<
                 let numToForwardAmendments = 0;
                 if (dialogData.useOriginalVersion) {
                     toForward.forEach(motion =>
-                        motion.amendments.forEach(amendment => numToForwardAmendments += amendment.state?.allow_amendment_forwarding && amendment.isAmendment() ? 1 : 0
+                        motion.amendments.forEach(
+                            amendment =>
+                                (numToForwardAmendments +=
+                                    amendment.state?.allow_amendment_forwarding && amendment.isAmendment() ? 1 : 0)
                         )
                     );
                 }
-                const numToForwardCR = dialogData.useOriginalVersion && toForward.length === 1 ? toForward[0].change_recommendations.length : 0;
-                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length - amountSelectedAmendments, numToForwardAmendments, numToForwardCR, result), `Ok`);
+                const numToForwardCR =
+                    dialogData.useOriginalVersion && toForward.length === 1
+                        ? toForward[0].change_recommendations.length
+                        : 0;
+                this.snackbar.open(
+                    this.createForwardingSuccessMessage(
+                        toForward.length - amountSelectedAmendments,
+                        numToForwardAmendments,
+                        numToForwardCR,
+                        result
+                    ),
+                    `Ok`
+                );
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
@@ -163,18 +179,27 @@ export class MotionForwardDialogService extends BaseDialogService<
     ): string {
         const ofTranslated = this.translate.instant(`of`);
         const andTranslated = this.translate.instant(`and`);
-        const wereTranslated = selectedMotionsLength === 1 && forwardedAmendmentsAmount === 0 && forwardedCRsAmount === 0 ? this.translate.instant(`was`) : this.translate.instant(`were`);
+        const wereTranslated =
+            selectedMotionsLength === 1 && forwardedAmendmentsAmount === 0 && forwardedCRsAmount === 0
+                ? this.translate.instant(`was`)
+                : this.translate.instant(`were`);
 
         const successfulMessage = wereTranslated + ` ` + this.translate.instant(`successfully forwarded`);
         const partialMessage = this.translate.instant(`partially forwarded`);
 
         const verboseNameMotions = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
-        const verboseNameAmendments = this.translate.instant(this.repo.getVerboseName(forwardedAmendmentsAmount !== 1, true));
+        const verboseNameAmendments = this.translate.instant(
+            this.repo.getVerboseName(forwardedAmendmentsAmount !== 1, true)
+        );
         const verboseNameCR = this.translate.instant(this.changeRecoRepo.getVerboseName(forwardedCRsAmount !== 1));
 
         const additionalInfoMotions = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
-        const additionalInfoAmendments = forwardedAmendmentsAmount === 0 ? `` : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
-        const additionalInfoCR = forwardedCRsAmount === 0 ? `` : `${andTranslated} ${forwardedCRsAmount} ${verboseNameCR} `;
+        const additionalInfoAmendments =
+            forwardedAmendmentsAmount === 0
+                ? ``
+                : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
+        const additionalInfoCR =
+            forwardedCRsAmount === 0 ? `` : `${andTranslated} ${forwardedCRsAmount} ${verboseNameCR} `;
 
         let resultString = ``;
         if (result.success || !result.partial) {

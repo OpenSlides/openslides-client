@@ -2,6 +2,7 @@ import { _ } from '@ngx-translate/core';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -75,10 +76,11 @@ interface IAssignmentRelations extends HasPolls<ViewAssignment> {
 }
 export interface ViewAssignment
     extends Assignment,
-    ViewModelRelations<IAssignmentRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasSequentialNumber {}
+        ViewModelRelations<IAssignmentRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasHistoryEntries,
+        HasSequentialNumber {}

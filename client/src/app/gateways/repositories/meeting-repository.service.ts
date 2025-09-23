@@ -319,12 +319,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * @returns An object containing user-ids as keys and an array of ids as values, which are the next group-ids
      * for the related user.
      */
-    private getNewGroupsForUsers(
-        data: Record<number, Id[]>,
-        users: ViewUser[] = [],
-        meetingId: Id,
-        groupId: Id
-    ): void {
+    private getNewGroupsForUsers(data: Record<number, Id[]>, users: ViewUser[] = [], meetingId: Id, groupId: Id): void {
         const getNextGroupIds = (groupIds: Id[]): number[] => {
             const index = groupIds.findIndex(id => groupId === id);
             if (index > -1) {

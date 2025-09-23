@@ -44,6 +44,7 @@ interface DifferedViewArguments extends Arguments {
      */
     firstLine: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number;
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -60,6 +61,7 @@ interface FormatMotionConfig extends Arguments {
      */
     firstLine?: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number;
 }
 
 @Injectable({
@@ -227,7 +229,14 @@ export class MotionFormatService {
     };
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine, firstLine, showAllChanges }: DifferedViewArguments = args;
+        const {
+            changes,
+            lineLength,
+            highlightedLine,
+            firstLine,
+            showAllChanges,
+            brokenTextChangesAmount
+        }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
@@ -238,7 +247,7 @@ export class MotionFormatService {
 
         let lastLineTo = -1;
         for (let i = 0; i < changesToShow.length; i++) {
-            if (changesToShow[i].getLineTo() > lastLineTo) {
+            if (changesToShow[i].getLineTo() > lastLineTo && changesToShow[i].getLineFrom() > firstLine) {
                 const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
                 text.push(
                     this.diffService.extractMotionLineRange(
@@ -255,12 +264,22 @@ export class MotionFormatService {
             }
             text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
+        if (brokenTextChangesAmount > 0) {
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                brokenTextChangesAmount +
+                ` ` +
+                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`);
+            text.push(`<em style="color: red; font-weight: bold;">` + msg + `</em>`);
+        }
         return this.adjustDiffClasses(text).join(``);
     };
 

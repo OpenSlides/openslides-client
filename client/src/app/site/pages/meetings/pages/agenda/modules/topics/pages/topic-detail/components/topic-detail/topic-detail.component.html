@@ -82,7 +82,10 @@
                             <mat-list dense>
                                 @for (file of sortedAttachments; track file) {
                                     <mat-list-item class="attachment-entry">
-                                        <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
+                                        <a target="_blank" [routerLink]="file.url">
+                                            <mat-icon class="attachment-icon">{{ file.getIcon() }}</mat-icon>
+                                            {{ file.getTitle() }}
+                                        </a>
                                     </mat-list-item>
                                 }
                             </mat-list>
@@ -141,14 +144,14 @@
                             </div>
                         } @else {
                             <div class="apply-button">
-                                <button mat-stroked-button (click)="applyTopicContent()">
-                                    <span>{{ 'Apply' | translate }}</span>
-                                </button>
                                 @if (applyFeedback) {
                                     <div class="apply-feedback-icon">
                                         <mat-icon>check</mat-icon>
                                     </div>
                                 }
+                                <button mat-stroked-button (click)="applyTopicContent()">
+                                    <span>{{ 'Apply' | translate }}</span>
+                                </button>
                             </div>
                         }
                     </form>

@@ -45,9 +45,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public get showPollCollection(): boolean {
-        return (
-            this._currentProjection?.type !== `agenda_item_list` && this._currentProjection?.type !== `wifi_access_data`
-        );
+        return this._currentProjection?.type !== `wifi_access_data`;
     }
 
     public get projectorTitle(): string {
@@ -106,6 +104,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         return Object.values(this.disabledContentElements).filter(v => v).length;
     }
 
+    public get isAgendaListProjection(): boolean {
+        return this._currentProjection?.type === `agenda_item_list`;
+    }
+
     public structureLevelCountdownEnabled = false;
 
     public disabledContentElements: Record<string, boolean> = {};
@@ -139,10 +141,15 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                             ? currentProjections[0]
                             : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
+                    if (this.projectedViewModel?.collection === `list_of_speakers`) {
+                        this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
+                    }
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
-                this.listOfSpeakers = clos;
+                if (this.projectedViewModel?.collection !== `list_of_speakers`) {
+                    this.listOfSpeakers = clos;
+                }
             }),
             this.meetingSettingsService
                 .get(`list_of_speakers_default_structure_level_time`)

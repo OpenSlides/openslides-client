@@ -27,7 +27,12 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
-import { ExportFileFormat, InfoToExport, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
+import {
+    ExportFileFormat,
+    InfoToExport,
+    motionImportExportHeaderOrder,
+    noMetaData
+} from '../../../../services/export/definitions';
 import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
 
 interface SavedSelections {
@@ -80,10 +85,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     public fileFormat = ExportFileFormat;
 
     /**
-     * The form that contains the export information.
-     */
-    public exportForm!: UntypedFormGroup;
-    /**
      * The form that contains the export information in the shape needed
      * for the view.
      */
@@ -96,8 +97,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private pdfDefaults = {
         format: ExportFileFormat.PDF,
-        lnMode: [],
-        crMode: [this.crMode.Diff],
+        lnMode: this.lnMode.Outside,
+        crMode: this.crMode.Diff,
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
@@ -112,7 +113,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     private csvDefaults = {
         format: ExportFileFormat.CSV,
         lnMode: [],
-        crMode: [this.crMode.Original],
+        crMode: this.crMode.Original,
         content: [`title`, `number`, `text`, `reason`, `sequential_number`],
         metaInfo: [`state`, `recommendation`, `category`, `tags`, `block`, `referring_motions`, `speakers`],
         personrelated: [`submitters`, `supporters`, `editors`, `working_group_speakers`],
@@ -317,7 +318,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 this.deselectOption(`content`, `text`);
                 this.changeStateOfChipOption(this.textChip, true, `text`);
             } else {
-                this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                if (!this.dialogForm.get(`content`).value.includes('text')) {
+                    this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                }
                 this.changeStateOfChipOption(this.textChip, false, `text`);
             }
         });
@@ -394,12 +397,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
+            chipOption.disabled = nextState;
             if (nextState) {
-                chipOption.disabled = nextState;
                 this.disabledControls.push(value);
+                chipOption.selected = false;
             } else {
-                chipOption.disabled = nextState;
-                this.disabledControls.filter(obj => !obj.includes(value));
+                this.disabledControls = this.disabledControls.filter(obj => !obj.includes(value));
             }
         }
     }
@@ -481,7 +484,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     }
 
     // Transform form of motion export to MotionExportInfo for further processing
-    public dialogToExportForm(dialogForm: UntypedFormGroup): MotionExportInfo {
+    public dialogToExportInfo(dialogForm: UntypedFormGroup): MotionExportInfo {
         const exportInfo = {};
 
         exportInfo[`format`] = dialogForm.value[`format`] as ExportFileFormat;
@@ -535,19 +538,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     public async exportMotions(): Promise<void> {
         this.repoSub.unsubscribe();
-        this.exportForm = this.formBuilder.group({
-            format: [],
-            lnMode: [],
-            crMode: [],
-            content: [],
-            metaInfo: [],
-            pdfOptions: [],
-            comments: []
-        });
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
-        this.exportForm.patchValue(this.dialogToExportForm(this.dialogForm));
-        const exportInfo = this.exportForm.value;
-
+        const exportInfo = this.dialogToExportInfo(this.dialogForm);
         if (exportInfo) {
             await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
             const amendments = this.amendmentRepo.getViewModelList();

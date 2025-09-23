@@ -77,7 +77,7 @@
             <!-- Results -->
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {
-                    <os-poll-progress [poll]="poll" />
+                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
                 }
                 @if (poll.canBeVotedFor()) {
                     <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll" />
@@ -138,6 +138,17 @@
         [menuItem]="true"
         [object]="poll.getProjectionBuildDescriptor()"
     />
+    <button
+        *osPerms="
+            permission.motionCanManagePolls;
+            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+        "
+        mat-menu-item
+        (click)="pseudoanonymizePoll()"
+    >
+        <mat-icon>warning</mat-icon>
+        <span>{{ 'Anonymize votes' | translate }}</span>
+    </button>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>

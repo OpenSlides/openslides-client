@@ -33,7 +33,7 @@
     [generatePasswordFn]="getRandomPasswordFn()"
     [isEditing]="isEditingUser"
     [isNewUser]="isNewUser"
-    [useAdditionalEditTemplate]="!!organizationManagementLevels.length || canManageHomeCommittee"
+    [shouldEnableFormControlFn]="shouldEnableFormControlFn"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
     (errorEvent)="formErrors = $event"
@@ -48,7 +48,6 @@
                     <mat-label>{{ 'Home committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="home_committee_id"
-                        [disabled]="!canManageHomeCommittee"
                         [includeNone]="true"
                         [multiple]="false"
                         [repo]="committeeController"
@@ -58,7 +57,7 @@
                         [transformSetFn]="getTransformSetHomeCommitteeFn()"
                     ></os-repo-search-selector>
                 </mat-form-field>
-                <mat-checkbox class="form50 guest-margin-top force-min-width" formControlName="guest">
+                <mat-checkbox class="form50 external-margin-top force-min-width" formControlName="external">
                     {{ 'external' | translate }}
                 </mat-checkbox>
             </div>
@@ -78,7 +77,7 @@
                 </mat-form-field>
             </div>
             <!-- Administration roles (at organization level) -->
-            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
+            <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">

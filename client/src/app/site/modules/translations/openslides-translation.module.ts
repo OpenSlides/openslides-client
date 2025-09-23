@@ -19,7 +19,7 @@ import { PruningTranslationLoader } from './translation-pruning-loader';
 export class OpenSlidesTranslationModule {
     public static forRoot(): ModuleWithProviders<TranslateModule> {
         return TranslateModule.forRoot({
-            defaultLanguage: `en`,
+            fallbackLang: `en`,
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,
@@ -36,7 +36,7 @@ export class OpenSlidesTranslationModule {
     // no config store for child.
     public static forChild(): ModuleWithProviders<TranslateModule> {
         return TranslateModule.forChild({
-            defaultLanguage: `en`,
+            fallbackLang: `en`,
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,

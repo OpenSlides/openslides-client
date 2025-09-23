@@ -1,4 +1,5 @@
 import { _ } from '@ngx-translate/core';
+import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
@@ -417,11 +418,12 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
 
 export interface ViewMotion
     extends Motion,
-    ViewModelRelations<IMotionRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasPersonalNote,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasReferencedMotionsInExtension {}
+        ViewModelRelations<IMotionRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasHistoryEntries,
+        HasReferencedMotionsInExtension {}

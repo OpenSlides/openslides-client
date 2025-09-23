@@ -121,7 +121,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get isAdminNotInMeeting(): boolean {
-        return this.operator.canSkipPermissionCheck && !this.operator.user.getMeetingUser();
+        return (
+            (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManager) &&
+            !this.operator.user.getMeetingUser()
+        );
     }
 
     @Input()
@@ -531,7 +534,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns a time string using the current language setting of the client
      */
     public startTimeToString(speaker: ViewSpeaker): string {
-        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang());
     }
 
     private subscribeToSettings(): void {

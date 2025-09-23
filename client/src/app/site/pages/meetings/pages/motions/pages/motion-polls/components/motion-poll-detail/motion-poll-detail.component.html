@@ -36,7 +36,7 @@
         </div>
         <os-motion-poll-detail-content [poll]="poll" />
         @if (poll.isStarted) {
-            <os-poll-progress [poll]="poll" />
+            <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
             <div *osPerms="permission.motionCanManagePolls" class="poll-content">
                 <div class="user-subtitle">
                     {{ 'Present entitled users' | translate }}:
@@ -102,7 +102,10 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named' && !poll.is_pseudoanonymized"
+        *osPerms="
+            permission.motionCanManagePolls;
+            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+        "
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

@@ -131,7 +131,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         if (poll.pollClassType === PollClassType.Motion) {
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {
-            return this.operator.hasPerms(this.permission.assignmentCanManage);
+            return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Topic) {
             return this.operator.hasPerms(this.permission.pollCanManage);
         }
@@ -142,7 +142,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
      * Helper function to detect new latest published polls and set them.
      */
     private updateLastPublished(): void {
-        const lastPublished = this.getLastfinshedPoll(this.currentProjection!);
+        const lastPublished = this.getLastFinishedOrPublishedPoll(this.currentProjection!);
         if (lastPublished !== this.lastPublishedPoll) {
             if (
                 (this.currentProjection as BaseViewModel)?.collection === `meeting` &&
@@ -173,15 +173,11 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
      *
      * @param viewModel
      */
-    private getLastfinshedPoll(viewModel: Partial<HasPolls<C>>): ViewPoll | null {
+    private getLastFinishedOrPublishedPoll(viewModel: Partial<HasPolls<C>>): ViewPoll | null {
         if (isHavingViewPolls(viewModel)) {
             let currPolls: ViewPoll[] = viewModel.polls;
-            /**
-             * Although it should, since the union type could use `.filter
-             * without any problem, without an any cast it will not work
-             */
-            currPolls = (currPolls as any[]).filter((p: ViewPoll) => p.stateHasVotes).reverse();
-            return currPolls[0];
+            currPolls = currPolls.filter((p: ViewPoll) => p.stateHasVotes).reverse();
+            return currPolls.length ? currPolls[0] : null;
         }
         return null;
     }

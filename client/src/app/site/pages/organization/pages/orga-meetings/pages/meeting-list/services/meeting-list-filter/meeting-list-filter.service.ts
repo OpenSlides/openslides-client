@@ -76,6 +76,10 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
     protected override preFilter(rawInputData: ViewMeeting[]): ViewMeeting[] {
         return this.operator.canSkipPermissionCheck
             ? rawInputData
-            : rawInputData.filter(meeting => this.operator.isInMeeting(meeting.id));
+            : rawInputData.filter(
+                  meeting =>
+                      this.operator.isInMeeting(meeting.id) ||
+                      this.operator.hasCommitteeManagementRights(meeting.committee_id)
+              );
     }
 }

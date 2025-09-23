@@ -99,7 +99,7 @@ describe(`ErrorMapService`, () => {
                 typeof actionMap === `function` &&
                 !!actionMap(getMockActionFromName(MotionAction.CREATE_FORWARDED)) &&
                 typeof Array.from(actionMap(getMockActionFromName(MotionAction.CREATE_FORWARDED)).values())[0] ===
-                `function`
+                    `function`
         },
         {
             title: `test with a different action error map`,

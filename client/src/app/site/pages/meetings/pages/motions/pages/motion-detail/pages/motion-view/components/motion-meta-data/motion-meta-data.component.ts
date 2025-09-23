@@ -102,11 +102,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public get validSupportersText(): number {
-        return this.translate
-            .instant(
-                `of which %num% not permissable`
-            )
-            .replace(`%num%`, this.validSupporters);
+        return this.translate.instant(`of which %num% not permissable`).replace(`%num%`, this.validSupporters);
     }
 
     /**
@@ -131,13 +127,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
-            map(motions => motions.naturalSort(this.translate.currentLang, [`number`, `title`]))
+            map(motions => motions.naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
         );
     }
 
     public get referencedMotions$(): Observable<ViewMotion[]> {
         return this.motion?.recommendation_extension_references$.pipe(
-            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.currentLang, [`number`, `title`]))
+            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
         );
     }
 
@@ -444,7 +440,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return (
             supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.getMeetingUser().vote_delegated_to_id && this.activeMeeting.users_forbid_delegator_as_supporter && this.activeMeeting.users_enable_vote_delegations
+                supporter.getMeetingUser().vote_delegated_to_id &&
+                this.activeMeeting.users_forbid_delegator_as_supporter &&
+                this.activeMeeting.users_enable_vote_delegations
             )
         );
     }

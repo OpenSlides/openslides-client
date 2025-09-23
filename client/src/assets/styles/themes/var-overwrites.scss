@@ -1,40 +1,43 @@
 @mixin os-var-overwrites {
     .mat-mdc-progress-bar {
-        --mdc-linear-progress-track-color: var(--theme-primary-100);
+        --mat-progress-bar-track-color: var(--theme-primary-100);
     }
 
-    .mat-mdc-fab, .mat-mdc-mini-fab {
-        --mat-icon-color: var(--mdc-fab-icon-color, inherit);
+    .mat-mdc-fab,
+    .mat-mdc-mini-fab {
+        --mat-icon-color: var(--mat-fab-icon-color, inherit);
     }
 
-    .mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
-        --mdc-fab-icon-color: var(--theme-primary-contrast-500);
+    .mat-mdc-fab.mat-primary,
+    .mat-mdc-mini-fab.mat-primary {
+        --mat-fab-icon-color: var(--theme-primary-contrast-500);
         --mat-mdc-fab-color: var(--theme-primary-contrast-500);
     }
 
-    .mat-mdc-fab.mat-accent, .mat-mdc-mini-fab.mat-accent {
-        --mdc-fab-icon-color: var(--theme-accent-contrast-500);
+    .mat-mdc-fab.mat-accent,
+    .mat-mdc-mini-fab.mat-accent {
+        --mat-fab-icon-color: var(--theme-accent-contrast-500);
         --mat-mdc-fab-color: var(--theme-accent-contrast-500);
     }
 
     .mat-mdc-raised-button.mat-primary {
-        --mdc-protected-button-label-text-color: var(--theme-primary-contrast-500);
+        --mat-button-protected-label-text-color: var(--theme-primary-contrast-500);
     }
 
     .mat-mdc-raised-button.mat-accent {
-        --mdc-protected-button-label-text-color: var(--theme-accent-contrast-500);
+        --mat-button-protected-label-text-color: var(--theme-accent-contrast-500);
     }
 
     .mat-mdc-unelevated-button.mat-primary {
-        --mdc-filled-button-label-text-color: var(--theme-primary-contrast-500);
+        --mat-button-filled-label-text-color: var(--theme-primary-contrast-500);
     }
 
     .mat-mdc-unelevated-button.mat-accent {
-        --mdc-filled-button-label-text-color: var(--theme-accent-contrast-500);
+        --mat-button-filled-label-text-color: var(--theme-accent-contrast-500);
     }
 
     .mat-mdc-button.mat-unthemed {
-        --mdc-text-button-label-text-color: inherit;
+        --mat-button-text-label-text-color: inherit;
     }
 
     --mat-table-header-headline-weight: 500;
@@ -42,11 +45,12 @@
 
     --mat-menu-item-label-text-size: 14px;
 
-    --mdc-dialog-supporting-text-tracking: normal;
+    --mat-dialog-supporting-text-tracking: normal;
 
-    --mdc-checkbox-selected-checkmark-color: var(--theme-primary-contrast-500);
+    --mat-checkbox-selected-checkmark-color: var(--theme-primary-contrast-500);
 
-    .mat-mdc-chip, .mat-mdc-basic-chip {
+    .mat-mdc-chip,
+    .mat-mdc-basic-chip {
         font-weight: 500;
     }
 }

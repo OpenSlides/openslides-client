@@ -61,7 +61,7 @@ export class MotionCsvExportService {
         private csvExport: MeetingCsvExportService,
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private motionService: MotionControllerService,
         private motionFormatService: MotionFormatService,
         private commentRepo: MotionCommentSectionControllerService
@@ -79,7 +79,7 @@ export class MotionCsvExportService {
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`) as number;
         const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
         const text = this.motionFormatService.formatMotion({ targetMotion: motion, crMode, changes, lineLength });
-        const strippedLines = this.linenumberingService.stripLineNumbers(text);
+        const strippedLines = this.lineNumberingService.stripLineNumbers(text);
         return strippedLines;
     }
 
@@ -159,7 +159,7 @@ export class MotionCsvExportService {
                 label: `Referring motions`,
                 map: motion =>
                     motion.referenced_in_motion_recommendation_extensions
-                        .naturalSort(this.translate.currentLang, [`number`, `title`])
+                        .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                         .map(motion => motion.getNumberOrTitle())
                         .join(`, `)
             });

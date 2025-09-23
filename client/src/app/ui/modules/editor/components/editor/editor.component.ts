@@ -18,28 +18,24 @@ import { MatDialog } from '@angular/material/dialog';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
-import Blockquote from '@tiptap/extension-blockquote';
-import Bold from '@tiptap/extension-bold';
-import Color from '@tiptap/extension-color';
-import Document from '@tiptap/extension-document';
-import HardBreak from '@tiptap/extension-hard-break';
-import Heading from '@tiptap/extension-heading';
+import { Blockquote } from '@tiptap/extension-blockquote';
+import { Bold } from '@tiptap/extension-bold';
+import { Color } from '@tiptap/extension-color';
+import { Document } from '@tiptap/extension-document';
+import { HardBreak } from '@tiptap/extension-hard-break';
+import { Heading } from '@tiptap/extension-heading';
 import { Level as HeadingLevel } from '@tiptap/extension-heading';
-import History from '@tiptap/extension-history';
-import Italic from '@tiptap/extension-italic';
-import Link from '@tiptap/extension-link';
-import Paragraph from '@tiptap/extension-paragraph';
-import Strike from '@tiptap/extension-strike';
-import Subscript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import Table from '@tiptap/extension-table';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
-import TableRow from '@tiptap/extension-table-row';
-import Text from '@tiptap/extension-text';
-import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import Underline from '@tiptap/extension-underline';
+import { Italic } from '@tiptap/extension-italic';
+import { Link } from '@tiptap/extension-link';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Strike } from '@tiptap/extension-strike';
+import { Subscript } from '@tiptap/extension-subscript';
+import { Superscript } from '@tiptap/extension-superscript';
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
+import { Text } from '@tiptap/extension-text';
+import { TextAlign } from '@tiptap/extension-text-align';
+import { Underline } from '@tiptap/extension-underline';
+import { UndoRedo } from '@tiptap/extensions';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
@@ -60,6 +56,7 @@ import { Highlight } from './extensions/highlight';
 import IFrame from './extensions/iframe';
 import { ImageResize } from './extensions/image-resize';
 import { OsSplit, OsSplitBulletList, OsSplitListItem, OsSplitOrderedList } from './extensions/os-split';
+import { TextStyle } from './extensions/text-style';
 
 const DEFAULT_COLOR_PALETE = [
     `#BFEDD2`,
@@ -212,7 +209,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
                 // Extensions
                 Color,
-                History,
+                UndoRedo,
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
                 }),
@@ -428,7 +425,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             .afterClosed()
             .subscribe((result: EditorHtmlDialogOutput) => {
                 if (result.action === `set`) {
-                    this.editor.commands.setContent(result.html, true);
+                    this.editor.commands.setContent(result.html);
                 }
             });
     }

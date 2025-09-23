@@ -10,8 +10,8 @@ import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 export type MeetingUserPatchFn =
-    | { [key in keyof MeetingUser]?: any } |
-    ((user: ViewMeetingUser) => { [key in keyof MeetingUser]?: any });
+    | { [key in keyof MeetingUser]?: any }
+    | ((user: ViewMeetingUser) => { [key in keyof MeetingUser]?: any });
 
 @Injectable({
     providedIn: `root`

@@ -21,9 +21,21 @@
                     <os-motion-detail-diff-summary
                         [changes]="changesForDiffMode"
                         [elContainer]="nativeElement"
+                        [lastLineNr]="getLastNumber()"
                         [motion]="motion"
                         [scrollToChange]="scrollToChange"
                     ></os-motion-detail-diff-summary>
+                    @if (amendmentLines.length === 0 && changesForDiffMode.length > 0) {
+                        <os-motion-detail-diff
+                            [changes]="changesForDiffMode"
+                            [lineNumberingMode]="lineNumberingMode"
+                            [lineRange]="{ from: -1, to: -1 }"
+                            [motion]="motion"
+                            [scrollToChange]="scrollToChange"
+                            [showPreamble]="false"
+                            [showSummary]="false"
+                        ></os-motion-detail-diff>
+                    }
                 }
                 @for (paragraph of getAmendmentParagraphs(); track $index) {
                     <div

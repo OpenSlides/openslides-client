@@ -198,6 +198,7 @@ export class Settings {
     public poll_default_onehundred_percent_base: PollPercentBase;
     public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_default_backend: PollBackendDurationType;
+    public poll_default_live_voting_enabled: boolean;
 
     // SSO
     public external_id!: string;
@@ -272,6 +273,8 @@ export class Meeting extends BaseModel<Meeting> {
     public template_for_organization_id!: Id; // (organization/template_meeting_ids)[];
 
     public structure_level_list_of_speakers_ids: Id[]; // (structure_level_list_of_speakers/meeting_id)[]
+
+    public relevant_history_entry_ids: Id[]; // history_entry/meeting_id
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);
@@ -371,6 +374,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_default_line_numbering`,
         `motions_line_length`,
         `motions_reason_required`,
+        `motions_origin_motion_toggle_default`,
+        `motions_enable_origin_motion_display`,
         `motions_enable_text_on_projector`,
         `motions_enable_reason_on_projector`,
         `motions_enable_sidebox_on_projector`,
@@ -448,6 +453,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_default_onehundred_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `poll_default_live_voting_enabled`,
         `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,
@@ -525,11 +531,12 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_poll_ids`,
         `default_group_id`,
         `admin_group_id`,
-        `anonymous_group_id`
+        `anonymous_group_id`,
+        `relevant_history_entry_ids`
     ];
 }
 export interface Meeting
     extends Settings,
-    HasProjectionIds,
-    HasProperties<MeetingMediafileUsageIdKey, number>,
-    HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}
+        HasProjectionIds,
+        HasProperties<MeetingMediafileUsageIdKey, number>,
+        HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

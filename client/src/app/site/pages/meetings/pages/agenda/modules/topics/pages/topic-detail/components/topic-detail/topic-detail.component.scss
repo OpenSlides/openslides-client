@@ -15,17 +15,16 @@
 
 .apply-button {
     display: flex;
+    justify-content: right;
     button {
         height: 37px;
         width: auto;
-        margin-left: auto;
         margin-right: 0;
     }
-}
-
-.apply-feedback-icon {
-    color: green;
-    margin-top: 8px;
+    .apply-feedback-icon {
+        color: green;
+        margin-top: 8px;
+    }
 }
 
 .attachment-entry {
@@ -36,5 +35,9 @@
         text-wrap: wrap;
         max-width: 100%;
         word-break: break-word;
+    }
+
+    .attachment-icon {
+        vertical-align: text-bottom;
     }
 }

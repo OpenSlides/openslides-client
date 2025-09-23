@@ -58,7 +58,10 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     public override ngOnInit(): void {
         super.ngOnInit();
         this.userSortService.initSorting();
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_users) || (this.committeeId && this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage))) {
+        if (
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
+            (this.committeeId && this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage))
+        ) {
             this.initItems();
         }
     }

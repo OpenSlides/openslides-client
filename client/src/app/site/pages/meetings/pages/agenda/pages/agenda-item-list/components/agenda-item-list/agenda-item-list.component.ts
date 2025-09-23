@@ -354,7 +354,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             return (
                 result +
                 ` (${this.translate.instant(`Estimated end`)}:
-            ${endTime.toLocaleTimeString(this.translate.currentLang, { hour: `numeric`, minute: `numeric` })} h)`
+            ${endTime.toLocaleTimeString(this.translate.getCurrentLang(), { hour: `numeric`, minute: `numeric` })} h)`
             );
         } else {
             return result;

@@ -25,6 +25,10 @@ export class ViewMeetingMediafile extends BaseProjectableViewModel<MeetingMediaf
         return this.mediafile.title;
     }
 
+    public getIcon(): string {
+        return this.mediafile?.getIcon() ?? `insert_drive_file`;
+    }
+
     /**
      * Determine the downloadURL
      *
@@ -63,7 +67,7 @@ interface IMeetingMediafileRelations {
 }
 export interface ViewMeetingMediafile
     extends MeetingMediafile,
-    ViewModelRelations<IMeetingMediafileRelations>,
-    /*  Searchable, */ HasMeeting,
-    HasListOfSpeakers,
-    HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}
+        ViewModelRelations<IMeetingMediafileRelations>,
+        /*  Searchable, */ HasMeeting,
+        HasListOfSpeakers,
+        HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

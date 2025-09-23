@@ -73,14 +73,14 @@ export class DetailViewComponent implements OnInit {
             });
             this.updateSubscription(ROUTE_SUBSCRIPTION_NAME, subscription);
 
-            firstValueFrom(this.router.events.pipe(
-                filter((event: any) => event instanceof NavigationEnd)
-            )).then(async () => {
-                const params = await firstValueFrom(this.route.params);
-                if (this._sequential_number === +params[`id`]) {
-                    this.parseSequentialNumber(params);
+            firstValueFrom(this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd))).then(
+                async () => {
+                    const params = await firstValueFrom(this.route.params);
+                    if (this._sequential_number === +params[`id`]) {
+                        this.parseSequentialNumber(params);
+                    }
                 }
-            });
+            );
         });
     }
 
