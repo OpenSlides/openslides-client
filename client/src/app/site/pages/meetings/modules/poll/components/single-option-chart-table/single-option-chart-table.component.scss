@@ -28,7 +28,7 @@
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .margins {
-        margin-left: 0px;
+        margin-left: 80px;
     }
 
     .result-table {
@@ -74,7 +74,7 @@
             }
         }
 
-        .inner-column-padding-slide {
+        .column-padding-width-slide {
             tr {
                 td {
                     padding: 15px 0;
@@ -91,15 +91,21 @@
             }
         }
 
-        .inner-column-padding {
+        .percent-column-width-gigantic {
             tr {
                 :nth-child(2):not(th) {
-                    padding-left: 10px;
-                    padding-right: 10px;
+                    min-width: 120px;
                 }
             }
         }
 
+        .percent-column-width-large {
+            tr {
+                :nth-child(2):not(th) {
+                    min-width: 100px;
+                }
+            }
+        }
         .votesvalid {
             border-top: 1px solid rgba(128, 128, 128, 0.2);
         }

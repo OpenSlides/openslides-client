@@ -7,10 +7,11 @@
             'items-left': inSlide
         }"
     >
-        <table class="result-table" [ngClass]="{ margins: !inSlide }">
+        <table class="result-table" [ngClass]="{ margins: !inSlide && iconSize === 'gigantic' }">
             <tbody
-                [class.inner-column-padding]="!inSlide"
-                [class.inner-column-padding-slide]="inSlide"
+                [class.column-padding-width-slide]="inSlide"
+                [class.percent-column-width-gigantic]="!inSlide && iconSize === 'gigantic'"
+                [class.percent-column-width-large]="!inSlide && iconSize === 'large'"
                 [ngClass]="textSizeClass"
             >
                 @if (shouldShowHead && !inSlide) {
