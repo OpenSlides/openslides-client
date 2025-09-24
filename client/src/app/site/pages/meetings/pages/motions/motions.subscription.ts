@@ -253,6 +253,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     `show_state_extension_field`,
                     `show_recommendation_extension_field`,
                     `recommendation_label`
+                    // `state_button_label`
                 ]
             },
             {
