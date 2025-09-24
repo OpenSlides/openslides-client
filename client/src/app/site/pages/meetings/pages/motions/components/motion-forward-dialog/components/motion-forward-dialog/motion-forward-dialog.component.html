@@ -108,7 +108,7 @@
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalSubmitter">
                             <mat-radio-button [value]="false">
-                                {{ 'committee name' | translate }}
+                                {{ 'Committee name' | translate }}
                                 @if (activeMeetingCommitteeName) {
                                     <span class="data-preview">
                                         <span>{{ activeMeetingCommitteeName }}</span>
@@ -116,7 +116,7 @@
                                 }
                             </mat-radio-button>
                             <mat-radio-button [value]="true">
-                                {{ 'original submitter' | translate }}
+                                {{ 'Original submitter' | translate }}
                                 @if (data.motion.length === 1 && data.motion[0].submitterNames.length > 0) {
                                     <span class="data-preview">
                                         <os-comma-separated-listing [list]="data.motion[0].submitterNames">
@@ -137,10 +137,10 @@
                     <span>
                         <mat-radio-group class="motion-forward-radio-group" [(ngModel)]="useOriginalNumber">
                             <mat-radio-button [value]="false">
-                                {{ 'without identifier' | translate }}
+                                {{ 'Without identifier' | translate }}
                             </mat-radio-button>
                             <mat-radio-button [value]="true">
-                                {{ 'original identifier' | translate }}
+                                {{ 'Original identifier' | translate }}
                                 @if (data.motion.length === 1) {
                                     <span class="data-preview">
                                         <span>{{ data.motion[0].number }}</span>
@@ -152,6 +152,7 @@
                 } @else if (rowName === 'attachments') {
                     <span>
                         <mat-checkbox [(ngModel)]="withAttachments"></mat-checkbox>
+                        <span>{{ 'Forward attachments' | translate }}</span>
                     </span>
                 } @else if (rowName === 'meeting') {
                     <span class="motion-forward-meeting-list">
