@@ -1,4 +1,4 @@
-FROM node:22.17-alpine as base
+FROM node:22.19-alpine as base
 
 ## Setup
 ARG CONTEXT
@@ -9,8 +9,8 @@ ENV APP_CONTEXT=${CONTEXT}
 COPY packages /packages
 
 WORKDIR /packages/openslides-motion-diff
-RUN npm ci
-RUN npm run build
+RUN npm ci && \
+    npm run build
 
 ## Installs
 WORKDIR /app
@@ -44,7 +44,7 @@ RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version
 RUN npm run build
 
 # Prod wants nginx as base image for some reason
-FROM nginx:1.28.0 as prod
+FROM nginx:1.29.1 as prod
 
 ## Setup
 ARG CONTEXT

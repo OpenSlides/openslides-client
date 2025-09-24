@@ -3,7 +3,9 @@
         <ng-container>
             <h1 [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ title }}</h1>
             @if (subtitle) {
-                <h2 class="poll-title" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ subtitle }}</h2>
+                <h2 class="poll-title padding-top-3" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">
+                    {{ subtitle }}
+                </h2>
             }
         </ng-container>
     </div>
@@ -88,8 +90,33 @@
                             @for (column of userVotesFormatted; track column) {
                                 <div class="votes-column" [ngStyle]="columnStyle">
                                     @for (user of column; track user[0]) {
-                                        @if (typeof user === 'string') {
-                                            <h3 class="structure-level">{{ user }}</h3>
+                                        @if (typeof user[1] === 'number') {
+                                            <div class="structure-level">
+                                                <h3>{{ user[3] }}</h3>
+                                                @if (polldata.state === PollState.Published) {
+                                                    <span>
+                                                        <os-icon-container
+                                                            icon="check_circle"
+                                                            iconClass="yes"
+                                                            [noWrap]="true"
+                                                        >
+                                                            {{ user[0] }}
+                                                        </os-icon-container>
+                                                        <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
+                                                            {{ user[1] }}
+                                                        </os-icon-container>
+                                                        @if (polldata.pollmethod === 'YNA') {
+                                                            <os-icon-container
+                                                                icon="circle"
+                                                                iconClass="abstain"
+                                                                [noWrap]="true"
+                                                            >
+                                                                {{ user[2] }}
+                                                            </os-icon-container>
+                                                        }
+                                                    </span>
+                                                }
+                                            </div>
                                         } @else {
                                             <div class="vote-entry">
                                                 @if (user[1] === 'Y') {

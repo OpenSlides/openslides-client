@@ -40,6 +40,8 @@ interface TitleInformation extends TitleInformationWithAgendaItem {
 
 export interface PollSlideEntitledUsersEntry extends EntitledUsersEntry {
     user?: SlidePollUser;
+    structure_level_id?: Id;
+    meeting_user_id?: Id;
 }
 
 export interface PollSlideLiveEntitledUsersEntry {

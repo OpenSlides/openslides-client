@@ -274,6 +274,8 @@ export class Meeting extends BaseModel<Meeting> {
 
     public structure_level_list_of_speakers_ids: Id[]; // (structure_level_list_of_speakers/meeting_id)[]
 
+    public relevant_history_entry_ids: Id[]; // history_entry/meeting_id
+
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);
     }
@@ -372,6 +374,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_default_line_numbering`,
         `motions_line_length`,
         `motions_reason_required`,
+        `motions_origin_motion_toggle_default`,
+        `motions_enable_origin_motion_display`,
         `motions_enable_text_on_projector`,
         `motions_enable_reason_on_projector`,
         `motions_enable_sidebox_on_projector`,
@@ -527,7 +531,8 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_poll_ids`,
         `default_group_id`,
         `admin_group_id`,
-        `anonymous_group_id`
+        `anonymous_group_id`,
+        `relevant_history_entry_ids`
     ];
 }
 export interface Meeting

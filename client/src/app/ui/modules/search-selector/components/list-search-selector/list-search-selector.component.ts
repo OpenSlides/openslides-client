@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
+import { auditTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 import { Selectable } from '../../../../../domain/interfaces/selectable';
 import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
@@ -16,6 +16,8 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     standalone: false
 })
 export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
+    private _inputListValuesSubscription: Subscription;
+
     /**
      * The inputlist subject. Subscribes to it and updates the selector, if the subject
      * changes its values.
@@ -25,18 +27,20 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
         if (!value) {
             return;
         }
+        if (this._inputListValuesSubscription) {
+            this._inputListValuesSubscription.unsubscribe();
+        }
         if (Array.isArray(value)) {
             this.selectableItems = value;
         } else {
-            this.subscriptions.push(
-                value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
-                    this.selectableItems = items;
-                    if (this.contentForm) {
-                        this.disabled =
-                            (this.disabled || !items || (!!items && !items.length)) && !this.clickNotFound.observed;
-                    }
-                })
-            );
+            this._inputListValuesSubscription = value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
+                this.selectableItems = items;
+                if (this.contentForm) {
+                    this.disabled =
+                        (this.disabled || !items || (!!items && !items.length)) && !this.clickNotFound.observed;
+                }
+            });
+            this.subscriptions.push(this._inputListValuesSubscription);
         }
     }
 
