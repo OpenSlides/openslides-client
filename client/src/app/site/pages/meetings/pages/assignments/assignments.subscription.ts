@@ -29,6 +29,7 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
             },
             {
                 idField: `assignment_candidate_ids`,
+                fieldset: [],
                 follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
             }
         ]
