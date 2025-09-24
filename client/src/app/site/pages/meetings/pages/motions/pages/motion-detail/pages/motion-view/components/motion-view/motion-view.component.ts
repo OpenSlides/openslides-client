@@ -484,7 +484,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     this.amendmentSortService.repositorySortingKey
                 )
             );
-            if (this._navigatedFromAmendmentList) {
+            if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
                 this.amendmentFilterService.parentMotionId = null;
             }
             this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
