@@ -471,7 +471,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private updateSortedMotionsObservable(): void {
         // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
+        if (
+            this.motion &&
+            this.motion.lead_motion_id &&
+            (!this._amendmentsInMainList || this._navigatedFromAmendmentList)
+        ) {
             // only use the amendments for this motion
             this.amendmentSortService.initSorting();
             this.amendmentFilterService.initFilters(
@@ -480,16 +484,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     this.amendmentSortService.repositorySortingKey
                 )
             );
-            this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
-        } else if (this.motion && this.motion.lead_motion_id && this._navigatedFromAmendmentList) {
-            this.amendmentSortService.initSorting();
-            this.amendmentFilterService.initFilters(
-                this.amendmentRepo.getSortedViewModelListObservableFor(
-                    { id: this.motion.lead_motion_id },
-                    this.amendmentSortService.repositorySortingKey
-                )
-            );
-            this.amendmentFilterService.parentMotionId = null;
+            if (this.navigateToMotion) {
+                this.amendmentFilterService.parentMotionId = null;
+            }
             this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
         } else {
             this.motionSortService.initSorting();
