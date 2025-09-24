@@ -267,6 +267,7 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     { idField: `state_id`, fieldset: FULL_FIELDSET },
                     {
                         idField: `submitter_ids`,
+                        fieldset: FULL_FIELDSET,
                         follow: [
                             {
                                 idField: `meeting_user_id`,

@@ -119,8 +119,8 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
 export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewUser,
-        ids: [id],
         fieldset: DEFAULT_FIELDSET,
+        ids: [id],
         follow: [
             {
                 idField: `meeting_user_ids`,
