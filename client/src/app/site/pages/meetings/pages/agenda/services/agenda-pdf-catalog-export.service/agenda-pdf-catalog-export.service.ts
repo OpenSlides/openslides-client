@@ -75,7 +75,10 @@ export class AgendaPdfCatalogExportService {
                     agendaItemIndex + 1 < sortedAgendaItems.length &&
                     !sortedAgendaItems[agendaItemIndex + 1].parent
                 ) {
-                    agendaDocDef.push(this.getDivLine(0.5));
+                    agendaDocDef.push({
+                        text: ``,
+                        marginBottom: this._addExtraSpace ? 25 : 20
+                    });
                 }
 
                 agendaDocList.push(agendaDocDef);
@@ -503,29 +506,6 @@ export class AgendaPdfCatalogExportService {
             default:
                 return {};
         }
-    }
-
-    private getDivLine(lineWidth?: number): Content[] {
-        const width =
-            this.pdfService.pageSize === 'A4'
-                ? PDF_A4_POINTS_WIDTH - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight
-                : PDF_A5_POINTS_WIDTH - this.pdfService.pageMarginPointsLeft - this.pdfService.pageMarginPointsRight;
-        return [
-            {
-                canvas: [
-                    {
-                        type: `line`,
-                        lineWidth: lineWidth ?? 2,
-                        x1: 0,
-                        y1: 0,
-                        x2: width,
-                        y2: 0
-                    }
-                ],
-                marginTop: !lineWidth && this._addExtraSpace ? 10 : 5,
-                marginBottom: 15
-            }
-        ];
     }
 
     private createAttachmentsDoc(agendaItem: ViewAgendaItem): Content[] {
