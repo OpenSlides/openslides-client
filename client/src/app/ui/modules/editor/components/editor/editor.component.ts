@@ -36,7 +36,10 @@ import { Text } from '@tiptap/extension-text';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { Underline } from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
@@ -109,6 +112,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public allowEmbeds = false;
 
+    @Input()
+    public limitEditor = false;
+
+    public allowEditorLimit = false;
+
     @Output()
     public leaveFocus = new EventEmitter<void>();
 
@@ -163,9 +171,21 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public constructor(
         private dialog: MatDialog,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private operator: OperatorService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super();
+
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`motions_create_enable_additional_submitter_text`)
+                .subscribe(value => (this.allowEditorLimit = value))
+        );
+    }
+
+    public isEditorLimited(): boolean {
+        return this.limitEditor && this.allowEditorLimit && this.operator.hasPerms(Permission.motionCanManage);
     }
 
     public ngAfterViewInit(): void {
