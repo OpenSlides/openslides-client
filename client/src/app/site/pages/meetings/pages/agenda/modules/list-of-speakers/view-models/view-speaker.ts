@@ -40,6 +40,14 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         }
     }
 
+    public get speechStateStr(): string {
+        const speechState = this.speaker.speech_state;
+        if (speechState === SpeechState.INTERPOSED_QUESTION) {
+            return `interposed question`;
+        }
+        return speechState;
+    }
+
     public get isSpeaking(): boolean {
         return this.speaker.begin_time && !this.speaker.end_time && !this.speaker.pause_time;
     }

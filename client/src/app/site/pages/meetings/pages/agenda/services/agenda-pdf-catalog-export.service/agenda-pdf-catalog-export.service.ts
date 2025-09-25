@@ -313,7 +313,7 @@ export class AgendaPdfCatalogExportService {
         // first finished speakers (sorted)
         let i = 1;
         for (const speaker of finishedSpeakers) {
-            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const state = speaker.speechStateStr ? this.translate.instant(speaker.speechStateStr) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             tableCells.push([
                 { text: `${i}.`, fillColor: backgroundColor },
@@ -336,7 +336,7 @@ export class AgendaPdfCatalogExportService {
         }
         // second rest of the speakers
         for (const speaker of speakers.filter(sp => !sp.isFinished)) {
-            const state = speaker.speech_state ? this.translate.instant(speaker.speech_state) : ``;
+            const state = speaker.speechStateStr ? this.translate.instant(speaker.speechStateStr) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
             const remainingTimes =
                 speaker.isWaiting && speaker.structure_level_list_of_speakers
