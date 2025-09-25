@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Content, ContentText } from 'pdfmake/interfaces';
+import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
@@ -293,7 +293,7 @@ export class AgendaPdfCatalogExportService {
         if (!this.isTopic(agendaItem.content_object)) {
             return [];
         }
-        const tableCells: Content[][] = [];
+        const tableCells: TableCell[][] = [];
         const finishedSpeakers: ViewSpeaker[] = agendaItem.content_object?.list_of_speakers.finishedSpeakers ?? [];
         const speakers: ViewSpeaker[] = agendaItem.content_object.list_of_speakers.speakers;
         const isA4 = this.pdfService.pageSize === `A4`;
@@ -318,21 +318,32 @@ export class AgendaPdfCatalogExportService {
         for (const speaker of finishedSpeakers) {
             const state = speaker.speechStateStr ? this.translate.instant(speaker.speechStateStr) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
+            const extraBorder = state ? [false, true, false, false] : [false, true, false, true];
             tableCells.push([
-                { text: `${i}.`, fillColor: backgroundColor },
-                { text: speaker.name, fillColor: backgroundColor },
-                { text: this.durationService.durationToString(speaker.speakingTime, `m`), fillColor: backgroundColor },
+                { border: extraBorder, text: `${i}.`, fillColor: backgroundColor },
+                { border: extraBorder, text: speaker.name, fillColor: backgroundColor },
                 {
+                    border: extraBorder,
+                    text: this.durationService.durationToString(speaker.speakingTime, `m`),
+                    fillColor: backgroundColor
+                },
+                {
+                    border: extraBorder,
                     text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
                     fillColor: backgroundColor
                 }
             ]);
             if (state) {
                 tableCells.push([
-                    { text: ``, fillColor: backgroundColor },
-                    { text: state, fillColor: backgroundColor, style: this.getStyle(`italics`) },
-                    { text: ``, fillColor: backgroundColor },
-                    { text: ``, fillColor: backgroundColor }
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor },
+                    {
+                        border: [false, false, false, false],
+                        text: state,
+                        fillColor: backgroundColor,
+                        style: this.getStyle(`italics`)
+                    },
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor },
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor }
                 ]);
             }
             i++;
@@ -348,19 +359,25 @@ export class AgendaPdfCatalogExportService {
                           'm'
                       )
                     : ``;
+            const extraBorder = state ? [false, true, false, false] : [false, true, false, true];
 
             tableCells.push([
-                { text: `${i}.`, fillColor: backgroundColor },
-                { text: speaker.name, fillColor: backgroundColor },
-                { text: remainingTimes, fillColor: backgroundColor },
-                { text: ``, fillColor: backgroundColor }
+                { border: extraBorder, text: `${i}.`, fillColor: backgroundColor },
+                { border: extraBorder, text: speaker.name, fillColor: backgroundColor },
+                { border: extraBorder, text: remainingTimes, fillColor: backgroundColor },
+                { border: extraBorder, text: ``, fillColor: backgroundColor }
             ]);
             if (state) {
                 tableCells.push([
-                    { text: ``, fillColor: backgroundColor },
-                    { text: state, fillColor: backgroundColor, style: this.getStyle(`italics`) },
-                    { text: ``, fillColor: backgroundColor },
-                    { text: ``, fillColor: backgroundColor }
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor },
+                    {
+                        border: [false, false, false, false],
+                        text: state,
+                        fillColor: backgroundColor,
+                        style: this.getStyle(`italics`)
+                    },
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor },
+                    { border: [false, false, false, false], text: ``, fillColor: backgroundColor }
                 ]);
             }
             i++;
