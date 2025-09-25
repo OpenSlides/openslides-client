@@ -229,9 +229,10 @@ export class AgendaPdfCatalogExportService {
             if (useItemNumber && itemNumber) {
                 numberOrTitle = `${itemNumber} `;
             }
-            numberOrTitle = numberOrTitle.concat(
-                `${motion.number} ${this.translate.instant('Motion')}: ${motion.title}`
-            );
+            if (motion.number) {
+                numberOrTitle = numberOrTitle.concat(`${motion.number} `);
+            }
+            numberOrTitle = numberOrTitle.concat(`${this.translate.instant('Motion')}: ${motion.title}`);
         } else if (agendaItem.content_object?.collection === `motion_block`) {
             const motionBlock = agendaItem.content_object;
             if (useItemNumber && itemNumber) {
