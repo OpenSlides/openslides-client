@@ -237,8 +237,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     ) {
         super();
         this.subscriptions.push(
-            this.route.queryParams.subscribe(params => {
-                this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
+            this.route.queryParamMap.subscribe(paramMap => {
+                this.motions = paramMap.getAll(`motions`).map(value => Number(value));
             })
         );
         // wait either for all viewmodels of motions to be loaded or for the view
@@ -335,7 +335,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     // Function to determine whioch options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
-    public hasAvailableVariables(): void {
+    private hasAvailableVariables(): void {
         // Check for meetingSettings if options should be visible
         this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `sequential_number`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
@@ -395,7 +395,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * @param chipOption The ChipOption whose state will change.
      * @param nextState The next state the ChipOption will assume.
      */
-    public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
+    private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             chipOption.disabled = nextState;
             if (nextState) {

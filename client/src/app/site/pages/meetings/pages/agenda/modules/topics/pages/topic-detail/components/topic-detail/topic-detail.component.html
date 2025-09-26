@@ -190,9 +190,9 @@
 <mat-menu #topicExtraMenu="matMenu">
     <ng-template matMenuContent>
         <!-- PDF -->
-        <button mat-menu-item (click)="onDownloadPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'PDF' | translate }}</span>
+        <button mat-menu-item (click)="onExport()">
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export' | translate }}</span>
         </button>
 
         <os-projector-button [menuItem]="true" [object]="topic" />
