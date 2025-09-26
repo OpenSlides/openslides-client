@@ -165,13 +165,13 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get hasSpoken(): SpeechWaitingState {
-        if (this.speaker.begin_time && this.speaker.end_time) {
-            return SpeechWaitingState.FINISHED;
-        } else if (this.speaker.begin_time) {
+        if (this.speaker.begin_time) {
+            if (this.speaker.end_time) {
+                return SpeechWaitingState.FINISHED;
+            }
             return SpeechWaitingState.STARTED;
-        } else {
-            return SpeechWaitingState.WAITING;
         }
+        return SpeechWaitingState.WAITING;
     }
 
     public getBeginTimeAsDate(): Date | null {
