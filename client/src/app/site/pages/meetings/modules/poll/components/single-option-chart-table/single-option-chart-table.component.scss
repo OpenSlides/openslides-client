@@ -12,18 +12,29 @@
     }
 }
 
+.items-center {
+    justify-items: center;
+    align-items: center;
+}
+
+.items-left {
+    justify-items: start;
+    align-items: start;
+}
+
 .result-wrapper {
     display: grid;
     grid-gap: 0 2em;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    justify-items: center;
-    align-items: center;
+
+    .margins {
+        margin-left: 80px;
+    }
 
     .result-table {
         border-collapse: collapse;
         height: fit-content;
-        width: fit-content;
-        // display: block;
+        width: fit-content(60%);
         .right-header {
             font-weight: initial;
             text-align: right;
@@ -45,8 +56,8 @@
             }
 
             :nth-child(2):not(th) {
-                padding-left: 14px;
-                padding-right: 14px;
+                padding-left: 10px;
+                padding-right: 10px;
             }
         }
 
@@ -57,12 +68,44 @@
                 }
 
                 :nth-child(2):not(th) {
-                    padding-left: 40px;
-                    padding-right: 40px;
+                    padding-left: 10px;
+                    padding-right: 10px;
                 }
             }
         }
 
+        .column-padding-width-slide {
+            tr {
+                td {
+                    padding: 15px 0;
+                }
+
+                :nth-child(2):not(th) {
+                    padding-left: 80px;
+                    padding-right: 80px;
+                }
+
+                :nth-child(3):not(th) {
+                    min-width: 120px;
+                }
+            }
+        }
+
+        .percent-column-width-gigantic {
+            tr {
+                :nth-child(2):not(th) {
+                    min-width: 120px;
+                }
+            }
+        }
+
+        .percent-column-width-large {
+            tr {
+                :nth-child(2):not(th) {
+                    min-width: 100px;
+                }
+            }
+        }
         .votesvalid {
             border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
@@ -83,11 +126,28 @@
             &-gigantic {
                 font-size: 22px;
             }
+
+            &-big-bold {
+                font-size: 28px;
+                font-weight: 500;
+            }
+
+            &-big {
+                font-size: 28px;
+            }
         }
     }
 
     .doughnut-chart {
-        display: block;
-        width: 100%;
+        width: 150px;
     }
+
+    .doughnut-chart-slide {
+        width: 220px;
+        margin-top: -5px;
+    }
+}
+
+.grid-gap-slide {
+    grid-gap: 0 14em;
 }
