@@ -11,6 +11,12 @@ import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
+
+export enum SpeechWaitingState {
+    WAITING = `waiting`,
+    STARTED = `started`,
+    FINISHED = `finished`
+}
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -158,8 +164,14 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             : null;
     }
 
-    public get hasSpoken(): boolean {
-        return this.speaker.end_time ? true : false;
+    public get hasSpoken(): SpeechWaitingState {
+        if (this.speaker.begin_time && this.speaker.end_time) {
+            return SpeechWaitingState.FINISHED;
+        } else if (this.speaker.begin_time) {
+            return SpeechWaitingState.STARTED;
+        } else {
+            return SpeechWaitingState.WAITING;
+        }
     }
 
     public getBeginTimeAsDate(): Date | null {
