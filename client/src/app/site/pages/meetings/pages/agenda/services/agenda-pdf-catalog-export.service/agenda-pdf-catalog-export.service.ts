@@ -492,7 +492,7 @@ export class AgendaPdfCatalogExportService {
             this._addExtraSpace = true;
             return [
                 {
-                    text: this.translate.instant(`Internal Commentary`),
+                    text: this.translate.instant(`Comment`),
                     style: this.getStyle(`header3`),
                     margin: this.getStyle(`margin-header3`)
                 },
