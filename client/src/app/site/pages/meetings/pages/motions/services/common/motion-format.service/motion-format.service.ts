@@ -247,7 +247,7 @@ export class MotionFormatService {
 
         let lastLineTo = -1;
         for (let i = 0; i < changesToShow.length; i++) {
-            if (changesToShow[i].getLineTo() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
+            if (changesToShow[i].getLineFrom() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
                 const changeFrom = changesToShow[i - 1] ? lastLineTo + 1 : firstLine;
                 text.push(
                     this.diffService.extractMotionLineRange(
