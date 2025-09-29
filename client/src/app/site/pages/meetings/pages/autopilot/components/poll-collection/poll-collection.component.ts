@@ -131,7 +131,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         if (poll.pollClassType === PollClassType.Motion) {
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {
-            return this.operator.hasPerms(this.permission.assignmentCanManage);
+            return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Topic) {
             return this.operator.hasPerms(this.permission.pollCanManage);
         }
