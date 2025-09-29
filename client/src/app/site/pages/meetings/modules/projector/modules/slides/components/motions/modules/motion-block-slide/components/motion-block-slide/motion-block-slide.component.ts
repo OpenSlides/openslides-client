@@ -96,7 +96,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         private cd: ChangeDetectorRef
     ) {
         super();
-        this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
+        this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang());
 
         this.meetingSettingsService.get(`motions_block_slide_columns`).subscribe(value => {
             this.maxColumns = value > 0 ? value : MAX_COLUMNS;
