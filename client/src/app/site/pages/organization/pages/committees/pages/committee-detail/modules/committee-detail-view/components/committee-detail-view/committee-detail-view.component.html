@@ -152,25 +152,29 @@
                     }
                 </os-committee-meta-info>
                 <!-- Numbers of accounts -->
-                <os-committee-meta-info
-                    icon="person"
-                    title="{{ 'Accounts' | translate }} ({{ 'incl. subcommittees' | translate }})"
-                >
+                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
                     <div>
-                        <b>{{ accountNumber }} {{ 'total' | translate }}</b>
-                        , {{ 'of which' | translate }} ...
+                        <b>{{ accountNumber }}</b>
+                        @if ((childCommitteesObservable | async).length > 0) {
+                            ({{ 'incl. subcommittees' | translate }})
+                        }
                         <br />
-                        &nbsp;· {{ accountActiveNumber }} {{ 'active' | translate }}
-                    </div>
-                    @if (!!accountGuestNumber) {
-                        <div>&nbsp;· {{ accountGuestNumber }} {{ 'external' | translate }}</div>
-                    }
-                    @if (!!accountHomeCommitteeNumber) {
-                        <div>
-                            &nbsp;· {{ accountHomeCommitteeNumber }} {{ 'with' | translate }}
+                        @if (
+                            accountNumber > accountActiveNumber || !!accountGuestNumber || !!accountHomeCommitteeNumber
+                        ) {
+                            {{ 'of which' | translate }}:
+                        }
+                        @if (accountNumber > accountActiveNumber) {
+                            {{ accountActiveNumber }} {{ 'active' | translate }}
+                        }
+                        @if (!!accountGuestNumber) {
+                            · {{ accountGuestNumber }} {{ 'external' | translate }}
+                        }
+                        @if (!!accountHomeCommitteeNumber) {
+                            · {{ accountHomeCommitteeNumber }} {{ 'with' | translate }}
                             {{ 'Home committee' | translate }}
-                        </div>
-                    }
+                        }
+                    </div>
                 </os-committee-meta-info>
             }
             <div class="os-card">
@@ -305,15 +309,15 @@
 <mat-menu #addMenu="matMenu">
     <ng-template matMenuContent>
         @if (currentCommitteeObservable | async; as committee) {
-            <a mat-menu-item [queryParams]="{ parentId: committeeId }" [routerLink]="['/', 'committees', 'create']">
-                <mat-icon>layers</mat-icon>
-                <span>{{ 'New committee' | translate }}</span>
-            </a>
             <a mat-menu-item type="button" [routerLink]="['meeting', 'create']">
                 <mat-icon>event_available</mat-icon>
                 <span>
                     {{ 'New meeting' | translate }}
                 </span>
+            </a>
+            <a mat-menu-item [queryParams]="{ parentId: committeeId }" [routerLink]="['/', 'committees', 'create']">
+                <mat-icon>layers</mat-icon>
+                <span>{{ 'New committee' | translate }}</span>
             </a>
         }
     </ng-template>
