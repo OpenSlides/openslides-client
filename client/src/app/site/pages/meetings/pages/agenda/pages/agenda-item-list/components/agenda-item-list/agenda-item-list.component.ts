@@ -26,6 +26,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
+import { AgendaForwardDialogService } from '../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
@@ -88,6 +89,12 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      */
     public filterProps = [`item_number`, `comment`, `getListTitle`];
 
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
+    private _forwardingAvailable = false;
+
     public constructor(
         protected override translate: TranslateService,
         private operator: OperatorService,
@@ -104,11 +111,16 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private treeService: TreeService,
         private tagRepo: TagControllerService,
-        private agendaItemMultiselectService: AgendaItemMultiselectService
+        private agendaItemMultiselectService: AgendaItemMultiselectService,
+        public forwardService: AgendaForwardDialogService
     ) {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
+
+        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 
     /**
@@ -215,6 +227,10 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             options.queryParams = { parent: parentId };
         }
         this.router.navigate([`topics`, `new`], options);
+    }
+
+    public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[]): Promise<void> {
+        await this.forwardService.forwardAgendaItemsToMeetings(...items);
     }
 
     /**

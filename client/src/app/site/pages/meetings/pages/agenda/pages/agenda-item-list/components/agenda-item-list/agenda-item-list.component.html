@@ -263,6 +263,16 @@
                     <span>{{ 'Remove from agenda' | translate }}</span>
                 </button>
             </div>
+            @if (canForward) {
+                <button
+                    mat-menu-item
+                    [disabled]="!selectedRows.length"
+                    (click)="forwardAgendaItemsToMeetings(selectedRows)"
+                >
+                    <mat-icon>forward</mat-icon>
+                    <span>{{ 'Forward' | translate }} ...</span>
+                </button>
+            }
         </div>
     }
 </mat-menu>
@@ -318,5 +328,11 @@
                 </button>
             }
         </div>
+        @if (canForward && isTopic(item.content_object)) {
+            <button mat-menu-item (click)="forwardAgendaItemsToMeetings([item])">
+                <mat-icon>forward</mat-icon>
+                <span>{{ 'Forward' | translate }} ...</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>

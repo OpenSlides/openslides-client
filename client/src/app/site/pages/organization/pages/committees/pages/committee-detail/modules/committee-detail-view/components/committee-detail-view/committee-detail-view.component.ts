@@ -35,6 +35,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
 
     public receiveExpanded = false;
     public forwardingExpanded = false;
+    public agendaReceiveExpanded = false;
+    public agendaForwardingExpanded = false;
     public requireDuplicateFrom = false;
 
     public get canManageCommittee(): boolean {

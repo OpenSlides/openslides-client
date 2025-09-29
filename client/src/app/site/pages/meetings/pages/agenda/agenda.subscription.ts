@@ -49,7 +49,13 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     {
                         idField: `content_object_id`,
-                        fieldset: [`number`, `title`, `agenda_item_id`, ...MEETING_ROUTING_FIELDS],
+                        fieldset: [
+                            `number`,
+                            `title`,
+                            `agenda_item_id`,
+                            `attachment_meeting_mediafile_ids`,
+                            ...MEETING_ROUTING_FIELDS
+                        ],
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
