@@ -247,8 +247,8 @@ export class MotionFormatService {
 
         let lastLineTo = -1;
         for (let i = 0; i < changesToShow.length; i++) {
-            if (changesToShow[i].getLineTo() > lastLineTo && changesToShow[i].getLineFrom() > firstLine) {
-                const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
+            if (changesToShow[i].getLineTo() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
+                const changeFrom = changesToShow[i - 1] ? lastLineTo + 1 : firstLine;
                 text.push(
                     this.diffService.extractMotionLineRange(
                         motionText,
@@ -262,7 +262,10 @@ export class MotionFormatService {
                     )
                 );
             }
-            text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
+            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i]);
+            if (amendmentNr) {
+                text.push(amendmentNr);
+            }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
 
             lastLineTo = changesToShow[i].getLineTo();
