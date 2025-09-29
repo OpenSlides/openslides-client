@@ -38,25 +38,49 @@ export class AgendaForwardDialogComponent implements OnInit {
     public withAttachments = false;
 
     public get tableRows(): string[] {
-        if (
-            this.data.agenda.length > 1 ||
-            (this.data.agenda.length === 1 &&
-                this.data.agenda[0].content_object?.attachment_meeting_mediafile_ids?.length)
-        ) {
-            return [`speakers`, `moderator_notes`, `attachments`, `meeting`];
+        const rows: string[] = [];
+        if (this.data.is_single && this.data.agenda.length === 1) {
+            const topic = this.data.agenda[0].content_object;
+            if (topic.list_of_speakers.speaker_ids?.length) {
+                rows.push(`speakers`);
+            }
+            if (topic.list_of_speakers.moderator_notes) {
+                rows.push(`moderator_notes`);
+            }
+            if (topic.attachment_meeting_mediafile_ids?.length) {
+                rows.push(`attachments`);
+            }
+            return [...rows, `meeting`];
         } else {
-            return [`speakers`, `moderator_notes`, `meeting`];
+            return [`speakers`, `moderator_notes`, `attachments`, `meeting`];
         }
     }
+
+    public showParentNotIncludedWarning = false;
+    public showChildrenNotIncludedWarning = false;
+    public showNotTopicWarning = false;
 
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
         @Inject(MAT_DIALOG_DATA)
-        public data: { agenda: ViewAgendaItem[]; forwardingMeetings: GetForwardingMeetingsPresenter[] },
+        public data: {
+            agenda: ViewAgendaItem[];
+            forwardingMeetings: GetForwardingMeetingsPresenter[];
+            is_single?: boolean;
+        },
         private dialogRef: MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>,
         private activeMeeting: ActiveMeetingService
-    ) {}
+    ) {
+        const agendaItemIds = new Set(this.data.agenda.map(item => item.id));
+        this.showParentNotIncludedWarning = this.data.agenda.some(
+            item => item.parent_id && !agendaItemIds.has(item.parent_id)
+        );
+        this.showChildrenNotIncludedWarning = this.data.agenda.some(
+            item => item.child_ids && item.child_ids.some(child_id => !agendaItemIds.has(child_id))
+        );
+        this.showNotTopicWarning = this.data.agenda.some(item => !item.content_object_id.startsWith(`topic/`));
+    }
 
     public async ngOnInit(): Promise<void> {
         for (const committee of this.data.forwardingMeetings) {

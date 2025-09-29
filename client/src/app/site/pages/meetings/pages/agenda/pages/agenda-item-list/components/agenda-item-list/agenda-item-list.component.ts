@@ -230,7 +230,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[]): Promise<void> {
-        await this.forwardService.forwardAgendaItemsToMeetings(...items);
+        await this.forwardService.forwardAgendaItemsToMeetings(items);
     }
 
     /**

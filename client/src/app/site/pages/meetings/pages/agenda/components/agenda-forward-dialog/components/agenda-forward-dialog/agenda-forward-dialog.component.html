@@ -9,6 +9,31 @@
         <div class="state">{{ data.agenda.length }} {{ 'agenda items' | translate }}</div>
     }
 
+    @if (showNotTopicWarning) {
+        <div class="state">
+            {{
+                'Warning: You are trying to forward something else than a topic, it will be skipped instead of forwarded.'
+                    | translate
+            }}
+        </div>
+    }
+    @if (showParentNotIncludedWarning) {
+        <div class="state">
+            {{
+                'Warning: You are trying to forward a child without its parent. The child will be forwarded, however the parent will not be automatically forwarded alongside it.'
+                    | translate
+            }}
+        </div>
+    }
+    @if (showChildrenNotIncludedWarning) {
+        <div class="state">
+            {{
+                'Warning: You are trying to forward a parent without at least one of its children. Children will not be automatically forwarded alongside their parents.'
+                    | translate
+            }}
+        </div>
+    }
+
     <table mat-table [dataSource]="tableRows">
         <!-- Label in front-->
         <ng-container matColumnDef="label">

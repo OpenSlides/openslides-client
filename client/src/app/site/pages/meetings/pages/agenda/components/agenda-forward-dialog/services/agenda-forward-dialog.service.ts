@@ -22,12 +22,17 @@ import {
     AgendaForwardDialogReturnData
 } from '../components/agenda-forward-dialog/agenda-forward-dialog.component';
 
+export interface AgendaForwardDialogPayload {
+    items: ViewAgendaItem[];
+    is_single: boolean;
+}
+
 @Injectable({
     providedIn: AgendaForwardDialogModule
 })
 export class AgendaForwardDialogService extends BaseDialogService<
     AgendaForwardDialogComponent,
-    ViewAgendaItem[],
+    AgendaForwardDialogPayload,
     AgendaForwardDialogReturnData
 > {
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
@@ -65,7 +70,7 @@ export class AgendaForwardDialogService extends BaseDialogService<
     }
 
     public async open(
-        data: ViewAgendaItem[]
+        data: AgendaForwardDialogPayload
     ): Promise<MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>> {
         await this.updateForwardMeetings();
 
@@ -74,20 +79,21 @@ export class AgendaForwardDialogService extends BaseDialogService<
             ...mediumDialogSettings,
             autoFocus: false,
             data: {
-                agenda: data,
-                forwardingMeetings: this._forwardingMeetings
+                agenda: data.items,
+                forwardingMeetings: this._forwardingMeetings,
+                is_single: data.is_single
             }
         });
     }
 
-    public async forwardAgendaItemsToMeetings(...items: ViewAgendaItem[]): Promise<void> {
+    public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[], is_single = false): Promise<void> {
         const toForward = items.filter(item => item.content_object_id.startsWith(`${Topic.COLLECTION}/`));
 
         if (toForward.length === 0) {
             this.snackbar.open(this.translate.instant(`None of the selected agenda items can be forwarded.`), `Ok`);
             return;
         }
-        const dialogRef = await this.open(toForward);
+        const dialogRef = await this.open({ items: toForward, is_single });
         const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as AgendaForwardDialogReturnData;
         const toMeetingIds = dialogData?.meetingIds as Ids;
         if (toMeetingIds) {

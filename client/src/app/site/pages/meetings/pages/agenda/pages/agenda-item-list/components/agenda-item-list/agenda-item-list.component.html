@@ -328,11 +328,5 @@
                 </button>
             }
         </div>
-        @if (canForward && isTopic(item.content_object)) {
-            <button mat-menu-item (click)="forwardAgendaItemsToMeetings([item])">
-                <mat-icon>forward</mat-icon>
-                <span>{{ 'Forward' | translate }} ...</span>
-            </button>
-        }
     </ng-template>
 </mat-menu>
