@@ -64,7 +64,7 @@ export class MotionPdfExportService {
      *
      * @param motions the motions to export
      */
-    public async exportMotionCatalogWithAttachments(
+    private async exportMotionCatalogWithAttachments(
         motions: ViewMotion[],
         exportInfo: MotionExportInfo
     ): Promise<void> {
