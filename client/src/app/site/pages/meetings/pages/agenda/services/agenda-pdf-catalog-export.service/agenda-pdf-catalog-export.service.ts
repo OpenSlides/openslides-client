@@ -232,10 +232,14 @@ export class AgendaPdfCatalogExportService {
             if (useItemNumber && itemNumber) {
                 numberOrTitle = `${itemNumber} `;
             }
+            numberOrTitle = numberOrTitle.concat(`${this.translate.instant('Motion')}`);
             if (motion.number) {
-                numberOrTitle = numberOrTitle.concat(`${motion.number} `);
+                numberOrTitle = numberOrTitle.concat(` ${motion.number}: `);
+            } else {
+                numberOrTitle = numberOrTitle.concat(`: `);
             }
-            numberOrTitle = numberOrTitle.concat(`${this.translate.instant('Motion')}: ${motion.title}`);
+
+            numberOrTitle = numberOrTitle.concat(`${motion.title}`);
         } else if (agendaItem.content_object?.collection === `motion_block`) {
             const motionBlock = agendaItem.content_object;
             if (useItemNumber && itemNumber) {
