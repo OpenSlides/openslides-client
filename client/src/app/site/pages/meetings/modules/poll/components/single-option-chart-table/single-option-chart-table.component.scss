@@ -80,13 +80,17 @@
                     padding: 15px 0;
                 }
 
+                td.label-column {
+                    min-width: 300px;
+                }
+
                 :nth-child(2):not(th) {
                     padding-left: 80px;
                     padding-right: 80px;
                 }
 
                 :nth-child(3):not(th) {
-                    min-width: 120px;
+                    min-width: 140px;
                 }
             }
         }
@@ -124,16 +128,16 @@
             }
 
             &-gigantic {
-                font-size: 22px;
+                font-size: 28px;
             }
 
             &-big-bold {
-                font-size: 28px;
+                font-size: 32px;
                 font-weight: 500;
             }
 
             &-big {
-                font-size: 28px;
+                font-size: 32px;
             }
         }
     }

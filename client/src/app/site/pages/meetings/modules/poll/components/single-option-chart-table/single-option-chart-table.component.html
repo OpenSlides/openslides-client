@@ -28,7 +28,7 @@
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
                         <tr [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
-                            <td>
+                            <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
                                         <div [class.text-big-bold]="inSlide">
@@ -68,12 +68,12 @@
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class]="row.votingOption" [class.text-big]="inSlide">
+                        <tr [class]="row.votingOption" [class.text-big-bold]="inSlide">
                             <!-- YNA/Valid etc -->
-                            <td>
+                            <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        <div [class.text-big]="inSlide">
+                                        <div [class.text-big-bold]="inSlide">
                                             {{ row.votingOption | pollKeyVerbose | translate }}
                                         </div>
                                     </os-icon-container>
