@@ -70,15 +70,19 @@ export class AgendaPdfCatalogExportService {
                 const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
                 agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
-                if (
-                    !enforcePageBreaks &&
-                    agendaItemIndex + 1 < sortedAgendaItems.length &&
-                    !sortedAgendaItems[agendaItemIndex + 1].parent
-                ) {
-                    agendaDocDef.push({
-                        text: ``,
-                        marginBottom: this._addExtraSpace ? 25 : 20
-                    });
+                if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length) {
+                    if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
+                        agendaDocDef.push({
+                            text: ``,
+                            marginBottom: this._addExtraSpace ? 25 : 20
+                        });
+                    } else {
+                        agendaDocDef.push({
+                            text: ``,
+                            marginBottom: this._addExtraSpace ? 15 : 10
+                        });
+                    }
+                    this._addExtraSpace = false;
                 }
 
                 agendaDocList.push(agendaDocDef);
