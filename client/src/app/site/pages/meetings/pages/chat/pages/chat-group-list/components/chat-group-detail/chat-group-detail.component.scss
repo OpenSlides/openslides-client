@@ -2,8 +2,9 @@ $message-form-height: 65px;
 $action-row-height: 35px;
 
 :host {
-    display: block;
-    height: calc(100% - #{$message-form-height});
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     > div:first-child {
         height: 100%;
@@ -15,6 +16,7 @@ $action-row-height: 35px;
 
         cdk-virtual-scroll-viewport {
             height: calc(100% - #{$action-row-height});
+            flex-grow: 1;
 
             &.has-write-permissions {
                 // The label of a content has almost the same height as the message-form
@@ -38,5 +40,14 @@ $action-row-height: 35px;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         max-lines: 2;
+    }
+
+    .flex-grow {
+        flex-grow: 1;
+    }
+
+    .flex-column {
+        display: flex;
+        flex-direction: column;
     }
 }

@@ -142,7 +142,7 @@ export const getStructureLevelListSubscriptionConfig: SubscriptionConfigGenerato
         follow: [
             {
                 idField: `structure_level_ids`,
-                fieldset: DEFAULT_FIELDSET
+                fieldset: [`color`, `id`, `meeting_id`, `name`]
             }
         ]
     },
