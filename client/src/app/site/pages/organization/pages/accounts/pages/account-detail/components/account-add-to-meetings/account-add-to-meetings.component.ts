@@ -72,7 +72,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public get showLanguageWarning(): boolean {
-        return this.translate.currentLang !== `en`;
+        return this.translate.getCurrentLang() !== `en`;
     }
 
     public waitingForResultsSubject = new BehaviorSubject(false);
