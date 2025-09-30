@@ -13,6 +13,7 @@ import { CustomTranslationParser } from '../site/modules/translations/translatio
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
 import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
 import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services';
+import { DIFF_VERSION } from '../site/pages/meetings/pages/motions/modules/change-recommendations/services/diff-factory.service';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -52,6 +53,8 @@ if (isFirefox && `serviceWorker` in navigator) {
         })
     ],
     providers: [
+        // Diff version of motions without specified diff version
+        { provide: DIFF_VERSION, useValue: `0.1.2` },
         WaitForActionDialogService,
         provideAppInitializer(() => {
             const initializerFn = AppLoaderFactory(inject(AppLoadService));

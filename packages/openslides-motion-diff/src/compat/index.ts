@@ -7,8 +7,8 @@ export function getForVersion(v: string): [typeof LineNumbering, typeof HtmlDiff
     [`1.0.0`, applyV1_0_0]
   ];
 
-  const ln = structuredClone(LineNumbering);
-  const diff = structuredClone(HtmlDiff);
+  const ln = { ...LineNumbering };
+  const diff = { ...HtmlDiff };
   diff.useCustomLineNumbering(ln);
 
   for (let m of migrations) {

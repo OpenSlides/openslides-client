@@ -13,6 +13,7 @@ export interface MotionFormattingRepresentation {
     text: string;
     modified_final_version: string;
     start_line_number: number;
+    diff_version: string;
 }
 
 export interface HasReferencedMotionInExtensionIds {
