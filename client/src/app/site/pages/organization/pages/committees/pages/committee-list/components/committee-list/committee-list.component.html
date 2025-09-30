@@ -40,13 +40,13 @@
 
 <os-list
     [alwaysShowMenu]="true"
+    [class.committee-hierarchy]="selectedView === 'hierarchy'"
     [filterProps]="['name']"
     [filterService]="filterService"
     [hiddenInMobile]="['forwarding', 'managers', 'meta']"
     [listObservableProvider]="committeeController"
     [multiSelect]="isMultiSelect"
     [sortService]="sortService"
-    [class.committee-hierarchy]="selectedView === 'hierarchy'"
     [(selectedRows)]="selectedRows"
 >
     <div
@@ -57,6 +57,21 @@
     >
         @if (!isMultiSelect && committee.canAccess()) {
             <a class="stretch-to-fill-parent" [attr.aria-label]="ariaLabel(committee)" [routerLink]="committee.id"></a>
+        }
+        @if (selectedView === 'hierarchy') {
+            @if (committee.child_ids?.length) {
+                <button
+                    mat-icon-button
+                    [attr.aria-label]="'Toggle sub committee expand' | translate"
+                    (click)="filterService.toggleExpanded(committee.id)"
+                >
+                    <mat-icon>
+                        {{ filterService.isExpanded(committee.id) ? 'keyboard_arrow_down' : 'chevron_right' }}
+                    </mat-icon>
+                </button>
+            }
+
+            <span class="hl"></span>
         }
         <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">

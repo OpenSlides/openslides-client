@@ -33,7 +33,16 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         return this.translate.instant(`Agenda items are in process. Please wait ...`);
     }
 
-    public selectedView = `list`;
+    private _selectedView = `list`;
+
+    public get selectedView(): string {
+        return this._selectedView;
+    }
+
+    public set selectedView(value) {
+        this._selectedView = value;
+        this.filterService.hierarchyFilterActive = value === 'hierarchy';
+    }
 
     public constructor(
         protected override translate: TranslateService,
