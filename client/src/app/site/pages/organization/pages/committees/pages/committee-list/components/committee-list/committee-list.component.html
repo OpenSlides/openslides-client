@@ -53,6 +53,7 @@
         *osScrollingTableCell="'name'; row as committee"
         class="cell-slot fill cell-title"
         [class.is-child]="!!committee.all_parent_ids?.length"
+        [class.no-children]="!committee.child_ids?.length"
         [style.--committee-level]="committee.all_parent_ids?.length || 0"
     >
         @if (!isMultiSelect && committee.canAccess()) {
@@ -62,6 +63,7 @@
             @if (committee.child_ids?.length) {
                 <button
                     mat-icon-button
+                    class="toggle-button"
                     [attr.aria-label]="'Toggle sub committee expand' | translate"
                     (click)="filterService.toggleExpanded(committee.id)"
                 >
