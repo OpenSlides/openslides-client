@@ -1,7 +1,13 @@
 @if (data?.data) {
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
-            <h1 [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ title }}</h1>
+            <h1
+                [ngClass]="{
+                    'ellipsis-overflow': useSingleVotes || pollContentObjectType === PollContentObjectType.Assignment
+                }"
+            >
+                {{ title }}
+            </h1>
             @if (subtitle) {
                 <h2 class="poll-title" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ subtitle }}</h2>
             }
