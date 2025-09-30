@@ -7,7 +7,7 @@
                     @for (row of pollService.getSortedTableData(poll); track row; let i = $index) {
                         <tr>
                             <!-- Votes -->
-                            <td>
+                            <td [class.first-col-slide]="inSlide">
                                 <os-icon-container
                                     icon="circle"
                                     size="gigantic"
@@ -28,6 +28,7 @@
                             </td>
                             <td
                                 class="result-cell-definition text-bold"
+                                [class.percent-col-slide]="inSlide"
                                 [class.text-big]="inSlide"
                                 [class.text-gigantic]="!inSlide"
                                 [style.color]="colors.backgroundColor[i]"
