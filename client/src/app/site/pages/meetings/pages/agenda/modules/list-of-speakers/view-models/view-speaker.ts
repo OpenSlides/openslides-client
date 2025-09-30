@@ -55,6 +55,12 @@ export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
     }
 }
 
+export enum SpeechWaitingState {
+    WAITING = `waiting`,
+    STARTED = `started`,
+    FINISHED = `finished`
+}
+
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -210,8 +216,14 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         return getSpeakerStateIcon(this);
     }
 
-    public get hasSpoken(): boolean {
-        return this.speaker.end_time ? true : false;
+    public get hasSpoken(): SpeechWaitingState {
+        if (this.speaker.begin_time) {
+            if (this.speaker.end_time) {
+                return SpeechWaitingState.FINISHED;
+            }
+            return SpeechWaitingState.STARTED;
+        }
+        return SpeechWaitingState.WAITING;
     }
 
     public getBeginTimeAsDate(): Date | null {

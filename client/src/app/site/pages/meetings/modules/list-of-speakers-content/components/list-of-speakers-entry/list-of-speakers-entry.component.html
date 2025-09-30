@@ -66,6 +66,7 @@
                 role="button"
                 tabindex="0"
                 translate
+                [ngClass]="{ 'select-speaker-button-design': !speaker.isSpeaking }"
                 (click)="updateSpeakerMeetingUser()"
                 (keyup.enter)="updateSpeakerMeetingUser()"
             >
