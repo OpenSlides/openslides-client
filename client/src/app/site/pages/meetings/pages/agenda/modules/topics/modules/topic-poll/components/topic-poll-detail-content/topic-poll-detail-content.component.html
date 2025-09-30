@@ -13,19 +13,23 @@
                                     size="gigantic"
                                     [style.color]="colors.backgroundColor[i]"
                                 >
-                                    <div class="text-gigantic text-bold">
+                                    <div class="text-bold" [class.text-big]="inSlide" [class.text-gigantic]="!inSlide">
                                         {{ row.label }}
                                     </div>
                                 </os-icon-container>
                             </td>
                             <td
-                                class="result-cell-definition text-gigantic text-bold"
+                                class="result-cell-definition text-bold"
+                                [class.text-big]="inSlide"
+                                [class.text-gigantic]="!inSlide"
                                 [style.color]="colors.backgroundColor[i]"
                             >
                                 {{ row.data | pollParseNumber }}
                             </td>
                             <td
-                                class="result-cell-definition text-gigantic text-bold"
+                                class="result-cell-definition text-bold"
+                                [class.text-big]="inSlide"
+                                [class.text-gigantic]="!inSlide"
                                 [style.color]="colors.backgroundColor[i]"
                             >
                                 @if (inSlide) {
@@ -37,13 +41,21 @@
                         </tr>
                     }
                     <tr class="votesvalid">
-                        <td class="text-gigantic text-bold">
+                        <td class="text-bold" [class.text-big]="inSlide" [class.text-gigantic]="!inSlide">
                             {{ 'Valid votes' | translate }}
                         </td>
-                        <td class="result-cell-definition text-gigantic text-bold">
+                        <td
+                            class="result-cell-definition text-bold"
+                            [class.text-big]="inSlide"
+                            [class.text-gigantic]="!inSlide"
+                        >
                             {{ poll.votesvalid }}
                         </td>
-                        <td class="result-cell-definition text-gigantic text-bold"></td>
+                        <td
+                            class="result-cell-definition text-bold"
+                            [class.text-big]="inSlide"
+                            [class.text-gigantic]="!inSlide"
+                        ></td>
                     </tr>
                 </tbody>
             </table>
