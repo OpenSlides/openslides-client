@@ -8,7 +8,7 @@
             'items-left': inSlide
         }"
     >
-        <table class="result-table" [ngClass]="{ margins: !inSlide && iconSize === 'gigantic' }">
+        <table class="result-table" [ngClass]="{ margins: iconSize === 'gigantic' }">
             <tbody
                 [class.column-padding-width-slide]="inSlide"
                 [class.percent-column-width-gigantic]="!inSlide && iconSize === 'gigantic'"
