@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
@@ -14,6 +14,7 @@ import {
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
+import { DIFF_VERSION, DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -47,12 +48,18 @@ export class MotionLineNumberingService {
     private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
     private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
+    private lineNumberingService: LineNumberingService;
+    private diffService: MotionDiffService;
+
     public constructor(
+        @Inject(DIFF_VERSION) diffVersion: string,
+        private diffServiceFactory: DiffServiceFactory,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private lineNumberingService: LineNumberingService,
-        private diffService: MotionDiffService,
         private translate: TranslateService
-    ) {}
+    ) {
+        this.diffService = this.diffServiceFactory.createService(MotionDiffService, diffVersion);
+        this.lineNumberingService = this.diffServiceFactory.createService(LineNumberingService, diffVersion);
+    }
 
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.
