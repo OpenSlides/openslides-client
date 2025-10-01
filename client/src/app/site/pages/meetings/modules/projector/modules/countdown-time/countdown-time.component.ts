@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ServerTimeService } from 'src/app/gateways/server-time.service';
 
-interface CountdownData {
+export interface CountdownData {
     running: boolean;
     default_time?: number;
     countdown_time: number;
