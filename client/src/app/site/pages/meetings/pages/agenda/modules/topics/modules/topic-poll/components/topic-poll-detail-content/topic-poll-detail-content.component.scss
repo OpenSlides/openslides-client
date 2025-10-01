@@ -34,6 +34,10 @@
             min-width: 300px;
         }
 
+        .second-col-slide {
+            min-width: 80px;
+        }
+
         .percent-col-slide {
             min-width: 150px;
         }
@@ -78,11 +82,15 @@
     cursor: pointer;
     display: grid;
     grid-gap: 14em;
-    margin: 2em 0px 0px 4em;
+    margin: 2em 0px 0px 0px;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .doughnut-chart {
         display: block;
         width: 220px;
     }
+}
+
+.result-wrapper-slide {
+    margin: 2em 0px 0px 4em;
 }

@@ -85,8 +85,9 @@
                 }
 
                 :nth-child(2):not(th) {
-                    padding-left: 80px;
-                    padding-right: 80px;
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    min-width: 80px;
                 }
 
                 :nth-child(3):not(th) {
@@ -94,7 +95,6 @@
                 }
             }
         }
-
         .percent-column-width-gigantic {
             tr {
                 :nth-child(2):not(th) {
@@ -110,6 +110,7 @@
                 }
             }
         }
+
         .votesvalid {
             border-top: 2px solid rgba(128, 128, 128, 0.2);
         }

@@ -1,5 +1,5 @@
 @if (poll) {
-    <div class="result-wrapper">
+    <div class="result-wrapper" [class.result-wrapper-slide]="inSlide">
         @if (hasResults && canSeeResults) {
             <!-- result table -->
             <table class="result-table">
@@ -20,6 +20,7 @@
                             </td>
                             <td
                                 class="result-cell-definition text-bold"
+                                [class.second-col-slide]="inSlide"
                                 [class.text-big]="inSlide"
                                 [class.text-gigantic]="!inSlide"
                                 [style.color]="colors.backgroundColor[i]"
