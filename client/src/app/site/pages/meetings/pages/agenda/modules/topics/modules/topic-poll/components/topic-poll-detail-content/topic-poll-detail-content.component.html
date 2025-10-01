@@ -63,7 +63,7 @@
             </table>
             <!-- Chart -->
             @if (shouldShowChart) {
-                <div class="doughnut-chart">
+                <div class="doughnut-chart" [class.doughnut-chart-slide]="inSlide">
                     <os-chart type="doughnut" [circleColors]="chartColors" [data]="chartData"></os-chart>
                 </div>
             }

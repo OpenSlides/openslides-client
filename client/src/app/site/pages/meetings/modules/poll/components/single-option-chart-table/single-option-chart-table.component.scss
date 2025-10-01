@@ -28,7 +28,7 @@
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .margins {
-        margin-left: 80px;
+        margin-left: 50px;
     }
 
     .result-table {
@@ -148,8 +148,10 @@
     }
 
     .doughnut-chart-slide {
-        width: 220px;
-        margin-top: -5px;
+        width: 230px;
+        margin-top: 0px;
+        justify-self: right;
+        margin-right: 50px;
     }
 }
 

@@ -81,7 +81,7 @@
 .result-wrapper {
     cursor: pointer;
     display: grid;
-    grid-gap: 14em;
+    grid-gap: 2em;
     margin: 2em 0px 0px 0px;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
@@ -89,8 +89,13 @@
         display: block;
         width: 220px;
     }
+
+    .doughnut-chart-slide {
+        justify-self: right;
+    }
 }
 
 .result-wrapper-slide {
-    margin: 2em 0px 0px 4em;
+    margin: 2em 50px 0px 50px;
+    grid-gap: 16em;
 }
