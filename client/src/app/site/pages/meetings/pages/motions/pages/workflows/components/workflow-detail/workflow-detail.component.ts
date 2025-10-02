@@ -280,6 +280,21 @@ Note: Does not affect the visibility of change recommendations.`
             ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
+        },
+        {
+            name: _(`Label for next state to be set by submitter`),
+            help_text: _(
+                `Defines the wording of the next state button that belongs to this state.
+
+                To show this button to the submitter "Submitter may set  state to" needs to direct to this state.
+                
+                Example: in "Submitter may set state to" accepted stated withdraw, and withdraw's button label is "Withdraw your motion".
+                If the motion is in the state accepted, then the submitter will see a button "Withdraw your motion" in the motion.`
+            ),
+            // TODO use actual names from the backend
+            // currently used: state_button_label
+            selector: `recommendation_label`,
+            type: `input`
         }
     ] as StatePerm[];
 
