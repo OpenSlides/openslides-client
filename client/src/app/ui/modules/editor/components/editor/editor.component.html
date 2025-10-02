@@ -34,10 +34,12 @@
                 <button mat-menu-item [matMenuTriggerFor]="headingMenu">
                     {{ 'Headings' | translate }}
                 </button>
-                <button mat-menu-item [matMenuTriggerFor]="textAlignMenu">
-                    {{ 'Align' | translate }}
-                </button>
-                <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
+                @if (!isEditorLimited()) {
+                    <button mat-menu-item [matMenuTriggerFor]="textAlignMenu">
+                        {{ 'Align' | translate }}
+                    </button>
+                    <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
+                }
             </mat-menu>
 
             <mat-menu #headingMenu="matMenu">
@@ -148,108 +150,113 @@
                 >
                     <mat-icon>format_italic</mat-icon>
                 </button>
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Underline' | translate"
-                    [ngClass]="{ active: editor.isActive('underline') }"
-                    (click)="editor.chain().focus().toggleUnderline().run()"
-                >
-                    <mat-icon>format_underline</mat-icon>
-                </button>
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Strikethrough' | translate"
-                    [ngClass]="{ active: editor.isActive('strike') }"
-                    (click)="editor.chain().focus().toggleStrike().run()"
-                >
-                    <mat-icon>format_strikethrough</mat-icon>
-                </button>
+
+                @if (!isEditorLimited()) {
+                    <button
+                        #btn
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Underline' | translate"
+                        [ngClass]="{ active: editor.isActive('underline') }"
+                        (click)="editor.chain().focus().toggleUnderline().run()"
+                    >
+                        <mat-icon>format_underline</mat-icon>
+                    </button>
+                    <button
+                        #btn
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Strikethrough' | translate"
+                        [ngClass]="{ active: editor.isActive('strike') }"
+                        (click)="editor.chain().focus().toggleStrike().run()"
+                    >
+                        <mat-icon>format_strikethrough</mat-icon>
+                    </button>
+                }
             </div>
 
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Text color' | translate"
-                    [ngClass]="{ active: editor.isActive('textStyle') }"
-                    [ngStyle]="{
-                        color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
-                    }"
-                    (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
-                >
-                    <mat-icon>format_color_text</mat-icon>
-                </button>
-                <button
-                    class="more color-selection"
-                    mat-ripple
-                    tabindex="-1"
-                    type="button"
-                    [ngClass]="{ focused: focusText }"
-                    (click)="updateColorSets()"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <input
+            @if (!isEditorLimited()) {
+                <div class="button-group">
+                    <button
                         #btn
-                        list="text-colors"
+                        mat-ripple
                         osTabNavigation
-                        type="color"
+                        type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Text color' | translate"
-                        [value]="editor.getAttributes('textStyle')['color']"
-                        (change)="updateFontColor($event)"
-                        (focus)="setFocus(true)"
-                        (focusout)="setFocus()"
-                    />
-                </button>
-            </div>
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Background color' | translate"
-                    [ngClass]="{ active: editor.isActive('highlight') }"
-                    [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
-                    (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
-                >
-                    <mat-icon>format_color_fill</mat-icon>
-                </button>
-                <button
-                    class="more color-selection"
-                    mat-ripple
-                    tabindex="-1"
-                    type="button"
-                    [ngClass]="{ focused: focusBackground }"
-                    (click)="updateColorSets()"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <input
+                        [ngClass]="{ active: editor.isActive('textStyle') }"
+                        [ngStyle]="{
+                            color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
+                        }"
+                        (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
+                    >
+                        <mat-icon>format_color_text</mat-icon>
+                    </button>
+                    <button
+                        class="more color-selection"
+                        mat-ripple
+                        tabindex="-1"
+                        type="button"
+                        [ngClass]="{ focused: focusText }"
+                        (click)="updateColorSets()"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                        <input
+                            #btn
+                            list="text-colors"
+                            osTabNavigation
+                            type="color"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Text color' | translate"
+                            [value]="editor.getAttributes('textStyle')['color']"
+                            (change)="updateFontColor($event)"
+                            (focus)="setFocus(true)"
+                            (focusout)="setFocus()"
+                        />
+                    </button>
+                </div>
+                <div class="button-group">
+                    <button
                         #btn
-                        list="background-colors"
+                        mat-ripple
                         osTabNavigation
-                        type="color"
+                        type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Background color' | translate"
-                        [value]="editor.getAttributes('highlight')['color']"
-                        (change)="updateHighlightColor($event)"
-                        (focus)="setFocus(false)"
-                        (focusout)="setFocus()"
-                    />
-                </button>
-            </div>
+                        [ngClass]="{ active: editor.isActive('highlight') }"
+                        [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
+                        (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
+                    >
+                        <mat-icon>format_color_fill</mat-icon>
+                    </button>
+                    <button
+                        class="more color-selection"
+                        mat-ripple
+                        tabindex="-1"
+                        type="button"
+                        [ngClass]="{ focused: focusBackground }"
+                        (click)="updateColorSets()"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                        <input
+                            #btn
+                            list="background-colors"
+                            osTabNavigation
+                            type="color"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Background color' | translate"
+                            [value]="editor.getAttributes('highlight')['color']"
+                            (change)="updateHighlightColor($event)"
+                            (focus)="setFocus(false)"
+                            (focusout)="setFocus()"
+                        />
+                    </button>
+                </div>
+            }
             <button
                 #btn
                 mat-ripple
@@ -291,33 +298,35 @@
                 </button>
             </div>
 
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Insert/edit link' | translate"
-                    [ngClass]="{ active: editor.isActive('link') }"
-                    (click)="setLinkDialog()"
-                >
-                    <mat-icon>link</mat-icon>
-                </button>
+            @if (!isEditorLimited()) {
+                <div class="button-group">
+                    <button
+                        #btn
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Insert/edit link' | translate"
+                        [ngClass]="{ active: editor.isActive('link') }"
+                        (click)="setLinkDialog()"
+                    >
+                        <mat-icon>link</mat-icon>
+                    </button>
 
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Insert/edit image' | translate"
-                    [ngClass]="{ active: editor.isActive('image') }"
-                    (click)="setImageDialog()"
-                >
-                    <mat-icon>image</mat-icon>
-                </button>
-            </div>
+                    <button
+                        #btn
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [matTooltip]="'Insert/edit image' | translate"
+                        [ngClass]="{ active: editor.isActive('image') }"
+                        (click)="setImageDialog()"
+                    >
+                        <mat-icon>image</mat-icon>
+                    </button>
+                </div>
+            }
 
             <div class="button-group">
                 <button

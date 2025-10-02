@@ -110,7 +110,7 @@
                                 </span>
                             }
                         </h4>
-                        <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
+                        <os-editor [formControlName]="'text_' + paragraph.paragraphNo" [limitEditor]="true"></os-editor>
                     </section>
                 }
 
@@ -131,7 +131,7 @@
                     }
                 </h3>
 
-                <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
+                <os-editor formControlName="reason" [limitEditor]="true" [required]="reasonRequired"></os-editor>
                 @if (
                     reasonRequired &&
                     contentForm.get('reason')?.invalid &&

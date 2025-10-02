@@ -42,7 +42,7 @@
         } @else {
             <form [formGroup]="formGroup">
                 <!-- The HTML Editor -->
-                <os-editor formControlName="text"></os-editor>
+                <os-editor formControlName="text" [limitEditor]="true"></os-editor>
             </form>
         }
         @if (saveHint) {
