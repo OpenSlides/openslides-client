@@ -44,6 +44,11 @@
                             <mat-hint>{{ 'Only for committee admins' | translate }}</mat-hint>
                         </mat-checkbox>
                     </section>
+                    <section>
+                        <mat-checkbox formControlName="forbid_committee_admins_to_set_agenda_forwarding_relations">
+                            {{ 'Forbid committee admins from changing committee agenda forwarding lists' }}
+                        </mat-checkbox>
+                    </section>
                 </div>
             </mat-card-content>
         </mat-card>

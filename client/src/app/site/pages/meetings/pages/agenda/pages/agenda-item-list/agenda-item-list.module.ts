@@ -17,6 +17,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 
+import { AgendaForwardDialogModule } from '../../components/agenda-forward-dialog/agenda-forward-dialog.module';
 import { AgendaItemCommonServiceModule } from '../../services/agenda-item-common-service.module';
 import { AgendaItemListRoutingModule } from './agenda-item-list-routing.module';
 import { AgendaItemInfoDialogComponent } from './components/agenda-item-info-dialog/agenda-item-info-dialog.component';
@@ -51,6 +52,7 @@ const OS_MODULES = [
         MatDialogModule,
         AgendaItemListServiceModule,
         AgendaItemCommonServiceModule,
+        AgendaForwardDialogModule,
         ...NG_MODULES,
         ...OS_MODULES
     ]
