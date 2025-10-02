@@ -182,7 +182,7 @@ export class MotionXlsxExportService {
                                 .join(`, `);
                         case `referring_motions`:
                             return motion.referenced_in_motion_recommendation_extensions
-                                .naturalSort(this.translate.currentLang, [`number`, `title`])
+                                .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                                 .map(motion => motion.getNumberOrTitle())
                                 .join(`, `);
                         default:

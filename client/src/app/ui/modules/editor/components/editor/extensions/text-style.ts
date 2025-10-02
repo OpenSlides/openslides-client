@@ -1,4 +1,4 @@
-import OriginalTextStyle from '@tiptap/extension-text-style';
+import { TextStyle as OriginalTextStyle } from '@tiptap/extension-text-style';
 
 export const TextStyle = OriginalTextStyle.extend({
     parseHTML() {
