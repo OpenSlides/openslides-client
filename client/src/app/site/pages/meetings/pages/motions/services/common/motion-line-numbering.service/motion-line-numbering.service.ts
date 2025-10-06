@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
@@ -7,14 +7,11 @@ import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';
 import {
     LineNumberedString,
-    LineNumberingService,
     LineNumberRange,
-    MotionChangeRecommendationControllerService,
-    MotionDiffService
+    MotionChangeRecommendationControllerService
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { DIFF_VERSION, DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -48,18 +45,10 @@ export class MotionLineNumberingService {
     private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
     private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
-    private lineNumberingService: LineNumberingService;
-    private diffService: MotionDiffService;
-
     public constructor(
-        @Inject(DIFF_VERSION) diffVersion: string,
-        private diffServiceFactory: DiffServiceFactory,
         private changeRecoRepo: MotionChangeRecommendationControllerService,
         private translate: TranslateService
-    ) {
-        this.diffService = this.diffServiceFactory.createService(MotionDiffService, diffVersion);
-        this.lineNumberingService = this.diffServiceFactory.createService(LineNumberingService, diffVersion);
-    }
+    ) {}
 
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.
@@ -83,7 +72,13 @@ export class MotionLineNumberingService {
             );
             sortedChangingObjects.push(...this.getAmendmentAmendedParagraphs(amendment, lineLength, toApplyChanges));
         }
-        return this.diffService.sortChangeRequests(sortedChangingObjects);
+
+        return sortedChangingObjects.sort((change1, change2): number => {
+            if (change1.getIdentifier() === change2.getIdentifier()) {
+                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
+            }
+            return change1.getLineFrom() - change2.getLineFrom();
+        });
     }
 
     public resetAmendmentChangeRecoListeners(amendments: ViewMotion[]): void {
@@ -111,12 +106,12 @@ export class MotionLineNumberingService {
      * @return {number}
      */
     public getLastLineNumber(motion: ViewMotion, lineLength: number): number {
-        const numberedHtml = this.lineNumberingService.insertLineNumbers({
+        const numberedHtml = motion.services().ln.insertLineNumbers({
             html: motion.text,
             lineLength,
             firstLine: motion.firstLine
         });
-        const range = this.lineNumberingService.getLineNumberRange(numberedHtml);
+        const range = motion.services().ln.getLineNumberRange(numberedHtml);
         return range.to as number;
     }
 
@@ -134,9 +129,9 @@ export class MotionLineNumberingService {
         }
         let html = motion.text;
         if (lineBreaks) {
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: motion.firstLine });
+            html = motion.services().ln.insertLineNumbers({ html, lineLength, firstLine: motion.firstLine });
         }
-        return this.lineNumberingService.splitToParagraphs(html);
+        return motion.services().ln.splitToParagraphs(html);
     }
 
     /**
@@ -154,18 +149,18 @@ export class MotionLineNumberingService {
             } else {
                 localParagraph = paragraph;
             }
-            return this.extractAffectedParagraphs(localParagraph, index);
+            return this.extractAffectedParagraphs(motion, localParagraph, index);
         });
     }
 
     /**
      * Creates a selectable and editable paragraph
      */
-    private extractAffectedParagraphs(paragraph: string, index: number): ParagraphToChoose {
-        const affected: LineNumberRange = this.lineNumberingService.getLineNumberRange(paragraph);
+    private extractAffectedParagraphs(motion: ViewMotion, paragraph: string, index: number): ParagraphToChoose {
+        const affected: LineNumberRange = motion.services().ln.getLineNumberRange(paragraph);
         return {
             paragraphNo: index,
-            html: this.lineNumberingService.stripLineNumbers(paragraph),
+            html: motion.services().ln.stripLineNumbers(paragraph),
             lineFrom: affected.from,
             lineTo: affected.to
         } as ParagraphToChoose;
@@ -210,21 +205,23 @@ export class MotionLineNumberingService {
             if (typeof amendment.amendment_paragraph_text(paraNo) === `string`) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
-                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
-                paragraph = this.diffService.diffHtmlToFinalText(diff);
+                const diff = motion.services().diff.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
+                paragraph = motion.services().diff.diffHtmlToFinalText(diff);
                 paragraphHasChanges = true;
             }
 
-            const affected: LineNumberRange = this.lineNumberingService.getLineNumberRange(paragraph);
+            const affected: LineNumberRange = motion.services().ln.getLineNumberRange(paragraph);
 
             changes.forEach((change: ViewMotionChangeRecommendation) => {
                 // Hint: this assumes that change recommendations only affect one specific paragraph, not multiple
                 if (change.line_from >= affected.from! && change.line_from <= affected.to!) {
-                    paragraph = this.diffService.replaceLines(paragraph, change.text, change.line_from, change.line_to);
+                    paragraph = motion
+                        .services()
+                        .diff.replaceLines(paragraph, change.text, change.line_from, change.line_to);
 
                     // Reapply relative line numbers
-                    const diff = this.diffService.diff(baseParagraphs[paraNo], paragraph);
-                    paragraph = this.diffService.diffHtmlToFinalText(diff);
+                    const diff = motion.services().diff.diff(baseParagraphs[paraNo], paragraph);
+                    paragraph = motion.services().diff.diffHtmlToFinalText(diff);
 
                     paragraphHasChanges = true;
                 }
@@ -282,12 +279,9 @@ export class MotionLineNumberingService {
                         `Inconsistent data. An amendment is probably referring to a non-existent line number.`
                     );
                 } else if (newText !== null) {
-                    return this.diffService.getAmendmentParagraphsLines(
-                        paraNo,
-                        baseParagraphs[paraNo],
-                        newText,
-                        lineLength
-                    );
+                    return motion
+                        .services()
+                        .diff.getAmendmentParagraphsLines(paraNo, baseParagraphs[paraNo], newText, lineLength);
                 } else {
                     return null; // Nothing has changed in this paragraph
                 }
@@ -296,7 +290,7 @@ export class MotionLineNumberingService {
                 // If nothing has changed and we want to keep unchanged paragraphs for the context,
                 // return the original text in "textPre"
                 if (diffLines === null && includeUnchanged) {
-                    const paragraph_line_range = this.lineNumberingService.getLineNumberRange(baseParagraphs[paraNo]);
+                    const paragraph_line_range = motion.services().ln.getLineNumberRange(baseParagraphs[paraNo]);
                     return {
                         paragraphNo: paraNo,
                         paragraphLineFrom: paragraph_line_range.from,
@@ -363,16 +357,18 @@ export class MotionLineNumberingService {
                 }
 
                 const origText = baseParagraphs[paragraphNumber];
-                const diff = this.diffService.diff(origText, newText);
-                const affectedLines = this.diffService.detectAffectedLineRange(diff);
+                const diff = motion.services().diff.diff(origText, newText);
+                const affectedLines = motion.services().diff.detectAffectedLineRange(diff);
 
                 if (affectedLines === null) {
                     return null;
                 }
-                const affectedDiff = this.diffService.formatDiff(
-                    this.diffService.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
-                );
-                const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff);
+                const affectedDiff = motion
+                    .services()
+                    .diff.formatDiff(
+                        motion.services().diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
+                    );
+                const affectedConsolidated = motion.services().diff.diffHtmlToFinalText(affectedDiff);
 
                 return new ViewMotionAmendedParagraph(amendment, paragraphNumber, affectedConsolidated, affectedLines);
             })
@@ -410,12 +406,12 @@ export class MotionLineNumberingService {
                 return origText;
             }
 
-            const diff = this.diffService.diff(origText, newText);
+            const diff = motion.services().diff.diff(origText, newText);
 
             if (withDiff) {
                 return diff;
             } else {
-                return this.diffService.diffHtmlToFinalText(diff);
+                return motion.services().diff.diffHtmlToFinalText(diff);
             }
         });
     }
@@ -430,9 +426,11 @@ export class MotionLineNumberingService {
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
                 const diffedParagraph = amendment.amendment_paragraph_text(index)
-                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph_text(index) as string, lineLength)
+                    ? amendment
+                          .services()
+                          .diff.diff(paragraph, amendment.amendment_paragraph_text(index) as string, lineLength)
                     : paragraph;
-                return this.extractAffectedParagraphs(diffedParagraph, index);
+                return this.extractAffectedParagraphs(amendment, diffedParagraph, index);
             });
         } else {
             throw new Error(`getDiffedParagraphToChoose: given amendment has no parent`);

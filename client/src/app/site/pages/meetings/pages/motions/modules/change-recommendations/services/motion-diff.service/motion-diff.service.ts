@@ -240,15 +240,6 @@ export class MotionDiffService {
         );
     }
 
-    public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return changes.sort((change1, change2): number => {
-            if (change1.getIdentifier() === change2.getIdentifier()) {
-                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
-            }
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
-    }
-
     /**
      * Applies all given changes to the motion and returns the (line-numbered) text
      *

@@ -15,6 +15,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { DiffLinesInParagraph } from '../../../definitions';
+import { LineNumberingService, MotionDiffService } from '../../../modules/change-recommendations/services';
 import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
@@ -242,20 +243,23 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     private onCreateViewModel(viewModel: ViewMotion): void {
-        let ln = this.motionLineNumbering;
-        if (viewModel.diffVersion) {
-            ln = this.diffFactroy.createService(MotionLineNumberingService, viewModel.diffVersion);
-        }
+        viewModel.services = (): {
+            diff: MotionDiffService;
+            ln: LineNumberingService;
+        } => ({
+            diff: this.diffFactroy.createService(MotionDiffService, viewModel.diffVersion),
+            ln: this.diffFactroy.createService(LineNumberingService, viewModel.diffVersion)
+        });
 
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph): string =>
-            ln.getAmendmentParagraphLinesTitle(paragraph);
+            this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
         if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
             viewModel.getAmendmentParagraphLines = (
                 recoMode: ChangeRecoMode,
                 includeUnchanged = false
             ): DiffLinesInParagraph[] => {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
-                return ln.getAmendmentParagraphLines(
+                return this.motionLineNumbering.getAmendmentParagraphLines(
                     viewModel,
                     this._lineLength,
                     recoMode,
