@@ -62,8 +62,8 @@
         @if (selectedView === 'hierarchy') {
             @if (committee.child_ids?.length) {
                 <button
-                    mat-icon-button
                     class="toggle-button"
+                    mat-icon-button
                     [attr.aria-label]="'Toggle sub committee expand' | translate"
                     (click)="filterService.toggleExpanded(committee.id)"
                 >
