@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation
@@ -57,6 +58,7 @@ import { AmendmentListSortService } from '../../../../../../services/list/amendm
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
+import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
 
 @Component({
     selector: `os-motion-view`,
@@ -162,6 +164,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private _navigatedFromAmendmentList = false;
 
+    private motionLineNumbering = inject(MotionLineNumberingService);
+
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
@@ -175,7 +179,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
         private motionForwardingService: MotionForwardDialogService,
-        private motionLineNumbering: MotionLineNumberingService,
+        private diffFactory: DiffServiceFactory,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
@@ -266,6 +270,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             if (motion.id !== id) {
                 return;
             }
+
+            this.motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diffVersion);
             this.onMotionLoaded();
 
             motion = await firstValueFrom(motionSubscription);

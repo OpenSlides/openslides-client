@@ -104,6 +104,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.list_of_speakers?.waitingSpeakerAmount ?? 0;
     }
 
+    public get diffVersion(): string {
+        return this.lead_motion?.diff_version || this.diff_version;
+    }
+
     /**
      * Necessary for motion filters
      */

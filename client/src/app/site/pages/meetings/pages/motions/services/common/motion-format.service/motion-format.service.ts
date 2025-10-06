@@ -89,6 +89,7 @@ export class MotionFormatService {
      * Can be called from detail view and exporter
      */
     public formatMotion({ targetMotion, crMode, ...args }: FormatMotionConfig): string {
+        console.log(targetMotion);
         const services: MotionFormatDiffServices = {
             diffService: this.diffFactory.createService(MotionDiffService, targetMotion.diff_version),
             lineNumberingService: this.diffFactory.createService(LineNumberingService, targetMotion.diff_version)
@@ -121,7 +122,7 @@ export class MotionFormatService {
     }
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
-        const motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diff_version);
+        const motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diffVersion);
 
         const changeRecommendation = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
         const amendeds = this.amendmentController.getViewModelListFor(motion);
