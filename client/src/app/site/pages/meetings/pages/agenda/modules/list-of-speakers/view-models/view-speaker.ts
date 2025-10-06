@@ -1,3 +1,4 @@
+import { _ } from '@ngx-translate/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
@@ -50,15 +51,15 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
         const speechState = this.speaker.speech_state;
         switch (speechState) {
             case SpeechState.INTERPOSED_QUESTION:
-                return `Interposed question`;
+                return _(`Interposed question`);
             case SpeechState.INTERVENTION:
-                return `Intervention`;
+                return _(`Intervention`);
             case SpeechState.CONTRIBUTION:
-                return `Contribution`;
+                return _(`Contribution`);
             case SpeechState.CONTRA:
-                return `Contra`;
+                return _(`Contra`);
             case SpeechState.PRO:
-                return `Pro`;
+                return _(`Pro`);
         }
     }
 
