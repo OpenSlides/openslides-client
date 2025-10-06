@@ -90,7 +90,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public set motion(value: ViewMotion) {
         this.diff = this.diffServiceFactory.createService(MotionDiffService, value.diffVersion);
         this.lineNumberingService = this.diffServiceFactory.createService(LineNumberingService, value.diffVersion);
-        this.motionLineNumbering = this.diffServiceFactory.createService(MotionLineNumberingService, value.diffVersion);
 
         this._motion = value;
         this.updateAllTextChangingObjects();
@@ -177,8 +176,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return this.el.nativeElement;
     }
 
-    private diff = inject(MotionDiffService);
-    private lineNumberingService = inject(LineNumberingService);
+    private diff: MotionDiffService;
+    private lineNumberingService: LineNumberingService;
+
     private motionLineNumbering = inject(MotionLineNumberingService);
     private diffServiceFactory = inject(DiffServiceFactory);
 

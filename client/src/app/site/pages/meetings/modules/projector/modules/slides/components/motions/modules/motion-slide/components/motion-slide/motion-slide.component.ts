@@ -161,8 +161,8 @@ export class MotionSlideComponent
         protected override translate: TranslateService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
-        private lineNumberingService: LineNumberingService,
-        private diff: MotionDiffService,
+        private lineNumberingService: LineNumberingService, // TODO
+        private diff: MotionDiffService, // TODO
         private meetingSettings: MeetingSettingsService
     ) {
         super();
