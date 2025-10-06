@@ -1,11 +1,9 @@
 @if (data?.data) {
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
-            <h1 [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ title }}</h1>
+            <h1 class="ellipsis-overflow">{{ title }}</h1>
             @if (subtitle) {
-                <h2 class="poll-title padding-top-3" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">
-                    {{ subtitle }}
-                </h2>
+                <h2 class="poll-title ellipsis-overflow padding-top-3">{{ subtitle }}</h2>
             }
         </ng-container>
     </div>
@@ -168,15 +166,19 @@
                         <div class="motion-poll-slide">
                             <os-motion-poll-detail-content
                                 iconSize="gigantic"
+                                [inSlide]="true"
                                 [poll]="polldata"
                             ></os-motion-poll-detail-content>
                         </div>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Assignment) {
-                        <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
+                        <os-assignment-poll-detail-content
+                            [inSlide]="true"
+                            [poll]="polldata"
+                        ></os-assignment-poll-detail-content>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Topic) {
-                        <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
+                        <os-topic-poll-detail-content [inSlide]="true" [poll]="polldata"></os-topic-poll-detail-content>
                     }
                 }
             </div>
