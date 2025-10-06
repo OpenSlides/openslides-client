@@ -43,6 +43,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
+import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
 import {
     getMotionOriginDetailSubscriptionConfig,
     MOTION_DETAIL_SUBSCRIPTION,
@@ -58,7 +59,6 @@ import { AmendmentListSortService } from '../../../../../../services/list/amendm
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
-import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
 
 @Component({
     selector: `os-motion-view`,

@@ -1,5 +1,5 @@
-import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { Injectable } from '@angular/core';
+import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
