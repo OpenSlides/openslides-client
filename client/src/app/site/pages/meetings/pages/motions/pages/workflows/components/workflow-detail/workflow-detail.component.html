@@ -26,8 +26,7 @@
     @if (workflow) {
         <div>
             <div class="title-line">
-                <span>{{ 'First state' | translate }}</span>
-                :
+                <span>{{ 'First state' | translate }}:</span>
                 @if (workflow.first_state) {
                     <span>{{ workflow.first_state.name }}</span>
                 }
