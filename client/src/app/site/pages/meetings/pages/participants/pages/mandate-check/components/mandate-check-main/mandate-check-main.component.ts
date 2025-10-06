@@ -4,6 +4,8 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
 
+import { getMandateCheckSubscriptionConfig } from '../../mandate-check.subscription';
+
 @Component({
     selector: 'os-mandate-check-main',
     imports: [RouterModule],
@@ -12,7 +14,7 @@ import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MandateCheckMainComponent extends BaseMeetingModelRequestHandler {
-    protected getSubscriptions(_id: Id): SubscriptionConfig<any>[] {
-        return [];
+    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
+        return [getMandateCheckSubscriptionConfig(id)];
     }
 }
