@@ -80,7 +80,7 @@ export class ParticipantSpeakerListFilterService extends BaseFilterListService<V
                 label: _(`Speaker`),
                 options: [
                     { condition: SpeechWaitingState.FINISHED, label: _(`Has spoken`) },
-                    { condition: SpeechWaitingState.STARTED, label: _(`Has started speaking`) },
+                    { condition: SpeechWaitingState.STARTED, label: _(`Is speaking`) },
                     { condition: SpeechWaitingState.WAITING, label: _(`Has not spoken`) }
                 ]
             }
