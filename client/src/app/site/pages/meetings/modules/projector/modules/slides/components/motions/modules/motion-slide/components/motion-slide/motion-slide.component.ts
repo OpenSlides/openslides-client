@@ -14,6 +14,7 @@ import {
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
+import { DiffServiceFactory } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services/diff-factory.service';
 import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -157,12 +158,14 @@ export class MotionSlideComponent
 
     public hideMetadataBackground = false;
 
+    private lineNumberingService: LineNumberingService;
+    private diff: MotionDiffService;
+
     public constructor(
         protected override translate: TranslateService,
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
-        private lineNumberingService: LineNumberingService, // TODO
-        private diff: MotionDiffService, // TODO
+        private diffServiceFactory: DiffServiceFactory,
         private meetingSettings: MeetingSettingsService
     ) {
         super();
@@ -174,6 +177,12 @@ export class MotionSlideComponent
 
     protected override setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
+        this.lineNumberingService = this.diffServiceFactory.createService(
+            LineNumberingService,
+            value.data.diff_version
+        );
+        this.diff = this.diffServiceFactory.createService(MotionDiffService, value.data.diff_version);
+
         const submitters = value.data.submitters ? [...value.data.submitters] : [];
         if (value.data.additional_submitter) {
             submitters.push(value.data.additional_submitter);
