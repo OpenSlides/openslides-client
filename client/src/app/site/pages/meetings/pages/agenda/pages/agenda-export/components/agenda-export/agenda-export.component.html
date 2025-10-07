@@ -112,29 +112,31 @@
                 </mat-chip-listbox>
             </div>
             @if (isPDFFormat) {
-                <div>
-                    <p class="toggle-group-head">{{ 'Page layout' | translate }}</p>
-                    <mat-chip-listbox formControlName="pageLayout" multiple>
-                        <mat-chip-option
-                            #tableOfContentChip
-                            matBadge="&check;"
-                            matBadgeOverlap="true"
-                            value="table_of_content"
-                            [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
-                        >
-                            <span>{{ 'Table of contents' | translate }}</span>
-                        </mat-chip-option>
-                        <mat-chip-option
-                            #lineBreakChip
-                            matBadge="&check;"
-                            matBadgeOverlap="true"
-                            value="line_break"
-                            [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
-                        >
-                            <span>{{ 'Enforce page breaks' | translate }}</span>
-                        </mat-chip-option>
-                    </mat-chip-listbox>
-                </div>
+                @if (agendaItems.length > 1) {
+                    <div>
+                        <p class="toggle-group-head">{{ 'Page layout' | translate }}</p>
+                        <mat-chip-listbox formControlName="pageLayout" multiple>
+                            <mat-chip-option
+                                #tableOfContentChip
+                                matBadge="&check;"
+                                matBadgeOverlap="true"
+                                value="table_of_content"
+                                [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
+                            >
+                                <span>{{ 'Table of contents' | translate }}</span>
+                            </mat-chip-option>
+                            <mat-chip-option
+                                #lineBreakChip
+                                matBadge="&check;"
+                                matBadgeOverlap="true"
+                                value="line_break"
+                                [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
+                            >
+                                <span>{{ 'Enforce page breaks' | translate }}</span>
+                            </mat-chip-option>
+                        </mat-chip-listbox>
+                    </div>
+                }
                 <div>
                     <p class="toggle-group-head">{{ 'Header and footer' | translate }}</p>
                     <mat-chip-listbox formControlName="headerFooter" multiple>
