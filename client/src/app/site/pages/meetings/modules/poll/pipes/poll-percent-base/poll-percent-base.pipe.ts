@@ -32,7 +32,7 @@ export class PollPercentBasePipe implements PipeTransform {
         const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
 
         if (voteValueInPercent) {
-            return voteValueInPercent;
+            return `(${voteValueInPercent})`;
         } else {
             return null;
         }

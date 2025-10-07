@@ -1,7 +1,11 @@
 @if (data?.data) {
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
-            <h1 class="ellipsis-overflow">{{ title }}</h1>
+            @if (subtitle) {
+                <h1 class="poll-title ellipsis-overflow padding-top-3">{{ subtitle }}</h1>
+            } @else {
+                <h1 class="ellipsis-overflow">{{ title }}</h1>
+            }
         </ng-container>
     </div>
     @if (polldata && showContent) {
@@ -45,7 +49,7 @@
                     </div>
                     @if (showResult) {
                         @if (polldata.pollmethod.includes('Y')) {
-                            <os-icon-container icon="check_circle" iconClass="yes" size="large">
+                            <os-icon-container icon="check_circle" iconClass="yes" size="large" [noWrap]="true">
                                 <span class="yes number">
                                     {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? results.Y }}
                                 </span>
@@ -65,7 +69,7 @@
                             </os-icon-container>
                         }
                         @if (polldata.pollmethod.includes('A')) {
-                            <os-icon-container icon="circle" iconClass="abstain" size="large">
+                            <os-icon-container class="extra-class" icon="circle" iconClass="abstain" size="large">
                                 <span class="abstain number">
                                     {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? results.A }}
                                 </span>
