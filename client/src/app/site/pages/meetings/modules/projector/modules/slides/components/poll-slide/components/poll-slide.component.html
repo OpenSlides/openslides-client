@@ -2,7 +2,7 @@
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
             @if (subtitle) {
-                <h1 class="poll-title ellipsis-overflow padding-top-3">{{ subtitle }}</h1>
+                <h1 class="ellipsis-overflow">{{ subtitle }}</h1>
             } @else {
                 <h1 class="ellipsis-overflow">{{ title }}</h1>
             }
