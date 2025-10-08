@@ -150,13 +150,13 @@
                             <span>{{ 'Header' | translate }}</span>
                         </mat-chip-option>
                         <mat-chip-option
-                            #footerChip
+                            #pageChip
                             matBadge="&check;"
                             matBadgeOverlap="true"
-                            value="footer"
-                            [matBadgeHidden]="footerChip.selected ? 'false' : 'true'"
+                            value="page"
+                            [matBadgeHidden]="pageChip.selected ? 'false' : 'true'"
                         >
-                            <span>{{ 'Footer' | translate }}</span>
+                            <span>{{ 'Page numbers' | translate }}</span>
                         </mat-chip-option>
                         <mat-chip-option
                             #currentDateChip
