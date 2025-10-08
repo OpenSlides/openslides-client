@@ -6,7 +6,11 @@
 </os-head-bar>
 <ul>
     <li>meeting</li>
-    @for (structureLevel of structureLevels; track structureLevel.id) {
-        <li>{{ structureLevel.name }} {{ structureLevel.meeting_user_ids }}</li>
+    @for (entry of entries; track entry.name) {
+        <li>
+            <div>{{ entry.name }} - {{ entry.presentUserIds.length }} - {{ entry.absentUserIds.length }}</div>
+            <div>( {{ entry.getTotalCount() }}, {{ entry.getPercent() }} )</div>
+            <div>( {{ entry.getTotalCount(true) }}, {{ entry.getPercent(true) }} )</div>
+        </li>
     }
 </ul>
