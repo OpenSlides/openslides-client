@@ -91,6 +91,8 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         return this.fileFormats[this.tabIndex] === ExportFileFormat.CSV;
     }
 
+    public agendaItems: Id[] = [];
+
     private pdfDefaults = {
         content: [`item_number`, `title`, `text`, `attachments`, `moderation_notes`],
         pageLayout: [],
@@ -103,7 +105,6 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
     };
 
     private tabIndex = 0;
-    private agendaItems: Id[] = [];
     // Store fileformats with corresponding tab group index
     private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV];
     private savedSelections: SavedSelections = {
