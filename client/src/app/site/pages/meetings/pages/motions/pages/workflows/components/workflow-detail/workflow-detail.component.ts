@@ -293,9 +293,7 @@ Hint: Administrators always have full access.`
                 Example: in "Submitter may set state to" accepted stated withdraw, and withdraw's button label is "Withdraw your motion".
                 If the motion is in the state accepted, then the submitter will see a button "Withdraw your motion" in the motion.`
             ),
-            // TODO use actual names from the backend
-            // currently used: state_button_label
-            selector: `recommendation_label`,
+            selector: `state_button_label`,
             type: `input`
         }
     ] as StatePerm[];

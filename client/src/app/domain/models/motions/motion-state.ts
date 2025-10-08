@@ -65,7 +65,7 @@ export class MotionState extends BaseModel<MotionState> {
         `name`,
         `weight`,
         `recommendation_label`,
-        // `state_button_label`,
+        `state_button_label`,
         `is_internal`,
         `css_class`,
         `restrictions`,
