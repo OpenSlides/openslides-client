@@ -1052,11 +1052,6 @@ export function getChangeDiff(
     });
     let diffText = diff(oldText, change.changeNewText);
 
-    // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
-    // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
-    // - Second, another one to prevent the displayed including insertions to exceed the page width
-    diffText = LineNumbering.insertLineBreaks(diffText, lineLength, true);
-
     if (highlight && highlight > 0) {
         diffText = LineNumbering.highlightLine(diffText, highlight);
     }

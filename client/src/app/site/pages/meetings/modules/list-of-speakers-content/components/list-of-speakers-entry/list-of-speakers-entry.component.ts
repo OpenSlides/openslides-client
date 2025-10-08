@@ -25,6 +25,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';
 import {
     getLosFirstContributionSubscriptionConfig,
     LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
@@ -72,6 +73,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     @Output()
     public stopSpeech = new EventEmitter<void>();
 
+    @Output()
+    public createAnswer = new EventEmitter<void>();
+
     public meetingUser$: Observable<ViewMeetingUser>;
 
     public get showFirstContributionHintObservable(): Observable<boolean> {
@@ -113,6 +117,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
 
     private pointOfOrderForOthersEnabled = false;
     private interventionEnabled = false;
+    private interposedQuestionEnabled = false;
 
     private canMarkSelf = false;
 
@@ -171,7 +176,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
      * @returns a time string using the current language setting of the client
      */
     public get startTime(): string {
-        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+        return this.speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang());
     }
 
     /**
@@ -193,7 +198,11 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public async updateSpeakerMeetingUser(): Promise<boolean> {
-        const dialogRef = await this.speakerUserSelectDialog.open(this.speaker.list_of_speakers);
+        const dialogRef = await this.speakerUserSelectDialog.open(
+            this.speaker.list_of_speakers,
+            this.speaker.speech_state,
+            this.speaker.answer
+        );
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
@@ -236,6 +245,14 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         return this.interventionEnabled && !this.speaker.isSpeaking;
     }
 
+    public enableInterventionAnswerButton(): boolean {
+        return this.interventionEnabled;
+    }
+
+    public enableInterposedQuestionAnswerButton(): boolean {
+        return this.interposedQuestionEnabled;
+    }
+
     public enablePointOfOrderButton(): boolean {
         return (
             this.pointOfOrderEnabled &&
@@ -245,7 +262,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
     }
 
     public enableUpdateUserButton(): boolean {
-        return this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION && !this.speaker.meeting_user_id;
+        return SPECIAL_SPEECH_STATES.includes(this.speaker.speech_state) && !this.speaker.meeting_user_id;
     }
 
     public showStructureLevels(): boolean {
@@ -313,6 +330,14 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         }
     }
 
+    public async onAnswerButton(): Promise<void> {
+        await this.speakerRepo.setAnswer(this.speaker);
+    }
+
+    public async onCreateAnswerButton(): Promise<void> {
+        this.createAnswer.emit();
+    }
+
     public async onPointOfOrderButton(): Promise<void> {
         if (!this.speaker.point_of_order && this.pointOfOrderCategoriesEnabled) {
             const dialogRef = await this.dialog.open();
@@ -361,6 +386,7 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
             speaker =>
                 speaker.state === SpeakerState.FINISHED &&
                 speaker.user_id === this.speaker.user_id &&
+                !SPECIAL_SPEECH_STATES.includes(speaker.speech_state) &&
                 !speaker.point_of_order
         ).length;
     }
@@ -384,42 +410,19 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
         );
     }
 
-    public getSpeakerCountdown(): any {
-        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION) {
-            const total_pause = this.speaker.total_pause || 0;
-            const end = this.speaker.pause_time || this.speaker.end_time || 0;
-            return {
-                running: this.speaker.isSpeaking,
-                default_time: 0,
-                countdown_time: this.speaker.isSpeaking
-                    ? this.speaker.begin_time + total_pause
-                    : (end - (this.speaker.begin_time + total_pause) || 0) * -1
-            };
+    public getSpeakerCountdown(): CountdownData {
+        if (this.speaker.speech_state === SpeechState.INTERPOSED_QUESTION || this.speaker.answer) {
+            return this.speaker.getCountupData();
         } else if (this.interventionEnabled && this.speaker.speech_state === SpeechState.INTERVENTION) {
             const default_time = this.meetingSettingsService.instant(`list_of_speakers_intervention_time`) || 0;
-            const total_pause = this.speaker.total_pause || 0;
-            const end = this.speaker.pause_time || this.speaker.end_time || 0;
-            const countdown_time = this.speaker.isSpeaking
-                ? this.speaker.begin_time + total_pause + default_time
-                : (end - (this.speaker.begin_time + total_pause + default_time)) * -1;
-            return {
-                running: this.speaker.isSpeaking,
-                default_time,
-                countdown_time: this.speaker.begin_time ? countdown_time : default_time
-            };
+            return this.speaker.getCountdownData(default_time);
         } else if (
             this.structureLevelCountdownEnabled &&
             this.speaker.structure_level_list_of_speakers &&
             !this.speaker.point_of_order
         ) {
             const speakingTime = this.speaker.structure_level_list_of_speakers;
-            const remaining = speakingTime.remaining_time;
-            return {
-                running: !!speakingTime.current_start_time,
-                countdown_time: speakingTime.current_start_time
-                    ? speakingTime.current_start_time + remaining
-                    : remaining
-            };
+            return speakingTime.countdownData;
         }
 
         return null;
@@ -451,6 +454,9 @@ export class ListOfSpeakersEntryComponent extends BaseMeetingComponent implement
             }),
             this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
                 this.interventionEnabled = time > 0;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_enable_interposed_question`).subscribe(val => {
+                this.interposedQuestionEnabled = val;
             }),
             this.interactionService.showLiveConfObservable.subscribe(show => {
                 this.isCallEnabled = show;
