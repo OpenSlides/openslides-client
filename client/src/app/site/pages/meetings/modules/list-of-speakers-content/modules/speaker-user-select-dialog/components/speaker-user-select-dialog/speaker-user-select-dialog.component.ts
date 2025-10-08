@@ -1,13 +1,16 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { getSpeakerVerboseState, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
 import { UserSelectionData } from '../../../../../participant-search-selector';
 
 interface SpeakerUserSelectDialogComponentData {
     listOfSpeakers: ViewListOfSpeakers;
+    state?: SpeechState;
+    answer: boolean;
 }
 
 @Component({
@@ -18,6 +21,10 @@ interface SpeakerUserSelectDialogComponentData {
 })
 export class SpeakerUserSelectDialogComponent {
     public nonAvailableUserIds: Id[] = [];
+
+    public get verboseState(): string {
+        return getSpeakerVerboseState({ speech_state: this.data.state, answer: this.data.answer });
+    }
 
     public constructor(
         public readonly dialogRef: MatDialogRef<SpeakerUserSelectDialogComponent>,

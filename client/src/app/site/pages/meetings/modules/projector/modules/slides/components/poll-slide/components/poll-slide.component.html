@@ -1,12 +1,7 @@
 @if (data?.data) {
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
-            <h1 [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">{{ title }}</h1>
-            @if (subtitle) {
-                <h2 class="poll-title padding-top-3" [ngClass]="{ 'ellipsis-overflow': useSingleVotes }">
-                    {{ subtitle }}
-                </h2>
-            }
+            <h1 class="ellipsis-overflow">{{ title }}</h1>
         </ng-container>
     </div>
     @if (polldata && showContent) {
@@ -50,29 +45,35 @@
                     </div>
                     @if (showResult) {
                         @if (polldata.pollmethod.includes('Y')) {
-                            <os-icon-container icon="check_circle" iconClass="yes" size="large">
-                                <span class="yes">
+                            <os-icon-container icon="check_circle" iconClass="yes" size="large" [noWrap]="true">
+                                <span class="yes number">
                                     {{ 'Yes' | translate }}: {{ polldata.options[0]?.yes ?? results.Y }}
-                                    {{ polldata.options[0]?.yes ?? results.Y | pollPercentBase: polldata }}
                                 </span>
+                                <div class="yes percentages">
+                                    {{ polldata.options[0]?.yes ?? results.Y | pollPercentBase: polldata }}
+                                </div>
                             </os-icon-container>
                         }
                         @if (polldata.pollmethod.includes('N')) {
                             <os-icon-container icon="cancel" iconClass="no" size="large">
-                                <span class="no">
+                                <span class="no number">
                                     {{ 'No' | translate }}: {{ polldata.options[0]?.no ?? results.N }}
-                                    {{ polldata.options[0]?.no ?? results.N | pollPercentBase: polldata }}
                                 </span>
+                                <div class="no percentages">
+                                    {{ polldata.options[0]?.no ?? results.N | pollPercentBase: polldata }}
+                                </div>
                             </os-icon-container>
                         }
                         @if (polldata.pollmethod.includes('A')) {
-                            <os-icon-container icon="circle" iconClass="abstain" size="large">
-                                <span class="abstain">
+                            <os-icon-container class="extra-class" icon="circle" iconClass="abstain" size="large">
+                                <span class="abstain number">
                                     {{ 'Abstain' | translate }}: {{ polldata.options[0]?.abstain ?? results.A }}
-                                    @if (polldata.onehundred_percent_base !== 'YN') {
-                                        {{ polldata.options[0]?.abstain ?? results.A | pollPercentBase: polldata }}
-                                    }
                                 </span>
+                                @if (polldata.onehundred_percent_base === 'YNA') {
+                                    <div class="abstain percentages">
+                                        {{ polldata.options[0]?.abstain ?? results.A | pollPercentBase: polldata }}
+                                    </div>
+                                }
                             </os-icon-container>
                         }
                     } @else if (isRunningLiveVote) {
@@ -96,22 +97,29 @@
                                                 @if (polldata.state === PollState.Published) {
                                                     <span>
                                                         <os-icon-container
+                                                            class="padding-right-3"
                                                             icon="check_circle"
                                                             iconClass="yes"
                                                             [noWrap]="true"
                                                         >
-                                                            {{ user[0] }}
+                                                            <h3 class="result-nr">{{ user[0] }}</h3>
                                                         </os-icon-container>
-                                                        <os-icon-container icon="cancel" iconClass="no" [noWrap]="true">
-                                                            {{ user[1] }}
+                                                        <os-icon-container
+                                                            class="padding-right-3"
+                                                            icon="cancel"
+                                                            iconClass="no"
+                                                            [noWrap]="true"
+                                                        >
+                                                            <h3 class="result-nr">{{ user[1] }}</h3>
                                                         </os-icon-container>
                                                         @if (polldata.pollmethod === 'YNA') {
                                                             <os-icon-container
+                                                                class="padding-right-3"
                                                                 icon="circle"
                                                                 iconClass="abstain"
                                                                 [noWrap]="true"
                                                             >
-                                                                {{ user[2] }}
+                                                                <h3 class="result-nr">{{ user[2] }}</h3>
                                                             </os-icon-container>
                                                         }
                                                     </span>
@@ -168,15 +176,19 @@
                         <div class="motion-poll-slide">
                             <os-motion-poll-detail-content
                                 iconSize="gigantic"
+                                [inSlide]="true"
                                 [poll]="polldata"
                             ></os-motion-poll-detail-content>
                         </div>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Assignment) {
-                        <os-assignment-poll-detail-content [poll]="polldata"></os-assignment-poll-detail-content>
+                        <os-assignment-poll-detail-content
+                            [inSlide]="true"
+                            [poll]="polldata"
+                        ></os-assignment-poll-detail-content>
                     }
                     @if (pollContentObjectType === PollContentObjectType.Topic) {
-                        <os-topic-poll-detail-content [poll]="polldata"></os-topic-poll-detail-content>
+                        <os-topic-poll-detail-content [inSlide]="true" [poll]="polldata"></os-topic-poll-detail-content>
                     }
                 }
             </div>

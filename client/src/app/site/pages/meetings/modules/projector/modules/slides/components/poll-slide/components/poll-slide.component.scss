@@ -1,7 +1,6 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 
 .motion-poll-slide {
-    max-width: 900px;
     margin: auto;
 }
 
@@ -77,11 +76,16 @@
         .general-data {
             flex: 1 0 0;
             font-size: 14px;
-            color: gray;
         }
         os-icon-container {
             width: fit-content;
             margin-right: -5px;
+            .number {
+                font-weight: 500;
+            }
+            .percentages {
+                font-size: 12px;
+            }
         }
         .vote-now {
             flex: 1 1 0;
@@ -118,7 +122,6 @@
             border-bottom: 1px solid rgba(128, 128, 128, 0.2);
             .not-present {
                 text-decoration: line-through;
-                color: #aaa;
             }
         }
 
@@ -137,7 +140,7 @@
             display: flex;
             justify-content: space-between;
             align-items: end;
-            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.7);
             h3 {
                 padding-top: 1.5px;
                 padding-bottom: 1.5px;
@@ -151,6 +154,9 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+            .result-nr {
+                padding-top: 3px !important;
             }
             span {
                 display: inline-flex;
