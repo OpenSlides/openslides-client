@@ -75,9 +75,9 @@ export class MotionPdfExportService {
             const metadata = {
                 title: filename
             };
-            motionPdfPromises.push(
-                this.pdfDocumentService.blob({ docDefinition: doc, filename, metadata, exportInfo })
-            );
+            const motionPdf = this.pdfDocumentService.blob({ docDefinition: doc, filename, metadata, exportInfo });
+            await motionPdf;
+            motionPdfPromises.push(motionPdf);
 
             for (const file of motion.attachment_meeting_mediafiles) {
                 if (file.mediafile.mimetype === `application/pdf`) {
