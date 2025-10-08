@@ -45,7 +45,7 @@ export class PermissionGuard {
      * @returns the current navigation's url
      */
     public getCurrentNavigationUrl(): string {
-        return this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.url;
+        return this.router.currentNavigation()?.extractedUrl.toString() || this.router.url;
     }
 
     private isLoginPage(url: string): boolean {

@@ -67,10 +67,9 @@ export class RoutingStateService {
             )
             .subscribe((event: any[]) => {
                 this.skipUnsafeRouteCheck =
-                    router.getCurrentNavigation()?.extras?.state &&
-                    router.getCurrentNavigation()?.extras?.state[`canGoBack`];
+                    router.currentNavigation()?.extras?.state && router.currentNavigation()?.extras?.state[`canGoBack`];
                 this._previousUrl = event[0]?.urlAfterRedirects ?? this._currentUrl;
-                const currentNavigationExtras = router.getCurrentNavigation()?.extras;
+                const currentNavigationExtras = router.currentNavigation()?.extras;
                 if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state[`back`]) {
                     this._customOrigin = this._previousUrl;
                 } else if (

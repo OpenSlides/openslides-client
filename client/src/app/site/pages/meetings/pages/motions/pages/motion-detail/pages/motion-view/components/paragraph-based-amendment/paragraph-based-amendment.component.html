@@ -70,18 +70,34 @@
                         <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
                     </div>
                     @if (changeRecoMode === ChangeRecoMode.Diff) {
-                        <os-motion-detail-diff
-                            [changes]="changesForDiffMode"
-                            [highlightedLine]="highlightedLine"
-                            [lineNumberingMode]="lineNumberingMode"
-                            [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
-                            [motion]="motion"
-                            [scrollToChange]="scrollToChange"
-                            [showAllAmendments]="showAllAmendments"
-                            [showPreamble]="false"
-                            [showSummary]="false"
-                            (createChangeRecommendation)="createChangeRecommendation.emit($event)"
-                        ></os-motion-detail-diff>
+                        @if (isChanged(paragraph.paragraphLineFrom, paragraph.paragraphLineTo)) {
+                            <os-motion-detail-diff
+                                [changes]="changesForDiffMode"
+                                [highlightedLine]="highlightedLine"
+                                [lineNumberingMode]="lineNumberingMode"
+                                [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
+                                [motion]="motion"
+                                [scrollToChange]="scrollToChange"
+                                [showAllAmendments]="showAllAmendments"
+                                [showPreamble]="false"
+                                [showSummary]="false"
+                                (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                            ></os-motion-detail-diff>
+                        } @else {
+                            <div
+                                class="motion-text motion-text-diff amendment-view underlined-links"
+                                [class.amendment-context]="showAmendmentContext"
+                                [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+                                [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+                                [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+                            >
+                                <os-motion-detail-original-change-recommendations
+                                    [changeRecommendations]="changeRecommendations$ | async"
+                                    [html]="getAmendmentDiffTextWithContext(paragraph)"
+                                    [motionId]="motion.id"
+                                ></os-motion-detail-original-change-recommendations>
+                            </div>
+                        }
                     }
                 }
             } @else if (changeRecoMode === ChangeRecoMode.Diff) {
