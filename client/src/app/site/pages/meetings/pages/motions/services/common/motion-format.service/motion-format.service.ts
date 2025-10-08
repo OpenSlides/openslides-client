@@ -185,11 +185,11 @@ export class MotionFormatService {
     private getFinalView = (
         targetMotion: MotionFormattingRepresentation,
         args: DifferedViewArguments,
-        s: MotionFormatDiffServices
+        diffService: MotionFormatDiffServices
     ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const appliedChanges: ViewUnifiedChange[] = changes.filter(change => change.showInFinalView());
-        return s.diffService.getTextWithChanges(
+        return diffService.diffService.getTextWithChanges(
             targetMotion.text,
             appliedChanges,
             lineLength,
@@ -202,11 +202,11 @@ export class MotionFormatService {
     private getModifiedFinalView = (
         targetMotion: MotionFormattingRepresentation,
         args: DifferedViewArguments,
-        s: MotionFormatDiffServices
+        diffService: MotionFormatDiffServices
     ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         if (targetMotion.modified_final_version) {
-            return s.lineNumberingService.insertLineNumbers({
+            return diffService.lineNumberingService.insertLineNumbers({
                 html: targetMotion.modified_final_version,
                 lineLength,
                 highlight: highlightedLine,
@@ -228,10 +228,10 @@ export class MotionFormatService {
     private getOriginalView = (
         targetMotion: MotionFormattingRepresentation,
         args: DifferedViewArguments,
-        s: MotionFormatDiffServices
+        diffService: MotionFormatDiffServices
     ): string => {
         const { lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
-        return s.lineNumberingService.insertLineNumbers({
+        return diffService.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
             highlight: highlightedLine,
@@ -242,13 +242,13 @@ export class MotionFormatService {
     private getChangedView = (
         targetMotion: MotionFormattingRepresentation,
         args: DifferedViewArguments,
-        s: MotionFormatDiffServices
+        diffService: MotionFormatDiffServices
     ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const filteredChangeRecommendations = changes.filter(
             change => change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION
         );
-        return s.diffService.getTextWithChanges(
+        return diffService.diffService.getTextWithChanges(
             targetMotion.text,
             filteredChangeRecommendations,
             lineLength,
@@ -261,7 +261,7 @@ export class MotionFormatService {
     private getDiffView = (
         targetMotion: MotionFormattingRepresentation,
         args: DifferedViewArguments,
-        s: MotionFormatDiffServices
+        diffService: MotionFormatDiffServices
     ): string => {
         const {
             changes,
@@ -273,7 +273,7 @@ export class MotionFormatService {
         }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
-        const motionText = s.lineNumberingService.insertLineNumbers({
+        const motionText = diffService.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
             firstLine
@@ -284,7 +284,7 @@ export class MotionFormatService {
             if (changesToShow[i].getLineFrom() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
                 const changeFrom = changesToShow[i - 1] ? lastLineTo + 1 : firstLine;
                 text.push(
-                    s.diffService.extractMotionLineRange(
+                    diffService.diffService.extractMotionLineRange(
                         motionText,
                         {
                             from: i === 0 ? firstLine : changeFrom,
@@ -296,17 +296,17 @@ export class MotionFormatService {
                     )
                 );
             }
-            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i], s.diffService);
+            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i], diffService.diffService);
             if (amendmentNr) {
                 text.push(amendmentNr);
             }
-            text.push(s.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            text.push(diffService.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
 
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
-            s.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+            diffService.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
         if (brokenTextChangesAmount > 0) {
             const msg =
