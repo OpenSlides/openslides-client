@@ -1,11 +1,7 @@
 @if (data?.data) {
     <div class="slidetitle" [ngClass]="{ 'single-votes-slidetitle': useSingleVotes }" [ngStyle]="titleDivStyles">
         <ng-container>
-            @if (subtitle) {
-                <h1 class="ellipsis-overflow">{{ subtitle }}</h1>
-            } @else {
-                <h1 class="ellipsis-overflow">{{ title }}</h1>
-            }
+            <h1 class="ellipsis-overflow">{{ subtitle }}</h1>
         </ng-container>
     </div>
     @if (polldata && showContent) {
