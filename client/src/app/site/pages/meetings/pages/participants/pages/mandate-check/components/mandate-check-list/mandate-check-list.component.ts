@@ -1,24 +1,29 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { ListModule } from 'src/app/ui/modules/list';
 
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 
 const FEMALE_GENDER_ID = 2;
 
-class MandateCheckEntry {
+class MandateCheckEntry implements Identifiable {
+    public id = -1;
     public name = ``;
     public presentUserIds: Id[] = [];
     public absentUserIds: Id[] = [];
     public presentFemaleUserIds: Id[] = [];
     public abentFemaleUserIds: Id[] = [];
 
-    public constructor(name: string) {
+    public constructor(name: string, id: Id) {
         this.name = name;
+        this.id = id;
     }
 
     public add(userId: Id, present: boolean, female: boolean): void {
@@ -51,7 +56,7 @@ class MandateCheckEntry {
 
 @Component({
     selector: 'os-mandate-check-list',
-    imports: [TranslateModule, HeadBarModule],
+    imports: [TranslateModule, HeadBarModule, ListModule],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
     changeDetection: ChangeDetectionStrategy.Default
@@ -59,6 +64,7 @@ class MandateCheckEntry {
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnInit {
     public structureLevels = [];
     public entries: MandateCheckEntry[] = [];
+    public entriesObservable = new BehaviorSubject<MandateCheckEntry[]>([]);
 
     public constructor(
         private participantRepo: ParticipantControllerService,
@@ -84,7 +90,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     }
 
     private updateEntries(participants: ViewUser[]): void {
-        const allMandates = new MandateCheckEntry(`All Mandates`);
+        const allMandates = new MandateCheckEntry(`All Mandates`, -1);
         for (const participant of participants) {
             allMandates.add(
                 participant.id,
@@ -93,5 +99,6 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             );
         }
         this.entries = [allMandates];
+        this.entriesObservable.next([allMandates]);
     }
 }
