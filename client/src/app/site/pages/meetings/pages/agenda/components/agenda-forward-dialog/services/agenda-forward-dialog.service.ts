@@ -15,8 +15,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { AgendaItemControllerService } from '../../../services';
+import { AgendaItemCommonServiceModule } from '../../../services/agenda-item-common-service.module';
 import { ViewAgendaItem } from '../../../view-models';
-import { AgendaForwardDialogModule } from '../agenda-forward-dialog.module';
 import {
     AgendaForwardDialogComponent,
     AgendaForwardDialogReturnData
@@ -28,7 +28,7 @@ export interface AgendaForwardDialogPayload {
 }
 
 @Injectable({
-    providedIn: AgendaForwardDialogModule
+    providedIn: AgendaItemCommonServiceModule
 })
 export class AgendaForwardDialogService extends BaseDialogService<
     AgendaForwardDialogComponent,
@@ -74,8 +74,7 @@ export class AgendaForwardDialogService extends BaseDialogService<
     ): Promise<MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>> {
         await this.updateForwardMeetings();
 
-        const module = await import(`../agenda-forward-dialog.module`).then(m => m.AgendaForwardDialogModule);
-        return this.dialog.open(module.getComponent(), {
+        return this.dialog.open(AgendaForwardDialogComponent, {
             ...mediumDialogSettings,
             autoFocus: false,
             data: {
