@@ -157,25 +157,20 @@ export class TopicPollService extends PollService {
     }
 
     protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        const keys = [];
         switch (poll.pollmethod) {
             case PollMethod.YNA: {
-                keys.push(...[YES_KEY, NO_KEY, ABSTAIN_KEY]);
-                break;
+                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
             }
             case PollMethod.YN: {
-                keys.push(...[YES_KEY, NO_KEY]);
-                break;
+                return [YES_KEY, NO_KEY];
             }
             case PollMethod.N: {
-                keys.push(NO_KEY);
-                break;
+                return [NO_KEY];
             }
             default: {
-                keys.push(YES_KEY);
+                return [YES_KEY];
             }
         }
-        return keys;
     }
 
     protected override getPercentBase(poll: PollData, row?: OptionData): number {
