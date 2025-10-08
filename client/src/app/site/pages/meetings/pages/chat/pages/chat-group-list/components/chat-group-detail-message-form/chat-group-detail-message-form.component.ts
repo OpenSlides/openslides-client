@@ -42,8 +42,9 @@ export class ChatGroupDetailMessageFormComponent {
     }
 
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === KeyCode.ENTER) {
+        if (event.key === KeyCode.ENTER && !event.shiftKey) {
             this.sendChatMessage();
+            event.preventDefault();
         }
     }
 

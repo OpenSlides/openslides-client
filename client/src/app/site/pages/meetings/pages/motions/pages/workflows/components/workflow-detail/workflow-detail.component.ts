@@ -256,7 +256,9 @@ Note: Does not affect the visibility of change recommendations.`
             help_text: _(
                 `Defines for the selected state which groups have access:
 - If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].
-- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].`
+- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].
+
+Hint: Administrators always have full access.`
             ),
             selector: `restrictions`,
             type: `restrictions`

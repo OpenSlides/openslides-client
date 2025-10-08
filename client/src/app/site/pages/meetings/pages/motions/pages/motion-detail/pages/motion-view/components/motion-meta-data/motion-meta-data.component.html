@@ -89,7 +89,7 @@
                 perms.isAllowed('change_state', motion) ||
                 (!!motionState.submitter_withdraw_state && operatorIsSubmitter)
             "
-            [chipValue]="stateLabel | translate"
+            [chipValue]="stateLabel"
             [classes]="motion.stateCssColor"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
             [searchFieldInput]="motion?.state_extension"
@@ -182,7 +182,7 @@
             extensionLabel="{{ 'Extension' | translate }}"
             title="{{ recommender }}"
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
-            [chipValue]="recommendationLabel | translate"
+            [chipValue]="recommendationLabel"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
             [internal]="motion?.state?.is_internal"
             [listValueTransformFns]="[motionTransformFn]"

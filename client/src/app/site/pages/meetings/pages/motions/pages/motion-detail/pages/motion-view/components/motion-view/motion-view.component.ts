@@ -56,7 +56,6 @@ import { AmendmentListFilterService } from '../../../../../../services/list/amen
 import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
 import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
 
 @Component({
@@ -184,7 +183,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private cd: ChangeDetectorRef,
         private dialog: MatDialog,
         private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private autoupdateService: AutoupdateService
     ) {
@@ -473,7 +471,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private updateSortedMotionsObservable(): void {
         // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
+        if (
+            this.motion &&
+            this.motion.lead_motion_id &&
+            (!this._amendmentsInMainList || this._navigatedFromAmendmentList)
+        ) {
             // only use the amendments for this motion
             this.amendmentSortService.initSorting();
             this.amendmentFilterService.initFilters(
@@ -482,6 +484,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     this.amendmentSortService.repositorySortingKey
                 )
             );
+            if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
+                this.amendmentFilterService.parentMotionId = null;
+            }
             this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
         } else {
             this.motionSortService.initSorting();
@@ -529,14 +534,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      * Does nothing on navigation between two motions.
      */
     private isNavigatedFromAmendments(): void {
-        const previousUrl = this.originUrlService.getPreviousUrl();
-        if (previousUrl) {
-            if (previousUrl.endsWith(`amendments`)) {
-                this._navigatedFromAmendmentList = true;
-            } else if (previousUrl.endsWith(`motions`)) {
-                this._navigatedFromAmendmentList = false;
-            }
-        }
+        this.storage.get('motion-navigation-last').then(last => {
+            this._navigatedFromAmendmentList = last === 'amendment-list';
+        });
     }
 
     /**
