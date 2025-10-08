@@ -3,8 +3,8 @@
         [ngClass]="{
             'result-wrapper': true,
             'result-wrapper-additional': iconSize !== 'medium',
-            'items-normal': !inSlide,
-            'items-slide': inSlide
+            'extra-grid-normal': !inSlide,
+            'extra-grid-slide': inSlide
         }"
     >
         <table class="result-table" [ngClass]="{ margins: iconSize === 'gigantic' }">
@@ -26,7 +26,7 @@
                 }
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
-                        <tr [class.in-slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
@@ -67,7 +67,7 @@
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class.in-slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <!-- YNA/Valid etc -->
                             <td class="label-column">
                                 @if (row.value[0].icon) {
