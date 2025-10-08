@@ -3,7 +3,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+
+import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
+
+const FEMALE_GENDER_ID = 2;
 
 class MandateCheckEntry {
     public name = ``;
@@ -56,6 +61,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public entries: MandateCheckEntry[] = [];
 
     public constructor(
+        private participantRepo: ParticipantControllerService,
         private structureLevelRepo: StructureLevelRepositoryService,
         private cd: ChangeDetectorRef
     ) {
@@ -63,17 +69,28 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     }
 
     public ngOnInit(): void {
-        this.structureLevelRepo.getViewModelListObservable().subscribe(strLvls => {
-            this.structureLevels = strLvls;
-            this.updateEntries();
-            this.cd.markForCheck();
-        });
+        this.subscriptions.push(
+            this.structureLevelRepo.getViewModelListObservable().subscribe(strLvls => {
+                this.structureLevels = strLvls;
+                this.cd.markForCheck();
+            })
+        );
+        // const selectedGroups = [];
+        this.subscriptions.push(
+            this.participantRepo
+                .getViewModelListObservable()
+                .subscribe(participants => this.updateEntries(participants))
+        );
     }
 
-    private updateEntries(): void {
+    private updateEntries(participants: ViewUser[]): void {
         const allMandates = new MandateCheckEntry(`All Mandates`);
-        for (let i = 1; i < 11; i++) {
-            allMandates.add(i, Boolean(i % 2), Boolean(i % 3));
+        for (const participant of participants) {
+            allMandates.add(
+                participant.id,
+                participant.isPresentInMeeting(),
+                participant.gender_id === FEMALE_GENDER_ID
+            );
         }
         this.entries = [allMandates];
     }
