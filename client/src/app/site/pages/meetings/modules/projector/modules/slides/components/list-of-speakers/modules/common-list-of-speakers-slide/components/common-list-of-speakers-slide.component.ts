@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
+import { getSpeakerStateIcon, getSpeakerVerboseState } from 'src/app/site/pages/meetings/pages/agenda';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
@@ -64,5 +65,13 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         } else {
             this.title = ``;
         }
+    }
+
+    public getStateIcon(speaker: SlideSpeaker): string {
+        return getSpeakerStateIcon(speaker);
+    }
+
+    public getVerboseState(speaker: SlideSpeaker): string {
+        return getSpeakerVerboseState(speaker);
     }
 }

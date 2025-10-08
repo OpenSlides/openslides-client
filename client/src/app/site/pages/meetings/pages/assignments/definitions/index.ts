@@ -10,7 +10,7 @@ export const AssignmentPhases: { name: string; value: AssignmentPhase; display_n
     {
         name: `PHASE_SEARCH`,
         value: AssignmentPhase.Search,
-        display_name: _(`Searching for candidates`)
+        display_name: _(`Open`)
     },
     {
         name: `PHASE_VOTING`,

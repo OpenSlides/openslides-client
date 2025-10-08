@@ -27,11 +27,11 @@ import { PollProgressComponent } from './components/poll-progress/poll-progress.
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from './pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
 import { PollServiceModule } from './services/poll-service.module';
 
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
-const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollParseNumberPipe];
+const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
     PollProgressComponent,
     PollFilteredVotesChartComponent,

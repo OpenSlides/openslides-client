@@ -5,7 +5,7 @@ import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { BaseFilterListService, OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
-import { ViewSpeaker } from '../../../../../agenda';
+import { SpeechWaitingState, ViewSpeaker } from '../../../../../agenda';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ParticipantSpeakerListServiceModule } from '../participant-speaker-list-service.module';
 
@@ -79,8 +79,9 @@ export class ParticipantSpeakerListFilterService extends BaseFilterListService<V
                 property: `hasSpoken`,
                 label: _(`Speaker`),
                 options: [
-                    { condition: true, label: _(`Has spoken`) },
-                    { condition: [false, null], label: _(`Has not spoken`) }
+                    { condition: SpeechWaitingState.FINISHED, label: _(`Has spoken`) },
+                    { condition: SpeechWaitingState.STARTED, label: _(`Is speaking`) },
+                    { condition: SpeechWaitingState.WAITING, label: _(`Has not spoken`) }
                 ]
             }
         ];

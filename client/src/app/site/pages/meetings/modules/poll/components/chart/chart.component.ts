@@ -143,7 +143,7 @@ export class ChartComponent {
             const perLabel = 60;
             return `${baseHeight + perLabel * this.labels.length}px`;
         } else {
-            return `300px`;
+            return `260px`;
         }
     }
 

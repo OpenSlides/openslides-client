@@ -4,7 +4,7 @@
     </div>
 </os-head-bar>
 
-<div class="motion-export-card">
+<div class="export-card">
     <mat-tab-group
         #tabGroup
         mat-stretch-tabs="false"
@@ -26,7 +26,7 @@
 <ng-template #exportPdf>
     <form [formGroup]="dialogForm">
         <!-- Content -->
-        <div class="motion-export-wrapper">
+        <div class="export-wrapper">
             @if (!isXLSXExport) {
                 <p class="toggle-group-head">{{ 'Text version' | translate }}</p>
                 <mat-chip-listbox formControlName="crMode">
