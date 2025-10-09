@@ -107,7 +107,7 @@ export class AgendaPdfCatalogExportService {
             }
         ]);
 
-        if (printToc) {
+        if (printToc && sortedAgendaItems.length > 1) {
             doc.push(this.createToc(sortedAgendaItems));
         }
 
