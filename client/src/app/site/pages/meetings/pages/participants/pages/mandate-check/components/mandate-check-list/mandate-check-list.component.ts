@@ -119,6 +119,9 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     }
 
     public displayPercent(value: number): string {
+        if (Number.isNaN(value)) {
+            return ``;
+        }
         return `${Number(value * 100).toFixed(0)}%`;
     }
 
