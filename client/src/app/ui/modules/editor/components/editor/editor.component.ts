@@ -115,7 +115,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public limitEditor = false;
 
-    public allowEditorLimit = false;
+    public allowEditorLimitNonManager = false;
+    public allowEditorLimitManager = false;
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
@@ -178,14 +179,22 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         super();
 
         this.subscriptions.push(
-            this.meetingSettingsService
-                .get(`motions_create_enable_additional_submitter_text`)
-                .subscribe(value => (this.allowEditorLimit = value))
+            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_non_manager`).subscribe(enabled => {
+                this.allowEditorLimitNonManager = enabled;
+            }),
+            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_manager`).subscribe(enabled => {
+                this.allowEditorLimitManager = enabled;
+            })
         );
     }
 
     public isEditorLimited(): boolean {
-        return this.limitEditor && this.allowEditorLimit && !this.operator.hasPerms(Permission.motionCanManage);
+        return (
+            (this.limitEditor &&
+                this.allowEditorLimitNonManager &&
+                !this.operator.hasPerms(Permission.motionCanManage)) ||
+            (this.allowEditorLimitManager && this.operator.hasPerms(Permission.motionCanManage))
+        );
     }
 
     public ngAfterViewInit(): void {
