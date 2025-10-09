@@ -20,7 +20,7 @@ class MandateCheckEntry implements Identifiable {
     public presentUserIds: Id[] = [];
     public absentUserIds: Id[] = [];
     public presentFemaleUserIds: Id[] = [];
-    public abentFemaleUserIds: Id[] = [];
+    public absentFemaleUserIds: Id[] = [];
 
     public constructor(name: string, id: Id) {
         this.name = name;
@@ -36,14 +36,14 @@ class MandateCheckEntry implements Identifiable {
         } else {
             this.absentUserIds.push(userId);
             if (female) {
-                this.abentFemaleUserIds.push(userId);
+                this.absentFemaleUserIds.push(userId);
             }
         }
     }
 
     public getTotalCount(female?: boolean): number {
         if (female) {
-            return this.presentFemaleUserIds.length + this.abentFemaleUserIds.length;
+            return this.presentFemaleUserIds.length + this.absentFemaleUserIds.length;
         }
         return this.presentUserIds.length + this.absentUserIds.length;
     }
@@ -88,6 +88,10 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
                 .getViewModelListObservable()
                 .subscribe(participants => this.updateEntries(participants))
         );
+    }
+
+    public displayPercent(value: number): string {
+        return `${Number(value * 100).toFixed(0)}%`;
     }
 
     private updateEntries(participants: ViewUser[]): void {
