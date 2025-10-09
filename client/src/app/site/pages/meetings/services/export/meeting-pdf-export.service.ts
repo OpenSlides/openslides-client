@@ -21,6 +21,7 @@ interface MeetingDownloadLandscapeConfig {
 
 interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
     exportInfo?: any;
+    disableProgress?: boolean;
 }
 
 @Injectable({
@@ -57,6 +58,16 @@ export class MeetingPdfExportService {
         private httpService: HttpService,
         private mediaManageService: MediaManageService
     ) {}
+
+    public blob(config: MeetingDownloadConfig): Promise<Blob | null> {
+        const pageMargins: [number, number, number, number] = [
+            this.pageMarginPointsLeft,
+            this.pageMarginPointsTop,
+            this.pageMarginPointsRight,
+            this.pageMarginPointsBottom
+        ];
+        return this.pdfExportService.blob({ ...config, ...this.createDownloadConfig(), pageMargins });
+    }
 
     public download(config: MeetingDownloadConfig): void {
         const pageMargins: [number, number, number, number] = [
