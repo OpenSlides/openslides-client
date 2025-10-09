@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
@@ -20,7 +19,6 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { AssignmentPollMethodKey, AssignmentPollMethodVerbose } from '../definitions';
 import { AssignmentPollServiceModule } from './assignment-poll-service.module';
 
 export const UnknownUserLabel = _(`Deleted user`);
@@ -82,23 +80,6 @@ export class AssignmentPollService extends PollService {
         }
 
         return poll;
-    }
-
-    /**
-     * @deprecated Please rewrite this function
-     *
-     * @param key
-     * @param value
-     * @returns
-     */
-    public override getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
-        switch (key) {
-            case `pollmethod`:
-                if (value in AssignmentPollMethodVerbose) {
-                    return AssignmentPollMethodVerbose[value as AssignmentPollMethodKey];
-                }
-        }
-        return super.getVerboseNameForValue(key, value);
     }
 
     protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
