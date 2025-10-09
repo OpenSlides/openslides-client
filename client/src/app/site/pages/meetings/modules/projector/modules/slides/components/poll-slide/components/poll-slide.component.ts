@@ -60,7 +60,6 @@ export class PollSlideComponent
     public pollContentObjectType: PollContentObjectType | null = null;
 
     public title!: string;
-    public subtitle: string | null = null;
 
     public polldata!: PollData;
 
@@ -278,15 +277,7 @@ export class PollSlideComponent
             this.pollContentObjectType = PollContentObjectType.Standalone;
         }
 
-        if (value.data.title_information) {
-            modifyAgendaItemNumber(value.data.title_information);
-            const repo = this.collectionMapperService.getRepository(value.data.title_information.collection);
-            this.title = repo!.getTitle(value.data.title_information as any);
-            this.subtitle = value.data.title;
-        } else {
-            this.title = value.data.title;
-            this.subtitle = null;
-        }
+        this.title = value.data.title;
         this.cd.markForCheck();
     }
 
