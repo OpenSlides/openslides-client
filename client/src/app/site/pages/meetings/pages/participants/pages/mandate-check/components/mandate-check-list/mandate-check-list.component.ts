@@ -149,6 +149,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
                 }
             }
         }
-        this.entriesObservable.next([allMandates, ...structureLevelsEntryMap.values()]);
+        const sortedEntries = [...structureLevelsEntryMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+        this.entriesObservable.next([allMandates, ...sortedEntries]);
     }
 }
