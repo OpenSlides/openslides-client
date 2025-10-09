@@ -36,9 +36,7 @@ import { Text } from '@tiptap/extension-text';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { Underline } from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
@@ -97,7 +95,7 @@ const DEFAULT_COLOR_PALETE = [
     standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
-    @ViewChild(`editorEl`) private editorEl: ElementRef;
+    @ViewChild(`editorEl`) public editorEl: ElementRef;
 
     @ViewChildren(`btn`)
     public buttonElements!: QueryList<ElementRef>;
@@ -111,12 +109,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Input()
     public allowEmbeds = false;
-
-    @Input()
-    public limitEditor = false;
-
-    public allowEditorLimitNonManager = false;
-    public allowEditorLimitManager = false;
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
@@ -166,81 +158,58 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         return this.translate.instant(`Paragraph`);
     }
 
-    private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    protected operator: OperatorService = inject(OperatorService);
+    private dialog: MatDialog = inject(MatDialog);
+    private translate: TranslateService = inject(TranslateService);
 
     private domParser = new DOMParser();
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService,
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor() {
         super();
-
-        this.subscriptions.push(
-            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_non_manager`).subscribe(enabled => {
-                this.allowEditorLimitNonManager = !this.operator.hasPerms(Permission.motionCanManage) && enabled;
-            }),
-            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_manager`).subscribe(enabled => {
-                this.allowEditorLimitManager = this.operator.hasPerms(Permission.motionCanManage) && enabled;
-            })
-        );
-    }
-
-    public isEditorLimited(): boolean {
-        return (this.limitEditor && this.allowEditorLimitNonManager || this.allowEditorLimitManager);
     }
 
     public ngAfterViewInit(): void {
-        const offLimitExtension = [];
-        if (!(this.allowEditorLimitNonManager || this.allowEditorLimitManager)) {
-            offLimitExtension.push(
-                ClearTextcolorPaste,
-                // Nodes
-                Blockquote,
-                ImageResize.configure({
-                    inline: true
-                }),
-                Table,
-                TableRow,
-                TableHeader,
-                TableCell,
-                // Marks
-                Highlight.configure({
-                    multicolor: true
-                }),
-                Link.extend({
-                    inclusive: false
-                }),
-                // Extensions
-                Color,
-                Strike,
-                Subscript,
-                Superscript,
-                Underline
-            );
-        }
         const editorConfig = {
             element: this.editorEl.nativeElement,
             extensions: [
                 OfficePaste,
+                ClearTextcolorPaste,
                 // Nodes
                 Document,
+                Blockquote,
                 HardBreak,
                 Heading,
+                ImageResize.configure({
+                    inline: true
+                }),
                 OsSplitBulletList,
                 OsSplitOrderedList,
                 OsSplitListItem,
                 Paragraph,
                 Text,
+                Table,
+                TableRow,
+                TableHeader,
+                TableCell,
 
                 // Marks
                 Bold,
+                Highlight.configure({
+                    multicolor: true
+                }),
                 Italic,
+                Link.extend({
+                    inclusive: false
+                }),
+                Strike,
+                Subscript,
+                Superscript,
                 TextStyle,
+                Underline,
 
                 // Extensions
+                Color,
                 UndoRedo,
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
@@ -268,13 +237,12 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                             this.updateForm(content);
                         }
                     }
-                }),
-                ...offLimitExtension
+                })
             ],
             content: this.value
         };
 
-        if (this.allowEmbeds && !(this.allowEditorLimitNonManager || this.allowEditorLimitManager)) {
+        if (this.allowEmbeds) {
             editorConfig.extensions.push(IFrame);
         }
 
@@ -471,7 +439,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.contentForm.setValue(value);
     }
 
-    private cleanupOutput(html: string): string {
+    protected cleanupOutput(html: string): string {
         const dom = this.domParser.parseFromString(html, `text/html`);
 
         // Remove paragraphs inside list elements

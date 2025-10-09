@@ -11,7 +11,7 @@
                         </span>
                     }
                 </h3>
-                <os-editor [formControlName]="paragraph.paragraphNo" [limitEditor]="true"></os-editor>
+                <os-limit-editor [formControlName]="paragraph.paragraphNo"></os-limit-editor>
                 @if (isControlInvalid(paragraph.paragraphNo)) {
                     <div class="red-warning-text">
                         {{ 'This field is required.' | translate }}

@@ -116,11 +116,10 @@
                                             <span>{{ preamble }}</span>
                                         </h3>
                                     }
-                                    <os-editor
+                                    <os-limit-editor
                                         formControlName="text"
-                                        [limitEditor]="true"
                                         [required]="!isParagraphBasedAmendment"
-                                    ></os-editor>
+                                    ></os-limit-editor>
                                     @if (
                                         contentForm.get('text')?.invalid &&
                                         (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -155,11 +154,10 @@
                                         }
                                     </h3>
                                     <!-- The HTML Editor -->
-                                    <os-editor
+                                    <os-limit-editor
                                         formControlName="reason"
-                                        [limitEditor]="true"
                                         [required]="reasonRequired"
-                                    ></os-editor>
+                                    ></os-limit-editor>
                                     @if (
                                         reasonRequired &&
                                         contentForm.get('reason')?.invalid &&

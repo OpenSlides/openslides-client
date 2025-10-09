@@ -19,7 +19,7 @@
         } @else {
             <form [formGroup]="formGroup">
                 <!-- The HTML Editor -->
-                <os-editor formControlName="text" [id]="sectionId" [limitEditor]="true"></os-editor>
+                <os-limit-editor formControlName="text" [id]="sectionId"></os-limit-editor>
             </form>
         }
         @if (saveHint) {
