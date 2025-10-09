@@ -76,7 +76,6 @@ class MandateCheckEntry implements Identifiable {
 })
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnInit {
     public structureLevels = [];
-    public entries: MandateCheckEntry[] = [];
     public entriesObservable = new BehaviorSubject<MandateCheckEntry[]>([]);
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
@@ -150,7 +149,6 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
                 }
             }
         }
-        this.entries = [allMandates, ...structureLevelsEntryMap.values()];
         this.entriesObservable.next([allMandates, ...structureLevelsEntryMap.values()]);
     }
 }
