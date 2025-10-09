@@ -262,6 +262,22 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
     }
 
+    public isExtensionActive(extension: string): boolean {
+        for (const ext of this.editor.extensionManager.extensions) {
+            console.log(ext.name);
+        }
+        return !!this.editor.extensionManager.extensions.find(ext => ext.name === extension);
+    }
+
+    public isAtLeastOneExtensionActive(extensions: string[]): boolean {
+        let isActive = false;
+        for (const ext of extensions) {
+            if (isActive) continue;
+            isActive = this.isExtensionActive(ext);
+        }
+        return isActive;
+    }
+
     public updateColorSets(): void {
         // Safari and Firefox have their own color paletes so no presets necessary
         if (navigator.userAgent.search(`Firefox`) > -1 || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {

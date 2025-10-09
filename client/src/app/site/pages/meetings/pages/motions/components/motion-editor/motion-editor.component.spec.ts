@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotionEditor } from './editor-limited.component';
+import { MotionEditorComponent } from './motion-editor.component';
 
-xdescribe(`EditorComponent`, () => {
-    let component: MotionEditor;
-    let fixture: ComponentFixture<MotionEditor>;
+xdescribe(`MotionEditor`, () => {
+    let component: MotionEditorComponent;
+    let fixture: ComponentFixture<MotionEditorComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MotionEditor]
+            declarations: [MotionEditorComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MotionEditor);
+        fixture = TestBed.createComponent(MotionEditorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

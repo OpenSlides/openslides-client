@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { MotionEditorComponent } from 'src/app/site/pages/meetings/pages/motions/components/motion-editor/motion-editor.component';
 
 import { EditorComponent } from './components/editor/editor.component';
 import { EditorEmbedDialogComponent } from './components/editor-embed-dialog/editor-embed-dialog.component';
@@ -24,7 +25,8 @@ const DECLARATIONS = [
     EditorEmbedDialogComponent,
     EditorLinkDialogComponent,
     EditorHtmlDialogComponent,
-    EditorTabNavigationDirective
+    EditorTabNavigationDirective,
+    MotionEditorComponent
 ];
 
 @NgModule({
