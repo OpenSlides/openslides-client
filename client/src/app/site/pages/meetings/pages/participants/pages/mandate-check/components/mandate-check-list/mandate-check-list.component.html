@@ -4,6 +4,19 @@
         <h2>{{ 'Mandate Check' | translate }}</h2>
     </div>
 </os-head-bar>
+<div [formGroup]="form">
+    <mat-form-field>
+        <mat-label>{{ 'Group' | translate }}</mat-label>
+        <mat-select formControlName="groups" multiple>
+            @for (item of groups; track item.id) {
+                <mat-option [value]="item.id">
+                    {{ item.name }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</div>
+
 <os-list
     [filterProps]="['name', 'female', 'total', 'progressbar', 'present', 'femalepresent']"
     [listObservable]="entriesObservable"
