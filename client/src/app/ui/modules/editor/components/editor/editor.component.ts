@@ -189,7 +189,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public isEditorLimited(): boolean {
-        return (this.limitEditor && this.allowEditorLimitNonManager) || this.allowEditorLimitManager;
+        return (this.limitEditor && this.allowEditorLimitNonManager || this.allowEditorLimitManager);
     }
 
     public ngAfterViewInit(): void {
