@@ -92,14 +92,23 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
 
     private updateEntries(participants: ViewUser[]): void {
         const allMandates = new MandateCheckEntry(`All Mandates`, -1);
+        const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
+        for (const strLvl of this.structureLevels ?? []) {
+            structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id));
+        }
         for (const participant of participants) {
             allMandates.add(
                 participant.id,
                 participant.isPresentInMeeting(),
                 participant.gender_id === FEMALE_GENDER_ID
             );
+            for (const strLvlId of participant.structure_level_ids() ?? []) {
+                structureLevelsEntryMap
+                    .get(strLvlId)
+                    .add(participant.id, participant.isPresentInMeeting(), participant.gender_id === FEMALE_GENDER_ID);
+            }
         }
-        this.entries = [allMandates];
-        this.entriesObservable.next([allMandates]);
+        this.entries = [allMandates, ...structureLevelsEntryMap.values()];
+        this.entriesObservable.next([allMandates, ...structureLevelsEntryMap.values()]);
     }
 }

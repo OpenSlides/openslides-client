@@ -4,16 +4,6 @@
         <h2>{{ 'Mandate Check' | translate }}</h2>
     </div>
 </os-head-bar>
-<ul>
-    <li>meeting</li>
-    @for (entry of entries; track entry.name) {
-        <li>
-            <div>{{ entry.name }} - {{ entry.presentUserIds.length }} - {{ entry.absentUserIds.length }}</div>
-            <div>( {{ entry.getTotalCount() }}, {{ entry.getPercent() }} )</div>
-            <div>( {{ entry.getTotalCount(true) }}, {{ entry.getPercent(true) }} )</div>
-        </li>
-    }
-</ul>
 <os-list
     [filterProps]="['name', 'female', 'total', 'progressbar', 'present', 'femalepresent']"
     [listObservable]="entriesObservable"
@@ -40,7 +30,7 @@
         ></mat-progress-bar>
     </div>
     <div *osScrollingTableCell="'present'; row as entry" class="cell-slot fill flex-container">
-        <div>{{ 'total' | translate }}</div>
+        <div>{{ 'present' | translate }}</div>
         <div>{{ entry.presentUserIds.length }}</div>
         <div>&nbsp;</div>
     </div>
