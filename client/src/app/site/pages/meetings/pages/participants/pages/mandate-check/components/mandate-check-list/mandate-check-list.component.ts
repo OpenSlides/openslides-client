@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -56,7 +57,7 @@ class MandateCheckEntry implements Identifiable {
 
 @Component({
     selector: 'os-mandate-check-list',
-    imports: [TranslateModule, HeadBarModule, ListModule],
+    imports: [TranslateModule, HeadBarModule, ListModule, MatProgressBarModule],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
     changeDetection: ChangeDetectionStrategy.Default

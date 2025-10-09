@@ -31,7 +31,14 @@
         <div>{{ entry.getTotalCount() }}</div>
         <div>{{ entry.getPercent() }}</div>
     </div>
-    <div *osScrollingTableCell="'progressbar'; row as entry" class="cell-slot fill flex-container">XXX</div>
+    <div *osScrollingTableCell="'progressbar'; row as entry" class="cell-slot fill">
+        <mat-progress-bar
+            class="progressbar-colored"
+            [bufferValue]="100"
+            [mode]="'determinate'"
+            [value]="entry.getPercent() * 100"
+        ></mat-progress-bar>
+    </div>
     <div *osScrollingTableCell="'present'; row as entry" class="cell-slot fill flex-container">
         <div>{{ 'total' | translate }}</div>
         <div>{{ entry.presentUserIds.length }}</div>

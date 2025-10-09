@@ -1,7 +1,16 @@
 @use 'src/assets/styles/tables.scss';
+@use '@angular/material' as mat;
 
 .flex-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.progressbar-colored {
+    @include mat.progress-bar-overrides(
+        (
+            active-indicator-color: orange
+        )
+    );
 }
