@@ -21,6 +21,7 @@ interface MeetingDownloadLandscapeConfig {
 
 interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
     exportInfo?: any;
+    disableProgress?: boolean;
 }
 
 @Injectable({

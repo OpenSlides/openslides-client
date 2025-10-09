@@ -213,7 +213,7 @@ class PdfCreator {
         // the result of the worker
         this._pdfWorker.onmessage = ({ data }): void => {
             // if the worker returns a numbers, is always the progress
-            if (typeof data === `number` && this._progressService) {
+            if (typeof data === `number` && this._progressService && this._progressSnackBarService) {
                 // update progress
                 const progress = Math.ceil(data * 100);
                 this._progressService.progressAmount = progress;
@@ -221,7 +221,7 @@ class PdfCreator {
 
             // if the worker returns an object, it's always the document
             if (typeof data === `object`) {
-                this._progressSnackBarService.dismiss();
+                this._progressSnackBarService?.dismiss();
                 result.resolve(data);
                 this._pdfWorker = null;
             }
@@ -546,15 +546,19 @@ export class PdfDocumentService {
     public async blob({
         docDefinition,
         filename: filetitle,
+        disableProgress,
         ...config
     }: DownloadConfig & {
         pageMargins: [number, number, number, number];
         pageSize: PageSize;
+        disableProgress?: boolean;
         progressService?: ProgressSnackBarControlService;
     }): Promise<Blob | null> {
         await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]);
 
-        this.showProgress();
+        if (!disableProgress) {
+            this.showProgress();
+        }
         const imageUrls = this.pdfImagesService.getImageUrls();
         this.pdfImagesService.clearImageUrls();
         return new PdfCreator({
@@ -570,7 +574,7 @@ export class PdfDocumentService {
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: null,
-            progressSnackBarService: this.progressSnackBarService,
+            progressSnackBarService: !disableProgress ? this.progressSnackBarService : undefined,
             ...config
         }).getFile();
     }

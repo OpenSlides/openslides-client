@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { ProgressSnackBarService } from 'src/app/gateways/export/progress-snack-bar/services/progress-snack-bar.service';
+import { ProgressSnackBarControlService } from 'src/app/gateways/export/progress-snack-bar/services/progress-snack-bar-control.service';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
@@ -23,7 +25,9 @@ export class MotionPdfExportService {
         private motionPdfService: MotionPdfService,
         private amendmentListPdfService: AmendmentListPdfService,
         private pdfCatalogService: MotionPdfCatalogService,
-        private pdfDocumentService: MeetingPdfExportService
+        private pdfDocumentService: MeetingPdfExportService,
+        private progressSnackBarService: ProgressSnackBarService,
+        private progressService: ProgressSnackBarControlService
     ) {}
 
     /**
@@ -47,7 +51,11 @@ export class MotionPdfExportService {
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         if (exportInfo.content.includes(`includePdfAttachments`)) {
-            this.exportMotionCatalogWithAttachments(motions, exportInfo);
+            try {
+                this.exportMotionCatalogWithAttachments(motions, exportInfo);
+            } catch (e) {
+                this.progressSnackBarService.dismiss();
+            }
             return;
         }
 
@@ -68,14 +76,39 @@ export class MotionPdfExportService {
         motions: ViewMotion[],
         exportInfo: MotionExportInfo
     ): Promise<void> {
+        let canceled = false;
+        this.progressSnackBarService
+            .open({
+                duration: 0
+            })
+            .then(progressBarRef => {
+                // Listen to clicks on the cancel button
+                progressBarRef.onAction().subscribe(() => {
+                    canceled = true;
+                    this.progressSnackBarService.dismiss();
+                });
+                this.progressService.message = this.translate.instant(`Creating motion exports`) + `...`;
+                this.progressService.progressMode = `determinate`;
+            });
+
         const motionPdfPromises = [];
-        for (const motion of motions) {
+        for (let i = 0; i < motions.length; i++) {
+            const motion = motions[i];
+            this.progressService.message =
+                this.translate.instant(`Creating motion exports`) + ` (${i + 1}/${motions.length})`;
+            this.progressService.progressAmount = Math.ceil(((i + 1) / motions.length) * 100);
             const doc = this.motionPdfService.motionToDocDef({ motion, exportInfo });
             const filename = `${this.translate.instant(`Motion`)} ${motion.numberOrTitle}`;
             const metadata = {
                 title: filename
             };
-            const motionPdf = this.pdfDocumentService.blob({ docDefinition: doc, filename, metadata, exportInfo });
+            const motionPdf = this.pdfDocumentService.blob({
+                docDefinition: doc,
+                filename,
+                metadata,
+                exportInfo,
+                disableProgress: true
+            });
             await motionPdf;
             motionPdfPromises.push(motionPdf);
 
@@ -84,11 +117,21 @@ export class MotionPdfExportService {
                     motionPdfPromises.push(fetch(file.url));
                 }
             }
+
+            if (canceled) {
+                return;
+            }
         }
 
+        this.progressService.message = this.translate.instant(`Downloading attachments`);
+        this.progressService.progressMode = `indeterminate`;
         const motionPdfs: (Blob | Response)[] = await Promise.all(motionPdfPromises);
+
+        this.progressService.message = this.translate.instant(`Creating PDF file ...`);
         const mergedPdf = await PDFDocument.create();
-        for (const mPdfBlob of motionPdfs) {
+        for (let i = 0; i < motionPdfs.length; i++) {
+            const mPdfBlob = motionPdfs[i];
+            this.progressService.progressAmount = Math.ceil(((i + 1) / motionPdfs.length) * 100);
             if (!mPdfBlob) {
                 continue;
             }
@@ -98,7 +141,10 @@ export class MotionPdfExportService {
             copiedPages.forEach(page => mergedPdf.addPage(page));
         }
         const mergedPdfFile = await mergedPdf.save();
-        saveAs(new Blob([mergedPdfFile]), `${this.translate.instant(`Motions`)}.pdf`);
+        if (!canceled) {
+            saveAs(new Blob([mergedPdfFile]), `${this.translate.instant(`Motions`)}.pdf`);
+        }
+        this.progressSnackBarService.dismiss();
     }
 
     /**
