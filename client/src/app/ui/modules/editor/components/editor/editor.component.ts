@@ -180,64 +180,67 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
         this.subscriptions.push(
             this.meetingSettingsService.get(`motions_enable_restricted_editor_for_non_manager`).subscribe(enabled => {
-                this.allowEditorLimitNonManager = enabled;
+                this.allowEditorLimitNonManager = !this.operator.hasPerms(Permission.motionCanManage) && enabled;
             }),
             this.meetingSettingsService.get(`motions_enable_restricted_editor_for_manager`).subscribe(enabled => {
-                this.allowEditorLimitManager = enabled;
+                this.allowEditorLimitManager = this.operator.hasPerms(Permission.motionCanManage) && enabled;
             })
         );
     }
 
     public isEditorLimited(): boolean {
-        return (
-            (this.limitEditor &&
-                this.allowEditorLimitNonManager &&
-                !this.operator.hasPerms(Permission.motionCanManage)) ||
-            (this.allowEditorLimitManager && this.operator.hasPerms(Permission.motionCanManage))
-        );
+        return (this.limitEditor && this.allowEditorLimitNonManager) || this.allowEditorLimitManager;
     }
 
     public ngAfterViewInit(): void {
+        const offLimitExtension = [];
+        if (!(this.allowEditorLimitNonManager || this.allowEditorLimitManager)) {
+            offLimitExtension.push(
+                ClearTextcolorPaste,
+                // Nodes
+                Blockquote,
+                ImageResize.configure({
+                    inline: true
+                }),
+                Table,
+                TableRow,
+                TableHeader,
+                TableCell,
+                // Marks
+                Highlight.configure({
+                    multicolor: true
+                }),
+                Link.extend({
+                    inclusive: false
+                }),
+                // Extensions
+                Color,
+                Strike,
+                Subscript,
+                Superscript,
+                Underline
+            );
+        }
         const editorConfig = {
             element: this.editorEl.nativeElement,
             extensions: [
                 OfficePaste,
-                ClearTextcolorPaste,
                 // Nodes
                 Document,
-                Blockquote,
                 HardBreak,
                 Heading,
-                ImageResize.configure({
-                    inline: true
-                }),
                 OsSplitBulletList,
                 OsSplitOrderedList,
                 OsSplitListItem,
                 Paragraph,
                 Text,
-                Table,
-                TableRow,
-                TableHeader,
-                TableCell,
 
                 // Marks
                 Bold,
-                Highlight.configure({
-                    multicolor: true
-                }),
                 Italic,
-                Link.extend({
-                    inclusive: false
-                }),
-                Strike,
-                Subscript,
-                Superscript,
                 TextStyle,
-                Underline,
 
                 // Extensions
-                Color,
                 UndoRedo,
                 TextAlign.configure({
                     types: [`heading`, `paragraph`]
@@ -265,12 +268,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                             this.updateForm(content);
                         }
                     }
-                })
+                }),
+                ...offLimitExtension
             ],
             content: this.value
         };
 
-        if (this.allowEmbeds) {
+        if (this.allowEmbeds && !(this.allowEditorLimitNonManager || this.allowEditorLimitManager)) {
             editorConfig.extensions.push(IFrame);
         }
 
