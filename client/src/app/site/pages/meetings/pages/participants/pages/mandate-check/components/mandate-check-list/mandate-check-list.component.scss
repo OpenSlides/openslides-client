@@ -1,5 +1,4 @@
 @use 'src/assets/styles/tables.scss';
-@use '@angular/material' as mat;
 
 .flex-container {
     display: flex;
@@ -7,10 +6,20 @@
     align-items: center;
 }
 
-.progressbar-colored {
-    @include mat.progress-bar-overrides(
-        (
-            active-indicator-color: orange
-        )
-    );
+.card-grid {
+    display: grid;
+    grid-template-columns: 15% 15% 40% 15% 15%;
+    grid-gap: 10px;
+}
+
+.center {
+    align-self: center;
+}
+
+.small-margin-top {
+    margin-top: 7px;
+}
+
+.color-blue {
+    color: var(--theme-primary-500);
 }

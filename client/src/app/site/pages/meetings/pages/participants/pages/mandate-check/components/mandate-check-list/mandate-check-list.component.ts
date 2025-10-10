@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
@@ -11,7 +12,6 @@ import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/s
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ListModule } from 'src/app/ui/modules/list';
 
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
@@ -64,11 +64,11 @@ class MandateCheckEntry implements Identifiable {
     imports: [
         TranslateModule,
         HeadBarModule,
-        ListModule,
         ReactiveFormsModule,
         MatProgressBarModule,
         MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule,
+        MatCardModule
     ],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
@@ -77,6 +77,7 @@ class MandateCheckEntry implements Identifiable {
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnInit {
     public structureLevels = [];
     public entriesObservable = new BehaviorSubject<MandateCheckEntry[]>([]);
+    public entries: MandateCheckEntry[] = [];
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
     public selectedGroups: Id[] = [];
@@ -153,6 +154,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             }
         }
         const sortedEntries = [...structureLevelsEntryMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+        this.entries = [allMandates, ...sortedEntries];
         this.entriesObservable.next([allMandates, ...sortedEntries]);
     }
 }
