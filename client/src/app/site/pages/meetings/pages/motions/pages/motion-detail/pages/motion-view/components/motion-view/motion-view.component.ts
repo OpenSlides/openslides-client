@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation
@@ -42,6 +43,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
+import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
 import {
     getMotionOriginDetailSubscriptionConfig,
     MOTION_DETAIL_SUBSCRIPTION,
@@ -162,6 +164,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private _navigatedFromAmendmentList = false;
 
+    private motionLineNumbering = inject(MotionLineNumberingService);
+
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
@@ -175,7 +179,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
         private motionForwardingService: MotionForwardDialogService,
-        private motionLineNumbering: MotionLineNumberingService,
+        private diffFactory: DiffServiceFactory,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
@@ -266,6 +270,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             if (motion.id !== id) {
                 return;
             }
+
+            this.motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diffVersion);
             this.onMotionLoaded();
 
             motion = await firstValueFrom(motionSubscription);

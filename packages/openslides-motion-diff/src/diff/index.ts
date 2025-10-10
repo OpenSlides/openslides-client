@@ -1,12 +1,17 @@
-import { LineNumbering } from "../index";
+import { LineNumbering as LineNumberingOrig } from "../index";
 import { LineNumberedString, LineNumberRange } from "../line-numbering/definitions";
 import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, fragmentToHtml, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChangeType } from "./definitions";
 import type { UnifiedChange } from "./definitions";
-import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
 import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
+
+let LineNumbering = LineNumberingOrig;
+export function useCustomLineNumbering(newLn: typeof LineNumbering) {
+    LineNumbering = newLn;
+}
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -218,6 +223,20 @@ export function formatDiff(diff: ExtractedContent): string {
     return (
         diff.outerContextStart + diff.innerContextStart + diff.html + diff.innerContextEnd + diff.outerContextEnd
     );
+}
+
+/**
+ * Convenience method that takes the html-attribute from an extractRangeByLineNumbers()-method,
+ * wraps it with the context and adds line numbers.
+ *
+ * @param {ExtractedContent} diff
+ * @param {number} lineLength
+ * @param {number} firstLine
+ */
+export function formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    let text = formatDiff(diff);
+    text = LineNumbering.insert({ html: text, lineLength, firstLine });
+    return text;
 }
 
 /**
@@ -792,7 +811,18 @@ export function diff(
 
     let diff: string;
     if (diffDetectBrokenDiffHtml(diffUnnormalized)) {
-        diff = diffParagraphs(htmlOld, htmlNew, lineLength!, firstLineNumber!);
+        let lineNumberedOld = htmlOld;
+        let lineNumberedNew = htmlNew;
+        if (lineLength !== null) {
+            lineNumberedOld = LineNumbering.insert({
+                html: htmlOld,
+                lineLength,
+                firstLine: firstLineNumber!
+            });
+            lineNumberedNew = LineNumbering.insertLineBreaks(htmlNew, lineLength);
+        }
+
+        diff = diffParagraphs(lineNumberedOld, lineNumberedNew);
     } else {
         let node: Element = document.createElement(`div`);
         node.innerHTML = diffUnnormalized;
