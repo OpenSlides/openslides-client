@@ -1,7 +1,7 @@
 <div class="editor">
     @if (editorReady) {
         <div class="editor-menu">
-            @if (isAtLeastOneExtensionActive(['bold'])) {
+            @if (isAtLeastOneExtensionActive(['heading', 'textAlign', 'subscript', 'superscript'])) {
                 <div class="button-group">
                     <button
                         #btn
@@ -45,7 +45,7 @@
                     </button>
                 }
 
-                @if (isAtLeastOneExtensionActive(['bold'])) {
+                @if (isAtLeastOneExtensionActive(['subscript', 'superscript'])) {
                     <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
                 }
             </mat-menu>
@@ -137,7 +137,7 @@
                 }
             </mat-menu>
 
-            @if (isAtLeastOneExtensionActive(['bold'])) {
+            @if (isAtLeastOneExtensionActive(['italic', 'bold', 'underline', 'strike'])) {
                 <div class="button-group">
                     @if (isExtensionActive('bold')) {
                         <button
@@ -281,21 +281,19 @@
                     </button>
                 </div>
             }
-            @if (true) {
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Clear formatting' | translate"
-                    (click)="clearSelectedFormat()"
-                >
-                    <mat-icon>format_clear</mat-icon>
-                </button>
-            }
+            <button
+                #btn
+                mat-ripple
+                osTabNavigation
+                type="button"
+                [buttonList]="buttonElements"
+                [matTooltip]="'Clear formatting' | translate"
+                (click)="clearSelectedFormat()"
+            >
+                <mat-icon>format_clear</mat-icon>
+            </button>
 
-            @if (isAtLeastOneExtensionActive(['bold'])) {
+            @if (isAtLeastOneExtensionActive(['bulletList', 'orderedList'])) {
                 <div class="button-group">
                     @if (isExtensionActive('bulletList')) {
                         <button
@@ -331,7 +329,7 @@
                 </div>
             }
 
-            @if (isAtLeastOneExtensionActive(['bold'])) {
+            @if (isAtLeastOneExtensionActive(['link', 'iframe'])) {
                 <div class="button-group">
                     @if (isExtensionActive('link')) {
                         <button
@@ -348,7 +346,7 @@
                         </button>
                     }
 
-                    @if (isExtensionActive('iframe')) {
+                    @if (isExtensionActive('image')) {
                         <button
                             #btn
                             mat-ripple
@@ -397,7 +395,7 @@
                 </div>
             }
 
-            @if (true) {
+            @if (isExtensionActive('clipboardTextSerializer')) {
                 <button
                     #btn
                     #setTab="osTabNavigation"

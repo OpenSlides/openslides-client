@@ -263,9 +263,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public isExtensionActive(extension: string): boolean {
-        for (const ext of this.editor.extensionManager.extensions) {
-            console.log(ext.name);
-        }
         return !!this.editor.extensionManager.extensions.find(ext => ext.name === extension);
     }
 
