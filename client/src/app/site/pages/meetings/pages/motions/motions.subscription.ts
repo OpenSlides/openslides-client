@@ -252,7 +252,8 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     `meeting_id`,
                     `show_state_extension_field`,
                     `show_recommendation_extension_field`,
-                    `recommendation_label`
+                    `recommendation_label`,
+                    `state_button_label`
                 ]
             },
             {
