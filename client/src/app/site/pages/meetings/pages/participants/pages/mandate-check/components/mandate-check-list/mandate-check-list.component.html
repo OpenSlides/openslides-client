@@ -18,11 +18,20 @@
 </div>
 
 @for (entry of entries; track entry.id) {
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>{{ entry.name }}</mat-card-title>
-        </mat-card-header>
+    <mat-card appearance="outlined">
         <mat-card-content>
+            <div class="header-grid">
+                <div>{{ entry.name }}</div>
+                <div>
+                    <button matIconButton (click)="toggle(entry.id)">
+                        @if (toggleMap.get(entry.id)) {
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                        } @else {
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                        }
+                    </button>
+                </div>
+            </div>
             <div class="card-grid">
                 <div class="flex-container small-margin-top color-blue">
                     <div>{{ 'female' | translate }}</div>
@@ -61,5 +70,23 @@
                 </div>
             </div>
         </mat-card-content>
+        @if (toggleMap.get(entry.id)) {
+            <mat-card-footer>
+                <div class="footer-grid">
+                    <div>
+                        <div class="bold margin-left-medium small-margin-top">{{ 'Present' | translate }}:</div>
+                        @for (userId of entry.presentUserIds; track userId) {
+                            <div class="margin-left-large">{{ getName(userId) }}</div>
+                        }
+                    </div>
+                    <div>
+                        <div class="bold margin-left-medium small-margin-top">{{ 'Absent' | translate }}:</div>
+                        @for (userId of entry.absentUserIds; track userId) {
+                            <div class="margin-left-large">{{ getName(userId) }}</div>
+                        }
+                    </div>
+                </div>
+            </mat-card-footer>
+        }
     </mat-card>
 }

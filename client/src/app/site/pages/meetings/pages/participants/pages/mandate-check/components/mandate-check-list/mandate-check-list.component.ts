@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,9 +19,10 @@ import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 
 const FEMALE_GENDER_ID = 2;
+const ALL_MANDATES_ID = -1;
 
 class MandateCheckEntry implements Identifiable {
-    public id = -1;
+    public id = ALL_MANDATES_ID;
     public name = ``;
     public presentUserIds: Id[] = [];
     public absentUserIds: Id[] = [];
@@ -65,10 +68,12 @@ class MandateCheckEntry implements Identifiable {
         TranslateModule,
         HeadBarModule,
         ReactiveFormsModule,
-        MatProgressBarModule,
+        MatButtonModule,
+        MatCardModule,
         MatFormFieldModule,
-        MatSelectModule,
-        MatCardModule
+        MatIconModule,
+        MatProgressBarModule,
+        MatSelectModule
     ],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
@@ -82,6 +87,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public participants: ViewUser[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
+    public toggleMap = new Map<Id, boolean>();
 
     public constructor(
         private participantRepo: ParticipantControllerService,
@@ -97,6 +103,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         this.subscriptions.push(
             this.structureLevelRepo.getViewModelListObservable().subscribe(strLvls => {
                 this.structureLevels = strLvls;
+                this.updateToggleMap();
                 this.cd.markForCheck();
             })
         );
@@ -126,11 +133,19 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         return `${Number(value * 100).toFixed(0)}%`;
     }
 
+    public toggle(structureLevelId: Id): void {
+        this.toggleMap.set(structureLevelId, !(this.toggleMap.get(structureLevelId) ?? true));
+    }
+
+    public getName(userId: Id): string {
+        return this.participantRepo.getViewModel(userId).getShortName();
+    }
+
     private updateEntries(): void {
         const filteredParticipants = this.participants.filter(pt =>
             (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id))
         );
-        const allMandates = new MandateCheckEntry(`All Mandates`, -1);
+        const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID);
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
             structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id));
@@ -156,5 +171,14 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         const sortedEntries = [...structureLevelsEntryMap.values()].sort((a, b) => a.name.localeCompare(b.name));
         this.entries = [allMandates, ...sortedEntries];
         this.entriesObservable.next([allMandates, ...sortedEntries]);
+    }
+
+    private updateToggleMap(): void {
+        const newMap = new Map<Id, boolean>();
+        newMap.set(ALL_MANDATES_ID, this.toggleMap.get(ALL_MANDATES_ID) ?? false);
+        for (const strlvl of this.structureLevels) {
+            newMap.set(strlvl.id, this.toggleMap.get(strlvl.id) ?? false);
+        }
+        this.toggleMap = newMap;
     }
 }

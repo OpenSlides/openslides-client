@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -16,7 +17,10 @@ export const getMandateCheckSubscriptionConfig: SubscriptionConfigGenerator = (i
                 follow: [
                     {
                         idField: `user_id`,
-                        fieldset: [`gender_id`, `is_present_in_meeting_ids`]
+                        fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(
+                            `gender_id`,
+                            `is_present_in_meeting_ids`
+                        )
                     }
                 ]
             },

@@ -6,10 +6,22 @@
     align-items: center;
 }
 
+.header-grid {
+    display: grid;
+    grid-template-columns: 95% 5%;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: 15% 15% 40% 15% 15%;
     grid-gap: 10px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 20px;
+    border-top: 2px solid rgba(128, 128, 128, 0.2);
 }
 
 .center {
@@ -22,4 +34,20 @@
 
 .color-blue {
     color: var(--theme-primary-500);
+}
+
+.bold {
+    font-weight: 500;
+}
+
+.margin-left-large {
+    margin-left: 140px;
+}
+
+.margin-left-medium {
+    margin-left: 70px;
+}
+
+button {
+    border-radius: 0%;
 }
