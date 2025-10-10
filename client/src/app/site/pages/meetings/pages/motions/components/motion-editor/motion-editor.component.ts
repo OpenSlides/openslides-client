@@ -45,10 +45,12 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
 
-        this.nonManagerSetting = this.meetingSettingsService.instant(`motions_enable_restricted_editor_for_non_manager`);
+        this.nonManagerSetting = this.meetingSettingsService.instant(
+            `motions_enable_restricted_editor_for_non_manager`
+        );
         this.managerSetting = this.meetingSettingsService.instant(`motions_enable_restricted_editor_for_manager`);
 
-        this.canManage = this.operator.hasPerms(Permission.motionCanManage)
+        this.canManage = this.operator.hasPerms(Permission.motionCanManage);
     }
 
     public override getExtensions(): Extension[] {
