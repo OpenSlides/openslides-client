@@ -75,14 +75,14 @@
                 <div class="footer-grid">
                     <div>
                         <div class="bold margin-left-medium small-margin-top">{{ 'Present' | translate }}:</div>
-                        @for (userId of entry.presentUserIds; track userId) {
-                            <div class="margin-left-large">{{ getName(userId) }}</div>
+                        @for (name of getSortedNames(entry.presentUserIds); track name) {
+                            <div class="margin-left-large">{{ name }}</div>
                         }
                     </div>
                     <div>
                         <div class="bold margin-left-medium small-margin-top">{{ 'Absent' | translate }}:</div>
-                        @for (userId of entry.absentUserIds; track userId) {
-                            <div class="margin-left-large">{{ getName(userId) }}</div>
+                        @for (name of getSortedNames(entry.absentUserIds); track name) {
+                            <div class="margin-left-large">{{ name }}</div>
                         }
                     </div>
                 </div>

@@ -141,6 +141,10 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         return this.participantRepo.getViewModel(userId).getShortName();
     }
 
+    public getSortedNames(userIds: Id[]): string[] {
+        return userIds.map(userId => this.getName(userId)).sort((a, b) => a.localeCompare(b));
+    }
+
     private updateEntries(): void {
         const filteredParticipants = this.participants.filter(pt =>
             (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id))
