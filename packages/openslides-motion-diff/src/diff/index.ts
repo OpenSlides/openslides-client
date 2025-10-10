@@ -6,7 +6,7 @@ import type { UnifiedChange } from "./definitions";
 import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
-import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
+import { djb2hash, getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -230,7 +230,14 @@ export function formatDiff(diff: ExtractedContent): string {
   * @param {string} diffHtml
   * @returns {LineRange}
   */
+const affectedLineRangeCache = new Map<string, LineRange>();
 export function detectAffectedLineRange(diffHtml: string): LineRange | null {
+    const cacheKey = djb2hash(diffHtml);
+    const cached = affectedLineRangeCache.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
+
     const fragment = htmlToFragment(diffHtml);
 
     insertInternalLineMarkers(fragment);
@@ -262,10 +269,13 @@ export function detectAffectedLineRange(diffHtml: string): LineRange | null {
         }
     }
 
-    return {
+    const lineRange = {
         from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
         to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
     };
+
+    affectedLineRangeCache.set(cacheKey, lineRange);
+    return lineRange;
 }
 
 /**
@@ -352,6 +362,7 @@ export function replaceLines(oldHtml: string, newHTML: string, fromLine: number,
     return serializeDom(mergedFragment, true);
 }
 
+const diffCache = new Map<string, string>();
 /**
   * This function calculates the diff between two strings and tries to fix problems with the resulting HTML.
   * If lineLength and firstLineNumber is given, line numbers will be returned es well
@@ -368,6 +379,12 @@ export function diff(
     lineLength: number | null = null,
     firstLineNumber: number | null = null
 ): string {
+    const cacheKey = lineLength + ` ` + firstLineNumber + ` ` + djb2hash(htmlOld) + djb2hash(htmlNew);
+    const cached = diffCache.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
+
     // TODO: This is a workaround to make sure the first element of a amendment
     //       has a line number for correct display of amendments in front of list
     //       or block elements
@@ -814,6 +831,7 @@ export function diff(
         diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
     }
 
+    diffCache.set(cacheKey, diff);
     return diff;
 }
 
