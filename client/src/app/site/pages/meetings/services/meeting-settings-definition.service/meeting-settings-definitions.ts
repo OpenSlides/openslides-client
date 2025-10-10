@@ -588,6 +588,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Activate submitter extension field in motion create form`),
                         helpText: _(`Requires permission to manage motion metadata`),
                         type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_non_manager`,
+                        label: _(`Limit the editor for all users without motion manage permissions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_manager`,
+                        label: _(`Limit the editor for all users with motion manage permissions`),
+                        type: `boolean`
                     }
                 ]
             },

@@ -109,6 +109,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public allowEmbeds = false;
 
+    public isNormalEditor = true;
+
     @Output()
     public leaveFocus = new EventEmitter<void>();
 
@@ -157,91 +159,24 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         return this.translate.instant(`Paragraph`);
     }
 
-    private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    private dialog: MatDialog = inject(MatDialog);
+    private translate: TranslateService = inject(TranslateService);
 
     private domParser = new DOMParser();
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {
+    public constructor() {
         super();
     }
 
     public ngAfterViewInit(): void {
         const editorConfig = {
             element: this.editorEl.nativeElement,
-            extensions: [
-                OfficePaste,
-                ClearTextcolorPaste,
-                // Nodes
-                Document,
-                Blockquote,
-                HardBreak,
-                Heading,
-                ImageResize.configure({
-                    inline: true
-                }),
-                OsSplitBulletList,
-                OsSplitOrderedList,
-                OsSplitListItem,
-                Paragraph,
-                Text,
-                Table,
-                TableRow,
-                TableHeader,
-                TableCell,
-
-                // Marks
-                Bold,
-                Highlight.configure({
-                    multicolor: true
-                }),
-                Italic,
-                Link.extend({
-                    inclusive: false
-                }),
-                Strike,
-                Subscript,
-                Superscript,
-                TextStyle,
-                Underline,
-
-                // Extensions
-                Color,
-                UndoRedo,
-                TextAlign.configure({
-                    types: [`heading`, `paragraph`]
-                }),
-                OsSplit,
-                Extension.create({
-                    name: `angular-component-ext`,
-                    onCreate: () => {
-                        this.editorReady = true;
-                        this.cd.detectChanges();
-                    },
-                    onDestroy: () => {
-                        this.editorReady = false;
-                        this.leaveFocus.emit();
-                    },
-                    onBlur: () => {
-                        this.leaveFocus.emit();
-                    },
-                    onSelectionUpdate: () => {
-                        this.cd.detectChanges();
-                    },
-                    onUpdate: () => {
-                        const content = this.cleanupOutput(this.editor.getHTML());
-                        if (this.value != content) {
-                            this.updateForm(content);
-                        }
-                    }
-                })
-            ],
+            extensions: this.getExtensions(),
             content: this.value
         };
 
-        if (this.allowEmbeds) {
+        if (this.allowEmbeds && this.isNormalEditor) {
             editorConfig.extensions.push(IFrame);
         }
 
@@ -259,6 +194,83 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         if (this.editor) {
             this.editor.commands.setContent(value);
         }
+    }
+
+    public isExtensionActive = (extension: string): boolean =>
+        !!this.editor.extensionManager.extensions.find(ext => ext.name === extension);
+
+    public getExtensions(): Extension[] {
+        return [
+            OfficePaste,
+            ClearTextcolorPaste,
+            // Nodes
+            Document,
+            Blockquote,
+            HardBreak,
+            Heading,
+            ImageResize.configure({
+                inline: true
+            }),
+            OsSplitBulletList,
+            OsSplitOrderedList,
+            OsSplitListItem,
+            Paragraph,
+            Text,
+            Table,
+            TableRow,
+            TableHeader,
+            TableCell,
+
+            // Marks
+            Bold,
+            Highlight.configure({
+                multicolor: true
+            }),
+            Italic,
+            Link.extend({
+                inclusive: false
+            }),
+            Strike,
+            Subscript,
+            Superscript,
+            TextStyle,
+            Underline,
+
+            // Extensions
+            Color,
+            UndoRedo,
+            TextAlign.configure({
+                types: [`heading`, `paragraph`]
+            }),
+            OsSplit,
+            this.createExtensionFunctions()
+        ];
+    }
+
+    public createExtensionFunctions(): Extension {
+        return Extension.create({
+            name: `angular-component-ext`,
+            onCreate: () => {
+                this.editorReady = true;
+                this.cd.detectChanges();
+            },
+            onDestroy: () => {
+                this.editorReady = false;
+                this.leaveFocus.emit();
+            },
+            onBlur: () => {
+                this.leaveFocus.emit();
+            },
+            onSelectionUpdate: () => {
+                this.cd.detectChanges();
+            },
+            onUpdate: () => {
+                const content = this.cleanupOutput(this.editor.getHTML());
+                if (this.value != content) {
+                    this.updateForm(content);
+                }
+            }
+        });
     }
 
     public updateColorSets(): void {
@@ -438,7 +450,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.contentForm.setValue(value);
     }
 
-    private cleanupOutput(html: string): string {
+    protected cleanupOutput(html: string): string {
         const dom = this.domParser.parseFromString(html, `text/html`);
 
         // Remove paragraphs inside list elements
