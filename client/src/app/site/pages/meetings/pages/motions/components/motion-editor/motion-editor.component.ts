@@ -33,8 +33,10 @@ import { TextStyle } from '../../../../../../../ui/modules/editor/components/edi
     standalone: false
 })
 export class MotionEditorComponent extends EditorComponent implements AfterViewInit {
-    private allowEditorLimitNonManager = false;
-    private allowEditorLimitManager = false;
+    private nonManagerSetting = false;
+    private managerSetting = false;
+
+    private canManage = false;
 
     public override isNormalEditor = false;
 
@@ -43,18 +45,14 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
 
-        this.subscriptions.push(
-            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_non_manager`).subscribe(enabled => {
-                this.allowEditorLimitNonManager = !this.operator.hasPerms(Permission.motionCanManage) && enabled;
-            }),
-            this.meetingSettingsService.get(`motions_enable_restricted_editor_for_manager`).subscribe(enabled => {
-                this.allowEditorLimitManager = this.operator.hasPerms(Permission.motionCanManage) && enabled;
-            })
-        );
+        this.nonManagerSetting = this.meetingSettingsService.instant(`motions_enable_restricted_editor_for_non_manager`);
+        this.managerSetting = this.meetingSettingsService.instant(`motions_enable_restricted_editor_for_manager`);
+
+        this.canManage = this.operator.hasPerms(Permission.motionCanManage)
     }
 
     public override getExtensions(): Extension[] {
-        if (this.allowEditorLimitNonManager || this.allowEditorLimitManager) {
+        if ((this.canManage && this.managerSetting) || (!this.canManage && this.nonManagerSetting)) {
             return [
                 OfficePaste,
                 // Nodes
@@ -83,9 +81,5 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
         } else {
             return super.getExtensions();
         }
-    }
-
-    public isEditorLimited(): boolean {
-        return this.allowEditorLimitNonManager || this.allowEditorLimitManager;
     }
 }
