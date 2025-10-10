@@ -141,20 +141,16 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         return this.participantRepo.getViewModel(userId).getShortName();
     }
 
-    public getSortedNames(userIds: Id[]): string[] {
-        return userIds.map(userId => this.getName(userId)).sort((a, b) => a.localeCompare(b));
-    }
-
     private updateEntries(): void {
-        const filteredParticipants = this.participants.filter(pt =>
-            (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id))
-        );
+        const filteredSortedParticipants = this.participants
+            .filter(pt => (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id)))
+            .sort((a, b) => a.short_name.localeCompare(b.short_name));
         const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID);
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
             structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id));
         }
-        for (const participant of filteredParticipants) {
+        for (const participant of filteredSortedParticipants) {
             allMandates.add(
                 participant.id,
                 participant.isPresentInMeeting(),
