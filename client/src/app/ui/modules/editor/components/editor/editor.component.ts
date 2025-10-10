@@ -196,7 +196,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
     }
 
-    public isExtensionActive = extension =>
+    public isExtensionActive = (extension: string): boolean  =>
         !!this.editor.extensionManager.extensions.find(ext => ext.name === extension);
 
     public getExtensions(): Extension[] {
