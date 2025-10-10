@@ -37,7 +37,6 @@ import { TextAlign } from '@tiptap/extension-text-align';
 import { Underline } from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
 import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
@@ -95,7 +94,7 @@ const DEFAULT_COLOR_PALETE = [
     standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
-    @ViewChild(`editorEl`) public editorEl: ElementRef;
+    @ViewChild(`editorEl`) private editorEl: ElementRef;
 
     @ViewChildren(`btn`)
     public buttonElements!: QueryList<ElementRef>;
@@ -109,6 +108,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     @Input()
     public allowEmbeds = false;
+
+    public isNormalEditor = true;
 
     @Output()
     public leaveFocus = new EventEmitter<void>();
@@ -159,7 +160,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
-    protected operator: OperatorService = inject(OperatorService);
     private dialog: MatDialog = inject(MatDialog);
     private translate: TranslateService = inject(TranslateService);
 
@@ -172,77 +172,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public ngAfterViewInit(): void {
         const editorConfig = {
             element: this.editorEl.nativeElement,
-            extensions: [
-                OfficePaste,
-                ClearTextcolorPaste,
-                // Nodes
-                Document,
-                Blockquote,
-                HardBreak,
-                Heading,
-                ImageResize.configure({
-                    inline: true
-                }),
-                OsSplitBulletList,
-                OsSplitOrderedList,
-                OsSplitListItem,
-                Paragraph,
-                Text,
-                Table,
-                TableRow,
-                TableHeader,
-                TableCell,
-
-                // Marks
-                Bold,
-                Highlight.configure({
-                    multicolor: true
-                }),
-                Italic,
-                Link.extend({
-                    inclusive: false
-                }),
-                Strike,
-                Subscript,
-                Superscript,
-                TextStyle,
-                Underline,
-
-                // Extensions
-                Color,
-                UndoRedo,
-                TextAlign.configure({
-                    types: [`heading`, `paragraph`]
-                }),
-                OsSplit,
-                Extension.create({
-                    name: `angular-component-ext`,
-                    onCreate: () => {
-                        this.editorReady = true;
-                        this.cd.detectChanges();
-                    },
-                    onDestroy: () => {
-                        this.editorReady = false;
-                        this.leaveFocus.emit();
-                    },
-                    onBlur: () => {
-                        this.leaveFocus.emit();
-                    },
-                    onSelectionUpdate: () => {
-                        this.cd.detectChanges();
-                    },
-                    onUpdate: () => {
-                        const content = this.cleanupOutput(this.editor.getHTML());
-                        if (this.value != content) {
-                            this.updateForm(content);
-                        }
-                    }
-                })
-            ],
+            extensions: this.getExtensions(),
             content: this.value
         };
 
-        if (this.allowEmbeds) {
+        if (this.allowEmbeds && this.isNormalEditor) {
             editorConfig.extensions.push(IFrame);
         }
 
@@ -273,6 +207,80 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             isActive = this.isExtensionActive(ext);
         }
         return isActive;
+    }
+
+    public getExtensions(): Extension[] {
+        return [
+            OfficePaste,
+            ClearTextcolorPaste,
+            // Nodes
+            Document,
+            Blockquote,
+            HardBreak,
+            Heading,
+            ImageResize.configure({
+                inline: true
+            }),
+            OsSplitBulletList,
+            OsSplitOrderedList,
+            OsSplitListItem,
+            Paragraph,
+            Text,
+            Table,
+            TableRow,
+            TableHeader,
+            TableCell,
+
+            // Marks
+            Bold,
+            Highlight.configure({
+                multicolor: true
+            }),
+            Italic,
+            Link.extend({
+                inclusive: false
+            }),
+            Strike,
+            Subscript,
+            Superscript,
+            TextStyle,
+            Underline,
+
+            // Extensions
+            Color,
+            UndoRedo,
+            TextAlign.configure({
+                types: [`heading`, `paragraph`]
+            }),
+            OsSplit,
+            this.createExtensionFunctions()
+        ];
+    }
+
+    public createExtensionFunctions(): Extension {
+        return Extension.create({
+            name: `angular-component-ext`,
+            onCreate: () => {
+                this.editorReady = true;
+                this.cd.detectChanges();
+            },
+            onDestroy: () => {
+                this.editorReady = false;
+                this.leaveFocus.emit();
+            },
+            onBlur: () => {
+                this.leaveFocus.emit();
+            },
+            onSelectionUpdate: () => {
+                this.cd.detectChanges();
+            },
+            onUpdate: () => {
+                const content = this.cleanupOutput(this.editor.getHTML());
+                if (this.value != content) {
+                    this.updateForm(content);
+                }
+            }
+        });
     }
 
     public updateColorSets(): void {

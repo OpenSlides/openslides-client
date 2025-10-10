@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, forwardRef } from '@angular/core';
+import { AfterViewInit, Component, forwardRef, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
-import { Editor, Extension } from '@tiptap/core';
+import { Extension } from '@tiptap/core';
 import { Bold } from '@tiptap/extension-bold';
 import { Document } from '@tiptap/extension-document';
 import { HardBreak } from '@tiptap/extension-hard-break';
@@ -13,6 +13,7 @@ import { TextAlign } from '@tiptap/extension-text-align';
 import { UndoRedo } from '@tiptap/extensions';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { EditorComponent } from '../../../../../../../ui/modules/editor/components/editor/editor.component';
 import {
@@ -35,6 +36,10 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
     private allowEditorLimitNonManager = false;
     private allowEditorLimitManager = false;
 
+    public override isNormalEditor = false;
+
+    protected operator: OperatorService = inject(OperatorService);
+
     public constructor(private meetingSettingsService: MeetingSettingsService) {
         super();
 
@@ -48,64 +53,35 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
         );
     }
 
-    public override ngAfterViewInit(): void {
+    public override getExtensions(): Extension[] {
         if (this.allowEditorLimitNonManager || this.allowEditorLimitManager) {
-            const editorConfig = {
-                element: this.editorEl.nativeElement,
-                extensions: [
-                    OfficePaste,
-                    // Nodes
-                    Document,
-                    HardBreak,
-                    Heading,
-                    OsSplitBulletList,
-                    OsSplitOrderedList,
-                    OsSplitListItem,
-                    Paragraph,
-                    Text,
+            return [
+                OfficePaste,
+                // Nodes
+                Document,
+                HardBreak,
+                Heading,
+                OsSplitBulletList,
+                OsSplitOrderedList,
+                OsSplitListItem,
+                Paragraph,
+                Text,
 
-                    // Marks
-                    Bold,
-                    Italic,
-                    TextStyle,
+                // Marks
+                Bold,
+                Italic,
+                TextStyle,
 
-                    // Extensions
-                    UndoRedo,
-                    TextAlign.configure({
-                        types: [`heading`, `paragraph`]
-                    }),
-                    OsSplit,
-                    Extension.create({
-                        name: `angular-component-ext`,
-                        onCreate: () => {
-                            this.editorReady = true;
-                            this.cd.detectChanges();
-                        },
-                        onDestroy: () => {
-                            this.editorReady = false;
-                            this.leaveFocus.emit();
-                        },
-                        onBlur: () => {
-                            this.leaveFocus.emit();
-                        },
-                        onSelectionUpdate: () => {
-                            this.cd.detectChanges();
-                        },
-                        onUpdate: () => {
-                            const content = this.cleanupOutput(this.editor.getHTML());
-                            if (this.value != content) {
-                                this.updateForm(content);
-                            }
-                        }
-                    })
-                ],
-                content: this.value
-            };
-
-            this.editor = new Editor(editorConfig);
-            this.updateColorSets();
+                // Extensions
+                UndoRedo,
+                TextAlign.configure({
+                    types: [`heading`, `paragraph`]
+                }),
+                OsSplit,
+                this.createExtensionFunctions()
+            ];
         } else {
-            super.ngAfterViewInit();
+            return super.getExtensions();
         }
     }
 
