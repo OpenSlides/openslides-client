@@ -1,7 +1,7 @@
 <div class="editor">
     @if (editorReady) {
         <div class="editor-menu">
-            @if (isAtLeastOneExtensionActive(['heading', 'textAlign', 'subscript', 'superscript'])) {
+            @if (['heading', 'textAlign', 'subscript', 'superscript'].some(isExtensionActive)) {
                 <div class="button-group">
                     <button
                         #btn
@@ -45,7 +45,7 @@
                     </button>
                 }
 
-                @if (isAtLeastOneExtensionActive(['subscript', 'superscript'])) {
+                @if (['subscript', 'superscript'].some(isExtensionActive)) {
                     <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
                 }
             </mat-menu>
@@ -137,7 +137,7 @@
                 }
             </mat-menu>
 
-            @if (isAtLeastOneExtensionActive(['italic', 'bold', 'underline', 'strike'])) {
+            @if (['italic', 'bold', 'underline', 'strike'].some(isExtensionActive)) {
                 <div class="button-group">
                     @if (isExtensionActive('bold')) {
                         <button
@@ -293,7 +293,7 @@
                 <mat-icon>format_clear</mat-icon>
             </button>
 
-            @if (isAtLeastOneExtensionActive(['bulletList', 'orderedList'])) {
+            @if (['bulletList', 'orderedList'].some(isExtensionActive)) {
                 <div class="button-group">
                     @if (isExtensionActive('bulletList')) {
                         <button
@@ -329,7 +329,7 @@
                 </div>
             }
 
-            @if (isAtLeastOneExtensionActive(['link', 'iframe'])) {
+            @if (['link', 'iframe'].some(isExtensionActive)) {
                 <div class="button-group">
                     @if (isExtensionActive('link')) {
                         <button
