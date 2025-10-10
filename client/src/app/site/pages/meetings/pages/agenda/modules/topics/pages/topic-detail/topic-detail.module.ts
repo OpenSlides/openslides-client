@@ -21,6 +21,7 @@ import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { AgendaForwardDialogComponent } from '../../../../components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component';
 import { TopicPollModule } from '../../modules/topic-poll/topic-poll.module';
 import { TopicCommonServiceModule } from '../../services/topic-common-service.module';
 import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
@@ -53,7 +54,8 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         TopicPollModule,
         RouterModule,
         IconContainerComponent,
-        ListOfSpeakersContentModule
+        ListOfSpeakersContentModule,
+        AgendaForwardDialogComponent
     ]
 })
 export class TopicDetailModule {}

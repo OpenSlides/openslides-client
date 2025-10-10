@@ -101,6 +101,11 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 display_name: _(`Can manage moderation notes`),
                 help_text: _(`Can edit all moderation notes.`),
                 value: Permission.listOfSpeakersCanManageModeratorNotes
+            },
+            {
+                display_name: _(`Can forward agenda items`),
+                help_text: _(`Helptext for new permission`),
+                value: Permission.agendaItemCanForward
             }
         ]
     },
