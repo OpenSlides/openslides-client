@@ -26,7 +26,6 @@ export interface AgendaForwardDialogReturnData {
     selector: 'os-agenda-forward-dialog',
     templateUrl: './agenda-forward-dialog.component.html',
     styleUrl: './agenda-forward-dialog.component.scss',
-    standalone: true,
     imports: [
         CommonModule,
         MatCheckboxModule,
