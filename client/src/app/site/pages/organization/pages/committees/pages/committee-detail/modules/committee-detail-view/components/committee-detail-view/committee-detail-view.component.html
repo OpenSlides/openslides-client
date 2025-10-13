@@ -150,7 +150,7 @@
                         }
                     </ul>
                     @if (committee.forward_agenda_to_committees.length > 1) {
-                        <button mat-button (click)="toggleForwardingList()">
+                        <button mat-button (click)="toggleAgendaForwardingList()">
                             @if (!agendaForwardingExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
                             } @else {
@@ -186,7 +186,7 @@
                         }
                     </ul>
                     @if (committee.receive_agenda_forwardings_from_committees.length > 1) {
-                        <button mat-button (click)="toggleReceiveList()">
+                        <button mat-button (click)="toggleAgendaReceiveList()">
                             @if (!agendaReceiveExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
                             } @else {

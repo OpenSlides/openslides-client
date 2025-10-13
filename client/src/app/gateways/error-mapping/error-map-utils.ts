@@ -1,5 +1,6 @@
 import { _ } from '@ngx-translate/core';
 
+import { AgendaItemAction } from '../repositories/agenda';
 import { MeetingAction } from '../repositories/meetings';
 import { MotionAction } from '../repositories/motions';
 import { UserAction } from '../repositories/users/user-action';
@@ -59,6 +60,7 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
         case MotionAction.CREATE_FORWARDED:
+        case AgendaItemAction.FORWARD:
         case UserAction.FORGET_PASSWORD_CONFIRM:
         case UserAction.SET_PASSWORD_SELF:
             return MatchAllErrorMap;

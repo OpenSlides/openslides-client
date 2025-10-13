@@ -59,6 +59,11 @@ export const PERMISSIONS: AppPermission[] = [
                 value: Permission.agendaItemCanSeeInternal
             },
             {
+                display_name: _(`Can forward agenda items`),
+                help_text: _(`Helptext for new permission`),
+                value: Permission.agendaItemCanForward
+            },
+            {
                 display_name: _(`Can manage agenda`),
                 help_text: _(
                     `Can create, modify and delete topics, add motions and elections to the agenda, sort, number and tag agenda items.`
@@ -101,11 +106,6 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 display_name: _(`Can manage moderation notes`),
                 help_text: _(`Can edit all moderation notes.`),
                 value: Permission.listOfSpeakersCanManageModeratorNotes
-            },
-            {
-                display_name: _(`Can forward agenda items`),
-                help_text: _(`Helptext for new permission`),
-                value: Permission.agendaItemCanForward
             }
         ]
     },

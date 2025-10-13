@@ -179,6 +179,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
         this.receiveExpanded = !this.receiveExpanded;
     }
 
+    public toggleAgendaForwardingList(): void {
+        this.agendaForwardingExpanded = !this.agendaForwardingExpanded;
+    }
+
+    public toggleAgendaReceiveList(): void {
+        this.agendaReceiveExpanded = !this.agendaReceiveExpanded;
+    }
+
     public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
         return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
     }

@@ -25,6 +25,7 @@ import {
 export interface AgendaForwardDialogPayload {
     items: ViewAgendaItem[];
     is_single: boolean;
+    showSkippedItemWarning: boolean;
 }
 
 @Injectable({
@@ -80,7 +81,8 @@ export class AgendaForwardDialogService extends BaseDialogService<
             data: {
                 agenda: data.items,
                 forwardingMeetings: this._forwardingMeetings,
-                is_single: data.is_single
+                is_single: data.is_single,
+                showSkippedItemWarning: data.showSkippedItemWarning
             }
         });
     }
@@ -92,18 +94,36 @@ export class AgendaForwardDialogService extends BaseDialogService<
             this.snackbar.open(this.translate.instant(`None of the selected agenda items can be forwarded.`), `Ok`);
             return;
         }
-        const dialogRef = await this.open({ items: toForward, is_single });
+        const dialogRef = await this.open({
+            items: toForward,
+            is_single,
+            showSkippedItemWarning: items.length !== toForward.length
+        });
         const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as AgendaForwardDialogReturnData;
         const toMeetingIds = dialogData?.meetingIds as Ids;
         if (toMeetingIds) {
-            const agendaItemIds = toForward.map(item => item.id);
-            await this.repo.forward(
-                toMeetingIds,
-                agendaItemIds,
-                dialogData.withModeratorNotes,
-                dialogData.withSpeakers,
-                dialogData.withAttachments
-            );
+            try {
+                const agendaItemIds = toForward.map(item => item.id);
+                await this.repo.forward(
+                    toMeetingIds,
+                    agendaItemIds,
+                    dialogData.withModeratorNotes,
+                    dialogData.withSpeakers,
+                    dialogData.withAttachments
+                );
+                this.snackbar.open(
+                    (items.length === 1
+                        ? this.translate.instant(`The agenda item was successfully forwarded to {} meeting(s)`)
+                        : `${toForward.length} ` +
+                          this.translate.instant(`of`) +
+                          ` ${items.length} ` +
+                          this.translate.instant(`agenda items were successfully forwarded to {} meeting(s)`)
+                    ).replace(`{}`, `${toMeetingIds.length}`),
+                    `Ok`
+                );
+            } catch (e: any) {
+                this.snackbar.open(e.toString(), `Ok`);
+            }
         }
     }
 

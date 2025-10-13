@@ -86,6 +86,7 @@ export class AgendaForwardDialogComponent implements OnInit {
             agenda: ViewAgendaItem[];
             forwardingMeetings: GetForwardingMeetingsPresenter[];
             is_single?: boolean;
+            showSkippedItemWarning: boolean;
         },
         private dialogRef: MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>,
         private activeMeeting: ActiveMeetingService
@@ -97,7 +98,7 @@ export class AgendaForwardDialogComponent implements OnInit {
         this.showChildrenNotIncludedWarning = this.data.agenda.some(
             item => item.child_ids && item.child_ids.some(child_id => !agendaItemIds.has(child_id))
         );
-        this.showNotTopicWarning = this.data.agenda.some(item => !item.content_object_id.startsWith(`topic/`));
+        this.showNotTopicWarning = this.data.showSkippedItemWarning;
     }
 
     public async ngOnInit(): Promise<void> {
