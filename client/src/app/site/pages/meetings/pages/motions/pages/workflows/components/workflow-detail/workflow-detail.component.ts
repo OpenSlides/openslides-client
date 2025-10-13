@@ -286,12 +286,7 @@ Hint: Administrators always have full access.`
         {
             name: _(`Label for next state to be set by submitter`),
             help_text: _(
-                `Defines the wording of the next state button that belongs to this state.
-
-                To show this button to the submitter "Submitter may set  state to" needs to direct to this state.
-                
-                Example: in "Submitter may set state to" accepted stated withdraw, and withdraw's button label is "Withdraw your motion".
-                If the motion is in the state accepted, then the submitter will see a button "Withdraw your motion" in the motion.`
+                `Enables and defines a button in the motion that appears for the submitters if they can set this state via "Submitter may set state to".`
             ),
             selector: `state_button_label`,
             type: `input`
