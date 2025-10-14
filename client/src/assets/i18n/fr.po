@@ -1,8 +1,8 @@
-# 
+#
 # Translators:
 # Moosline, 2024
 # Elblinator, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Elblinator, 2025\n"
@@ -3976,6 +3976,9 @@ msgstr "Le mot de passe a été créé avec succès."
 
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas."
+
+msgid "New and old passwords are identical!"
+msgstr ""
 
 msgid "Paste/write your topics in this textbox."
 msgstr "Collez/écrivez vos sujets dans cette zone de texte."

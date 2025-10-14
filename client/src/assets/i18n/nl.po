@@ -1,8 +1,8 @@
-# 
+#
 # Translators:
 # Michael Schulze, 2025
 # Birte Spekker <birte.spekker@intevation.de>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Birte Spekker <birte.spekker@intevation.de>, 2025\n"
@@ -3990,6 +3990,9 @@ msgstr "Wachtwoord succesvol gewijzigd!"
 
 msgid "Passwords do not match"
 msgstr "Wachtwoorden kloppen niet"
+
+msgid "New and old passwords are identical!"
+msgstr ""
 
 msgid "Paste/write your topics in this textbox."
 msgstr "Plak/schrijf uw onderwerpen in dit tekstvak."

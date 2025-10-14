@@ -1,11 +1,11 @@
-# 
+#
 # Translators:
 # Joshua Sangmeister <joshua.sangmeister@gmail.com>, 2024
 # Katharina <karmitt2@web.de>, 2024
 # Elblinator, 2025
 # Birte Spekker <birte.spekker@intevation.de>, 2025
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2025\n"
@@ -4062,6 +4062,9 @@ msgstr "Passwort erfolgreich geändert!"
 
 msgid "Passwords do not match"
 msgstr "Passwörter stimmen nicht überein"
+
+msgid "New and old passwords are identical!"
+msgstr "Neues und altes Passwort sind identisch!"
 
 msgid "Paste/write your topics in this textbox."
 msgstr ""

@@ -1,9 +1,9 @@
-# 
+#
 # Translators:
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
 # Katharina <karmitt2@web.de>, 2022
 # Birte Spekker <birte.spekker@intevation.de>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Birte Spekker <birte.spekker@intevation.de>, 2025\n"
@@ -3773,6 +3773,9 @@ msgid "Password changed successfully!"
 msgstr ""
 
 msgid "Passwords do not match"
+msgstr ""
+
+msgid "New and old passwords are identical!"
 msgstr ""
 
 msgid "Paste/write your topics in this textbox."

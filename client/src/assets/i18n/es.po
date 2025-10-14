@@ -1,10 +1,10 @@
-# 
+#
 # Translators:
 # Katharina <karmitt2@web.de>, 2021
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
 # Wiebke Spekker <wiebkespekker@gmx.de>, 2022
 # Birte Spekker <birte.spekker@intevation.de>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Birte Spekker <birte.spekker@intevation.de>, 2025\n"
@@ -3818,6 +3818,9 @@ msgstr "La contraseña ha sido cambiada con éxito."
 
 msgid "Passwords do not match"
 msgstr "La contraseña antigua no coincide."
+
+msgid "New and old passwords are identical!"
+msgstr ""
 
 msgid "Paste/write your topics in this textbox."
 msgstr "Pegue/escriba sus temas en este cuadro de texto."
