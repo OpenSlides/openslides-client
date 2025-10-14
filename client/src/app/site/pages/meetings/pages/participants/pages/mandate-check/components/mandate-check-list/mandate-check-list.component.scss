@@ -38,6 +38,10 @@
         grid-template-columns: 22% 22% 12% 22% 22%;
         grid-gap: 5px;
     }
+    @media (min-width: 1500px) {
+        grid-template-columns: 10% 10% 60% 10% 10%;
+        grid-gap: 10px;
+    }
 }
 
 .footer-grid {
