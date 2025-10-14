@@ -254,6 +254,10 @@ export class AutoupdateService {
             return;
         }
 
+        if (Object.keys(autoupdateData).length === 0) {
+            return;
+        }
+
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.debug(
             `[autoupdate] from streams:`,
