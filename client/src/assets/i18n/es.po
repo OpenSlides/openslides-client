@@ -1,10 +1,10 @@
-#
+# 
 # Translators:
 # Katharina <karmitt2@web.de>, 2021
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
 # Wiebke Spekker <wiebkespekker@gmx.de>, 2022
 # Birte Spekker <birte.spekker@intevation.de>, 2025
-#
+# 
 msgid ""
 msgstr ""
 "Last-Translator: Birte Spekker <birte.spekker@intevation.de>, 2025\n"
