@@ -250,11 +250,11 @@ export class AutoupdateService {
 
     private async handleAutoupdate({ autoupdateData, idDescriptionMap }: AutoupdateIncomingMessage): Promise<void> {
         const requestIds = Object.keys(idDescriptionMap).map(id => +id);
-        if (!this._activeRequestObjects || !requestIds.some(id => this._activeRequestObjects[id])) {
-            return;
-        }
-
-        if (Object.keys(autoupdateData).length === 0) {
+        if (
+            !this._activeRequestObjects ||
+            !requestIds.some(id => this._activeRequestObjects[id]) ||
+            Object.keys(autoupdateData).length === 0
+        ) {
             return;
         }
 
