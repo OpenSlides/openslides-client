@@ -1,8 +1,8 @@
-#
+# 
 # Translators:
 # fri, 2024
 # Birte Spekker <birte.spekker@intevation.de>, 2025
-#
+# 
 msgid ""
 msgstr ""
 "Last-Translator: Birte Spekker <birte.spekker@intevation.de>, 2025\n"
