@@ -33,9 +33,10 @@
 .card-grid {
     display: grid;
     grid-template-columns: 15% 15% 40% 15% 15%;
-    grid-gap: 5px;
+    grid-gap: 10px;
     @media (max-width: 700px) {
         grid-template-columns: 22% 22% 12% 22% 22%;
+        grid-gap: 5px;
     }
 }
 
