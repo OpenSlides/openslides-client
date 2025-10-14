@@ -20,6 +20,11 @@
     margin-top: 20px;
 }
 
+.border-grid {
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+}
+
 .header-grid {
     display: grid;
     grid-template-columns: 95% 5%;
@@ -28,7 +33,10 @@
 .card-grid {
     display: grid;
     grid-template-columns: 15% 15% 40% 15% 15%;
-    grid-gap: 20px;
+    grid-gap: 5px;
+    @media (max-width: 700px) {
+        grid-template-columns: 22% 22% 12% 22% 22%;
+    }
 }
 
 .footer-grid {
