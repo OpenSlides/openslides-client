@@ -9,14 +9,8 @@ import {
     NO_KEY,
     PollMethod,
     PollPercentBase,
-    PollPercentBaseVerbose,
-    PollPercentBaseVerboseKey,
-    PollPropertyVerbose,
-    PollPropertyVerboseKey,
     PollTableData,
     PollType,
-    PollTypeVerbose,
-    PollTypeVerboseKey,
     PollValues,
     VOTE_MAJORITY,
     VOTE_UNDOCUMENTED,
@@ -42,6 +36,10 @@ export abstract class PollService {
 
     public get isElectronicVotingEnabled(): boolean {
         return this._isElectronicVotingEnabled;
+    }
+
+    public get isMaxVotesPerOptionEnabled(): boolean {
+        return this.enableMaxVotesPerOption;
     }
 
     private _isElectronicVotingEnabled = false;
@@ -279,27 +277,6 @@ export abstract class PollService {
         return ``;
     }
 
-    /**
-     * @deprecated Please rewrite this function
-     *
-     * @param key
-     * @param value
-     * @returns
-     */
-    public getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
-        switch (key) {
-            case `onehundred_percent_base`:
-                return PollPercentBaseVerbose[value as PollPercentBaseVerboseKey];
-            case `type`:
-                return PollTypeVerbose[value as PollTypeVerboseKey];
-        }
-        return ``;
-    }
-
-    public getVerboseNameForKey(key: PollPropertyVerboseKey): string {
-        return PollPropertyVerbose[key];
-    }
-
     public getVoteTableKeys(poll: PollData): VotingResult[] {
         const keys: VotingResult[] = [
             {
@@ -333,7 +310,7 @@ export abstract class PollService {
         );
     }
 
-    public showPercentOfValidOrCast(poll: PollData): boolean {
+    private showPercentOfValidOrCast(poll: PollData): boolean {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
             poll.onehundred_percent_base === PollPercentBase.Cast ||
@@ -394,14 +371,6 @@ export abstract class PollService {
 
     protected getPollDataFields(_poll: PollData): CalculablePollKey[] {
         throw new Error(`Method not implemented`);
-    }
-
-    public isVoteDocumented(vote: number): boolean {
-        return vote !== null && vote !== undefined && vote !== VOTE_UNDOCUMENTED;
-    }
-
-    public isMaxVotesPerOptionEnabled(): boolean {
-        return this.enableMaxVotesPerOption;
     }
 
     private transformToOptionData(data: PollTableData): OptionData {
