@@ -44,7 +44,7 @@ RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version
 RUN npm run build
 
 # Prod wants nginx as base image for some reason
-FROM nginx:1.29.1 as prod
+FROM nginx:1.29.2 as prod
 
 ## Setup
 ARG CONTEXT
