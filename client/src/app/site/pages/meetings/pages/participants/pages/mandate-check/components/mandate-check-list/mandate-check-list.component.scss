@@ -3,7 +3,21 @@
 .flex-container {
     display: flex;
     flex-direction: column;
+}
+
+.align-right {
+    align-items: end;
+}
+
+.align-left {
+    align-items: start;
+}
+
+.groups-grid {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    margin-top: 20px;
 }
 
 .header-grid {
@@ -14,7 +28,7 @@
 .card-grid {
     display: grid;
     grid-template-columns: 15% 15% 40% 15% 15%;
-    grid-gap: 10px;
+    grid-gap: 20px;
 }
 
 .footer-grid {
@@ -50,4 +64,26 @@
 
 button {
     border-radius: 0%;
+}
+
+.text-large-bold {
+    font-size: 19px;
+    font-weight: 500;
+}
+
+.text-small {
+    font-size: 12px;
+
+    &-bold {
+        font-weight: 500;
+    }
+}
+
+.text-medium-bold {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.text-medium {
+    font-size: 14px;
 }
