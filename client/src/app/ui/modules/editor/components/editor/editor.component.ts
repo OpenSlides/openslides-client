@@ -457,15 +457,18 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
         // Remove paragraphs inside list elements
         const listParagraphs = dom.querySelectorAll(`li > p`);
-        for (let i = 0; i < listParagraphs.length; i++) {
-            unwrapNode(listParagraphs.item(i));
+        for (const item of listParagraphs) {
+            unwrapNode(item);
         }
 
-        // Remove empty span if editor is limited
-        if (!this.isExtensionActive(`color`)) {
+        // if editor is limited remove empty span
+        // color and backgroundcolor are the only elements which we support which produce spans
+        if (!this.isExtensionActive(`color`) || !this.isExtensionActive(`highlight`)) {
             const spanElements = dom.querySelectorAll(`span`);
-            for (let i = 0; i < spanElements.length; i++) {
-                unwrapNode(spanElements.item(i));
+            for (const item of spanElements) {
+                if (item.style.color === `` && item.style.backgroundColor === ``) {
+                    unwrapNode(item);
+                }
             }
         }
 
