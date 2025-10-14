@@ -73,13 +73,13 @@
                 <mat-card-footer>
                     <div class="footer-grid">
                         <div>
-                            <div class="bold margin-left-medium small-margin-top">{{ 'Present' | translate }}:</div>
+                            <div class="bold margin-left-medium small-margin-top">{{ 'Present' | translate }}</div>
                             @for (userId of entry.presentUserIds; track userId) {
                                 <div class="margin-left-large">{{ getName(userId) }}</div>
                             }
                         </div>
                         <div>
-                            <div class="bold margin-left-medium small-margin-top">{{ 'Absent' | translate }}:</div>
+                            <div class="bold margin-left-medium small-margin-top">{{ 'Absent' | translate }}</div>
                             @for (userId of entry.absentUserIds; track userId) {
                                 <div class="margin-left-large">{{ getName(userId) }}</div>
                             }
