@@ -1,8 +1,8 @@
-#
+# 
 # Translators:
 # Moosline, 2024
 # Elblinator, 2025
-#
+# 
 msgid ""
 msgstr ""
 "Last-Translator: Elblinator, 2025\n"
