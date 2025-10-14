@@ -3819,9 +3819,6 @@ msgstr "La contraseña ha sido cambiada con éxito."
 msgid "Passwords do not match"
 msgstr "La contraseña antigua no coincide."
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Pegue/escriba sus temas en este cuadro de texto."
 

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { _ } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { PasswordForm } from '../../definitions';
@@ -18,7 +19,7 @@ const UndesiredPasswords = [
     `123123`
 ];
 const UndesiredPasswordFeedback = `ಠ_ಠ`;
-const PointlessPasswordFeedback = `New and old passwords are identical!`;
+const PointlessPasswordFeedback = _(`New and old passwords are identical!`);
 
 @Component({
     selector: `os-password-form`,

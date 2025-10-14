@@ -3856,9 +3856,6 @@ msgstr "Heslo bylo úspěšně změněno!"
 msgid "Passwords do not match"
 msgstr "Hesla se neshodují"
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Kopírujte nebo vložte názvy vašich námětů do tohoto textového pole."
 

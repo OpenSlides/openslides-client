@@ -3775,9 +3775,6 @@ msgstr ""
 msgid "Passwords do not match"
 msgstr ""
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Вставьте/напишите ваши темы в этом текстовом поле."
 

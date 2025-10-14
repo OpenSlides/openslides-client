@@ -3991,9 +3991,6 @@ msgstr "Wachtwoord succesvol gewijzigd!"
 msgid "Passwords do not match"
 msgstr "Wachtwoorden kloppen niet"
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Plak/schrijf uw onderwerpen in dit tekstvak."
 

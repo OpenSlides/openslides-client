@@ -3977,9 +3977,6 @@ msgstr "Le mot de passe a été créé avec succès."
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas."
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Collez/écrivez vos sujets dans cette zone de texte."
 

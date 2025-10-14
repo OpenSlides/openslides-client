@@ -4063,9 +4063,6 @@ msgstr "Passwort erfolgreich geändert!"
 msgid "Passwords do not match"
 msgstr "Passwörter stimmen nicht überein"
 
-msgid "New and old passwords are identical!"
-msgstr "Neues und altes Passwort sind identisch!"
-
 msgid "Paste/write your topics in this textbox."
 msgstr ""
 "Kopieren oder schreiben Sie die Titel Ihrer Themenpunkte in diese Textbox."

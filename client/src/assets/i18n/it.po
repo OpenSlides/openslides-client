@@ -4004,9 +4004,6 @@ msgstr "Password cambiata con successo!"
 msgid "Passwords do not match"
 msgstr "Le password non corrispondono"
 
-msgid "New and old passwords are identical!"
-msgstr ""
-
 msgid "Paste/write your topics in this textbox."
 msgstr "Copiare / scrivere i propri temi nel campo di testo."
 
