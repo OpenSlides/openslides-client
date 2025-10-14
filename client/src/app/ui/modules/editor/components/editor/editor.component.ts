@@ -146,7 +146,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public get godButtonText(): string {
-        if (this.editor.isActive(`subscript`)) {
+        if (!this.isNormalEditor) {
+            return this.translate.instant(`Heading`);
+        } else if (this.editor.isActive(`subscript`)) {
             return this.translate.instant(`Subscript`);
         } else if (this.editor.isActive(`superscript`)) {
             return this.translate.instant(`Superscript`);
@@ -457,6 +459,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         const listParagraphs = dom.querySelectorAll(`li > p`);
         for (let i = 0; i < listParagraphs.length; i++) {
             unwrapNode(listParagraphs.item(i));
+        }
+
+        // Remove empty span if editor is limited
+        if (!this.isExtensionActive(`color`)) {
+            const spanElements = dom.querySelectorAll(`span`);
+            for (let i = 0; i < spanElements.length; i++) {
+                unwrapNode(spanElements.item(i));
+            }
         }
 
         if (!this.editor.getText() && !dom.images.length) {

@@ -6,10 +6,8 @@ import { Bold } from '@tiptap/extension-bold';
 import { Document } from '@tiptap/extension-document';
 import { HardBreak } from '@tiptap/extension-hard-break';
 import { Heading } from '@tiptap/extension-heading';
-import { Italic } from '@tiptap/extension-italic';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { TextAlign } from '@tiptap/extension-text-align';
 import { UndoRedo } from '@tiptap/extensions';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -69,14 +67,10 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
 
                 // Marks
                 Bold,
-                Italic,
                 TextStyle,
 
                 // Extensions
                 UndoRedo,
-                TextAlign.configure({
-                    types: [`heading`, `paragraph`]
-                }),
                 OsSplit,
                 this.createExtensionFunctions()
             ];
