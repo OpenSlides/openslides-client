@@ -250,10 +250,11 @@ export class AutoupdateService {
 
     private async handleAutoupdate({ autoupdateData, idDescriptionMap }: AutoupdateIncomingMessage): Promise<void> {
         const requestIds = Object.keys(idDescriptionMap).map(id => +id);
+        const dataKeys = Object.keys(autoupdateData);
         if (
             !this._activeRequestObjects ||
             !requestIds.some(id => this._activeRequestObjects[id]) ||
-            Object.keys(autoupdateData).length === 0
+            dataKeys.length === 0
         ) {
             return;
         }
@@ -274,7 +275,7 @@ export class AutoupdateService {
         for (const id of requestIds) {
             const modelRequest = this._activeRequestObjects[id]?.modelRequest;
             if (modelRequest) {
-                for (const key of Object.keys(autoupdateData)) {
+                for (const key of dataKeys) {
                     const data = key.split(`/`);
                     const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
                     if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
