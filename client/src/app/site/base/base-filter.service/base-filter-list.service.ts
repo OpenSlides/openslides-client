@@ -292,27 +292,27 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                     if (viewModels && viewModels.length) {
                         let models: FilterModel[] = viewModels.filter(filterFn ?? ((): boolean => true));
                         if (mapFn) {
-                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model.id]: model })));
+                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model?.id]: model })));
                         }
                         filterProperties = models
                             .map((model: FilterModel) => ({
-                                condition: model.id,
-                                label: model.getTitle(),
-                                isChild: !!model.parent,
+                                condition: model?.id,
+                                label: model?.getTitle() ?? `Deleted entrance`,
+                                isChild: !!model?.parent,
                                 isActive: (
                                     filter.options.find(
-                                        f => (f as OsFilterOption)?.condition === model.id
+                                        f => (f as OsFilterOption)?.condition === model?.id
                                     ) as OsFilterOption
                                 )?.isActive,
                                 skipTranslate: true,
-                                children: model.children?.length
+                                children: model?.children?.length
                                     ? model.children.map((child: any) => ({
                                           label: child.getTitle(),
                                           condition: child.id
                                       }))
                                     : undefined
                             }))
-                            .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
+                            .sort((a, b) => a.label?.trim().localeCompare(b.label?.trim()));
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);

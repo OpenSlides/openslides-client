@@ -316,7 +316,21 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         }
 
         if (this.operator.hasPerms(Permission.motionCanManage)) {
+            for (let i = 0; i < this.editorFilterOptions.options.length; i++) {
+                const item = this.editorFilterOptions.options[i];
+                if (typeof item !== `string` && item.label === `Deleted entrance`) {
+                    item.label = `Deleted user`;
+                    this.editorFilterOptions.options[i] = item;
+                }
+            }
             filterDefinitions.push(this.editorFilterOptions);
+            for (let i = 0; i < this.workingGroupSpeakerFilterOptions.options.length; i++) {
+                const item = this.workingGroupSpeakerFilterOptions.options[i];
+                if (typeof item !== `string` && item.label === `Deleted entrance`) {
+                    item.label = `Deleted user`;
+                    this.workingGroupSpeakerFilterOptions.options[i] = item;
+                }
+            }
             filterDefinitions.push(this.workingGroupSpeakerFilterOptions);
         }
 

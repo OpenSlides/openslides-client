@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { _ } from '@ngx-translate/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -61,11 +62,15 @@ export class GlobalSearchService {
 
     public getTitle(collection: string, content: any): string {
         if (collection === `user`) {
-            const firstName = content.first_name?.trim() || ``;
-            const lastName = content.last_name?.trim() || ``;
-            const userName = content.username?.trim() || ``;
-            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+            if (content) {
+                const firstName = content.first_name?.trim() || ``;
+                const lastName = content.last_name?.trim() || ``;
+                const userName = content.username?.trim() || ``;
+                const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+                return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+            } else {
+                return _(`Deleted user`);
+            }
         }
 
         return content.title || content.name;

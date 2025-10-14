@@ -143,7 +143,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this.additionalInputControl = this.fb.control(``);
         this.secondSelectorFormControl = this.fb.control(``);
         this.subscriptions.push(
-            this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
+            this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id)))
         );
         this.subscriptions.push(
             this.secondSelectorFormControl.valueChanges.subscribe(value => {
@@ -176,7 +176,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     ? val
                     : firstValueFrom(
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
-                              map(motion => this.getIntermediateModels(motion).find(model => model.user_id === val.id)),
+                              map(motion =>
+                                  this.getIntermediateModels(motion).find(model => model.getTitle() === val.getTitle())
+                              ),
                               filter(model => !!model)
                           )
                       )
