@@ -23,6 +23,9 @@
 .border-grid {
     display: grid;
     grid-template-columns: 15% 70% 15%;
+    @media (max-width: 700px) {
+        grid-template-columns: 0% 100% 0%;
+    }
 }
 
 .header-grid {
@@ -49,6 +52,7 @@
     grid-template-columns: 50% 50%;
     grid-gap: 20px;
     border-top: 2px solid rgba(128, 128, 128, 0.2);
+    margin-bottom: 7px;
 }
 
 .center {
@@ -61,6 +65,10 @@
 
 .color-blue {
     color: var(--theme-primary-500);
+}
+
+.color-black {
+    color: rgba(0, 0, 0, 0.65);
 }
 
 .bold {

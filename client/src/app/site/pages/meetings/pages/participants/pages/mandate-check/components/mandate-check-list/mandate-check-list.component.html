@@ -23,7 +23,7 @@
         <mat-card appearance="outlined" class="margin-bottom-20">
             <mat-card-content>
                 <div class="header-grid">
-                    <div class="text-large-bold">{{ entry.name }}</div>
+                    <div class="text-large-bold color-black">{{ entry.name }}</div>
                     <div>
                         <button matIconButton (click)="toggle(entry.id)">
                             @if (toggleMap.get(entry.id)) {
@@ -55,12 +55,12 @@
                             [value]="entry.getPercent() * 100"
                         ></mat-progress-bar>
                     </div>
-                    <div class="flex-container align-left">
+                    <div class="flex-container align-left color-black">
                         <div class="text-medium-bold">{{ 'total' | translate }}</div>
                         <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
                         <div>&nbsp;</div>
                     </div>
-                    <div class="flex-container align-left small-margin-top">
+                    <div class="flex-container align-left small-margin-top color-black">
                         <div class="text-small-bold">{{ 'female' | translate }}</div>
                         <div class="text-small-bold">{{ entry.getTotalCount(true) }}</div>
                         <div class="text-small">
@@ -73,15 +73,19 @@
                 <mat-card-footer>
                     <div class="footer-grid">
                         <div>
-                            <div class="bold margin-left-medium small-margin-top">{{ 'Present' | translate }}</div>
+                            <div class="bold margin-left-medium small-margin-top color-black">
+                                {{ 'Present' | translate }}
+                            </div>
                             @for (userId of entry.presentUserIds; track userId) {
-                                <div class="margin-left-large">{{ getName(userId) }}</div>
+                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
                             }
                         </div>
                         <div>
-                            <div class="bold margin-left-medium small-margin-top">{{ 'Absent' | translate }}</div>
+                            <div class="bold margin-left-medium small-margin-top color-black">
+                                {{ 'Absent' | translate }}
+                            </div>
                             @for (userId of entry.absentUserIds; track userId) {
-                                <div class="margin-left-large">{{ getName(userId) }}</div>
+                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
                             }
                         </div>
                     </div>
