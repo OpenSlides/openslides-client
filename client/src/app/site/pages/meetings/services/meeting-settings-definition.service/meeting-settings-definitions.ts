@@ -588,16 +588,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Activate submitter extension field in motion create form`),
                         helpText: _(`Requires permission to manage motion metadata`),
                         type: `boolean`
-                    },
-                    {
-                        key: `motions_enable_restricted_editor_for_non_manager`,
-                        label: _(`Limit the editor for all users without motion manage permissions`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `motions_enable_restricted_editor_for_manager`,
-                        label: _(`Limit the editor for all users with motion manage permissions`),
-                        type: `boolean`
                     }
                 ]
             },
@@ -645,6 +635,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motions_show_sequential_number`,
                         label: _(`Show the sequential number for a motion`),
                         helpText: _(`In motion list, motion detail and PDF.`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_non_manager`,
+                        label: _(`Limit the editor for all users without motion manage permissions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_manager`,
+                        label: _(`Limit the editor for all users with motion manage permissions`),
                         type: `boolean`
                     }
                 ]
