@@ -238,6 +238,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             this._removeUsersMap[model.user_id] = model.id;
         } else if (this._addUsersSet.has(model.id)) {
             this._addUsersSet.delete(model.id);
+        } else if (model.getTitle() === `Deleted user`) {
+            this._removeUsersMap[model.user_id] = model.id;
         }
         const value = this.editSubject.getValue();
         this.editSubject.next(value.filter(user => user.fqid !== model.fqid));

@@ -1,4 +1,5 @@
 import { Directive } from '@angular/core';
+import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
@@ -297,14 +298,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                         filterProperties = models
                             .map((model: FilterModel) => ({
                                 condition: model?.id,
-                                label: model?.getTitle() ?? `Deleted entrance`,
+                                label: model?.getTitle() ?? _(`Deleted user`),
                                 isChild: !!model?.parent,
                                 isActive: (
                                     filter.options.find(
                                         f => (f as OsFilterOption)?.condition === model?.id
                                     ) as OsFilterOption
                                 )?.isActive,
-                                skipTranslate: true,
+                                skipTranslate: model?.getTitle() ? true : false,
                                 children: model?.children?.length
                                     ? model.children.map((child: any) => ({
                                           label: child.getTitle(),
