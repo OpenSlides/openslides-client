@@ -677,7 +677,7 @@ export class MotionPdfService {
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
-            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length
+            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length;
             const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(
                 change =>
