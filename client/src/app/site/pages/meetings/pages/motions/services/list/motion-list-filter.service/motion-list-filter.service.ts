@@ -319,7 +319,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
             for (let i = 0; i < this.editorFilterOptions.options.length; i++) {
                 const item = this.editorFilterOptions.options[i];
                 if (typeof item !== `string` && item.label === `Deleted entrance`) {
-                    item.label = `Deleted user`;
+                    item.label = _(`Deleted user`);
                     this.editorFilterOptions.options[i] = item;
                 }
             }
@@ -327,7 +327,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
             for (let i = 0; i < this.workingGroupSpeakerFilterOptions.options.length; i++) {
                 const item = this.workingGroupSpeakerFilterOptions.options[i];
                 if (typeof item !== `string` && item.label === `Deleted entrance`) {
-                    item.label = `Deleted user`;
+                    item.label = _(`Deleted user`);
                     this.workingGroupSpeakerFilterOptions.options[i] = item;
                 }
             }

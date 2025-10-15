@@ -81,7 +81,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get submitterNames(): string[] {
-        return this.mapSubmittersWithAdditional(submitter => submitter?.getTitle() ?? `Deleted user`);
+        return this.mapSubmittersWithAdditional(submitter => submitter?.getTitle() ?? _(`Deleted user`));
     }
 
     public get editorUserIds(): Id[] {

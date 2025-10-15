@@ -110,7 +110,11 @@ export class MotionCsvExportService {
                         return {
                             label: `submitters`,
                             map: motion =>
-                                motion.mapSubmittersWithAdditional(s => (s ? s.full_name : `Deleted user`)).join(`, `)
+                                motion
+                                    .mapSubmittersWithAdditional(s =>
+                                        s ? s.full_name : this.translate.instant(`Deleted user`)
+                                    )
+                                    .join(`, `)
                         };
                     case `editors`:
                         return {
