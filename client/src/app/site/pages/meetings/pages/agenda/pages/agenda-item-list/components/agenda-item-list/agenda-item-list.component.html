@@ -127,13 +127,15 @@
 <mat-menu #agendaMenu="matMenu">
     @if (!isMultiSelect) {
         <div>
-            <div *osPerms="permission.agendaItemCanManage">
+            <div *osPerms="permission.agendaItemCanForward">
                 <!-- Enable multi select -->
                 <button mat-menu-item (click)="toggleMultiSelect()">
                     <mat-icon>library_add</mat-icon>
                     <span>{{ 'Multiselect' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
+            </div>
+            <div *osPerms="permission.agendaItemCanManage">
                 <!-- automatic numbering -->
                 @if (isNumberingAllowed) {
                     <button mat-menu-item (click)="onAutoNumbering()">
@@ -263,6 +265,16 @@
                     <span>{{ 'Remove from agenda' | translate }}</span>
                 </button>
             </div>
+            @if (canForward) {
+                <button
+                    mat-menu-item
+                    [disabled]="!selectedRows.length"
+                    (click)="forwardAgendaItemsToMeetings(selectedRows)"
+                >
+                    <mat-icon>forward</mat-icon>
+                    <span>{{ 'Forward' | translate }} ...</span>
+                </button>
+            }
         </div>
     }
 </mat-menu>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
@@ -26,6 +26,16 @@ export class AgendaItemControllerService extends BaseMeetingControllerService<Vi
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {
         return this.repo.update(update, item);
+    }
+
+    public forward(
+        meeting_ids: Ids,
+        agenda_item_ids: Ids,
+        with_moderator_notes = false,
+        with_speakers = false,
+        with_attachments = false
+    ): Promise<void> {
+        return this.repo.forward(meeting_ids, agenda_item_ids, with_moderator_notes, with_speakers, with_attachments);
     }
 
     public autoNumbering(): Promise<void> {

@@ -4,6 +4,7 @@
  * permissions instead of arbitrary strings should be given.
  */
 export enum Permission {
+    agendaItemCanForward = `agenda_item.can_forward`,
     agendaItemCanManage = `agenda_item.can_manage`,
     agendaItemCanSee = `agenda_item.can_see`,
     agendaItemCanSeeInternal = `agenda_item.can_see_internal`,

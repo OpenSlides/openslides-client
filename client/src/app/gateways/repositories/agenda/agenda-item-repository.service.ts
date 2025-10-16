@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
@@ -67,6 +67,32 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
             ...this.getOptionalPayload(update)
         };
         await this.createAction(AgendaItemAction.UPDATE, payload).resolve();
+    }
+
+    /**
+     * Forwards the list of amendment ids to the given meetings.
+     *
+     * @param meeting_ids the target meeting ids
+     * @param agenda_item_ids the agenda item ids that should be forwarded
+     * @param with_moderator_notes if moderator notes should be forwarded
+     * @param with_speakers if speakers should be forwarded
+     * @param with_attachments if attachments should be forwarded
+     */
+    public async forward(
+        meeting_ids: Ids,
+        agenda_item_ids: Ids,
+        with_moderator_notes = false,
+        with_speakers = false,
+        with_attachments = false
+    ): Promise<void> {
+        const payload: any = {
+            meeting_ids,
+            agenda_item_ids,
+            with_moderator_notes,
+            with_speakers,
+            with_attachments
+        };
+        await this.createAction(AgendaItemAction.FORWARD, payload).resolve();
     }
 
     public assignToParents(content: any, meetingId: Id = this.activeMeetingId!): Action<void> {

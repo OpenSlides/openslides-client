@@ -1,0 +1,19 @@
+.agenda-forward-meeting-list {
+    vertical-align: middle;
+    min-height: 100px;
+    height: 33vh;
+    overflow-y: auto;
+}
+
+.state {
+    padding-left: 6px;
+}
+
+.warning-text {
+    padding-left: 6px;
+    font-size: 12px;
+}
+
+.warning-text:last-of-type {
+    padding-bottom: 10px;
+}

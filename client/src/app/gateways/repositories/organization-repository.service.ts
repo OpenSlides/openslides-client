@@ -45,7 +45,8 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `saml_metadata_idp`,
             `saml_metadata_sp`,
             `saml_private_key`,
-            `enable_anonymous`
+            `enable_anonymous`,
+            `forbid_committee_admins_to_set_agenda_forwarding_relations`
         );
         return {
             ...super.getFieldsets(),
