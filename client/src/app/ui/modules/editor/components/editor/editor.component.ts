@@ -465,7 +465,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const spanElements = dom.querySelectorAll(`span`);
             for (const item of spanElements) {
                 item.style.removeProperty(`color`);
-                console.log(item.style.removeProperty)
                 if (item.getAttribute(`style`) === ``) {
                     unwrapNode(item);
                 }

@@ -72,7 +72,7 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
                 OsSplit,
                 this.ngExtension()
             ];
-        } 
+        }
         return super.getExtensions();
     }
 }
