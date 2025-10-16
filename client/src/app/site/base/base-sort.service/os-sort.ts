@@ -6,6 +6,7 @@ export type SortDefinition<T> = keyof T | OsSortingDefinition<T>;
 export interface OsSortingDefinition<T> {
     sortProperty: OsSortProperty<T>;
     sortAscending: boolean;
+    additionalInfo?: unknown;
 }
 
 /**

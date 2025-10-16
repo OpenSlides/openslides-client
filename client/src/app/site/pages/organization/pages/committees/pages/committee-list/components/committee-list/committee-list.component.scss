@@ -17,3 +17,77 @@
     flex-flow: column;
     width: 75px;
 }
+
+.committee-hierarchy {
+    --committee-level-padding: 38px;
+    .cell-title:not(.is-child) {
+        &:after,
+        &:before {
+            content: '';
+            display: inline-block;
+            height: 30%;
+            border: solid #ddd;
+            border-width: 0 0 2px 2px;
+            margin-right: 8px;
+        }
+        &:after {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-width: 0 0 0 2px;
+        }
+    }
+
+    .cell-title.is-child {
+        padding-left: calc(var(--committee-level) * var(--committee-level-padding));
+
+        &:before,
+        &:after {
+            content: '';
+            display: inline-block;
+            height: 30%;
+            border: solid #ddd;
+            border-width: 0 0 2px 2px;
+            margin-right: 8px;
+        }
+        &:after {
+            position: absolute;
+            left: calc(var(--committee-level) * var(--committee-level-padding));
+            bottom: 0;
+            border-width: 0 0 0 2px;
+        }
+    }
+
+    .cell-title .stretch-to-fill-parent {
+        left: calc(calc(var(--committee-level) * var(--committee-level-padding)) + 29px);
+    }
+
+    .cell-title .toggle-button {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(calc(var(--committee-level) * var(--committee-level-padding)) - 23px);
+    }
+
+    .cell-title .hl {
+        display: inline-block;
+        width: 24px;
+        border: solid #ddd;
+        border-width: 0 0 2px 0;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .cell-title.no-children {
+        &:after,
+        &:before {
+            height: 50%;
+            margin-right: 0px;
+        }
+
+        .hl {
+            margin-left: 0px;
+            width: 42px;
+        }
+    }
+}
