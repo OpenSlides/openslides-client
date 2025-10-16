@@ -10,25 +10,25 @@
     }
 
     @if (showNotTopicWarning) {
-        <div class="state">
+        <div class="warning-text">
             {{
-                'Warning: You are trying to forward something else than a topic, it will be skipped instead of forwarded.'
+                'Warning: You are trying to forward something else than a topic, it will be skipped and not forwarded.'
                     | translate
             }}
         </div>
     }
     @if (showParentNotIncludedWarning) {
-        <div class="state">
+        <div class="warning-text">
             {{
-                'Warning: You are trying to forward a child without its parent. The child will be forwarded, however the parent will not be automatically forwarded alongside it.'
+                'Warning: You are trying to forward a child agenda item without its parent. The child will be forwarded, however the parent item will not be automatically forwarded alongside it.'
                     | translate
             }}
         </div>
     }
     @if (showChildrenNotIncludedWarning) {
-        <div class="state">
+        <div class="warning-text">
             {{
-                'Warning: You are trying to forward a parent without at least one of its children. Children will not be automatically forwarded alongside their parents.'
+                'Warning: You are trying to forward a parent agenda item without at least one of its children. Children will not be automatically forwarded alongside their parent items.'
                     | translate
             }}
         </div>
@@ -44,7 +44,7 @@
                     <span>{{ 'List of speakers' | translate }}</span>
                     <br />
                     <span class="subtitle" translate>
-                        This will add participants, structure_levels and groups to the other meetings
+                        This will add participants, structure levels and groups to the target meeting(s)
                     </span>
                 } @else if (rowName === 'meeting') {
                     <span>{{ 'Target meeting' | translate }}</span>

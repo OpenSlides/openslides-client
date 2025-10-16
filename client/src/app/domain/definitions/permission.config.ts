@@ -60,7 +60,11 @@ export const PERMISSIONS: AppPermission[] = [
             },
             {
                 display_name: _(`Can forward agenda items`),
-                help_text: _(`Helptext for new permission`),
+                help_text: _(`Can forward agenda items to other meetings within the OpenSlides instance.
+
+Further requirements:
+1. forwarding hierarchy must be set at the organiztional level in the committee.
+2. target meeting must be created.`),
                 value: Permission.agendaItemCanForward
             },
             {
