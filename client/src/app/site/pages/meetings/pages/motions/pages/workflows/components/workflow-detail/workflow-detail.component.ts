@@ -256,7 +256,9 @@ Note: Does not affect the visibility of change recommendations.`
             help_text: _(
                 `Defines for the selected state which groups have access:
 - If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].
-- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].`
+- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].
+
+Hint: Administrators always have full access.`
             ),
             selector: `restrictions`,
             type: `restrictions`
@@ -280,6 +282,14 @@ Note: Does not affect the visibility of change recommendations.`
             ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
+        },
+        {
+            name: _(`Label for next state to be set by submitter`),
+            help_text: _(
+                `Enables and defines a button in the motion that appears for the submitters if they can set this state via "Submitter may set state to".`
+            ),
+            selector: `state_button_label`,
+            type: `input`
         }
     ] as StatePerm[];
 
