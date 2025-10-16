@@ -9,7 +9,16 @@
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon class="icon-16" color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon
+            class="icon-16 badge-green"
+            color="primary"
+            matBadge="&#8288;"
+            matBadgePosition="below after"
+            matBadgeSize="small"
+            [matBadgeHidden]="!isPresent"
+        >
+            {{ isPresent ? 'how_to_reg' : 'person' }}
+        </mat-icon>
     </div>
 </div>
 
