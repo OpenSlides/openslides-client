@@ -109,8 +109,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public allowEmbeds = false;
 
-    public isNormalEditor = true;
-
     @Output()
     public leaveFocus = new EventEmitter<void>();
 
@@ -146,7 +144,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public get godButtonText(): string {
-        if (!this.isNormalEditor) {
+        if (!['textAlign', 'subscript', 'superscript'].some(this.isExtensionActive)) {
             return this.translate.instant(`Heading`);
         } else if (this.editor.isActive(`subscript`)) {
             return this.translate.instant(`Subscript`);
@@ -178,7 +176,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             content: this.value
         };
 
-        if (this.allowEmbeds && this.isNormalEditor) {
+        if (this.allowEmbeds) {
             editorConfig.extensions.push(IFrame);
         }
 
@@ -245,11 +243,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 types: [`heading`, `paragraph`]
             }),
             OsSplit,
-            this.createExtensionFunctions()
+            this.ngExtension()
         ];
     }
 
-    public createExtensionFunctions(): Extension {
+    public ngExtension(): Extension {
         return Extension.create({
             name: `angular-component-ext`,
             onCreate: () => {
@@ -462,11 +460,13 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         }
 
         // if editor is limited remove empty span
-        // color and backgroundcolor are the only elements which we support which produce spans
-        if (!this.isExtensionActive(`color`) || !this.isExtensionActive(`highlight`)) {
+        // color is the only element which we support which produce spans
+        if (!this.isExtensionActive(`color`)) {
             const spanElements = dom.querySelectorAll(`span`);
             for (const item of spanElements) {
-                if (item.style.color === `` && item.style.backgroundColor === ``) {
+                item.style.removeProperty(`color`);
+                console.log(item.style.removeProperty)
+                if (item.getAttribute(`style`) === ``) {
                     unwrapNode(item);
                 }
             }

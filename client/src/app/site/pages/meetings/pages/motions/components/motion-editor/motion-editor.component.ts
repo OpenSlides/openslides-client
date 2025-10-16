@@ -36,8 +36,6 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
 
     private canManage = false;
 
-    public override isNormalEditor = false;
-
     protected operator: OperatorService = inject(OperatorService);
 
     public constructor(private meetingSettingsService: MeetingSettingsService) {
@@ -72,10 +70,9 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
                 // Extensions
                 UndoRedo,
                 OsSplit,
-                this.createExtensionFunctions()
+                this.ngExtension()
             ];
-        } else {
-            return super.getExtensions();
-        }
+        } 
+        return super.getExtensions();
     }
 }
