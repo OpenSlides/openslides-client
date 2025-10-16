@@ -450,7 +450,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         this.contentForm.setValue(value);
     }
 
-    protected cleanupOutput(html: string): string {
+    private cleanupOutput(html: string): string {
         const dom = this.domParser.parseFromString(html, `text/html`);
 
         // Remove paragraphs inside list elements
