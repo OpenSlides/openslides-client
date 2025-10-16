@@ -905,7 +905,13 @@ export class MotionPdfService {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
+            {
+                text: motion.submitters.length
+                    ? motion
+                          .mapSubmittersWithAdditional(s => (s ? s.short_name : this.translate.instant(`Deleted user`)))
+                          .join(`, `)
+                    : ``
+            },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``

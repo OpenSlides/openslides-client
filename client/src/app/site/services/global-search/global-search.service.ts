@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -20,6 +20,7 @@ import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } fr
 })
 export class GlobalSearchService {
     public constructor(
+        private translate: TranslateService,
         private http: HttpService,
         private activeMeeting: ActiveMeetingService
     ) {}
@@ -69,7 +70,7 @@ export class GlobalSearchService {
                 const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
                 return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
             } else {
-                return _(`Deleted user`);
+                return this.translate.instant(`Deleted user`);
             }
         }
 

@@ -1,5 +1,4 @@
 import { Directive } from '@angular/core';
-import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
@@ -298,7 +297,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                         filterProperties = models
                             .map((model: FilterModel) => ({
                                 condition: model?.id,
-                                label: model?.getTitle() ?? _(`Deleted user`),
+                                label: model?.getTitle() ?? `Deleted user`,
                                 isChild: !!model?.parent,
                                 isActive: (
                                     filter.options.find(
@@ -313,7 +312,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                                       }))
                                     : undefined
                             }))
-                            .sort((a, b) => a.label?.trim().localeCompare(b.label?.trim()));
+                            .sort((a, b) => a.label.trim().localeCompare(b.label.trim()));
 
                         if (noneOptionLabel) {
                             filterProperties.push(`-`);

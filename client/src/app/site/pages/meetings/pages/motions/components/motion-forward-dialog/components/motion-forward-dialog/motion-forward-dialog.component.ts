@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
@@ -59,7 +60,8 @@ export class MotionForwardDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA)
         public data: { motion: ViewMotion[]; forwardingMeetings: GetForwardingMeetingsPresenter[] },
         private dialogRef: MatDialogRef<MotionForwardDialogComponent, MotionForwardDialogReturnData>,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private translate: TranslateService
     ) {}
 
     public async ngOnInit(): Promise<void> {
@@ -133,5 +135,9 @@ export class MotionForwardDialogComponent implements OnInit {
     public hasAnyAmendment(): boolean {
         const hasAmend: (element: ViewMotion) => boolean = element => element.amendments.length > 0;
         return this.data.motion.some(hasAmend);
+    }
+
+    public getSubmitterOrDeletedUser(submitter: string): string {
+        return submitter ?? this.translate.instant(`Deleted user`);
     }
 }

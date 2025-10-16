@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -92,7 +93,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      * The current list of intermediate models.
      */
     public readonly editSubject = new BehaviorSubject<MotionMeetingUser[]>([]);
-    public editUserIds: number[] = [];
+    public nonSelectableUserIds: number[] = [];
 
     /**
      * The observable from editSubject. Fixing this value is a performance boost, because
@@ -128,6 +129,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     private _oldIds = new Set<Id>([]);
 
     public constructor(
+        private translate: TranslateService,
         private userRepository: ParticipantControllerService,
         public perms: MotionPermissionService,
         private motionController: MotionControllerService,
@@ -143,7 +145,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this.additionalInputControl = this.fb.control(``);
         this.secondSelectorFormControl = this.fb.control(``);
         this.subscriptions.push(
-            this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id)))
+            this.editSubject.subscribe(ids => (this.nonSelectableUserIds = ids.map(model => model.user_id ?? model.id)))
         );
         this.subscriptions.push(
             this.secondSelectorFormControl.valueChanges.subscribe(value => {
@@ -238,7 +240,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             this._removeUsersMap[model.user_id] = model.id;
         } else if (this._addUsersSet.has(model.id)) {
             this._addUsersSet.delete(model.id);
-        } else if (model.getTitle() === `Deleted user`) {
+        } else if (model.getTitle() === this.translate.instant(`Deleted user`)) {
             this._removeUsersMap[model.user_id] = model.id;
         }
         const value = this.editSubject.getValue();

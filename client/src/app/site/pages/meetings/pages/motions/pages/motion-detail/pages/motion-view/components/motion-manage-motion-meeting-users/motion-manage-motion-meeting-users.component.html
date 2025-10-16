@@ -55,7 +55,7 @@
         <div class="text-field-container">
             <os-participant-search-selector
                 placeholder="{{ 'Select participant' | translate }}"
-                [nonSelectableUserIds]="editUserIds"
+                [nonSelectableUserIds]="nonSelectableUserIds"
                 (userSelected)="addUser($event)"
             ></os-participant-search-selector>
         </div>
