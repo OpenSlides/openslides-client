@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { _ } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { PasswordForm } from '../../definitions';
@@ -18,6 +19,7 @@ const UndesiredPasswords = [
     `123123`
 ];
 const UndesiredPasswordFeedback = `ಠ_ಠ`;
+const PointlessPasswordFeedback = _(`New and old passwords are identical!`);
 
 @Component({
     selector: `os-password-form`,
@@ -51,7 +53,10 @@ export class PasswordFormComponent extends BaseComponent implements OnInit {
             confirmPassword: [``, [Validators.required, PasswordValidator.validation(this.newPasswordForm)]]
         });
         this.subscriptions.push(
-            this.changePasswordForm.valueChanges.subscribe(value => this.evaluatePasswordField(value))
+            this.changePasswordForm.valueChanges.subscribe(value => this.evaluatePasswordField(value)),
+            this.newPasswordForm.valueChanges.subscribe(() =>
+                this.changePasswordForm.controls['confirmPassword'].updateValueAndValidity({ onlySelf: true })
+            )
         );
     }
 
@@ -65,6 +70,9 @@ export class PasswordFormComponent extends BaseComponent implements OnInit {
 
         if (value.confirmPassword === value.newPassword && UndesiredPasswords.includes(value.newPassword)) {
             this.raiseWarning(UndesiredPasswordFeedback);
+        } else if (value.oldPassword === value.newPassword && value.oldPassword === value.confirmPassword) {
+            const warning = `${this.translate.instant(PointlessPasswordFeedback)}`;
+            this.raiseWarning(warning);
         }
     }
 }
