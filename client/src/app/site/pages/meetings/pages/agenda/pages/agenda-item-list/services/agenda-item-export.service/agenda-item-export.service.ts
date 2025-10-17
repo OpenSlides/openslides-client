@@ -43,7 +43,7 @@ export class AgendaItemExportService {
             config.push({ label: `item_number`, property: `item_number` });
         }
         if (info.includes(`title`)) {
-            config.push({ label: `title`, map: (viewItem): string => viewItem.getTitle() });
+            config.push({ label: `title`, map: (viewItem): string => viewItem.content_object?.title });
         }
         if (info.includes(`text`)) {
             config.push({
