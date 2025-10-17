@@ -10,7 +10,6 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { verboseChangeRecoMode } from '../../../../../../../../../../../domain/models/motions/motions.constants';
-import { LineNumberingService } from '../../../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { ViewUnifiedChange } from '../../../../../../modules/change-recommendations/view-models/view-unified-change';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service';
@@ -111,7 +110,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     public constructor(
         protected override translate: TranslateService,
-        private lineNumberingService: LineNumberingService,
         private promptService: PromptService,
         private vpService: ViewPortService
     ) {
@@ -194,7 +192,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine
         });
-        finalVersion = this.lineNumberingService.stripLineNumbers(finalVersion);
+        finalVersion = this.motion.services().ln.stripLineNumbers(finalVersion);
 
         // Update the motion
         try {
