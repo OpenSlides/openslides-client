@@ -55,7 +55,9 @@ export class AmendmentListPdfService {
                 text: amendment.getChangedLines()
             },
             {
-                text: amendment.submitterNames.toString()
+                text: amendment.submitterNames
+                    .map(sub => (sub === undefined ? this.translate.instant(`Deleted user`) : sub))
+                    .toString()
             },
             {
                 // requires stack cause this can be an array

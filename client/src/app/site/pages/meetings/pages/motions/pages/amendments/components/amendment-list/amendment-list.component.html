@@ -74,7 +74,7 @@
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequentialNumber) {

@@ -269,7 +269,11 @@ export class MotionPdfCatalogService {
                 pageReference: `${motion.id}`,
                 style
             },
-            this.pdfService.createTocLineInline(motion.submitterNames.join(`, `)),
+            this.pdfService.createTocLineInline(
+                motion.submitterNames
+                    .map(submitter => (!submitter ? this.translate.instant(`Deleted user`) : submitter))
+                    .join(`, `)
+            ),
             this.pdfService.createTocLineInline(state, true)
         );
     }

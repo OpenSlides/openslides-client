@@ -586,4 +586,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             behavior: `smooth`
         });
     }
+
+    public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {
+        return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
+    }
 }

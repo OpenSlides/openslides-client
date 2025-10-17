@@ -378,4 +378,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             queryParams: { motions: motions_ids }
         });
     }
+
+    public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {
+        return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
+    }
 }

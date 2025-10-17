@@ -291,7 +291,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         const agendaTitle: AgendaListTitle = { title };
 
         if (viewMotion.submitterNames && viewMotion.submitterNames.length) {
-            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.join(`, `)}`;
+            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.map(sub => (sub === undefined ? this.translate.instant(`Deleted user`) : sub)).join(`, `)}`;
         }
         return agendaTitle;
     };
