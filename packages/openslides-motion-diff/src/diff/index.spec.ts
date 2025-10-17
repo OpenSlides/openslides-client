@@ -3,7 +3,7 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines, useCustomHtmlDiff, useCustomLineNumbering } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
@@ -197,6 +197,8 @@ describe(`MotionDiffService`, () => {
         ` Line 4</li></ol>`;
 
     beforeEach(() => {
+        useCustomHtmlDiff(HtmlDiff);
+        useCustomLineNumbering(LineNumbering);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
         insertInternalLineMarkers(baseHtmlDom1);
