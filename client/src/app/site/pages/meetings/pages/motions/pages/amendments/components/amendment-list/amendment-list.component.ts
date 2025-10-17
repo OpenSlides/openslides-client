@@ -160,7 +160,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         return amendment.getChangedLines();
     }
 
-    public getSubmitterListWDeletedUsers(submitters: string[]): string[] {
+    public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {
         return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
     }
 }
