@@ -292,7 +292,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                     if (viewModels && viewModels.length) {
                         let models: FilterModel[] = viewModels.filter(filterFn ?? ((): boolean => true));
                         if (mapFn) {
-                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model?.id]: model })));
+                            models = Object.values(
+                                models.map(mapFn).mapToObject(model => {
+                                    // The questionmark behind models in this function is only relevant for models which
+                                    // were deleted but should still be displayed
+                                    // That is (so far) only the case for a meeting user who was assigned as submitter/editor/speaker and is now deleted)
+                                    return { [model?.id]: model };
+                                })
+                            );
                         }
                         filterProperties = models
                             .map((model: FilterModel) => ({
