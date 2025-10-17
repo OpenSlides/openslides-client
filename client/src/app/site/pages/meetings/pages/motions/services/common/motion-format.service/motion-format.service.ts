@@ -306,7 +306,12 @@ export class MotionFormatService {
         }
 
         text.push(
-            diffService.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+            diffService.diffService.getTextRemainderAfterLastChange(
+                motionText,
+                changesToShow,
+                lineLength,
+                highlightedLine
+            )
         );
         if (brokenTextChangesAmount > 0) {
             const msg =
