@@ -107,7 +107,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this._editMode = value;
         this._addUsersSet.clear();
         this._removeUsersMap = {};
-        this._removeDeletedUsersList = {};
+        this._removeDeletedUsers = {};
         if (value && this.loadSecondSelectorValues) {
             this.loadSecondSelectorValues().then(items => {
                 this.secondSelectorValues = items;
@@ -125,7 +125,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     private _addUsersSet = new Set<Id>();
     private _removeUsersMap: IdMap = {};
-    private _removeDeletedUsersList: IdMap = {};
+    private _removeDeletedUsers: IdMap = {};
 
     private _oldIds = new Set<Id>([]);
 
@@ -159,7 +159,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     public async onSave(): Promise<void> {
         const actions: Action<any>[] = [];
         const removeMap: Identifiable[] = [];
-        if (Object.values(this._removeUsersMap).length > 0 || Object.values(this._removeDeletedUsersList).length > 0) {
+        if (Object.values(this._removeUsersMap).length > 0 || Object.values(this._removeDeletedUsers).length > 0) {
             if (Object.values(this._removeUsersMap).length > 0) {
                 removeMap.push(
                     ...(Object.values(this._removeUsersMap).map(id => {
@@ -167,9 +167,9 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     }) as Identifiable[])
                 );
             }
-            if (Object.values(this._removeDeletedUsersList).length > 0) {
+            if (Object.values(this._removeDeletedUsers).length > 0) {
                 removeMap.push(
-                    ...(Object.values(this._removeDeletedUsersList).map(id => {
+                    ...(Object.values(this._removeDeletedUsers).map(id => {
                         return { id: id };
                     }) as Identifiable[])
                 );
@@ -180,10 +180,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         if (this._addUsersSet.size > 0) {
             actions.push(this.repo.create(this.motion, ...Array.from(this._addUsersSet).map(id => ({ id }))));
 
-            if (
-                Object.values(this._removeUsersMap).length > 0 ||
-                Object.values(this._removeDeletedUsersList).length > 0
-            ) {
+            if (Object.values(this._removeUsersMap).length > 0 || Object.values(this._removeDeletedUsers).length > 0) {
                 actions[0].setSendActionFn((r, _) => this.actionService.sendRequests(r, true));
             }
         }
@@ -259,7 +256,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         } else if (this._addUsersSet.has(model.id)) {
             this._addUsersSet.delete(model.id);
         } else if (model.user_id === undefined) {
-            this._removeDeletedUsersList[model.id] = model.id;
+            this._removeDeletedUsers[model.id] = model.id;
         }
         const value = this.editSubject.getValue();
         this.editSubject.next(value.filter(user => user.fqid !== model.fqid));
@@ -300,8 +297,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                 newRemoveMap[model.user_id] = model.id;
             } else if (this._addUsersSet.has(model.user_id)) {
                 this._addUsersSet.delete(model.user_id);
-            } else if (model.user_id === undefined && this._removeDeletedUsersList[model.id]) {
-                newRemoveMapDeletedUser[model.user_id] = model.id;
+            } else if (model.id === undefined && this._removeDeletedUsers[model.id]) {
+                newRemoveMapDeletedUser[model.id] = model.id;
             }
         }
         this.editSubject.next(
@@ -316,7 +313,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                 })
         );
         this._removeUsersMap = newRemoveMap;
-        this._removeDeletedUsersList = newRemoveMapDeletedUser;
+        this._removeDeletedUsers = newRemoveMapDeletedUser;
     }
 
     private getUserId(model: MotionMeetingUser): number {

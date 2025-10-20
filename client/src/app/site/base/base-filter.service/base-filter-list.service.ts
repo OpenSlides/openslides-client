@@ -294,10 +294,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                         if (mapFn) {
                             models = Object.values(
                                 models.map(mapFn).mapToObject(model => {
-                                    // The questionmark behind models in this function is only relevant for models which
-                                    // were deleted but should still be displayed
-                                    // That is (so far) only the case for a meeting user who was assigned as submitter/editor/speaker and is now deleted)
-                                    return { [model?.id]: model };
+                                    if (!model) {
+                                        // This is [undefined]: undefined
+                                        // That is only relevant for models which were deleted but should still be displayed
+                                        // That is (so far) only the case for a meeting user who was assigned as editor/speaker and is now deleted)
+                                        return { [model?.id]: undefined };
+                                    }
+                                    return { [model.id]: model };
                                 })
                             );
                         }
