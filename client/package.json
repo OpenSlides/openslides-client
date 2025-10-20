@@ -112,7 +112,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/tinycolor2": "^1.4.6",
     "@types/video.js": "^7.3.58",
-    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.33.1",
     "@vendure/ngx-translate-extract": "^10.0.1",
     "angular-eslint": "^20.2.0",
