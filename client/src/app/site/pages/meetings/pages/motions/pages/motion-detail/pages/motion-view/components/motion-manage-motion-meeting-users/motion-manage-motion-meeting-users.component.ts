@@ -281,15 +281,12 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             return;
         }
         const newRemoveMap: IdMap = {};
-        const newRemoveMapDeletedUser: IdMap = {};
         const sortMap = new Map(this.editSubject.value.map((model, index) => [this.getUserId(model), index]));
         for (const model of models) {
             if (this._removeUsersMap[model.id]) {
-                newRemoveMap[model.id] = model.id;
+                newRemoveMap[model.id] = model?.id;
             } else if (this._addUsersSet.has(model.user_id)) {
                 this._addUsersSet.delete(model.user_id);
-            } else if (model.id === undefined && this._removeUsersMap[model.id]) {
-                newRemoveMap[model.id] = undefined;
             }
         }
         this.editSubject.next(
