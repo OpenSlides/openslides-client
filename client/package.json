@@ -120,7 +120,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-unused-imports": "^4.2.0",
+    "eslint-plugin-unused-imports": "^4.3.0",
     "fetch-mock": "^12.5.4",
     "jasmine-core": "^5.12.0",
     "js-yaml": "^4.1.0",
