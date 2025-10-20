@@ -56,3 +56,13 @@ a {
     background: white;
     border-radius: 50%;
 }
+
+.fake-fab-button2 {
+    margin: 4px;
+    $button-size: 20px;
+    width: $button-size;
+    height: $button-size;
+    line-height: $button-size;
+    text-align: center;
+    cursor: pointer;
+}
