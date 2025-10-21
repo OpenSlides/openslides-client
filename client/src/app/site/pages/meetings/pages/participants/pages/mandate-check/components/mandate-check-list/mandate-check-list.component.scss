@@ -35,14 +35,14 @@
 
 .card-grid {
     display: grid;
-    grid-template-columns: 15% 15% 40% 15% 15%;
+    grid-template-columns: 30% 40% 30%;
     grid-gap: 10px;
     @media (max-width: 700px) {
-        grid-template-columns: 22% 22% 12% 22% 22%;
+        grid-template-columns: 30% 40% 30%;
         grid-gap: 5px;
     }
     @media (min-width: 1500px) {
-        grid-template-columns: 10% 10% 60% 10% 10%;
+        grid-template-columns: 15% 70% 15%;
         grid-gap: 10px;
     }
 }

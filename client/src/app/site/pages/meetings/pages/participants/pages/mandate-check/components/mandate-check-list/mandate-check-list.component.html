@@ -35,17 +35,16 @@
                     </div>
                 </div>
                 <div class="card-grid">
-                    <div class="flex-container align-right small-margin-top color-blue">
-                        <div class="text-small-bold">{{ 'female' | translate }}</div>
-                        <div class="text-small-bold">{{ entry.presentFemaleUserIds.length }}</div>
-                        <div class="text-small">
-                            {{ displayPercent(entry.presentFemaleUserIds.length / entry.presentUserIds.length) }}
-                        </div>
-                    </div>
                     <div class="flex-container align-right color-blue">
                         <div class="text-medium-bold">{{ 'present' | translate }}</div>
-                        <div class="text-medium-bold">{{ entry.presentUserIds.length }}</div>
-                        <div class="text-medium">{{ displayPercent(entry.getPercent()) }}</div>
+                        <div class="text-medium-bold">
+                            {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
+                        </div>
+                        @if (entry.getTotalCount(true)) {
+                            <div class="text-medium">{{ getOfFemales(entry.presentFemaleUserIds.length) }}</div>
+                        } @else {
+                            <div>&nbsp;</div>
+                        }
                     </div>
                     <div class="center">
                         <mat-progress-bar
@@ -58,14 +57,11 @@
                     <div class="flex-container align-left color-black">
                         <div class="text-medium-bold">{{ 'total' | translate }}</div>
                         <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
-                        <div>&nbsp;</div>
-                    </div>
-                    <div class="flex-container align-left small-margin-top color-black">
-                        <div class="text-small-bold">{{ 'female' | translate }}</div>
-                        <div class="text-small-bold">{{ entry.getTotalCount(true) }}</div>
-                        <div class="text-small">
-                            {{ displayPercent(entry.getTotalCount(true) / entry.getTotalCount()) }}
-                        </div>
+                        @if (entry.getTotalCount(true)) {
+                            <div>{{ getOfFemales(entry.getTotalCount(true)) }}</div>
+                        } @else {
+                            <div>&nbsp;</div>
+                        }
                     </div>
                 </div>
             </mat-card-content>

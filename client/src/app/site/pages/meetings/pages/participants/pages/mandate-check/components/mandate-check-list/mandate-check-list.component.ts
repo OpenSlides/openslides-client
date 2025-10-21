@@ -130,7 +130,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         if (Number.isNaN(value)) {
             return ``;
         }
-        return `${Number(value * 100).toFixed(0)}%`;
+        return `(${Number(value * 100).toFixed(0)}%)`;
     }
 
     public toggle(structureLevelId: Id): void {
@@ -139,6 +139,11 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
 
     public getName(userId: Id): string {
         return this.participantRepo.getViewModel(userId).getShortName();
+    }
+
+    public getOfFemales(value: number): string {
+        const label = this.translate.instant(`of this %num% female`).replace(`%num%`, value);
+        return label;
     }
 
     private updateEntries(): void {
