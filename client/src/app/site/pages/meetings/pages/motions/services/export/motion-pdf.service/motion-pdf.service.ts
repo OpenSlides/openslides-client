@@ -677,12 +677,13 @@ export class MotionPdfService {
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
+            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length;
             const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(
                 change =>
                     !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr
             );
-            const brokenTextChangesAmount = changes.length - workingTextChanges.length;
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length - hasChangedTitle;
 
             const titleChange = changes.find(change => change.isTitleChange());
 
@@ -817,7 +818,7 @@ export class MotionPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public callListToDoc(motions: ViewMotion[]): Content {
-        motions.sort((a, b) => a.sort_weight - b.sort_weight);
+        motions.sort((a, b) => a.tree_weight - b.tree_weight);
         const title = {
             text: this.translate.instant(`Call list`),
             style: `title`
