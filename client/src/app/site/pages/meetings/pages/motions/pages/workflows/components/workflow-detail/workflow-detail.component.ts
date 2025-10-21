@@ -284,9 +284,9 @@ Hint: Administrators always have full access.`
             type: `submitter_withdraw_state`
         },
         {
-            name: _(`Label for next state to be set by submitter`),
+            name: _(`Button text for next state`),
             help_text: _(
-                `Enables and defines a button in the motion that appears for the submitters if they can set this state via "Submitter may set state to".`
+                `Enables a button with defined text that sets the motion to next state. The next state is defined via "Submitter may set state to".`
             ),
             selector: `state_button_label`,
             type: `input`

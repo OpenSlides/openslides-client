@@ -794,6 +794,10 @@ msgstr ""
 msgid "Bullet list"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Button text for next state"
+msgstr ""
+
 msgid "CSV import"
 msgstr ""
 
@@ -1950,6 +1954,12 @@ msgstr ""
 msgid "Enable/disable accounts"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Enables a button with defined text that sets the motion to next state. The "
+"next state is defined via \"Submitter may set state to\"."
+msgstr ""
+
 msgid ""
 "Enables for the selected state the possibility for submitters to change the "
 "state of the motion. Other administrative functions are excluded."
@@ -2190,10 +2200,6 @@ msgid "Font regular"
 msgstr ""
 
 msgid "Font size in pt"
-msgstr ""
-
-#: app/src/app/site/pages/meetings/pages/agenda/pages/agenda-export/components/agenda-export/agenda-export.component.html
-msgid "Footer"
 msgstr ""
 
 msgid ""
@@ -2816,6 +2822,14 @@ msgstr ""
 msgid "Light mode"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITH motion manage permission"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITHOUT motion manage permission"
+msgstr ""
+
 msgid "Limit of active accounts"
 msgstr ""
 
@@ -3192,6 +3206,10 @@ msgid "New account"
 msgstr ""
 
 msgid "New amendment"
+msgstr ""
+
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.ts
+msgid "New and old passwords are identical!"
 msgstr ""
 
 msgid "New ballot"
