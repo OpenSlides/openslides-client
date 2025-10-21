@@ -9,9 +9,7 @@
         <mat-label>{{ 'Group' | translate }}</mat-label>
         <mat-select formControlName="groups" multiple>
             @for (item of groups; track item.id) {
-                <mat-option [value]="item.id">
-                    {{ item.name }}
-                </mat-option>
+                <mat-option [value]="item.id">{{ item.name }}</mat-option>
             }
         </mat-select>
     </mat-form-field>

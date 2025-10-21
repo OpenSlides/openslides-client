@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -79,7 +79,7 @@ class MandateCheckEntry implements Identifiable {
     styleUrl: './mandate-check-list.component.scss',
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class MandateCheckListComponent extends BaseMeetingComponent implements OnInit {
+export class MandateCheckListComponent extends BaseMeetingComponent implements OnDestroy, OnInit {
     public structureLevels = [];
     public entriesObservable = new BehaviorSubject<MandateCheckEntry[]>([]);
     public entries: MandateCheckEntry[] = [];
@@ -124,6 +124,13 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             this.updateEntries();
             this.cd.markForCheck();
         });
+
+        this.storage.get<Id[]>(`mandate-check-groups`).then(groups => this.form.get(`groups`).setValue(groups));
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.storage.set(`mandate-check-groups`, this.selectedGroups);
     }
 
     public displayPercent(value: number): string {
