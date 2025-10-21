@@ -245,7 +245,7 @@ Meeting specific information: Structure level, Group, Participant number, About 
             },
             {
                 display_name: _(`Can manage presence of others`),
-                help_text: _(`Can change the presence status of other participants.`),
+                help_text: _(`Can change the presence status of other participants and see the mandate check.`),
                 value: Permission.userCanManagePresence
             },
             {
