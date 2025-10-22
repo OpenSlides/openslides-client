@@ -201,6 +201,7 @@ export class MotionCsvExportService {
      * @param motions All motions in the CSV. They should be ordered by weight correctly.
      */
     public exportCallList(motions: ViewMotion[]): void {
+        motions.sort((a, b) => a.tree_weight - b.tree_weight);
         this.csvExport.export(
             motions,
             [
