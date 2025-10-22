@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 
 import { LineRange } from '../../../../../../definitions/index';
 import {
@@ -77,13 +78,19 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
      * Creates the forms for the Motion and the MotionVersion
      */
     protected createForm(): void {
-        this.contentForm = this.formBuilder.group({
-            text: [this.changeReco?.text, Validators.required],
-            type: [this.changeReco?.type, Validators.required],
-            public: [!this.changeReco?.internal],
-            line_to: [this.changeReco?.line_to],
-            line_from: [this.changeReco?.line_from]
-        });
+        this.contentForm = this.formBuilder.group(
+            {
+                text: [this.changeReco?.text, Validators.required],
+                type: [this.changeReco?.type, Validators.required],
+                public: [!this.changeReco?.internal],
+                line_to: [this.changeReco?.line_to],
+                line_from: [this.changeReco?.line_from]
+            },
+            {
+                validators: [isNumberRange(`line_from`, `line_to`, `range_error`)]
+            }
+        );
+        this.contentForm.valueChanges.subscribe(() => this.onChange());
     }
 
     protected override initializeDialogData(): void {
@@ -96,5 +103,16 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
             { ...this.changeReco, ...this.contentForm.value, internal: !this.contentForm.value.public },
             this.data.firstLine
         );
+    }
+
+    protected onChange(): void {
+        if (!this.contentForm.touched) {
+            this.contentForm.markAllAsTouched();
+        }
+        if (this.contentForm.hasError(`range_error`)) {
+            this.contentForm.get(`line_from`).setErrors({ range_error: true });
+        } else {
+            this.contentForm.get('line_from').setErrors(null);
+        }
     }
 }
