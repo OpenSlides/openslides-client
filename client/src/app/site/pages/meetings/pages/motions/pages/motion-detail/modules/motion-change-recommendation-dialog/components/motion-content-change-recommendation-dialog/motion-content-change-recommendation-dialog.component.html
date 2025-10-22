@@ -14,6 +14,7 @@
             <h4>
                 <span>{{ 'Changed version in line' | translate }}</span>
                 {{ lineRange.from }}:
+                <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
             </h4>
         }
         @if (lineRange.to !== lineRange.from) {
@@ -22,7 +23,20 @@
                 {{ lineRange.from }}
                 <span>{{ 'to' | translate }}</span>
                 {{ lineRange.to }}:
+                <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
             </h4>
+        }
+        @if (editLineRange) {
+            <div>
+                <mat-form-field class="margin-right-small">
+                    <mat-label>{{ 'Line from' | translate }}</mat-label>
+                    <input formControlName="line_from" matInput type="number" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Line to' | translate }}</mat-label>
+                    <input formControlName="line_to" matInput type="number" />
+                </mat-form-field>
+            </div>
         }
         <div>
             <os-motion-editor formControlName="text"></os-motion-editor>

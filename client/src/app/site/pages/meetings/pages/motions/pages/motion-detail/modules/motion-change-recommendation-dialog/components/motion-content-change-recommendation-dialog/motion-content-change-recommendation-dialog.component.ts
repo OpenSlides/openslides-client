@@ -67,6 +67,12 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
      */
     public lineRange!: LineRange;
 
+    public editLineRange = false;
+
+    public toggleLineRange(): void {
+        this.editLineRange = !this.editLineRange;
+    }
+
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
@@ -74,7 +80,9 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
         this.contentForm = this.formBuilder.group({
             text: [this.changeReco?.text, Validators.required],
             type: [this.changeReco?.type, Validators.required],
-            public: [!this.changeReco?.internal]
+            public: [!this.changeReco?.internal],
+            line_to: [this.changeReco?.line_to],
+            line_from: [this.changeReco?.line_from]
         });
     }
 
