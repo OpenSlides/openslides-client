@@ -16,6 +16,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };
 
@@ -183,9 +184,14 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     : firstValueFrom(
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
                               map(motion =>
-                                  this.getIntermediateModels(motion).find(
-                                      model => model.user_id === val.id || model.id === val.id
-                                  )
+                                    this.getIntermediateModels(motion).find(
+                                        model => {
+                                            if (val instanceof ViewUser) {
+                                                return model.user_id === val.id
+                                            }
+                                            return model.id === val.id
+                                        }
+                                    )
                               ),
                               filter(model => !!model)
                           )
@@ -285,8 +291,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         for (const model of models) {
             if (this._removeUsersMap[model.id]) {
                 newRemoveMap[model.id] = model?.id;
-            } else if (this._addUsersSet.has(model.user_id)) {
-                this._addUsersSet.delete(model.user_id);
+            } else if (this._addUsersSet.has(model.id)) {
+                this._addUsersSet.delete(model.id);
             }
         }
         this.editSubject.next(
