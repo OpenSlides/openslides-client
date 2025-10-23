@@ -11,12 +11,12 @@ import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/ba
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };
 
@@ -157,16 +157,10 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
 
     public async onSave(): Promise<void> {
         const actions: Action<any>[] = [];
-        const removeMap: Identifiable[] = [];
         if (Object.values(this._removeUsersMap).length > 0) {
-            if (Object.values(this._removeUsersMap).length > 0) {
-                removeMap.push(
-                    ...(Object.values(this._removeUsersMap).map(id => {
-                        return { id: id };
-                    }) as Identifiable[])
-                );
-            }
-
+            const removeMap = Object.values(this._removeUsersMap).map(id => {
+                return { id: id };
+            }) as Identifiable[];
             actions.push(this.repo.delete(...removeMap));
         }
         if (this._addUsersSet.size > 0) {
@@ -184,14 +178,12 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     : firstValueFrom(
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
                               map(motion =>
-                                    this.getIntermediateModels(motion).find(
-                                        model => {
-                                            if (val instanceof ViewUser) {
-                                                return model.user_id === val.id
-                                            }
-                                            return model.id === val.id
-                                        }
-                                    )
+                                  this.getIntermediateModels(motion).find(model => {
+                                      if (val instanceof ViewUser) {
+                                          return model.user_id === val.id;
+                                      }
+                                      return model.id === val.id;
+                                  })
                               ),
                               filter(model => !!model)
                           )
@@ -291,8 +283,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         for (const model of models) {
             if (this._removeUsersMap[model.id]) {
                 newRemoveMap[model.id] = model?.id;
-            } else if (this._addUsersSet.has(model.id)) {
-                this._addUsersSet.delete(model.id);
+            } else if (this._addUsersSet.has(model.user_id)) {
+                this._addUsersSet.delete(model.user_id);
             }
         }
         this.editSubject.next(
