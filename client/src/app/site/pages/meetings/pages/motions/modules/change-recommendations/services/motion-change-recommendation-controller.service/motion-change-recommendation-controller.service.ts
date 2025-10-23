@@ -90,7 +90,14 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         const intersect = otherRecos.some(
             otherReco => !(line_from > otherReco.line_to || line_to < otherReco.line_from)
         );
-        return !intersect;
+        const lineRange = this.lineNumberingService.getLineNumberRange(
+            this.lineNumberingService.insertLineNumbers({
+                html: reco.motion.text,
+                lineLength: this.meetingSettingsService.instant(`motions_line_length`),
+                firstLine: reco.motion.firstLine
+            })
+        );
+        return !intersect && lineRange.to >= line_to;
     }
 
     /**
