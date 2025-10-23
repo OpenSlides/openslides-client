@@ -85,8 +85,11 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
                 text: [this.changeReco?.text, Validators.required],
                 type: [this.changeReco?.type, Validators.required],
                 public: [!this.changeReco?.internal],
-                line_to: [this.changeReco?.line_to],
-                line_from: [this.changeReco?.line_from, Validators.min(0)]
+                line_to: [this.changeReco?.line_to, [Validators.required, Validators.pattern(`[0-9]*`)]],
+                line_from: [
+                    this.changeReco?.line_from,
+                    [Validators.required, Validators.min(0), Validators.pattern(`[0-9]*`)]
+                ]
             },
             {
                 validators: [isNumberRange(`line_from`, `line_to`, `range_error`)]

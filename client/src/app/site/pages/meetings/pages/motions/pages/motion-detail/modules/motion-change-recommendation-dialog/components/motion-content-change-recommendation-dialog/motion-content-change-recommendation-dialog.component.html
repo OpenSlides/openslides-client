@@ -62,7 +62,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-    <button mat-button (click)="submitChanges()">
+    <button mat-button [disabled]="contentForm.invalid" (click)="submitChanges()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button mat-dialog-close>
