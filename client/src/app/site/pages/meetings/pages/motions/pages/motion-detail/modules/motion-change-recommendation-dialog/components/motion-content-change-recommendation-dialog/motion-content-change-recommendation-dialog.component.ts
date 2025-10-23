@@ -3,6 +3,7 @@ import { Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
+import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { LineRange } from '../../../../../../definitions/index';
 import {
@@ -44,6 +45,7 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
     standalone: false
 })
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {
+    public parentErrorStateMatcher = new ParentErrorStateMatcher();
     /**
      * The replacement types for the radio group
      * @TODO translate
@@ -84,13 +86,12 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
                 type: [this.changeReco?.type, Validators.required],
                 public: [!this.changeReco?.internal],
                 line_to: [this.changeReco?.line_to],
-                line_from: [this.changeReco?.line_from]
+                line_from: [this.changeReco?.line_from, Validators.min(0)]
             },
             {
                 validators: [isNumberRange(`line_from`, `line_to`, `range_error`)]
             }
         );
-        this.contentForm.valueChanges.subscribe(() => this.onChange());
     }
 
     protected override initializeDialogData(): void {
@@ -103,16 +104,5 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
             { ...this.changeReco, ...this.contentForm.value, internal: !this.contentForm.value.public },
             this.data.firstLine
         );
-    }
-
-    protected onChange(): void {
-        if (!this.contentForm.touched) {
-            this.contentForm.markAllAsTouched();
-        }
-        if (this.contentForm.hasError(`range_error`)) {
-            this.contentForm.get(`line_from`).setErrors({ range_error: true });
-        } else {
-            this.contentForm.get('line_from').setErrors(null);
-        }
     }
 }
