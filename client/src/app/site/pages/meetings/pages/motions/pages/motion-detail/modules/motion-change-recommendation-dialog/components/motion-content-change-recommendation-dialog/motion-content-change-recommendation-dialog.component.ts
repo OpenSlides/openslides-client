@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
@@ -76,6 +76,17 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
         this.editLineRange = !this.editLineRange;
     }
 
+    protected checkLineRangeValidator(): ValidatorFn {
+        return (formControl: AbstractControl): Record<string, any> | null => {
+            const line_from = formControl.get(`line_from`)!.value;
+            const line_to = formControl.get(`line_to`)!.value;
+            if (!this.repo.checkLineRanges(this.changeReco.id, line_from, line_to)) {
+                return { line_check_error: true };
+            }
+            return null;
+        };
+    }
+
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
@@ -92,7 +103,7 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
                 ]
             },
             {
-                validators: [isNumberRange(`line_from`, `line_to`, `range_error`)]
+                validators: [isNumberRange(`line_from`, `line_to`, `range_error`), this.checkLineRangeValidator()]
             }
         );
     }

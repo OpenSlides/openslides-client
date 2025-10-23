@@ -79,6 +79,21 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     }
 
     /**
+     * Check if can use new line_from and line_to for recoId
+     */
+
+    public checkLineRanges(recoId: Id, line_from: number, line_to: number): boolean {
+        const reco = this.getViewModel(recoId);
+        const otherRecos = this.getViewModelList().filter(
+            creco => creco.motion_id === reco.motion_id && creco.id !== reco.id
+        );
+        const intersect = otherRecos.some(
+            otherReco => !(line_from > otherReco.line_to || line_to < otherReco.line_from)
+        );
+        return !intersect;
+    }
+
+    /**
      * Sets a change recommendation to accepted.
      *
      * @param {ViewMotionChangeRecommendation} changeRecommendation
