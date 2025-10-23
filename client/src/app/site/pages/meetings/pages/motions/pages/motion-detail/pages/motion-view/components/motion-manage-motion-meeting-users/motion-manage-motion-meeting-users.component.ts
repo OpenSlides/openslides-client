@@ -221,7 +221,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             this.additionalInputControl.setValue(this.additionalInputValue);
         }
         this.editSubject.next(this.intermediateModels);
-        this._oldIds = new Set(this.intermediateModels.map(model => model.user_id));
+        this._oldIds = new Set(this.intermediateModels.map(model => model.id));
     }
 
     public async createNewIntermediateModel(username: string): Promise<void> {
@@ -283,8 +283,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         for (const model of models) {
             if (this._removeUsersMap[model.id]) {
                 newRemoveMap[model.id] = model?.id;
-            } else if (this._addUsersSet.has(model.user_id)) {
-                this._addUsersSet.delete(model.user_id);
+            } else if (this._addUsersSet.has(model.id)) {
+                this._addUsersSet.delete(model.id);
             }
         }
         this.editSubject.next(
@@ -313,7 +313,16 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      * Adds the user to the list, if they aren't already in there.
      */
     private async addUserAsIntermediateModel(model: MotionMeetingUser): Promise<void> {
-        if (!model?.user_id) {
+        if (model instanceof ViewUser) {
+            const meetingUser = this.getIntermediateModels(this.motion).find(modelB => {
+                return modelB.user_id === model.id;
+            });
+            if (this._oldIds.has(meetingUser.id)) {
+                delete this._removeUsersMap[meetingUser.id];
+            } else {
+                this._addUsersSet.add(model.id);
+            }
+        } else if (!model?.user_id) {
             if (this._oldIds.has(model.id)) {
                 delete this._removeUsersMap[model.id];
             } else {
