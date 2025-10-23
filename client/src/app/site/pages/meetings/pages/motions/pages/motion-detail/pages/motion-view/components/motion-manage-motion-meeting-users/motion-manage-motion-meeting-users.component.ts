@@ -313,20 +313,17 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      * Adds the user to the list, if they aren't already in there.
      */
     private async addUserAsIntermediateModel(model: MotionMeetingUser): Promise<void> {
-        if (model instanceof ViewUser) {
-            const meetingUser = this.getIntermediateModels(this.motion).find(modelB => {
-                return modelB.user_id === model.id;
-            });
-            if (this._oldIds.has(meetingUser.id)) {
-                delete this._removeUsersMap[meetingUser.id];
-            } else {
-                this._addUsersSet.add(model.id);
+        let userNumber = model.id;
+        if (!model?.user_id || model instanceof ViewUser) {
+            if (model instanceof ViewUser) {
+                userNumber = this.getIntermediateModels(this.motion).find(user => {
+                    return user.user_id === model.id;
+                }).id;
             }
-        } else if (!model?.user_id) {
-            if (this._oldIds.has(model.id)) {
-                delete this._removeUsersMap[model.id];
+            if (this._oldIds.has(userNumber)) {
+                delete this._removeUsersMap[userNumber];
             } else {
-                this._addUsersSet.add(model.id);
+                this._addUsersSet.add(userNumber);
             }
         }
         const models = this.editSubject.value;
