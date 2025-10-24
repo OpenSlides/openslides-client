@@ -284,9 +284,14 @@ Hint: Administrators always have full access.`
             type: `submitter_withdraw_state`
         },
         {
-            name: _(`Button text for next state`),
+            name: _(`Button text`),
             help_text: _(
-                `Enables a button with defined text that sets the motion to next state. The next state is defined via "Submitter may set state to".`
+                `Defines the wording of the button to change the state. Button is visible if the corresponding state is defined in "Submitter may set state to".
+
+Example: 
+1. State "in progress": "Submitter may set state to" = "submitted"
+2. State "submitted": "Button text" = "Submit motion"
+=> This enables a submit button in state "in progress".`
             ),
             selector: `state_button_label`,
             type: `input`
