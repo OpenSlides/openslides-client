@@ -292,20 +292,30 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                     if (viewModels && viewModels.length) {
                         let models: FilterModel[] = viewModels.filter(filterFn ?? ((): boolean => true));
                         if (mapFn) {
-                            models = Object.values(models.map(mapFn).mapToObject(model => ({ [model.id]: model })));
+                            models = Object.values(
+                                models.map(mapFn).mapToObject(model => {
+                                    if (!model) {
+                                        // This is [undefined]: undefined
+                                        // That is only relevant for models which were deleted but should still be displayed
+                                        // That is (so far) only the case for a meeting user who was assigned as editor/speaker and is now deleted)
+                                        return { [model?.id]: undefined };
+                                    }
+                                    return { [model.id]: model };
+                                })
+                            );
                         }
                         filterProperties = models
                             .map((model: FilterModel) => ({
-                                condition: model.id,
-                                label: model.getTitle(),
-                                isChild: !!model.parent,
+                                condition: model?.id,
+                                label: model?.getTitle() ?? `Deleted user`,
+                                isChild: !!model?.parent,
                                 isActive: (
                                     filter.options.find(
-                                        f => (f as OsFilterOption)?.condition === model.id
+                                        f => (f as OsFilterOption)?.condition === model?.id
                                     ) as OsFilterOption
                                 )?.isActive,
-                                skipTranslate: true,
-                                children: model.children?.length
+                                skipTranslate: model?.getTitle() ? true : false,
+                                children: model?.children?.length
                                     ? model.children.map((child: any) => ({
                                           label: child.getTitle(),
                                           condition: child.id

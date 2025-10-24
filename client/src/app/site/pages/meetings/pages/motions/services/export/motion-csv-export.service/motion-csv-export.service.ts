@@ -109,7 +109,12 @@ export class MotionCsvExportService {
                     case `submitters`:
                         return {
                             label: `submitters`,
-                            map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
+                            map: motion =>
+                                motion
+                                    .mapSubmittersWithAdditional(s =>
+                                        s ? s.full_name : this.translate.instant(`Deleted user`)
+                                    )
+                                    .join(`, `)
                         };
                     case `editors`:
                         return {
@@ -204,7 +209,12 @@ export class MotionCsvExportService {
                 { label: `Called with`, map: (motion): string => (!motion.sort_parent_id ? `` : motion.numberOrTitle) },
                 {
                     label: `submitters`,
-                    map: (motion): string => motion.mapSubmittersWithAdditional(s => s.short_name).join(`,`)
+                    map: (motion): string =>
+                        motion
+                            .mapSubmittersWithAdditional(s =>
+                                s ? s.short_name : this.translate.instant(`Deleted user`)
+                            )
+                            .join(`,`)
                 },
                 { property: `title` },
                 {
