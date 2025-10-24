@@ -14,7 +14,9 @@
             <h4>
                 <span>{{ 'Changed version in line' | translate }}</span>
                 {{ lineRange.from }}:
-                <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                @if (editReco) {
+                    <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                }
             </h4>
         }
         @if (lineRange.to !== lineRange.from) {
@@ -23,7 +25,9 @@
                 {{ lineRange.from }}
                 <span>{{ 'to' | translate }}</span>
                 {{ lineRange.to }}:
-                <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                @if (editReco) {
+                    <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                }
             </h4>
         }
         @if (editLineRange) {
