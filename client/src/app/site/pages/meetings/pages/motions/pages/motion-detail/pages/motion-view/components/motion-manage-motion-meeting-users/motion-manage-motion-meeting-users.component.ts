@@ -316,9 +316,12 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         let userNumber = model.id;
         if (!model?.user_id || model instanceof ViewUser) {
             if (model instanceof ViewUser) {
-                userNumber = this.getIntermediateModels(this.motion).find(user => {
+                const user = this.getIntermediateModels(this.motion).find(user => {
                     return user.user_id === model.id;
-                }).id;
+                });
+                if (user !== undefined) {
+                    userNumber = user.id
+                }
             }
             if (this._oldIds.has(userNumber)) {
                 delete this._removeUsersMap[userNumber];
