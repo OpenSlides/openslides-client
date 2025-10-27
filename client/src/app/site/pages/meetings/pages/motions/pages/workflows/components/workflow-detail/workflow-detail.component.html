@@ -156,9 +156,8 @@
                                             @if (state.restrictions?.length) {
                                                 <div>
                                                     <os-comma-separated-listing [list]="state.restrictions">
-                                                        <ng-template let-res>
-                                                            {{ getRestrictionLabel(res) | translate }}
-                                                        </ng-template>
+                                                        <!-- prettier-ignore -->
+                                                        <ng-template let-res>{{ getRestrictionLabel(res) | translate }}</ng-template>
                                                     </os-comma-separated-listing>
                                                 </div>
                                             }

@@ -326,7 +326,9 @@ export class AgendaPdfCatalogExportService {
         for (const speaker of finishedSpeakers) {
             const state = speaker.speechStateStr ? this.translate.instant(speaker.speechStateStr) : ``;
             const backgroundColor = (i + 1) % 2 ? TABLEROW_GREY : ``;
-            const extraBorder = state ? [false, true, false, false] : [false, true, false, true];
+            const extraBorder: [boolean, boolean, boolean, boolean] = state
+                ? [false, true, false, false]
+                : [false, true, false, true];
             tableCells.push([
                 { border: extraBorder, text: `${i}.`, fillColor: backgroundColor },
                 { border: extraBorder, text: speaker.name, fillColor: backgroundColor },
@@ -367,7 +369,9 @@ export class AgendaPdfCatalogExportService {
                           'm'
                       )
                     : ``;
-            const extraBorder = state ? [false, true, false, false] : [false, true, false, true];
+            const extraBorder: [boolean, boolean, boolean, boolean] = state
+                ? [false, true, false, false]
+                : [false, true, false, true];
 
             tableCells.push([
                 { border: extraBorder, text: `${i}.`, fillColor: backgroundColor },

@@ -301,6 +301,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * Creates the form with default values
      */
     public async createForm(): Promise<void> {
+        if (this.dialogForm) {
+            return;
+        }
         this.dialogForm = this.formBuilder.group({
             format: [],
             lnMode: [],
