@@ -26,7 +26,7 @@ export abstract class BaseMotionMeetingUserRepositoryService<
         super(repositoryServiceCollector, constructor);
     }
 
-    public getTitle = (model: V): string => model?.user?.getTitle() || this.translate.instant(`Unknown participant`);
+    public getTitle = (model: V): string => model?.user?.getTitle() || this.translate.instant(`Deleted user`);
 
     public create(motion: Identifiable, ...meetingUsers: Identifiable[]): Action<Identifiable[]> {
         const payload = meetingUsers.map(user => ({

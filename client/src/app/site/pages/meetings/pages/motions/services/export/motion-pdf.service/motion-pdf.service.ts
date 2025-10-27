@@ -258,7 +258,9 @@ export class MotionPdfService {
 
         // submitters
         if (!infoToExport || infoToExport.includes(`submitters`)) {
-            const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
+            const submitters = motion
+                .mapSubmittersWithAdditional(user => user?.full_name || this.translate.instant(`Deleted user`))
+                .join(`, `);
 
             metaTableBody.push([
                 {
@@ -295,7 +297,9 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`editors`)) {
             const motionEnableEditor = this.meetingSettingsService.instant(`motions_enable_editor`);
             if (motionEnableEditor && motion.editors.length > 0) {
-                const editors = motion.editors.map(editor => editor.user.full_name).join(`, `);
+                const editors = motion.editors
+                    .map(editor => editor.user?.full_name || this.translate.instant(`Deleted user`))
+                    .join(`, `);
 
                 metaTableBody.push([
                     {
@@ -316,7 +320,7 @@ export class MotionPdfService {
             );
             if (motionEnableWorkingGroupSpeaker && motion.working_group_speakers.length > 0) {
                 const working_group_speakers = motion.working_group_speakers
-                    .map(speaker => speaker.user.full_name)
+                    .map(speaker => speaker.user?.full_name || this.translate.instant(`Deleted user`))
                     .join(`, `);
 
                 metaTableBody.push([
@@ -902,7 +906,13 @@ export class MotionPdfService {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
+            {
+                text: motion.submitters.length
+                    ? motion
+                          .mapSubmittersWithAdditional(s => s?.short_name || this.translate.instant(`Deleted user`))
+                          .join(`, `)
+                    : ``
+            },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``

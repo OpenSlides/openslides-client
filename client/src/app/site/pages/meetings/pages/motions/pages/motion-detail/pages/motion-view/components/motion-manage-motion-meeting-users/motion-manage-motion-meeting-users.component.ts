@@ -9,11 +9,14 @@ import { Action, ActionService } from 'src/app/gateways/actions';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { ViewMotionEditor } from '../../../../../../modules/editors';
 import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
+import { ViewMotionWorkingGroupSpeaker } from '../../../../../../modules/working-group-speakers';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 
@@ -92,7 +95,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      * The current list of intermediate models.
      */
     public readonly editSubject = new BehaviorSubject<MotionMeetingUser[]>([]);
-    public editUserIds: number[] = [];
+    public nonSelectableUserIds: number[] = [];
 
     /**
      * The observable from editSubject. Fixing this value is a performance boost, because
@@ -143,7 +146,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this.additionalInputControl = this.fb.control(``);
         this.secondSelectorFormControl = this.fb.control(``);
         this.subscriptions.push(
-            this.editSubject.subscribe(ids => (this.editUserIds = ids.map(model => model.user_id ?? model.id)))
+            this.editSubject.subscribe(ids => (this.nonSelectableUserIds = ids.map(model => model.user_id ?? model.id)))
         );
         this.subscriptions.push(
             this.secondSelectorFormControl.valueChanges.subscribe(value => {
@@ -176,7 +179,19 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     ? val
                     : firstValueFrom(
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
-                              map(motion => this.getIntermediateModels(motion).find(model => model.user_id === val.id)),
+                              map(motion =>
+                                  this.getIntermediateModels(motion).find(model => {
+                                      if (
+                                          val instanceof ViewMotionSubmitter ||
+                                          val instanceof ViewMotionEditor ||
+                                          val instanceof ViewMotionWorkingGroupSpeaker
+                                      ) {
+                                          return model.id === val.id;
+                                      }
+                                      // else is (val instanceof ViewUser)
+                                      return model.user_id === val.id;
+                                  })
+                              ),
                               filter(model => !!model)
                           )
                       )
@@ -213,7 +228,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
             this.additionalInputControl.setValue(this.additionalInputValue);
         }
         this.editSubject.next(this.intermediateModels);
-        this._oldIds = new Set(this.intermediateModels.map(model => model.user_id));
+        this._oldIds = new Set(this.intermediateModels.map(model => model.id));
     }
 
     public async createNewIntermediateModel(username: string): Promise<void> {
@@ -233,9 +248,11 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      */
     public onRemove(model: MotionMeetingUser): void {
         if (model.user_id) {
-            this._removeUsersMap[model.user_id] = model.id;
+            this._removeUsersMap[model.id] = model.id;
         } else if (this._addUsersSet.has(model.id)) {
             this._addUsersSet.delete(model.id);
+        } else if (model.user_id === undefined) {
+            this._removeUsersMap[model.id] = model.id;
         }
         const value = this.editSubject.getValue();
         this.editSubject.next(value.filter(user => user.fqid !== model.fqid));
@@ -271,10 +288,10 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         const newRemoveMap: IdMap = {};
         const sortMap = new Map(this.editSubject.value.map((model, index) => [this.getUserId(model), index]));
         for (const model of models) {
-            if (this._removeUsersMap[model.user_id]) {
-                newRemoveMap[model.user_id] = model.id;
-            } else if (this._addUsersSet.has(model.user_id)) {
-                this._addUsersSet.delete(model.user_id);
+            if (this._removeUsersMap[model.id]) {
+                newRemoveMap[model.id] = model?.id;
+            } else if (this._addUsersSet.has(model.id)) {
+                this._addUsersSet.delete(model.id);
             }
         }
         this.editSubject.next(
@@ -303,11 +320,20 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
      * Adds the user to the list, if they aren't already in there.
      */
     private async addUserAsIntermediateModel(model: MotionMeetingUser): Promise<void> {
-        if (!model?.user_id) {
-            if (this._oldIds.has(model.id)) {
-                delete this._removeUsersMap[model.id];
+        let userNumber = model.id;
+        if (!model?.user_id || model instanceof ViewUser) {
+            if (model instanceof ViewUser) {
+                const user = this.getIntermediateModels(this.motion).find(user => {
+                    return user.user_id === model.id;
+                });
+                if (user !== undefined) {
+                    userNumber = user.id;
+                }
+            }
+            if (this._oldIds.has(userNumber)) {
+                delete this._removeUsersMap[userNumber];
             } else {
-                this._addUsersSet.add(model.id);
+                this._addUsersSet.add(userNumber);
             }
         }
         const models = this.editSubject.value;

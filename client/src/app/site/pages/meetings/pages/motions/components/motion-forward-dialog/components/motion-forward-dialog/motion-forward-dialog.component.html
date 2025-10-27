@@ -121,7 +121,7 @@
                                     <span class="data-preview">
                                         <os-comma-separated-listing [list]="data.motion[0].submitterNames">
                                             <ng-template let-submitter>
-                                                {{ submitter }}
+                                                {{ getSubmitterOrDeletedUser(submitter) }}
                                             </ng-template>
                                         </os-comma-separated-listing>
                                     </span>
