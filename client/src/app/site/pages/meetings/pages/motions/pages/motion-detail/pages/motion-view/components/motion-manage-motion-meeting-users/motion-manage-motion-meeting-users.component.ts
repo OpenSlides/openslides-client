@@ -9,12 +9,14 @@ import { Action, ActionService } from 'src/app/gateways/actions';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { ViewMotionEditor } from '../../../../../../modules/editors';
 import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
+import { ViewMotionWorkingGroupSpeaker } from '../../../../../../modules/working-group-speakers';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 
@@ -179,10 +181,15 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                           this.motionController.getViewModelObservable(this.motion.id).pipe(
                               map(motion =>
                                   this.getIntermediateModels(motion).find(model => {
-                                      if (val instanceof ViewUser) {
-                                          return model.user_id === val.id;
+                                      if (
+                                          val instanceof ViewMotionSubmitter ||
+                                          val instanceof ViewMotionEditor ||
+                                          val instanceof ViewMotionWorkingGroupSpeaker
+                                      ) {
+                                          return model.id === val.id;
                                       }
-                                      return model.id === val.id;
+                                      // else is (val instanceof ViewUser)
+                                      return model.user_id === val.id;
                                   })
                               ),
                               filter(model => !!model)
@@ -320,7 +327,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                     return user.user_id === model.id;
                 });
                 if (user !== undefined) {
-                    userNumber = user.id
+                    userNumber = user.id;
                 }
             }
             if (this._oldIds.has(userNumber)) {
