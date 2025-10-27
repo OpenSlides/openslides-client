@@ -123,10 +123,6 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
         fieldset: DEFAULT_FIELDSET,
         follow: [
             {
-                idField: `meeting_user_ids`,
-                fieldset: DEFAULT_FIELDSET
-            },
-            {
                 idField: `gender_id`,
                 fieldset: [`name`]
             }

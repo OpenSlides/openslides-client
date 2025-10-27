@@ -636,6 +636,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Show the sequential number for a motion`),
                         helpText: _(`In motion list, motion detail and PDF.`),
                         type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_non_manager`,
+                        label: _(`Limit editor formatting options for users WITHOUT motion manage permission`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_manager`,
+                        label: _(`Limit editor formatting options for users WITH motion manage permission`),
+                        type: `boolean`
                     }
                 ]
             },

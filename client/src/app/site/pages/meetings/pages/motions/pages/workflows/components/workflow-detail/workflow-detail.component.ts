@@ -282,6 +282,14 @@ Hint: Administrators always have full access.`
             ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
+        },
+        {
+            name: _(`Button text for next state`),
+            help_text: _(
+                `Enables a button with defined text that sets the motion to next state. The next state is defined via "Submitter may set state to".`
+            ),
+            selector: `state_button_label`,
+            type: `input`
         }
     ] as StatePerm[];
 
