@@ -639,12 +639,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_enable_restricted_editor_for_non_manager`,
-                        label: _(`Limit the editor for all users without motion manage permissions`),
+                        label: _(`Limit editor formatting options for users WITHOUT motion manage permission`),
                         type: `boolean`
                     },
                     {
                         key: `motions_enable_restricted_editor_for_manager`,
-                        label: _(`Limit the editor for all users with motion manage permissions`),
+                        label: _(`Limit editor formatting options for users WITH motion manage permission`),
                         type: `boolean`
                     }
                 ]

@@ -794,6 +794,10 @@ msgstr ""
 msgid "Bullet list"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Button text"
+msgstr ""
+
 msgid "CSV import"
 msgstr ""
 
@@ -1635,6 +1639,17 @@ msgstr ""
 msgid "Defines the time in which applause amounts are add up."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Defines the wording of the button to change the state. Button is visible if "
+"the corresponding state is defined in \"Submitter may set state to\".\n"
+"\n"
+"Example: \n"
+"1. State \"in progress\": \"Submitter may set state to\" = \"submitted\"\n"
+"2. State \"submitted\": \"Button text\" = \"Submit motion\"\n"
+"=> This enables a submit button in state \"in progress\"."
+msgstr ""
+
 msgid ""
 "Defines the wording of the recommendation that belongs to this state.\n"
 "Example: State = Accepted / Recommendation = Acceptance.\n"
@@ -2190,10 +2205,6 @@ msgid "Font regular"
 msgstr ""
 
 msgid "Font size in pt"
-msgstr ""
-
-#: app/src/app/site/pages/meetings/pages/agenda/pages/agenda-export/components/agenda-export/agenda-export.component.html
-msgid "Footer"
 msgstr ""
 
 msgid ""
@@ -2816,6 +2827,14 @@ msgstr ""
 msgid "Light mode"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITH motion manage permission"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITHOUT motion manage permission"
+msgstr ""
+
 msgid "Limit of active accounts"
 msgstr ""
 
@@ -3192,6 +3211,10 @@ msgid "New account"
 msgstr ""
 
 msgid "New amendment"
+msgstr ""
+
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.ts
+msgid "New and old passwords are identical!"
 msgstr ""
 
 msgid "New ballot"
