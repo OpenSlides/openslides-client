@@ -27,16 +27,7 @@ export class Vote extends BaseModel<Vote> {
         return [`weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Vote)[] = [
-        `id`,
-        `weight`,
-        `value`,
-        `user_token`,
-        `option_id`,
-        `user_id`,
-        `delegated_user_id`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Vote)[] = [`id`, `weight`, `value`];
 }
 
 export interface Vote extends HasMeetingId {}
