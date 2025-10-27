@@ -305,12 +305,20 @@ export class HtmlToPdfService {
      */
     protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
         const children = this.parseChildren(data.element, data.styles);
+
         const newParagraph = {
             ...this.create(`text`),
             ...this.computeStyle(data.styles)
         };
 
-        newParagraph.text = children;
+        if (data.classes?.includes(`spacer`)) {
+            const lines = +data.element.getAttribute(`data-lines`) || 0;
+            if (lines - 1 > 0) {
+                newParagraph.text = `\n`.repeat(lines - 1);
+            }
+        } else {
+            newParagraph.text = children;
+        }
         return newParagraph;
     }
 

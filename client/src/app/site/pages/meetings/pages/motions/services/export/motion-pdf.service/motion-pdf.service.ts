@@ -682,7 +682,7 @@ export class MotionPdfService {
                 change =>
                     !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr
             );
-            const brokenTextChangesAmount = changes.length - workingTextChanges.length - hasChangedTitle;
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length - +hasChangedTitle;
 
             const titleChange = changes.find(change => change.isTitleChange());
 

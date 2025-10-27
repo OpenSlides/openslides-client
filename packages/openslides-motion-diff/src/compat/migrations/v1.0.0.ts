@@ -3,11 +3,11 @@ import * as HtmlDiff from "../../diff";
 
 export function applyV1_0_0(ln: typeof LineNumbering, _diff: typeof HtmlDiff) {
   const originalLnInsert = ln.insert;
-  ln.insert = function(input): string {
+  ln.insert = function (input): string {
     input.html = input.html?.replace(/<br>(<br>)+/gm, (match) => {
-      return `<br style="margin-bottom: ${match.length / 4 * 19}px">`;
+      return `<br><span class="spacer" data-lines="${match.length / 4}" style="display:block; margin-bottom: ${(match.length / 4) * 19}px"></span>`;
     });
 
     return originalLnInsert(input);
-  }
+  };
 }
