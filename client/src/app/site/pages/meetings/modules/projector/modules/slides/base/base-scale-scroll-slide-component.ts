@@ -21,7 +21,8 @@ export interface IBaseScaleScrollSlideComponent<T extends object> extends BaseSl
 @Directive()
 export abstract class BaseScaleScrollSlideComponent<T extends object>
     extends BaseSlideComponent<T>
-    implements IBaseScaleScrollSlideComponent<T> {
+    implements IBaseScaleScrollSlideComponent<T>
+{
     @Input()
     public scroll!: number;
 

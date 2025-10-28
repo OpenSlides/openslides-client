@@ -60,7 +60,7 @@ export class ServerTimeService {
             credentials: `omit`,
             headers: {
                 'ngsw-bypass': `true`,
-                "cache": `no-store`
+                cache: `no-store`
             }
         });
         const date = new Date(servertimeResponse.headers.get(`Date`));

@@ -77,6 +77,11 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public readonly hasLoaded = new Deferred<boolean>();
 
+    /**
+     * Show apply feedback for a short time
+     */
+    public applyFeedback = false;
+
     private _topicId: Id | null = null;
 
     public getTitleFn = (): string => this.topic.getListTitle();
@@ -325,18 +330,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     }
 
     /**
-     * clicking Shift and Enter will save automatically
-     * Hitting escape while in topicForm should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
-        }
-    }
-
-    /**
      * Save a new topic as agenda item
      */
     private async saveTopic(): Promise<void> {
@@ -359,6 +352,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public async applyTopicContent(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
+        this.applyFeedback = true;
+        setTimeout(() => (this.applyFeedback = false), 2000);
     }
 
     private async createTopic(): Promise<void> {
@@ -371,8 +366,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.setEditMode(false);
     }
 
-    public onDownloadPdf(): void {
-        this.topicPdfService.exportSingleTopic(this.topic);
+    public onExport(): void {
+        this.componentServiceCollector.router.navigate([this.activeMeetingId, `agenda`, `agenda-export`], {
+            queryParams: { 'agenda-items': this.topic.agenda_item_id, back: this.topic.sequential_number }
+        });
     }
 
     /**

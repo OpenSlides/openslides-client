@@ -98,8 +98,8 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                @if (!motion.isAmendment()) {
-                    <div *osPerms="permission.motionCanForward; and: (motion.state$ | async)?.allow_motion_forwarding">
+                @if (!motion.isAmendment() && showForwardMenuEntry) {
+                    <div>
                         <button mat-menu-item (click)="forwardMotionToMeetings()">
                             <mat-icon>forward</mat-icon>
                             <span>{{ 'Forward' | translate }}</span>
@@ -110,7 +110,7 @@
                     <mat-divider />
                     <!-- Edit-->
                     @if (perms.isAllowed('update', motion)) {
-                        <button mat-menu-item [routerLink]="['edit']">
+                        <button mat-menu-item [replaceUrl]="true" [routerLink]="['edit']">
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit' | translate }}</span>
                         </button>
@@ -151,7 +151,7 @@
                     <!-- Comments -->
                     <os-motion-comments [motion]="motion"></os-motion-comments>
                     <!-- Personal note -->
-                    @if (!operator.isAnonymous) {
+                    @if (!operator.isAnonymous && operator.isInMeeting(activeMeetingId)) {
                         <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                     }
                 </div>
@@ -161,7 +161,7 @@
                         <!-- Meta Info -->
                         <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
                         <os-motion-comments [motion]="motion"></os-motion-comments>
-                        @if (!operator.isAnonymous) {
+                        @if (!operator.isAnonymous && operator.isInMeeting(activeMeetingId)) {
                             <os-motion-personal-note [motion]="motion"></os-motion-personal-note>
                         }
                     </div>
@@ -191,6 +191,7 @@
             [activeOriginMotions]="originMotionsLoaded"
             [changeRecoMode]="changeRecoMode"
             [motion]="motion"
+            [showForwardButton]="showForwardButton"
             (disableOriginMotion)="hideOriginMotion($event)"
             (enableOriginMotion)="displayOriginMotion($event)"
             (setShowAllAmendments)="showAllAmendments = $event"
@@ -261,6 +262,7 @@
                 [changeRecoMode]="changeRecoMode"
                 [lineNumberingMode]="lineNumberingMode"
                 [motion]="motion"
+                [originMotionsLoaded]="originMotionsLoaded"
                 [showAllAmendments]="showAllAmendments"
                 [unifiedChanges]="unifiedChanges$"
                 (updateCrMode)="changeRecoMode = $event"

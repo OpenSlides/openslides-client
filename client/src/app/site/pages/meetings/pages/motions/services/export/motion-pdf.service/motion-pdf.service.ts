@@ -83,7 +83,7 @@ export class MotionPdfService {
         private meetingSettingsService: MeetingSettingsService,
         private pdfDocumentService: MeetingPdfExportService,
         private htmlToPdfService: MotionHtmlToPdfService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private commentRepo: MotionCommentSectionControllerService,
         private organizationSettingsService: OrganizationSettingsService,
         private motionPollService: MotionPollService,
@@ -276,7 +276,7 @@ export class MotionPdfService {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporters.length > 0) {
                 const supporters = motion.supporters
-                    .naturalSort(this.translate.currentLang, [`first_name`, `last_name`])
+                    .naturalSort(this.translate.getCurrentLang(), [`first_name`, `last_name`])
                     .map(supporter => supporter.full_name)
                     .join(`, `);
 
@@ -366,7 +366,7 @@ export class MotionPdfService {
         ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
-                    .naturalSort(this.translate.currentLang, [`number`, `title`])
+                    .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 
@@ -672,7 +672,19 @@ export class MotionPdfService {
             // lead motion or normal amendments
 
             const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-            const textChanges = changes.filter(change => !change.isTitleChange());
+            const baseText = this.lineNumberingService.insertLineNumbers({
+                html: motion!.text,
+                lineLength: lineLength,
+                firstLine: motion.firstLine
+            });
+            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length;
+            const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
+            const workingTextChanges = changes.filter(
+                change =>
+                    !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr
+            );
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length - hasChangedTitle;
+
             const titleChange = changes.find(change => change.isTitleChange());
 
             if (crMode === ChangeRecoMode.Diff && titleChange) {
@@ -687,14 +699,15 @@ export class MotionPdfService {
             let formattedText = this.motionFormatService.formatMotion({
                 targetMotion: motion,
                 crMode,
-                changes: textChanges,
+                changes: workingTextChanges,
                 lineLength,
                 firstLine: motion.firstLine,
-                showAllChanges: showAllChanges
+                showAllChanges: showAllChanges,
+                brokenTextChangesAmount: brokenTextChangesAmount
             });
             formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF
-            htmlText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
+            htmlText += this.lineNumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
         return this.htmlToPdfService.convertHtml({ htmlText, lnMode, lineHeight });
@@ -731,7 +744,7 @@ export class MotionPdfService {
             });
 
             // handling too long hyperlinks by forcing the text to break
-            let reasonHtml = this.linenumberingService.insertLineBreaksWithoutNumbers(
+            let reasonHtml = this.lineNumberingService.insertLineBreaksWithoutNumbers(
                 motion.reason,
                 this.meetingSettingsService.instant(`motions_line_length`) as number
             );
@@ -805,7 +818,7 @@ export class MotionPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public callListToDoc(motions: ViewMotion[]): Content {
-        motions.sort((a, b) => a.sort_weight - b.sort_weight);
+        motions.sort((a, b) => a.tree_weight - b.tree_weight);
         const title = {
             text: this.translate.instant(`Call list`),
             style: `title`

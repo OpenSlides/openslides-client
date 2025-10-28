@@ -16,6 +16,7 @@ import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider'
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
 import { FilterListService, SearchService, SortListService } from '../../definitions';
+import { SortFilterBarComponent } from '../sort-filter-bar/sort-filter-bar.component';
 
 @Component({
     selector: `os-view-list`,
@@ -28,6 +29,9 @@ import { FilterListService, SearchService, SortListService } from '../../definit
 export class ViewListComponent<V extends Identifiable> implements OnInit, OnDestroy {
     @ViewChild(ScrollingTableComponent, { static: true })
     private readonly _scrollingTableComponent: ScrollingTableComponent<V> | undefined;
+
+    @ViewChild(SortFilterBarComponent)
+    private readonly _sortFilterBarComponent: SortFilterBarComponent<V> | undefined;
 
     /**
      * The required repository (prioritized over listObservable)
@@ -119,7 +123,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public alsoFilterByProperties: string[] = [`id`];
 
     @Input()
-    public searchFieldValue = ``;
+    public searchFieldInput = ``;
 
     @Input()
     public addBottomSpacer = false;
@@ -222,12 +226,12 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this._source = this.sortService
                 ? this.listObservableProvider?.getSortedViewModelListObservable
                     ? this.listObservableProvider.getSortedViewModelListObservable(
-                            this.sortService.repositorySortingKey
-                        )
+                          this.sortService.repositorySortingKey
+                      )
                     : this.sortService.getSortedViewModelListObservable()
                 : this.listObservableProvider
-                    ? this.listObservableProvider.getViewModelListObservable()
-                    : this.listObservable;
+                  ? this.listObservableProvider.getViewModelListObservable()
+                  : this.listObservable;
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this._source = this.filterService.getViewModelListObservable();
@@ -256,5 +260,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
         }
 
         this._scrollingTableComponent.scrollViewport.scrollTo({ top: offset });
+    }
+
+    public clearSearchField(): void {
+        this._sortFilterBarComponent?.clearSearchField();
     }
 }

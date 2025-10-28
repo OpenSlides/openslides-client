@@ -35,6 +35,23 @@
             </ng-container>
         </div>
     }
+    @let interventionCountdowns = getSpeakerCountdowns();
+    @for (countdown of interventionCountdowns; track countdown[0]) {
+        <div class="structure-level">
+            <div class="structure-level-content">
+                <hr class="structure-level-color" />
+                <span class="structure-level-time">
+                    <os-countdown-time [countdown]="countdown[1]" [unstyled]="true"></os-countdown-time>
+                </span>
+                <div class="structure-level-name">{{ countdown[0] | translate }}</div>
+            </div>
+            <ng-container *osPerms="permission.listOfSpeakersCanManage">
+                <button class="margin-top-12" disabled="true" mat-icon-button type="button">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </ng-container>
+        </div>
+    }
 </div>
 
 <mat-menu #editAndDistributeMenu="matMenu">

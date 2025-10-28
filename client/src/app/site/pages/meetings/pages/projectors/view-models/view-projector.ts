@@ -11,8 +11,8 @@ import { ViewProjection } from './view-projection';
 
 export const PROJECTOR_CONTENT_FOLLOW: Follow = {
     idField: `current_projection_ids`,
-    follow: [{ idField: `content_object_id` }],
-    fieldset: `content`
+    fieldset: `content`,
+    follow: [{ idField: `content_object_id` }]
 };
 
 export class ViewProjector extends BaseViewModel<Projector> {
@@ -43,6 +43,6 @@ interface IProjectorRelations {
 }
 export interface ViewProjector
     extends Projector,
-    ViewModelRelations<IProjectorRelations>,
-    HasMeeting,
-    HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}
+        ViewModelRelations<IProjectorRelations>,
+        HasMeeting,
+        HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}

@@ -171,7 +171,16 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     protected get filterProps(): string[] {
         if (this.canSeeSensitiveData) {
-            return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`, `member_number`, `email`];
+            return [
+                `full_name`,
+                `groups`,
+                `number`,
+                `delegationName`,
+                `structure_levels`,
+                `member_number`,
+                `email`,
+                `username`
+            ];
         } else {
             return [`full_name`, `groups`, `number`, `delegationName`, `structure_levels`];
         }
@@ -538,7 +547,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                             };
                         },
                         leftUser,
-                        (response.rightUser as ViewUser)
+                        response.rightUser as ViewUser
                     )
                     .resolve(false);
                 this.matSnackBar.open(

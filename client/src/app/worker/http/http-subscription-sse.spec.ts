@@ -46,8 +46,7 @@ function getValidStream(req: NormalizedRequestOptions, interval: number, resolve
     return new Response(stream);
 }
 
-// TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-xdescribe(`http subscription polling`, () => {
+describe(`http subscription polling`, () => {
     beforeEach(() => {
         fetchMock.mockGlobal();
         fetchMock.route(`end:/does-not-resolve`, args => getValidStream(args.options, 100));
@@ -68,8 +67,7 @@ xdescribe(`http subscription polling`, () => {
         expect(fetchMock.callHistory.called(`/does-not-resolve`)).toBeFalse();
     });
 
-    // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-    xit(`receives data once`, async () => {
+    it(`receives data once`, async () => {
         let resolver: CallableFunction;
         const receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, (d: any) => resolver(d));
@@ -93,8 +91,8 @@ xdescribe(`http subscription polling`, () => {
         subscr.start();
         await expectAsync(receivedError).toBeResolved();
         expectAsync(receivedData).toBePending();
-        expect((await receivedError as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
-        expect((await receivedError as ErrorDescription)?.error?.type).toEqual(`mock-error`);
+        expect(((await receivedError) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect(((await receivedError) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -104,8 +102,8 @@ xdescribe(`http subscription polling`, () => {
         const subscr = getHttpSubscriptionSSEInstance(`/error400-expected-format`, (d: any) => resolver(d));
         subscr.start();
         await expectAsync(receivedData).toBeResolved();
-        expect((await receivedData as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
-        expect((await receivedData as ErrorDescription)?.error?.type).toEqual(`mock-error`);
+        expect(((await receivedData) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
+        expect(((await receivedData) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
     });
 
@@ -122,8 +120,7 @@ xdescribe(`http subscription polling`, () => {
             expect(subscr.active).toBeFalsy();
         });
 
-        // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-        xit(`stop after data received`, async () => {
+        it(`stop after data received`, async () => {
             let resolver: CallableFunction;
             const receivedData = new Promise(resolve => (resolver = resolve));
             const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`, () => resolver());
@@ -133,8 +130,7 @@ xdescribe(`http subscription polling`, () => {
             return expectAsync(start).toBeResolved();
         });
 
-        // TODO: https://github.com/wheresrhys/fetch-mock/issues/845
-        xit(`instant stop`, async () => {
+        it(`instant stop`, async () => {
             const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`);
             const start = subscr.start();
             await subscr.stop();

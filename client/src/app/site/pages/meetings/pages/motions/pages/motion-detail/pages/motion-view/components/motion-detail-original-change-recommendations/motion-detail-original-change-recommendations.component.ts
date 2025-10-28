@@ -192,7 +192,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * @param reco
      */
     public calcRecoTop(reco: ViewUnifiedChange): string {
-        const from = this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10)) as HTMLElement;
+        const from = this.element.querySelector(
+            `.os-line-number.line-number-` + reco.getLineFrom().toString(10)
+        ) as HTMLElement;
         return (from?.offsetTop.toString() || `0`) + `px`;
     }
 
@@ -201,8 +203,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * @param reco
      */
     public calcRecoHeight(reco: ViewUnifiedChange): string {
-        const from = this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10)) as HTMLElement;
-        const to = this.element.querySelector(`.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10)) as HTMLElement;
+        const from = this.element.querySelector(
+            `.os-line-number.line-number-` + reco.getLineFrom().toString(10)
+        ) as HTMLElement;
+        const to = this.element.querySelector(
+            `.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10)
+        ) as HTMLElement;
         if (to) {
             return (to.offsetTop - from.offsetTop).toString() + `px`;
         } else {

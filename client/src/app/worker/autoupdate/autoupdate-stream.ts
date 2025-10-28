@@ -120,8 +120,8 @@ export class AutoupdateStream extends HttpStream {
         for (const key of Object.keys(this._currentData)) {
             if (lastHit === null || !key.startsWith(fqids[lastHit] + `/`)) {
                 lastHit = null;
-                for (let i = 0; i < fqids.length; i++) {
-                    if (key.startsWith(fqids[i] + `/`)) {
+                for (const ids of fqids) {
+                    if (key.startsWith(ids + `/`)) {
                         lastHit = key;
                         break;
                     }

@@ -41,7 +41,10 @@ export const getCommitteeListMinimalSubscriptionConfig: SubscriptionConfigGenera
                     `receive_forwardings_from_committee_ids`,
                     `organization_tag_ids`,
                     `manager_ids`,
-                    `external_id`
+                    `external_id`,
+                    `native_user_ids`,
+                    `all_parent_ids`,
+                    `all_child_ids`
                 ]
             }
         ]
@@ -53,7 +56,15 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewCommittee,
         ids: [id],
-        fieldset: [`description`, `forward_to_committee_ids`, `id`, `manager_ids`],
+        fieldset: [
+            `description`,
+            `forward_to_committee_ids`,
+            `id`,
+            `manager_ids`,
+            `native_user_ids`,
+            `all_parent_ids`,
+            `all_child_ids`
+        ],
         follow: [
             {
                 idField: `user_ids`,

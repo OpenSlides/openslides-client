@@ -56,7 +56,7 @@ describe(`GetUsersPresenterService`, () => {
                         (data.sort_criteria as any[]).some(
                             criteria => ![`username`, `first_name`, `last_name`].includes(criteria)
                         ))) ||
-                        checkProperty(data.filter, `string`)
+                checkProperty(data.filter, `string`)
             ) {
                 return { error: `MockPresenterService: Data has wrong format` };
             }

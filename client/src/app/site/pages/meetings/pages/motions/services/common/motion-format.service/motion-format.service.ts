@@ -44,6 +44,7 @@ interface DifferedViewArguments extends Arguments {
      */
     firstLine: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number;
 }
 
 interface FormatMotionConfig extends Arguments {
@@ -60,6 +61,7 @@ interface FormatMotionConfig extends Arguments {
      */
     firstLine?: number;
     showAllChanges?: boolean;
+    brokenTextChangesAmount?: number;
 }
 
 @Injectable({
@@ -227,7 +229,14 @@ export class MotionFormatService {
     };
 
     private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine, firstLine, showAllChanges }: DifferedViewArguments = args;
+        const {
+            changes,
+            lineLength,
+            highlightedLine,
+            firstLine,
+            showAllChanges,
+            brokenTextChangesAmount
+        }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
         const motionText = this.lineNumberingService.insertLineNumbers({
@@ -238,8 +247,8 @@ export class MotionFormatService {
 
         let lastLineTo = -1;
         for (let i = 0; i < changesToShow.length; i++) {
-            if (changesToShow[i].getLineTo() > lastLineTo) {
-                const changeFrom = changesToShow[i - 1] ? changesToShow[i - 1].getLineTo() + 1 : firstLine;
+            if (changesToShow[i].getLineFrom() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
+                const changeFrom = changesToShow[i - 1] ? lastLineTo + 1 : firstLine;
                 text.push(
                     this.diffService.extractMotionLineRange(
                         motionText,
@@ -253,64 +262,70 @@ export class MotionFormatService {
                     )
                 );
             }
-            text.push(this.addAmendmentNr(changesToShow, changesToShow[i]));
+            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i]);
+            if (amendmentNr) {
+                text.push(amendmentNr);
+            }
             text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
+        if (brokenTextChangesAmount > 0) {
+            const msg =
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
+                brokenTextChangesAmount +
+                ` ` +
+                this.translate.instant(`change recommendation(s) refer to a nonexistent line number.`);
+            text.push(`<em style="color: red; font-weight: bold;">` + msg + `</em>`);
+        }
         return this.adjustDiffClasses(text).join(``);
     };
 
     private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string {
         const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
-        const amendmentNr: string[] = [];
 
+        let warning = ``;
+        let additionClasses = ``;
         if (this.diffService.changeHasCollissions(current_text, changesToShow)) {
+            let iconMargin = `margin-left-40`;
             if (lineNumbering === LineNumberingMode.Outside) {
-                amendmentNr.push(
-                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-right-10">warning</mat-icon>`
-                );
+                iconMargin = `margin-right-10`;
             } else if (lineNumbering === LineNumberingMode.Inside) {
-                amendmentNr.push(
-                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-45">warning</mat-icon>`
-                );
-            } else {
-                amendmentNr.push(
-                    `<span class="amendment-nr-n-icon"><mat-icon class="margin-left-40">warning</mat-icon>`
-                );
+                iconMargin = `margin-left-45`;
             }
-        } else {
-            if (lineNumbering === LineNumberingMode.Outside) {
-                amendmentNr.push(`<span class="amendment-nr-n-icon">`);
-            } else if (lineNumbering === LineNumberingMode.Inside) {
-                amendmentNr.push(`<span class="margin-left-46 amendment-nr-n-icon">`);
-            } else {
-                amendmentNr.push(`<span class="margin-left-40 amendment-nr-n-icon">`);
-            }
+            warning = `<mat-icon class="${iconMargin}">warning</mat-icon>`;
+        } else if (lineNumbering === LineNumberingMode.Inside) {
+            additionClasses = `margin-left-46`;
+        } else if (lineNumbering === LineNumberingMode.None) {
+            additionClasses = `margin-left-40`;
         }
-        amendmentNr.push(`<span class="amendment-nr">`);
+
+        let title = ``;
         if (`amend_nr` in current_text) {
-            if (typeof current_text.amend_nr === `string`) {
-                amendmentNr.push(current_text.amend_nr);
-            }
             if (current_text.amend_nr === ``) {
-                amendmentNr.push(this.translate.instant(`Amendment`));
+                title = this.translate.instant(`Amendment`);
+            } else if (typeof current_text.amend_nr === `string`) {
+                title = current_text.amend_nr;
             }
         } else if (current_text.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
             const amendment = current_text as ViewMotionAmendedParagraph;
-            amendmentNr.push(amendment.getNumber(), ` - `, amendment.stateName);
-        } else {
-            if (current_text.isRejected()) {
-                amendmentNr.push(this.translate.instant(`Change recommendation - rejected`));
-            } else {
-                amendmentNr.push(this.translate.instant(`Change recommendation`));
-            }
+            title = `${amendment.getNumber()} - ${amendment.stateName}`;
         }
-        amendmentNr.push(`: </span></span>`);
-        return amendmentNr.join(``);
+
+        if (!warning && !title) {
+            return ``;
+        } else if (!title) {
+            return `<span class="amendment-nr-n-icon ${additionClasses}">${warning}</span>`;
+        }
+
+        return `<span class="amendment-nr-n-icon ${additionClasses}">
+                    ${warning} <span class="amendment-nr">${title}: </span>
+                </span>`;
     }
 
     private adjustDiffClasses(text: string[]): string[] {

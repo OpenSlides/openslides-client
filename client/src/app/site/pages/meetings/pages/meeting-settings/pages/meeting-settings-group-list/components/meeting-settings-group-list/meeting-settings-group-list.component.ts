@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -15,7 +15,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     styleUrls: [`./meeting-settings-group-list.component.scss`],
     standalone: false
 })
-export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
+export class MeetingSettingsGroupListComponent extends BaseMeetingComponent implements OnInit {
     public groups: SettingsGroup[] = [];
 
     public constructor(
@@ -27,6 +27,10 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
         super();
 
         this.groups = this.meetingSettingsDefinitionProvider.settings;
+    }
+
+    public ngOnInit(): void {
+        super.setTitle(`Settings`);
     }
 
     /**

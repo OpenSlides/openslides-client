@@ -583,6 +583,10 @@ describe(`utils: functions`, () => {
         it(`test with null`, () => {
             expect(filterObject(null, keyVal => !!keyVal.value)).toEqual(null);
         });
+
+        it(`test with all filtered out`, () => {
+            expect(filterObject({ a: [], b: [] }, keyVal => keyVal.value.length > 0)).toEqual({});
+        });
     });
 
     describe(`partitionModelsForUpdate function`, () => {
@@ -724,12 +728,12 @@ describe(`utils: functions`, () => {
 
         it(`test with keys with spaces`, () => {
             expect(
-                replaceObjectKeys({ "a": `b`, 'c d': `e`, "f": `g h` }, [
+                replaceObjectKeys({ a: `b`, 'c d': `e`, f: `g h` }, [
                     [`a`, `b`],
                     [`c d`, `e`],
                     [`f`, `g h`]
                 ])
-            ).toEqual({ "b": `b`, "e": `e`, 'g h': `g h` });
+            ).toEqual({ b: `b`, e: `e`, 'g h': `g h` });
         });
     });
 

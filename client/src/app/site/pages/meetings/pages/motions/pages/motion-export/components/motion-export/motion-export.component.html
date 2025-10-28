@@ -1,14 +1,14 @@
 <os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportMotions()">
     <div class="title-slot">
-        <h2>{{ 'Export ' + motionsNr + ' Motions' | translate }}</h2>
+        <h2>{{ motionsNr }} {{ 'motions' | translate }}</h2>
     </div>
 </os-head-bar>
 
-<div class="motion-export-card">
+<div class="export-card">
     <mat-tab-group
         #tabGroup
         mat-stretch-tabs="false"
-        (animationDone)="animationDone()"
+        (animationDone)="afterTabChanged()"
         (selectedTabChange)="tabChanged($event)"
     >
         <mat-tab label="PDF">
@@ -26,7 +26,7 @@
 <ng-template #exportPdf>
     <form [formGroup]="dialogForm">
         <!-- Content -->
-        <div class="motion-export-wrapper">
+        <div class="export-wrapper">
             @if (!isXLSXExport) {
                 <p class="toggle-group-head">{{ 'Text version' | translate }}</p>
                 <mat-chip-listbox formControlName="crMode">
@@ -287,7 +287,7 @@
                             value="speakers"
                             [matBadgeHidden]="speakRequestsChipOption.selected ? 'false' : 'true'"
                         >
-                            <span>{{ 'Open requests to speak' | translate }}</span>
+                            <span>{{ 'Number of open requests to speak' | translate }}</span>
                         </mat-chip-option>
                     }
                 </mat-chip-listbox>

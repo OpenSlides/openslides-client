@@ -8,13 +8,8 @@
             </span>
         }
 
-        <div
-            class="motion-text underlined-links"
-            [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
-            [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
-            [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
-        >
-            @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
+        @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
+            <div class="motion-text underlined-links line-numbers-outside">
                 <os-motion-detail-original-change-recommendations
                     [changeRecommendations]="changeRecommendations$ | async"
                     [html]="formattedTextPlain$ | async"
@@ -22,13 +17,14 @@
                     (createChangeRecommendation)="createChangeRecommendation($event)"
                     (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
-            } @else {
-                <os-motion-final-version
-                    [formattedText]="formattedTextPlain$ | async"
-                    [motion]="motion"
-                ></os-motion-final-version>
-            }
-        </div>
+            </div>
+        } @else {
+            <os-motion-final-version
+                [formattedText]="formattedTextPlain$ | async"
+                [lineNumberingMode]="lineNumberingMode"
+                [motion]="motion"
+            ></os-motion-final-version>
+        }
     } @else {
         <os-motion-detail-diff
             [changes]="changesForDiffMode$ | async"
@@ -36,6 +32,7 @@
             [lineNumberingMode]="lineNumberingMode"
             [motion]="motion"
             [noEditMode]="noEditMode"
+            [originMotionsLoaded]="originMotionsLoaded"
             [scrollToChange]="scrollToChange"
             [showAllAmendments]="showAllAmendments$ | async"
             (createChangeRecommendation)="createChangeRecommendation($event)"
@@ -75,8 +72,11 @@
                     </h3>
                     <mat-list dense>
                         @for (file of sortedAttachments$ | async; track file.id) {
-                            <mat-list-item>
-                                <a target="_blank" [routerLink]="file.url">{{ file.title }}</a>
+                            <mat-list-item class="attachment-entry">
+                                <a target="_blank" [routerLink]="file.url">
+                                    <mat-icon class="attachment-icon">{{ file.getIcon() }}</mat-icon>
+                                    {{ file.getTitle() }}
+                                </a>
                             </mat-list-item>
                         }
                     </mat-list>

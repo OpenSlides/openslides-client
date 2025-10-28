@@ -23,3 +23,7 @@
 </mat-toolbar>
 
 <ng-template [cdkPortalOutlet]="headbarService.headbar" />
+
+@if (headbarService.additionalHeadbar) {
+    <ng-template [cdkPortalOutlet]="headbarService.additionalHeadbar" />
+}

@@ -77,7 +77,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * Initial value of the input-field.
      */
     @Input()
-    public inputValue!: string;
+    public searchFieldInput!: string;
 
     @Input()
     public internal = false;
@@ -245,7 +245,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * Initialize the value of the input.
      */
     public initInput(): void {
-        this.inputControl = this.inputValue;
+        this.inputControl = this.searchFieldInput;
     }
 
     /**

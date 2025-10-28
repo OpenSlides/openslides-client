@@ -1,4 +1,4 @@
-name: CI
+name: CI - Build and Test Service
 
 on:
   pull_request:
@@ -11,12 +11,13 @@ env:
   NG_CLI_ANALYTICS: ci
 
 jobs:
-  build-and-test-prod-image:    
+  build-and-test-prod-image:
+    name: build-and-test-prod-image
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: Clone main repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: OpenSlides/OpenSlides
           path: "."
@@ -32,7 +33,7 @@ jobs:
         run: rm -r openslides-client
 
       - name: Clone openslides-client
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: "./openslides-client"
 
@@ -58,7 +59,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: playwright-report
@@ -71,9 +72,10 @@ jobs:
         run: docker compose down --volumes --remove-orphans
 
   build-and-test-dev-image:
+    name: build-and-test-dev-image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: create docker dev image
         run: make build-dev

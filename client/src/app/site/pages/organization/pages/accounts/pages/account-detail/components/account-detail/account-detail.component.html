@@ -33,7 +33,7 @@
     [generatePasswordFn]="getRandomPasswordFn()"
     [isEditing]="isEditingUser"
     [isNewUser]="isNewUser"
-    [useAdditionalEditTemplate]="!!organizationManagementLevels.length"
+    [shouldEnableFormControlFn]="shouldEnableFormControlFn"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
     (errorEvent)="formErrors = $event"
@@ -42,9 +42,43 @@
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
+            <!-- Home committee -->
+            <div class="home-committee-area">
+                <mat-form-field class="form50 force-min-width">
+                    <mat-label>{{ 'Home committee' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="home_committee_id"
+                        [includeNone]="true"
+                        [multiple]="false"
+                        [repo]="committeeController"
+                        [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetHomeCommitteeFn()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+                <mat-checkbox class="form50 external-margin-top force-min-width" formControlName="external">
+                    {{ 'external' | translate }}
+                </mat-checkbox>
+            </div>
+            <!-- Committee admin -->
+            <div *osOmlPerms="OML.can_manage_organization">
+                <mat-form-field class="form100 force-min-width">
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="committee_management_ids"
+                        [multiple]="true"
+                        [repo]="committeeController"
+                        [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetFn()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+            </div>
             <!-- Administration roles (at organization level) -->
-            <div *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
-                <mat-form-field class="form100 force-min-with">
+            <div *osOmlPerms="OML.can_manage_users">
+                <mat-form-field class="form100 force-min-width">
                     <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         @if (!orgaManagementLevelChangeDisabled) {
@@ -58,25 +92,10 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <!-- Committee admin -->
-            <div *osOmlPerms="OML.can_manage_organization">
-                <mat-form-field class="form100 force-min-with">
-                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="committee_management_ids"
-                        [multiple]="true"
-                        [repo]="committeeController"
-                        [sortService]="committeeSortService"
-                        [subscriptionConfig]="committeeSubscriptionConfig"
-                        [transformPropagateFn]="getTransformPropagateFn()"
-                        [transformSetFn]="getTransformSetFn()"
-                    ></os-repo-search-selector>
-                </mat-form-field>
-            </div>
         </div>
         <!-- Default Vote weight -->
         <div [formGroup]="form">
-            <mat-form-field class="form100 force-min-with">
+            <mat-form-field class="form100 force-min-width">
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
                 <input formControlName="default_vote_weight" matInput type="number" />
                 @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0) {
@@ -96,6 +115,14 @@
             <div>
                 <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
                 <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
+            </div>
+        }
+        @if (user.home_committee_id) {
+            <div>
+                <h4>{{ 'Home committee' | translate }}</h4>
+                <a [routerLink]="'/committees/' + user.home_committee_id">
+                    {{ user.home_committee.name }}
+                </a>
             </div>
         }
         <!-- Default vote weight -->

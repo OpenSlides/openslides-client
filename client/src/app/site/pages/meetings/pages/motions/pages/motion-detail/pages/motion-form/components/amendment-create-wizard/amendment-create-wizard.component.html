@@ -36,7 +36,7 @@
     </os-head-bar>
 
     <form [formGroup]="contentForm">
-        <mat-horizontal-stepper #matStepper linear>
+        <mat-horizontal-stepper #matStepper linear (selectedIndexChange)="changeStepper($event)">
             <mat-step [completed]="contentForm.value.selectedParagraphs.length > 0">
                 <ng-template matStepLabel>{{ 'Select paragraphs' | translate }}</ng-template>
                 <div class="amendment-create-wizard-wrapper spacer-bottom-20">
@@ -110,7 +110,7 @@
                                 </span>
                             }
                         </h4>
-                        <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>
+                        <os-motion-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-motion-editor>
                     </section>
                 }
 
@@ -131,7 +131,7 @@
                     }
                 </h3>
 
-                <os-editor formControlName="reason" [required]="reasonRequired"></os-editor>
+                <os-motion-editor formControlName="reason" [required]="reasonRequired"></os-motion-editor>
                 @if (
                     reasonRequired &&
                     contentForm.get('reason')?.invalid &&

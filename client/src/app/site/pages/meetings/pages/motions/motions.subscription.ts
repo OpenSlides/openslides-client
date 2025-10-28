@@ -111,6 +111,7 @@ export const getMotionWorkflowSubscriptionConfig: SubscriptionConfigGenerator = 
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
+        fieldset: [],
         follow: [{ idField: `motion_workflow_ids`, fieldset: FULL_FIELDSET }]
     },
     subscriptionName: MOTION_WORKFLOW_SUBSCRIPTION
@@ -123,7 +124,8 @@ export const getMotionWorkflowDetailSubscriptionConfig: SubscriptionConfigGenera
         fieldset: [],
         follow: [
             {
-                idField: `state_ids`
+                idField: `state_ids`,
+                fieldset: []
             }
         ]
     },
@@ -161,7 +163,10 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
         ids,
         viewModelCtor: ViewMotion,
         fieldset: [`forwarded`, `created`, `sequential_number`],
-        follow: [{ idField: `meeting_id`, fieldset: [`name`, `description`] }]
+        follow: [
+            { idField: `meeting_id`, fieldset: [`name`, `description`] },
+            { idField: `amendment_ids`, fieldset: [], follow: [`meeting_id`] }
+        ]
     },
     subscriptionName: MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION
 });
@@ -184,7 +189,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `lead_motion_id`, fieldset: [`text`] },
             {
                 idField: `amendment_ids`,
-                fieldset: [`text`, `modified_final_version`, `amendment_paragraphs`],
+                fieldset: [`text`, `modified_final_version`, `amendment_paragraphs`, `marked_forwarded`],
                 follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
             },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
@@ -247,7 +252,8 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                     `meeting_id`,
                     `show_state_extension_field`,
                     `show_recommendation_extension_field`,
-                    `recommendation_label`
+                    `recommendation_label`,
+                    `state_button_label`
                 ]
             },
             {
@@ -265,13 +271,13 @@ export const getMotionOriginDetailSubscriptionConfig: SubscriptionConfigGenerato
                         follow: [
                             {
                                 idField: `meeting_user_id`,
+                                fieldset: `participantListMinimal`,
                                 follow: [
                                     {
                                         idField: `user_id`,
                                         fieldset: `participantList`
                                     }
-                                ],
-                                fieldset: `participantListMinimal`
+                                ]
                             }
                         ]
                     }
@@ -350,6 +356,7 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
     modelRequest: {
         ids,
         viewModelCtor: ViewMotion,
+        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`],
         follow: [
             {
                 idField: `amendment_ids`,
@@ -357,8 +364,7 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
                 follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }
-        ],
-        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`]
+        ]
     },
     subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
 });

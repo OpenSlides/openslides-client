@@ -367,21 +367,15 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             case `date`:
             case `datetime`:
                 // datetime has to be converted
-                const date = this.form.get(`date`)!.value;
-                const time = this.form.get(`time`)!.value;
-                value = this.dateAndTimeToUnix(date, time);
+                value = this.dateAndTimeToUnix(this.form.get(`date`)!.value, this.form.get(`time`)!.value);
                 break;
             case `daterange`:
                 // daterange has to be formatted
-                const start = this.form.get(`daterange`)!.value.start;
-                const end = this.form.get(`daterange`)!.value.end;
-                value = [start, end];
+                value = [this.form.get(`daterange`)!.value.start, this.form.get(`daterange`)!.value.end];
                 break;
             case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
-                const newS = new Set(value);
-                const oldS = new Set(this._firstValue);
-                if (newS.equals(oldS)) {
+                if (new Set(value).equals(new Set(this._firstValue))) {
                     return;
                 }
                 break;

@@ -36,7 +36,7 @@ export class MotionBlock extends BaseModel<MotionBlock> {
 }
 export interface MotionBlock
     extends HasMeetingId,
-    HasAgendaItemId,
-    HasListOfSpeakersId,
-    HasProjectionIds,
-    HasSequentialNumber {}
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasProjectionIds,
+        HasSequentialNumber {}

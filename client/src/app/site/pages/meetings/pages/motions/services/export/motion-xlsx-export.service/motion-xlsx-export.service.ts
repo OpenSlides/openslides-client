@@ -116,7 +116,7 @@ export class MotionXlsxExportService {
                         propertyHeader = _(`Motion block`);
                         break;
                     case `speakers`:
-                        propertyHeader = _(`Open requests to speak`);
+                        propertyHeader = _(`Number of open requests to speak`);
                         break;
                     case `working_group_speakers`:
                         propertyHeader = _(`Spokesperson`);
@@ -182,7 +182,7 @@ export class MotionXlsxExportService {
                                 .join(`, `);
                         case `referring_motions`:
                             return motion.referenced_in_motion_recommendation_extensions
-                                .naturalSort(this.translate.currentLang, [`number`, `title`])
+                                .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                                 .map(motion => motion.getNumberOrTitle())
                                 .join(`, `);
                         default:
@@ -198,9 +198,7 @@ export class MotionXlsxExportService {
                         } else {
                             const section = this.commentRepo.getViewModel(commentId)!;
                             const motionComment = motion.getCommentForSection(section);
-                            return motionComment?.comment
-                                ? reconvertChars(stripHtmlTags(motionComment.comment))
-                                : ``;
+                            return motionComment?.comment ? reconvertChars(stripHtmlTags(motionComment.comment)) : ``;
                         }
                     })
                 );

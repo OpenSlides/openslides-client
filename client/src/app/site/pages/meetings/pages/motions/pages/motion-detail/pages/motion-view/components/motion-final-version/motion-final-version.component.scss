@@ -33,11 +33,15 @@
 
 .apply-button {
     display: flex;
+    justify-content: right;
     button {
         margin-top: 10px;
         height: 37px;
         width: auto;
-        margin-left: auto;
         margin-right: 0;
+    }
+    .apply-feedback-icon {
+        color: green;
+        margin-top: 16px;
     }
 }

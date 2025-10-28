@@ -73,14 +73,14 @@ export class OnlyNumberDirective implements OnInit {
         if (this.osOnlyNumber) {
             if (
                 this.allowedKeys.includes(event.key) ||
-                // Allow: Ctrl+A
-                (event.key === `a` && event.ctrlKey) ||
-                // Allow: Ctrl+C
-                (event.key === `c` && event.ctrlKey) ||
-                // Allow: Ctrl+V
-                (event.key === `v` && event.ctrlKey) ||
-                // Allow: Ctrl+X
-                (event.key === `x` && event.ctrlKey) ||
+                // Allow: Ctrl+A and command+A
+                (event.key === `a` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+C and command+C
+                (event.key === `c` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+V and command+V
+                (event.key === `v` && (event.ctrlKey || event.metaKey)) ||
+                // Allow: Ctrl+X and command+X
+                (event.key === `x` && (event.ctrlKey || event.metaKey)) ||
                 this.regExp.test(nextValue)
             ) {
                 return;
@@ -95,7 +95,7 @@ export class OnlyNumberDirective implements OnInit {
         if (this._osOnlyNumberAllowDecimal) {
             const maximumDecimalDigits =
                 this._osOnlyNumberMaxDecimalDigits === 0 ? `` : `{${this._osOnlyNumberMaxDecimalDigits}}`;
-            regexString = `^([1-9][0-9]*|0)((\,|\.)${maximumDecimalDigits})?$`;
+            regexString = `^([1-9][0-9]*|0)((,|.)${maximumDecimalDigits})?$`;
         } else {
             const hexCharacters = this._osOnlyNumberAllowHex ? `a-fA-F` : ``;
             const allowedFirstCharacter = `[1-9${hexCharacters}]`;

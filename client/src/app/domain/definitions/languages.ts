@@ -5,6 +5,7 @@ export const availableTranslations = {
     fr: `Français`,
     it: `Italiano`,
     es: `Español`,
+    nl: `Nederlands`,
     ru: `русский`
 };
 

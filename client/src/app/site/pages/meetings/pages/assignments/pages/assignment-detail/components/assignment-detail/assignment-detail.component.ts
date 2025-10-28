@@ -252,7 +252,10 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 }
             case `createPoll`:
                 return (
-                    isManager && this.assignment && !this.assignment.isFinished && this.assignment.candidateAmount > 0
+                    this.operator.hasPerms(Permission.assignmentCanManagePolls) &&
+                    this.assignment &&
+                    !this.assignment.isFinished &&
+                    this.assignment.candidateAmount > 0
                 );
             case `manage`:
                 return isManager;
@@ -274,17 +277,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
         if (!newMode) {
             this.isEditing = false;
-        }
-    }
-
-    /**
-     * Hitting escape while in the edit form should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
         }
     }
 

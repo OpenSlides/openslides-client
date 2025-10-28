@@ -17,5 +17,5 @@ interface IPointOfOrderCategoryRelations {
 }
 export interface ViewPointOfOrderCategory
     extends PointOfOrderCategory,
-    ViewModelRelations<IPointOfOrderCategoryRelations>,
-    HasMeeting {}
+        ViewModelRelations<IPointOfOrderCategoryRelations>,
+        HasMeeting {}

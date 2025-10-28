@@ -1,5 +1,5 @@
 @if (data && projector) {
-    <div>
+    <div [ngClass]="{ 'label-backgrounds': !hideMetadataBackground }">
         @if (data.data.show_sidebox) {
             <div
                 id="sidebox"

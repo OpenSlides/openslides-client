@@ -1,6 +1,6 @@
 @if (isEditMode) {
     <form [formGroup]="contentForm">
-        <os-editor formControlName="modified_final_version" required [hidden]="!isEditMode"></os-editor>
+        <os-motion-editor formControlName="modified_final_version" required [hidden]="!isEditMode"></os-motion-editor>
         @if (
             contentForm.get('modified_final_version')?.invalid &&
             (contentForm.get('modified_final_version')?.dirty || contentForm.get('modified_final_version')?.touched)
@@ -10,11 +10,23 @@
             </div>
         }
         <div class="apply-button">
+            @if (applyFeedback) {
+                <div class="apply-feedback-icon">
+                    <mat-icon>check</mat-icon>
+                </div>
+            }
             <button mat-stroked-button (click)="applyModifiedFinalVersion()">
                 <span>{{ 'Apply' | translate }}</span>
             </button>
         </div>
     </form>
 } @else {
-    <div [innerHTML]="formattedText | trust: 'html'"></div>
+    <div
+        class="motion-text underlined-links"
+        [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+        [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+        [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+    >
+        <div [innerHTML]="formattedText | trust: 'html'"></div>
+    </div>
 }

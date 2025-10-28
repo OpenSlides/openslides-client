@@ -43,18 +43,14 @@
             <button mat-button type="button" (click)="openSupportersDialog()">
                 {{ motion.supporters.length }} {{ 'supporters' | translate }}
             </button>
-            @if (validSupporters > 0 && canManage && (allowSupporters$ | async)) {
+            @if (canManage && validSupporters > 0) {
                 <span class="warn">{{ validSupportersText }}</span>
             }
             @if (showSupporters) {
                 <p class="supporters">
                     <os-comma-separated-listing [list]="supportersObservable | async">
                         <ng-template let-supporter>
-                            <span
-                                [class.warn]="
-                                    !checkValidSupporter(supporter) && canManage && (allowSupporters$ | async)
-                                "
-                            >
+                            <span [class.warn]="canManage && !checkValidSupporter(supporter)">
                                 {{ supporter.full_name }}
                             </span>
                         </ng-template>
@@ -93,10 +89,10 @@
                 perms.isAllowed('change_state', motion) ||
                 (!!motionState.submitter_withdraw_state && operatorIsSubmitter)
             "
-            [chipValue]="stateLabel | translate"
+            [chipValue]="stateLabel"
             [classes]="motion.stateCssColor"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
-            [inputValue]="motion?.state_extension"
+            [searchFieldInput]="motion?.state_extension"
             (succeeded)="setStateExtension($event)"
         >
             <span class="trigger-menu">
@@ -137,6 +133,20 @@
                 }
             </span>
         </os-motion-extension-field>
+        <!-- For submitters button to send to next state -->
+        @if (
+            !!motionState.submitter_withdraw_state &&
+            operatorIsSubmitter &&
+            motionState.submitter_withdraw_state.state_button_label
+        ) {
+            <button
+                class="spacer-top-10"
+                mat-stroked-button
+                (click)="setState(motion.state.submitter_withdraw_state.id)"
+            >
+                <span>{{ motionState.submitter_withdraw_state.state_button_label }}</span>
+            </button>
+        }
         <!-- Forward to meeting -->
         @if (showForwardButton) {
             <button class="spacer-top-10" mat-stroked-button (click)="forwardMotionToMeetings()">
@@ -171,11 +181,11 @@
             extensionLabel="{{ 'Extension' | translate }}"
             title="{{ recommender }}"
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
-            [chipValue]="recommendationLabel | translate"
+            [chipValue]="recommendationLabel"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [inputValue]="motion?.recommendation_extension"
             [internal]="motion?.state?.is_internal"
             [listValueTransformFns]="[motionTransformFn]"
+            [searchFieldInput]="motion?.recommendation_extension"
             [searchLists]="searchLists"
             (succeeded)="setRecommendationExtension($event)"
         >

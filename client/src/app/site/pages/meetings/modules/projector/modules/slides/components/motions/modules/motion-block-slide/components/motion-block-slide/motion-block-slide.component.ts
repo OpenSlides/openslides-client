@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
@@ -91,13 +91,17 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(private meetingSettingsService: MeetingSettingsService) {
+    public constructor(
+        private meetingSettingsService: MeetingSettingsService,
+        private cd: ChangeDetectorRef
+    ) {
         super();
-        this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
+        this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang());
 
-        this.meetingSettingsService
-            .get(`motions_block_slide_columns`)
-            .subscribe(value => (this.maxColumns = value > 0 ? value : MAX_COLUMNS));
+        this.meetingSettingsService.get(`motions_block_slide_columns`).subscribe(value => {
+            this.maxColumns = value > 0 ? value : MAX_COLUMNS;
+            this.cd.markForCheck();
+        });
     }
 
     /**
@@ -142,6 +146,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
             this.commonRecommendation = null;
         }
         super.setData(value);
+        this.cd.markForCheck();
     }
 
     /**

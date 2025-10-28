@@ -1,7 +1,6 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 
 .motion-poll-slide {
-    max-width: 900px;
     margin: auto;
 }
 
@@ -37,6 +36,7 @@
     line-height: 1;
     display: flex;
     flex-direction: column;
+    height: 70px;
 
     .poll-bar {
         width: 100%;
@@ -49,22 +49,53 @@
         }
     }
 
+    .poll-progress {
+        --color: var(--theme-accent-500);
+    }
+
+    .poll-progress::-moz-progress-bar {
+        background: var(--color);
+    }
+
+    .poll-progress::-webkit-progress-value {
+        background: var(--color);
+    }
+
+    .vote-progress {
+        width: 100%;
+    }
+
     .data-area {
         display: inline-flex;
         width: 100%;
         align-items: center;
         gap: 0 10px;
         line-height: 1.5;
-        margin-top: 5px;
+        margin-top: auto;
 
         .general-data {
-            flex: 1 0 auto;
+            flex: 1 0 0;
             font-size: 14px;
-            color: gray;
         }
         os-icon-container {
             width: fit-content;
             margin-right: -5px;
+            .number {
+                font-weight: 500;
+            }
+            .percentages {
+                font-size: 12px;
+            }
+        }
+        .vote-now {
+            flex: 1 1 0;
+            text-align: center;
+            color: var(--theme-accent-500);
+            font-weight: bold;
+            font-size: 25px;
+        }
+        .spacer {
+            flex: 1 1 0;
         }
     }
 }
@@ -85,13 +116,54 @@
         min-width: 0;
 
         .vote-entry {
-            min-height: 29px;
+            height: 29px;
             display: flex;
             align-items: center;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+            .not-present {
+                text-decoration: line-through;
+            }
         }
 
-        :not(:last-child) {
-            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        :last-child:not(.structure-level) {
+            margin-bottom: 1px;
+        }
+
+        .vote-entry:has(+ .structure-level) {
+            border-bottom: 0;
+            margin-bottom: 1px;
+        }
+
+        .structure-level {
+            margin-bottom: 1px !important;
+            height: 29px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.7);
+            h3 {
+                padding-top: 1.5px;
+                padding-bottom: 1.5px;
+                margin-top: 0;
+                margin-bottom: 0 !important;
+                line-height: 1;
+                font-size: 18px;
+                font-weight: 500;
+
+                // setting for the ellipsis for long structure levels
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .result-nr {
+                padding-top: 3px !important;
+            }
+            span {
+                display: inline-flex;
+                os-icon-container {
+                    width: fit-content;
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
 
 .motion-text {
     ins,
@@ -135,5 +135,5 @@
         opacity: 1;
     }
 
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }

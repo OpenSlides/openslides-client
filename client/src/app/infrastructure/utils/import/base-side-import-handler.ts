@@ -15,8 +15,8 @@ type FindFn<E, O> = (name: string, originalEntry: O) => E;
  */
 export interface SideImportHandler<MainModel, SideModel = any>
     extends ImportHandler<MainModel>,
-    ImportFind<MainModel, SideModel>,
-    ImportResolveHandler {
+        ImportFind<MainModel, SideModel>,
+        ImportResolveHandler {
     getModelsToCreate(): CsvMapping<SideModel>[];
 }
 
@@ -36,7 +36,8 @@ export interface BaseSideImportHandlerConfig<MainModel = any, SideModel = any>
  */
 export abstract class BaseSideImportHandler<MainModel, SideModel>
     extends BaseImportHandler<MainModel, SideModel>
-    implements SideImportHandler<MainModel, SideModel> {
+    implements SideImportHandler<MainModel, SideModel>
+{
     public get modelsToCreateObservable(): Observable<CsvMapping<SideModel>[]> {
         return this._modelsToCreateSubject;
     }

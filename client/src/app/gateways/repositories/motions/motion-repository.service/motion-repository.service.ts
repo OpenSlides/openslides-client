@@ -62,6 +62,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         useOriginalSubmitter: boolean,
         useOriginalNumber: boolean,
         useOriginalVersion: boolean,
+        withAttachments: boolean,
+        markAmendmentsAsForwarded: boolean,
         ...motions: MotionFormatResult[]
     ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
@@ -74,6 +76,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                         use_original_number: useOriginalNumber,
                         with_amendments: useOriginalVersion,
                         with_change_recommendations: useOriginalVersion,
+                        with_attachments: withAttachments,
+                        mark_amendments_as_forwarded: markAmendmentsAsForwarded,
                         ...motion
                     };
                 })
@@ -292,7 +296,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return agendaTitle;
     };
 
-    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false, amendment = false): string => {
+        if (amendment) {
+            return this.translate.instant(plural ? `Amendments` : `Amendment`);
+        }
+        return this.translate.instant(plural ? `Motions` : `Motion`);
+    };
 
     public getProjectorTitle = (
         viewMotion: ViewMotion

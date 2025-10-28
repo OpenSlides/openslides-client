@@ -19,5 +19,5 @@ interface IMotionCommentSectionRelations {
 }
 export interface ViewMotionCommentSection
     extends MotionCommentSection,
-    ViewModelRelations<IMotionCommentSectionRelations>,
-    HasMeeting {}
+        ViewModelRelations<IMotionCommentSectionRelations>,
+        HasMeeting {}

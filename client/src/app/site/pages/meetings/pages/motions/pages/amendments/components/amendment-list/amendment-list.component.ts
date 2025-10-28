@@ -67,7 +67,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
         super();
@@ -75,6 +75,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;
         this.modelRequestService.waitSubscriptionReady(AMENDMENT_LIST_SUBSCRIPTION).then(() => (this.ready = true));
+        this.storage.set('motion-navigation-last', 'amendment-list');
     }
 
     public ngOnInit(): void {
@@ -149,7 +150,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     public getAmendmentDiffLines(amendment: ViewMotion): string {
         const diffLines = amendment.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+            return diffLines.map(diffLine => this.lineNumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }

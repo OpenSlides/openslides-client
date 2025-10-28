@@ -46,9 +46,9 @@ export class AutopilotMainComponent extends BaseMeetingModelRequestHandler {
                                         this.collectionMapper
                                             .getModelConstructor(collectionFromFqid(fqid))
                                             ?.REQUESTABLE_FIELDS.indexOf(`content_object_id`) !== -1 ||
-                                            this.collectionMapper
-                                                .getModelConstructor(collectionFromFqid(fqid))
-                                                ?.REQUESTABLE_FIELDS.indexOf(`list_of_speakers_id`) !== -1)
+                                        this.collectionMapper
+                                            .getModelConstructor(collectionFromFqid(fqid))
+                                            ?.REQUESTABLE_FIELDS.indexOf(`list_of_speakers_id`) !== -1)
                                 );
                             })
                             .map(p => p.id)

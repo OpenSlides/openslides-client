@@ -47,7 +47,10 @@ const routes: Routes = [
             },
             {
                 path: `motion-export`,
-                loadComponent: () => import(`./pages/motion-export/components/motion-export/motion-export.component`).then(m => m.MotionExportComponent),
+                loadComponent: () =>
+                    import(`./pages/motion-export/components/motion-export/motion-export.component`).then(
+                        m => m.MotionExportComponent
+                    ),
                 data: { meetingPermissions: [Permission.motionCanSee] }
             },
             {

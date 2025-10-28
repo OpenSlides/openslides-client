@@ -29,6 +29,8 @@
                         {{ 'Voting in progress' | translate }}
                     </i>
                 </div>
+
+                <os-poll-progress [poll]="poll"></os-poll-progress>
             }
             @if (poll.isMotionPoll) {
                 <div>

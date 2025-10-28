@@ -107,7 +107,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public getCurrentLanguageName(): string {
-        return this.getLanguageName(this.translate.currentLang);
+        return this.getLanguageName(this.translate.getCurrentLang());
     }
 
     /**
@@ -169,7 +169,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout((this.clickTimeout as any));
+            clearTimeout(this.clickTimeout as any);
         }
 
         if (this.clickCounter === 4) {
@@ -179,7 +179,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             if (match) {
                 config.data = { userId: +match[1] };
             }
-            this.dialog.open(ChessDialogComponent, config);
+            this.dialog.open(ChessDialogComponent, { ...config, disableClose: true });
         } else {
             this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;

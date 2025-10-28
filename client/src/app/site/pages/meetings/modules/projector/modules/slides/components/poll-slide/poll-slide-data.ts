@@ -40,7 +40,21 @@ interface TitleInformation extends TitleInformationWithAgendaItem {
 
 export interface PollSlideEntitledUsersEntry extends EntitledUsersEntry {
     user?: SlidePollUser;
+    structure_level_id?: Id;
+    meeting_user_id?: Id;
 }
+
+export interface PollSlideLiveEntitledUsersEntry {
+    present: boolean;
+    structure_level_id: Id;
+    user_data: SlidePollUser;
+    votes: any;
+    weight: string;
+}
+
+export type PollSlideLiveEntitledUsers = Record<number, PollSlideLiveEntitledUsersEntry>;
+
+export type PollSlideLiveEntitledStructureLevels = Record<number, string>;
 
 export interface PollSlideData {
     id: Id;
@@ -50,10 +64,14 @@ export interface PollSlideData {
     description: string;
     type: PollType;
     state: PollState;
+    live_voting_enabled: boolean;
     global_yes: boolean;
     global_no: boolean;
     global_abstain: boolean;
     options: SlidePollOption[];
+
+    entitled_users: PollSlideLiveEntitledUsers;
+    entitled_structure_levels: PollSlideLiveEntitledStructureLevels;
 
     // These keys are only available, if poll/state == "published"
     entitled_users_at_stop: PollSlideEntitledUsersEntry[];

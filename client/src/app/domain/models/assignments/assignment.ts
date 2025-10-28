@@ -26,6 +26,8 @@ export class Assignment extends BaseModel<Assignment> {
 
     public candidate_ids!: Id[]; // (assignment_candidate/assignment_id)[];
 
+    public history_entry_ids: Id[];
+
     public constructor(input?: any) {
         super(Assignment.COLLECTION, input);
     }
@@ -46,15 +48,16 @@ export class Assignment extends BaseModel<Assignment> {
         `tag_ids`,
         `attachment_meeting_mediafile_ids`,
         `projection_ids`,
-        `meeting_id`
+        `meeting_id`,
+        `history_entry_ids`
     ];
 }
 export interface Assignment
     extends HasMeetingId,
-    HasProjectionIds,
-    HasAttachmentMeetingMediafileIds,
-    HasTagIds,
-    HasAgendaItemId,
-    HasListOfSpeakersId,
-    HasSequentialNumber,
-    HasPollIds {}
+        HasProjectionIds,
+        HasAttachmentMeetingMediafileIds,
+        HasTagIds,
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasSequentialNumber,
+        HasPollIds {}

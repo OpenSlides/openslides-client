@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Content, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Content, ContentText, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
@@ -82,19 +82,19 @@ export class MeetingPdfExportService {
         );
     }
 
-    public getPageBreak(): any {
+    public getPageBreak(): ContentText {
         return this.pdfExportService.getPageBreak();
     }
 
-    public getSpacer(): any {
+    public getSpacer(): ContentText {
         return this.pdfExportService.getSpacer();
     }
 
-    public createTitle(title: string): any {
+    public createTitle(title: string): ContentText {
         return this.pdfExportService.createTitle(title);
     }
 
-    public createPreamble(preamble: string | null): any {
+    public createPreamble(preamble: string | null): Content {
         return this.pdfExportService.createPreamble(preamble);
     }
 
@@ -165,7 +165,7 @@ export class MeetingPdfExportService {
             fontSize: this.fontSize!,
             loadFonts: () => this.getFonts(),
             createVfs: () => this.createVirtualFileSystem(),
-            pageSize: this.meetingSettingsService.instant(`export_pdf_pagesize`) as PageSize ?? `A4`
+            pageSize: (this.meetingSettingsService.instant(`export_pdf_pagesize`) as PageSize) ?? `A4`
         };
     }
 }

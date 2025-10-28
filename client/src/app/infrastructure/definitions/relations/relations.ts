@@ -10,6 +10,8 @@ import {
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
+import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
+import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
 import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
@@ -286,6 +288,12 @@ export const RELATIONS: Relation[] = [
         MField: `gender`,
         OField: `users`
     }),
+    ...makeM2O({
+        MViewModel: ViewUser,
+        OViewModel: ViewCommittee,
+        MField: `home_committee`,
+        OField: `users`
+    }),
     // Vote delegations
     // vote_delegated_to_id -> vote_delegations_from_ids
     {
@@ -336,6 +344,30 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewCommittee,
         AField: `forward_to_committees`,
         BField: `receive_forwardings_from_committees`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewUser,
+        OField: `native_users`,
+        MField: `home_committee`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewCommittee,
+        OField: `all_parents`,
+        MField: `committee`
+    }),
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewCommittee,
+        OField: `all_childs`,
+        MField: `committee`
+    }),
+    ...makeO2O({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewCommittee,
+        AField: `parent`,
+        BField: `committee`
     }),
     // ########## Meetings
     ...makeO2O({
@@ -1110,5 +1142,33 @@ export const RELATIONS: Relation[] = [
         MField: `structure_level`,
         OField: `structure_level_list_of_speakers`,
         OIdField: `structure_level_list_of_speakers_ids`
+    }),
+    // ########## History collections
+    ...makeM2O({
+        MViewModel: ViewHistoryEntry,
+        OViewModel: ViewHistoryPosition,
+        MField: `position`,
+        OField: `entries`,
+        OIdField: `entry_ids`
+    }),
+    ...makeM2O({
+        MViewModel: ViewHistoryEntry,
+        OViewModel: ViewMeeting,
+        MField: `meeting`,
+        OField: `relevant_history_entries`,
+        OIdField: `relevant_history_entry_ids`
+    }),
+    ...makeM2O({
+        MViewModel: ViewHistoryPosition,
+        OViewModel: ViewUser,
+        MField: `user`,
+        OField: `history_positions`
+    }),
+    ...makeGenericO2M({
+        OViewModel: ViewHistoryEntry,
+        MPossibleViewModels: [ViewMotion, ViewAssignment, ViewUser],
+        OViewModelField: `model`,
+        MPossibleViewModelsField: `history_entries`,
+        MPossibleViewModelsIdField: `history_entry_ids`
     })
 ];

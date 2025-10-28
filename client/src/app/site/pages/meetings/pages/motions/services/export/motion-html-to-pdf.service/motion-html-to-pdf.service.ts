@@ -196,9 +196,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             }
 
             for (const line of lines) {
-                if (line.lineNumber) {
-                    listCol.columns[0].stack.push(this.getLineNumberObject(line));
-                }
+                listCol.columns[0].stack.push(this.getLineNumberObject(line));
             }
 
             list[nodeName] = cleanedChildren;
@@ -298,7 +296,8 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         const elementCopy = element.cloneNode(true) as Element;
         const children = elementCopy.childNodes;
 
-        // using for-of did not work as expected
+        // using for-of does not work as expected
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < children.length; i++) {
             if (this.getLineNumber(children[i] as Element)) {
                 children[i].remove();

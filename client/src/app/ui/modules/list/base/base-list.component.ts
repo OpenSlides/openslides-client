@@ -166,7 +166,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
      * Search input value
      */
     @Input()
-    public inputValue = ``;
+    public searchFieldInput = ``;
 
     public get currentOffset(): number {
         if (!this._viewListComponent.scrollViewport) {
@@ -247,7 +247,8 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
      * @param filterValue the string to search for
      */
     public searchFilter(filterValue: string): void {
-        this.inputValue = filterValue;
+        this.searchFieldInput = filterValue;
+        this.cd.markForCheck();
     }
 
     public scrollTo(offset: number): void {
@@ -260,5 +261,9 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
 
     public deselectAll(): void {
         this.scrollingTableManager.currentScrollingTableComponent?.deselectAll();
+    }
+
+    public clearSearchField(): void {
+        this._viewListComponent?.clearSearchField();
     }
 }

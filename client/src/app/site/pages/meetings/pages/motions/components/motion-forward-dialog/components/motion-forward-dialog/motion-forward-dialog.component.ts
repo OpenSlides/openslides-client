@@ -13,6 +13,8 @@ export interface MotionForwardDialogReturnData {
     useOriginalSubmitter: boolean;
     useOriginalNumber: boolean;
     useOriginalVersion: boolean;
+    withAttachments: boolean;
+    markAmendmentsAsForwarded: boolean;
 }
 
 @Component({
@@ -36,9 +38,19 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalSubmitter = false;
     public useOriginalNumber = false;
     public useOriginalVersion = false;
+    public withAttachments = false;
+    public markAmendmentsAsForwarded = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
+    }
+
+    public get tableRows(): string[] {
+        if (this.data.motion.length > 1 || (this.data.motion.length === 1 && this.data.motion[0].hasAttachments())) {
+            return [`motion_version`, `submitter`, `identifier`, `attachments`, `meeting`];
+        } else {
+            return [`motion_version`, `submitter`, `identifier`, `meeting`];
+        }
     }
 
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
@@ -51,9 +63,29 @@ export class MotionForwardDialogComponent implements OnInit {
     ) {}
 
     public async ngOnInit(): Promise<void> {
+        for (const committee of this.data.forwardingMeetings) {
+            committee.meetings = this.getMeetingsSorted(committee);
+        }
         this.committeesSubject.next(this.data.forwardingMeetings);
         this.selectedMeetings = new Set();
         this.initStateMap();
+    }
+
+    private getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
+        return committee.meetings.sort((a, b) => {
+            const end_time = b.end_time - a.end_time;
+            if (Number.isNaN(end_time)) {
+                if (b.end_time) {
+                    return b.end_time;
+                } else if (a.end_time) {
+                    return -a.end_time;
+                }
+                return a.name.localeCompare(b.name);
+            } else if (end_time === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return end_time;
+        });
     }
 
     public onSaveClicked(): void {
@@ -61,7 +93,9 @@ export class MotionForwardDialogComponent implements OnInit {
             meetingIds: Array.from(this.selectedMeetings),
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
-            useOriginalVersion: this.useOriginalVersion
+            useOriginalVersion: this.useOriginalVersion,
+            withAttachments: this.withAttachments,
+            markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
 
@@ -90,5 +124,14 @@ export class MotionForwardDialogComponent implements OnInit {
         for (const meeting of meetings) {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
+    }
+
+    public amendmentNumber(): number {
+        return this.data.motion.filter(motion => !!motion.isAmendment()).length;
+    }
+
+    public hasAnyAmendment(): boolean {
+        const hasAmend: (element: ViewMotion) => boolean = element => element.amendments.length > 0;
+        return this.data.motion.some(hasAmend);
     }
 }

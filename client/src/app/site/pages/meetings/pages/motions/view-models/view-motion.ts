@@ -1,4 +1,5 @@
 import { _ } from '@ngx-translate/core';
+import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
@@ -69,6 +70,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get workflow(): ViewMotionWorkflow | null {
         return this.state?.workflow || null;
+    }
+
+    public get isForwardedAmendment(): boolean {
+        return this.marked_forwarded;
     }
 
     public get submittersAsUsers(): ViewUser[] {
@@ -408,15 +413,17 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     comments: ViewMotionComment[];
+    marked_forwarded: boolean;
 }
 
 export interface ViewMotion
     extends Motion,
-    ViewModelRelations<IMotionRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasPersonalNote,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasReferencedMotionsInExtension {}
+        ViewModelRelations<IMotionRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasHistoryEntries,
+        HasReferencedMotionsInExtension {}

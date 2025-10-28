@@ -1,5 +1,13 @@
-import { Injectable, Injector, ProviderToken } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router, RoutesRecognized, UrlTree } from '@angular/router';
+import { Injectable, Injector } from '@angular/core';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    DeprecatedGuard,
+    Router,
+    RoutesRecognized,
+    UrlTree
+} from '@angular/router';
 import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -93,10 +101,10 @@ export class OpenSlidesRouterService {
     }
 
     public navigateToLogin(): void {
-        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
+        const url = this.router.currentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
-        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^\/[0-9]+\/${UrlTarget.LOGIN}`).test(url)) {
+        if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^/[0-9]+/${UrlTarget.LOGIN}`).test(url)) {
             this.setNextAfterLoginUrl(url);
             this.router.navigate([`/`, UrlTarget.LOGIN]);
         }
@@ -134,7 +142,7 @@ export class OpenSlidesRouterService {
     }
 
     public getCurrentMeetingId(): number {
-        const url = this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
+        const url = this.router.currentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
         const segments = url.split(`/`);
         const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
         return Number(meetingIdString) || null;
@@ -191,7 +199,7 @@ export class OpenSlidesRouterService {
     }
 
     private async validateGuard(
-        guardToken: ProviderToken<any>,
+        guardToken: CanActivateFn | DeprecatedGuard,
         route: ActivatedRoute,
         type: `canActivateChild` | `canActivate` | `canLoad`
     ): Promise<boolean | UrlTree> {

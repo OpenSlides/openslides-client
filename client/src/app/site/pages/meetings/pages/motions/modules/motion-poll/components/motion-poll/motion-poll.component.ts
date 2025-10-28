@@ -68,6 +68,10 @@ export class MotionPollComponent extends BasePollComponent {
         return !this.poll.meeting_id || this.activeMeetingId === this.poll.meeting_id;
     }
 
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.motionCanManagePolls);
+    }
+
     public constructor(
         protected override translate: TranslateService,
         private pollService: MotionPollService,

@@ -11,7 +11,6 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
-
 @include mat.all-component-themes(light.$openslides-light-theme);
 
 .openslides-light-theme {
@@ -28,11 +27,11 @@
     @include global-components-style.os-component-themes(dark.$openslides-dark-theme);
     @include var-overwrites.os-var-overwrites();
 
-    --mat-table-header-headline-color: rgba(255, 255, 255, 0.70);
+    --mat-table-header-headline-color: rgba(255, 255, 255, 0.7);
     --mat-chip-option-background-color: grey;
 
     mat-form-field:focus-within {
-        mat-label{
+        mat-label {
             color: white;
         }
     }

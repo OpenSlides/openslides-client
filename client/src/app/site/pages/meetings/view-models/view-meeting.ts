@@ -8,6 +8,7 @@ import {
     ViewMeetingMediafileUsageKey
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewCommittee } from '../../organization/pages/committees';
@@ -213,11 +214,12 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     structure_levels: ViewStructureLevel[];
+    relevant_history_entries: ViewHistoryEntry[];
 }
 export interface ViewMeeting
     extends Meeting,
-    ViewModelRelations<IMeetingRelations>,
-    HasProjectorTitle,
-    HasOrganizationTags,
-    HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
-    HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
+        ViewModelRelations<IMeetingRelations>,
+        HasProjectorTitle,
+        HasOrganizationTags,
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

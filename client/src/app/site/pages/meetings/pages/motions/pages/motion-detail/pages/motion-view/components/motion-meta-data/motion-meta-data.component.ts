@@ -42,6 +42,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     @Input()
     public activeOriginMotions: ViewMotion[];
 
+    @Input()
+    public showForwardButton = false;
+
     @Output()
     public enableOriginMotion = new EventEmitter<Id>();
 
@@ -59,7 +62,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public showSupporters = false;
 
     public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
-    public allowSupporters$ = this.meetingSettingsService.get(`users_forbid_delegator_as_supporter`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
     public originToggleDefault$ = this.meetingSettingsService
         .get(`motions_origin_motion_toggle_default`)
@@ -100,11 +102,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public get validSupportersText(): number {
-        return this.translate
-            .instant(
-                `of which %num% are not permissable`
-            )
-            .replace(`%num%`, this.validSupporters);
+        return this.translate.instant(`of which %num% not permissable`).replace(`%num%`, this.validSupporters);
     }
 
     /**
@@ -129,13 +127,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
-            map(motions => motions.naturalSort(this.translate.currentLang, [`number`, `title`]))
+            map(motions => motions.naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
         );
     }
 
     public get referencedMotions$(): Observable<ViewMotion[]> {
         return this.motion?.recommendation_extension_references$.pipe(
-            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.currentLang, [`number`, `title`]))
+            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
         );
     }
 
@@ -150,15 +148,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public set showAllAmendments(is: boolean) {
         this.setShowAllAmendments.emit(is);
-    }
-
-    public get showForwardButton(): boolean {
-        return (
-            !!this.motion.state?.allow_motion_forwarding &&
-            this.operator.hasPerms(Permission.motionCanForward) &&
-            this._forwardingAvailable &&
-            !this.motion.derived_motions.length
-        );
     }
 
     public get operatorIsSubmitter(): boolean {
@@ -180,8 +169,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
 
-    private _forwardingAvailable = false;
-
     /**
      * The subscription to the recommender config variable.
      */
@@ -202,15 +189,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         super();
 
         if (operator.hasPerms(Permission.motionCanManageMetadata)) {
-            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-                this._forwardingAvailable = forwardingAvailable && !this.motion.isAmendment();
-                this.cd.markForCheck();
+            this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
                 };
             });
-        } else {
-            this._forwardingAvailable = false;
         }
     }
 
@@ -457,7 +440,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return (
             supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.getMeetingUser().vote_delegated_to_id
+                supporter.getMeetingUser().vote_delegated_to_id &&
+                this.activeMeeting.users_forbid_delegator_as_supporter &&
+                this.activeMeeting.users_enable_vote_delegations
             )
         );
     }

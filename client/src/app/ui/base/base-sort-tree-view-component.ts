@@ -22,7 +22,8 @@ export interface SortTreeFilterOption {
 @Directive()
 export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
     extends BaseUiComponent
-    implements CanComponentDeactivate {
+    implements CanComponentDeactivate
+{
     /**
      * Reference to the view child
      */

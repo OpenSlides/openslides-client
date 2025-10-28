@@ -27,7 +27,8 @@ import { ParentErrorStateMatcher } from '../../validators';
 @Directive()
 export abstract class BaseSearchSelectorComponent
     extends BaseFormFieldControlComponent<Selectable>
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
 
@@ -166,14 +167,14 @@ export abstract class BaseSearchSelectorComponent
     @Input()
     public addClearSelection = false;
 
-    public itemSizeInPx = 50;
+    public itemSizeInPx = 48;
 
     public get panelHeight(): number {
         return this.showEntriesNumber * this.itemSizeInPx;
     }
 
     public get maxHeight(): string {
-        return 112 + this.panelHeight + `px`;
+        return 92 + this.panelHeight + `px`;
     }
 
     private _defaultSortFn = (a: Selectable, b: Selectable): number =>
@@ -272,11 +273,6 @@ export abstract class BaseSearchSelectorComponent
                 this.onSearchValueUpdated(value.trim());
             })
         );
-
-        // Create css style for the mat-selects panel
-        const sheet = document.createElement(`style`);
-        sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
-        document.body.appendChild(sheet);
     }
 
     public override ngOnDestroy(): void {
@@ -316,14 +312,6 @@ export abstract class BaseSearchSelectorComponent
 
             // Ensure that the main panel doesn't ever scroll away from the top
             const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
-            const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
-            const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
-            if (inputRect) {
-                document.documentElement.style.setProperty(
-                    `--os-search-selector-panel-height`,
-                    `${cdkRect.bottom - inputRect.top}px`
-                );
-            }
             if (panelElement) {
                 panelElement.addEventListener(`scroll`, () => {
                     if (panelElement.scrollTop !== 0) {

@@ -177,7 +177,9 @@ export class AssignmentPdfService {
                 const tableData = this.assignmentPollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
                     const rank = [`user`, `list`].includes(pollResult.class) ? index + 1 : ``;
-                    const voteOption = this.translate.instant(this.assignmentPollService.pollKeyVerbose(pollResult.votingOption));
+                    const voteOption = this.translate.instant(
+                        this.assignmentPollService.pollKeyVerbose(pollResult.votingOption)
+                    );
                     const resultLine = this.getPollResult(pollResult, poll);
                     const tableLine = [
                         {
@@ -261,7 +263,10 @@ export class AssignmentPdfService {
                 const pollKey = this.assignmentPollService.pollKeyVerbose(singleResult.vote!);
                 const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
                 const resultValue = this.assignmentPollService.parseNumber(singleResult.amount!);
-                const resultInPercent = this.assignmentPollService.getVoteValueInPercent(singleResult.amount!, { poll: poll, row: votingResult });
+                const resultInPercent = this.assignmentPollService.getVoteValueInPercent(singleResult.amount!, {
+                    poll: poll,
+                    row: votingResult
+                });
                 return `${votingKey}${resultValue} ${
                     singleResult.showPercent && resultInPercent ? `(${resultInPercent})` : ``
                 }`;

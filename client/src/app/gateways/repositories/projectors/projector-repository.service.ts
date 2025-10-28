@@ -31,6 +31,9 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
             name: partialProjector.name,
             ...this.getPartialPayload(partialProjector)
         };
+        if (payload.is_internal === null) {
+            payload.is_internal = false;
+        }
         return await this.sendActionToBackend(ProjectorAction.CREATE, payload);
     }
 

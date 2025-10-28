@@ -81,6 +81,8 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public change_recommendation_ids!: Id[]; // (motion_change_recommendation/motion_id)[];
     public comment_ids!: Id[]; // (motion_comment/motion_id)[];
 
+    public history_entry_ids: Id[];
+
     public get firstLine(): number {
         return this.start_line_number || 1;
     }
@@ -149,16 +151,17 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `attachment_meeting_mediafile_ids`,
         `projection_ids`,
         `personal_note_ids`,
-        `meeting_id`
+        `meeting_id`,
+        `history_entry_ids`
     ];
 }
 export interface Motion
     extends HasMeetingId,
-    HasAgendaItemId,
-    HasListOfSpeakersId,
-    HasTagIds,
-    HasAttachmentMeetingMediafileIds,
-    HasPersonalNoteIds,
-    HasProjectionIds,
-    HasReferencedMotionInExtensionIds,
-    HasPollIds {}
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasTagIds,
+        HasAttachmentMeetingMediafileIds,
+        HasPersonalNoteIds,
+        HasProjectionIds,
+        HasReferencedMotionInExtensionIds,
+        HasPollIds {}

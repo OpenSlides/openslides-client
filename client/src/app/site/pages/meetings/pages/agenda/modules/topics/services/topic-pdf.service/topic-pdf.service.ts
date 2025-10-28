@@ -167,7 +167,10 @@ export class TopicPdfService {
                 const pollKey = this.pollService.pollKeyVerbose(singleResult.vote!);
                 const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
                 const resultValue = this.pollService.parseNumber(singleResult.amount!);
-                const resultInPercent = this.pollService.getVoteValueInPercent(singleResult.amount!, { poll: poll, row: votingResult });
+                const resultInPercent = this.pollService.getVoteValueInPercent(singleResult.amount!, {
+                    poll: poll,
+                    row: votingResult
+                });
                 return `${votingKey}${resultValue} ${
                     singleResult.showPercent && resultInPercent ? `(${resultInPercent})` : ``
                 }`;

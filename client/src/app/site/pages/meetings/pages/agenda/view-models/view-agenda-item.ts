@@ -91,5 +91,5 @@ interface AgendaItemRelations<C extends BaseViewModel & HasAgendaItem> {
 }
 export interface ViewAgendaItem<C extends BaseViewModel & HasAgendaItem = any>
     extends AgendaItem,
-    ViewModelRelations<AgendaItemRelations<C>>,
-    HasTags {}
+        ViewModelRelations<AgendaItemRelations<C>>,
+        HasTags {}

@@ -46,10 +46,10 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
 }
 export interface ViewTopic
     extends Topic,
-    HasAttachmentMeetingMediafiles,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasMeeting,
-    ViewTopicRelations {}
+        HasAttachmentMeetingMediafiles,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasMeeting,
+        ViewTopicRelations {}
 
 interface ViewTopicRelations extends HasPolls<ViewTopic> {}

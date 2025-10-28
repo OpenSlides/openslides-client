@@ -7,7 +7,15 @@
             </button>
         </div>
     }
-    <input #chatinput autocomplete="off" matInput type="text" [formControl]="messageForm" />
+    <textarea
+        #chatinput
+        autocomplete="off"
+        cdkAutosizeMaxRows="10"
+        cdkAutosizeMinRows="1"
+        cdkTextareaAutosize
+        matInput
+        [formControl]="messageForm"
+    ></textarea>
     @if (chatinput.value!.length >= CHAT_MESSAGE_MAX_LENGTH - 100) {
         <mat-hint align="end">
             <span>{{ chatinput.value?.length || 0 }}/{{ CHAT_MESSAGE_MAX_LENGTH }}</span>

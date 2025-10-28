@@ -44,7 +44,13 @@ mat-card mat-card-content h3 {
 }
 
 .election-document-list mat-list-item {
-    height: 20px;
+    height: auto;
+    height: max-content !important;
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+        word-break: break-word;
+    }
 }
 
 .candidates-list {
@@ -126,4 +132,8 @@ mat-card mat-card-content h3 {
 
 :host ::ng-deep .detail-view {
     @include detail-view-appearance.detail-view-appearance;
+}
+
+.attachment-icon {
+    vertical-align: text-bottom;
 }

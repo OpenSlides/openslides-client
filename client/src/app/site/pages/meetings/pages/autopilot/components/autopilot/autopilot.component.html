@@ -1,6 +1,11 @@
 <os-head-bar>
     <div class="title-slot">
-        <h2>{{ 'Autopilot' | translate }}</h2>
+        <h2>
+            {{ 'Autopilot' | translate }}
+            @if ((title || '').toLowerCase() === 'axolotl') {
+                ⚞(⚬___⚬)⚟
+            }
+        </h2>
     </div>
 
     <!-- Menu -->
@@ -23,7 +28,16 @@
     </ng-container>
 </os-head-bar>
 
-<div class="content-container">
+<div
+    class="content-container"
+    [ngClass]="{
+        'split-autopilot':
+            disabledContentElements['speaking-times'] !== true &&
+                structureLevelCountdownEnabled &&
+                listOfSpeakers &&
+                showRightCol | async
+    }"
+>
     <div class="col-wrapper">
         <div class="col-main">
             <!-- Title Card -->
@@ -125,7 +139,7 @@
             </ng-container>
 
             <!-- Moderator Note-->
-            @if (hasCurrentProjection && disabledContentElements['moderation-note'] !== true) {
+            @if (hasCurrentProjection && !!listOfSpeakers && disabledContentElements['moderation-note'] !== true) {
                 <div>
                     <os-moderation-note
                         [listOfSpeakers]="listOfSpeakers"
@@ -141,7 +155,7 @@
             ) {
                 <os-poll-collection
                     [currentProjection]="projectedViewModel"
-                    [disableFinished]="disabledContentElements['poll-finished'] === true"
+                    [disableFinished]="disabledContentElements['poll-finished'] === true || isAgendaListProjection"
                     [disableRunning]="disabledContentElements['poll-running'] === true"
                     [displayInAutopilot]="true"
                 ></os-poll-collection>
@@ -188,10 +202,7 @@
 <ng-template #speakingTimes>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-speaking-times
-                [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
-                [showProjectionMenu]="false"
-            />
+            <os-speaking-times [listOfSpeakers]="listOfSpeakers" [showProjectionMenu]="false" />
         </mat-card-content>
     </mat-card>
 </ng-template>

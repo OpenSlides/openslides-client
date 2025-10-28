@@ -6,10 +6,10 @@
     }
 }
 
-.os-search-selector-panel {
-    height: var(--os-search-selector-panel-height, 296px);
+div.mat-mdc-select-panel.os-search-selector-panel {
     max-height: none !important;
     overflow: hidden !important;
+    padding: 0;
 }
 
 .os-search-selector--no-options {
@@ -30,8 +30,8 @@
 }
 
 .os-search-selector--input-wrapper {
-    height: 3em;
-    line-height: 3em;
+    height: 48px;
+    line-height: 48px;
 
     input {
         height: 100%;

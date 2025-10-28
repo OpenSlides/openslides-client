@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, Component, DOCUMENT, Inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -14,6 +13,7 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
+import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
@@ -46,7 +46,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private config: DateFnsConfigurationService,
         private updateService: UpdateService,
         private router: Router,
-        private modelStore: ViewModelStoreService
+        private modelStore: ViewModelStoreService,
+        private ctService: CustomTranslationService
     ) {
         overloadJsFunctions();
         this.addDebugFunctions();
@@ -66,13 +67,15 @@ export class OpenSlidesMainComponent implements OnInit {
             if (lang && this.translate.getLangs().includes(lang as string)) {
                 this.translate.use(lang as string);
             } else {
-                // try to use the browser language if it is available. If not, uses english.
-                this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
+                // try to use the browser language if it is available. If not, uses fallback language.
+                this.translate.use(
+                    this.translate.getLangs().includes(browserLang) ? browserLang : this.translate.getFallbackLang()
+                );
             }
 
             // set date-fns locale
             this.updateLocaleByName(
-                this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang
+                this.translate.getCurrentLang() ? this.translate.getCurrentLang() : this.translate.getFallbackLang()
             );
         });
 
@@ -82,6 +85,13 @@ export class OpenSlidesMainComponent implements OnInit {
 
             // update date-fns locale
             this.updateLocaleByName(event.lang);
+        });
+
+        this.ctService.customTranslationSubject.subscribe(ct => {
+            this.translate.setTranslation(`en`, ct || {}, false);
+            if (this.translate.getCurrentLang() !== this.translate.getFallbackLang()) {
+                this.translate.setTranslation(this.translate.getCurrentLang(), {}, true);
+            }
         });
     }
 

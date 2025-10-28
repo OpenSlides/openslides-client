@@ -82,15 +82,23 @@
         <!-- Second line -->
         <div class="personal-info-area">
             <!-- Gender -->
-            <mat-form-field class="form58 force-min-width">
-                <mat-label>{{ 'Gender' | translate }}</mat-label>
-                <os-repo-search-selector
-                    formControlName="gender_id"
-                    [includeNone]="true"
-                    [repo]="genderRepo"
-                    [subscriptionConfig]="genderListSubscriptionConfig"
-                ></os-repo-search-selector>
-            </mat-form-field>
+            @if (disableGenderField) {
+                <mat-form-field class="form58 force-min-width">
+                    <mat-label>{{ 'Gender' | translate }}</mat-label>
+                    <input matInput readonly value="{{ genderName | translate }}" />
+                </mat-form-field>
+            } @else {
+                <mat-form-field class="form58 force-min-width">
+                    <mat-label>{{ 'Gender' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="gender_id"
+                        [includeNone]="true"
+                        [pipeFn]="genderPipeFn"
+                        [repo]="genderRepo"
+                        [subscriptionConfig]="genderListSubscriptionConfig"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+            }
             <!-- Pronoun -->
             <mat-form-field class="form38 force-min-width">
                 <mat-label>{{ 'Pronoun' | translate }}</mat-label>

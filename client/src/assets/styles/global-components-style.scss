@@ -26,23 +26,38 @@
         text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
 
         &:hover {
-            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
+            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary))
+                0.175em;
         }
 
         & {
-           a.mat-mdc-button-base {
+            a.mat-mdc-button-base {
                 text-decoration: inherit;
-           }
+            }
         }
     }
 
-    .accentuated-background, .accentuated-background button {
-        background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, background), 4%), darken(mat.m2-get-color-from-palette($background, background), 4%));
+    .select-speaker-button-design {
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+    }
+
+    .accentuated-background,
+    .accentuated-background button {
+        background-color: if(
+            $is-dark-theme,
+            lighten(mat.m2-get-color-from-palette($background, background), 4%),
+            darken(mat.m2-get-color-from-palette($background, background), 4%)
+        );
     }
 
     mat-card {
-        .accentuated-background, .accentuated-background button {
-            background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, card), 4%), darken(mat.m2-get-color-from-palette($background, card), 4%));
+        .accentuated-background,
+        .accentuated-background button {
+            background-color: if(
+                $is-dark-theme,
+                lighten(mat.m2-get-color-from-palette($background, card), 4%),
+                darken(mat.m2-get-color-from-palette($background, card), 4%)
+            );
         }
     }
 
@@ -80,7 +95,11 @@
         .mat-icon {
             color: adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
             svg path {
-                fill: mat.m2-get-color-from-palette($foreground, disabled-button adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)) !important;
+                fill: mat.m2-get-color-from-palette(
+                    $foreground,
+                    disabled-button
+                        adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
+                ) !important;
             }
         }
     }
@@ -138,7 +157,8 @@
     /* projector components */
     .backgroundColorAccent {
         background-color: mat.m2-get-color-from-palette($accent);
-        &, .mdc-list-item__primary-text {
+        &,
+        .mdc-list-item__primary-text {
             color: mat.m2-get-color-from-palette($accent, default-contrast) !important;
         }
     }
@@ -292,7 +312,8 @@
         color: mat.m2-get-color-from-palette($foreground, text);
     }
 
-    mat-hint, .hint {
+    mat-hint,
+    .hint {
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
@@ -329,6 +350,6 @@
     }
 
     .sidenav-background {
-        background: if($is-dark-theme,  darken(mat.m2-get-color-from-palette($background, background), 0.5%), white);
+        background: if($is-dark-theme, darken(mat.m2-get-color-from-palette($background, background), 0.5%), white);
     }
 }

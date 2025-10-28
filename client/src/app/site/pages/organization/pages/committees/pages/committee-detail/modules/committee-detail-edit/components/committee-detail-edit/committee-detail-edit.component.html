@@ -44,12 +44,16 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Committee managers' | translate }}</mat-label>
-                    <os-account-search-selector formControlName="manager_ids"></os-account-search-selector>
+                    <os-account-search-selector
+                        formControlName="manager_ids"
+                        [committeeId]="committeeId"
+                    ></os-account-search-selector>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="forward_to_committee_ids"
+                        [disableOptionWhenFn]="isNotCommitteeAdminFor"
                         [multiple]="true"
                         [repo]="committeeRepo"
                         [showChips]="false"
@@ -61,7 +65,7 @@
                     <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="receive_forwardings_from_committee_ids"
-                        [disableOptionWhenFn]="getDisableOptionWhenFn()"
+                        [disableOptionWhenFn]="getDisableOptionWhenFn"
                         [multiple]="true"
                         [repo]="committeeRepo"
                         [showChips]="false"
@@ -72,6 +76,20 @@
                 <mat-form-field>
                     <mat-label>{{ 'External ID' | translate }}</mat-label>
                     <input formControlName="external_id" matInput />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Parent committee' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="parent_id"
+                        [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
+                        [includeNone]="isOrgaManager && isCreateView"
+                        [multiple]="false"
+                        [repo]="committeeRepo"
+                        [required]="!isOrgaManager && isCreateView"
+                        [showChips]="false"
+                        [sortService]="committeeSortService"
+                        [tooltipFn]="getTooltipFn()"
+                    ></os-repo-search-selector>
                 </mat-form-field>
             </form>
         }

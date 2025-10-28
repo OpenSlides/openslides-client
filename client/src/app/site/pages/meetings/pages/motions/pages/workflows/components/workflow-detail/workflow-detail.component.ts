@@ -198,7 +198,11 @@ Prerequisites:
         {
             name: _(`Allow forwarding of amendments`),
             help_text: _(
-                `Causes amendments in this state to be automatically forwarded along with their lead motion, should said lead motion be forwarded.`
+                `Enables the forwarding of amendments in the selected state.
+
+Prerequisites:
+1. Motion forwarding is activated.
+2. 'Original version with changes' in forwarding dialog must be selected.`
             ),
             selector: `allow_amendment_forwarding`,
             type: `check`
@@ -252,7 +256,9 @@ Note: Does not affect the visibility of change recommendations.`
             help_text: _(
                 `Defines for the selected state which groups have access:
 - If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].
-- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].`
+- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].
+
+Hint: Administrators always have full access.`
             ),
             selector: `restrictions`,
             type: `restrictions`
@@ -276,6 +282,19 @@ Note: Does not affect the visibility of change recommendations.`
             ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
+        },
+        {
+            name: _(`Button text`),
+            help_text: _(
+                `Defines the wording of the button to change the state. Button is visible if the corresponding state is defined in "Submitter may set state to".
+
+Example: 
+1. State "in progress": "Submitter may set state to" = "submitted"
+2. State "submitted": "Button text" = "Submit motion"
+=> This enables a submit button in state "in progress".`
+            ),
+            selector: `state_button_label`,
+            type: `input`
         }
     ] as StatePerm[];
 

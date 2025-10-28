@@ -1,43 +1,70 @@
 @if (poll) {
-    <div class="result-wrapper">
+    <div class="result-wrapper" [class.result-wrapper-slide]="inSlide">
         @if (hasResults && canSeeResults) {
             <!-- result table -->
             <table class="result-table">
                 <tbody>
-                    <tr>
-                        <th colspan="2">{{ 'Votes' | translate }}</th>
-                    </tr>
-                    @for (label of pollService.getSortedChartLabels(poll); track label; let i = $index) {
-                        <div>
-                            <tr>
-                                <!-- Votes -->
-                                <td>
-                                    <os-icon-container
-                                        icon="circle"
-                                        [size]="iconSize"
-                                        [style.color]="colors.backgroundColor[i]"
-                                    ></os-icon-container>
-                                </td>
-                                <td>
-                                    {{ label }}
-                                </td>
-                            </tr>
-                            @if (poll.options.length - 1 > i) {
-                                <mat-divider></mat-divider>
-                            }
-                        </div>
+                    @for (row of pollService.getSortedTableData(poll); track row; let i = $index) {
+                        <tr>
+                            <!-- Votes -->
+                            <td [class.first-col-slide]="inSlide">
+                                <os-icon-container
+                                    icon="circle"
+                                    size="gigantic"
+                                    [style.color]="colors.backgroundColor[i]"
+                                >
+                                    <div class="text-bold" [class.text-big]="inSlide" [class.text-gigantic]="!inSlide">
+                                        {{ row.label }}
+                                    </div>
+                                </os-icon-container>
+                            </td>
+                            <td
+                                class="result-cell-definition text-bold"
+                                [class.second-col-slide]="inSlide"
+                                [class.text-big]="inSlide"
+                                [class.text-gigantic]="!inSlide"
+                                [style.color]="colors.backgroundColor[i]"
+                            >
+                                {{ row.data | pollParseNumber }}
+                            </td>
+                            <td
+                                class="result-cell-definition text-bold"
+                                [class.percent-col-slide]="inSlide"
+                                [class.text-big]="inSlide"
+                                [class.text-gigantic]="!inSlide"
+                                [style.color]="colors.backgroundColor[i]"
+                            >
+                                @if (inSlide) {
+                                    {{ row.data | pollPercentBaseAlt: poll }}
+                                } @else {
+                                    {{ row.data | pollPercentBase: poll }}
+                                }
+                            </td>
+                        </tr>
                     }
+                    <tr class="votesvalid">
+                        <td class="text-bold" [class.text-big]="inSlide" [class.text-gigantic]="!inSlide">
+                            {{ 'Valid votes' | translate }}
+                        </td>
+                        <td
+                            class="result-cell-definition text-bold"
+                            [class.text-big]="inSlide"
+                            [class.text-gigantic]="!inSlide"
+                        >
+                            {{ poll.votesvalid }}
+                        </td>
+                        <td
+                            class="result-cell-definition text-bold"
+                            [class.text-big]="inSlide"
+                            [class.text-gigantic]="!inSlide"
+                        ></td>
+                    </tr>
                 </tbody>
             </table>
             <!-- Chart -->
             @if (shouldShowChart) {
-                <div class="doughnut-chart">
-                    <os-chart
-                        type="doughnut"
-                        [circleColors]="chartColors"
-                        [data]="chartData"
-                        [labels]="pollService.getSortedChartLabels(poll)"
-                    ></os-chart>
+                <div class="doughnut-chart" [class.doughnut-chart-slide]="inSlide">
+                    <os-chart type="doughnut" [circleColors]="chartColors" [data]="chartData"></os-chart>
                 </div>
             }
         }

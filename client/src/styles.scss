@@ -2,7 +2,7 @@
 @use '@angular/material' as mat;
 
 /** angular material theming */
-@use "sass:meta";
+@use 'sass:meta';
 @use 'assets/styles/theme-styles.scss';
 
 /** Useful default classes */
@@ -41,7 +41,13 @@
 /** Define the general style-rules */
 .mat-toolbar h2,
 .mat-mdc-dialog-title {
-    font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+    font-family:
+        OSFont,
+        Fira Sans,
+        Roboto,
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 .generic-mini-button {
@@ -151,7 +157,7 @@
     line-height: 2;
     display: inline-flex;
     &.pre-wrap {
-        .mdc-evolution-chip__text-label{
+        .mdc-evolution-chip__text-label {
             -webkit-user-select: none;
             user-select: none;
             white-space: pre-wrap !important;
@@ -339,7 +345,8 @@ button.mat-mdc-menu-item.selected {
     font-size: 75%;
     display: block;
 }
-mat-hint, .hint {
+mat-hint,
+.hint {
     font-size: 10.5px;
     display: block;
     line-height: 1.5;
@@ -363,4 +370,11 @@ mat-hint, .hint {
 
 .text-medium {
     font-size: 14px;
+}
+
+.html-view {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
 }

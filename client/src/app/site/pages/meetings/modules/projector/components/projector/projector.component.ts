@@ -83,23 +83,23 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
             backgroundImage: string;
         };
     } = {
-            container: {
-                height: `0px`
-            },
-            projector: {
-                transform: `none`,
-                width: `0px`,
-                height: `0px`,
-                color: `black`,
-                backgroundColor: `white`,
-                H1Color: `#317796`
-            },
-            headerFooter: {
-                color: `white`,
-                backgroundColor: `#317796`,
-                backgroundImage: `none`
-            }
-        };
+        container: {
+            height: `0px`
+        },
+        projector: {
+            transform: `none`,
+            width: `0px`,
+            height: `0px`,
+            color: `black`,
+            backgroundColor: `white`,
+            H1Color: `#317796`
+        },
+        headerFooter: {
+            color: `white`,
+            backgroundColor: `#317796`,
+            backgroundImage: `none`
+        }
+    };
 
     /**
      * All slides to show on this projector

@@ -9,6 +9,9 @@ import { AccountListServiceModule } from '../account-list-service.module';
 })
 export class AccountListSearchService extends ListSearchService<ViewUser> {
     public constructor() {
-        super([`short_name`, `username`, `email`, `saml_id`, `member_number`], []);
+        super(
+            [`short_name`, `username`, `email`, `saml_id`, `member_number`, `externalString`, `homeCommitteeName`],
+            []
+        );
     }
 }

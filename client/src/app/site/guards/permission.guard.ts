@@ -45,10 +45,10 @@ export class PermissionGuard {
      * @returns the current navigation's url
      */
     public getCurrentNavigationUrl(): string {
-        return this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.url;
+        return this.router.currentNavigation()?.extractedUrl.toString() || this.router.url;
     }
 
     private isLoginPage(url: string): boolean {
-        return url.startsWith(`/login`) || new RegExp(`^\/[0-9]+\/login`).test(url);
+        return url.startsWith(`/login`) || new RegExp(`^[0-9]+login`).test(url);
     }
 }

@@ -36,9 +36,9 @@ export class MeetingMediaAdapterService {
             {
                 ...(param.action === `set`
                     ? {
-                            id: meetingId,
-                            mediafile_id: param.mediafile.id
-                        }
+                          id: meetingId,
+                          mediafile_id: param.mediafile.id
+                      }
                     : { id: meetingId }),
                 place: param.place
             }

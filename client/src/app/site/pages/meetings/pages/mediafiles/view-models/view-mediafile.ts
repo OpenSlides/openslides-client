@@ -193,7 +193,7 @@ interface IMediafileRelations {
 }
 export interface ViewMediafile
     extends Mediafile,
-    ViewModelRelations<IMediafileRelations>,
-    /*  Searchable, */ HasMeeting,
-    HasListOfSpeakers,
-    HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}
+        ViewModelRelations<IMediafileRelations>,
+        /*  Searchable, */ HasMeeting,
+        HasListOfSpeakers,
+        HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

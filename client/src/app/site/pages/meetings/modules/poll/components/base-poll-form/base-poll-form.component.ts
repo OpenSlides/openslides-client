@@ -52,7 +52,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
 
     public PollType = PollType;
-    public PollPropertyVerbose = PollPropertyVerbose;
+    public PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = PollPropertyVerbose;
     public readonly pollBackendDurationChoices = PollBackendDurationChoices;
 
     /**
@@ -144,6 +144,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return !this.data.state || this.data.isCreated; // no state means, its under creation
     }
 
+    public get isNamedVotingSelected(): boolean {
+        return this.pollTypeControl?.value === PollType.Named || false;
+    }
+
     public get isEVotingSelected(): boolean {
         return this.pollTypeControl?.value !== PollType.Analog || false;
     }
@@ -190,6 +194,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
     }
 
+    public get isMotionPoll(): boolean {
+        return this.pollClassType === PollClassType.Motion;
+    }
+
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(VotingPrivacyWarningDialogService);
@@ -211,6 +219,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         if (this.data) {
             this.checkPollState();
             this.checkPollBackend();
+            this.patchLiveVotingEnabled();
 
             if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
                 // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
@@ -221,8 +230,22 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
-            if (this.allowToSetMinMax) {
+            if (this.allowToSetMinMax && !this.data.id) {
                 this.updatePollMethod(PollMethod.Y);
+            } else if (this.allowToSetMinMax) {
+                const controls = this.getVotesAmountControl();
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`min_votes_amount`)
+                    .setValidators(controls.get(`min_votes_amount`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`max_votes_amount`)
+                    .setValidators(controls.get(`max_votes_amount`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
+                    .get(`max_votes_per_option`)
+                    .setValidators(controls.get(`max_votes_per_option`).validator);
             }
         }
 
@@ -298,6 +321,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
     }
 
+    private patchLiveVotingEnabled(): void {
+        if (this.isMotionPoll) {
+            const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
+            this.contentForm.get(`live_voting_enabled`).setValue(liveVotingDefault);
+        }
+    }
+
     private checkPollState(): void {
         if (this.data.state) {
             this.disablePollType();
@@ -313,7 +343,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return (
             (selectedPollMethod === FormPollMethod.Y ||
                 (selectedPollMethod !== FormPollMethod.LIST_YNA && this.allowToSetMinMax)) &&
-                (!data || !data.state || data.isCreated)
+            (!data || !data.state || data.isCreated)
         );
     }
 
@@ -473,10 +503,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
         return (formControl: AbstractControl): Record<string, any> | null => {
-            if (!this.pollOptionAmount || this.isList) {
+            if (
+                this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`) ||
+                !this.pollOptionAmount ||
+                this.isList
+            ) {
                 return null;
             }
-
             const min = formControl.get(minCtrlName)!.value;
             const votesPerOption = formControl.get(perOptionCtrlNam)!.value || 1;
             if (this.pollOptionAmount * votesPerOption < min) {
@@ -498,7 +531,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             backend: [],
             global_yes: [false],
             global_no: [false],
-            global_abstain: [false]
+            global_abstain: [false],
+            live_voting_enabled: [false]
         });
     }
 
@@ -511,10 +545,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
         };
         if (this.allowToSetMinMax) {
-            config.max_votes_amount = [
-                maxVotesPreselect,
-                [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
-            ];
+            if (this.meetingSettingsService.instant(`assignment_poll_enable_max_votes_per_option`)) {
+                config.max_votes_amount = [maxVotesPreselect, [Validators.required, Validators.min(1)]];
+            } else {
+                config.max_votes_amount = [
+                    maxVotesPreselect,
+                    [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
+                ];
+            }
         }
         return this.fb.group(config, {
             validators: [

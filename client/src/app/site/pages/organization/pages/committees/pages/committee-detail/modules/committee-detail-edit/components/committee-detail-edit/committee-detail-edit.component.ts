@@ -5,6 +5,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -29,7 +30,7 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
     standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {
-    private committeeId: number | null = null;
+    public committeeId: number | null = null;
 
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
@@ -38,6 +39,10 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public committeeForm!: UntypedFormGroup;
 
     public editCommittee!: ViewCommittee;
+
+    public get isOrgaManager(): boolean {
+        return this.operator.isOrgaManager;
+    }
 
     private get managerIdCtrl(): AbstractControl {
         return this.committeeForm.get(`manager_ids`)!;
@@ -83,8 +88,22 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
      *
      * @returns A function that will return a boolean
      */
-    public getDisableOptionWhenFn(): (value: Selectable) => boolean {
-        return value => value.id === this.committeeId;
+    public getDisableOptionWhenFn: (value: Selectable) => boolean = value =>
+        value.id === this.committeeId || this.isNotCommitteeAdminFor(value);
+
+    public isNotCommitteeAdminFor: (value: Selectable) => boolean = value =>
+        !(this.isOrgaManager || this.operator.committeeCanManageNoOrgaCheck(value.id));
+
+    public getDisableOptionForCommitteeParentFn(): (value: Selectable) => boolean {
+        return value => {
+            if (value.id === this.committeeId) {
+                return true;
+            } else if (this.isCreateView) {
+                return !this.operator.hasCommitteePermissions(value.id, CML.can_manage);
+            }
+
+            return false;
+        };
     }
 
     /**
@@ -185,6 +204,11 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
                     this.loadCommittee(this.committeeId);
                 })
             );
+        } else if (this.route.snapshot.queryParams?.[`parentId`]) {
+            this.isCreateView = true;
+            this.route.queryParams.subscribe(queryParams => {
+                this.committeeForm.get(`parent_id`).setValue(Number(queryParams[`parentId`]));
+            });
         } else {
             this.isCreateView = true;
         }
@@ -209,7 +233,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]],
-            external_id: [``]
+            external_id: [``],
+            parent_id: [``]
         };
         this.committeeForm = this.formBuilder.group(partialForm);
     }

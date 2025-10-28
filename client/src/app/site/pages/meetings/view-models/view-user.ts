@@ -1,4 +1,6 @@
 import { User } from 'src/app/domain/models/users/user';
+import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
+import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
@@ -23,7 +25,7 @@ export enum DuplicateStatus {
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
+export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
 
 export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
@@ -113,8 +115,20 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return !!this.member_number;
     }
 
+    public get hasHomeCommittee(): boolean {
+        return !!this.home_committee_id;
+    }
+
     public get gender_name(): string {
         return this.gender?.name ?? ``;
+    }
+
+    public get homeCommitteeName(): string {
+        return this.home_committee?.name ?? ``;
+    }
+
+    public get externalString(): string {
+        return this.external ? this.getTranslatedExternal() : ``;
     }
 
     // Will be set by the repository
@@ -123,6 +137,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getFullName!: (structureLevel?: ViewStructureLevel) => string;
     public getLevelAndNumber!: () => string;
     public getMeetingUser!: (meetingId?: Id) => ViewMeetingUser;
+    public getTranslatedExternal!: () => string;
 
     /**
      * A function which will return the id of the currently active meeting, if one is chosen.
@@ -384,6 +399,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
+    home_committee: ViewCommittee;
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
@@ -393,6 +409,7 @@ interface IUserRelations {
     votes: ViewVote[];
     poll_candidates: ViewPollCandidate[];
     gender?: ViewGender;
+    history_positions: ViewHistoryPosition[];
 }
 
-export interface ViewUser extends User, ViewModelRelations<IUserRelations> {}
+export interface ViewUser extends User, ViewModelRelations<IUserRelations>, HasHistoryEntries {}

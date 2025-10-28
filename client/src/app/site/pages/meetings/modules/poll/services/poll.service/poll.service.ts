@@ -29,6 +29,7 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
+import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { PollServiceModule } from '../poll-service.module';
 
 const PollChartBarThickness = 20;
@@ -48,6 +49,7 @@ export abstract class PollService {
     private organizationSettingsService = inject(OrganizationSettingsService);
     protected translate = inject(TranslateService);
     protected themeService = inject(ThemeService);
+    protected activeMeeting = inject(ActiveMeetingService);
 
     public constructor() {
         this.organizationSettingsService
@@ -146,12 +148,16 @@ export abstract class PollService {
         return PollValues[value] || value;
     }
 
-    public parseNumber(value?: number): string {
-        const formatter = new Intl.NumberFormat(`us-us`, {
+    public parseNumber(value?: number, maximumFractionDigits = 6): string {
+        let lang = this.translate.getCurrentLang();
+        if (this.activeMeeting.meeting) {
+            lang = this.activeMeeting.meeting.language;
+        }
+        const formatter = new Intl.NumberFormat(lang, {
             style: `decimal`,
             useGrouping: false,
             minimumFractionDigits: 0,
-            maximumFractionDigits: 6
+            maximumFractionDigits
         });
 
         switch (value) {
@@ -267,8 +273,7 @@ export abstract class PollService {
         if (totalByBase && totalByBase > 0) {
             const percentNumber = (value / totalByBase) * 100;
             if (percentNumber >= 0) {
-                const result = percentNumber % 1 === 0 ? percentNumber : percentNumber.toFixed(PERCENT_DECIMAL_PLACES);
-                return `${result} %`;
+                return `${this.parseNumber(percentNumber, PERCENT_DECIMAL_PLACES)} %`;
             }
         }
         return ``;

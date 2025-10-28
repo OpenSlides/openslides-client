@@ -58,7 +58,10 @@
     </div>
     <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
-            @if (committee.forward_to_committees?.length && operator.isOrgaManager) {
+            @if (
+                committee.forward_to_committee_ids?.length &&
+                (operator.canSkipPermissionCheck || operator.hasCommitteeManagementRights(committee.id))
+            ) {
                 <div>
                     <os-icon-container
                         icon="file_upload"
@@ -67,12 +70,15 @@
                         [noWrap]="true"
                     >
                         <span>
-                            {{ committee.forward_to_committees.length }}
+                            {{ committee.forward_to_committee_ids.length }}
                         </span>
                     </os-icon-container>
                 </div>
             }
-            @if (committee.receive_forwardings_from_committees?.length && operator.isOrgaManager) {
+            @if (
+                committee.receive_forwardings_from_committee_ids?.length &&
+                (operator.canSkipPermissionCheck || operator.hasCommitteeManagementRights(committee.id))
+            ) {
                 <div>
                     <os-icon-container
                         icon="file_download"
@@ -81,7 +87,7 @@
                         [noWrap]="true"
                     >
                         <span>
-                            {{ committee.receive_forwardings_from_committees.length }}
+                            {{ committee.receive_forwardings_from_committee_ids.length }}
                         </span>
                     </os-icon-container>
                 </div>
@@ -89,41 +95,56 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
-        <div>
-            @if (committee.meetingAmount) {
-                <div>
-                    <os-icon-container
-                        icon="event_available"
-                        iconTooltip="{{ 'Meetings' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.meetingAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.memberAmount) {
-                <div>
-                    <os-icon-container
-                        icon="group"
-                        iconTooltip="{{ 'Accounts' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.memberAmount }}
-                    </os-icon-container>
-                </div>
-            }
-            @if (committee.managerAmount) {
-                <div>
-                    <os-icon-container
-                        icon="engineering"
-                        iconTooltip="{{ 'Committee management' | translate }}"
-                        iconTooltipPosition="right"
-                    >
-                        {{ committee.managerAmount }}
-                    </os-icon-container>
-                </div>
-            }
+    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 150 }">
+        <div class="meta-flex-row">
+            <div class="meta-flex-column">
+                @if (committee.meetingAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="event_available"
+                            iconTooltip="{{ 'Meetings' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.meetingAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+                @if (getCommitteeChildrenNumber(committee)) {
+                    <div>
+                        <os-icon-container
+                            icon="layers"
+                            iconTooltip="{{ 'Subcommittees' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ getCommitteeChildrenNumber(committee) }}
+                        </os-icon-container>
+                    </div>
+                }
+            </div>
+            <div class="meta-flex-column">
+                @if (committee.memberAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="group"
+                            iconTooltip="{{ 'Accounts' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.memberAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+                @if (committee.managerAmount) {
+                    <div>
+                        <os-icon-container
+                            icon="engineering"
+                            iconTooltip="{{ 'Committee management' | translate }}"
+                            iconTooltipPosition="right"
+                        >
+                            {{ committee.managerAmount }}
+                        </os-icon-container>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 
@@ -162,6 +183,7 @@
             data-cy="committeeListSingleDeleteButton"
             mat-menu-item
             type="button"
+            [disabled]="hasCommitteeChildren(committee)"
             (click)="doDelete(committee)"
         >
             <mat-icon>delete</mat-icon>

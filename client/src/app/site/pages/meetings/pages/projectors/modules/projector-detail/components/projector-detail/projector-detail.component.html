@@ -433,18 +433,16 @@
                                 ></os-projector-button>
                                 <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                             </div>
-                            <!-- Strucutre level current speaker -->
-                            @if (isStructureLevelCountdownEnabled()) {
-                                <div class="projectable-entry">
-                                    <os-projector-button
-                                        [object]="getCurrentStructureLevel()"
-                                        [projector]="projector"
-                                    ></os-projector-button>
-                                    <span class="spacer-left-10">
-                                        {{ 'Speaking time – current contribution' | translate }}
-                                    </span>
-                                </div>
-                            }
+                            <!-- Current speaker -->
+                            <div class="projectable-entry">
+                                <os-projector-button
+                                    [object]="getCurrentStructureLevel()"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking time – current contribution' | translate }}
+                                </span>
+                            </div>
                             <!-- All structure level -->
                             @if (
                                 projectorCount > 1 &&

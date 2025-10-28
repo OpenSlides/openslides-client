@@ -600,7 +600,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         if (event.type === `click` || (event as KeyboardEvent).key === ` `) {
             document.getSelection().removeAllRanges();
             event.preventDefault();
-            if ((event as MouseEvent).ctrlKey) {
+            if ((event as MouseEvent).ctrlKey || (event as MouseEvent).metaKey) {
                 const index = this.multiSelectedIndex.findIndex(i => i === clickIndex);
                 if (index === -1) {
                     this.multiSelectedIndex.push(clickIndex);
@@ -911,7 +911,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                     nextNeighborAbove.isExpanded =
                         (!!this.getParentNode(nextNeighborAbove) &&
                             this.getParentNode(nextNeighborAbove)!.isExpanded) ||
-                            noChildren;
+                        noChildren;
                 }
             }
 

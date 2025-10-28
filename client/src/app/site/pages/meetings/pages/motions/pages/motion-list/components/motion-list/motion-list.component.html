@@ -178,9 +178,9 @@
                 </div>
                 <!-- TODO: These two now appear twice. Might be an own component -->
                 <!-- Workflow state -->
-                <div class="ellipsis-overflow white">
+                <div class="white">
                     @if (motion.state) {
-                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                        <mat-basic-chip class="non-overflowing-chip" [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ motionRepo.getExtendedStateLabel(motion) | translate }}
                         </mat-basic-chip>
                     }
@@ -188,7 +188,7 @@
                 <!-- Recommendation -->
                 @if (motion.recommendation && motion.state?.next_state_ids?.length) {
                     <div class="ellipsis-overflow white spacer-top-3">
-                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                        <mat-basic-chip class="bluegrey non-overflowing-chip" [disabled]="true">
                             {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
                         </mat-basic-chip>
                     </div>

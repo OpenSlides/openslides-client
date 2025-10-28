@@ -39,18 +39,6 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-function getUserCML(user: ViewUser): Record<number, string> | null {
-    if (!user.committee_management_ids) {
-        return null; // Explicit null to distinguish from undefined
-    }
-
-    const committeeManagementLevel: Record<number, CML> = {};
-    for (const id of user.committee_management_ids) {
-        committeeManagementLevel[id] = CML.can_manage;
-    }
-    return committeeManagementLevel;
-}
-
 @Injectable({
     providedIn: `root`
 })
@@ -95,16 +83,31 @@ export class OperatorService {
         return this.isSuperAdmin || this.isOrgaManager;
     }
 
+    public get canSkipPermissionCheckMeetingInternal(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager || this.isCommitteeManager;
+    }
+
+    public committeeCanManageNoOrgaCheck(committeeId: number): boolean {
+        return this._CML[committeeId] === CML.can_manage;
+    }
+
     public get isAccountAdmin(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public get isCommitteeManager(): boolean {
-        return !!(this.user?.committee_management_ids || []).length;
+        if (this.activeMeeting) {
+            return this.hasCommitteeManagementRights(this.activeMeeting.committee_id);
+        }
+        return false;
+    }
+
+    public get isAnyCommitteeManager(): boolean {
+        return !!this._CML && !!Object.keys(this._CML).length;
     }
 
     public get isAnyManager(): boolean {
-        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isCommitteeManager : false;
+        return this.canSkipPermissionCheck || this.readyDeferred.wasResolved ? this.isAnyCommitteeManager : false;
     }
 
     public get knowsMultipleMeetings(): boolean {
@@ -113,8 +116,8 @@ export class OperatorService {
             (this.isAnonymous
                 ? this.defaultAnonUser.hasMultipleMeetings
                 : this.readyDeferred.wasResolved
-                    ? this.user?.hasMultipleMeetings
-                    : false)
+                  ? this.user?.hasMultipleMeetings
+                  : false)
         );
     }
 
@@ -218,9 +221,7 @@ export class OperatorService {
         return activeMeeting ? activeMeeting.admin_group_id : null;
     }
 
-    private get currentCommitteeIds(): Id[] {
-        return this._userSubject?.value?.committee_ids || [];
-    }
+    private currentCommitteeIds: Set<Id> = new Set<Id>();
 
     private readonly _operatorUpdatedSubject = new Subject<void>();
     private readonly _operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
@@ -410,12 +411,16 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (
-            (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds?.includes(meetingId) || false
-        );
+        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds.includes(meetingId);
+    }
+
+    public hasCommitteeManagementRights(committee_id: number): boolean {
+        return this._CML && !!this._CML[committee_id];
     }
 
     private updateUser(user: ViewUser): void {
+        this.currentCommitteeIds.update(new Set(user.committee_ids));
+
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
             this._permissions = this.calcPermissions();
@@ -425,7 +430,22 @@ export class OperatorService {
             this._OML = user.organization_management_level || null;
         }
         this._meetingIds = user.ensuredMeetingIds;
-        this._CML = getUserCML(user);
+        this._CML = this.getUserCML(user);
+    }
+
+    private getUserCML(user: ViewUser): Record<number, string> | null {
+        if (!user.committee_management_ids) {
+            return null; // Explicit null to distinguish from undefined
+        }
+
+        const committeeManagementLevel: Record<number, CML> = {};
+        for (const committee of user.committee_managements) {
+            committeeManagementLevel[committee.id] = CML.can_manage;
+            for (const childId of committee?.all_child_ids || []) {
+                committeeManagementLevel[childId] = CML.can_manage;
+            }
+        }
+        return committeeManagementLevel;
     }
 
     private checkReadyState(): void {
@@ -590,7 +610,7 @@ export class OperatorService {
             // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
-        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
+        if ((this.canSkipPermissionCheck || this.isCommitteeManager) && !this.activeMeeting.locked_from_inside) {
             return true;
         }
 
@@ -614,7 +634,11 @@ export class OperatorService {
             // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
-        if (this.canSkipPermissionCheck && !this.activeMeeting.locked_from_inside) {
+        if (
+            (this.canSkipPermissionCheck ||
+                this.hasCommitteePermissions(this.meetingRepo.getViewModel(meetingId).committee_id, CML.can_manage)) &&
+            !this.activeMeeting.locked_from_inside
+        ) {
             return true;
         }
         const groups = this.user.groups(meetingId);
@@ -667,15 +691,23 @@ export class OperatorService {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
-        if (!this._CML || !committeeId || !this.currentCommitteeIds.includes(committeeId)) {
+        if (!this._CML || !committeeId || !(this._CML[committeeId] || this.currentCommitteeIds.has(committeeId))) {
             return false;
         }
+
         const currentCommitteePermission = cmlNameMapping[(this._CML || {})[committeeId]] || 0;
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
     }
 
-    public isAnyCommitteeAdmin(): boolean {
-        return !!this._CML && !!Object.keys(this._CML).length;
+    public hasMeetingAccess(meetingId: Id): boolean {
+        if (this.canSkipPermissionCheck) {
+            return true;
+        }
+        const committeeId = this.meetingRepo.getViewModel(meetingId)?.committee_id;
+        if (committeeId && this.hasCommitteePermissions(committeeId, CML.can_manage)) {
+            return true;
+        }
+        return this.isInMeeting(meetingId);
     }
 
     /**
@@ -702,7 +734,7 @@ export class OperatorService {
      * @returns `true` if the operator is in at least one of the given committees.
      */
     public isInCommitteesNonAdminCheck(...committees: Committee[]): boolean {
-        return committees.some(committee => this.currentCommitteeIds.includes(committee.id));
+        return committees.some(committee => this.currentCommitteeIds.has(committee.id));
     }
 
     /**
@@ -719,9 +751,13 @@ export class OperatorService {
         return this.isInGroupIds(...groups.map(group => group.id));
     }
 
+    public isCommitteeManagerForMeeting(meetingId: Id): boolean {
+        return this._CML && !!this._CML[this.meetingRepo.getViewModel(meetingId)?.committee_id];
+    }
+
     /**
      * This checks if an operator is in at least one of the given groups. It is also a permission check.
-     * That means, if the operator is an admin, a superadmin or an orgaadmin, this function returns `true`, too.
+     * That means, if the operator is an admin, the committee admin, a superadmin or an orgaadmin, this function returns `true`, too.
      *
      * TODO: what if no active meeting??
      *
@@ -730,10 +766,15 @@ export class OperatorService {
      * @returns `true`, if the operator is in at least one group or they are an admin. a superadmin or a orgaadmin.
      */
     public isInGroupIds(...groupIds: Id[]): boolean {
-        if (!this._groupIds) {
-            return false;
-        }
-        if (this.canSkipPermissionCheck) {
+        const meetingIds = Array.from(
+            new Set(
+                groupIds.map(groupId => {
+                    const group = this.groupRepo.getViewModel(groupId);
+                    return group?.meeting_id;
+                })
+            )
+        ).filter(meetingId => !!meetingId);
+        if (this.canSkipPermissionCheck || !!meetingIds.find(id => this.isCommitteeManagerForMeeting(id))) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
@@ -750,7 +791,9 @@ export class OperatorService {
         if (!this._meetingIds) {
             return false;
         }
-        return meetingIds.some(meetingId => this._meetingIds?.includes(meetingId));
+        return meetingIds.some(
+            meetingId => this._meetingIds?.includes(meetingId) || this.isCommitteeManagerForMeeting(meetingId)
+        );
     }
 
     /**
@@ -810,6 +853,14 @@ export class OperatorService {
                                 ]
                             }
                         ]
+                    },
+                    {
+                        idField: `committee_management_ids`,
+                        fieldset: [`all_child_ids`]
+                    },
+                    {
+                        idField: `gender_id`,
+                        fieldset: [`name`]
                     }
                 ]
             };

@@ -1,43 +1,53 @@
 <div class="editor">
     @if (editorReady) {
         <div class="editor-menu">
-            <div class="button-group">
-                <button
-                    #btn
-                    #setTab="osTabNavigation"
-                    class="text"
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [ngClass]="{ active: isGodButtonActive }"
-                    (click)="godButtonAction()"
-                    (focus)="setTab.setTab()"
-                >
-                    {{ godButtonText }}
-                </button>
+            @if (['heading', 'textAlign', 'subscript', 'superscript'].some(isExtensionActive)) {
+                <div class="button-group">
+                    <button
+                        #btn
+                        #setTab="osTabNavigation"
+                        class="text"
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [ngClass]="{ active: isGodButtonActive }"
+                        (click)="godButtonAction()"
+                        (focus)="setTab.setTab()"
+                    >
+                        {{ godButtonText }}
+                    </button>
 
-                <button
-                    #btn
-                    class="more"
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matMenuTriggerFor]="formatMenu"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                </button>
-            </div>
+                    <button
+                        #btn
+                        class="more"
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [matMenuTriggerFor]="formatMenu"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                    </button>
+                </div>
+            }
 
             <mat-menu #formatMenu="matMenu">
-                <button mat-menu-item [matMenuTriggerFor]="headingMenu">
-                    {{ 'Headings' | translate }}
-                </button>
-                <button mat-menu-item [matMenuTriggerFor]="textAlignMenu">
-                    {{ 'Align' | translate }}
-                </button>
-                <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
+                @if (isExtensionActive('heading')) {
+                    <button mat-menu-item [matMenuTriggerFor]="headingMenu">
+                        {{ 'Headings' | translate }}
+                    </button>
+                }
+
+                @if (isExtensionActive('textAlign')) {
+                    <button mat-menu-item [matMenuTriggerFor]="textAlignMenu">
+                        {{ 'Align' | translate }}
+                    </button>
+                }
+
+                @if (['subscript', 'superscript'].some(isExtensionActive)) {
+                    <button mat-menu-item [matMenuTriggerFor]="inlineMenu">{{ 'Inline' | translate }}</button>
+                }
             </mat-menu>
 
             <mat-menu #headingMenu="matMenu">
@@ -102,154 +112,175 @@
             </mat-menu>
 
             <mat-menu #inlineMenu="matMenu">
-                <button
-                    mat-menu-item
-                    type="button"
-                    [ngClass]="{ active: editor.isActive('subscript') }"
-                    (click)="editor.chain().focus().toggleSubscript().run()"
-                >
-                    <mat-icon>subscript</mat-icon>
-                    {{ 'Subscript' | translate }}
-                </button>
+                @if (isExtensionActive('subscript')) {
+                    <button
+                        mat-menu-item
+                        type="button"
+                        [ngClass]="{ active: editor.isActive('subscript') }"
+                        (click)="editor.chain().focus().toggleSubscript().run()"
+                    >
+                        <mat-icon>subscript</mat-icon>
+                        {{ 'Subscript' | translate }}
+                    </button>
+                }
 
-                <button
-                    mat-menu-item
-                    type="button"
-                    [ngClass]="{ active: editor.isActive('superscript') }"
-                    (click)="editor.chain().focus().toggleSuperscript().run()"
-                >
-                    <mat-icon>superscript</mat-icon>
-                    {{ 'Superscript' | translate }}
-                </button>
+                @if (isExtensionActive('superscript')) {
+                    <button
+                        mat-menu-item
+                        type="button"
+                        [ngClass]="{ active: editor.isActive('superscript') }"
+                        (click)="editor.chain().focus().toggleSuperscript().run()"
+                    >
+                        <mat-icon>superscript</mat-icon>
+                        {{ 'Superscript' | translate }}
+                    </button>
+                }
             </mat-menu>
 
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Bold' | translate"
-                    [ngClass]="{ active: editor.isActive('bold') }"
-                    (click)="editor.chain().focus().toggleBold().run()"
-                >
-                    <mat-icon>format_bold</mat-icon>
-                </button>
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Italic' | translate"
-                    [ngClass]="{ active: editor.isActive('italic') }"
-                    (click)="editor.chain().focus().toggleItalic().run()"
-                >
-                    <mat-icon>format_italic</mat-icon>
-                </button>
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Underline' | translate"
-                    [ngClass]="{ active: editor.isActive('underline') }"
-                    (click)="editor.chain().focus().toggleUnderline().run()"
-                >
-                    <mat-icon>format_underline</mat-icon>
-                </button>
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Strikethrough' | translate"
-                    [ngClass]="{ active: editor.isActive('strike') }"
-                    (click)="editor.chain().focus().toggleStrike().run()"
-                >
-                    <mat-icon>format_strikethrough</mat-icon>
-                </button>
-            </div>
+            @if (['italic', 'bold', 'underline', 'strike'].some(isExtensionActive)) {
+                <div class="button-group">
+                    @if (isExtensionActive('bold')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Bold' | translate"
+                            [ngClass]="{ active: editor.isActive('bold') }"
+                            (click)="editor.chain().focus().toggleBold().run()"
+                        >
+                            <mat-icon>format_bold</mat-icon>
+                        </button>
+                    }
+                    @if (isExtensionActive('italic')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Italic' | translate"
+                            [ngClass]="{ active: editor.isActive('italic') }"
+                            (click)="editor.chain().focus().toggleItalic().run()"
+                        >
+                            <mat-icon>format_italic</mat-icon>
+                        </button>
+                    }
 
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Text color' | translate"
-                    [ngClass]="{ active: editor.isActive('textStyle') }"
-                    [ngStyle]="{
-                        color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
-                    }"
-                    (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
-                >
-                    <mat-icon>format_color_text</mat-icon>
-                </button>
-                <button
-                    class="more color-selection"
-                    mat-ripple
-                    tabindex="-1"
-                    type="button"
-                    [ngClass]="{ focused: focusText }"
-                    (click)="updateColorSets()"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <input
+                    @if (isExtensionActive('underline')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Underline' | translate"
+                            [ngClass]="{ active: editor.isActive('underline') }"
+                            (click)="editor.chain().focus().toggleUnderline().run()"
+                        >
+                            <mat-icon>format_underline</mat-icon>
+                        </button>
+                    }
+
+                    @if (isExtensionActive('strike')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Strikethrough' | translate"
+                            [ngClass]="{ active: editor.isActive('strike') }"
+                            (click)="editor.chain().focus().toggleStrike().run()"
+                        >
+                            <mat-icon>format_strikethrough</mat-icon>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (isExtensionActive('color')) {
+                <div class="button-group">
+                    <button
                         #btn
-                        list="text-colors"
+                        mat-ripple
                         osTabNavigation
-                        type="color"
+                        type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Text color' | translate"
-                        [value]="editor.getAttributes('textStyle')['color']"
-                        (change)="updateFontColor($event)"
-                        (focus)="setFocus(true)"
-                        (focusout)="setFocus()"
-                    />
-                </button>
-            </div>
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Background color' | translate"
-                    [ngClass]="{ active: editor.isActive('highlight') }"
-                    [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
-                    (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
-                >
-                    <mat-icon>format_color_fill</mat-icon>
-                </button>
-                <button
-                    class="more color-selection"
-                    mat-ripple
-                    tabindex="-1"
-                    type="button"
-                    [ngClass]="{ focused: focusBackground }"
-                    (click)="updateColorSets()"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <input
+                        [ngClass]="{ active: editor.isActive('textStyle') }"
+                        [ngStyle]="{
+                            color: editor.isActive('textStyle') ? editor.getAttributes('textStyle')['color'] : null
+                        }"
+                        (click)="updateColorSets(); editor.chain().focus().setColor(null).removeEmptyTextStyle().run()"
+                    >
+                        <mat-icon>format_color_text</mat-icon>
+                    </button>
+                    <button
+                        class="more color-selection"
+                        mat-ripple
+                        tabindex="-1"
+                        type="button"
+                        [ngClass]="{ focused: focusText }"
+                        (click)="updateColorSets()"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                        <input
+                            #btn
+                            list="text-colors"
+                            osTabNavigation
+                            type="color"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Text color' | translate"
+                            [value]="editor.getAttributes('textStyle')['color']"
+                            (change)="updateFontColor($event)"
+                            (focus)="setFocus(true)"
+                            (focusout)="setFocus()"
+                        />
+                    </button>
+                </div>
+            }
+
+            @if (isExtensionActive('highlight')) {
+                <div class="button-group">
+                    <button
                         #btn
-                        list="background-colors"
+                        mat-ripple
                         osTabNavigation
-                        type="color"
+                        type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Background color' | translate"
-                        [value]="editor.getAttributes('highlight')['color']"
-                        (change)="updateHighlightColor($event)"
-                        (focus)="setFocus(false)"
-                        (focusout)="setFocus()"
-                    />
-                </button>
-            </div>
+                        [ngClass]="{ active: editor.isActive('highlight') }"
+                        [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
+                        (click)="updateColorSets(); editor.chain().focus().toggleHighlight().run()"
+                    >
+                        <mat-icon>format_color_fill</mat-icon>
+                    </button>
+                    <button
+                        class="more color-selection"
+                        mat-ripple
+                        tabindex="-1"
+                        type="button"
+                        [ngClass]="{ focused: focusBackground }"
+                        (click)="updateColorSets()"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                        <input
+                            #btn
+                            list="background-colors"
+                            osTabNavigation
+                            type="color"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Background color' | translate"
+                            [value]="editor.getAttributes('highlight')['color']"
+                            (change)="updateHighlightColor($event)"
+                            (focus)="setFocus(false)"
+                            (focusout)="setFocus()"
+                        />
+                    </button>
+                </div>
+            }
             <button
                 #btn
                 mat-ripple
@@ -262,106 +293,123 @@
                 <mat-icon>format_clear</mat-icon>
             </button>
 
-            <div class="button-group">
-                <button
-                    #btn
-                    mat-ripple
-                    matTooltipPosition="above"
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Bullet list' | translate"
-                    [ngClass]="{ active: editor.isActive('bulletList') }"
-                    (click)="editor.chain().focus().toggleBulletList().run()"
-                >
-                    <mat-icon>format_list_bulleted</mat-icon>
-                </button>
-                <button
-                    #btn
-                    mat-ripple
-                    matTooltipPosition="above"
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Numbered list' | translate"
-                    [ngClass]="{ active: editor.isActive('orderedList') }"
-                    (click)="editor.chain().focus().toggleOrderedList().run()"
-                >
-                    <mat-icon>format_list_numbered</mat-icon>
-                </button>
-            </div>
+            @if (['bulletList', 'orderedList'].some(isExtensionActive)) {
+                <div class="button-group">
+                    @if (isExtensionActive('bulletList')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            matTooltipPosition="above"
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Bullet list' | translate"
+                            [ngClass]="{ active: editor.isActive('bulletList') }"
+                            (click)="editor.chain().focus().toggleBulletList().run()"
+                        >
+                            <mat-icon>format_list_bulleted</mat-icon>
+                        </button>
+                    }
 
-            <div class="button-group">
+                    @if (isExtensionActive('orderedList')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            matTooltipPosition="above"
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Numbered list' | translate"
+                            [ngClass]="{ active: editor.isActive('orderedList') }"
+                            (click)="editor.chain().focus().toggleOrderedList().run()"
+                        >
+                            <mat-icon>format_list_numbered</mat-icon>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (['link', 'iframe'].some(isExtensionActive)) {
+                <div class="button-group">
+                    @if (isExtensionActive('link')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Insert/edit link' | translate"
+                            [ngClass]="{ active: editor.isActive('link') }"
+                            (click)="setLinkDialog()"
+                        >
+                            <mat-icon>link</mat-icon>
+                        </button>
+                    }
+
+                    @if (isExtensionActive('image')) {
+                        <button
+                            #btn
+                            mat-ripple
+                            osTabNavigation
+                            type="button"
+                            [buttonList]="buttonElements"
+                            [matTooltip]="'Insert/edit image' | translate"
+                            [ngClass]="{ active: editor.isActive('image') }"
+                            (click)="setImageDialog()"
+                        >
+                            <mat-icon>image</mat-icon>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (isExtensionActive('undoRedo')) {
+                <div class="button-group">
+                    <button
+                        #btn
+                        #isDisabled="osTabNavigation"
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [disabled]="!editor.can().undo()"
+                        [matTooltip]="'Undo' | translate"
+                        (click)="editor.chain().focus().undo().run() && isDisabled.setDisabled()"
+                    >
+                        <mat-icon>undo</mat-icon>
+                    </button>
+
+                    <button
+                        #btn
+                        #isDisabled="osTabNavigation"
+                        mat-ripple
+                        osTabNavigation
+                        type="button"
+                        [buttonList]="buttonElements"
+                        [disabled]="!editor.can().redo()"
+                        [matTooltip]="'Redo' | translate"
+                        (click)="editor.chain().focus().redo().run() && isDisabled.setDisabled()"
+                    >
+                        <mat-icon>redo</mat-icon>
+                    </button>
+                </div>
+            }
+
+            @if (isExtensionActive('clipboardTextSerializer')) {
                 <button
                     #btn
+                    #setTab="osTabNavigation"
                     mat-ripple
                     osTabNavigation
                     type="button"
                     [buttonList]="buttonElements"
-                    [matTooltip]="'Insert/edit link' | translate"
-                    [ngClass]="{ active: editor.isActive('link') }"
-                    (click)="setLinkDialog()"
+                    [matTooltip]="'Source code' | translate"
+                    (click)="editCode()"
+                    (focus)="setTab.setTab(true)"
                 >
-                    <mat-icon>link</mat-icon>
+                    <mat-icon>code</mat-icon>
                 </button>
-
-                <button
-                    #btn
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [matTooltip]="'Insert/edit image' | translate"
-                    [ngClass]="{ active: editor.isActive('image') }"
-                    (click)="setImageDialog()"
-                >
-                    <mat-icon>image</mat-icon>
-                </button>
-            </div>
-
-            <div class="button-group">
-                <button
-                    #btn
-                    #isDisabled="osTabNavigation"
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [disabled]="!editor.can().undo()"
-                    [matTooltip]="'Undo' | translate"
-                    (click)="editor.chain().focus().undo().run() && isDisabled.setDisabled()"
-                >
-                    <mat-icon>undo</mat-icon>
-                </button>
-
-                <button
-                    #btn
-                    #isDisabled="osTabNavigation"
-                    mat-ripple
-                    osTabNavigation
-                    type="button"
-                    [buttonList]="buttonElements"
-                    [disabled]="!editor.can().redo()"
-                    [matTooltip]="'Redo' | translate"
-                    (click)="editor.chain().focus().redo().run() && isDisabled.setDisabled()"
-                >
-                    <mat-icon>redo</mat-icon>
-                </button>
-            </div>
-
-            <button
-                #btn
-                #setTab="osTabNavigation"
-                mat-ripple
-                osTabNavigation
-                type="button"
-                [buttonList]="buttonElements"
-                [matTooltip]="'Source code' | translate"
-                (click)="editCode()"
-                (focus)="setTab.setTab(true)"
-            >
-                <mat-icon>code</mat-icon>
-            </button>
+            }
         </div>
     }
 

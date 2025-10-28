@@ -1,5 +1,5 @@
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { GeneralUser } from 'src/app/gateways/repositories/users';
+import { userHeadersAndVerboseNames } from 'src/app/site/pages/organization/pages/accounts/pages/account-import/definitions';
 
 export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: any } = {
     ...userHeadersAndVerboseNames,
@@ -31,5 +31,7 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `is_present`,
     `locked_out`,
     `saml_id`,
+    `home_committee`,
+    `external`,
     `comment`
 ];

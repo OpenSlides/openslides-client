@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { _ } from '@ngx-translate/core';
+import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
@@ -15,6 +17,11 @@ import { ViewAssignment } from '../../../../view-models';
     standalone: false
 })
 export class AssignmentPollFormComponent extends BasePollFormComponent implements OnInit {
+    public override PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = {
+        ...this.PollPropertyVerbose,
+        pollmethod: _(`Election method`)
+    };
+
     public get hideSelects(): PollFormHideSelectsData {
         return {
             globalOptions: false

@@ -143,9 +143,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
         this.propagateChanges();
     }
 
-    public set paragraphBasedAmendmentContent(content: {
-        amendment_paragraphs: Record<number, UnsafeHtml>;
-    }) {
+    public set paragraphBasedAmendmentContent(content: { amendment_paragraphs: Record<number, UnsafeHtml> }) {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
@@ -268,9 +266,9 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     public leaveEditMotion(motion: HasSequentialNumber | null = this.motion): void {
         if (motion?.sequential_number) {
-            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
+            this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number], { replaceUrl: true });
         } else {
-            this.router.navigate([this.activeMeetingId, `motions`]);
+            this.router.navigate([this.activeMeetingId, `motions`], { replaceUrl: true });
         }
     }
 
@@ -608,9 +606,12 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     }
 
     private showMotionEditConflictWarningIfNecessary(): void {
-        if (this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0) {
+        if (
+            this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0 ||
+            this.motion.change_recommendations.length > 0
+        ) {
             const msg = this.translate.instant(
-                `Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.`
+                `Warning: Amendments or change recommendations exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted, or change recommendations might lose their reference line completely.`
             );
             this.raiseWarning(msg);
         }

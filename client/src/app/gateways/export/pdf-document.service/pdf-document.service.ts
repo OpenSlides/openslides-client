@@ -74,6 +74,7 @@ export interface TocLineDefinition {
     title: string;
     pageReference: string;
     style?: StyleType;
+    fillColor?: string;
 }
 
 export interface TocTableDefinition {
@@ -464,22 +465,25 @@ export class PdfDocumentService {
      * @returns A line for the toc
      */
     public createTocLine(
-        { identifier, title, pageReference, style = StyleType.DEFAULT }: TocLineDefinition,
+        { identifier, title, pageReference, style = StyleType.DEFAULT, fillColor = `` }: TocLineDefinition,
         ...subTitle: Content[]
     ): Content[] {
         return [
             {
                 text: identifier,
+                fillColor,
                 style
             },
             {
                 text: [title, ...subTitle],
-                style: `tocEntry`
+                style: `tocEntry`,
+                fillColor
             },
             {
                 pageReference,
                 style: `tocEntry`,
-                alignment: `right`
+                alignment: `right`,
+                fillColor
             }
         ];
     }
@@ -618,6 +622,8 @@ export class PdfDocumentService {
         this.imageUrls = imageUrls ? imageUrls : [];
         const pageOrientation: PageOrientation = landscape ? `landscape` : `portrait`;
         const result = {
+            version: `1.5`,
+            subset: `PDF/A-3a`,
             pageSize,
             pageOrientation,
             pageMargins,
@@ -635,7 +641,7 @@ export class PdfDocumentService {
             content: documentContent,
             styles: this.getStandardPaperStyles(pageSize)
         };
-        return result;
+        return result as TDocumentDefinitions;
     }
 
     /**
@@ -682,9 +688,11 @@ export class PdfDocumentService {
             const start_time = this.meetingSettingsService.instant(`start_time`);
             const end_time = this.meetingSettingsService.instant(`end_time`);
             const start_date = start_time
-                ? new Date(start_time * 1000).toLocaleDateString(this.translate.currentLang)
+                ? new Date(start_time * 1000).toLocaleDateString(this.translate.getCurrentLang())
                 : ``;
-            const end_date = end_time ? new Date(end_time * 1000).toLocaleDateString(this.translate.currentLang) : ``;
+            const end_date = end_time
+                ? new Date(end_time * 1000).toLocaleDateString(this.translate.getCurrentLang())
+                : ``;
             const date = start_date !== end_date ? [start_date, end_date].filter(Boolean).join(` - `) : start_date;
             const line1 = [name, description].filter(Boolean).join(` - `);
             const line2 = [location, date].filter(Boolean).join(`, `);
@@ -761,7 +769,7 @@ export class PdfDocumentService {
         if (showDate) {
             footerDate = {
                 text: `${this.translate.instant(`As of`)}: ${new Date().toLocaleDateString(
-                    this.translate.currentLang
+                    this.translate.getCurrentLang()
                 )}`,
                 fontSize: 6
             };

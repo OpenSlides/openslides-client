@@ -18,7 +18,7 @@ import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
@@ -120,8 +120,15 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.canManage && this.isCallEnabled;
     }
 
+    public get interventionEnabled(): boolean {
+        return this._interventionEnabled;
+    }
+
     public get isAdminNotInMeeting(): boolean {
-        return this.operator.canSkipPermissionCheck && !this.operator.user.getMeetingUser();
+        return (
+            (this.operator.canSkipPermissionCheck || this.operator.isCommitteeManager) &&
+            !this.operator.user.getMeetingUser()
+        );
     }
 
     @Input()
@@ -175,6 +182,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private _currentUser: ViewUser | null = null;
 
     private _listOfSpeakers: ViewListOfSpeakers | null = null;
+
+    private _interventionEnabled = false;
 
     private get onlyPresentUsers(): boolean {
         return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
@@ -231,6 +240,30 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this._destroyed.emit(true);
+    }
+
+    public async createAnswer(speaker: ViewSpeaker): Promise<void> {
+        const speakers = this.finishedSpeakers.concat(
+            this.activeSpeaker ? [this.activeSpeaker] : [],
+            this.interposedQuestions,
+            this.waitingSpeakers
+        );
+        speakers.reverse();
+        const speakerIndex = speakers.findIndex(listSpeaker => listSpeaker.id === speaker.id);
+        speakers.splice(0, speakerIndex + 1);
+        const predecessor = speakers.find(spkr => !SPECIAL_SPEECH_STATES.includes(spkr.speech_state));
+        await this.speakerRepo.create(
+            speaker.list_of_speakers,
+            this.operator.hasPerms(this.permission.listOfSpeakersCanManage)
+                ? undefined
+                : this.operator.user.getMeetingUser().id,
+            {
+                meeting_user_id: predecessor?.meeting_user_id || undefined,
+                structure_level_id: predecessor?.structureLevelId || undefined,
+                speechState: speaker.speech_state,
+                answer_to_id: speaker.id
+            }
+        );
     }
 
     private isListOfSpeakersEmpty(): void {
@@ -301,6 +334,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async addInterposedQuestion(): Promise<void> {
         await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
             speechState: SpeechState.INTERPOSED_QUESTION
+        });
+    }
+
+    public async addIntervention(): Promise<void> {
+        await this.speakerRepo.create(this.listOfSpeakers, this.canManage ? undefined : this._currentUser.id, {
+            speechState: SpeechState.INTERVENTION
         });
     }
 
@@ -531,7 +570,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @returns a time string using the current language setting of the client
      */
     public startTimeToString(speaker: ViewSpeaker): string {
-        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang);
+        return speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang());
     }
 
     private subscribeToSettings(): void {
@@ -568,6 +607,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             }),
             this.meetingSettingsService.get(`users_forbid_delegator_in_list_of_speakers`).subscribe(enabled => {
                 this.forbidDelegatorToAddSelf = enabled;
+            }),
+            this.meetingSettingsService.get(`list_of_speakers_intervention_time`).subscribe(time => {
+                this._interventionEnabled = time > 0;
             })
         );
     }

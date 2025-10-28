@@ -38,6 +38,10 @@ export class CommitteeExportService {
                         .getManagers()
                         .map(manager => manager.username)
                         .join(`, `)
+            },
+            {
+                label: `parent`,
+                map: model => model.parent?.name
             }
         ];
         const filename = `${this.translate.instant(`Committees`)}.csv`;

@@ -29,7 +29,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
     protected translate = inject(TranslateService);
 
     public constructor() {
-        this.intl = getIntlCollatorForLang(this.translate.currentLang, {
+        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang(), {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`
@@ -94,9 +94,10 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                         return this.intl.compare(propertyA, propertyB as any);
                     }
                 case `function`:
-                    const a = propertyA.bind(itemA)();
-                    const b = (propertyB as unknown as () => any).bind(itemB)();
-                    return this.intl.compare(a, b);
+                    return this.intl.compare(
+                        propertyA.bind(itemA)(),
+                        (propertyB as unknown as () => any).bind(itemB)()
+                    );
                 case `object`:
                     if (propertyA instanceof Date) {
                         return propertyA > propertyB ? 1 : -1;

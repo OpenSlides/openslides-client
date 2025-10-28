@@ -17,9 +17,9 @@ export class OpenSlidesDateAdapter extends DateFnsAdapter {
         super(dateLocale);
         // subscribe to language changes to change localisation of dates accordingly
         // DateAdapter seems not to be a singleton so we do that in this subclass instead of app.component
-        this.updateLocaleByName(translate.currentLang);
+        this.updateLocaleByName(translate.getCurrentLang());
         translate.onLangChange.subscribe(() => {
-            this.updateLocaleByName(translate.currentLang);
+            this.updateLocaleByName(translate.getCurrentLang());
         });
     }
 

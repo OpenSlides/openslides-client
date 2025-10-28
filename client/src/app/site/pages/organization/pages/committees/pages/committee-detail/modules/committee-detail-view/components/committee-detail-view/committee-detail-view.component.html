@@ -1,10 +1,4 @@
-<os-head-bar
-    [customMenu]="true"
-    [hasMainButton]="canManageCommittee"
-    [mainActionTooltip]="'New meeting' | translate"
-    [nav]="false"
-    (mainEvent)="onCreateMeeting()"
->
+<os-head-bar [goBack]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ (currentCommitteeObservable | async)?.name }}</h2>
@@ -12,6 +6,14 @@
 
     <!-- Menu -->
     <ng-container class="menu-slot">
+        <button mat-icon-button type="button" [routerLink]="['/', 'committees']">
+            <mat-icon>view_headline</mat-icon>
+        </button>
+        @if (canManageCommittee) {
+            <button mat-icon-button type="button" [matMenuTriggerFor]="addMenu">
+                <mat-icon>add_circle</mat-icon>
+            </button>
+        }
         @if (isOrgaAdmin()) {
             <button data-cy="committeeMenuTrigger" mat-icon-button type="button" [matMenuTriggerFor]="committeeMenu">
                 <mat-icon>more_vert</mat-icon>
@@ -19,6 +21,34 @@
         }
     </ng-container>
 </os-head-bar>
+
+<os-head-toolbar>
+    @if (currentCommitteeObservable | async; as committee) {
+        <span class="breadcrumb-nav-bar h-scroller">
+            <button class="breadcrumb" mat-button [routerLink]="['/', 'committees']">
+                <mat-icon class="grey-icon foreground-icon">layers</mat-icon>
+            </button>
+            @for (item of getNavbarCommittees(committee); track item.id) {
+                <span class="breadcrumb-section">
+                    <span class="arrow">
+                        <mat-icon class="grey-icon foreground-icon">chevron_right</mat-icon>
+                    </span>
+                    @if (!$last) {
+                        <button class="breadcrumb" mat-button [routerLink]="['/', 'committees', item.id]">
+                            <span class="breadcrumb-text">
+                                {{ item.getTitle() }}
+                            </span>
+                        </button>
+                    } @else {
+                        <span class="breadcrumb fake-breadcrumb breadcrumb-text">
+                            {{ item.getTitle() }}
+                        </span>
+                    }
+                </span>
+            }
+        </span>
+    }
+</os-head-toolbar>
 
 @if (currentCommitteeObservable | async; as committee) {
     <mat-card class="committee-details os-card">
@@ -41,8 +71,7 @@
                                     <a [routerLink]="['/', 'committees', forwarding.id]">
                                         {{ forwarding.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(forwarding)) {
+                                } @else {
                                     {{ forwarding.name }}
                                 }
                             </li>
@@ -51,16 +80,15 @@
                     @if (committee.forward_to_committees.length > 1) {
                         <button mat-button (click)="toggleForwardingList()">
                             @if (!forwardingExpanded) {
-                                {{ 'More' | translate }}
+                                <mat-icon class="icon-text">expand_more</mat-icon>
+                            } @else {
+                                <mat-icon class="icon-text">expand_less</mat-icon>
                             }
+
                             @if (!forwardingExpanded) {
-                                <mat-icon>expand_more</mat-icon>
-                            }
-                            @if (forwardingExpanded) {
-                                {{ 'Less' | translate }}
-                            }
-                            @if (forwardingExpanded) {
-                                <mat-icon>expand_less</mat-icon>
+                                <span>{{ 'More' | translate }}</span>
+                            } @else {
+                                <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
                     }
@@ -79,8 +107,7 @@
                                     <a [routerLink]="['/', 'committees', receive.id]">
                                         {{ receive.name }}
                                     </a>
-                                }
-                                @if (!canAccessCommittee(receive)) {
+                                } @else {
                                     <span>{{ receive.name }}</span>
                                 }
                             </li>
@@ -89,16 +116,15 @@
                     @if (committee.receive_forwardings_from_committees.length > 1) {
                         <button mat-button (click)="toggleReceiveList()">
                             @if (!receiveExpanded) {
-                                {{ 'More' | translate }}
+                                <mat-icon class="icon-text">expand_more</mat-icon>
+                            } @else {
+                                <mat-icon class="icon-text">expand_less</mat-icon>
                             }
-                            @if (receiveExpanded) {
-                                {{ 'Less' | translate }}
-                            }
+
                             @if (!receiveExpanded) {
-                                <mat-icon>expand_more</mat-icon>
-                            }
-                            @if (receiveExpanded) {
-                                <mat-icon>expand_less</mat-icon>
+                                <span>{{ 'More' | translate }}</span>
+                            } @else {
+                                <span>{{ 'Less' | translate }}</span>
                             }
                         </button>
                     }
@@ -125,34 +151,129 @@
                         }
                     }
                 </os-committee-meta-info>
+                <!-- Numbers of accounts -->
+                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
+                    <div>
+                        <b>{{ accountNumber }}</b>
+                        @if ((childCommitteesObservable | async).length > 0) {
+                            ({{ 'incl. subcommittees' | translate }})
+                        }
+                        <br />
+                        @if (
+                            accountNumber > accountActiveNumber || !!accountGuestNumber || !!accountHomeCommitteeNumber
+                        ) {
+                            {{ 'of which' | translate }}:
+                        }
+                        @if (accountNumber > accountActiveNumber) {
+                            {{ accountActiveNumber }} {{ 'active' | translate }}
+                        }
+                        @if (!!accountGuestNumber) {
+                            · {{ accountGuestNumber }} {{ 'external' | translate }}
+                        }
+                        @if (!!accountHomeCommitteeNumber) {
+                            · {{ accountHomeCommitteeNumber }} {{ 'with' | translate }}
+                            {{ 'Home committee' | translate }}
+                        }
+                    </div>
+                </os-committee-meta-info>
             }
+            <div class="os-card">
+                <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" [selectedIndex]="getIndex(committee)">
+                    @if (!!(childCommitteesObservable | async).length) {
+                        <mat-tab [label]="'Subcommittees' | translate">
+                            <os-list
+                                #subcommittees
+                                [filterProps]="['name']"
+                                [fullScreen]="false"
+                                [listObservable]="childCommitteesObservable"
+                                [multiSelect]="false"
+                                [vScrollFixed]="70"
+                            >
+                                <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
+                                    @if (committee.canAccess()) {
+                                        <a
+                                            class="stretch-to-fill-parent"
+                                            [attr.aria-label]="
+                                                ('Navigate to committee detail view from ' | translate) + committee.name
+                                            "
+                                            [routerLink]="['/', 'committees', committee.id]"
+                                        ></a>
+                                        <div class="overflow-hidden">
+                                            <div class="title-line ellipsis-overflow">
+                                                {{ committee.name }}
+                                                @if (committee.description?.trim()) {
+                                                    <div class="subtitle ellipsis-overflow">
+                                                        {{ committee.description }}
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <!-- layers with committee.length-->
+                                <div
+                                    *osScrollingTableCell="'meta'; row as committee; config: { width: 55 }"
+                                    class="cell-slot fill"
+                                >
+                                    @if (committee.canAccess() && !!committee.meeting_ids?.length) {
+                                        <div>
+                                            <os-icon-container
+                                                icon="event_available"
+                                                iconTooltipPosition="right"
+                                                [iconTooltip]="'Meetings' | translate"
+                                            >
+                                                {{ committee.meeting_ids?.length ?? 0 }}
+                                            </os-icon-container>
+                                        </div>
+                                    }
+
+                                    @if (committee.canAccess() && !!committee.child_ids?.length) {
+                                        <div>
+                                            <os-icon-container
+                                                icon="layers"
+                                                iconTooltipPosition="right"
+                                                [iconTooltip]="'Subcommittees' | translate"
+                                            >
+                                                {{ committee.child_ids?.length ?? 0 }}
+                                            </os-icon-container>
+                                        </div>
+                                    }
+                                </div>
+                            </os-list>
+                        </mat-tab>
+                    }
+                    @if (!!committee.meetings.length) {
+                        <mat-tab [label]="'Meetings' | translate">
+                            <div>
+                                @if (!getMeetingsSorted(committee).length) {
+                                    <mat-card class="meeting-preview-card">
+                                        <mat-card-content>
+                                            {{ 'No meetings available' | translate }}
+                                        </mat-card-content>
+                                    </mat-card>
+                                }
+                                @for (meeting of getMeetingsSorted(committee); track meeting) {
+                                    <os-committee-meeting-preview
+                                        class="meeting-preview-card"
+                                        [committee]="committee"
+                                        [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
+                                        [meeting]="meeting"
+                                    ></os-committee-meeting-preview>
+                                }
+                            </div>
+                        </mat-tab>
+                    }
+                </mat-tab-group>
+            </div>
         </mat-card-content>
     </mat-card>
-    <!-- Meetings -->
-    <div>
-        @if (!getMeetingsSorted(committee).length) {
-            <mat-card class="os-card">
-                <mat-card-content>
-                    {{ 'No meetings available' | translate }}
-                </mat-card-content>
-            </mat-card>
-        }
-        @for (meeting of getMeetingsSorted(committee); track meeting) {
-            <os-committee-meeting-preview
-                class="meeting-preview-card"
-                [committee]="committee"
-                [isCMAndRequireDuplicateFrom]="isCMandRequireDuplicateFrom()"
-                [meeting]="meeting"
-            ></os-committee-meeting-preview>
-        }
-    </div>
 }
 
 <mat-menu #committeeMenu="matMenu">
     <ng-template matMenuContent>
         @if (currentCommitteeObservable | async; as committee) {
             <a
-                *osOmlPerms="OML.can_manage_organization"
+                *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true"
                 data-cy="committeeEditAnchor"
                 mat-menu-item
                 [queryParams]="{ committeeId: committeeId }"
@@ -169,13 +290,35 @@
                     </span>
                 </a>
             }
-            <ng-container *osOmlPerms="OML.can_manage_organization">
+            <ng-container *osOmlPerms="OML.can_manage_organization; allowCommitteeAdmin: true">
                 <mat-divider />
-                <button class="red-warning-text" mat-menu-item (click)="onDeleteCommittee(committee)">
+                <button
+                    class="red-warning-text"
+                    mat-menu-item
+                    [disabled]="hasCommitteeChildren(committee)"
+                    (click)="onDeleteCommittee(committee)"
+                >
                     <mat-icon>delete</mat-icon>
                     <span>{{ 'Delete' | translate }}</span>
                 </button>
             </ng-container>
+        }
+    </ng-template>
+</mat-menu>
+
+<mat-menu #addMenu="matMenu">
+    <ng-template matMenuContent>
+        @if (currentCommitteeObservable | async; as committee) {
+            <a mat-menu-item type="button" [routerLink]="['meeting', 'create']">
+                <mat-icon>event_available</mat-icon>
+                <span>
+                    {{ 'New meeting' | translate }}
+                </span>
+            </a>
+            <a mat-menu-item [queryParams]="{ parentId: committeeId }" [routerLink]="['/', 'committees', 'create']">
+                <mat-icon>layers</mat-icon>
+                <span>{{ 'New committee' | translate }}</span>
+            </a>
         }
     </ng-template>
 </mat-menu>
