@@ -1,0 +1,114 @@
+@use 'src/assets/styles/tables.scss';
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.align-right {
+    align-items: end;
+}
+
+.align-left {
+    align-items: start;
+}
+
+.groups-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.border-grid {
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+    @media (max-width: 700px) {
+        grid-template-columns: 0% 100% 0%;
+    }
+}
+
+.header-grid {
+    display: grid;
+    grid-template-columns: 95% 5%;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+    grid-gap: 10px;
+    @media (max-width: 700px) {
+        grid-template-columns: 30% 40% 30%;
+        grid-gap: 5px;
+    }
+    @media (min-width: 1500px) {
+        grid-template-columns: 15% 70% 15%;
+        grid-gap: 10px;
+    }
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 20px;
+    border-top: 2px solid rgba(128, 128, 128, 0.2);
+    margin-bottom: 7px;
+}
+
+.center {
+    align-self: center;
+}
+
+.small-margin-top {
+    margin-top: 7px;
+}
+
+.color-blue {
+    color: var(--theme-primary-500);
+}
+
+.color-black {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.bold {
+    font-weight: 500;
+}
+
+.margin-left-large {
+    margin-left: 140px;
+}
+
+.margin-left-medium {
+    margin-left: 70px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+button {
+    border-radius: 0%;
+}
+
+.text-large-bold {
+    font-size: 19px;
+    font-weight: 500;
+}
+
+.text-small {
+    font-size: 12px;
+
+    &-bold {
+        font-weight: 500;
+    }
+}
+
+.text-medium-bold {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.text-medium {
+    font-size: 14px;
+}
