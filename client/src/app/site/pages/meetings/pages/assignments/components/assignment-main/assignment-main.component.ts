@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -18,10 +18,7 @@ import {
 })
 export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
     private _currentAssignmentId: Id | null = null;
-
-    public constructor(private sequentialNumberMapping: SequentialNumberMappingService) {
-        super();
-    }
+    private sequentialNumberMapping = inject(SequentialNumberMappingService);
 
     protected override onShouldCreateModelRequests(params: any, meetingId: any): void {
         if (meetingId) {
