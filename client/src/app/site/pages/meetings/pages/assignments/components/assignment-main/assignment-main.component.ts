@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
-import { getAssignmentSubscriptionConfig } from '../../assignments.subscription';
+import { SequentialNumberMappingService } from '../../../../services/sequential-number-mapping.service';
+import {
+    ASSIGNMENT_LIST_SUBSCRIPTION,
+    getAssignmentDetailSubscriptionConfig,
+    getAssignmentSubscriptionConfig
+} from '../../assignments.subscription';
 
 @Component({
     selector: `os-assignment-main`,
@@ -11,8 +16,58 @@ import { getAssignmentSubscriptionConfig } from '../../assignments.subscription'
     styleUrls: [`./assignment-main.component.scss`],
     standalone: false
 })
-export class AssignmentMainComponent extends BaseMeetingModelRequestHandler {
-    protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {
-        return [getAssignmentSubscriptionConfig(id)];
+export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
+    private _currentAssignmentId: Id | null = null;
+
+    public constructor(private sequentialNumberMapping: SequentialNumberMappingService) {
+        super();
+    }
+
+    protected override onShouldCreateModelRequests(params: any, meetingId: any): void {
+        if (meetingId) {
+            if (+params[`id`]) {
+                this.loadAssignmentDetail(+params[`id`], +params[`meetingId`]);
+            } else {
+                this.loadAssignmentList(+params[`meetingId`]);
+            }
+        }
+    }
+
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (
+            params[`id`] !== oldParams[`id`] ||
+            (+params[`meetingId`] && params[`meetingId`] !== oldParams[`meetingId`])
+        ) {
+            if (+params[`id`]) {
+                this.loadAssignmentDetail(+params[`id`], +params[`meetingId`]);
+            } else {
+                this.loadAssignmentList(+params[`meetingId`]);
+            }
+        }
+    }
+
+    private loadAssignmentDetail(sNr: Id, meetingId: Id): void {
+        this.sequentialNumberMapping
+            .getIdBySequentialNumber({
+                collection: Assignment.COLLECTION,
+                meetingId,
+                sequentialNumber: sNr
+            })
+            .then(id => {
+                if (id && this._currentAssignmentId !== id) {
+                    this._currentAssignmentId = id;
+                    this.updateSubscribeTo(getAssignmentDetailSubscriptionConfig(this._currentAssignmentId), {
+                        hideWhenDestroyed: true
+                    });
+                }
+            });
+    }
+
+    private async loadAssignmentList(meetingId: number): Promise<void> {
+        try {
+            await this.modelRequestService.waitSubscriptionReady(ASSIGNMENT_LIST_SUBSCRIPTION, 500);
+        } catch (e) {
+            await this.updateSubscribeTo(getAssignmentSubscriptionConfig(meetingId));
+        }
     }
 }
