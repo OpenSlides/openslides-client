@@ -121,4 +121,13 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
             })
         ).to;
     }
+
+    public isChanged(para_from: number, para_to: number): boolean {
+        for (const change of this.changesForDiffMode) {
+            if (para_from <= change.getLineFrom() && para_to >= change.getLineTo()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

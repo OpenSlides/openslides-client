@@ -1,7 +1,9 @@
+import { _ } from '@ngx-translate/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { CountdownData } from 'src/app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
 import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
@@ -11,6 +13,54 @@ import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
+
+export interface SpeakerSpeechStateData {
+    speech_state: SpeechState;
+    answer: boolean;
+}
+
+export function getSpeakerVerboseState(speaker: SpeakerSpeechStateData): string {
+    switch (speaker.speech_state) {
+        case SpeechState.INTERPOSED_QUESTION:
+            if (speaker.answer) {
+                return _(`Answer to interposed question`);
+            }
+            return _(`Interposed question`);
+        case SpeechState.INTERVENTION:
+            if (speaker.answer) {
+                return _(`Answer to intervention`);
+            }
+            return _(`Intervention`);
+        case SpeechState.PRO:
+            return _(`Forspeech`);
+        case SpeechState.CONTRA:
+            return _(`Counter speech`);
+        case SpeechState.CONTRIBUTION:
+            return _(`Contribution`);
+    }
+}
+
+export function getSpeakerStateIcon(speaker: SpeakerSpeechStateData): string {
+    switch (speaker.speech_state) {
+        case SpeechState.INTERPOSED_QUESTION:
+            return `contact_support`;
+        case SpeechState.INTERVENTION:
+            return `feedback`;
+        case SpeechState.PRO:
+            return `add_circle`;
+        case SpeechState.CONTRA:
+            return `remove_circle`;
+        case SpeechState.CONTRIBUTION:
+            return `star`;
+    }
+}
+
+export enum SpeechWaitingState {
+    WAITING = `waiting`,
+    STARTED = `started`,
+    FINISHED = `finished`
+}
+
 /**
  * Provides "safe" access to a speaker with all it's components
  */
@@ -37,6 +87,22 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             return SpeakerState.CURRENT;
         } else {
             return SpeakerState.FINISHED;
+        }
+    }
+
+    public get speechStateStr(): string {
+        const speechState = this.speaker.speech_state;
+        switch (speechState) {
+            case SpeechState.INTERPOSED_QUESTION:
+                return _(`Interposed question`);
+            case SpeechState.INTERVENTION:
+                return _(`Intervention`);
+            case SpeechState.CONTRIBUTION:
+                return _(`Contribution`);
+            case SpeechState.CONTRA:
+                return _(`Contra`);
+            case SpeechState.PRO:
+                return _(`Pro`);
         }
     }
 
@@ -158,8 +224,22 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             : null;
     }
 
-    public get hasSpoken(): boolean {
-        return this.speaker.end_time ? true : false;
+    public get verboseState(): string {
+        return getSpeakerVerboseState(this);
+    }
+
+    public get stateIcon(): string {
+        return getSpeakerStateIcon(this);
+    }
+
+    public get hasSpoken(): SpeechWaitingState {
+        if (this.speaker.begin_time) {
+            if (this.speaker.end_time) {
+                return SpeechWaitingState.FINISHED;
+            }
+            return SpeechWaitingState.STARTED;
+        }
+        return SpeechWaitingState.WAITING;
     }
 
     public getBeginTimeAsDate(): Date | null {
@@ -168,6 +248,31 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
 
     public getEndTimeAsDate(): Date | null {
         return this.speaker.end_time ? new Date(this.speaker.end_time * 1000) : null;
+    }
+
+    public getCountupData(): CountdownData {
+        const total_pause = this.total_pause || 0;
+        const end = this.pause_time || this.end_time || 0;
+        return {
+            running: this.isSpeaking,
+            default_time: 0,
+            countdown_time: this.isSpeaking
+                ? this.begin_time + total_pause
+                : (end - (this.begin_time + total_pause) || 0) * -1
+        };
+    }
+
+    public getCountdownData(default_time: number): CountdownData {
+        const total_pause = this.total_pause || 0;
+        const end = this.pause_time || this.end_time || 0;
+        const countdown_time = this.isSpeaking
+            ? this.begin_time + total_pause + default_time
+            : (end - (this.begin_time + total_pause + default_time)) * -1;
+        return {
+            running: this.isSpeaking,
+            default_time,
+            countdown_time: this.begin_time ? countdown_time : default_time
+        };
     }
 }
 interface ISpeakerRelations {

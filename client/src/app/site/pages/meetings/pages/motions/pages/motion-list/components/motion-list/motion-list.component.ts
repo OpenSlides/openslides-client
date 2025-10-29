@@ -146,6 +146,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         this.motionService.forwardingMeetingsAvailable().then(forwardingAvailable => {
             this._forwardingAvailable = forwardingAvailable;
         });
+        this.storage.set('motion-navigation-last', 'motion-list');
     }
 
     /**

@@ -37,6 +37,10 @@
         }
     }
 
+    .select-speaker-button-design {
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+    }
+
     .accentuated-background,
     .accentuated-background button {
         background-color: if(

@@ -1,6 +1,6 @@
 @if (isEditMode) {
     <form [formGroup]="contentForm">
-        <os-editor formControlName="modified_final_version" required [hidden]="!isEditMode"></os-editor>
+        <os-motion-editor formControlName="modified_final_version" required [hidden]="!isEditMode"></os-motion-editor>
         @if (
             contentForm.get('modified_final_version')?.invalid &&
             (contentForm.get('modified_final_version')?.dirty || contentForm.get('modified_final_version')?.touched)

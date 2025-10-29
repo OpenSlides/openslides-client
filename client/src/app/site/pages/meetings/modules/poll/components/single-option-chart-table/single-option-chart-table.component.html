@@ -1,8 +1,20 @@
 @if (poll) {
-    <div [ngClass]="{ 'result-wrapper': true, 'result-wrapper-additional': iconSize !== 'medium' }">
-        <table class="result-table">
-            <tbody [ngClass]="textSizeClass">
-                @if (shouldShowHead) {
+    <div
+        [ngClass]="{
+            'result-wrapper': true,
+            'result-wrapper-additional': iconSize !== 'medium',
+            'extra-grid-normal': !inSlide,
+            'extra-grid-slide': inSlide
+        }"
+    >
+        <table class="result-table" [ngClass]="{ margins: iconSize === 'gigantic' }">
+            <tbody
+                [class.column-padding-width-slide]="inSlide"
+                [class.percent-column-width-gigantic]="!inSlide && iconSize === 'gigantic'"
+                [class.percent-column-width-large]="!inSlide && iconSize === 'large'"
+                [ngClass]="textSizeClass"
+            >
+                @if (shouldShowHead && !inSlide) {
                     <tr>
                         <th class="left-header">
                             @if (title) {
@@ -14,15 +26,16 @@
                 }
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
-                        <tr [ngClass]="row.votingOption">
-                            <td>
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                            <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                        <div [class.text-big-bold]="inSlide">
+                                            {{ row.votingOption | pollKeyVerbose | translate }}
+                                        </div>
                                     </os-icon-container>
-                                }
-                                @if (!row.value[0].icon) {
-                                    <span>
+                                } @else {
+                                    <span [class.text-big-bold]="inSlide">
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </span>
                                 }
@@ -31,7 +44,11 @@
                                 <div class="result-cell-definition">
                                     @if (row.value[0].showPercent) {
                                         <span>
-                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                            @if (inSlide) {
+                                                {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                            } @else {
+                                                {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                            }
                                         </span>
                                     }
                                 </div>
@@ -39,22 +56,27 @@
                             <td>
                                 <div class="result-cell-definition">
                                     <span>
-                                        {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        @if (inSlide) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
+                                        } @else {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        }
                                     </span>
                                 </div>
                             </td>
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class]="row.votingOption">
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <!-- YNA/Valid etc -->
-                            <td>
+                            <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
-                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                        <div [class.text-big-bold]="inSlide">
+                                            {{ row.votingOption | pollKeyVerbose | translate }}
+                                        </div>
                                     </os-icon-container>
-                                }
-                                @if (!row.value[0].icon) {
+                                } @else {
                                     <span>
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </span>
@@ -62,18 +84,33 @@
                             </td>
                             <!-- Percent numbers -->
                             <td class="result-cell-definition">
-                                @if (
-                                    row.value[0].showPercent ||
-                                    (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
-                                ) {
-                                    <span>
-                                        {{ row.value[0].amount! | pollPercentBase: poll }}
-                                    </span>
+                                @if (inSlide) {
+                                    {{ row.value[0].amount | pollParseNumber }}
+                                } @else {
+                                    @if (
+                                        row.value[0].showPercent ||
+                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                    ) {
+                                        <span>
+                                            {{ row.value[0].amount! | pollPercentBase: poll }}
+                                        </span>
+                                    }
                                 }
                             </td>
                             <!-- Voices -->
                             <td class="result-cell-definition">
-                                {{ row.value[0].amount | pollParseNumber }}
+                                @if (inSlide) {
+                                    @if (
+                                        row.value[0].showPercent ||
+                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                    ) {
+                                        <span>
+                                            {{ row.value[0].amount! | pollPercentBaseAlt: poll }}
+                                        </span>
+                                    }
+                                } @else {
+                                    {{ row.value[0].amount | pollParseNumber }}
+                                }
                             </td>
                         </tr>
                     }
@@ -106,7 +143,7 @@
         </table>
         <!-- Chart -->
         @if (shouldShowChart) {
-            <div class="doughnut-chart">
+            <div [class.doughnut-chart-normal]="!inSlide" [class.doughnut-chart-slide]="inSlide">
                 <os-chart type="doughnut" [data]="chartData"></os-chart>
             </div>
         }

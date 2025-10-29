@@ -69,7 +69,7 @@ function getMeetingCreateFollowConfig(
 ): any {
     return {
         idField: idField,
-        follow: [{ idField: `committee_id`, fieldset: `name` }],
-        fieldset: [`name`]
+        fieldset: [`name`],
+        follow: [{ idField: `committee_id`, fieldset: `name` }]
     };
 }
