@@ -2,6 +2,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { environment } from 'src/environments/environment';
 
 export class WorkerHttpAuth {
+    private serverTimeOffset = 0;
     private static subscriptions = new Map<string, (token: string, newUserId?: Id) => void>();
     private static workerHttpAuth: WorkerHttpAuth | null = null;
 
@@ -111,6 +112,14 @@ export class WorkerHttpAuth {
                 });
                 const json = await res.json();
                 if (json?.success) {
+                    const date = new Date(res.headers.get(`Date`));
+                    if (res.headers.get(`Date`) && !isNaN(date.valueOf())) {
+                        const clientTime = date.getTime();
+                        this.serverTimeOffset = Math.floor(Date.now() - clientTime);
+                    } else {
+                        this.serverTimeOffset = 0;
+                    }
+
                     this.setAuthToken(res.headers.get(`authentication`) || null);
                 } else if (!res.ok && json?.message === `Not signed in`) {
                     this.setAuthToken(null);
@@ -135,7 +144,7 @@ export class WorkerHttpAuth {
         if (this.authToken) {
             const payload = atob(this.authToken.split(`.`)[1]);
             const token = JSON.parse(payload);
-            const issuedAt = new Date().getTime(); // in ms
+            const issuedAt = Date.now() - this.serverTimeOffset; // in ms
             const expiresAt = token.exp; // in sec
             this.currentUserId = token.userId;
             this._authTokenRefreshTimeout = setTimeout(
