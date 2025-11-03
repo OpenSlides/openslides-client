@@ -121,7 +121,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.3.0",
-    "fetch-mock": "^12.5.5",
+    "fetch-mock": "^12.6.0",
     "jasmine-core": "^5.12.0",
     "js-yaml": "^4.1.0",
     "karma": "~6.4.4",
