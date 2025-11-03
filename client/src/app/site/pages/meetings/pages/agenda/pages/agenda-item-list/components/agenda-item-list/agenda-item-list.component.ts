@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
@@ -16,7 +17,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -28,7 +28,6 @@ import { TagControllerService } from '../../../../../motions/modules/tags/servic
 import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
-import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
 import { AgendaItemMultiselectService } from '../../services/agenda-item-multiselect.service/agenda-item-multiselect.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
@@ -97,7 +96,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private dialog: MatDialog,
         public vp: ViewPortService,
         public durationService: DurationService,
-        private agendaItemExportService: AgendaItemExportService,
         public filterService: AgendaItemFilterService,
         private topicRepo: TopicControllerService,
         private meetingRepo: MeetingControllerService,
@@ -312,29 +310,25 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     /**
-     * Export all items as CSV
+     * Triggers the export page of one agenda item
      */
-    public csvExportItemList(): void {
-        this.modelRequestService
-            .fetch({
-                modelRequest: {
-                    viewModelCtor: ViewMeeting,
-                    ids: [this.activeMeetingId],
-                    follow: [{ idField: `topic_ids`, fieldset: [`text`] }]
-                },
-                subscriptionName: `topic_list_texts`
-            })
-            .then(() => {
-                this.agendaItemExportService.exportAsCsv(this.listComponent.source);
-            });
+    public exportAgendaItem(itemId: Id): void {
+        this.componentServiceCollector.router.navigate([`agenda-export`], {
+            relativeTo: this.route,
+            queryParams: { 'agenda-items': itemId }
+        });
     }
 
     /**
-     * Triggers the export of the agenda. Currently filtered items and 'hidden'
-     * items will not be exported
+     * Triggers the export of the agenda.
      */
-    public onDownloadPdf(): void {
-        this.agendaItemExportService.exportAsPdf(this.listComponent.source);
+    public exportAgendaItems(): void {
+        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
+        const ids = agendaItems.map(item => item.id);
+        this.componentServiceCollector.router.navigate([`agenda-export`], {
+            relativeTo: this.route,
+            queryParams: { 'agenda-items': ids }
+        });
     }
 
     /**

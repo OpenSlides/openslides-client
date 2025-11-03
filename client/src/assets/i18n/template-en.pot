@@ -1,3 +1,4 @@
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-extension-field/motion-extension-field.component.html
 msgid ""
 msgstr ""
 "mime-version: 1.0\n"
@@ -22,12 +23,6 @@ msgid "-Ä"
 msgstr ""
 
 msgid "100% base"
-msgstr ""
-
-msgid ""
-"<a href=\"https://openslides.com\">OpenSlides</a> is a free web based "
-"presentation and assembly system for visualizing and controlling agenda, "
-"motions and elections of an assembly."
 msgstr ""
 
 msgid "<unknown motion>"
@@ -175,9 +170,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Activates the extension field of the recommendation in this state, which can "
-"be filled with free text or extended with references to other motions or "
-"committees as desired."
+"Activates the extension field of the recommendation in this state, which "
+"can be filled with free text or extended with references to other motions "
+"or committees as desired."
 msgstr ""
 
 msgid "Active"
@@ -193,6 +188,10 @@ msgid "Active meetings"
 msgstr ""
 
 msgid "Add"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-entry/list-of-speakers-entry.component.html
+msgid "Add answer"
 msgstr ""
 
 msgid "Add me"
@@ -260,6 +259,10 @@ msgid ""
 msgstr ""
 
 msgid "Agenda"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/pages/agenda-export/components/agenda-export/agenda-export.component.html
+msgid "Agenda export"
 msgstr ""
 
 msgid "Agenda items are in process. Please wait ..."
@@ -336,8 +339,7 @@ msgstr ""
 msgid "Allow support"
 msgstr ""
 
-msgid ""
-"Allow to accumulate several votes on one candidate (\"comulative voting\")"
+msgid "Allow to accumulate several votes on one candidate (\"comulative voting\")"
 msgstr ""
 
 msgid "Allow users to set themselves as present"
@@ -382,6 +384,10 @@ msgstr ""
 msgid "Amount of meetings"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-blocks/services/motion-block-sort.service/motion-block-sort.service.ts
+msgid "Amount of motions"
+msgstr ""
+
 msgid "Amount of votes"
 msgstr ""
 
@@ -398,6 +404,14 @@ msgid "Anonymizing can only be done after finishing a poll."
 msgstr ""
 
 msgid "Anonymous"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Answer to interposed question"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.ts
+msgid "Answer to intervention"
 msgstr ""
 
 msgid "Applause interval in seconds"
@@ -435,8 +449,7 @@ msgstr ""
 msgid "Are you sure you want to activate this meeting?"
 msgstr ""
 
-msgid ""
-"Are you sure you want to add the following time onto every structure level?"
+msgid "Are you sure you want to add the following time onto every structure level?"
 msgstr ""
 
 msgid "Are you sure you want to anonymize all votes? This cannot be undone."
@@ -452,7 +465,8 @@ msgid "Are you sure you want to clear all speakers of all lists?"
 msgstr ""
 
 msgid ""
-"Are you sure you want to delete all next speakers from this list of speakers?"
+"Are you sure you want to delete all next speakers from this list of "
+"speakers?"
 msgstr ""
 
 msgid ""
@@ -478,8 +492,7 @@ msgstr ""
 msgid "Are you sure you want to delete all selected tags?"
 msgstr ""
 
-msgid ""
-"Are you sure you want to delete all speakers from this list of speakers?"
+msgid "Are you sure you want to delete all speakers from this list of speakers?"
 msgstr ""
 
 msgid "Are you sure you want to delete the editorial final version?"
@@ -669,12 +682,11 @@ msgstr ""
 
 msgid ""
 "Attention: Accounts will add to the default group of each meeting only. If "
-"another group is intended please use the 'Add to meetings' dialog in account "
-"detail view."
+"another group is intended please use the 'Add to meetings' dialog in "
+"account detail view."
 msgstr ""
 
-msgid ""
-"Attention: Existing home committees and external status will be overwritten."
+msgid "Attention: Existing home committees and external status will be overwritten."
 msgstr ""
 
 msgid "Attention: First enter the wifi data in [Settings > General]"
@@ -782,6 +794,10 @@ msgstr ""
 msgid "Bullet list"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Button text"
+msgstr ""
+
 msgid "CSV import"
 msgstr ""
 
@@ -848,8 +864,8 @@ msgstr ""
 
 msgid ""
 "Can create, modify and delete motions and votings, amendments and change "
-"recommendations, and edit the metadata of a motion. Including the management "
-"of categories, motion blocks, tags, workflows and comment fields."
+"recommendations, and edit the metadata of a motion. Including the "
+"management of categories, motion blocks, tags, workflows and comment fields."
 msgstr ""
 
 msgid ""
@@ -860,13 +876,17 @@ msgstr ""
 msgid ""
 "Can create, modify, delete chat groups and define permissions.\n"
 "\n"
-"Note: The chat menu item becomes visible to all participants, except admins, "
-"as soon as a chat has been created."
+"Note: The chat menu item becomes visible to all participants, except "
+"admins, as soon as a chat has been created."
 msgstr ""
 
 msgid ""
 "Can create, modify, delete participant datasets and administrate group "
 "permissions."
+msgstr ""
+
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can create, modify, start/stop and delete ballots."
 msgstr ""
 
 msgid "Can create, modify, start/stop and delete votings."
@@ -900,6 +920,10 @@ msgid ""
 msgstr ""
 
 msgid "Can manage agenda"
+msgstr ""
+
+#: app/src/app/domain/definitions/permission.config.ts
+msgid "Can manage ballots"
 msgstr ""
 
 msgid "Can manage elections"
@@ -1016,8 +1040,8 @@ msgid "Can see motions in internal state"
 msgstr ""
 
 msgid ""
-"Can see motions in the internal state that are limited in the workflow under "
-"Restrictions with the same description.\n"
+"Can see motions in the internal state that are limited in the workflow "
+"under Restrictions with the same description.\n"
 "\n"
 "Tip: Cross-check desired visibility of motions with test delegate account. "
 msgstr ""
@@ -1049,8 +1073,8 @@ msgid ""
 "Can see the History menu item with the history of processing timestamps for "
 "motions, elections and participants.\n"
 "\n"
-"Note: For privacy reasons, it is recommended to limit the rights to view the "
-"History significantly."
+"Note: For privacy reasons, it is recommended to limit the rights to view "
+"the History significantly."
 msgstr ""
 
 msgid "Can see the Home menu item."
@@ -1062,8 +1086,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Can see the Projector menu item and all projectors (in the Autopilot as well "
-"as in the Projector menu item)"
+"Can see the Projector menu item and all projectors (in the Autopilot as "
+"well as in the Projector menu item)"
 msgstr ""
 
 msgid ""
@@ -1093,8 +1117,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Can see the menu item Participants and therefore the following data from all "
-"participants:\n"
+"Can see the menu item Participants and therefore the following data from "
+"all participants:\n"
 "Personal data: Name, pronoun, gender.\n"
 "Meeting specific information: Structure level, Group, Participant number, "
 "About me, Presence status."
@@ -1197,9 +1221,6 @@ msgstr ""
 msgid "Change recommendation"
 msgstr ""
 
-msgid "Change recommendation - rejected"
-msgstr ""
-
 msgid "Change recommendations"
 msgstr ""
 
@@ -1251,8 +1272,7 @@ msgstr ""
 msgid "Choose 0 to disable Intervention."
 msgstr ""
 
-msgid ""
-"Choose 0 to disable speaking times widget for structure level countdowns."
+msgid "Choose 0 to disable speaking times widget for structure level countdowns."
 msgstr ""
 
 msgid "Choose 0 to disable the supporting system."
@@ -1274,9 +1294,6 @@ msgid "Chyron speaker, background color"
 msgstr ""
 
 msgid "Chyron speaker, font color"
-msgstr ""
-
-msgid "Classic"
 msgstr ""
 
 msgid "Clear"
@@ -1384,6 +1401,10 @@ msgstr ""
 msgid "Committee managers"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Committee name"
+msgstr ""
+
 msgid "Committees"
 msgstr ""
 
@@ -1427,6 +1448,10 @@ msgid "Continue livestream"
 msgstr ""
 
 msgid "Continuous text"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Contra"
 msgstr ""
 
 msgid "Contra speech"
@@ -1501,6 +1526,10 @@ msgstr ""
 msgid "Current speaker"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "Current speaker / structure level"
+msgstr ""
+
 msgid "Current speaker chyron"
 msgstr ""
 
@@ -1562,12 +1591,11 @@ msgid "Default line numbering"
 msgstr ""
 
 msgid ""
-"Default speaking time contingent for parliamentary groups (structure levels) "
-"in seconds"
+"Default speaking time contingent for parliamentary groups (structure "
+"levels) in seconds"
 msgstr ""
 
-msgid ""
-"Default text version for change recommendations and projection of motions"
+msgid "Default text version for change recommendations and projection of motions"
 msgstr ""
 
 msgid "Default visibility for new agenda items (except topics)"
@@ -1585,27 +1613,41 @@ msgstr ""
 msgid "Default voting type"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
 msgid ""
 "Defines for the selected state which groups have access:\n"
-"- If no option is selected, the motions in the selected state are visible to "
-"all; The prerequisite for this is group permission: [Can see motions].\n"
+"- If no option is selected, the motions in the selected state are visible "
+"to all; The prerequisite for this is group permission: [Can see motions].\n"
 "- Selecting one or more options restricts access to those groups for which "
 "the selected authorization option is defined under > [Participants] > "
-"[Groups]."
+"[Groups].\n"
+"\n"
+"Hint: Administrators always have full access."
 msgstr ""
 
 msgid "Defines the colour for the state button."
 msgstr ""
 
 msgid ""
-"Defines the maximum deflection. Entering zero will use the amount of present "
-"participants instead."
+"Defines the maximum deflection. Entering zero will use the amount of "
+"present participants instead."
 msgstr ""
 
 msgid "Defines the minimum deflection which is required to recognize applause."
 msgstr ""
 
 msgid "Defines the time in which applause amounts are add up."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Defines the wording of the button to change the state. Button is visible if "
+"the corresponding state is defined in \"Submitter may set state to\".\n"
+"\n"
+"Example: \n"
+"1. State \"in progress\": \"Submitter may set state to\" = \"submitted\"\n"
+"2. State \"submitted\": \"Button text\" = \"Submit motion\"\n"
+"=> This enables a submit button in state \"in progress\"."
 msgstr ""
 
 msgid ""
@@ -1763,12 +1805,11 @@ msgstr ""
 msgid "Duration of requests to speak"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
 msgid ""
-"During non-nominal voting OpenSlides does NOT store the individual user ID "
-"of the voter. This in no way means that a non-nominal vote is completely "
-"anonymous and secure. The votes cannot track their individual votes after "
-"the data has been submitted. The validity of the data cannot always be "
-"guaranteed."
+"During non-nominal voting, OpenSlides does NOT store the individual user "
+"IDs of voters in connection with the votes cast. Once the data has been "
+"transmitted, voters can no longer track or check their own votes."
 msgstr ""
 
 msgid "Edit"
@@ -1930,8 +1971,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Enables public access to this meeting without login data. Permissions can be "
-"set after activation in the new group 'Public'."
+"Enables public access to this meeting without login data. Permissions can "
+"be set after activation in the new group 'Public'."
 msgstr ""
 
 msgid "Enables the ability to create votings for motions in this state."
@@ -1997,7 +2038,8 @@ msgid "Enter duration in seconds. Choose 0 to disable warning color."
 msgstr ""
 
 msgid ""
-"Enter number of the next shown speakers. Choose -1 to show all next speakers."
+"Enter number of the next shown speakers. Choose -1 to show all next "
+"speakers."
 msgstr ""
 
 msgid "Enter participant number"
@@ -2019,6 +2061,10 @@ msgid "Entitled users"
 msgstr ""
 
 msgid "Error"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts
+msgid "Error during PDF creation of agenda item:"
 msgstr ""
 
 msgid "Error during PDF creation of election:"
@@ -2170,8 +2216,7 @@ msgid ""
 "                        3. Enter minimum number (see next field)"
 msgstr ""
 
-msgid ""
-"For large instances this may block the server to the point of unusability"
+msgid "For large instances this may block the server to the point of unusability"
 msgstr ""
 
 msgid "Foreground color"
@@ -2187,6 +2232,10 @@ msgid "Forspeech"
 msgstr ""
 
 msgid "Forward"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Forward attachments"
 msgstr ""
 
 msgid "Forward motions"
@@ -2433,7 +2482,8 @@ msgid ""
 "IMPORTANT: The sender address (noreply@openslides.com) is defined in the "
 "OpenSlides server settings and cannot be changed here.\n"
 "                            To receive replies you have to enter a reply "
-"address in the next field. Please test the email dispatch in case of changes!"
+"address in the next field. Please test the email dispatch in case of "
+"changes!"
 msgstr ""
 
 msgid "Identical motions"
@@ -2683,17 +2733,20 @@ msgstr ""
 msgid "Is speaker"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-speaker-list/services/participant-speaker-list-filter.service/participant-speaker-list-filter.service.ts
+msgid "Is speaking"
+msgstr ""
+
 msgid "Is submitter"
 msgstr ""
 
-msgid ""
-"It is not allowed to delete countdowns used for list of speakers or polls"
+msgid "It is not allowed to delete countdowns used for list of speakers or polls"
 msgstr ""
 
 msgid ""
-"It is not allowed to set the permisson 'Can manage participants' to a locked "
-"out user. Please unset the lockout state before adding a group with this "
-"permission."
+"It is not allowed to set the permisson 'Can manage participants' to a "
+"locked out user. Please unset the lockout state before adding a group with "
+"this permission."
 msgstr ""
 
 msgid "It's a draw!"
@@ -2772,6 +2825,14 @@ msgid "Level indicator"
 msgstr ""
 
 msgid "Light mode"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITH motion manage permission"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITHOUT motion manage permission"
 msgstr ""
 
 msgid "Limit of active accounts"
@@ -2867,8 +2928,11 @@ msgstr ""
 msgid "Main motion and line number"
 msgstr ""
 
-msgid ""
-"Make background color from meta information box on the projector transparent"
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-entry/list-of-speakers-entry.component.html
+msgid "Main speaker"
+msgstr ""
+
+msgid "Make background color from meta information box on the projector transparent"
 msgstr ""
 
 msgid "Mandates switched sucessfully!"
@@ -2985,9 +3049,6 @@ msgid "Moderation note"
 msgstr ""
 
 msgid "Moderation-Note"
-msgstr ""
-
-msgid "Modern"
 msgstr ""
 
 msgid "Modify design"
@@ -3152,6 +3213,10 @@ msgstr ""
 msgid "New amendment"
 msgstr ""
 
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.ts
+msgid "New and old passwords are identical!"
+msgstr ""
+
 msgid "New ballot"
 msgstr ""
 
@@ -3210,6 +3275,10 @@ msgid "New participant"
 msgstr ""
 
 msgid "New password"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-detail/components/topic-detail/topic-detail.component.html
+msgid "New poll"
 msgstr ""
 
 msgid "New projector"
@@ -3347,8 +3416,11 @@ msgstr ""
 msgid "Not locked out"
 msgstr ""
 
-msgid ""
-"Note, that the default password will be changed to the new generated one."
+#: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
+msgid "Note on secret voting"
+msgstr ""
+
+msgid "Note, that the default password will be changed to the new generated one."
 msgstr ""
 
 msgid "Note: Amendments cannot be forwarded without their parent motion."
@@ -3475,6 +3547,10 @@ msgstr ""
 msgid "Only available for nominal voting"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Only for committee admins"
+msgstr ""
+
 msgid "Only for internal notes."
 msgstr ""
 
@@ -3494,6 +3570,10 @@ msgid "Only time"
 msgstr ""
 
 msgid "Only traffic light"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/definitions/index.ts
+msgid "Open"
 msgstr ""
 
 msgid "Open Jitsi in new tab"
@@ -3571,6 +3651,14 @@ msgid "Origin motion deleted"
 msgstr ""
 
 msgid "Original"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Original identifier"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Original submitter"
 msgstr ""
 
 msgid "Original version"
@@ -3889,6 +3977,10 @@ msgstr ""
 msgid "Private key of Service Provider (SP)"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Pro"
+msgstr ""
+
 msgid "Process handling"
 msgstr ""
 
@@ -4148,7 +4240,8 @@ msgid "Restart livestream"
 msgstr ""
 
 msgid ""
-"Restrict delegation principals from adding themselves to the list of speakers"
+"Restrict delegation principals from adding themselves to the list of "
+"speakers"
 msgstr ""
 
 msgid "Restrict delegation principals from creating motions/amendments"
@@ -4229,13 +4322,7 @@ msgstr ""
 msgid "Search player"
 msgstr ""
 
-msgid "Searching for candidates"
-msgstr ""
-
 msgid "Searching for players ..."
-msgstr ""
-
-msgid "Secret voting can not be guaranteed"
 msgstr ""
 
 msgid "Select"
@@ -4505,8 +4592,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Shows if livestream is not started. Recommended image format: 500x200px, PNG "
-"or JPG"
+"Shows if livestream is not started. Recommended image format: 500x200px, "
+"PNG or JPG"
 msgstr ""
 
 msgid ""
@@ -4803,8 +4890,8 @@ msgstr ""
 msgid ""
 "The import returned warnings. This does not mean that it failed, but some "
 "data may have been imported differently. Usually the warnings will be the "
-"same as during the preview, but as there is a possibility that new ones have "
-"arisen, the relevant rows will be displayed below."
+"same as during the preview, but as there is a possibility that new ones "
+"have arisen, the relevant rows will be displayed below."
 msgstr ""
 
 msgid "The import was successful."
@@ -4825,6 +4912,10 @@ msgid ""
 msgstr ""
 
 msgid "The number has to be greater than 0."
+msgstr ""
+
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "The organizer is responsible for the content under press law."
 msgstr ""
 
 msgid "The parent motion is not available."
@@ -4856,12 +4947,10 @@ msgstr ""
 msgid "The title is required"
 msgstr ""
 
-msgid ""
-"The user %user% has no email, so the invitation email could not be sent."
+msgid "The user %user% has no email, so the invitation email could not be sent."
 msgstr ""
 
-msgid ""
-"The users %user% have no email, so the invitation emails could not be sent."
+msgid "The users %user% have no email, so the invitation emails could not be sent."
 msgstr ""
 
 msgid "There are not enough options."
@@ -4903,8 +4992,8 @@ msgid "This account has relations to meetings or committees"
 msgstr ""
 
 msgid ""
-"This account is not linked as candidate, submitter or speaker in any meeting "
-"and is not manager of any committee"
+"This account is not linked as candidate, submitter or speaker in any "
+"meeting and is not manager of any committee"
 msgstr ""
 
 msgid "This action will remove you from one or more groups."
@@ -4967,13 +5056,12 @@ msgid "This prefix will be set if you run the automatic agenda numbering."
 msgstr ""
 
 msgid ""
-"This projector is currently internal. Selecting such projectors as reference "
-"projectors will automatically set them to visible. Do you really want to do "
-"this?"
+"This projector is currently internal. Selecting such projectors as "
+"reference projectors will automatically set them to visible. Do you really "
+"want to do this?"
 msgstr ""
 
-msgid ""
-"This will add or remove the following groups for all selected participants:"
+msgid "This will add or remove the following groups for all selected participants:"
 msgstr ""
 
 msgid ""
@@ -4981,12 +5069,10 @@ msgid ""
 "participants:"
 msgstr ""
 
-msgid ""
-"This will add or remove the following submitters for all selected motions:"
+msgid "This will add or remove the following submitters for all selected motions:"
 msgstr ""
 
-msgid ""
-"This will add or remove the following tags for all selected agenda items:"
+msgid "This will add or remove the following tags for all selected agenda items:"
 msgstr ""
 
 msgid "This will add or remove the following tags for all selected motions:"
@@ -4996,7 +5082,8 @@ msgid "This will add or remove the selected accounts to following meetings:"
 msgstr ""
 
 msgid ""
-"This will add or remove the selected accounts to the selected home committee:"
+"This will add or remove the selected accounts to the selected home "
+"committee:"
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -5340,10 +5427,10 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Warning: Amendments or change recommendations exist for this motion. Editing "
-"this text will likely impact them negatively. Particularily, amendments "
-"might become unusable if the paragraph they affect is deleted, or change "
-"recommendations might lose their reference line completely."
+"Warning: Amendments or change recommendations exist for this motion. "
+"Editing this text will likely impact them negatively. Particularily, "
+"amendments might become unusable if the paragraph they affect is deleted, "
+"or change recommendations might lose their reference line completely."
 msgstr ""
 
 msgid ""
@@ -5351,8 +5438,7 @@ msgid ""
 "deleted as well. Do you want to delete anyway?"
 msgstr ""
 
-msgid ""
-"Warning: Data loss is possible because accounts are in the same meeting."
+msgid "Warning: Data loss is possible because accounts are in the same meeting."
 msgstr ""
 
 msgid "Warning: This projector will be set to visible"
@@ -5368,6 +5454,19 @@ msgid "Welcome to OpenSlides"
 msgstr ""
 
 msgid "What is new?"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
+msgid ""
+"When hosted by Intevation GmbH, secret, legally compliant voting is ensured "
+"by organizational measures (see legal opinion)."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
+msgid ""
+"When self-hosted, OpenSlides cannot guarantee that the requirements for "
+"legally compliant, secret voting are met. Responsibility for this lies with "
+"the server operator."
 msgstr ""
 
 msgid "Which version?"
@@ -5391,6 +5490,10 @@ msgid ""
 msgstr ""
 
 msgid "Withdraw point of order"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
+msgid "Without identifier"
 msgstr ""
 
 msgid "Workflow"
@@ -5436,8 +5539,8 @@ msgid "Yes/No/Abstain per list"
 msgstr ""
 
 msgid ""
-"You are moving a file from a public folder into an not published folder. The "
-"file will not be accessible in meetings afterwards."
+"You are moving a file from a public folder into an not published folder. "
+"The file will not be accessible in meetings afterwards."
 msgstr ""
 
 msgid ""
@@ -5476,22 +5579,21 @@ msgid "You cannot delete the last workflow of a meeting."
 msgstr ""
 
 msgid ""
-"You cannot delete the workflow as long as it is selected as default workflow "
-"for new amendments in the settings. Please set another workflow as default "
-"in the settings and try to delete the workflow again."
+"You cannot delete the workflow as long as it is selected as default "
+"workflow for new amendments in the settings. Please set another workflow as "
+"default in the settings and try to delete the workflow again."
 msgstr ""
 
 msgid ""
-"You cannot delete the workflow as long as it is selected as default workflow "
-"for new motions in the settings. Please set another workflow as default in "
-"the settings and try to delete the workflow again."
+"You cannot delete the workflow as long as it is selected as default "
+"workflow for new motions in the settings. Please set another workflow as "
+"default in the settings and try to delete the workflow again."
 msgstr ""
 
 msgid "You cannot delete yourself."
 msgstr ""
 
-msgid ""
-"You cannot enter this meeting because you are not assigned to any group."
+msgid "You cannot enter this meeting because you are not assigned to any group."
 msgstr ""
 
 msgid "You cannot vote since your vote right is delegated."
@@ -5629,9 +5731,6 @@ msgid "change recommendation(s) refer to a nonexistent line number."
 msgstr ""
 
 msgid "change recommendations"
-msgstr ""
-
-msgid "committee name"
 msgstr ""
 
 msgid "committee-example"
@@ -5829,12 +5928,6 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-msgid "original identifier"
-msgstr ""
-
-msgid "original submitter"
-msgstr ""
-
 msgid "outside"
 msgstr ""
 
@@ -5883,6 +5976,10 @@ msgstr ""
 msgid "short running"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "single-line"
+msgstr ""
+
 msgid "started"
 msgstr ""
 
@@ -5901,7 +5998,8 @@ msgstr ""
 msgid "today"
 msgstr ""
 
-msgid "total"
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
+msgid "two-line"
 msgstr ""
 
 msgid "undocumented"
@@ -5937,7 +6035,8 @@ msgstr ""
 msgid "with"
 msgstr ""
 
-msgid "without identifier"
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service.ts
+msgid "without structure level"
 msgstr ""
 
 msgid "yellow"
@@ -5950,113 +6049,4 @@ msgid "{{amount}} of them will be saved with 'unknown' speaker"
 msgstr ""
 
 msgid "{{amount}} will be saved"
-msgstr ""
-
-msgid "Acceptance"
-msgstr ""
-
-msgid "Adjournment"
-msgstr ""
-
-msgid "Admin"
-msgstr ""
-
-msgid "Complex Workflow"
-msgstr ""
-
-#, python-brace-format
-msgid ""
-"Dear {name},\n"
-"\n"
-"this is your personal OpenSlides login:\n"
-"\n"
-"{url}\n"
-"Username: {username}\n"
-"Password: {password}\n"
-"\n"
-"\n"
-"This email was generated automatically."
-msgstr ""
-
-msgid "Default projector"
-msgstr ""
-
-msgid "Delegates"
-msgstr ""
-
-msgid "No concernment"
-msgstr ""
-
-msgid "No decision"
-msgstr ""
-
-msgid "Presentation and assembly system"
-msgstr ""
-
-msgid "Referral to"
-msgstr ""
-
-msgid "Rejection"
-msgstr ""
-
-msgid "Reset your OpenSlides password"
-msgstr ""
-
-msgid "Simple Workflow"
-msgstr ""
-
-msgid "Space for your welcome text."
-msgstr ""
-
-msgid "Speaking time"
-msgstr ""
-
-msgid "Staff"
-msgstr ""
-
-#, python-brace-format
-msgid ""
-"You are receiving this email because you have requested a new password for "
-"your OpenSlides account.\n"
-"\n"
-"Please open the following link and choose a new password:\n"
-"{url}/login/forget-password-confirm?user_id={user_id}&token={token}\n"
-"\n"
-"The link will be valid for 10 minutes."
-msgstr ""
-
-msgid "accepted"
-msgstr ""
-
-msgid "adjourned"
-msgstr ""
-
-msgid "in progress"
-msgstr ""
-
-msgid "name"
-msgstr ""
-
-msgid "not concerned"
-msgstr ""
-
-msgid "not decided"
-msgstr ""
-
-msgid "not permitted"
-msgstr ""
-
-msgid "permitted"
-msgstr ""
-
-msgid "referred to"
-msgstr ""
-
-msgid "rejected"
-msgstr ""
-
-msgid "submitted"
-msgstr ""
-
-msgid "withdrawn"
 msgstr ""

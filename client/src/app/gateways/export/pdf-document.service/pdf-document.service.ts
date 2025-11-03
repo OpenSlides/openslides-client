@@ -74,6 +74,7 @@ export interface TocLineDefinition {
     title: string;
     pageReference: string;
     style?: StyleType;
+    fillColor?: string;
 }
 
 export interface TocTableDefinition {
@@ -464,22 +465,25 @@ export class PdfDocumentService {
      * @returns A line for the toc
      */
     public createTocLine(
-        { identifier, title, pageReference, style = StyleType.DEFAULT }: TocLineDefinition,
+        { identifier, title, pageReference, style = StyleType.DEFAULT, fillColor = `` }: TocLineDefinition,
         ...subTitle: Content[]
     ): Content[] {
         return [
             {
                 text: identifier,
+                fillColor,
                 style
             },
             {
                 text: [title, ...subTitle],
-                style: `tocEntry`
+                style: `tocEntry`,
+                fillColor
             },
             {
                 pageReference,
                 style: `tocEntry`,
-                alignment: `right`
+                alignment: `right`,
+                fillColor
             }
         ];
     }

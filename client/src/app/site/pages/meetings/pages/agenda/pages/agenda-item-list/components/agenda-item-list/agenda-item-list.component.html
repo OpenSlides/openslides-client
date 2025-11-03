@@ -158,15 +158,10 @@
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
-            <!-- CSV export -->
-            <button *osPerms="permission.agendaItemCanManage" mat-menu-item (click)="csvExportItemList()">
+            <!-- PDF/CSV export -->
+            <button mat-menu-item (click)="exportAgendaItems()">
                 <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
-            <!-- PDF export -->
-            <button mat-menu-item (click)="onDownloadPdf()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as PDF' | translate }}</span>
+                <span>{{ 'Export' | translate }}</span>
             </button>
             <!-- Import -->
             <button
@@ -252,6 +247,11 @@
                     <span>{{ 'Set hidden' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
+                <!-- PDF/CSV export -->
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAgendaItems()">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export' | translate }}</span>
+                </button>
                 <!-- Duplicate items -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="duplicateMultipleTopics(selectedRows)">
                     <mat-icon>file_copy</mat-icon>
@@ -294,6 +294,12 @@
             <button mat-menu-item (click)="onPlusButton(item.id)">
                 <mat-icon>add_circle</mat-icon>
                 <span>{{ 'Create subitem' | translate }}</span>
+            </button>
+
+            <!-- PDF/CSV Export -->
+            <button mat-menu-item (click)="exportAgendaItem(item.id)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export' | translate }}</span>
             </button>
 
             <!-- Duplicate button -->

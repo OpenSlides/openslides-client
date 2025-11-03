@@ -24,38 +24,10 @@
                 </div>
             }
             <!-- Pro Speech -->
-            @if (data.data.speech_state === SpeechState.PRO) {
+            @if (data.data.speech_state) {
                 <div id="inner-type">
-                    <mat-icon inline>add_circle</mat-icon>
-                    {{ 'Forspeech' | translate }}
-                </div>
-            }
-            <!-- Contra Speech -->
-            @if (data.data.speech_state === SpeechState.CONTRA) {
-                <div id="inner-type">
-                    <mat-icon inline>remove_circle</mat-icon>
-                    {{ 'Counter speech' | translate }}
-                </div>
-            }
-            <!-- Marked -->
-            @if (data.data.speech_state === SpeechState.CONTRIBUTION) {
-                <div id="inner-type">
-                    <mat-icon inline>star</mat-icon>
-                    {{ 'Contribution' | translate }}
-                </div>
-            }
-            <!-- Interposed question -->
-            @if (data.data.speech_state === SpeechState.INTERPOSED_QUESTION) {
-                <div id="inner-type">
-                    <mat-icon inline>help</mat-icon>
-                    {{ 'Interposed question' | translate }}
-                </div>
-            }
-            <!-- Intervention -->
-            @if (data.data.speech_state === SpeechState.INTERVENTION) {
-                <div id="inner-type">
-                    <mat-icon inline>error</mat-icon>
-                    {{ 'Intervention' | translate }}
+                    <mat-icon inline>{{ icon }}</mat-icon>
+                    {{ verboseState | translate }}
                 </div>
             }
         </span>

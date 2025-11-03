@@ -38,7 +38,7 @@
                     type="button"
                     (click)="samlLogin()"
                 >
-                    {{ samlLoginButtonText || 'SAML Login' | translate }}
+                    {{ samlLoginButtonText || 'SSO Login' }}
                 </button>
                 @if (guestsEnabled) {
                     <button class="login-button" mat-stroked-button type="button" (click)="guestLogin()">

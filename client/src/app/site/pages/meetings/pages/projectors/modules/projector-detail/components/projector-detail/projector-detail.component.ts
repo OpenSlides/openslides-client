@@ -82,7 +82,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public get isPdfProjection(): boolean {
         return this.projector?.nonStableCurrentProjections?.some(
             projection =>
-                projection.content_object_id.includes(`mediafile`) &&
+                projection.content_object_id?.includes(`mediafile`) &&
                 typeof projection.content[`mimetype`] === `string` &&
                 projection.content[`mimetype`].endsWith(`/pdf`)
         );

@@ -75,6 +75,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;
         this.modelRequestService.waitSubscriptionReady(AMENDMENT_LIST_SUBSCRIPTION).then(() => (this.ready = true));
+        this.storage.set('motion-navigation-last', 'amendment-list');
     }
 
     public ngOnInit(): void {

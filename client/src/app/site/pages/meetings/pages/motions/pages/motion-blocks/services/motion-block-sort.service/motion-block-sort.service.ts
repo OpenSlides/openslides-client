@@ -1,4 +1,5 @@
 import { Injectable, ProviderToken } from '@angular/core';
+import { _ } from '@ngx-translate/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionBlockRepositoryService } from 'src/app/gateways/repositories/motions';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -19,7 +20,7 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
         { property: `title` },
         {
             property: `motions`,
-            label: `Amount of motions`,
+            label: _(`Amount of motions`),
             sortFn: (aBlock, bBlock, ascending): number =>
                 ascending
                     ? aBlock.motions.length - bBlock.motions.length

@@ -60,7 +60,6 @@ export class PollSlideComponent
     public pollContentObjectType: PollContentObjectType | null = null;
 
     public title!: string;
-    public subtitle: string | null = null;
 
     public polldata!: PollData;
 
@@ -179,11 +178,11 @@ export class PollSlideComponent
     public columnStyle: Record<string, any> = {};
 
     public bufferUp: number;
-    public userVotesFormatted: ([string, VoteResult] | string)[][];
+    public userVotesFormatted: ([number, number, number, string] | [string, VoteResult] | string)[][];
 
     private _maxColumns = 6;
     private _orderBy: keyof User = `last_name`;
-    private _userVotes: ([string, VoteResult] | string)[] = [];
+    private _userVotes: ([number, number, number, string] | [string, VoteResult] | string)[] = [];
 
     private _votes: Record<string, SlidePollVote> = {};
 
@@ -278,15 +277,7 @@ export class PollSlideComponent
             this.pollContentObjectType = PollContentObjectType.Standalone;
         }
 
-        if (value.data.title_information) {
-            modifyAgendaItemNumber(value.data.title_information);
-            const repo = this.collectionMapperService.getRepository(value.data.title_information.collection);
-            this.title = repo!.getTitle(value.data.title_information as any);
-            this.subtitle = value.data.title;
-        } else {
-            this.title = value.data.title;
-            this.subtitle = null;
-        }
+        this.title = value.data.title;
         this.cd.markForCheck();
     }
 
@@ -401,7 +392,25 @@ export class PollSlideComponent
         this._userVotes = Object.entries(splitUserVotes).flatMap(str_lvl_list => {
             const str_lvl = Number(str_lvl_list[0]);
             if (str_lvl > 0) {
-                return [this._structureLevels[str_lvl], ...str_lvl_list[1]];
+                let yes = 0;
+                let no = 0;
+                let abstain = 0;
+                for (const res of str_lvl_list[1]) {
+                    if (res[1] === `Y`) {
+                        yes += 1;
+                    } else if (res[1] === `N`) {
+                        no += 1;
+                    } else if (res[1] === `A`) {
+                        abstain += 1;
+                    }
+                }
+                const str_level_w_number: [number, number, number, string] = [
+                    yes,
+                    no,
+                    abstain,
+                    this._structureLevels[str_lvl]
+                ];
+                return [str_level_w_number, ...str_lvl_list[1]];
             }
             return str_lvl_list[1];
         });
@@ -444,7 +453,9 @@ export class PollSlideComponent
             Y: this._userVotes.filter(e => typeof e !== `string` && e[1] === `Y`).length,
             N: this._userVotes.filter(e => typeof e !== `string` && e[1] === `N`).length,
             A: this._userVotes.filter(e => typeof e !== `string` && e[1] === `A`).length,
-            valid: this._userVotes.filter(e => typeof e !== `string` && e[1].toUpperCase() !== `X`).length
+            valid: this._userVotes.filter(
+                e => typeof e !== `string` && typeof e[1] !== `number` && e[1].toUpperCase() !== `X`
+            ).length
         };
     }
 
@@ -481,7 +492,7 @@ export class PollSlideComponent
 
     private newCalculateFormattedUserVotes(columns: number, rows: number): void {
         let nextIndex = 0;
-        const votesFormatted: ([string, VoteResult] | string)[][] = [];
+        const votesFormatted: ([number, number, number, string] | [string, VoteResult] | string)[][] = [];
         for (let i = 0; i < columns; i++) {
             const [stop, untilIndex] = this.newCalcStopAndActualUntilIndex(nextIndex + rows);
             votesFormatted.push(this._userVotes.slice(nextIndex, untilIndex));

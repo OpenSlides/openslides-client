@@ -21,6 +21,9 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
 
+    @Input()
+    public inSlide = false;
+
     public get chartData(): ChartData {
         return this._chartData;
     }
