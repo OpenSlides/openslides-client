@@ -32,7 +32,7 @@
         }
         @if (editLineRange) {
             <div>
-                <mat-form-field class="margin-right-small" [style.width.px]="300">
+                <mat-form-field class="margin-right-small width-medium">
                     <mat-label>{{ 'Line from' | translate }}</mat-label>
                     <input
                         formControlName="line_from"
@@ -48,7 +48,7 @@
                         <mat-error>{{ 'Line range is not allowed to collide.' }}</mat-error>
                     }
                 </mat-form-field>
-                <mat-form-field [style.width.px]="300">
+                <mat-form-field class="width-medium">
                     <mat-label>{{ 'Line to' | translate }}</mat-label>
                     <input
                         formControlName="line_to"
