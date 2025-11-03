@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -239,7 +238,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             await this.modelRequestBuilder.build({
                 ids: [ORGANIZATION_ID],
                 viewModelCtor: ViewOrganization,
-                fieldset: FULL_FIELDSET,
                 follow: [{ idField: `active_meeting_ids`, fieldset: [`enable_anonymous`] }]
             }),
             `meeting_login`

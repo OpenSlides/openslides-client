@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { PollCandidate } from 'src/app/domain/models/poll-candidate-lists/poll-candidate';
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -31,7 +30,7 @@ export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository
     public override getFieldsets(): Fieldsets<PollCandidate> {
         const detailFieldset: (keyof PollCandidate)[] = [`poll_candidate_list_id`, `user_id`, `weight`, `meeting_id`];
         return {
-            [FULL_FIELDSET]: detailFieldset
+            [DEFAULT_FIELDSET]: detailFieldset
         };
     }
 }

@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -25,6 +24,7 @@ import {
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
@@ -323,7 +323,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                 modelRequest: {
                     viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
                     ids,
-                    fieldset: FULL_FIELDSET
+                    fieldset: DEFAULT_FIELDSET
                 },
                 subscriptionName
             });
@@ -354,7 +354,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             modelRequest: {
                 viewModelCtor: this.collectionMapperService.getViewModelConstructor(collection),
                 ids: [id],
-                fieldset: FULL_FIELDSET,
+                fieldset: DEFAULT_FIELDSET,
                 follow: [
                     {
                         idField: `history_entry_ids`,
