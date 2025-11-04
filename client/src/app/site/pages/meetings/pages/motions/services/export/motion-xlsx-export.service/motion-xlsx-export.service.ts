@@ -171,7 +171,9 @@ export class MotionXlsxExportService {
                     }
                     switch (property) {
                         case `submitters`:
-                            return motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `);
+                            return motion
+                                .mapSubmittersWithAdditional(s => s?.full_name || _(`Deleted user`))
+                                .join(`, `);
                         case `state`:
                             return this.motionService.getExtendedStateLabel(motion);
                         case `recommendation`:
