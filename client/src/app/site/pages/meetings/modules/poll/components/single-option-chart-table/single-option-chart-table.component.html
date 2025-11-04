@@ -42,24 +42,22 @@
                             </td>
                             <td>
                                 <div class="result-cell-definition">
-                                    @if (row.value[0].showPercent) {
-                                        <span>
-                                            @if (inSlide) {
-                                                {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
-                                            } @else {
-                                                {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
-                                            }
-                                        </span>
-                                    }
+                                    <span>
+                                        @if (inSlide) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        } @else if (row.value[0].showPercent) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                        }
+                                    </span>
                                 </div>
                             </td>
                             <td>
                                 <div class="result-cell-definition">
                                     <span>
-                                        @if (inSlide) {
-                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
-                                        } @else {
+                                        @if (!inSlide) {
                                             {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        } @else if (row.value[0].showPercent) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
                                         }
                                     </span>
                                 </div>
