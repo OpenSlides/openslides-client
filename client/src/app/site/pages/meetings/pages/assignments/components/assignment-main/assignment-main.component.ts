@@ -62,9 +62,9 @@ export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
 
     private async loadAssignmentList(meetingId: number): Promise<void> {
         try {
-            await this.modelRequestService.waitSubscriptionReady(ASSIGNMENT_LIST_SUBSCRIPTION, 500);
+            await this.modelRequestService.waitSubscriptionReady(ASSIGNMENT_LIST_SUBSCRIPTION, 0);
         } catch (e) {
-            await this.updateSubscribeTo(getAssignmentSubscriptionConfig(meetingId));
+            await this.updateSubscribeTo(getAssignmentSubscriptionConfig(meetingId), { hideWhenMeetingChanged: true });
         }
     }
 }
