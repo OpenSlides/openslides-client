@@ -1,4 +1,11 @@
 <div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
+    @if (isPresent) {
+        <div class="fake-fab-button flex-center">
+            <mat-icon class="icon-16">done</mat-icon>
+        </div>
+    } @else {
+        <div class="width-16">&nbsp;</div>
+    }
     <div class="operator-information flex-center">
         <div class="first-line one-line">
             @if (isLoggedIn) {
@@ -9,7 +16,7 @@
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon class="icon-16" color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon class="icon-16">person</mat-icon>
     </div>
 </div>
 
@@ -57,6 +64,18 @@
                             </mat-icon>
                             <span class="menu-text">{{ 'Present' | translate }}</span>
                         </button>
+                    } @else if (hasActiveMeeting) {
+                        @if (isPresent) {
+                            <button mat-menu-item>
+                                <mat-icon class="menu-icon">done</mat-icon>
+                                <span class="menu-text">{{ 'Present' | translate }}</span>
+                            </button>
+                        } @else {
+                            <button mat-menu-item>
+                                <mat-icon class="menu-icon">clear</mat-icon>
+                                <span class="menu-text">{{ 'Not present' | translate }}</span>
+                            </button>
+                        }
                     }
                 </div>
             }
