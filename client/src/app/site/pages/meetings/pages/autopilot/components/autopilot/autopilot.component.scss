@@ -9,6 +9,9 @@
         max-width: 1320px;
         margin: 0 auto;
     }
+    @media (max-width: 700px) {
+        margin: 0 0;
+    }
     @include variables.phone {
         .col-wrapper {
             display: block;
