@@ -1344,6 +1344,11 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Collision with existing change recommendation"
+msgstr ""
+
 msgid "Color"
 msgstr ""
 
@@ -2180,6 +2185,10 @@ msgstr ""
 msgid "First state"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "First value must be less or equal than second value."
+msgstr ""
+
 msgid "Follow recommendation"
 msgstr ""
 
@@ -2257,6 +2266,10 @@ msgid "Forwarding created"
 msgstr ""
 
 msgid "Forwarding of motion"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "From"
 msgstr ""
 
 msgid "Front page title"
@@ -3414,6 +3427,10 @@ msgid "Not found"
 msgstr ""
 
 msgid "Not locked out"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
+msgid "Not present"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
@@ -5151,6 +5168,10 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "To"
+msgstr ""
+
 msgid "To start your search press Enter or the search icon"
 msgstr ""
 
@@ -5226,9 +5247,6 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
-msgid "Unknown participant"
-msgstr ""
-
 msgid "Unknown user"
 msgstr ""
 
@@ -5291,6 +5309,10 @@ msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
 msgid "Valid votes"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Value must be positive."
 msgstr ""
 
 msgid "View"
