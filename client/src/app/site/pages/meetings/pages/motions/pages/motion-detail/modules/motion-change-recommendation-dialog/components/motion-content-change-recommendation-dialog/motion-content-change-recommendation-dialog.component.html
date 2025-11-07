@@ -33,7 +33,7 @@
         @if (editLineRange) {
             <div>
                 <mat-form-field class="margin-right-small width-medium">
-                    <mat-label>{{ 'Line from' | translate }}</mat-label>
+                    <mat-label>{{ 'From' | translate }}</mat-label>
                     <input
                         formControlName="line_from"
                         matInput
@@ -41,15 +41,15 @@
                         [errorStateMatcher]="parentErrorStateMatcher"
                     />
                     @if (contentForm.hasError('range_error')) {
-                        <mat-error>{{ 'Line from must be less or equal than line to.' | translate }}</mat-error>
+                        <mat-error>{{ 'First value must be less or equal than second value.' | translate }}</mat-error>
                     } @else if (contentForm.get(`line_from`).hasError('min')) {
-                        <mat-error>{{ 'Line from must be positiv.' | translate }}</mat-error>
+                        <mat-error>{{ 'Value must be positive.' | translate }}</mat-error>
                     } @else if (contentForm.hasError('line_check_error')) {
-                        <mat-error>{{ 'Line range is not allowed to collide.' }}</mat-error>
+                        <mat-error>{{ 'Collision with existing change recommendation' | translate }}</mat-error>
                     }
                 </mat-form-field>
                 <mat-form-field class="width-medium">
-                    <mat-label>{{ 'Line to' | translate }}</mat-label>
+                    <mat-label>{{ 'To' | translate }}</mat-label>
                     <input
                         formControlName="line_to"
                         matInput
@@ -57,9 +57,9 @@
                         [errorStateMatcher]="parentErrorStateMatcher"
                     />
                     @if (contentForm.hasError('range_error')) {
-                        <mat-error>{{ 'Line from must be less or equal than line to.' | translate }}</mat-error>
+                        <mat-error>{{ 'First value must be less or equal than second value.' | translate }}</mat-error>
                     } @else if (contentForm.hasError('line_check_error')) {
-                        <mat-error>{{ 'Line range is not allowed to collide.' }}</mat-error>
+                        <mat-error>{{ 'Collision with existing change recommendation' | translate }}</mat-error>
                     }
                 </mat-form-field>
             </div>
