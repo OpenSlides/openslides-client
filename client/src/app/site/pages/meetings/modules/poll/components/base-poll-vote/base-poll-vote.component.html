@@ -38,10 +38,10 @@
             }
             <div>
                 @if (poll.type !== PollType.Analog) {
-                    <div role="grid">
+                    <div>
                         <!-- Leftover votes -->
                         @if (showAvailableVotes && !settings.hideLeftoverVotes) {
-                            <div class="option-list-information-grid" role="row">
+                            <div class="option-list-information-grid">
                                 <b>{{ poll.option_ids.length }} {{ optionPluralLabel | translate }}</b>
                                 <div></div>
                                 <b class="text-right">
@@ -69,7 +69,6 @@
                         <!-- Options and Actions -->
                         @if (!(settings.isSplitSingleOption && !displayed_in_autopilot)) {
                             <div
-                                role="row"
                                 [ngClass]="{
                                     'yna-grid':
                                         ((poll.isListPoll && !isMobile) || !poll.isListPoll) &&
@@ -93,14 +92,14 @@
                                 }"
                             >
                                 @if (showAvailableVotes) {
-                                    <div class="grid-name-area" role="gridcell"></div>
+                                    <div class="grid-name-area"></div>
                                 }
                                 @if (
                                     !showAvailableVotes &&
                                     poll.option_ids &&
                                     !(settings.isSplitSingleOption && displayed_in_autopilot)
                                 ) {
-                                    <b class="grid-name-area" role="gridcell">
+                                    <b class="grid-name-area">
                                         @if (poll.isListPoll) {
                                             {{ poll.options[0]?.contentTitlesAsSortedArray.length }}
                                         } @else {
@@ -111,7 +110,7 @@
                                 }
                                 @if (!settings.isSplitSingleOption && poll.isListPoll && isMobile) {
                                     @if (poll.options[0]?.content_object) {
-                                        <div class="vote-option-title-single" role="gridcell">
+                                        <div class="vote-option-title-single">
                                             <span>
                                                 <span>{{ poll.options[0].content_object.getTitle() | translate }}</span>
                                             </span>
@@ -124,7 +123,7 @@
                                     let i = $index
                                 ) {
                                     @if (!poll.isTopicPoll) {
-                                        <b class="poll-option-title" role="columnheader" [ngClass]="'option' + i">
+                                        <b class="poll-option-title" [ngClass]="'option' + i">
                                             {{ action.label | translate }}
                                         </b>
                                     }
@@ -135,13 +134,13 @@
                             @if (!settings.hideGlobalOptions) {
                                 @for (option of globalVoteActions; track option.vote) {
                                     @if (option.vote === 'Y') {
-                                        <div class="single-vote-grid" role="row">
-                                            <div class="vote-option-title" role="rowheader">
+                                        <div class="single-vote-grid">
+                                            <div class="vote-option-title">
                                                 <span>
                                                     {{ getGlobalOptionName(option) | translate }}
                                                 </span>
                                             </div>
-                                            <div class="vote-button-area" role="gridcell">
+                                            <div class="vote-button-area">
                                                 <button
                                                     class="vote-button"
                                                     mat-raised-button
@@ -168,7 +167,7 @@
                                 }
                             }
                             @if (!settings.hideLeftoverVotes) {
-                                <div class="or-divider-grid" role="row">
+                                <div class="or-divider-grid">
                                     <div class="hr-wrapper">
                                         <hr />
                                     </div>
@@ -182,7 +181,6 @@
 
                         @for (option of poll.options; track option.id; let i = $index) {
                             <div
-                                [attr.role]="poll.max_votes_per_option > 1 ? 'row' : 'row radiogroup'"
                                 [ngClass]="{
                                     'yna-split-grid':
                                         settings.isSplitSingleOption && !displayed_in_autopilot && poll.isMethodYNA,
@@ -209,7 +207,6 @@
                                 @if (!settings.isSplitSingleOption && !option.isListOption) {
                                     <div
                                         class="vote-option-title grid-name-area"
-                                        role="rowheader"
                                         [ngClass]="{ 'strike-text no': shouldStrikeOptionText(option, delegation) }"
                                     >
                                         @if (option.content_object) {
@@ -233,7 +230,7 @@
                                     </div>
                                 }
                                 @if (!settings.isSplitSingleOption && option.isListOption && !isMobile) {
-                                    <div class="vote-option-title grid-name-area" role="rowheader">
+                                    <div class="vote-option-title grid-name-area">
                                         @if (option.content_object) {
                                             <span>
                                                 <span>{{ option.content_object.getTitle() | translate }}</span>
@@ -247,15 +244,10 @@
                                         track action.vote;
                                         let i = $index
                                     ) {
-                                        <div class="vote-button-area" role="gridcell" [ngClass]="'option' + i">
+                                        <div class="vote-button-area" [ngClass]="'option' + i">
                                             <button
                                                 class="vote-button"
                                                 mat-raised-button
-                                                role="radio"
-                                                [ariaLabel]="action.label | translate"
-                                                [attr.aria-checked]="
-                                                    getActionButtonClass(action, option, delegation) ? 'true' : 'false'
-                                                "
                                                 [disabled]="isDeliveringVote(delegation)"
                                                 (click)="saveSingleVote(option.id, action.vote, delegation)"
                                             >
@@ -274,15 +266,49 @@
                                                 </div>
                                             </button>
                                             @if (settings.isSplitSingleOption && !displayed_in_autopilot) {
-                                                <span aria-hidden="true" class="vote-label">
+                                                <span class="vote-label">
                                                     {{ action.label | translate }}
                                                 </span>
                                             }
                                         </div>
                                     }
                                 }
+                                @if (settings.isSplitSingleOption && displayed_in_autopilot) {
+                                    <ng-container>
+                                        @for (
+                                            action of voteActions.length ? voteActions : voteOptions;
+                                            track action.vote;
+                                            let i = $index
+                                        ) {
+                                            <div class="vote-button-area" [ngClass]="'option' + i">
+                                                <button
+                                                    class="vote-button"
+                                                    mat-raised-button
+                                                    [disabled]="isDeliveringVote(delegation)"
+                                                    (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                                >
+                                                    <div
+                                                        class="vote-button-content"
+                                                        [ngClass]="
+                                                            getActionButtonContentClass(action, option, delegation)
+                                                        "
+                                                    >
+                                                        <os-custom-icon
+                                                            class="vote-button-cross"
+                                                            [customIcon]="drawnCross"
+                                                            [ngClass]="getActionButtonClass(action, option, delegation)"
+                                                        ></os-custom-icon>
+                                                        <mat-icon class="vote-button-circle">
+                                                            radio_button_unchecked
+                                                        </mat-icon>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    </ng-container>
+                                }
                                 @if (poll.max_votes_per_option > 1) {
-                                    <mat-form-field appearance="outline" class="vote-input" role="gridcell">
+                                    <mat-form-field appearance="outline" class="vote-input">
                                         <input
                                             matInput
                                             max="{{ poll.max_votes_per_option }}"
@@ -306,7 +332,7 @@
                             (!poll.isMethodN || poll.global_no || poll.global_abstain)
                         ) {
                             @if (!settings.hideLeftoverVotes) {
-                                <div class="or-divider-grid" role="row">
+                                <div class="or-divider-grid">
                                     <div class="hr-wrapper">
                                         <hr />
                                     </div>
@@ -321,20 +347,16 @@
                             @if (!settings.hideGlobalOptions) {
                                 @for (option of globalVoteActions; track option.vote) {
                                     @if (!poll.isMethodN || option.vote !== 'Y') {
-                                        <div class="single-vote-grid" role="row">
-                                            <div class="vote-option-title" role="rowheader">
+                                        <div class="single-vote-grid">
+                                            <div class="vote-option-title">
                                                 <span>
                                                     {{ getGlobalOptionName(option) | translate }}
                                                 </span>
                                             </div>
-                                            <div class="vote-button-area" role="gridcell">
+                                            <div class="vote-button-area">
                                                 <button
                                                     class="vote-button"
                                                     mat-raised-button
-                                                    role="checkbox"
-                                                    [attr.aria-checked]="
-                                                        getGlobalCSSClass(option, delegation) ? 'true' : 'false'
-                                                    "
                                                     [disabled]="isDeliveringVote(delegation)"
                                                     (click)="saveGlobalVote(option.vote, delegation)"
                                                 >
