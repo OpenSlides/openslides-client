@@ -81,6 +81,10 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         );
     }
 
+    public get isAdmin(): boolean {
+        return this.operator.isInGroupIds(this.activeMeeting.admin_group_id);
+    }
+
     public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
@@ -110,7 +114,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private treeService: TreeService,
         private tagRepo: TagControllerService,
         private agendaItemMultiselectService: AgendaItemMultiselectService,
-        public forwardService: AgendaForwardDialogService
+        private forwardService: AgendaForwardDialogService
     ) {
         super();
         this.canMultiSelect = true;

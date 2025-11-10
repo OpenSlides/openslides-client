@@ -4,13 +4,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
@@ -55,7 +57,9 @@ export class AgendaForwardDialogService extends BaseDialogService<
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
         private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private autoupdate: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService
     ) {
         super();
 
@@ -132,23 +136,53 @@ export class AgendaForwardDialogService extends BaseDialogService<
             const meetingId = await firstValueFrom(
                 this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
             );
-            const meetings =
-                this.operator.hasPerms(Permission.agendaItemCanForward) && !!meetingId
-                    ? await this.presenter.call({ meeting_id: meetingId, for_agenda: true })
-                    : [];
+            const response = await this.autoupdate.single(
+                await this.modelRequestBuilder.build({
+                    ids: [meetingId],
+                    viewModelCtor: ViewMeeting,
+                    follow: [
+                        {
+                            idField: `committee_id`,
+                            fieldset: [`name`, `id`, `default_meeting_id`],
+                            follow: [
+                                {
+                                    idField: `meeting_ids`,
+                                    fieldset: [`id`, `name`, `start_time`, `end_time`, `admin_group_for_meeting_id`]
+                                }
+                            ]
+                        }
+                    ]
+                }),
+                `agenda_copy_meetings`
+            );
+            if (!response || !response[`meeting`]) {
+                throw Error(`Copying not possible: No target meetings`);
+            }
+
+            const meetings = Object.values(response[`meeting`])
+                .filter(line => {
+                    const adminGroupId = line[`admin_group_for_meeting_id`];
+                    return this.operator.isInGroupIds(adminGroupId);
+                })
+                .map(line => ({
+                    id: line[`id`],
+                    name: line[`name`],
+                    start_time: line[`start_time`],
+                    end_time: line[`end_time`]
+                }));
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
-            this._forwardingCommitteesSubject.next(
-                meetings.map(committee => {
-                    return {
-                        id: committee.id,
-                        name: committee.name,
-                        getTitle: (): string => committee.name,
-                        getListTitle: (): string => ``,
-                        toString: (): string => committee.name
-                    };
-                })
-            );
+            const committeeId = response[`meeting`][meetingId][`committee_id`];
+            const committee = response[`committee`][committeeId];
+            this._forwardingCommitteesSubject.next([
+                {
+                    id: committee[`id`],
+                    name: committee[`name`],
+                    getTitle: (): string => committee[`name`],
+                    getListTitle: (): string => ``,
+                    toString: (): string => committee[`name`]
+                }
+            ]);
         }
     }
 }

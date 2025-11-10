@@ -41,8 +41,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public editCommittee!: ViewCommittee;
 
-    public forbid_committee_admins_to_set_agenda_forwarding_relations = false;
-
     public get isOrgaManager(): boolean {
         return this.operator.isOrgaManager;
     }
@@ -72,10 +70,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
-
-        this.orgaSettings.get(`forbid_committee_admins_to_set_agenda_forwarding_relations`).subscribe(setting => {
-            this.forbid_committee_admins_to_set_agenda_forwarding_relations = setting;
-        });
     }
 
     public ngOnInit(): void {
@@ -92,7 +86,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     /**
      * Returns a function to know if the option which contains this committee should be disabled
-     * in the `receive_forwardings_from_committee_ids` and `receive_agenda_forwardings_from_committee_ids`-controls
+     * in the `receive_forwardings_from_committee_ids`-control
      *
      * @returns A function that will return a boolean
      */
@@ -138,14 +132,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         const value = this.committeeForm.value as ViewCommittee;
         let id: Id | null = null;
 
-        if (
-            this.forbid_committee_admins_to_set_agenda_forwarding_relations &&
-            !this.operator.hasOrganizationPermissions(this.OML.can_manage_organization)
-        ) {
-            delete value[`forward_agenda_to_committee_ids`];
-            delete value[`receive_agenda_forwardings_from_committee_ids`];
-        }
-
         if (this.isCreateView) {
             const identifiable = (await this.committeeRepo.create(value))[0];
             id = identifiable.id;
@@ -185,20 +171,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public onForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
         if (committee.id === this.committeeId) {
             const formControlName = `receive_forwardings_from_committee_ids`;
-            const previousValue = new Set<Id>(this.committeeForm.get(formControlName)!.value || []);
-            const fn = selected ? `add` : `delete`;
-            previousValue[fn](committee.id);
-            this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });
-        }
-    }
-
-    /**
-     * Function to (un-) select the same committee in the `receive_agenda_forwardings_from_committee_ids`-control. This
-     * enables then the forwarding to the same committee.
-     */
-    public onAgendaForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
-        if (committee.id === this.committeeId) {
-            const formControlName = `receive_agenda_forwardings_from_committee_ids`;
             const previousValue = new Set<Id>(this.committeeForm.get(formControlName)!.value || []);
             const fn = selected ? `add` : `delete`;
             previousValue[fn](committee.id);
@@ -263,8 +235,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]],
-            forward_agenda_to_committee_ids: [[]],
-            receive_agenda_forwardings_from_committee_ids: [[]],
             external_id: [``],
             parent_id: [``]
         };

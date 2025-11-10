@@ -6,7 +6,6 @@ import { PresenterService } from './presenter.service';
 
 interface GetForwardMeetingsPresenterPayload {
     meeting_id: Id;
-    for_agenda?: boolean;
 }
 
 export interface GetForwardingMeetingsPresenterMeeting {

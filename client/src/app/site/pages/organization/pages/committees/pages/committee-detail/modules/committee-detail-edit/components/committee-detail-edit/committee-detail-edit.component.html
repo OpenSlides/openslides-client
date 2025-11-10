@@ -73,39 +73,6 @@
                         [tooltipFn]="getTooltipFn()"
                     ></os-repo-search-selector>
                 </mat-form-field>
-                <mat-form-field
-                    *osOmlPerms="
-                        OML.can_manage_organization;
-                        or: !forbid_committee_admins_to_set_agenda_forwarding_relations
-                    "
-                >
-                    <mat-label>{{ 'Can forward agenda items to committee' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="forward_agenda_to_committee_ids"
-                        [disableOptionWhenFn]="isNotCommitteeAdminFor"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [showChips]="false"
-                        [sortService]="committeeSortService"
-                        (selectionChanged)="onAgendaForwardingSelectionChanged($event)"
-                    ></os-repo-search-selector>
-                </mat-form-field>
-                <mat-form-field
-                    *osOmlPerms="
-                        OML.can_manage_organization;
-                        or: !forbid_committee_admins_to_set_agenda_forwarding_relations
-                    "
-                >
-                    <mat-label>{{ 'Can receive agenda items from committee' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="receive_agenda_forwardings_from_committee_ids"
-                        [disableOptionWhenFn]="getDisableOptionWhenFn"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [showChips]="false"
-                        [sortService]="committeeSortService"
-                    ></os-repo-search-selector>
-                </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{ 'External ID' | translate }}</mat-label>
                     <input formControlName="external_id" matInput />

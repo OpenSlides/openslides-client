@@ -345,12 +345,6 @@ export const RELATIONS: Relation[] = [
         AField: `forward_to_committees`,
         BField: `receive_forwardings_from_committees`
     }),
-    ...makeM2M({
-        AViewModel: ViewCommittee,
-        BViewModel: ViewCommittee,
-        AField: `forward_agenda_to_committees`,
-        BField: `receive_agenda_forwardings_from_committees`
-    }),
     ...makeM2O({
         OViewModel: ViewCommittee,
         MViewModel: ViewUser,

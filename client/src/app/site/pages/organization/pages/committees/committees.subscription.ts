@@ -59,8 +59,6 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
         fieldset: [
             `description`,
             `forward_to_committee_ids`,
-            `forward_agenda_to_committee_ids`,
-            `receive_agenda_forwardings_from_committee_ids`,
             `id`,
             `manager_ids`,
             `native_user_ids`,

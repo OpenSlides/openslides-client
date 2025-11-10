@@ -59,15 +59,6 @@ export const PERMISSIONS: AppPermission[] = [
                 value: Permission.agendaItemCanSeeInternal
             },
             {
-                display_name: _(`Can forward agenda items`),
-                help_text: _(`Can forward agenda items to other meetings within the OpenSlides instance.
-
-Further requirements:
-1. forwarding hierarchy must be set at the organiztional level in the committee.
-2. target meeting must be created.`),
-                value: Permission.agendaItemCanForward
-            },
-            {
                 display_name: _(`Can manage agenda`),
                 help_text: _(
                     `Can create, modify and delete topics, add motions and elections to the agenda, sort, number and tag agenda items.`

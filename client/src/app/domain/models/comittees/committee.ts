@@ -17,8 +17,6 @@ export class Committee extends BaseModel<Committee> {
     public user_ids!: Id[]; // (user/committee_ids)[];
     public forward_to_committee_ids!: Id[]; // (committee/receive_forwardings_from_committee_ids)[];
     public receive_forwardings_from_committee_ids!: Id[]; // (committee/forward_to_committee_ids)[];
-    public forward_agenda_to_committee_ids!: Id[]; // (committee/receive_agenda_forwardings_from_committee_ids)[];
-    public receive_agenda_forwardings_from_committee_ids!: Id[]; // (committee/forward_agenda_to_committee_ids)[];
     public organization_id!: Id; // organization/committee_ids;
     public organization_tag_ids!: Id[]; // (committee/organization_tag_ids)[];
     public manager_ids!: Id[]; // (user/committe_management_ids)[];
@@ -46,8 +44,6 @@ export class Committee extends BaseModel<Committee> {
         `native_user_ids`,
         `forward_to_committee_ids`,
         `receive_forwardings_from_committee_ids`,
-        `forward_agenda_to_committee_ids`,
-        `receive_agenda_forwardings_from_committee_ids`,
         `organization_tag_ids`,
         `organization_id`
     ];

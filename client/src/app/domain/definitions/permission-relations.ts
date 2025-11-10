@@ -3,12 +3,7 @@ import { Permission } from './permission';
 import { PermissionsMap } from './permission.config';
 
 export const permissionChildren: PermissionsMap = {
-    'agenda_item.can_forward': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
-    'agenda_item.can_manage': [
-        Permission.agendaItemCanForward,
-        Permission.agendaItemCanSeeInternal,
-        Permission.agendaItemCanSee
-    ],
+    'agenda_item.can_manage': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
     'agenda_item.can_see': [],
     'agenda_item.can_see_internal': [Permission.agendaItemCanSee],
     'assignment.can_manage': [Permission.assignmentCanNominateOther, Permission.assignmentCanSee],
@@ -66,14 +61,9 @@ export const permissionChildren: PermissionsMap = {
 };
 
 export const permissionParents: PermissionsMap = {
-    'agenda_item.can_forward': [Permission.agendaItemCanManage],
     'agenda_item.can_manage': [],
-    'agenda_item.can_see': [
-        Permission.agendaItemCanSeeInternal,
-        Permission.agendaItemCanForward,
-        Permission.agendaItemCanManage
-    ],
-    'agenda_item.can_see_internal': [Permission.agendaItemCanForward, Permission.agendaItemCanManage],
+    'agenda_item.can_see': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanManage],
+    'agenda_item.can_see_internal': [Permission.agendaItemCanManage],
     'assignment.can_manage': [],
     'assignment.can_manage_polls': [],
     'assignment.can_nominate_other': [Permission.assignmentCanManage],

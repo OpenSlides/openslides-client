@@ -127,14 +127,16 @@
 <mat-menu #agendaMenu="matMenu">
     @if (!isMultiSelect) {
         <div>
-            <div *osPerms="permission.agendaItemCanForward">
-                <!-- Enable multi select -->
-                <button mat-menu-item (click)="toggleMultiSelect()">
-                    <mat-icon>library_add</mat-icon>
-                    <span>{{ 'Multiselect' | translate }}</span>
-                </button>
-                <mat-divider></mat-divider>
-            </div>
+            @if (isAdmin) {
+                <div>
+                    <!-- Enable multi select -->
+                    <button mat-menu-item (click)="toggleMultiSelect()">
+                        <mat-icon>library_add</mat-icon>
+                        <span>{{ 'Multiselect' | translate }}</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                </div>
+            }
             <div *osPerms="permission.agendaItemCanManage">
                 <!-- automatic numbering -->
                 @if (isNumberingAllowed) {

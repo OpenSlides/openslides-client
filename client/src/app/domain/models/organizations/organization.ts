@@ -23,7 +23,6 @@ export class OrganizationSetting {
     public default_language!: string;
     public require_duplicate_from!: boolean;
     public enable_anonymous!: boolean;
-    public forbid_committee_admins_to_set_agenda_forwarding_relations: boolean;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -68,7 +67,6 @@ export class Organization extends BaseModel<Organization> {
         `privacy_policy`,
         `login_text`,
         `reset_password_verbose_errors`,
-        `forbid_committee_admins_to_set_agenda_forwarding_relations`,
         `gender_ids`,
         `enable_electronic_voting`,
         `enable_chat`,

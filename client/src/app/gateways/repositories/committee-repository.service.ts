@@ -39,8 +39,6 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `meeting_ids`,
             `forward_to_committee_ids`,
             `receive_forwardings_from_committee_ids`,
-            `forward_agenda_to_committee_ids`,
-            `receive_agenda_forwardings_from_committee_ids`,
             `organization_tag_ids`,
             `user_ids`,
             `manager_ids`,
@@ -140,12 +138,6 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
                 committee.receive_forwardings_from_committee_ids === null
                     ? []
                     : committee.receive_forwardings_from_committee_ids,
-            forward_agenda_to_committee_ids:
-                committee.forward_agenda_to_committee_ids === null ? [] : committee.forward_agenda_to_committee_ids,
-            receive_agenda_forwardings_from_committee_ids:
-                committee.receive_agenda_forwardings_from_committee_ids === null
-                    ? []
-                    : committee.receive_agenda_forwardings_from_committee_ids,
             external_id: committee.external_id,
             native_user_ids: committee.native_user_ids === null ? [] : committee.native_user_ids,
             parent_id: !committee.parent_id ? undefined : committee.parent_id,
