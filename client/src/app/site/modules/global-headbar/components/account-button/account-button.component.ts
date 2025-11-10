@@ -44,6 +44,12 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private _langTriggerSubscription: Subscription;
 
+    public get presentString(): string {
+        return this.user.isPresentInMeeting()
+            ? this.translate.instant(`Present`)
+            : this.translate.instant(`Not present`);
+    }
+
     public get isPresent(): boolean {
         return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
             ? this.user.isPresentInMeeting()
