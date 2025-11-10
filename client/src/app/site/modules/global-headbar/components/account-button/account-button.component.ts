@@ -50,6 +50,18 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             : false;
     }
 
+    public getAriaLabel(): string {
+        let stringForUserPresent = this.translate.instant(`Account from `) + this.user.short_name;
+        if (!this.hasActiveMeeting) {
+            stringForUserPresent += this.translate.instant(`is not in Meeting`);
+        } else if (this.user.isPresentInMeeting()) {
+            stringForUserPresent += this.translate.instant(`is present`);
+        } else {
+            stringForUserPresent += this.translate.instant(`is not present`);
+        }
+        return stringForUserPresent;
+    }
+
     public get isAllowedSelfSetPresent(): boolean {
         return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
     }
