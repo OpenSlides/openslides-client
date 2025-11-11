@@ -795,7 +795,7 @@ msgid "Bullet list"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
-msgid "Button text for next state"
+msgid "Button text"
 msgstr ""
 
 msgid "CSV import"
@@ -1344,6 +1344,11 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Collision with existing change recommendation"
+msgstr ""
+
 msgid "Color"
 msgstr ""
 
@@ -1637,6 +1642,17 @@ msgid "Defines the minimum deflection which is required to recognize applause."
 msgstr ""
 
 msgid "Defines the time in which applause amounts are add up."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Defines the wording of the button to change the state. Button is visible if "
+"the corresponding state is defined in \"Submitter may set state to\".\n"
+"\n"
+"Example: \n"
+"1. State \"in progress\": \"Submitter may set state to\" = \"submitted\"\n"
+"2. State \"submitted\": \"Button text\" = \"Submit motion\"\n"
+"=> This enables a submit button in state \"in progress\"."
 msgstr ""
 
 msgid ""
@@ -2175,6 +2191,10 @@ msgstr ""
 msgid "First state"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "First value must be less or equal than second value."
+msgstr ""
+
 msgid "Follow recommendation"
 msgstr ""
 
@@ -2200,10 +2220,6 @@ msgid "Font regular"
 msgstr ""
 
 msgid "Font size in pt"
-msgstr ""
-
-#: app/src/app/site/pages/meetings/pages/agenda/pages/agenda-export/components/agenda-export/agenda-export.component.html
-msgid "Footer"
 msgstr ""
 
 msgid ""
@@ -2256,6 +2272,10 @@ msgid "Forwarding created"
 msgstr ""
 
 msgid "Forwarding of motion"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "From"
 msgstr ""
 
 msgid "Front page title"
@@ -3413,6 +3433,10 @@ msgid "Not found"
 msgstr ""
 
 msgid "Not locked out"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
+msgid "Not present"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
@@ -5150,6 +5174,10 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "To"
+msgstr ""
+
 msgid "To start your search press Enter or the search icon"
 msgstr ""
 
@@ -5225,9 +5253,6 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
-msgid "Unknown participant"
-msgstr ""
-
 msgid "Unknown user"
 msgstr ""
 
@@ -5290,6 +5315,10 @@ msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
 msgid "Valid votes"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Value must be positive."
 msgstr ""
 
 msgid "View"
