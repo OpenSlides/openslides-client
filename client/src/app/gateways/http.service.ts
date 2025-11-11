@@ -20,8 +20,6 @@ type HttpHeadersObj = HttpHeaders | Record<string, string | string[]>;
 
 const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
 
-class VoteLocationDisallowedError extends Error {}
-
 export interface RequestSettings {
     queryParams?: QueryParams;
     customHeader?: HttpHeaders;
@@ -89,13 +87,17 @@ export class HttpService {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
             if (response.status === 202) {
                 return (await this.actionWorkerWatch.watch<T>(response, true)).body as T;
-            } else if (response.status === 451 && path.startsWith(`/system/vote`)) {
-                throw new VoteLocationDisallowedError();
             }
             return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
-                if (error.error.message) {
+                if (error.status === 451 && path.startsWith(`/system/vote`)) {
+                    const cleanError = this.translate.instant(
+                        `Vote was not counted, because of regulations of the organization.`
+                    );
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    throw new ProcessError(cleanError);
+                } else if (error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
                         data,
                         url: error.url
@@ -114,12 +116,6 @@ export class HttpService {
 
                     throw new ProcessError(cleanError);
                 }
-            } else if (error instanceof VoteLocationDisallowedError) {
-                const cleanError = this.translate.instant(
-                    `Vote was not counted, because of regulations of the organization.`
-                );
-                this.snackBar.open(cleanError, this.translate.instant(`Ok`));
-                throw new ProcessError(cleanError);
             }
 
             throw new ProcessError(error);
