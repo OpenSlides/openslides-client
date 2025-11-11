@@ -1,4 +1,4 @@
-<div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
+<button class="accountButton flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
     @if (isPresent) {
         <div class="fake-fab-button flex-center">
             <mat-icon class="icon-16">done</mat-icon>
@@ -18,7 +18,7 @@
     <div class="fake-fab-button flex-center">
         <mat-icon class="icon-16">person</mat-icon>
     </div>
-</div>
+</button>
 
 <mat-menu #userMenu="matMenu" class="user-menu">
     <ng-template matMenuContent>
@@ -59,8 +59,9 @@
                     <!-- present toggle -->
                     @if (isAllowedSelfSetPresent && hasActiveMeeting) {
                         <button
-                            aria-label="{{ presentString }}"
+                            aria-checked="{{ isPresent }}"
                             mat-menu-item
+                            role="menuitemcheckbox"
                             [ngClass]="{ active: isPresent }"
                             (click)="toggleOperatorPresence()"
                         >
@@ -71,12 +72,12 @@
                         </button>
                     } @else if (hasActiveMeeting) {
                         @if (isPresent) {
-                            <button mat-menu-item>
+                            <button aria-checked="true" mat-menu-item role="menuitemcheckbox">
                                 <mat-icon class="menu-icon">done</mat-icon>
                                 <span class="menu-text">{{ 'Present' | translate }}</span>
                             </button>
                         } @else {
-                            <button mat-menu-item>
+                            <button aria-checked="false" mat-menu-item role="menuitemcheckbox">
                                 <mat-icon class="menu-icon">clear</mat-icon>
                                 <span class="menu-text">{{ 'Not present' | translate }}</span>
                             </button>
