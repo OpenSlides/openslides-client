@@ -1,4 +1,9 @@
-<div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
+<button
+    aria-label="{{ getAriaLabel() }}"
+    class="accountButton flex-center"
+    data-cy="accountButton"
+    [matMenuTriggerFor]="userMenu"
+>
     @if (isPresent) {
         <div class="fake-fab-button flex-center">
             <mat-icon class="icon-16">done</mat-icon>
@@ -18,7 +23,7 @@
     <div class="fake-fab-button flex-center">
         <mat-icon class="icon-16">person</mat-icon>
     </div>
-</div>
+</button>
 
 <mat-menu #userMenu="matMenu" class="user-menu">
     <ng-template matMenuContent>
