@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    {{ data.agenda.length > 1 ? ('Forward agenda items' | translate) : ('Forwarding of agenda item' | translate) }}
+    {{ data.agenda.length > 1 ? ('Copy agenda items to...' | translate) : ('Copy agenda item to...' | translate) }}
     @if (data.agenda.length === 1 && data.agenda[0].item_number) {
         {{ data.agenda[0].item_number }}
     }
@@ -12,7 +12,7 @@
     @if (showNotTopicWarning) {
         <div class="warning-text">
             {{
-                'Warning: You are trying to forward something else than a topic, it will be skipped and not forwarded.'
+                'Warning: You are trying to copy something else than a topic, it will be skipped and not copied.'
                     | translate
             }}
         </div>
@@ -20,7 +20,7 @@
     @if (showParentNotIncludedWarning) {
         <div class="warning-text">
             {{
-                'Warning: You are trying to forward a child agenda item without its parent. The child will be forwarded, however the parent item will not be automatically forwarded alongside it.'
+                'Warning: You are trying to copy a child agenda item without its parent. The child will be copied, however the parent item will not be automatically copied alongside it.'
                     | translate
             }}
         </div>
@@ -28,7 +28,7 @@
     @if (showChildrenNotIncludedWarning) {
         <div class="warning-text">
             {{
-                'Warning: You are trying to forward a parent agenda item without at least one of its children. Children will not be automatically forwarded alongside their parent items.'
+                'Warning: You are trying to copy a parent agenda item without at least one of its children. Children will not be automatically copied alongside their parent items.'
                     | translate
             }}
         </div>
@@ -43,11 +43,20 @@
                 } @else if (rowName === 'speakers') {
                     <span>{{ 'List of speakers' | translate }}</span>
                     <br />
+                    <span class="subtitle">
+                        {{ speakerAmount }} {{ 'speakers' | translate }}, {{ participantAmount }}
+                        {{ 'participants' | translate }}
+                    </span>
+                    <br />
                     <span class="subtitle" translate>
-                        This will add participants, structure levels and groups to the target meeting(s)
+                        This will add participants, structure levels and groups to the target meeting(s).
                     </span>
                 } @else if (rowName === 'meeting') {
                     <span>{{ 'Target meeting' | translate }}</span>
+                    <br />
+                    <span class="subtitle" translate>
+                        You must be admin in the target meeting. Said meeting cannot be archived or in the past.
+                    </span>
                 } @else if (rowName === 'attachments') {
                     <span>{{ 'Attachments' | translate }}</span>
                 }
@@ -78,7 +87,11 @@
                                     @for (meeting of committee.meetings; track meeting) {
                                         <div>
                                             <mat-checkbox
-                                                [disabled]="isActiveMeeting(meeting)"
+                                                [disabled]="
+                                                    !isAdmin(meeting, committee.id) ||
+                                                    !meeting.is_active ||
+                                                    isInPast(meeting)
+                                                "
                                                 [value]="meeting.id"
                                                 [(ngModel)]="checkboxStateMap[meeting.id]"
                                                 (change)="onChangeCheckbox($event)"
@@ -109,7 +122,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <button color="primary" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
-        {{ 'Forward' | translate }}
+        {{ 'Copy' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>

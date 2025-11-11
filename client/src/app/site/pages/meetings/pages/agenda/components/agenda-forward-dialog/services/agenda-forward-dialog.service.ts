@@ -6,7 +6,7 @@ import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
+import { GetForwardingMeetingsPresenter } from 'src/app/gateways/presenter';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -55,11 +55,10 @@ export class AgendaForwardDialogService extends BaseDialogService<
         private translate: TranslateService,
         private repo: AgendaItemControllerService,
         private snackbar: MatSnackBar,
-        private presenter: GetForwardingMeetingsPresenterService,
         private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService,
         private autoupdate: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private operator: OperatorService
     ) {
         super();
 
@@ -71,7 +70,21 @@ export class AgendaForwardDialogService extends BaseDialogService<
     public async forwardingMeetingsAvailable(): Promise<boolean> {
         await this.updateForwardMeetings();
 
-        return !!this._forwardingMeetings.length;
+        return (
+            !!this._forwardingMeetings.length &&
+            this._forwardingMeetings.some(
+                pres =>
+                    this.operator.hasCommitteeManagementRights(pres.id) ||
+                    pres.meetings.some(
+                        meeting =>
+                            meeting.is_active &&
+                            meeting.end_time &&
+                            meeting.end_time * 1000 < Date.now() &&
+                            meeting.admin_group_id &&
+                            this.operator.user.getMeetingUser(+meeting.id)?.group_ids.includes(meeting.admin_group_id)
+                    )
+            )
+        );
     }
 
     public async open(
@@ -117,11 +130,11 @@ export class AgendaForwardDialogService extends BaseDialogService<
                 );
                 this.snackbar.open(
                     (items.length === 1
-                        ? this.translate.instant(`The agenda item was successfully forwarded to {} meeting(s)`)
+                        ? this.translate.instant(`The agenda item was successfully copied to {} meeting(s)`)
                         : `${toForward.length} ` +
                           this.translate.instant(`of`) +
                           ` ${items.length} ` +
-                          this.translate.instant(`agenda items were successfully forwarded to {} meeting(s)`)
+                          this.translate.instant(`agenda items were successfully copied to {} meeting(s)`)
                     ).replace(`{}`, `${toMeetingIds.length}`),
                     `Ok`
                 );
@@ -147,7 +160,14 @@ export class AgendaForwardDialogService extends BaseDialogService<
                             follow: [
                                 {
                                     idField: `meeting_ids`,
-                                    fieldset: [`id`, `name`, `start_time`, `end_time`, `admin_group_for_meeting_id`]
+                                    fieldset: [
+                                        `id`,
+                                        `name`,
+                                        `start_time`,
+                                        `end_time`,
+                                        `admin_group_id`,
+                                        `is_active_in_organization_id`
+                                    ]
                                 }
                             ]
                         }
@@ -159,21 +179,30 @@ export class AgendaForwardDialogService extends BaseDialogService<
                 throw Error(`Copying not possible: No target meetings`);
             }
 
-            const meetings = Object.values(response[`meeting`])
-                .filter(line => {
-                    const adminGroupId = line[`admin_group_for_meeting_id`];
-                    return this.operator.isInGroupIds(adminGroupId);
-                })
-                .map(line => ({
-                    id: line[`id`],
-                    name: line[`name`],
-                    start_time: line[`start_time`],
-                    end_time: line[`end_time`]
-                }));
-            this._forwardingMeetings = meetings;
-            this._forwardingMeetingsUpdateRequired = false;
             const committeeId = response[`meeting`][meetingId][`committee_id`];
             const committee = response[`committee`][committeeId];
+            const meetings = {
+                id: committeeId,
+                name: committee[`name`],
+                default_meeting_id: committee[`default_meeting_id`],
+                meetings: Object.values(response[`meeting`])
+                    .filter(line => {
+                        return line[`id`] !== meetingId;
+                    })
+                    .map(line => {
+                        const adminGroupId = line[`admin_group_id`];
+                        return {
+                            id: line[`id`],
+                            name: line[`name`],
+                            start_time: line[`start_time`],
+                            end_time: line[`end_time`],
+                            admin_group_id: adminGroupId,
+                            is_active: !!line[`is_active_in_organization_id`]
+                        };
+                    })
+            };
+            this._forwardingMeetings = [meetings];
+            this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next([
                 {
                     id: committee[`id`],

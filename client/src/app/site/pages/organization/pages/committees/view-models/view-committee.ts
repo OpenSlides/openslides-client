@@ -54,8 +54,6 @@ interface ICommitteeRelations {
     native_users: ViewUser[];
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
-    forward_agenda_to_committees: ViewCommittee[];
-    receive_agenda_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
     managers: ViewUser[];
     parent: ViewCommittee;

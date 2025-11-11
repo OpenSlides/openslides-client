@@ -204,10 +204,10 @@
                 <span>{{ 'Delete' | translate }}</span>
             </button>
         </div>
-        @if (canForward) {
+        @if (isAdmin && canForward) {
             <button mat-menu-item [disabled]="agendaItemForwardDisabled" (click)="forwardAgendaItemsToMeetings()">
                 <mat-icon>forward</mat-icon>
-                <span>{{ 'Forward' | translate }}</span>
+                <span>{{ 'Copy to' | translate }}</span>
             </button>
         }
     </ng-template>

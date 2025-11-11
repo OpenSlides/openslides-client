@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 
 import { ViewAgendaItem } from '../../../../view-models';
@@ -77,6 +78,9 @@ export class AgendaForwardDialogComponent implements OnInit {
     public showChildrenNotIncludedWarning = false;
     public showNotTopicWarning = false;
 
+    public speakerAmount: number;
+    public participantAmount: number;
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
@@ -88,7 +92,8 @@ export class AgendaForwardDialogComponent implements OnInit {
             showSkippedItemWarning: boolean;
         },
         private dialogRef: MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private operator: OperatorService
     ) {
         const agendaItemIds = new Set(this.data.agenda.map(item => item.id));
         this.showParentNotIncludedWarning = this.data.agenda.some(
@@ -98,9 +103,22 @@ export class AgendaForwardDialogComponent implements OnInit {
             item => item.child_ids && item.child_ids.some(child_id => !agendaItemIds.has(child_id))
         );
         this.showNotTopicWarning = this.data.showSkippedItemWarning;
+        // TODO: fix this it somehow returns 0
+        this.speakerAmount = this.data.agenda.reduce(
+            (sum, item) => sum + (item.list_of_speakers?.speaker_ids.length ?? 0),
+            0
+        );
+        this.participantAmount = Array.from(
+            new Set(
+                this.data.agenda.flatMap(item =>
+                    item.list_of_speakers?.speakers.map(speaker => speaker.meeting_user_id)
+                )
+            )
+        ).length;
     }
 
     public async ngOnInit(): Promise<void> {
+        console.log(`DATA`, this.data);
         for (const committee of this.data.forwardingMeetings) {
             committee.meetings = this.getMeetingsSorted(committee);
         }
@@ -140,8 +158,16 @@ export class AgendaForwardDialogComponent implements OnInit {
         this.selectedMeetings[fn](+source.value);
     }
 
-    public isActiveMeeting(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
-        return +meeting.id === this.activeMeeting.meetingId;
+    public isAdmin(meeting: GetForwardingMeetingsPresenterMeeting, committeeId: number): boolean {
+        return (
+            this.operator.hasCommitteeManagementRights(committeeId) ||
+            (meeting.admin_group_id &&
+                this.operator.user.getMeetingUser(+meeting.id)?.group_ids.includes(meeting.admin_group_id))
+        );
+    }
+
+    public isInPast(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
+        return meeting.end_time && meeting.end_time * 1000 < Date.now();
     }
 
     public showActiveMeetingName(): string {

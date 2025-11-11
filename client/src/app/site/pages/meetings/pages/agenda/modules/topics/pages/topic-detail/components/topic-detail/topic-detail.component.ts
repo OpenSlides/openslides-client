@@ -108,6 +108,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         return this._forwardingAvailable;
     }
 
+    public get isAdmin(): boolean {
+        return this.operator.isInGroupIds(this.activeMeeting.admin_group_id);
+    }
+
     private _forwardingAvailable = false;
 
     private _nextTopic: ViewTopic | null = null;

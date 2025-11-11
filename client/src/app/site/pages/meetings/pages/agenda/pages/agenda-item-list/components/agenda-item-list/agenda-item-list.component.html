@@ -261,14 +261,14 @@
                     <mat-icon>file_copy</mat-icon>
                     <span>{{ 'Duplicate' | translate }}</span>
                 </button>
-                @if (canForward) {
+                @if (canForward && isAdmin) {
                     <button
                         mat-menu-item
                         [disabled]="!selectedRows.length"
                         (click)="forwardAgendaItemsToMeetings(selectedRows)"
                     >
                         <mat-icon>forward</mat-icon>
-                        <span>{{ 'Forward' | translate }} ...</span>
+                        <span>{{ 'Copy to' | translate }} ...</span>
                     </button>
                 }
                 <!-- Delete selected -->
