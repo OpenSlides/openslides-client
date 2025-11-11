@@ -89,7 +89,7 @@ export class HttpService {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
             if (response.status === 202) {
                 return (await this.actionWorkerWatch.watch<T>(response, true)).body as T;
-            } else if (response.status === 451) {
+            } else if (response.status === 451 && path.startsWith(`/system/vote`)) {
                 throw new VoteLocationDisallowedError();
             }
             return response.body as T;
