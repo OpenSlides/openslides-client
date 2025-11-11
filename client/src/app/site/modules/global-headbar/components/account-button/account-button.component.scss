@@ -60,3 +60,9 @@ a {
     width: 20px;
     height: 20px;
 }
+
+.accountButton {
+    background: var(--theme-headbar);
+    color: var(--theme-headbar-contrast);
+    border: none;
+}
