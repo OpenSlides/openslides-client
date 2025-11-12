@@ -41,6 +41,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
         const payload = {
             id: viewModel.id,
             internal: update.internal,
+            line_from: update.line_from,
+            line_to: update.line_to,
             other_description: update.other_description,
             rejected: update.rejected,
             text: update.text,
