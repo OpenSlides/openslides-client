@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { ViewMotion } from '../../../../view-models';
 
@@ -41,13 +42,17 @@ export class MotionForwardDialogComponent implements OnInit {
     public useOriginalVersion = false;
     public withAttachments = false;
     public markAmendmentsAsForwarded = false;
+    public disableForwardWithAttachments = false;
 
     public get numAmendments(): number {
         return this.data.motion.reduce((acc, curr) => acc + (curr.amendment_ids?.length || 0), 0);
     }
 
     public get tableRows(): string[] {
-        if (this.data.motion.length > 1 || (this.data.motion.length === 1 && this.data.motion[0].hasAttachments())) {
+        if (
+            !this.disableForwardWithAttachments &&
+            (this.data.motion.length > 1 || (this.data.motion.length === 1 && this.data.motion[0].hasAttachments()))
+        ) {
             return [`motion_version`, `submitter`, `identifier`, `attachments`, `meeting`];
         } else {
             return [`motion_version`, `submitter`, `identifier`, `meeting`];
@@ -61,6 +66,7 @@ export class MotionForwardDialogComponent implements OnInit {
         public data: { motion: ViewMotion[]; forwardingMeetings: GetForwardingMeetingsPresenter[] },
         private dialogRef: MatDialogRef<MotionForwardDialogComponent, MotionForwardDialogReturnData>,
         private activeMeeting: ActiveMeetingService,
+        private organisationSettings: OrganizationSettingsService,
         private translate: TranslateService
     ) {}
 
@@ -71,6 +77,7 @@ export class MotionForwardDialogComponent implements OnInit {
         this.committeesSubject.next(this.data.forwardingMeetings);
         this.selectedMeetings = new Set();
         this.initStateMap();
+        this.disableForwardWithAttachments = this.organisationSettings.instant(`disable_forward_with_attachments`);
     }
 
     private getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
@@ -96,7 +103,7 @@ export class MotionForwardDialogComponent implements OnInit {
             useOriginalSubmitter: this.useOriginalSubmitter,
             useOriginalNumber: this.useOriginalNumber,
             useOriginalVersion: this.useOriginalVersion,
-            withAttachments: this.withAttachments,
+            withAttachments: this.disableForwardWithAttachments ? undefined : this.withAttachments,
             markAmendmentsAsForwarded: this.markAmendmentsAsForwarded && this.useOriginalVersion
         });
     }
