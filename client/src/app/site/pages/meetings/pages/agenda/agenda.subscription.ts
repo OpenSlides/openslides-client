@@ -140,7 +140,7 @@ export const listOfSpeakersSpeakerCountSubscription = {
     follow: [
         {
             idField: `speaker_ids`,
-            fieldset: [`begin_time`, `end_time`],
+            fieldset: [`begin_time`, `end_time`, `meeting_user_id`],
             follow: [
                 {
                     idField: `point_of_order_category_id`,

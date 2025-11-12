@@ -103,22 +103,22 @@ export class AgendaForwardDialogComponent implements OnInit {
             item => item.child_ids && item.child_ids.some(child_id => !agendaItemIds.has(child_id))
         );
         this.showNotTopicWarning = this.data.showSkippedItemWarning;
-        // TODO: fix this it somehow returns 0
         this.speakerAmount = this.data.agenda.reduce(
-            (sum, item) => sum + (item.list_of_speakers?.speaker_ids.length ?? 0),
+            (sum, item) => sum + (item.content_object?.list_of_speakers?.speaker_ids?.length ?? 0),
             0
         );
         this.participantAmount = Array.from(
             new Set(
-                this.data.agenda.flatMap(item =>
-                    item.list_of_speakers?.speakers.map(speaker => speaker.meeting_user_id)
-                )
+                this.data.agenda
+                    .flatMap(item =>
+                        item.content_object?.list_of_speakers?.speakers?.map(speaker => speaker.meeting_user_id)
+                    )
+                    .filter(val => !!val)
             )
         ).length;
     }
 
     public async ngOnInit(): Promise<void> {
-        console.log(`DATA`, this.data);
         for (const committee of this.data.forwardingMeetings) {
             committee.meetings = this.getMeetingsSorted(committee);
         }
