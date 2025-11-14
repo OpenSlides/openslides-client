@@ -301,6 +301,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * Creates the form with default values
      */
     public async createForm(): Promise<void> {
+        if (this.dialogForm) {
+            return;
+        }
         this.dialogForm = this.formBuilder.group({
             format: [],
             lnMode: [],
@@ -551,7 +554,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
         const exportInfo = this.dialogToExportInfo(this.dialogForm);
         if (exportInfo) {
-            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
+            if (motions_models.length) {
+                await this.modelRequestService.fetch(
+                    getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id))
+                );
+            }
             const amendments = this.amendmentRepo.getViewModelList();
             this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
 

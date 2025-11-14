@@ -1,4 +1,4 @@
-FROM node:22.19-alpine AS base
+FROM node:22.21-alpine AS base
 
 ## Setup
 ARG CONTEXT
@@ -44,7 +44,7 @@ RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version
 RUN npm run build
 
 # Prod wants nginx as base image for some reason
-FROM nginx:1.29.2 AS prod
+FROM nginx:1.29.3 AS prod
 
 ## Setup
 ARG CONTEXT

@@ -143,7 +143,7 @@
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequential) {
@@ -303,13 +303,12 @@
                         {{ motion.title }}
                     </span>
                 </div>
-
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequential) {
