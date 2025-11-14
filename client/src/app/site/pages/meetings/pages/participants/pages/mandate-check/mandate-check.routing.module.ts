@@ -16,7 +16,7 @@ const routes: Routes = [
                     import(`./components/mandate-check-list/mandate-check-list.component`).then(
                         m => m.MandateCheckListComponent
                     ),
-                data: { meetingPermissions: [Permission.userCanManagePresence] }
+                data: { meetingPermissions: [Permission.userCanSeeSensitiveData] }
             }
         ]
     }
