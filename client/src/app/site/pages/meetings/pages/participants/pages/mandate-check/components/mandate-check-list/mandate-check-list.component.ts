@@ -22,6 +22,7 @@ import { ParticipantControllerService } from '../../../../services/common/partic
 
 const FEMALE_ID = 2;
 const MALE_ID = 1;
+const UNKNOWN_ID = -1;
 const ALL_MANDATES_ID = -1;
 
 class GenderEntry implements Identifiable {
@@ -67,7 +68,11 @@ class MandateCheckEntry implements Identifiable {
         } else {
             this.absentUserIds.push(userId);
         }
-        this.genderEntryMap.get(genderId)?.add(present);
+        if (genderId) {
+            this.genderEntryMap.get(genderId)?.add(present);
+        } else {
+            this.genderEntryMap.get(UNKNOWN_ID)?.add(present);
+        }
     }
 
     public getTotalCount(genderId?: Id): number {
@@ -109,7 +114,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
     public genderIds: Id[] = [2, 1, 3, 4];
-    public genders: ViewGender[] = [];
+    public genders: any[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
     public toggleMap = new Map<Id, boolean>();
@@ -174,11 +179,6 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         return this.participantRepo.getViewModel(userId).getShortName();
     }
 
-    public getOfFemales(value: number): string {
-        const label = this.translate.instant(`of this %num% female`).replace(`%num%`, value);
-        return label;
-    }
-
     private updateEntries(): void {
         const filteredSortedParticipants = this.participants
             .filter(pt => (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id)))
@@ -191,6 +191,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         ) {
             this.genders = [this.genders[1], this.genders[0], ...this.genders.slice(2)];
         }
+        this.genders.push({ id: UNKNOWN_ID, name: 'NA' });
         const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID, this.genders);
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
