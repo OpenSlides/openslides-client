@@ -39,6 +39,23 @@
                             {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
                         </div>
                         <div class="text-medium">{{ 'of this' | translate }}</div>
+                    </div>
+                    <div class="center">
+                        <mat-progress-bar
+                            class="progressbar-colored"
+                            [bufferValue]="100"
+                            [mode]="'determinate'"
+                            [value]="entry.getPercent() * 100"
+                        ></mat-progress-bar>
+                    </div>
+                    <div class="flex-container align-left color-black">
+                        <div class="text-medium-bold">{{ 'total' | translate }}</div>
+                        <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
+                        <div class="text-medium">{{ 'of this' | translate }}</div>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <div class="flex-container align-right color-blue">
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <div class="text-medium">
@@ -53,18 +70,8 @@
                             }
                         }
                     </div>
-                    <div class="center">
-                        <mat-progress-bar
-                            class="progressbar-colored"
-                            [bufferValue]="100"
-                            [mode]="'determinate'"
-                            [value]="entry.getPercent() * 100"
-                        ></mat-progress-bar>
-                    </div>
+                    <div>&nbsp;</div>
                     <div class="flex-container align-left color-black">
-                        <div class="text-medium-bold">{{ 'total' | translate }}</div>
-                        <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
-                        <div class="text-medium">{{ 'of this' | translate }}</div>
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <div class="text-medium">
