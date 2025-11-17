@@ -20,7 +20,13 @@ export const getMandateCheckSubscriptionConfig: SubscriptionConfigGenerator = (i
                         fieldset: UserFieldsets.FullNameSubscription.fieldset.concat(
                             `gender_id`,
                             `is_present_in_meeting_ids`
-                        )
+                        ),
+                        follow: [
+                            {
+                                idField: `gender_id`,
+                                fieldset: [`name`]
+                            }
+                        ]
                     }
                 ]
             },

@@ -13,51 +13,72 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 
-const FEMALE_GENDER_ID = 2;
 const ALL_MANDATES_ID = -1;
 
+class GenderEntry implements Identifiable {
+    public label: string;
+    public id: Id;
+    public present: number;
+    public absent: number;
+
+    public constructor(id: Id, label: string) {
+        this.id = id;
+        this.label = label;
+        this.present = 0;
+        this.absent = 0;
+    }
+
+    public add(present: boolean): void {
+        if (present) {
+            this.present += 1;
+        } else {
+            this.absent += 1;
+        }
+    }
+}
 class MandateCheckEntry implements Identifiable {
     public id = ALL_MANDATES_ID;
     public name = ``;
     public presentUserIds: Id[] = [];
     public absentUserIds: Id[] = [];
-    public presentFemaleUserIds: Id[] = [];
-    public absentFemaleUserIds: Id[] = [];
+    public genderEntryMap: Map<Id, GenderEntry> = new Map<Id, GenderEntry>();
 
-    public constructor(name: string, id: Id) {
+    public constructor(name: string, id: Id, genders: ViewGender[]) {
         this.name = name;
         this.id = id;
-    }
 
-    public add(userId: Id, present: boolean, female: boolean): void {
-        if (present) {
-            this.presentUserIds.push(userId);
-            if (female) {
-                this.presentFemaleUserIds.push(userId);
-            }
-        } else {
-            this.absentUserIds.push(userId);
-            if (female) {
-                this.absentFemaleUserIds.push(userId);
-            }
+        for (const gender of genders) {
+            this.genderEntryMap.set(gender.id, new GenderEntry(gender.id, gender.name));
         }
     }
 
-    public getTotalCount(female?: boolean): number {
-        if (female) {
-            return this.presentFemaleUserIds.length + this.absentFemaleUserIds.length;
+    public add(userId: Id, present: boolean, genderId: Id | null): void {
+        if (present) {
+            this.presentUserIds.push(userId);
+        } else {
+            this.absentUserIds.push(userId);
+        }
+        this.genderEntryMap.get(genderId)?.add(present);
+    }
+
+    public getTotalCount(genderId?: Id): number {
+        if (genderId) {
+            const genderEntry = this.genderEntryMap.get(genderId);
+            return (genderEntry?.present ?? 0) + (genderEntry?.absent ?? 0);
         }
         return this.presentUserIds.length + this.absentUserIds.length;
     }
 
-    public getPercent(female?: boolean): number {
-        const total = this.getTotalCount(female);
-        const part = female ? this.presentFemaleUserIds.length : this.presentUserIds.length;
+    public getPercent(genderId?: Id): number {
+        const total = this.getTotalCount(genderId);
+        const part = genderId ? this.genderEntryMap.get(genderId)?.present : this.presentUserIds.length;
         return part / total;
     }
 }
@@ -85,6 +106,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public entries: MandateCheckEntry[] = [];
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
+    public genders: ViewGender[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
     public toggleMap = new Map<Id, boolean>();
@@ -93,6 +115,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         private participantRepo: ParticipantControllerService,
         private structureLevelRepo: StructureLevelRepositoryService,
         private groupRepo: GroupControllerService,
+        private genderRepo: GenderControllerService,
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef
     ) {
@@ -157,26 +180,19 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         const filteredSortedParticipants = this.participants
             .filter(pt => (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id)))
             .sort((a, b) => a.short_name.localeCompare(b.short_name));
-        const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID);
+        this.genders = this.genderRepo.getViewModelList();
+        const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID, this.genders);
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
-            structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id));
+            structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id, this.genders));
         }
         for (const participant of filteredSortedParticipants) {
-            allMandates.add(
-                participant.id,
-                participant.isPresentInMeeting(),
-                participant.gender_id === FEMALE_GENDER_ID
-            );
+            allMandates.add(participant.id, participant.isPresentInMeeting(), participant.gender_id);
             for (const strLvlId of participant.structure_level_ids() ?? []) {
                 if (this.structureLevels.length) {
                     structureLevelsEntryMap
                         .get(strLvlId)
-                        .add(
-                            participant.id,
-                            participant.isPresentInMeeting(),
-                            participant.gender_id === FEMALE_GENDER_ID
-                        );
+                        .add(participant.id, participant.isPresentInMeeting(), participant.gender_id);
                 }
             }
         }

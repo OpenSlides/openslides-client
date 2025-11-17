@@ -38,10 +38,19 @@
                         <div class="text-medium-bold">
                             {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
                         </div>
-                        @if (entry.getTotalCount(true)) {
-                            <div class="text-medium">{{ getOfFemales(entry.presentFemaleUserIds.length) }}</div>
-                        } @else {
-                            <div>&nbsp;</div>
+                        <div class="text-medium">{{ 'of this' | translate }}</div>
+                        @for (gender of genders; track gender.id) {
+                            @if (entry.getTotalCount(gender.id)) {
+                                <div class="text-medium">
+                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    {{ entry.genderEntryMap.get(gender.id)?.present }}
+                                    {{
+                                        displayPercent(
+                                            entry.genderEntryMap.get(gender.id)?.present / entry.presentUserIds.length
+                                        )
+                                    }}
+                                </div>
+                            }
                         }
                     </div>
                     <div class="center">
@@ -55,10 +64,15 @@
                     <div class="flex-container align-left color-black">
                         <div class="text-medium-bold">{{ 'total' | translate }}</div>
                         <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
-                        @if (entry.getTotalCount(true)) {
-                            <div>{{ getOfFemales(entry.getTotalCount(true)) }}</div>
-                        } @else {
-                            <div>&nbsp;</div>
+                        <div class="text-medium">{{ 'of this' | translate }}</div>
+                        @for (gender of genders; track gender.id) {
+                            @if (entry.getTotalCount(gender.id)) {
+                                <div class="text-medium">
+                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    {{ entry.getTotalCount(gender.id) }}
+                                    {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
+                                </div>
+                            }
                         }
                     </div>
                 </div>
