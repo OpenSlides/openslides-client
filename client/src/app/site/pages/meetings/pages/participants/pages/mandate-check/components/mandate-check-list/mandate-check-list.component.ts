@@ -20,6 +20,8 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 
+const FEMALE_ID = 2;
+const MALE_ID = 1;
 const ALL_MANDATES_ID = -1;
 
 class GenderEntry implements Identifiable {
@@ -106,6 +108,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public entries: MandateCheckEntry[] = [];
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
+    public genderIds: Id[] = [2, 1, 3, 4];
     public genders: ViewGender[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
@@ -181,6 +184,13 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             .filter(pt => (this.selectedGroups ?? []).some(id => pt.group_ids().includes(id)))
             .sort((a, b) => a.short_name.localeCompare(b.short_name));
         this.genders = this.genderRepo.getViewModelList();
+        // female at first place
+        if (
+            this.genders.some(gender => gender.id === MALE_ID) &&
+            this.genders.some(gender => gender.id === FEMALE_ID)
+        ) {
+            this.genders = [this.genders[1], this.genders[0], ...this.genders.slice(2)];
+        }
         const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID, this.genders);
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
