@@ -3,9 +3,8 @@
         [ngClass]="{
             'result-wrapper': true,
             'result-wrapper-additional': iconSize !== 'medium',
-            'grid-gap-slide': inSlide,
-            'items-center': !inSlide,
-            'items-left': inSlide
+            'extra-grid-normal': !inSlide,
+            'extra-grid-slide': inSlide
         }"
     >
         <table class="result-table" [ngClass]="{ margins: iconSize === 'gigantic' }">
@@ -27,7 +26,7 @@
                 }
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
-                        <tr [class.in-slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
@@ -43,24 +42,22 @@
                             </td>
                             <td>
                                 <div class="result-cell-definition">
-                                    @if (row.value[0].showPercent) {
-                                        <span>
-                                            @if (inSlide) {
-                                                {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
-                                            } @else {
-                                                {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
-                                            }
-                                        </span>
-                                    }
+                                    <span>
+                                        @if (inSlide) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        } @else if (row.value[0].showPercent) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                        }
+                                    </span>
                                 </div>
                             </td>
                             <td>
                                 <div class="result-cell-definition">
                                     <span>
-                                        @if (inSlide) {
-                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
-                                        } @else {
+                                        @if (!inSlide) {
                                             {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
+                                        } @else if (row.value[0].showPercent) {
+                                            {{ getVoteAmount(row.value[0].amount, row) | pollPercentBaseAlt: poll }}
                                         }
                                     </span>
                                 </div>
@@ -68,7 +65,7 @@
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class.in-slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
                             <!-- YNA/Valid etc -->
                             <td class="label-column">
                                 @if (row.value[0].icon) {
@@ -144,7 +141,7 @@
         </table>
         <!-- Chart -->
         @if (shouldShowChart) {
-            <div [class.doughnut-chart]="!inSlide" [class.doughnut-chart-slide]="inSlide">
+            <div [class.doughnut-chart-normal]="!inSlide" [class.doughnut-chart-slide]="inSlide">
                 <os-chart type="doughnut" [data]="chartData"></os-chart>
             </div>
         }
