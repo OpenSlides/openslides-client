@@ -449,6 +449,15 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`content`, `includePdfAttachments`);
             this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }
+        const motionAmount = this.motions_models.length;
+        let PDFamount = 0;
+        for (const motion of this.motions_models) {
+            PDFamount = +motion[`attachment_meeting_mediafile_ids`]?.length;
+        }
+        if (motionAmount > 100 || PDFamount > 100) {
+            this.deselectOption(`content`, `includePdfAttachments`);
+            this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
+        }
         if (this.motions_models.filter(m => (m ? m.hasTags() : false)).length === 0) {
             this.deselectOption(`metaInfo`, `tags`);
             this.changeStateOfChipOption(this.tagChipOption, true, `tags`);
