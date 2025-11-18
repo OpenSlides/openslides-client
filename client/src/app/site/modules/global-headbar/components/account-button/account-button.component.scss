@@ -61,7 +61,10 @@ a {
     background: var(--theme-headbar);
     color: var(--theme-headbar-contrast);
     border: none;
+    border-radius: 10px;
     &:hover {
         cursor: pointer;
+        background: rgba(0, 0, 0, 0.07);
+        transition: background 0.3s ease;
     }
 }
