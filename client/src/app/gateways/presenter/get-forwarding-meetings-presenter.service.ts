@@ -13,6 +13,8 @@ export interface GetForwardingMeetingsPresenterMeeting {
     name: string;
     start_time: number;
     end_time: number;
+    admin_group_id?: number;
+    is_active?: boolean;
 }
 
 export interface GetForwardingMeetingsPresenter {

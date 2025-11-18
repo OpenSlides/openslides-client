@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
+import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
@@ -26,6 +27,7 @@ import { CommitteeDetailEditComponent } from './components/committee-detail-edit
         ReactiveFormsModule,
         MatInputModule,
         SearchSelectorModule,
+        DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })
