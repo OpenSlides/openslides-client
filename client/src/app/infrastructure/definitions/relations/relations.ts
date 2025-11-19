@@ -15,6 +15,7 @@ import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-posit
 import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
 import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
+import { ViewMotionSupporter } from 'src/app/site/pages/meetings/pages/motions/modules/supporters/view-models/view-motion-supporter';
 import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers';
 import {
     ViewStructureLevel,
@@ -252,11 +253,11 @@ export const RELATIONS: Relation[] = [
         MField: `meeting_user`,
         OField: `personal_notes`
     }),
-    ...makeM2M({
-        AViewModel: ViewMotion,
-        BViewModel: ViewMeetingUser,
-        AField: `supporter_meeting_users`,
-        BField: `supported_motions`
+    ...makeM2O({
+        MViewModel: ViewMotionSupporter,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `motion_supporters`
     }),
     ...makeM2O({
         MViewModel: ViewMotionSubmitter,
@@ -551,6 +552,13 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionBlock,
         OField: `motion_blocks`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionSupporter,
+        OField: `motion_supporters`,
         MField: `meeting`,
         isFullList: true
     }),
@@ -883,11 +891,10 @@ export const RELATIONS: Relation[] = [
         OField: `motions`
     }),
     ...makeM2O({
-        MViewModel: ViewMotionSubmitter,
+        MViewModel: ViewMotionSupporter,
         OViewModel: ViewMotion,
         MField: `motion`,
-        OField: `submitters`,
-        order: `weight`
+        OField: `supporters`
     }),
     ...makeM2O({
         MViewModel: ViewMotionChangeRecommendation,

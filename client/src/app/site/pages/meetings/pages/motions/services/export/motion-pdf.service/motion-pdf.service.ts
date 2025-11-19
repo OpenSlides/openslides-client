@@ -279,7 +279,7 @@ export class MotionPdfService {
             if (minSupporters && motion.supporters.length > 0) {
                 const supporters = motion.supporters
                     .naturalSort(this.translate.getCurrentLang(), [`first_name`, `last_name`])
-                    .map(supporter => supporter.full_name)
+                    .map(supporter => supporter.getTitle())
                     .join(`, `);
 
                 metaTableBody.push([

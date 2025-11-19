@@ -111,7 +111,10 @@ export class MotionPermissionService {
                     motion.state?.allow_support &&
                     (!motion.submitters ||
                         !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId!)) &&
-                    (!motion.supporters || !motion.supporter_ids?.includes(this.operator.operatorId!))
+                    (!motion.supporters ||
+                        !motion.supporters
+                            ?.flatMap(sup => sup.meeting_users?.map(muser => muser.user_id))
+                            .includes(this.operator.operatorId!))
                 );
             }
             case `unsupport`: {
@@ -127,7 +130,9 @@ export class MotionPermissionService {
                     !!motion.state &&
                     motion.state.allow_support &&
                     motion.supporters &&
-                    !!motion.supporter_ids?.includes(this.operator.operatorId!)
+                    !!motion.supporters
+                        ?.flatMap(sup => sup?.meeting_users.map(muser => muser.user_id))
+                        .includes(this.operator.operatorId!)
                 );
             }
             case `createpoll`: {

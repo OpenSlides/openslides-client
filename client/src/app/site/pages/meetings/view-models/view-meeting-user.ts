@@ -4,8 +4,9 @@ import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-m
 import { ViewSpeaker } from '../pages/agenda';
 import { ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatMessage } from '../pages/chat';
-import { ViewMotion, ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
+import { ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-models/view-motion-supporter';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
@@ -32,7 +33,7 @@ interface IMeetingUserRelations {
     chat_messages: ViewChatMessage[];
     speakers: ViewSpeaker[];
     personal_notes: ViewPersonalNote[];
-    supported_motions: ViewMotion[];
+    motion_supporters: ViewMotionSupporter[];
     submitted_motions: ViewMotionSubmitter[];
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
