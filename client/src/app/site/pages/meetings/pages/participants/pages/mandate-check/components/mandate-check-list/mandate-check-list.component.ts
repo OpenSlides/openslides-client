@@ -118,7 +118,6 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public entries: MandateCheckEntry[] = [];
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
-    public genderIds: Id[] = [2, 1, 3, 4];
     public genders: GenderEntryProvider[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
