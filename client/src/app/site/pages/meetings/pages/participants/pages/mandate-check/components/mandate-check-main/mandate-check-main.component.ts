@@ -11,7 +11,7 @@ import { getMandateCheckSubscriptionConfig } from '../../mandate-check.subscript
     imports: [RouterModule],
     templateUrl: './mandate-check-main.component.html',
     styleUrl: './mandate-check-main.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class MandateCheckMainComponent extends BaseMeetingModelRequestHandler {
     protected getSubscriptions(id: Id): SubscriptionConfig<any>[] {

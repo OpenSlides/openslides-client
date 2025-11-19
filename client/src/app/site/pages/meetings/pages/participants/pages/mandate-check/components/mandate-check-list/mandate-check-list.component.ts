@@ -14,16 +14,21 @@ import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/s
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 
 const FEMALE_ID = 2;
 const MALE_ID = 1;
 const UNKNOWN_ID = -1;
 const ALL_MANDATES_ID = -1;
+
+interface GenderEntryProvider {
+    id: Id;
+    name: string;
+}
 
 class GenderEntry implements Identifiable {
     public label: string;
@@ -53,7 +58,7 @@ class MandateCheckEntry implements Identifiable {
     public absentUserIds: Id[] = [];
     public genderEntryMap: Map<Id, GenderEntry> = new Map<Id, GenderEntry>();
 
-    public constructor(name: string, id: Id, genders: ViewGender[]) {
+    public constructor(name: string, id: Id, genders: GenderEntryProvider[]) {
         this.name = name;
         this.id = id;
 
@@ -108,13 +113,13 @@ class MandateCheckEntry implements Identifiable {
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnDestroy, OnInit {
-    public structureLevels = [];
+    public structureLevels: ViewStructureLevel[] = [];
     public entriesObservable = new BehaviorSubject<MandateCheckEntry[]>([]);
     public entries: MandateCheckEntry[] = [];
     public groups: ViewGroup[] = [];
     public participants: ViewUser[] = [];
     public genderIds: Id[] = [2, 1, 3, 4];
-    public genders: any[] = [];
+    public genders: GenderEntryProvider[] = [];
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
     public toggleMap = new Map<Id, boolean>();
@@ -136,16 +141,12 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
                 this.structureLevels = strLvls;
                 this.updateToggleMap();
                 this.cd.markForCheck();
-            })
-        );
-        this.subscriptions.push(
+            }),
             this.participantRepo.getViewModelListObservable().subscribe(participants => {
                 this.participants = participants;
                 this.updateEntries();
                 this.cd.markForCheck();
-            })
-        );
-        this.subscriptions.push(
+            }),
             this.groupRepo.getViewModelListObservable().subscribe(groups => (this.groups = groups))
         );
 
@@ -207,16 +208,16 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
                 }
             }
         }
-        const sortedEntries = [...structureLevelsEntryMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+        const sortedEntries = Array.from(structureLevelsEntryMap.values()).sort((a, b) => a.name.localeCompare(b.name));
         this.entries = [allMandates, ...sortedEntries];
-        this.entriesObservable.next([allMandates, ...sortedEntries]);
+        this.entriesObservable.next(this.entries);
     }
 
     private updateToggleMap(): void {
         const newMap = new Map<Id, boolean>();
-        newMap.set(ALL_MANDATES_ID, this.toggleMap.get(ALL_MANDATES_ID) ?? false);
+        newMap.set(ALL_MANDATES_ID, !!this.toggleMap.get(ALL_MANDATES_ID));
         for (const strlvl of this.structureLevels) {
-            newMap.set(strlvl.id, this.toggleMap.get(strlvl.id) ?? false);
+            newMap.set(strlvl.id, !!this.toggleMap.get(strlvl.id));
         }
         this.toggleMap = newMap;
     }
