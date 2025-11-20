@@ -204,6 +204,12 @@ export const VoteValuesVerbose = {
     A: `Abstain`
 };
 
+export const RequiredMajorityBaseVerbose = {
+    no_majority: _('No majority'),
+    two_third_majority: _('Two-thid majority'),
+    absolute_majority: _('Absolute majority')
+};
+
 /**
  * Interface describes the possible data for the result-table.
  */
