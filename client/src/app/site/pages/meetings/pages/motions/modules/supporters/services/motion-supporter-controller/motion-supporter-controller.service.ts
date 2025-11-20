@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionSupporter } from 'src/app/domain/models/motions/motion-supporter';
+import { Action } from 'src/app/gateways/actions';
 import { MotionSupporterRepositoryService } from 'src/app/gateways/repositories/motions/motion-supporter';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -30,7 +30,7 @@ export class MotionSupporterControllerService extends BaseMeetingControllerServi
         return this.repo.create(motion, ...meetingUsers);
     }
 
-    public delete(...models: Identifiable[]): Action<void> {
+    public delete(...models: ViewMotionSupporter[]): Action<void> {
         return this.repo.delete(...models);
     }
 }

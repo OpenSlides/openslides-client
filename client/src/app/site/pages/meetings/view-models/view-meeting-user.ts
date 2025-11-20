@@ -1,3 +1,4 @@
+import { Id } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
@@ -23,6 +24,10 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
 
     public structureLevels(): string {
         return (this.structure_levels || []).map(sl => sl.name).join(`, `);
+    }
+
+    public getSupporter(motion_id: Id): ViewMotionSupporter | undefined {
+        return this.motion_supporters.find(sup => sup.motion_id === motion_id);
     }
 }
 interface IMeetingUserRelations {

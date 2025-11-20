@@ -12,6 +12,10 @@ export class ViewMotionSupporter extends BaseHasMeetingUserViewModel<MotionSuppo
     public get motionSupporter(): MotionSupporter {
         return this._model;
     }
+
+    public get full_name(): string {
+        return this.getTitle();
+    }
 }
 interface IMotionSupporterRelations {
     motion: ViewMotion;

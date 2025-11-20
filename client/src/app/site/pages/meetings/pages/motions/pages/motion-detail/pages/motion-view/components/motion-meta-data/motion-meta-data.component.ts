@@ -12,13 +12,14 @@ import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presen
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
 import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
+import { ViewMotionSupporter } from '../../../../../../modules/supporters';
+import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services';
 import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
@@ -159,7 +160,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
-    public get supportersObservable(): Observable<ViewUser[]> {
+    public get supportersObservable(): Observable<ViewMotionSupporter[]> {
         return this._supportersSubject;
     }
 
@@ -167,7 +168,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return this.operator.hasPerms(Permission.userCanManage);
     }
 
-    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
+    private _supportersSubject = new BehaviorSubject<ViewMotionSupporter[]>([]);
 
     /**
      * The subscription to the recommender config variable.
@@ -181,6 +182,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         private motionForwardingService: MotionForwardDialogService,
         private meetingController: MeetingControllerService,
         public motionSubmitterRepo: MotionSubmitterControllerService,
+        public motionSupporterRepo: MotionSupporterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
         private participantSort: ParticipantListSortService,
@@ -305,14 +307,17 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      * Supports the motion (as requested user)
      */
     public support(): void {
-        this.repo.support(this.motion).catch(this.raiseError);
+        this.motionSupporterRepo.create(this.motion, this.operator.user).resolve().catch(this.raiseError);
     }
 
     /**
      * Unsupports the motion
      */
     public unsupport(): void {
-        this.repo.unsupport(this.motion).catch(this.raiseError);
+        this.motionSupporterRepo
+            .delete(this.motion.supporters.find(sup => sup.meeting_user.user_id === this.operator.user.id))
+            .resolve()
+            .catch(this.raiseError);
     }
 
     /**
@@ -320,6 +325,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      * TODO: open dialog here!
      */
     public openSupportersDialog(): void {
+        this.updateSupportersSubject();
         this.showSupporters = !this.showSupporters;
     }
 
@@ -394,7 +400,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
+        this._supportersSubject.next(
+            (await this.participantSort.sort(this.motion.supporterUsers)).flatMap(user =>
+                user.getMeetingUser().getSupporter(this.motion.id)
+            )
+        );
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
@@ -436,11 +446,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return forwardingCommittees;
     }
 
-    public checkValidSupporter(supporter: ViewUser): boolean {
+    public checkValidSupporter(supporter: ViewMotionSupporter): boolean {
         return (
-            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
+            supporter.meeting_user?.groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.getMeetingUser().vote_delegated_to_id &&
+                supporter.meeting_user?.vote_delegated_to_id &&
                 this.activeMeeting.users_forbid_delegator_as_supporter &&
                 this.activeMeeting.users_enable_vote_delegations
             )
