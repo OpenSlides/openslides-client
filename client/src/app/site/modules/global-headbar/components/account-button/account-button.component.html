@@ -63,7 +63,13 @@
                 <div>
                     <!-- present toggle -->
                     @if (isAllowedSelfSetPresent && hasActiveMeeting) {
-                        <button mat-menu-item [ngClass]="{ active: isPresent }" (click)="toggleOperatorPresence()">
+                        <button
+                            aria-checked="{{ isPresent }}"
+                            mat-menu-item
+                            role="menuitemcheckbox"
+                            [ngClass]="{ active: isPresent }"
+                            (click)="toggleOperatorPresence()"
+                        >
                             <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
                                 {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
                             </mat-icon>
@@ -71,15 +77,15 @@
                         </button>
                     } @else if (hasActiveMeeting) {
                         @if (isPresent) {
-                            <button mat-menu-item>
+                            <div mat-menu-item>
                                 <mat-icon class="menu-icon">done</mat-icon>
                                 <span class="menu-text">{{ 'Present' | translate }}</span>
-                            </button>
+                            </div>
                         } @else {
-                            <button mat-menu-item>
+                            <div mat-menu-item>
                                 <mat-icon class="menu-icon">clear</mat-icon>
                                 <span class="menu-text">{{ 'Not present' | translate }}</span>
-                            </button>
+                            </div>
                         }
                     }
                 </div>
