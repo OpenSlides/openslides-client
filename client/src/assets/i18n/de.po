@@ -1,11 +1,11 @@
-# 
+#
 # Translators:
 # Joshua Sangmeister <joshua.sangmeister@gmail.com>, 2024
 # Katharina <karmitt2@web.de>, 2024
 # Elblinator, 2025
 # Birte Spekker <birte.spekker@intevation.de>, 2025
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2025\n"
@@ -2140,14 +2140,6 @@ msgstr "Account ein-/ausschalten ..."
 
 msgid "Enable/disable accounts"
 msgstr "Accounts ein-/ausschalten"
-
-msgid ""
-"Enables a button with defined text that sets the motion to next state. The "
-"next state is defined via \"Submitter may set state to\"."
-msgstr ""
-"Aktiviert einen Button mit angegebenen Text, der den Antrag in den nächsten "
-"Status setzt. Der nächste Status ist definiert durch das Feld "
-"\"Antragsteller*in darf Status setzen auf\"."
 
 msgid ""
 "Enables for the selected state the possibility for submitters to change the "

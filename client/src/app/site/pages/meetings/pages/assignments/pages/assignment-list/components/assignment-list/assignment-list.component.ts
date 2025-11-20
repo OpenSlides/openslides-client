@@ -7,6 +7,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.subscription';
 import { AssignmentPhases } from '../../../../definitions/index';
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { AssignmentExportService } from '../../../../services/assignment-export.service';
@@ -95,7 +96,9 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      * otherwise the whole list of assignments is exported.
      */
     public async downloadAssignmentButton(assignments?: ViewAssignment[]): Promise<void> {
-        this.pdfService.exportMultipleAssignments(assignments ?? this.repo.getViewModelList());
+        const usedAssignments = assignments ?? this.repo.getViewModelList();
+        await this.modelRequestService.fetch(getAssignmentDetailSubscriptionConfig(...usedAssignments.map(a => a.id)));
+        this.pdfService.exportMultipleAssignments(usedAssignments);
     }
 
     public getCandidateAmount(assignments: ViewAssignment): number {
