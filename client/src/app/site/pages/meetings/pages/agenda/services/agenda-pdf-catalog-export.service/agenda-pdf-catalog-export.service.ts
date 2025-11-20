@@ -10,6 +10,7 @@ import { DurationService } from 'src/app/site/services/duration.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { MeetingPdfExportService } from '../../../../services/export';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models';
@@ -41,6 +42,7 @@ export class AgendaPdfCatalogExportService {
         private pdfService: MeetingPdfExportService,
         private htmlToPdfService: HtmlToPdfService,
         private organizationSettingsService: OrganizationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private pdfImagesService: PdfImagesService,
         private durationService: DurationService,
         private treeService: TreeService
@@ -428,6 +430,7 @@ export class AgendaPdfCatalogExportService {
         const optionWidth = `*`;
         const votesWidth = isA4 ? 200 : 100;
         const firstPlaceWidth = 10;
+        const useVoteWeight = this.meetingSettingsService.instant(`users_enable_vote_weight`);
 
         if (agendaItem.content_object?.polls.length) {
             for (let pollIndex = 0; pollIndex < agendaItem.content_object?.polls.length; pollIndex++) {
@@ -447,7 +450,12 @@ export class AgendaPdfCatalogExportService {
                 // poll table rows
                 let optionIndex = 0;
                 for (const option of poll.options) {
-                    const votesForOption = poll.stateHasVotes ? option.votes.length : ``;
+                    let votesForOption: any = ``;
+                    if (poll.stateHasVotes && useVoteWeight) {
+                        votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
+                    } else if (poll.stateHasVotes) {
+                        votesForOption = option.votes.length;
+                    }
                     const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
                     tableCells.push([
                         { text: optionIndex + 1, fillColor: backgroundColor },
