@@ -59,6 +59,11 @@ const routes: Routes = [
                 data: { meetingPermissions: [Permission.userCanManage] }
             },
             {
+                path: `mandate-check`,
+                loadChildren: () =>
+                    import(`./pages/mandate-check/mandate-check.routing.module`).then(m => m.MandateCheckRoutingModule)
+            },
+            {
                 path: ``,
                 loadChildren: () =>
                     import(`./pages/participant-detail/participant-detail.module`).then(m => m.ParticipantDetailModule)
