@@ -19,6 +19,7 @@ import {
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
@@ -178,20 +179,33 @@ class PdfCreator {
         this._settings = config.settings;
     }
 
-    public download(): void {
+    public async getFile(): Promise<Blob | null> {
         if (this.canDownload()) {
-            this.initPdfWorker();
+            const filePromise = this.subscribePdfWorker();
             this.sendDocumentToPdfWorker();
-        } else {
-            this._pdfWorker = null;
-            this._progressSnackBarService.dismiss();
-            // this.matSnackBar.open(_(`Cannot create PDF files on this browser.`), ``, {
-            //     duration: 0
-            // });
+
+            const file = await filePromise;
+            return file;
         }
+
+        this._pdfWorker = null;
+        this._progressSnackBarService.dismiss();
+        return null;
     }
 
-    private initPdfWorker(): void {
+    public async download(): Promise<void> {
+        const file = await this.getFile();
+        if (file !== null) {
+            saveAs(file, this._filename, { autoBom: true });
+            return;
+        }
+
+        this._pdfWorker = null;
+        this._progressSnackBarService.dismiss();
+    }
+
+    private subscribePdfWorker(): Promise<Blob> {
+        const result = new Deferred<Blob>();
         this._pdfWorker = new Worker(new URL(`./pdf-worker.worker`, import.meta.url), {
             type: `module`
         });
@@ -199,7 +213,7 @@ class PdfCreator {
         // the result of the worker
         this._pdfWorker.onmessage = ({ data }): void => {
             // if the worker returns a numbers, is always the progress
-            if (typeof data === `number`) {
+            if (typeof data === `number` && this._progressService && this._progressSnackBarService) {
                 // update progress
                 const progress = Math.ceil(data * 100);
                 this._progressService.progressAmount = progress;
@@ -207,11 +221,13 @@ class PdfCreator {
 
             // if the worker returns an object, it's always the document
             if (typeof data === `object`) {
-                this._progressSnackBarService.dismiss();
-                saveAs(data, this._filename, { autoBom: true });
+                this._progressSnackBarService?.dismiss();
+                result.resolve(data);
                 this._pdfWorker = null;
             }
         };
+
+        return result;
     }
 
     private async sendDocumentToPdfWorker(): Promise<void> {
@@ -525,34 +541,57 @@ export class PdfDocumentService {
     }
 
     /**
-     * Downloads a pdf with the standard page definitions.
+     * Returns a Blob of a pdf with the standard page definitions.
      */
-    public async download({
+    public async blob({
         docDefinition,
         filename: filetitle,
+        disableProgress,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }): Promise<void> {
-        await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]).then(_ => {
+    }: DownloadConfig & {
+        pageMargins: [number, number, number, number];
+        pageSize: PageSize;
+        disableProgress?: boolean;
+        progressService?: ProgressSnackBarControlService;
+    }): Promise<Blob | null> {
+        await this.updateHeader([`pdf_header_l`, `pdf_header_r`, `pdf_footer_l`, `pdf_footer_r`]);
+
+        if (!disableProgress) {
             this.showProgress();
-            const imageUrls = this.pdfImagesService.getImageUrls();
-            this.pdfImagesService.clearImageUrls();
-            new PdfCreator({
+        }
+        const imageUrls = this.pdfImagesService.getImageUrls();
+        this.pdfImagesService.clearImageUrls();
+        return new PdfCreator({
+            document: this.getStandardPaper({
                 ...config,
-                document: this.getStandardPaper({
-                    ...config,
-                    documentContent: docDefinition,
-                    pageMargins: config.pageMargins,
-                    pageSize: config.pageSize,
-                    landscape: false,
-                    imageUrls: imageUrls
-                }),
-                filename: `${filetitle}.pdf`,
-                settings: this.settings,
-                loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
-                progressService: this.progressService,
-                progressSnackBarService: this.progressSnackBarService
-            }).download();
+                documentContent: docDefinition,
+                pageMargins: config.pageMargins,
+                pageSize: config.pageSize,
+                landscape: false,
+                imageUrls: imageUrls
+            }),
+            filename: `${filetitle}.pdf`,
+            settings: this.settings,
+            loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
+            progressService: null,
+            progressSnackBarService: !disableProgress ? this.progressSnackBarService : undefined,
+            ...config
+        }).getFile();
+    }
+
+    /**
+     * Downloads a pdf with the standard page definitions.
+     */
+    public async download(
+        config: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: PageSize }
+    ): Promise<void> {
+        const file = await this.blob({
+            ...config,
+            progressService: this.progressService
         });
+        if (file) {
+            saveAs(file, config.filename, { autoBom: true });
+        }
     }
 
     /**
