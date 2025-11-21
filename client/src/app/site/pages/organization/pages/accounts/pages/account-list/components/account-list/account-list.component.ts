@@ -199,21 +199,24 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
         if (result) {
             const isActive = result.action === SET_ACTIVE;
-            if (this.operator.isOrgaManager && !isActive) {
-                if (this.selectedRows.length == 1 && this.selectedRows[0].id === this.operator.user.id) {
-                    this.snackbar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
-                } else if (this.selectedRows.some(row => row.id === this.operator.user.id)) {
-                    this.userController
-                        .update(
-                            { is_active: isActive },
-                            ...this.selectedRows.filter(row => row.id !== this.operator.user.id)
-                        )
-                        .resolve();
-                    this.snackbar.open(
-                        this.translate.instant(`Accounts were set to inactive, except for your own account.`),
-                        `Ok`
-                    );
-                }
+            const orgaManagerAndInactive = this.operator.isOrgaManager && !isActive;
+            if (
+                orgaManagerAndInactive &&
+                this.selectedRows.length == 1 &&
+                this.selectedRows[0].id === this.operator.user.id
+            ) {
+                this.snackbar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
+            } else if (orgaManagerAndInactive && this.selectedRows.some(row => row.id === this.operator.user.id)) {
+                this.userController
+                    .update(
+                        { is_active: isActive },
+                        ...this.selectedRows.filter(row => row.id !== this.operator.user.id)
+                    )
+                    .resolve();
+                this.snackbar.open(
+                    this.translate.instant(`Accounts were set to inactive, except for your own account.`),
+                    `Ok`
+                );
             } else {
                 this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
             }
