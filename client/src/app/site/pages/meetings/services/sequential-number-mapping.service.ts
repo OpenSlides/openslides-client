@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src/app/domain/interfaces';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
@@ -10,7 +11,6 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
-import { ViewAssignment } from '../pages/assignments';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewMotionWorkflow } from '../pages/motions';
 import { ViewPoll } from '../pages/polls';
 import { ViewProjector } from '../pages/projectors';
@@ -19,7 +19,7 @@ import { ActiveMeetingService } from './active-meeting.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
 const SEQUENTIAL_NUMBER_ID_FIELDS: Record<string, (keyof ViewMeeting)[]> = {
-    [ViewAssignment.COLLECTION]: [`assignment_ids`],
+    [Assignment.COLLECTION]: [`assignment_ids`],
     [ListOfSpeakers.COLLECTION]: [`list_of_speakers_ids`],
     [ViewMotion.COLLECTION]: [`motion_ids`],
     [ViewMotionBlock.COLLECTION]: [`motion_block_ids`],

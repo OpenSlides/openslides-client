@@ -163,10 +163,10 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     public async createNewSelectedUser(name: string): Promise<void> {
         const newUserObj = await this.userRepo.createFromString(name);
-        this.emitSelectedUser({ userId: newUserObj.id, user: newUserObj });
         const user = await firstValueFrom(
             this.userRepo.getViewModelObservable(newUserObj.id).pipe(filter(user => !!user))
         );
+        this.emitSelectedUser({ userId: newUserObj.id, user });
         this.snackBar.open(
             this.translate
                 .instant(`A user with the username '%username%' and the first name '%first_name%' was created.`)

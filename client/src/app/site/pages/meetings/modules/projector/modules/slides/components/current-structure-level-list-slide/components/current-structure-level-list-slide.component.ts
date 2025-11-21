@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import {
@@ -12,7 +12,6 @@ const MAX_COLUMNS = 3;
     selector: `os-current-structure-level-list-slide`,
     templateUrl: `./current-structure-level-list-slide.component.html`,
     styleUrls: [`./current-structure-level-list-slide.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class CurrentStructureLevelListSlideComponent extends BaseSlideComponent<CurrentStructureLevelListSlideData> {

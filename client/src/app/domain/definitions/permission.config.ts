@@ -238,7 +238,7 @@ Meeting specific information: Structure level, Group, Participant number, About 
             {
                 display_name: _(`Can see sensitive data`),
                 help_text: _(
-                    `Can see email, username, membership number, SSO identification and locked out state of all participants.`
+                    `Can see email, username, membership number, SSO identification and locked out state of all participants and can see mandate check.`
                 ),
                 anon_allowed: true,
                 value: Permission.userCanSeeSensitiveData

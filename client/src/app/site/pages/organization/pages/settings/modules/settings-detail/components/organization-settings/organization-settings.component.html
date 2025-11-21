@@ -44,6 +44,11 @@
                             <mat-hint>{{ 'Only for committee admins' | translate }}</mat-hint>
                         </mat-checkbox>
                     </section>
+                    <section>
+                        <mat-checkbox formControlName="disable_forward_with_attachments">
+                            {{ 'Attachments to motions cannot be forwarded' | translate }}
+                        </mat-checkbox>
+                    </section>
                 </div>
             </mat-card-content>
         </mat-card>

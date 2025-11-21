@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { isNumberRange } from 'src/app/infrastructure/utils/validators';
+import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { LineRange } from '../../../../../../definitions/index';
 import {
@@ -43,6 +45,7 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
     standalone: false
 })
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {
+    public parentErrorStateMatcher = new ParentErrorStateMatcher();
     /**
      * The replacement types for the radio group
      * @TODO translate
@@ -67,15 +70,42 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
      */
     public lineRange!: LineRange;
 
+    public editLineRange = false;
+
+    public toggleLineRange(): void {
+        this.editLineRange = !this.editLineRange;
+    }
+
+    protected checkLineRangeValidator(): ValidatorFn {
+        return (formControl: AbstractControl): Record<string, any> | null => {
+            const line_from = formControl.get(`line_from`)!.value;
+            const line_to = formControl.get(`line_to`)!.value;
+            if (!this.repo.checkLineRanges(this.changeReco.id, line_from, line_to)) {
+                return { line_check_error: true };
+            }
+            return null;
+        };
+    }
+
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
     protected createForm(): void {
-        this.contentForm = this.formBuilder.group({
-            text: [this.changeReco?.text, Validators.required],
-            type: [this.changeReco?.type, Validators.required],
-            public: [!this.changeReco?.internal]
-        });
+        this.contentForm = this.formBuilder.group(
+            {
+                text: [this.changeReco?.text, Validators.required],
+                type: [this.changeReco?.type, Validators.required],
+                public: [!this.changeReco?.internal],
+                line_to: [this.changeReco?.line_to, [Validators.required, Validators.pattern(`[0-9]*`)]],
+                line_from: [
+                    this.changeReco?.line_from,
+                    [Validators.required, Validators.min(0), Validators.pattern(`[0-9]*`)]
+                ]
+            },
+            {
+                validators: [isNumberRange(`line_from`, `line_to`, `range_error`), this.checkLineRangeValidator()]
+            }
+        );
     }
 
     protected override initializeDialogData(): void {

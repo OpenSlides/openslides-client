@@ -75,7 +75,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
-                enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false]
+                enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
+                disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {

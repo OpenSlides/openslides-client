@@ -91,7 +91,13 @@ export class HttpService {
             return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
-                if (error.error.message) {
+                if (error.status === 451 && path.startsWith(`/system/vote`)) {
+                    const cleanError = this.translate.instant(
+                        `Vote was not counted, because of regulations of the organization.`
+                    );
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    throw new ProcessError(cleanError);
+                } else if (error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
                         data,
                         url: error.url

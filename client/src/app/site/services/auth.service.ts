@@ -145,6 +145,12 @@ export class AuthService {
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();
+        // In case SAML is enabled, we need to redirect the user to the IDP
+        // to complete the logout-flow. Maybe there is a better way to check
+        // for activated SAML than checking if the response is a URL.
+        if (response?.message && URL.parse(response.message)) {
+            location.replace(response.message);
+        }
     }
 
     public async logoutAnonymous(): Promise<void> {

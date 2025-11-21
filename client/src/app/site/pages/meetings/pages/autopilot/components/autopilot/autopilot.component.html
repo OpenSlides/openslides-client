@@ -68,16 +68,18 @@
             >
                 <ng-template osListOfSpeakersContentTitle>
                     <div class="line-and-icon subtitle-text">
-                        @if (closUrl) {
-                            <a [routerLink]="closUrl">
-                                {{ 'List of speakers' | translate }}
-                            </a>
-                        }
-                        @if (!closUrl) {
-                            <span>
-                                {{ 'List of speakers' | translate }}
-                            </span>
-                        }
+                        <h2 class="accessibility-h2 accessibility-h2-1">
+                            @if (closUrl) {
+                                <a [routerLink]="closUrl">
+                                    {{ 'List of speakers' | translate }}
+                                </a>
+                            }
+                            @if (!closUrl) {
+                                <span>
+                                    {{ 'List of speakers' | translate }}
+                                </span>
+                            }
+                        </h2>
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             @if (isLosClosed) {
@@ -166,7 +168,11 @@
                 <mat-card class="os-card spacer-bottom-60">
                     <mat-card-content>
                         <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
-                            <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                            <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text">
+                                <span>
+                                    {{ projectorTitle | translate }}
+                                </span>
+                            </h2>
                         </a>
                         <a
                             [routerLink]="viewModelUrl || null"

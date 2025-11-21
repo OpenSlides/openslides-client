@@ -152,7 +152,7 @@ test.describe(`Testing the sign in and out process`, () => {
         await login(context);
         await page.goto(`/`);
         await expect(page).not.toHaveURL(`/login`);
-        await page.locator(`os-account-button > div`).click();
+        await page.locator(`os-account-button > button`).click();
         await page.getByText(`Logout`).first().click();
         await expect(page).toHaveURL(`/login`);
     });
@@ -161,7 +161,7 @@ test.describe(`Testing the sign in and out process`, () => {
         await login(context, DELEGATE_NAME);
         await page.goto(`/${DEFAULT_MEETING_ID}`);
         await expect(page).not.toHaveURL(`/login`);
-        await page.locator(`os-account-button > div`).click();
+        await page.locator(`os-account-button > button`).click();
         await page.getByText(`Logout`).first().click();
         await expect(page).toHaveURL(`/login`);
     });
@@ -179,7 +179,7 @@ test.describe(`Testing the sign in and out process`, () => {
         await expect(page).not.toHaveURL(`/${DEFAULT_MEETING_ID}/login`);
         await expect(page).toHaveURL(`/${DEFAULT_MEETING_ID}`);
 
-        await page.locator(`os-account-button > div`).click();
+        await page.locator(`os-account-button > button`).click();
         await page.getByText(`Logout`).first().click();
         await expect(page).toHaveURL(`/login`);
 
