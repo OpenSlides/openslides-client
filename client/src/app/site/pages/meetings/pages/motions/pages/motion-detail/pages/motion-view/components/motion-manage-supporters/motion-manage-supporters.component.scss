@@ -1,0 +1,44 @@
+@use 'src/assets/styles/mixins/button.scss';
+
+.text-field-container {
+    display: grid;
+
+    .mat-mdc-form-field {
+        width: 100%;
+    }
+}
+
+.small-button {
+    @include button.custom-size-button(20px, 14px);
+}
+
+.single-line {
+    display: grid;
+    grid-template-columns: auto min-content;
+    grid-column-gap: 0.5em;
+    margin-right: 0.5em;
+
+    span {
+        margin: auto 0;
+    }
+}
+
+.user .mat-mdc-chip {
+    border-radius: 16px !important;
+    padding: 5px 15px !important;
+    margin: 5px 0;
+    border: 1px solid #dddddd;
+    height: auto;
+}
+
+div.remove-top-margin {
+    margin-top: -1.33em;
+}
+
+div.origin-view {
+    display: inline-block;
+}
+
+span.referencelist {
+    display: inline-block;
+}

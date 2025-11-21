@@ -248,6 +248,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
+        console.log(`HANDLE ERROR`, error);
         if (error?.error.content?.type !== `auth`) {
             await this.waitUntilEndpointHealthy();
         }
