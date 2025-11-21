@@ -198,7 +198,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        fieldset: [`motion_supporter_ids`, `user_id`, `group_ids`],
+                        fieldset: [`motion_supporter_ids`, `user_id`, `group_ids`, `meeting_id`],
                         follow: [
                             {
                                 idField: `user_id`,

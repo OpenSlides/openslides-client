@@ -30,7 +30,7 @@ export class MotionSupporterControllerService extends BaseMeetingControllerServi
         return this.repo.create(motion, ...meetingUsers);
     }
 
-    public delete(...models: ViewMotionSupporter[]): Action<void> {
+    public delete(...models: Identifiable[]): Action<void> {
         return this.repo.delete(...models);
     }
 }
