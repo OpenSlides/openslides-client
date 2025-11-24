@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { GetForwardingMeetingsPresenter } from 'src/app/gateways/presenter';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -43,12 +45,12 @@ export class AgendaForwardDialogService extends BaseDialogService<
     }
 
     public get forwardingMeetingIds(): number[] {
-        return this._forwardingMeetings.flatMap(obj => obj.meetings?.map(m => +m.id));
+        return this._forwardingMeeting.meetings?.map(m => +m.id);
     }
 
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
 
-    private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
+    private _forwardingMeeting: GetForwardingMeetingsPresenter = undefined;
     private _forwardingMeetingsUpdateRequired = true;
 
     public constructor(
@@ -71,19 +73,11 @@ export class AgendaForwardDialogService extends BaseDialogService<
         await this.updateForwardMeetings();
 
         return (
-            !!this._forwardingMeetings.length &&
-            this._forwardingMeetings.some(
-                pres =>
-                    this.operator.hasCommitteeManagementRights(pres.id) ||
-                    pres.meetings.some(
-                        meeting =>
-                            meeting.is_active &&
-                            meeting.end_time &&
-                            meeting.end_time * 1000 < Date.now() &&
-                            meeting.admin_group_id &&
-                            this.operator.user.getMeetingUser(+meeting.id)?.group_ids.includes(meeting.admin_group_id)
-                    )
-            )
+            !!this._forwardingMeeting &&
+            (this.operator.hasCommitteeManagementRights(this._forwardingMeeting.id) ||
+                this._forwardingMeeting.meetings.some(
+                    meeting => meeting.end_time && meeting.end_time * 1000 < Date.now()
+                ))
         );
     }
 
@@ -97,7 +91,7 @@ export class AgendaForwardDialogService extends BaseDialogService<
             autoFocus: false,
             data: {
                 agenda: data.items,
-                forwardingMeetings: this._forwardingMeetings,
+                forwardingMeeting: this._forwardingMeeting,
                 is_single: data.is_single,
                 showSkippedItemWarning: data.showSkippedItemWarning
             }
@@ -144,6 +138,16 @@ export class AgendaForwardDialogService extends BaseDialogService<
         }
     }
 
+    public isInPast(meeting: Partial<Meeting>): boolean {
+        const referenceTime = meeting.start_time ?? meeting.end_time;
+        if (!referenceTime && referenceTime !== 0) {
+            return false;
+        }
+        const current = new Date();
+        const end = endOfDay(fromUnixTime(meeting.end_time)) ?? endOfDay(fromUnixTime(meeting.start_time));
+        return end < current;
+    }
+
     private async updateForwardMeetings(): Promise<void> {
         if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
             const meetingId = await firstValueFrom(
@@ -181,27 +185,33 @@ export class AgendaForwardDialogService extends BaseDialogService<
 
             const committeeId = response[`meeting`][meetingId][`committee_id`];
             const committee = response[`committee`][committeeId];
+            const isCommitteeAdmin = this.operator.hasCommitteeManagementRights(committeeId);
             const meetings = {
                 id: committeeId,
                 name: committee[`name`],
                 default_meeting_id: committee[`default_meeting_id`],
                 meetings: Object.values(response[`meeting`])
                     .filter(line => {
-                        return line[`id`] !== meetingId;
+                        const adminGroupId = line[`admin_group_id`];
+                        return (
+                            line[`id`] !== meetingId &&
+                            line[`is_active_in_organization_id`] &&
+                            !this.isInPast(line) &&
+                            (isCommitteeAdmin ||
+                                (adminGroupId &&
+                                    this.operator.user.getMeetingUser(+line[`id`])?.group_ids.includes(adminGroupId)))
+                        );
                     })
                     .map(line => {
-                        const adminGroupId = line[`admin_group_id`];
                         return {
                             id: line[`id`],
                             name: line[`name`],
                             start_time: line[`start_time`],
-                            end_time: line[`end_time`],
-                            admin_group_id: adminGroupId,
-                            is_active: !!line[`is_active_in_organization_id`]
+                            end_time: line[`end_time`]
                         };
                     })
             };
-            this._forwardingMeetings = [meetings];
+            this._forwardingMeeting = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next([
                 {

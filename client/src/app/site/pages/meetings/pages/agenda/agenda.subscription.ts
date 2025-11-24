@@ -64,7 +64,13 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
-                                ...listOfSpeakersSpeakerCountSubscription
+                                ...listOfSpeakersSpeakerCountSubscription,
+                                follow: [
+                                    {
+                                        idField: `speaker_ids`,
+                                        fieldset: [`end_time`, `begin_time`, `speech_state`, `point_of_order`]
+                                    }
+                                ]
                             },
                             {
                                 idField: `submitter_ids`,

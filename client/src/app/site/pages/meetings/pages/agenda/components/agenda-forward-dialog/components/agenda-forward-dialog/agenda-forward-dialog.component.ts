@@ -9,9 +9,9 @@ import { MatTableModule } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 
 import { ViewAgendaItem } from '../../../../view-models';
@@ -37,11 +37,12 @@ export interface AgendaForwardDialogReturnData {
         FormsModule,
         MeetingTimeComponent,
         TranslatePipe
-    ]
+    ],
+    standalone: true
 })
 export class AgendaForwardDialogComponent implements OnInit {
-    public get committeesObservable(): Observable<GetForwardingMeetingsPresenter[]> {
-        return this.committeesSubject;
+    public get committeeObservable(): Observable<GetForwardingMeetingsPresenter> {
+        return this.committeeSubject;
     }
 
     public readonly checkboxStateMap: Record<string, boolean> = {};
@@ -79,21 +80,21 @@ export class AgendaForwardDialogComponent implements OnInit {
     public showNotTopicWarning = false;
 
     public speakerAmount: number;
+    public hasForbiddenSpeakers: boolean;
     public participantAmount: number;
 
-    private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
+    private readonly committeeSubject = new BehaviorSubject<GetForwardingMeetingsPresenter>(undefined);
 
     public constructor(
         @Inject(MAT_DIALOG_DATA)
         public data: {
             agenda: ViewAgendaItem[];
-            forwardingMeetings: GetForwardingMeetingsPresenter[];
+            forwardingMeeting: GetForwardingMeetingsPresenter;
             is_single?: boolean;
             showSkippedItemWarning: boolean;
         },
         private dialogRef: MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>,
-        private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService
+        private activeMeeting: ActiveMeetingService
     ) {
         const agendaItemIds = new Set(this.data.agenda.map(item => item.id));
         this.showParentNotIncludedWarning = this.data.agenda.some(
@@ -107,6 +108,15 @@ export class AgendaForwardDialogComponent implements OnInit {
             (sum, item) => sum + (item.content_object?.list_of_speakers?.speaker_ids?.length ?? 0),
             0
         );
+        this.hasForbiddenSpeakers = this.data.agenda.some(item =>
+            item.content_object?.list_of_speakers?.speakers?.some(
+                speaker =>
+                    !speaker?.end_time &&
+                    (speaker?.speech_state === SpeechState.INTERVENTION ||
+                        speaker?.point_of_order ||
+                        speaker.begin_time)
+            )
+        );
         this.participantAmount = Array.from(
             new Set(
                 this.data.agenda
@@ -119,10 +129,8 @@ export class AgendaForwardDialogComponent implements OnInit {
     }
 
     public async ngOnInit(): Promise<void> {
-        for (const committee of this.data.forwardingMeetings) {
-            committee.meetings = this.getMeetingsSorted(committee);
-        }
-        this.committeesSubject.next(this.data.forwardingMeetings);
+        this.data.forwardingMeeting.meetings = this.getMeetingsSorted(this.data.forwardingMeeting);
+        this.committeeSubject.next(this.data.forwardingMeeting);
         this.selectedMeetings = new Set();
         this.initStateMap();
     }
@@ -158,24 +166,12 @@ export class AgendaForwardDialogComponent implements OnInit {
         this.selectedMeetings[fn](+source.value);
     }
 
-    public isAdmin(meeting: GetForwardingMeetingsPresenterMeeting, committeeId: number): boolean {
-        return (
-            this.operator.hasCommitteeManagementRights(committeeId) ||
-            (meeting.admin_group_id &&
-                this.operator.user.getMeetingUser(+meeting.id)?.group_ids.includes(meeting.admin_group_id))
-        );
-    }
-
-    public isInPast(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
-        return meeting.end_time && meeting.end_time * 1000 < Date.now();
-    }
-
     public showActiveMeetingName(): string {
         return this.activeMeeting?.meeting?.name;
     }
 
     private initStateMap(): void {
-        const meetings = this.committeesSubject.value.flatMap(committee => committee.meetings)!;
+        const meetings = this.committeeSubject.value.meetings!;
         for (const meeting of meetings) {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
