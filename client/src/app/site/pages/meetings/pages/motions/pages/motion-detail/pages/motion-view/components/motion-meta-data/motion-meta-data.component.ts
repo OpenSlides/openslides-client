@@ -17,7 +17,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
 import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
-import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services';
 import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
@@ -156,7 +155,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         private motionForwardingService: MotionForwardDialogService,
         private meetingController: MeetingControllerService,
         public motionSubmitterRepo: MotionSubmitterControllerService,
-        public motionSupporterRepo: MotionSupporterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
         private presenter: GetForwardingCommitteesPresenterService

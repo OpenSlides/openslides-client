@@ -900,7 +900,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotionSubmitter,
         OViewModel: ViewMotion,
         MField: `motion`,
-        OField: `submitters`
+        OField: `submitters`,
+        order: `weight`
     }),
     ...makeM2O({
         MViewModel: ViewMotionChangeRecommendation,
