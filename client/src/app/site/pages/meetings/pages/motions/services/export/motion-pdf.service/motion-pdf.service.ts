@@ -258,7 +258,9 @@ export class MotionPdfService {
 
         // submitters
         if (!infoToExport || infoToExport.includes(`submitters`)) {
-            const submitters = motion.mapSubmittersWithAdditional(user => user.full_name).join(`, `);
+            const submitters = motion
+                .mapSubmittersWithAdditional(user => user?.full_name || this.translate.instant(`Deleted user`))
+                .join(`, `);
 
             metaTableBody.push([
                 {
@@ -295,7 +297,9 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`editors`)) {
             const motionEnableEditor = this.meetingSettingsService.instant(`motions_enable_editor`);
             if (motionEnableEditor && motion.editors.length > 0) {
-                const editors = motion.editors.map(editor => editor.user.full_name).join(`, `);
+                const editors = motion.editors
+                    .map(editor => editor.user?.full_name || this.translate.instant(`Deleted user`))
+                    .join(`, `);
 
                 metaTableBody.push([
                     {
@@ -316,7 +320,7 @@ export class MotionPdfService {
             );
             if (motionEnableWorkingGroupSpeaker && motion.working_group_speakers.length > 0) {
                 const working_group_speakers = motion.working_group_speakers
-                    .map(speaker => speaker.user.full_name)
+                    .map(speaker => speaker.user?.full_name || this.translate.instant(`Deleted user`))
                     .join(`, `);
 
                 metaTableBody.push([
@@ -677,12 +681,13 @@ export class MotionPdfService {
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
+            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length;
             const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(
                 change =>
                     !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr
             );
-            const brokenTextChangesAmount = changes.length - workingTextChanges.length;
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length - hasChangedTitle;
 
             const titleChange = changes.find(change => change.isTitleChange());
 
@@ -817,7 +822,7 @@ export class MotionPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public callListToDoc(motions: ViewMotion[]): Content {
-        motions.sort((a, b) => a.sort_weight - b.sort_weight);
+        motions.sort((a, b) => a.tree_weight - b.tree_weight);
         const title = {
             text: this.translate.instant(`Call list`),
             style: `title`
@@ -901,7 +906,13 @@ export class MotionPdfService {
                 text: motion.sort_parent_id ? `` : motion.numberOrTitle
             },
             { text: motion.sort_parent_id ? motion.numberOrTitle : `` },
-            { text: motion.submitters.length ? motion.mapSubmittersWithAdditional(s => s.short_name).join(`, `) : `` },
+            {
+                text: motion.submitters.length
+                    ? motion
+                          .mapSubmittersWithAdditional(s => s?.short_name || this.translate.instant(`Deleted user`))
+                          .join(`, `)
+                    : ``
+            },
             { text: motion.title },
             {
                 text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ``

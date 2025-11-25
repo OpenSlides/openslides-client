@@ -366,8 +366,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.setEditMode(false);
     }
 
-    public onDownloadPdf(): void {
-        this.topicPdfService.exportSingleTopic(this.topic);
+    public onExport(): void {
+        this.componentServiceCollector.router.navigate([this.activeMeetingId, `agenda`, `agenda-export`], {
+            queryParams: { 'agenda-items': this.topic.agenda_item_id, back: this.topic.sequential_number }
+        });
     }
 
     /**

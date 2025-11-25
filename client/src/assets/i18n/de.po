@@ -222,6 +222,9 @@ msgstr "Aktive Veranstaltungen"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgid "Add answer"
+msgstr "Antwort hinzufügen"
+
 msgid "Add me"
 msgstr "Füge mich hinzu"
 
@@ -295,6 +298,9 @@ msgstr ""
 
 msgid "Agenda"
 msgstr "Tagesordnung"
+
+msgid "Agenda export"
+msgstr "Tagesordnungsexport"
 
 msgid "Agenda items are in process. Please wait ..."
 msgstr "Tagesordnungspunkte werden bearbeitet. Bitte warten ..."
@@ -438,6 +444,12 @@ msgstr "Anonymisieren kann erst nach Beenden der Stimmabgabe erfolgen."
 
 msgid "Anonymous"
 msgstr "Anonym"
+
+msgid "Answer to interposed question"
+msgstr "Antwort auf Zwischenfrage"
+
+msgid "Answer to intervention"
+msgstr "Antwort auf Kurzintervention"
 
 msgid "Applause interval in seconds"
 msgstr "Applaus-Zeitintervall in Sekunden"
@@ -859,6 +871,9 @@ msgstr "Fett"
 
 msgid "Bullet list"
 msgstr "Aufzählung"
+
+msgid "Button text"
+msgstr "Button-Text"
 
 msgid "CSV import"
 msgstr "CSV-Import"
@@ -1344,9 +1359,6 @@ msgstr "Anwesenheit ändern"
 msgid "Change recommendation"
 msgstr "Änderungsempfehlung"
 
-msgid "Change recommendation - rejected"
-msgstr "Änderungsempfehlung - Abgelehnt"
-
 msgid "Change recommendations"
 msgstr "Änderungsempfehlungen"
 
@@ -1474,6 +1486,9 @@ msgstr "Erledigte Einträge"
 msgid "Collapse all"
 msgstr "Alle zusammenklappen"
 
+msgid "Collision with existing change recommendation"
+msgstr "Kollision mit anderer Änderungsempfehlung"
+
 msgid "Color"
 msgstr "Farbe"
 
@@ -1578,6 +1593,9 @@ msgstr "Livestream fortsetzen"
 
 msgid "Continuous text"
 msgstr "Fortlaufender Text"
+
+msgid "Contra"
+msgstr "Contra"
 
 msgid "Contra speech"
 msgstr "Gegenrede"
@@ -1745,11 +1763,15 @@ msgstr "Voreingestellte Art der Stimmabgabe"
 msgid ""
 "Defines for the selected state which groups have access:\n"
 "- If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].\n"
-"- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups]."
+"- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].\n"
+"\n"
+"Hint: Administrators always have full access."
 msgstr ""
 "Definiert für den ausgewählten Status, welche Gruppen Zugriff haben:\n"
 "- Wenn keine Option ausgewählt ist, sind die Anträge im ausgewählten Status für alle sichtbar; Voraussetzung hierfür ist Gruppenrecht: [Darf Anträge sehen].\n"
-"- Die Auswahl einer oder mehrerer Optionen schränkt den Zugriff auf diejenigen Gruppen ein, für die unter > [Teilnehmende] > [Gruppen] die ausgewählte Berechtigungsoption definiert ist."
+"- Die Auswahl einer oder mehrerer Optionen schränkt den Zugriff auf diejenigen Gruppen ein, für die unter > [Teilnehmende] > [Gruppen] die ausgewählte Berechtigungsoption definiert ist.\n"
+"\n"
+"Hinweis: Administratoren haben immer vollen Zugriff."
 
 msgid "Defines the colour for the state button."
 msgstr "Definiert die Farbe für die Status-Schaltfläche."
@@ -1769,6 +1791,21 @@ msgstr ""
 
 msgid "Defines the time in which applause amounts are add up."
 msgstr "Definiert die Zeit in der Applauswerte aufsummiert werden."
+
+msgid ""
+"Defines the wording of the button to change the state. Button is visible if the corresponding state is defined in \"Submitter may set state to\".\n"
+"\n"
+"Example: \n"
+"1. State \"in progress\": \"Submitter may set state to\" = \"submitted\"\n"
+"2. State \"submitted\": \"Button text\" = \"Submit motion\"\n"
+"=> This enables a submit button in state \"in progress\"."
+msgstr ""
+"Legt den Wortlaut des Buttons zum Statusändern fest. Der Button ist nur dann sichtbar, wenn der entsprechende Status unter „Antragsteller*in darf Status setzen auf“ definiert ist.\n"
+"\n"
+"Beispiel: \n"
+"1. Status „in Bearbeitung“: „Antragsteller*in darf Status setzen auf“ = „eingereicht“\n"
+"2. Status „eingereicht“: „Button-Text“ = „Antrag einreichen“\n"
+"=> Dadurch wird ein Antrag-Einreichen-Button im Status „in Bearbeitung“ aktiviert."
 
 msgid ""
 "Defines the wording of the recommendation that belongs to this state.\n"
@@ -2235,6 +2272,9 @@ msgstr "Stimmberechtigte"
 msgid "Error"
 msgstr "Fehler"
 
+msgid "Error during PDF creation of agenda item:"
+msgstr "Fehler bei der PDF-Erstellung des TOPs:"
+
 msgid "Error during PDF creation of election:"
 msgstr "Fehler bei der PDF-Erstellung der Wahl:"
 
@@ -2354,6 +2394,9 @@ msgstr "Erstredner*in"
 msgid "First state"
 msgstr "Erster Status"
 
+msgid "First value must be less or equal than second value."
+msgstr "Erster Wert muss kleiner oder gleich dem zweiten Wert sein."
+
 msgid "Follow recommendation"
 msgstr "Empfehlung folgen"
 
@@ -2434,6 +2477,9 @@ msgstr "Weiterleitung erstellt"
 
 msgid "Forwarding of motion"
 msgstr "Weiterleitung von Antrag"
+
+msgid "From"
+msgstr "Von"
 
 msgid "Front page title"
 msgstr "Titel der Startseite"
@@ -2916,6 +2962,9 @@ msgstr "Ist öffentlich"
 msgid "Is speaker"
 msgstr "ist Redner*in"
 
+msgid "Is speaking"
+msgstr "Redet gerade"
+
 msgid "Is submitter"
 msgstr "ist Antragsteller*in"
 
@@ -3014,6 +3063,18 @@ msgstr "Pegelanzeige"
 msgid "Light mode"
 msgstr "Heller Modus"
 
+msgid ""
+"Limit editor formatting options for users WITH motion manage permission"
+msgstr ""
+"Editor-Formatierungsmöglichkeit einschränken für Nutzer MIT "
+"Antragsverwaltungsrecht"
+
+msgid ""
+"Limit editor formatting options for users WITHOUT motion manage permission"
+msgstr ""
+"Editor-Formatierungsmöglichkeit einschränken für Nutzer OHNE "
+"Antragsverwaltungsrecht"
+
 msgid "Limit of active accounts"
 msgstr "Anzahl der maximal aktiven Accounts"
 
@@ -3106,6 +3167,9 @@ msgstr "Niedrigster Applauswert"
 
 msgid "Main motion and line number"
 msgstr "Hauptantrag und Zeilennummer"
+
+msgid "Main speaker"
+msgstr "Hauptredner*in"
 
 msgid ""
 "Make background color from meta information box on the projector transparent"
@@ -3398,6 +3462,9 @@ msgstr "Neuer Account"
 msgid "New amendment"
 msgstr "Neuer Änderungsantrag"
 
+msgid "New and old passwords are identical!"
+msgstr "Neues und altes Passwort sind identisch!"
+
 msgid "New ballot"
 msgstr "Neuer Wahlgang"
 
@@ -3595,6 +3662,9 @@ msgstr "Nicht gefunden"
 
 msgid "Not locked out"
 msgstr "Nicht ausgeschlossen"
+
+msgid "Not present"
+msgstr "Nicht anwesend"
 
 msgid "Note on secret voting"
 msgstr "Hinweis zu geheimen Stimmabgaben"
@@ -4183,6 +4253,9 @@ msgstr "Datenschutzerklärung"
 
 msgid "Private key of Service Provider (SP)"
 msgstr "Privater Schlüssel des Service Providers (SP)"
+
+msgid "Pro"
+msgstr "Pro"
 
 msgid "Process handling"
 msgstr "Prozessverarbeitung"
@@ -5149,6 +5222,9 @@ msgstr ""
 msgid "The number has to be greater than 0."
 msgstr "Die Anzahl muss größer als 0 sein."
 
+msgid "The organizer is responsible for the content under press law."
+msgstr "Presserechtlich verantwortlich für den Inhalt ist der Veranstalter."
+
 msgid "The parent motion is not available."
 msgstr "Der Eltern-Antrag ist nicht verfügbar."
 
@@ -5430,6 +5506,9 @@ msgstr "Titel für PDF-Dokumente von Anträgen"
 msgid "Title for access data and welcome PDF"
 msgstr "Titel für das Zugangsdaten- und Begrüßungs-PDF"
 
+msgid "To"
+msgstr "Bis"
+
 msgid "To start your search press Enter or the search icon"
 msgstr "Zum Starten der Suche Enter oder das Suchsymbol drücken."
 
@@ -5505,9 +5584,6 @@ msgstr "unerledigt"
 msgid "Unique speakers"
 msgstr "Eindeutige Redner*innen"
 
-msgid "Unknown participant"
-msgstr "Unbekannte*r Teilnehmer*in"
-
 msgid "Unknown user"
 msgstr "Unbekannter Nutzer"
 
@@ -5581,6 +5657,9 @@ msgstr ""
 
 msgid "Valid votes"
 msgstr "Gültige Stimmen"
+
+msgid "Value must be positive."
+msgstr "Wert muss positiv sein."
 
 msgid "View"
 msgstr "Ansicht"

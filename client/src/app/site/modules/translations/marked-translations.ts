@@ -124,3 +124,4 @@ _(`anonymized`);
 // organization strings
 _(`Amount of meetings`);
 _(`Amount of accounts`);
+_(`The organizer is responsible for the content under press law.`);

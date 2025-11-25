@@ -17,7 +17,11 @@
     <div>
         @for (model of intermediateModels$ | async; track model.id) {
             <mat-chip-listbox class="user">
-                <mat-basic-chip class="pre-wrap" disableRipple>{{ model.user?.getTitle() }}</mat-basic-chip>
+                @if (model.user) {
+                    <mat-basic-chip class="pre-wrap" disableRipple>{{ model.user.getTitle() }}</mat-basic-chip>
+                } @else {
+                    <mat-basic-chip class="pre-wrap" disableRipple>{{ 'Deleted user' | translate }}</mat-basic-chip>
+                }
             </mat-chip-listbox>
         }
         @if (useAdditionalInput && additionalInputValue) {
@@ -51,7 +55,7 @@
         <div class="text-field-container">
             <os-participant-search-selector
                 placeholder="{{ 'Select participant' | translate }}"
-                [nonSelectableUserIds]="editUserIds"
+                [nonSelectableUserIds]="nonSelectableUserIds"
                 (userSelected)="addUser($event)"
             ></os-participant-search-selector>
         </div>

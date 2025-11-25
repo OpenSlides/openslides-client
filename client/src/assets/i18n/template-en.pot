@@ -190,6 +190,10 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-entry/list-of-speakers-entry.component.html
+msgid "Add answer"
+msgstr ""
+
 msgid "Add me"
 msgstr ""
 
@@ -255,6 +259,10 @@ msgid ""
 msgstr ""
 
 msgid "Agenda"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/pages/agenda-export/components/agenda-export/agenda-export.component.html
+msgid "Agenda export"
 msgstr ""
 
 msgid "Agenda items are in process. Please wait ..."
@@ -396,6 +404,14 @@ msgid "Anonymizing can only be done after finishing a poll."
 msgstr ""
 
 msgid "Anonymous"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Answer to interposed question"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component.ts
+msgid "Answer to intervention"
 msgstr ""
 
 msgid "Applause interval in seconds"
@@ -776,6 +792,10 @@ msgid "Bold"
 msgstr ""
 
 msgid "Bullet list"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid "Button text"
 msgstr ""
 
 msgid "CSV import"
@@ -1201,9 +1221,6 @@ msgstr ""
 msgid "Change recommendation"
 msgstr ""
 
-msgid "Change recommendation - rejected"
-msgstr ""
-
 msgid "Change recommendations"
 msgstr ""
 
@@ -1327,6 +1344,11 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Collision with existing change recommendation"
+msgstr ""
+
 msgid "Color"
 msgstr ""
 
@@ -1431,6 +1453,10 @@ msgid "Continue livestream"
 msgstr ""
 
 msgid "Continuous text"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Contra"
 msgstr ""
 
 msgid "Contra speech"
@@ -1592,13 +1618,16 @@ msgstr ""
 msgid "Default voting type"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
 msgid ""
 "Defines for the selected state which groups have access:\n"
 "- If no option is selected, the motions in the selected state are visible "
 "to all; The prerequisite for this is group permission: [Can see motions].\n"
 "- Selecting one or more options restricts access to those groups for which "
 "the selected authorization option is defined under > [Participants] > "
-"[Groups]."
+"[Groups].\n"
+"\n"
+"Hint: Administrators always have full access."
 msgstr ""
 
 msgid "Defines the colour for the state button."
@@ -1613,6 +1642,17 @@ msgid "Defines the minimum deflection which is required to recognize applause."
 msgstr ""
 
 msgid "Defines the time in which applause amounts are add up."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-detail/workflow-detail.component.ts
+msgid ""
+"Defines the wording of the button to change the state. Button is visible if "
+"the corresponding state is defined in \"Submitter may set state to\".\n"
+"\n"
+"Example: \n"
+"1. State \"in progress\": \"Submitter may set state to\" = \"submitted\"\n"
+"2. State \"submitted\": \"Button text\" = \"Submit motion\"\n"
+"=> This enables a submit button in state \"in progress\"."
 msgstr ""
 
 msgid ""
@@ -2028,6 +2068,10 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts
+msgid "Error during PDF creation of agenda item:"
+msgstr ""
+
 msgid "Error during PDF creation of election:"
 msgstr ""
 
@@ -2141,6 +2185,10 @@ msgstr ""
 msgid "First state"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "First value must be less or equal than second value."
+msgstr ""
+
 msgid "Follow recommendation"
 msgstr ""
 
@@ -2218,6 +2266,10 @@ msgid "Forwarding created"
 msgstr ""
 
 msgid "Forwarding of motion"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "From"
 msgstr ""
 
 msgid "Front page title"
@@ -2694,6 +2746,10 @@ msgstr ""
 msgid "Is speaker"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-speaker-list/services/participant-speaker-list-filter.service/participant-speaker-list-filter.service.ts
+msgid "Is speaking"
+msgstr ""
+
 msgid "Is submitter"
 msgstr ""
 
@@ -2782,6 +2838,14 @@ msgid "Level indicator"
 msgstr ""
 
 msgid "Light mode"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITH motion manage permission"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions.ts
+msgid "Limit editor formatting options for users WITHOUT motion manage permission"
 msgstr ""
 
 msgid "Limit of active accounts"
@@ -2875,6 +2939,10 @@ msgid "Lowest applause amount"
 msgstr ""
 
 msgid "Main motion and line number"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-entry/list-of-speakers-entry.component.html
+msgid "Main speaker"
 msgstr ""
 
 msgid "Make background color from meta information box on the projector transparent"
@@ -3158,6 +3226,10 @@ msgstr ""
 msgid "New amendment"
 msgstr ""
 
+#: app/src/app/site/modules/user-components/components/password-form/password-form.component.ts
+msgid "New and old passwords are identical!"
+msgstr ""
+
 msgid "New ballot"
 msgstr ""
 
@@ -3355,6 +3427,10 @@ msgid "Not found"
 msgstr ""
 
 msgid "Not locked out"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
+msgid "Not present"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
@@ -3916,6 +3992,10 @@ msgid "Privacy policy"
 msgstr ""
 
 msgid "Private key of Service Provider (SP)"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker.ts
+msgid "Pro"
 msgstr ""
 
 msgid "Process handling"
@@ -4851,6 +4931,10 @@ msgstr ""
 msgid "The number has to be greater than 0."
 msgstr ""
 
+#: app/src/app/site/modules/translations/marked-translations.ts
+msgid "The organizer is responsible for the content under press law."
+msgstr ""
+
 msgid "The parent motion is not available."
 msgstr ""
 
@@ -5084,6 +5168,10 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "To"
+msgstr ""
+
 msgid "To start your search press Enter or the search icon"
 msgstr ""
 
@@ -5159,9 +5247,6 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
-msgid "Unknown participant"
-msgstr ""
-
 msgid "Unknown user"
 msgstr ""
 
@@ -5224,6 +5309,10 @@ msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
 msgid "Valid votes"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Value must be positive."
 msgstr ""
 
 msgid "View"

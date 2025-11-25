@@ -1,11 +1,17 @@
 @if (poll) {
-    <div [ngClass]="{ 'result-wrapper-wrapper': iconSize !== 'medium' }">
+    <div
+        [ngClass]="{
+            'result-wrapper-wrapper': iconSize !== 'medium' && !inSlide,
+            'result-wrapper-wrapper-in-slide': inSlide
+        }"
+    >
         <ng-content></ng-content>
         <div class="result-wrapper">
             @if (hasResults) {
                 @if (canSeeResults) {
                     <os-single-option-chart-table
                         [iconSize]="iconSize"
+                        [inSlide]="inSlide"
                         [poll]="poll"
                         [pollService]="motionPollService"
                         [shouldShowEntitled]="isPercentBaseEntitled || shouldShowEntitled"

@@ -237,8 +237,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     ) {
         super();
         this.subscriptions.push(
-            this.route.queryParams.subscribe(params => {
-                this.motions = params[`motions`].length > 1 ? params[`motions`] : [params[`motions`]];
+            this.route.queryParamMap.subscribe(paramMap => {
+                this.motions = paramMap.getAll(`motions`).map(value => Number(value));
             })
         );
         // wait either for all viewmodels of motions to be loaded or for the view
@@ -301,6 +301,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * Creates the form with default values
      */
     public async createForm(): Promise<void> {
+        if (this.dialogForm) {
+            return;
+        }
         this.dialogForm = this.formBuilder.group({
             format: [],
             lnMode: [],
@@ -327,6 +330,16 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
+            } else {
+                const defaultLineNumbering = this.meetingSettingsService.instant(`motions_default_line_numbering`);
+                const defaultTextVersion = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+                if ([this.lnMode.None, this.lnMode.Outside].includes(defaultLineNumbering)) {
+                    (this.savedSelections.tab_selections[0] as any).lnMode = defaultLineNumbering;
+                }
+                (this.savedSelections.tab_selections[0] as any).crMode = defaultTextVersion;
+                if ([this.crMode.Original, this.crMode.Final].includes(defaultTextVersion)) {
+                    (this.savedSelections.tab_selections[1] as any).crMode = defaultTextVersion;
+                }
             }
             this.tabGroup.selectedIndex = this.savedSelections.tab_index;
             this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
@@ -335,7 +348,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     // Function to determine whioch options are available, set as defaults and disabled
     // (based on property binding with the formgroup)
-    public hasAvailableVariables(): void {
+    private hasAvailableVariables(): void {
         // Check for meetingSettings if options should be visible
         this.filterFormControlDefaults(`content`, `motions_show_sequential_number`, `sequential_number`);
         this.filterFormControlDefaults(`personrelated`, `motions_enable_working_group_speaker`);
@@ -395,7 +408,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      * @param chipOption The ChipOption whose state will change.
      * @param nextState The next state the ChipOption will assume.
      */
-    public changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
+    private changeStateOfChipOption(chipOption: MatChipOption, nextState: boolean, value: string): void {
         if (chipOption) {
             chipOption.disabled = nextState;
             if (nextState) {
@@ -541,7 +554,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
         const exportInfo = this.dialogToExportInfo(this.dialogForm);
         if (exportInfo) {
-            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
+            if (motions_models.length) {
+                await this.modelRequestService.fetch(
+                    getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id))
+                );
+            }
             const amendments = this.amendmentRepo.getViewModelList();
             this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
 

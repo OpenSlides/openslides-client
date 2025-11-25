@@ -3,13 +3,9 @@ $height: 14px;
 :host {
     display: flex;
     flex-direction: row;
-    padding: 0 6px 0 12px;
+    padding: 0 6px 0 6px;
     cursor: pointer;
     transition: background 0.3s ease;
-
-    &:hover {
-        background: #5f5f5f;
-    }
 }
 
 .operator-information {
@@ -53,6 +49,21 @@ a {
     line-height: $button-size;
     text-align: center;
     cursor: pointer;
-    background: white;
-    border-radius: 50%;
+}
+
+.width-16 {
+    margin: 4px;
+    width: 20px;
+    height: 20px;
+}
+
+.accountButton {
+    background: var(--theme-headbar);
+    color: var(--theme-headbar-contrast);
+    border: none;
+    &:hover {
+        cursor: pointer;
+        background: #5f5f5f;
+        transition: background 0.3s ease;
+    }
 }

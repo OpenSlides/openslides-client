@@ -133,6 +133,21 @@
                 }
             </span>
         </os-motion-extension-field>
+        <!-- For submitters button to send to next state -->
+        @if (
+            !!motionState.submitter_withdraw_state &&
+            operatorIsSubmitter &&
+            motionState.submitter_withdraw_state.state_button_label
+        ) {
+            <button
+                class="spacer-top-10"
+                color="accent"
+                mat-raised-button
+                (click)="setState(motion.state.submitter_withdraw_state.id)"
+            >
+                <span>{{ motionState.submitter_withdraw_state.state_button_label }}</span>
+            </button>
+        }
         <!-- Forward to meeting -->
         @if (showForwardButton) {
             <button class="spacer-top-10" mat-stroked-button (click)="forwardMotionToMeetings()">
