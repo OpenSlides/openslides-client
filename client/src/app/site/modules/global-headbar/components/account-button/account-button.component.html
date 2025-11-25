@@ -1,4 +1,9 @@
-<button class="accountButton flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
+<button
+    aria-label="{{ getAriaLabel() }}"
+    class="accountButton flex-center"
+    data-cy="accountButton"
+    [matMenuTriggerFor]="userMenu"
+>
     @if (isPresent) {
         <div class="fake-fab-button flex-center">
             <mat-icon class="icon-16">done</mat-icon>
