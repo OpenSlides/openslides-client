@@ -120,9 +120,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
 
-        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-            this._forwardingAvailable = forwardingAvailable;
-        });
+        this.updateForwardingMeetings();
     }
 
     /**
@@ -232,6 +230,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[]): Promise<void> {
+        await this.updateForwardingMeetings();
         await this.forwardService.forwardAgendaItemsToMeetings(items);
     }
 
@@ -425,5 +424,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
         return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
+    }
+
+    public updateForwardingMeetings(): void {
+        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 }

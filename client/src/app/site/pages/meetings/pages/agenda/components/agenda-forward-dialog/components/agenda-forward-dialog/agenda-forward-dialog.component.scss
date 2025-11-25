@@ -20,28 +20,17 @@
 }
 
 .select-table {
-    min-width: 100%;
-    border: 0;
     border-spacing: 0;
-    table-layout: auto;
-    white-space: normal;
-    background-color: var(--mat-table-background-color, var(--mat-sys-surface));
     tr {
         height: var(--mat-table-row-item-container-height, 52px);
-        color: var(--mat-table-row-item-label-text-color, var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87)));
         td {
             border-bottom-color: var(--mat-table-row-item-outline-color, var(--mat-sys-outline, rgba(0, 0, 0, 0.12)));
             border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
             border-bottom-style: solid;
-            letter-spacing: var(--mat-table-row-item-label-text-tracking, var(--mat-sys-body-medium-tracking));
-            line-height: inherit;
 
             padding: 0 16px;
-            box-sizing: border-box;
             overflow: hidden;
-            text-align: left;
             text-overflow: ellipsis;
-            white-space: normal;
             color: var(--mat-table-row-item-label-text-color, var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87)));
         }
     }

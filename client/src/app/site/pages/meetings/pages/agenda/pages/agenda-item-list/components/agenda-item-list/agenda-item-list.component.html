@@ -10,7 +10,9 @@
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu" (click)="updateForwardingMeetings()">
+            <mat-icon>more_vert</mat-icon>
+        </button>
     </ng-container>
 
     <!-- Multiselect info -->
