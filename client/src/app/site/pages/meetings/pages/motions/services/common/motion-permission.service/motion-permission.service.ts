@@ -98,6 +98,22 @@ export class MotionPermissionService {
                 );
             }
             case `support`: {
+                console.log(
+                    `SUPPORT`,
+                    motion,
+                    motion?.state,
+                    this.operator.hasPerms(
+                        this.canDoActionWhileDelegationEnabled(this._forbidDelegatorSupportMotions)
+                            ? Permission.motionCanSupport
+                            : Permission.motionCanManage
+                    ),
+                    this.configMinSupporters,
+                    motion?.state?.allow_support,
+                    motion?.submitters,
+                    motion?.submitters?.map(submitter => submitter.user_id).includes(this.operator.operatorId!),
+                    motion?.supporters,
+                    motion?.supporters?.map(sup => sup.meeting_user?.user_id).includes(this.operator.operatorId!)
+                );
                 if (!motion || !motion.state) {
                     return false;
                 }

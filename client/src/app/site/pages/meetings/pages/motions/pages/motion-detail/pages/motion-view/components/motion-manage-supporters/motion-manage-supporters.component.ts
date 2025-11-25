@@ -3,11 +3,12 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { Action, ActionService } from 'src/app/gateways/actions';
+import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import {
@@ -129,6 +130,11 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
 
     private _supportersSubject = new BehaviorSubject<ViewMotionSupporter[]>([]);
 
+    /**
+     * The international localisation.
+     */
+    private intl: Intl.Collator;
+
     public constructor(
         private userRepository: ParticipantControllerService,
         public perms: MotionPermissionService,
@@ -144,6 +150,11 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
 
         this.editObservable = this.editSubject as Observable<Selectable[]>;
 
+        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang(), {
+            numeric: true,
+            ignorePunctuation: true,
+            sensitivity: `base`
+        });
         this.subscriptions.push(
             this.participantSort.getSortedViewModelListObservable().subscribe(() => {
                 this.updateSupportersSubject();
@@ -221,30 +232,7 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
             }
         }
 
-        const promise = Promise.all(
-            this.editSubject.value.map(val =>
-                val.user_id
-                    ? val
-                    : firstValueFrom(
-                          this.motionController.getViewModelObservable(this.motion.id).pipe(
-                              map(motion =>
-                                  this.getIntermediateModels(motion).find(model => {
-                                      if (val instanceof ViewUser) {
-                                          return model.user_id === val.id;
-                                      }
-                                      // else is (val instanceof ViewMotionSubmitter/ViewMotionEditor/ViewMotionWorkingGroupSpeaker)
-                                      return model.user_id === val.id;
-                                  })
-                              ),
-                              filter(model => !!model)
-                          )
-                      )
-            )
-        );
-
         await Action.from(...actions).resolve();
-
-        await promise;
         this.isEditMode = false;
     }
 
@@ -301,9 +289,18 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
 
     private async updateSupportersSubject(): Promise<void> {
         this._supportersSubject.next(
-            (await this.participantSort.sort(this.motion?.supporterUsers ?? [])).flatMap(
-                user => user.getMeetingUser()?.getSupporter(this.motion.id) ?? []
-            )
+            this.motion?.supporters.sort((a, b) => {
+                if (!b.meeting_user_id || !b.user) {
+                    return -1;
+                } else if (!a.meeting_user_id || !a.user) {
+                    return 1;
+                }
+                const comp = this.intl.compare(a.user.first_name, b.user.first_name);
+                if (comp) {
+                    return comp;
+                }
+                return this.intl.compare(a.user.last_name, b.user.last_name);
+            })
         );
     }
 
