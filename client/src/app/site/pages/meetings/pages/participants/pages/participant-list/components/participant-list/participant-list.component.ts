@@ -682,6 +682,22 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                         { duration: 3000 }
                     );
                 }
+            } else if (
+                field === 'is_active' &&
+                !value &&
+                this.operator.isOrgaManager &&
+                this.selectedRows.some(user => user.id === this.operator.user.id)
+            ) {
+                if (this.selectedRows.length === 1) {
+                    this.matSnackBar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
+                } else {
+                    const filteredRows = this.selectedRows.filter(user => user.id !== this.operator.user.id);
+                    this.repo.setState(field, value, ...filteredRows);
+                    this.matSnackBar.open(
+                        this.translate.instant(`Accounts were set to inactive, except for your own account.`),
+                        `Ok`
+                    );
+                }
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }

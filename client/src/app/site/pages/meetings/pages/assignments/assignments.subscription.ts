@@ -32,10 +32,10 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
     subscriptionName: ASSIGNMENT_LIST_SUBSCRIPTION
 });
 
-export const getAssignmentDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+export const getAssignmentDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         viewModelCtor: ViewAssignment,
-        ids: [id],
+        ids: ids,
         fieldset: FULL_FIELDSET,
         follow: [
             {
@@ -47,7 +47,7 @@ export const getAssignmentDetailSubscriptionConfig: SubscriptionConfigGenerator 
             { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription },
             {
                 idField: `candidate_ids`,
-                fieldset: [],
+                fieldset: [`weight`],
                 follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
             }
         ]
