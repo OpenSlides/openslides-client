@@ -449,11 +449,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             this.deselectOption(`content`, `includePdfAttachments`);
             this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }
+        const motionAmount = this.motions_models.length;
         let PDFamount = 0;
         for (const motion of this.motions_models) {
             PDFamount = +motion[`attachment_meeting_mediafile_ids`]?.length;
         }
-        if (PDFamount > 100) {
+        if (motionAmount > 100 || PDFamount > 100) {
             this.deselectOption(`content`, `includePdfAttachments`);
             this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }
