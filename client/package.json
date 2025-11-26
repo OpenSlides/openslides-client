@@ -59,7 +59,7 @@
     "@cantoo/pdf-lib": "^2.4.3",
     "@intevation/tiptap-extension-office-paste": "^0.1.2",
     "@material/typography": "^14.0.0",
-    "@ngx-pwa/local-storage": "^20.0.1",
+    "@ngx-pwa/local-storage": "^21.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@openslides/motion-diff": "file:../packages/openslides-motion-diff",
