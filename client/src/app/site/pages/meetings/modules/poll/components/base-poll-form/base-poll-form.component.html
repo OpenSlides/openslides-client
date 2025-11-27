@@ -172,6 +172,23 @@
                 }
             </div>
             <div>
+                @if (!hideSelects.requiredMajority) {
+                    <mat-form-field>
+                        <mat-label>{{ 'Required majority' | translate }}</mat-label>
+                        <mat-select formControlName="required_majority" panelClass="required_majority" required>
+                            @for (option of requiredMajorityBases | keyvalue: keepEntryOrder; track option) {
+                                <mat-option [value]="option.key">
+                                    {{ option.value }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
+            </div>
+        </div>
+        <div class="info-grid">
+            <div></div>
+            <div>
                 @if (isEVotingSelected && isCreated && !hideSelects.backendDuration) {
                     <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Voting duration' | translate }}</mat-label>
