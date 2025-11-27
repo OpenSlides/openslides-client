@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="card-grid">
-                    <div class="flex-container align-right color-blue">
+                    <div class="flex-container align-right foreground-active">
                         <div class="text-medium-bold">{{ 'present' | translate }}</div>
                         <div class="text-medium-bold">
                             {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
@@ -48,14 +48,14 @@
                             [value]="entry.getPercent() * 100"
                         ></mat-progress-bar>
                     </div>
-                    <div class="flex-container align-left color-black">
+                    <div class="flex-container align-left text">
                         <div class="text-medium-bold">{{ 'total' | translate }}</div>
                         <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
                         <div class="text-medium">{{ 'of this' | translate }}</div>
                     </div>
                 </div>
                 <div class="card-grid">
-                    <div class="flex-container align-right color-blue">
+                    <div class="flex-container align-right foreground-active">
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <div class="text-medium">
@@ -71,7 +71,7 @@
                         }
                     </div>
                     <div>&nbsp;</div>
-                    <div class="flex-container align-left color-black">
+                    <div class="flex-container align-left text">
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <div class="text-medium">
@@ -88,15 +88,15 @@
                 <mat-card-footer>
                     <div class="footer-grid">
                         <div>
-                            <div class="bold margin-left-medium small-margin-top color-black">
+                            <div class="bold margin-left-medium small-margin-top text">
                                 {{ 'Present' | translate }}
                             </div>
                             @for (userId of entry.presentUserIds; track userId) {
-                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
+                                <div class="margin-left-large text">{{ getName(userId) }}</div>
                             }
                         </div>
                         <div>
-                            <div class="bold margin-left-medium small-margin-top color-black">
+                            <div class="bold margin-left-medium small-margin-top text">
                                 {{ 'Absent' | translate }}
                             </div>
                             @for (userId of entry.absentUserIds; track userId) {
