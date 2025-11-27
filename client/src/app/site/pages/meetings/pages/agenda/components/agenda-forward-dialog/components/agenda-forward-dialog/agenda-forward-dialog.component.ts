@@ -114,7 +114,7 @@ export class AgendaForwardDialogComponent implements OnInit {
                     !speaker?.end_time &&
                     (speaker?.speech_state === SpeechState.INTERVENTION ||
                         speaker?.point_of_order ||
-                        speaker.begin_time)
+                        speaker?.begin_time)
             )
         );
         this.participantAmount = Array.from(
