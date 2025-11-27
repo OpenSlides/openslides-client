@@ -12,7 +12,6 @@
                 </button>
             }
         }
-        <!-- @if (perms.isAllowed('support', motion) || motion.hasSupporters()) { -->
         @if (!isEditMode && (perms.isAllowed('support', motion) || motion.hasSupporters())) {
             <!-- support button -->
             @if (perms.isAllowed('support', motion)) {
