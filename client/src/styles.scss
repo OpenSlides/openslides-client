@@ -380,9 +380,15 @@ mat-hint,
 }
 
 .accessibility-h2 {
-    display: block !important;
     margin: 0 !important;
     font-weight: 100 !important;
+    font-family:
+        OSFont,
+        Fira Sans,
+        Roboto,
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 .accessibility-h2-1 {
@@ -390,15 +396,9 @@ mat-hint,
 }
 
 .accessibility-h2-2 {
-    margin: 16px 0 !important;
+    margin-top: 16px !important;
 }
 
 .accessibility-h2-3 {
     margin-bottom: 16px !important;
-}
-
-.accessibility-h2-4 {
-    font-size: 125% !important;
-    margin-bottom: 15px !important;
-    font-weight: 150 !important;
 }

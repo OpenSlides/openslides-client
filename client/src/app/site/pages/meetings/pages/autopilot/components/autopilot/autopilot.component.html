@@ -68,18 +68,18 @@
             >
                 <ng-template osListOfSpeakersContentTitle>
                     <div class="line-and-icon subtitle-text">
-                        <h2 class="accessibility-h2 accessibility-h2-1">
-                            @if (closUrl) {
-                                <a [routerLink]="closUrl">
+                        @if (closUrl) {
+                            <a [routerLink]="closUrl">
+                                <h2 class="accessibility-h2 accessibility-h2-1">
                                     {{ 'List of speakers' | translate }}
-                                </a>
-                            }
-                            @if (!closUrl) {
-                                <span>
-                                    {{ 'List of speakers' | translate }}
-                                </span>
-                            }
-                        </h2>
+                                </h2>
+                            </a>
+                        }
+                        @if (!closUrl) {
+                            <h2 class="accessibility-h2 accessibility-h2-1">
+                                {{ 'List of speakers' | translate }}
+                            </h2>
+                        }
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             @if (isLosClosed) {
@@ -169,9 +169,7 @@
                     <mat-card-content>
                         <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
                             <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text">
-                                <span>
-                                    {{ projectorTitle | translate }}
-                                </span>
+                                {{ projectorTitle }}
                             </h2>
                         </a>
                         <a
