@@ -26,6 +26,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
+import { AgendaForwardDialogService } from '../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
@@ -80,12 +81,22 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         );
     }
 
+    public get isAdmin(): boolean {
+        return this.operator.isInGroupIds(this.activeMeeting.admin_group_id);
+    }
+
     public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define extra filter properties
      */
     public filterProps = [`item_number`, `comment`, `getListTitle`];
+
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
+    private _forwardingAvailable = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -102,11 +113,14 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private treeService: TreeService,
         private tagRepo: TagControllerService,
-        private agendaItemMultiselectService: AgendaItemMultiselectService
+        private agendaItemMultiselectService: AgendaItemMultiselectService,
+        private forwardService: AgendaForwardDialogService
     ) {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
+
+        this.updateForwardingMeetings();
     }
 
     /**
@@ -213,6 +227,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             options.queryParams = { parent: parentId };
         }
         this.router.navigate([`topics`, `new`], options);
+    }
+
+    public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[]): Promise<void> {
+        await this.updateForwardingMeetings();
+        await this.forwardService.forwardAgendaItemsToMeetings(items);
     }
 
     /**
@@ -405,5 +424,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
         return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
+    }
+
+    public updateForwardingMeetings(): void {
+        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 }
