@@ -37,8 +37,7 @@ export interface AgendaForwardDialogReturnData {
         FormsModule,
         MeetingTimeComponent,
         TranslatePipe
-    ],
-    standalone: true
+    ]
 })
 export class AgendaForwardDialogComponent implements OnInit {
     public get committeeObservable(): Observable<GetForwardingMeetingsPresenter> {

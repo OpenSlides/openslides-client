@@ -191,23 +191,25 @@ export class AgendaForwardDialogService extends BaseDialogService<
                 name: committee[`name`],
                 default_meeting_id: committee[`default_meeting_id`],
                 meetings: Object.values(response[`meeting`])
-                    .filter(line => {
-                        const adminGroupId = line[`admin_group_id`];
+                    .filter(meeting => {
+                        const adminGroupId = meeting[`admin_group_id`];
                         return (
-                            line[`id`] !== meetingId &&
-                            line[`is_active_in_organization_id`] &&
-                            !this.isInPast(line) &&
+                            meeting[`id`] !== meetingId &&
+                            meeting[`is_active_in_organization_id`] &&
+                            !this.isInPast(meeting) &&
                             (isCommitteeAdmin ||
                                 (adminGroupId &&
-                                    this.operator.user.getMeetingUser(+line[`id`])?.group_ids.includes(adminGroupId)))
+                                    this.operator.user
+                                        .getMeetingUser(+meeting[`id`])
+                                        ?.group_ids.includes(adminGroupId)))
                         );
                     })
-                    .map(line => {
+                    .map(meeting => {
                         return {
-                            id: line[`id`],
-                            name: line[`name`],
-                            start_time: line[`start_time`],
-                            end_time: line[`end_time`]
+                            id: meeting[`id`],
+                            name: meeting[`name`],
+                            start_time: meeting[`start_time`],
+                            end_time: meeting[`end_time`]
                         };
                     })
             };
