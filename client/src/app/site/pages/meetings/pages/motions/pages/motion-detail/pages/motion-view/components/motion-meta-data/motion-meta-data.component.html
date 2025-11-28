@@ -19,47 +19,7 @@
 }
 
 <!-- do Support -->
-@if (minSupporters$ | async) {
-    <div>
-        @if (perms.isAllowed('support', motion) || motion.hasSupporters()) {
-            <h4>{{ 'Supporters' | translate }}</h4>
-            <!-- support button -->
-            @if (perms.isAllowed('support', motion)) {
-                <button color="accent" mat-stroked-button type="button" (click)="support()">
-                    <mat-icon>thumb_up</mat-icon>
-                    {{ 'Support' | translate }}
-                </button>
-            }
-            <!-- unsupport button -->
-            @if (perms.isAllowed('unsupport', motion)) {
-                <button color="accent" mat-stroked-button type="button" (click)="unsupport()">
-                    <mat-icon>thumb_down</mat-icon>
-                    {{ 'Unsupport' | translate }}
-                </button>
-            }
-        }
-        <!-- show supporters (TODO: open in dialog) -->
-        @if (motion.hasSupporters()) {
-            <button mat-button type="button" (click)="openSupportersDialog()">
-                {{ motion.supporters.length }} {{ 'supporters' | translate }}
-            </button>
-            @if (canManage && validSupporters > 0) {
-                <span class="warn">{{ validSupportersText }}</span>
-            }
-            @if (showSupporters) {
-                <p class="supporters">
-                    <os-comma-separated-listing [list]="supportersObservable | async">
-                        <ng-template let-supporter>
-                            <span [class.warn]="canManage && !checkValidSupporter(supporter)">
-                                {{ supporter.full_name }}
-                            </span>
-                        </ng-template>
-                    </os-comma-separated-listing>
-                </p>
-            }
-        }
-    </div>
-}
+<os-motion-manage-supporters [motion]="motion"></os-motion-manage-supporters>
 
 <div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
@@ -141,7 +101,8 @@
         ) {
             <button
                 class="spacer-top-10"
-                mat-stroked-button
+                color="accent"
+                mat-raised-button
                 (click)="setState(motion.state.submitter_withdraw_state.id)"
             >
                 <span>{{ motionState.submitter_withdraw_state.state_button_label }}</span>

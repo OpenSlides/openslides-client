@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -73,7 +74,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         public searchService: AccountListSearchService,
         private operator: OperatorService,
         private vp: ViewPortService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private snackbar: MatSnackBar
     ) {
         super();
         super.setTitle(`Accounts`);
@@ -197,7 +199,28 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
         if (result) {
             const isActive = result.action === SET_ACTIVE;
-            this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
+            if (
+                !isActive &&
+                this.operator.isOrgaManager &&
+                this.selectedRows.some(row => row.id === this.operator.user.id)
+            ) {
+                if (this.selectedRows.length === 1) {
+                    this.snackbar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
+                } else {
+                    this.userController
+                        .update(
+                            { is_active: isActive },
+                            ...this.selectedRows.filter(row => row.id !== this.operator.user.id)
+                        )
+                        .resolve();
+                    this.snackbar.open(
+                        this.translate.instant(`Accounts were set to inactive, except for your own account.`),
+                        `Ok`
+                    );
+                }
+            } else {
+                this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
+            }
         }
     }
 

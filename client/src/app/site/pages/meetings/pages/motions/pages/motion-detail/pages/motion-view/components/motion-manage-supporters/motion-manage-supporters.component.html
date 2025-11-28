@@ -1,0 +1,96 @@
+@if (minSupporters$ | async) {
+    <div>
+        <span class="title-font">{{ 'Supporters' | translate }}</span>
+        @if (perms.isAllowed('change_metadata')) {
+            @if (isEditMode) {
+                <button class="small-button" disableRipple mat-icon-button type="button" (click)="onCancel()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            } @else {
+                <button class="small-button" disableRipple mat-icon-button type="button" (click)="onEdit()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            }
+        }
+        @if (!isEditMode && (perms.isAllowed('support', motion) || motion.hasSupporters())) {
+            <!-- support button -->
+            @if (perms.isAllowed('support', motion)) {
+                <button color="accent" mat-stroked-button type="button" (click)="support()">
+                    <mat-icon>thumb_up</mat-icon>
+                    {{ 'Support' | translate }}
+                </button>
+            }
+            <!-- unsupport button -->
+            @if (perms.isAllowed('unsupport', motion)) {
+                <button color="accent" mat-stroked-button type="button" (click)="unsupport()">
+                    <mat-icon>thumb_down</mat-icon>
+                    {{ 'Unsupport' | translate }}
+                </button>
+            }
+        } @else if (isEditMode) {
+            <div>
+                <os-sorting-list
+                    [count]="false"
+                    [enable]="false"
+                    [input]="editObservable"
+                    [live]="true"
+                    (sortEvent)="onSortingChange($event)"
+                >
+                    <!-- implicit user references into the component using ng-template slot -->
+                    <ng-template let-user>
+                        <div class="single-line">
+                            <span class="ellipsis-overflow">
+                                {{ user.getTitle() }}
+                            </span>
+                            <span>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="{{ 'Remove' | translate }}"
+                                    type="button"
+                                    (click)="onRemove(user)"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </span>
+                        </div>
+                    </ng-template>
+                </os-sorting-list>
+                <div class="text-field-container">
+                    <os-participant-search-selector
+                        placeholder="{{ 'Select participant' | translate }}"
+                        [nonSelectableUserIds]="nonSelectableUserIds"
+                        (userSelected)="addUser($event)"
+                    ></os-participant-search-selector>
+                </div>
+                <p>
+                    <button mat-button type="button" (click)="onSave()">
+                        <span>{{ 'Save' | translate }}</span>
+                    </button>
+                    <button mat-button type="button" (click)="onCancel()">
+                        <span>{{ 'Cancel' | translate }}</span>
+                    </button>
+                </p>
+            </div>
+        }
+        <!-- show supporters (TODO: open in dialog) -->
+        @if (motion.hasSupporters() && !isEditMode) {
+            <button mat-button type="button" (click)="openSupportersDialog()">
+                {{ motion.supporters.length }} {{ 'supporters' | translate }}
+            </button>
+            @if (canManage && validSupporters > 0) {
+                <span class="warn">{{ validSupportersText }}</span>
+            }
+            @if (showSupporters) {
+                <p class="supporters">
+                    <os-comma-separated-listing [list]="supportersObservable | async">
+                        <ng-template let-supporter>
+                            <span [class.warn]="canManage && !checkValidSupporter(supporter)">
+                                {{ supporter.full_name }}
+                            </span>
+                        </ng-template>
+                    </os-comma-separated-listing>
+                </p>
+            }
+        }
+    </div>
+}
