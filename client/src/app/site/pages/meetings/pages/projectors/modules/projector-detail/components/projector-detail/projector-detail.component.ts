@@ -79,14 +79,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return !!this.projector.nonStableCurrentProjections;
     }
 
-    public get isPdfProjection(): boolean {
-        return this.projector?.nonStableCurrentProjections?.some(
-            projection =>
-                projection.content_object_id?.includes(`mediafile`) &&
-                typeof projection.content[`mimetype`] === `string` &&
-                projection.content[`mimetype`].endsWith(`/pdf`)
-        );
-    }
+    // TODO: Implement
+    public readonly isPdfProjection = false;
 
     public get projectorScroll(): number {
         return this.isPdfProjection ? Math.floor(this.projector.scroll / 100) : this.projector.scroll;
@@ -316,6 +310,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public isStructureLevelCountdownEnabled(): boolean {
         const strucutreLevelTime = this.meetingSettingsService.instant(`list_of_speakers_default_structure_level_time`);
         return strucutreLevelTime > 0;
+    }
+
+    public welcomeMessageBuildDesc(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: `meeting/${this.activeMeetingId}`,
+            type: MeetingProjectionType.Home,
+            projectionDefault: null,
+            getDialogTitle: () => this.translate.instant(`Meeting home`)
+        };
     }
 
     public wifiDataBuildDesc(): ProjectionBuildDescriptor {
