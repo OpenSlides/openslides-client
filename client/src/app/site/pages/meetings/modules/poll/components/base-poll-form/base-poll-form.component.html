@@ -176,7 +176,7 @@
                     <mat-form-field>
                         <mat-label>{{ 'Required majority' | translate }}</mat-label>
                         <mat-select formControlName="required_majority" panelClass="required_majority" required>
-                            @for (option of requiredMajorityBases | keyvalue: keepEntryOrder; track option) {
+                            @for (option of requiredMajorityBaseVerbose | keyvalue: keepEntryOrder; track option.key) {
                                 <mat-option [value]="option.key">
                                     {{ option.value }}
                                 </mat-option>

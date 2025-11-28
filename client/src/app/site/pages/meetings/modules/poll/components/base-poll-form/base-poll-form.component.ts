@@ -70,7 +70,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public percentBases: Record<string, string>;
 
     public alternativePercentBases = PollPercentBaseVerbose;
-    public requiredMajorityBases = RequiredMajorityBaseVerbose;
+    public requiredMajorityBaseVerbose = RequiredMajorityBaseVerbose;
 
     @Input()
     public set data(data: Partial<ViewPoll>) {

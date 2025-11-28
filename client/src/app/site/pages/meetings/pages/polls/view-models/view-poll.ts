@@ -10,6 +10,7 @@ import {
     PollStateVerbose,
     PollType,
     PollTypeVerbose,
+    RequiredMajorityBaseVerbose,
     VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
@@ -70,6 +71,10 @@ export class ViewPoll<C extends PollContentObject = any>
 
     public get percentBaseVerbose(): string {
         return PollPercentBaseVerbose[this.onehundred_percent_base];
+    }
+
+    public get requiredMajorityBaseVerbose(): string {
+        return RequiredMajorityBaseVerbose[this.required_majority];
     }
 
     public get pollClassTypeVerbose(): string {
