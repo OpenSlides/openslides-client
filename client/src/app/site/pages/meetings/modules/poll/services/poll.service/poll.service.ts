@@ -289,9 +289,9 @@ export abstract class PollService {
             case RequiredMajorityBase.no_majority:
                 return false;
             case RequiredMajorityBase.two_third_majority:
-                return value >= (totalByBase * 2) / 3;
+                return value > (totalByBase * 2) / 3;
             case RequiredMajorityBase.absolute_majority:
-                return value >= totalByBase / 2;
+                return value > totalByBase / 2;
             default:
                 return false;
         }
