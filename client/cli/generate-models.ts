@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE = path.resolve(path.join(__dirname, '../../meta/models.yml'));
+const SOURCE = path.resolve(path.join(__dirname, '../meta/models.yml'));
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
 function findModelFile(startPath: string, name: string): string | null {
