@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { endOfDay, fromUnixTime } from 'date-fns';
-import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
@@ -11,6 +11,7 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { GetForwardingMeetingsPresenter } from 'src/app/gateways/presenter';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
@@ -35,11 +36,10 @@ export interface AgendaForwardDialogPayload {
 @Injectable({
     providedIn: AgendaItemCommonServiceModule
 })
-export class AgendaForwardDialogService extends BaseDialogService<
-    AgendaForwardDialogComponent,
-    AgendaForwardDialogPayload,
-    AgendaForwardDialogReturnData
-> {
+export class AgendaForwardDialogService
+    extends BaseDialogService<AgendaForwardDialogComponent, AgendaForwardDialogPayload, AgendaForwardDialogReturnData>
+    implements OnDestroy
+{
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
         return this._forwardingCommitteesSubject;
     }
@@ -53,9 +53,13 @@ export class AgendaForwardDialogService extends BaseDialogService<
     private _forwardingMeeting: GetForwardingMeetingsPresenter = undefined;
     private _forwardingMeetingsUpdateRequired = true;
 
+    private _committeeMeetingSubscription: Subscription;
+    private _activeMeetingSubscription: Subscription;
+
     public constructor(
         private translate: TranslateService,
         private repo: AgendaItemControllerService,
+        private meetingRepo: MeetingControllerService,
         private snackbar: MatSnackBar,
         private activeMeeting: ActiveMeetingService,
         private autoupdate: AutoupdateService,
@@ -64,9 +68,18 @@ export class AgendaForwardDialogService extends BaseDialogService<
     ) {
         super();
 
-        this.activeMeeting.meetingIdObservable.subscribe(() => {
+        this.updateCommitteeMeetingSubscription();
+        this._activeMeetingSubscription = this.activeMeeting.meetingIdObservable.subscribe(() => {
+            this.updateCommitteeMeetingSubscription();
             this._forwardingMeetingsUpdateRequired = true;
         });
+    }
+
+    public ngOnDestroy(): void {
+        if (this._committeeMeetingSubscription) {
+            this._committeeMeetingSubscription.unsubscribe();
+        }
+        this._activeMeetingSubscription.unsubscribe();
     }
 
     public async forwardingMeetingsAvailable(): Promise<boolean> {
@@ -111,6 +124,7 @@ export class AgendaForwardDialogService extends BaseDialogService<
             showSkippedItemWarning: items.length !== toForward.length
         });
         const dialogData = (await firstValueFrom(dialogRef.afterClosed())) as AgendaForwardDialogReturnData;
+
         const toMeetingIds = dialogData?.meetingIds as Ids;
         if (toMeetingIds) {
             try {
@@ -146,6 +160,17 @@ export class AgendaForwardDialogService extends BaseDialogService<
         const current = new Date();
         const end = endOfDay(fromUnixTime(meeting.end_time)) ?? endOfDay(fromUnixTime(meeting.start_time));
         return end < current;
+    }
+
+    private updateCommitteeMeetingSubscription(): void {
+        if (this._committeeMeetingSubscription) {
+            this._committeeMeetingSubscription.unsubscribe();
+        }
+        if (this.activeMeeting.meeting) {
+            this._committeeMeetingSubscription = this.activeMeeting.meeting.committee.meetings$.subscribe(() => {
+                this._forwardingMeetingsUpdateRequired = true;
+            });
+        }
     }
 
     private async updateForwardMeetings(): Promise<void> {
