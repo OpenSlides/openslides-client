@@ -168,4 +168,18 @@
         justify-self: right;
         margin-right: 50px;
     }
+
+    .majority-icon-check {
+        position: relative;
+        left: 90px;
+        top: -142px;
+        color: var(--theme-yes);
+    }
+
+    .majority-icon-cancel {
+        position: relative;
+        left: 90px;
+        top: -142px;
+        color: var(--theme-no);
+    }
 }

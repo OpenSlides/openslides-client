@@ -143,6 +143,15 @@
         @if (shouldShowChart) {
             <div [class.doughnut-chart-normal]="!inSlide" [class.doughnut-chart-slide]="inSlide">
                 <os-chart type="doughnut" [data]="chartData"></os-chart>
+                @if (shouldShowChartIcon === 'check') {
+                    <div class="majority-icon-check">
+                        <mat-icon>check_circle</mat-icon>
+                    </div>
+                } @else if (shouldShowChartIcon === 'cancel') {
+                    <div class="majority-icon-cancel">
+                        <mat-icon>cancel</mat-icon>
+                    </div>
+                }
             </div>
         }
     </div>
