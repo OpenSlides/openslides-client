@@ -280,21 +280,27 @@ export abstract class PollService {
         return ``;
     }
 
-    public isRequiredMajority(value: number, poll: PollData, row?: OptionData): boolean {
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData): number | null {
         const totalByBase = this.getPercentBase(poll, row);
-        if (!totalByBase || totalByBase === 0) {
-            return false;
+        if (!totalByBase) {
+            return null;
         }
         switch (poll.required_majority) {
-            case RequiredMajorityBase.no_majority:
-                return false;
-            case RequiredMajorityBase.two_third_majority:
-                return value > (totalByBase * 2) / 3;
             case RequiredMajorityBase.absolute_majority:
-                return value > totalByBase / 2;
+                return totalByBase / 2;
+            case RequiredMajorityBase.two_third_majority:
+                return (totalByBase * 2) / 3;
             default:
-                return false;
+                return null;
         }
+    }
+
+    public isRequiredMajority(value: number, poll: PollData, row?: OptionData): boolean {
+        const requiredMajorityBase = this.getRequiredMajorityBase(poll, row);
+        if (requiredMajorityBase === null) {
+            return false;
+        }
+        return value > requiredMajorityBase;
     }
 
     /**
