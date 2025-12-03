@@ -13,6 +13,7 @@ import {
     PollPercentBase,
     PollTableData,
     PollType,
+    RequiredMajorityBase,
     VOTE_MAJORITY,
     VotingResult,
     YES_KEY
@@ -38,6 +39,7 @@ export interface TableDataEntryCreationInput {
 export class MotionPollService extends PollService {
     public defaultPercentBase!: PollPercentBase;
     public defaultPollMethod: PollMethod | undefined;
+    public defaultRequiredMajority: RequiredMajorityBase;
     public defaultPollType!: PollType;
     public defaultGroupIds!: number[];
 
@@ -55,11 +57,15 @@ export class MotionPollService extends PollService {
         this.meetingSettingsService
             .get(`motion_poll_default_method`)
             .subscribe(method => (this.defaultPollMethod = method));
+        this.meetingSettingsService
+            .get(`motion_poll_default_required_majority`)
+            .subscribe(req_maj => (this.defaultRequiredMajority = req_maj));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
         const poll: Partial<Poll> = {
             onehundred_percent_base: this.defaultPercentBase,
+            required_majority: this.defaultRequiredMajority ?? RequiredMajorityBase.no_majority,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
             pollmethod: this.defaultPollMethod
