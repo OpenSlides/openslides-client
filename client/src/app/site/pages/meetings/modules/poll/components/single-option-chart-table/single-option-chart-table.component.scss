@@ -168,32 +168,4 @@
         justify-self: right;
         margin-right: 50px;
     }
-
-    .majority-icon-check {
-        position: relative;
-        left: 60px;
-        top: -170px;
-        color: var(--theme-yes);
-        & mat-icon {
-            font-size: 80px;
-            width: 80px;
-            min-width: 80px;
-            height: 80px;
-            margin-top: 0 !important;
-        }
-    }
-
-    .majority-icon-cancel {
-        position: relative;
-        left: 60px;
-        top: -170px;
-        color: var(--theme-no);
-        & mat-icon {
-            font-size: 80px;
-            width: 80px;
-            min-width: 80px;
-            height: 80px;
-            margin-top: 0 !important;
-        }
-    }
 }

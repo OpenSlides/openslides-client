@@ -9,5 +9,14 @@
             [options]="chartOptions"
             [type]="type"
         ></canvas>
+        @if (chartIcon === 'check') {
+            <div class="chart-icon color-green">
+                <mat-icon>check</mat-icon>
+            </div>
+        } @else if (chartIcon === 'cancel') {
+            <div class="chart-icon color-red">
+                <mat-icon>close</mat-icon>
+            </div>
+        }
     }
 </div>
