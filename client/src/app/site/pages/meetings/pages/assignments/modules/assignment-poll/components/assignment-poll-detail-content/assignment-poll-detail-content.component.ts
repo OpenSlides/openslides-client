@@ -7,6 +7,7 @@ import {
     PollPercentBase,
     PollState,
     PollTableData,
+    RequiredMajorityBase,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
@@ -200,6 +201,20 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private setChartData(): void {
         this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
+    }
+
+    public get showRequiredMajority(): `check` | `cancel` | null {
+        if (
+            (this.poll.required_majority === RequiredMajorityBase.absolute_majority ||
+                this.poll.required_majority === RequiredMajorityBase.two_third_majority) &&
+            this._chartData[0].label === 'YES'
+        ) {
+            if (this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll)) {
+                return `check`;
+            }
+            return `cancel`;
+        }
+        return null;
     }
 
     public getVoteClass(votingResult: VotingResult): string {
