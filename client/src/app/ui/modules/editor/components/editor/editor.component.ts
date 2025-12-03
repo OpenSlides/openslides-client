@@ -327,20 +327,19 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     public clearSelectedFormat(): void {
         try {
             this.editor
-            .chain()
-            .focus()
-            .selectAll()
-            .unsetHighlight()
-            .unsetStrike()
-            .unsetItalic()
-            .unsetUnderline()
-            .unsetColor()
-            .blur()
-            .run()
-        }
-        catch (error){
-            console.error(error)
-        }finally{
+                .chain()
+                .focus()
+                .selectAll()
+                .unsetHighlight()
+                .unsetStrike()
+                .unsetItalic()
+                .unsetUnderline()
+                .unsetColor()
+                .blur()
+                .run();
+        } catch (error) {
+            console.error(error);
+        } finally {
             this.editor
             .chain()
             .focus()
