@@ -34,6 +34,7 @@ import {
     ViewTag
 } from '../pages/motions';
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionSupporter } from '../pages/motions/modules/supporters';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
@@ -183,6 +184,7 @@ interface IMeetingRelations {
     motion_categories: ViewMotionCategory[];
     motion_blocks: ViewMotionBlock[];
     motion_submitters: ViewMotionSubmitter[];
+    motion_supporters: ViewMotionSupporter[];
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     motion_change_recommendations: ViewMotionChangeRecommendation[];
