@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
+import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
     PollMethod,
     PollPercentBase,
@@ -215,6 +215,21 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             return `cancel`;
         }
         return null;
+    }
+
+    public showRequiredMajorityInTable(votes: number, poll: PollData, row?: OptionData): boolean {
+        return this.pollService.isRequiredMajority(votes, poll, row);
+    }
+
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData): string {
+        const requiredMajorityBase = this.pollService.getRequiredMajorityBase(poll, row);
+        if (requiredMajorityBase) {
+            if (Number.isInteger(requiredMajorityBase)) {
+                return `${requiredMajorityBase + 1}`;
+            }
+            return `${Math.ceil(requiredMajorityBase)}`;
+        }
+        return ``;
     }
 
     public getVoteClass(votingResult: VotingResult): string {

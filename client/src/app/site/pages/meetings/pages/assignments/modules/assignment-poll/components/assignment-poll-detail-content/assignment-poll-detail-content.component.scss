@@ -33,6 +33,11 @@
         text-align: left;
     }
 
+    .check-icon {
+        width: 20px;
+        color: var(--theme-yes);
+    }
+
     .user + .sums {
         td {
             padding-top: 0.5em;
