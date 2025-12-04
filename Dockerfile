@@ -28,6 +28,8 @@ CMD ["./command.sh"]
 # Development Image
 FROM base AS dev
 
+COPY ./meta ./meta
+
 RUN apk add --no-cache git
 
 # Testing Image

@@ -8,6 +8,5 @@ export class MotionAction {
     public static readonly RESET_STATE = `motion.reset_state`;
     public static readonly SET_RECOMMENDATION = `motion.set_recommendation`;
     public static readonly RESET_RECOMMENDATION = `motion.reset_recommendation`;
-    public static readonly SET_SUPPORT_SELF = `motion.set_support_self`;
     public static readonly SORT = `motion.sort`;
 }
