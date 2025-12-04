@@ -166,7 +166,7 @@ export class AgendaForwardDialogService
         if (this._committeeMeetingSubscription) {
             this._committeeMeetingSubscription.unsubscribe();
         }
-        if (this.activeMeeting.meeting) {
+        if (this.activeMeeting.meeting && this.activeMeeting.meeting.committee) {
             this._committeeMeetingSubscription = this.activeMeeting.meeting.committee.meetings$.subscribe(() => {
                 this._forwardingMeetingsUpdateRequired = true;
             });
