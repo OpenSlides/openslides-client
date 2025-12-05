@@ -296,11 +296,14 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     public async anonymize(poll: Identifiable, updateState?: PollState): Promise<void> {
         const payload: Identifiable = { id: poll.id };
         if (updateState === PollState.Published) {
-            return this.sendActionsToBackend([
-                { action: PollAction.STOP, data: [payload] },
-                { action: PollAction.ANONYMIZE, data: [payload] },
-                { action: PollAction.PUBLISH, data: [payload] }
-            ]);
+            return this.sendActionsToBackend(
+                [
+                    { action: PollAction.STOP, data: [payload] },
+                    { action: PollAction.ANONYMIZE, data: [payload] },
+                    { action: PollAction.PUBLISH, data: [payload] }
+                ],
+                true
+            );
         }
         return this.sendActionToBackend(PollAction.ANONYMIZE, payload);
     }
