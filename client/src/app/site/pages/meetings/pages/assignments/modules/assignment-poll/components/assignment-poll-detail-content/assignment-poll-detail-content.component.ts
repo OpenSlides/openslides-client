@@ -217,11 +217,11 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return null;
     }
 
-    public showRequiredMajorityInTable(votes: number, poll: PollData, row?: OptionData): boolean {
+    public showRequiredMajorityInTable(votes: number, poll: PollData, row?: OptionData | PollTableData): boolean {
         return this.pollService.isRequiredMajority(votes, poll, row);
     }
 
-    public getRequiredMajorityBase(poll: PollData, row?: OptionData): string {
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): string {
         const requiredMajorityBase = this.pollService.getRequiredMajorityBase(poll, row);
         if (requiredMajorityBase) {
             if (Number.isInteger(requiredMajorityBase)) {

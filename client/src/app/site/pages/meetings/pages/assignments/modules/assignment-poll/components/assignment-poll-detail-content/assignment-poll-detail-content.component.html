@@ -68,7 +68,7 @@
                                 @if (
                                     row.class === 'user' &&
                                     !isMethodN &&
-                                    showRequiredMajorityInTable(getVoteAmount(row.value[0], row), poll)
+                                    showRequiredMajorityInTable(getVoteAmount(row.value[0], row), poll, row)
                                 ) {
                                     <mat-icon>check</mat-icon>
                                 }

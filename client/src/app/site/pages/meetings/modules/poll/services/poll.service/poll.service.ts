@@ -280,8 +280,9 @@ export abstract class PollService {
         return ``;
     }
 
-    public getRequiredMajorityBase(poll: PollData, row?: OptionData): number | null {
-        const totalByBase = this.getPercentBase(poll, row);
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): number | null {
+        const option: OptionData | undefined = isPollTableData(row) ? this.transformToOptionData(row) : row;
+        const totalByBase = this.getPercentBase(poll, option);
         if (!totalByBase) {
             return null;
         }
@@ -295,7 +296,7 @@ export abstract class PollService {
         }
     }
 
-    public isRequiredMajority(value: number, poll: PollData, row?: OptionData): boolean {
+    public isRequiredMajority(value: number, poll: PollData, row?: OptionData | PollTableData): boolean {
         const requiredMajorityBase = this.getRequiredMajorityBase(poll, row);
         if (requiredMajorityBase === null) {
             return false;
