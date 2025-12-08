@@ -88,6 +88,11 @@ export class AgendaForwardDialogService
         return (
             !!this._forwardingMeeting &&
             (this.operator.hasCommitteeManagementRights(this._forwardingMeeting.id) ||
+                this._forwardingMeeting.meetings.some(meeting =>
+                    this.operator.user
+                        .getMeetingUser(+meeting[`id`])
+                        ?.group_ids.includes((meeting as any).admin_group_id)
+                ) ||
                 this._forwardingMeeting.meetings.some(
                     meeting => meeting.end_time && meeting.end_time * 1000 < Date.now()
                 ))
@@ -234,7 +239,8 @@ export class AgendaForwardDialogService
                             id: meeting[`id`],
                             name: meeting[`name`],
                             start_time: meeting[`start_time`],
-                            end_time: meeting[`end_time`]
+                            end_time: meeting[`end_time`],
+                            admin_group_id: meeting[`admin_group_id`]
                         };
                     })
             };
