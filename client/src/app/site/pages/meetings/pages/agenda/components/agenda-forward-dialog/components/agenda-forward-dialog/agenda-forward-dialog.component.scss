@@ -1,0 +1,42 @@
+.agenda-forward-meeting-list {
+    vertical-align: middle;
+    min-height: 100px;
+    height: 33vh;
+    overflow-y: auto;
+}
+
+.state {
+    padding-left: 6px;
+    padding-bottom: 6px;
+}
+
+.warning-text {
+    padding-left: 6px;
+    font-size: 12px;
+}
+
+.warning-text:last-of-type {
+    padding-bottom: 10px;
+}
+
+.select-table {
+    border-spacing: 0;
+    tr {
+        height: var(--mat-table-row-item-container-height, 52px);
+        td {
+            border-bottom-color: var(--mat-table-row-item-outline-color, var(--mat-sys-outline, rgba(0, 0, 0, 0.12)));
+            border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+            border-bottom-style: solid;
+
+            padding: 0 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--mat-table-row-item-label-text-color, var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87)));
+        }
+    }
+    tr:last-child {
+        td {
+            border-bottom: none;
+        }
+    }
+}

@@ -35,6 +35,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
 
     public receiveExpanded = false;
     public forwardingExpanded = false;
+    public agendaReceiveExpanded = false;
+    public agendaForwardingExpanded = false;
     public requireDuplicateFrom = false;
 
     public get canManageCommittee(): boolean {
@@ -175,6 +177,14 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
 
     public toggleReceiveList(): void {
         this.receiveExpanded = !this.receiveExpanded;
+    }
+
+    public toggleAgendaForwardingList(): void {
+        this.agendaForwardingExpanded = !this.agendaForwardingExpanded;
+    }
+
+    public toggleAgendaReceiveList(): void {
+        this.agendaReceiveExpanded = !this.agendaReceiveExpanded;
     }
 
     public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
