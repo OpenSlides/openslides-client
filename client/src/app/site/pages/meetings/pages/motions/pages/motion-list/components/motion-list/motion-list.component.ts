@@ -297,6 +297,24 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     }
 
     /**
+     * Assigns an aria-label to every motion
+     *
+     * @param motion the currently selected motion
+     * @returns a string "'is favorite'? + motion number? + motion title"
+     */
+    public getAriaLabel(motion: ViewMotion): string {
+        const parts: string[] = [];
+        if (motion.getPersonalNote()?.star) {
+            parts.push('is favorite');
+        }
+        if (motion.number) {
+            parts.push(motion.number);
+        }
+        parts.push(motion.title);
+        return parts.join(' ');
+    }
+
+    /**
      * This function saves the selected view by changes.
      *
      * @param value is the new view the user has selected.
