@@ -339,9 +339,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 .run();
         } catch (error) {
             console.error(error);
-        } finally {
-            this.editor.chain().focus().selectAll().unsetBold().removeEmptyTextStyle().blur().run();
         }
+        this.editor.chain().focus().selectAll().unsetBold().removeEmptyTextStyle().blur().run();
     }
 
     public async setLinkDialog(): Promise<void> {
