@@ -93,7 +93,7 @@ export class HttpService {
             if (error instanceof HttpErrorResponse) {
                 if (error.status === 451 && path.startsWith(`/system/vote`)) {
                     const cleanError = this.translate.instant(
-                        `Vote was not counted, because of regulations of the organization.`
+                        `Your vote was rejected because your IP address is not in the allowed IP range.`
                     );
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     throw new ProcessError(cleanError);

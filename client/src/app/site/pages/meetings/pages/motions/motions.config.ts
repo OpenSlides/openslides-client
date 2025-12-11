@@ -8,6 +8,7 @@ import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comme
 import { MotionEditor } from 'src/app/domain/models/motions/motion-editor';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
+import { MotionSupporter } from 'src/app/domain/models/motions/motion-supporter';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { MotionWorkingGroupSpeaker } from 'src/app/domain/models/motions/motion-working-group-speaker';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
@@ -25,6 +26,7 @@ import {
     MotionWorkflowRepositoryService,
     MotionWorkingGroupSpeakerRepositoryService
 } from 'src/app/gateways/repositories/motions';
+import { MotionSupporterRepositoryService } from 'src/app/gateways/repositories/motions/motion-supporter';
 import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
 import { TagRepositoryService } from 'src/app/gateways/repositories/tags';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
@@ -42,6 +44,7 @@ import {
     ViewTag
 } from './modules';
 import { ViewMotionEditor } from './modules/editors';
+import { ViewMotionSupporter } from './modules/supporters';
 import { ViewMotionWorkingGroupSpeaker } from './modules/working-group-speakers';
 import { ViewMotion } from './view-models';
 
@@ -57,6 +60,11 @@ export const MotionsAppConfig: AppConfig = {
             model: MotionSubmitter,
             viewModel: ViewMotionSubmitter,
             repository: MotionSubmitterRepositoryService
+        },
+        {
+            model: MotionSupporter,
+            viewModel: ViewMotionSupporter,
+            repository: MotionSupporterRepositoryService
         },
         {
             model: MotionEditor,
