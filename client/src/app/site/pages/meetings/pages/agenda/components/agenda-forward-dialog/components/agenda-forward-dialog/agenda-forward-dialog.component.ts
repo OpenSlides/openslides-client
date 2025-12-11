@@ -74,8 +74,6 @@ export class AgendaForwardDialogComponent implements OnInit {
         }
     }
 
-    public showParentNotIncludedWarning = false;
-    public showChildrenNotIncludedWarning = false;
     public showNotTopicWarning = false;
 
     public speakerAmount: number;
@@ -96,12 +94,6 @@ export class AgendaForwardDialogComponent implements OnInit {
         private activeMeeting: ActiveMeetingService
     ) {
         const agendaItemIds = new Set(this.data.agenda.map(item => item.id));
-        this.showParentNotIncludedWarning = this.data.agenda.some(
-            item => item.parent_id && !agendaItemIds.has(item.parent_id)
-        );
-        this.showChildrenNotIncludedWarning = this.data.agenda.some(
-            item => item.child_ids && item.child_ids.some(child_id => !agendaItemIds.has(child_id))
-        );
         this.showNotTopicWarning = this.data.showSkippedItemWarning;
         this.speakerAmount = this.data.agenda.reduce(
             (sum, item) => sum + (item.content_object?.list_of_speakers?.speaker_ids?.length ?? 0),

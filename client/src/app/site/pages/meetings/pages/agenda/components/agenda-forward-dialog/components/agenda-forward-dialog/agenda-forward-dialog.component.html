@@ -4,40 +4,19 @@
 <mat-dialog-content>
     <div class="state">
         {{ data.agenda.length }}
-        {{ data.agenda.length > 1 ? ('agenda items' | translate) : ('agenda item' | translate) }}
+        {{ 'selected' | translate }}
     </div>
 
     @if (showNotTopicWarning) {
         <div class="warning-text">
-            {{
-                'Warning: You are trying to copy something else than a topic, it will be skipped and not copied.'
-                    | translate
-            }}
-        </div>
-    }
-    @if (showParentNotIncludedWarning) {
-        <div class="warning-text">
-            {{
-                'Warning: You are trying to copy a child agenda item without its parent. The child will be copied, however the parent item will not be automatically copied alongside it.'
-                    | translate
-            }}
-        </div>
-    }
-    @if (showChildrenNotIncludedWarning) {
-        <div class="warning-text">
-            {{
-                'Warning: You are trying to copy a parent agenda item without at least one of its children. Children will not be automatically copied alongside their parent items.'
-                    | translate
-            }}
+            {{ 'Note: Motions and elections will not be copied.' | translate }}
         </div>
     }
 
     <table class="select-table">
         <tr>
             <td colspan="2">
-                <span translate>
-                    The selected items title, text, agenda visibility and comment are always copied over.
-                </span>
+                <span translate>Title, text, visibility and comment are copied by default.</span>
             </td>
         </tr>
         <!-- Label in front-->
@@ -51,25 +30,25 @@
                         <span>{{ 'List of speakers' | translate }}</span>
                         <br />
                         <span class="subtitle" translate>
-                            This will add participants, structure levels and groups to the target meeting(s).
+                            Adds participants, structure levels and groups to target meeting.
                         </span>
                         <br />
                         @if (hasForbiddenSpeakers) {
-                            <span class="subtitle-nocolor warn" translate>
-                                Ensure there are no running/paused speakers, and no waiting points of order or
-                                interventions.
+                            <span class="subtitle-nocolor warn">
+                                {{
+                                    'Warning: List of speakers cannot be copied because person is speaking, has an open point of order or intervention.'
+                                        | translate
+                                }}
                             </span>
                         }
                     } @else if (rowName === 'meeting') {
                         <span>{{ 'Target meeting' | translate }}</span>
                         <br />
-                        <span class="subtitle" translate>
-                            You must be admin in the target meeting. Said meeting cannot be archived or in the past.
-                        </span>
+                        <span class="subtitle" translate>You must be admin in target meeting.</span>
                     } @else if (rowName === 'attachments') {
                         <span>{{ 'Attachments' | translate }}</span>
                     } @else if (rowName === 'info') {
-                        <span translate>Title, text, agenda visibility and comment are transferred every time.</span>
+                        <span translate>Title, text, visibility and comment are copied by default.</span>
                     }
                 </td>
                 <!-- </ng-container> -->
