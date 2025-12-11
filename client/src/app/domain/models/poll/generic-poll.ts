@@ -5,7 +5,15 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+import {
+    EntitledUsersEntry,
+    PollClassType,
+    PollMethod,
+    PollPercentBase,
+    PollState,
+    PollType,
+    RequiredMajorityBase
+} from './poll-constants';
 
 export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
 
@@ -19,6 +27,7 @@ export interface PollData {
     pollmethod: PollMethod;
     state: PollState;
     onehundred_percent_base: PollPercentBase;
+    required_majority?: RequiredMajorityBase;
     votesvalid: number;
     votesinvalid: number;
     votescast: number;
