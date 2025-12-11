@@ -192,7 +192,11 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             this.genders = [this.genders[1], this.genders[0], ...this.genders.slice(2)];
         }
         this.genders.push({ id: UNKNOWN_ID, name: 'NA' });
-        const allMandates = new MandateCheckEntry(`All Mandates`, ALL_MANDATES_ID, this.genders);
+        const allMandates = new MandateCheckEntry(
+            this.translate.instant(`All mandates`),
+            ALL_MANDATES_ID,
+            this.genders
+        );
         const structureLevelsEntryMap = new Map<Id, MandateCheckEntry>();
         for (const strLvl of this.structureLevels ?? []) {
             structureLevelsEntryMap.set(strLvl.id, new MandateCheckEntry(strLvl.name, strLvl.id, this.genders));

@@ -120,7 +120,7 @@ export class AgendaForwardDialogService
         const toForward = items.filter(item => item.content_object_id.startsWith(`${Topic.COLLECTION}/`));
 
         if (toForward.length === 0) {
-            this.snackbar.open(this.translate.instant(`None of the selected agenda items can be forwarded.`), `Ok`);
+            this.snackbar.open(this.translate.instant(`None of the selected agenda items can be copied.`), `Ok`);
             return;
         }
         const dialogRef = await this.open({
