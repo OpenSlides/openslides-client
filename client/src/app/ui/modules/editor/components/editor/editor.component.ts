@@ -325,17 +325,22 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public clearSelectedFormat(): void {
-        this.editor
-            .chain()
-            .focus()
-            .unsetBold()
-            .unsetStrike()
-            .unsetItalic()
-            .unsetUnderline()
-            .unsetColor()
-            .unsetHighlight()
-            .removeEmptyTextStyle()
-            .run();
+        try {
+            this.editor
+                .chain()
+                .focus()
+                .selectAll()
+                .unsetHighlight()
+                .unsetStrike()
+                .unsetItalic()
+                .unsetUnderline()
+                .unsetColor()
+                .blur()
+                .run();
+        } catch (error) {
+            console.error(error);
+        }
+        this.editor.chain().focus().selectAll().unsetBold().removeEmptyTextStyle().blur().run();
     }
 
     public async setLinkDialog(): Promise<void> {
