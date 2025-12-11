@@ -1,9 +1,6 @@
 import { Fqid, Id } from '../../definitions/key-types';
-import { HasCollection } from '../../interfaces/has-collection';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
-
-type ProjectionContent = HasCollection & Record<string, any>;
 
 export class Projection extends BaseModel<Projection> {
     public static COLLECTION = `projection`;
@@ -13,9 +10,6 @@ export class Projection extends BaseModel<Projection> {
     public options!: Record<string, any>;
 
     public weight!: number;
-
-    // Calculated field
-    public content!: ProjectionContent;
 
     public content_object_id!: Fqid; // */projection_ids
     public current_projector_id!: Id; // projector/current_projection_ids;
@@ -32,7 +26,6 @@ export class Projection extends BaseModel<Projection> {
         `stable`,
         `weight`,
         `type`,
-        `content`,
         `current_projector_id`,
         `preview_projector_id`,
         `history_projector_id`,
