@@ -93,7 +93,6 @@ export class AgendaForwardDialogComponent implements OnInit {
         private dialogRef: MatDialogRef<AgendaForwardDialogComponent, AgendaForwardDialogReturnData>,
         private activeMeeting: ActiveMeetingService
     ) {
-        const agendaItemIds = new Set(this.data.agenda.map(item => item.id));
         this.showNotTopicWarning = this.data.showSkippedItemWarning;
         this.speakerAmount = this.data.agenda.reduce(
             (sum, item) => sum + (item.content_object?.list_of_speakers?.speaker_ids?.length ?? 0),
