@@ -2,11 +2,16 @@ import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
+import {
+    GetForwardingMeetingsPresenter,
+    GetForwardingMeetingsPresenterMeeting,
+    GetForwardingMeetingsPresenterService
+} from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -158,6 +163,10 @@ export class MotionForwardDialogService extends BaseDialogService<
                 this.operator.hasPerms(Permission.motionCanForward) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
+            meetings.forEach(
+                committee =>
+                    (committee.meetings = committee.meetings?.filter(m => this.endFilter(m)) ?? committee.meetings)
+            );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -172,6 +181,16 @@ export class MotionForwardDialogService extends BaseDialogService<
                 })
             );
         }
+    }
+
+    private endFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
+        const referenceTime = meetingData.start_time ?? meetingData.end_time;
+        if (!referenceTime && referenceTime !== 0) {
+            return false;
+        }
+        const current = new Date();
+        const end = endOfDay(fromUnixTime(meetingData.end_time)) ?? endOfDay(fromUnixTime(meetingData.start_time));
+        return current <= end;
     }
 
     private createForwardingSuccessMessage(
