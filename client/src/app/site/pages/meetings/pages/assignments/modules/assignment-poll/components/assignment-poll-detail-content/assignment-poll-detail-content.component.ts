@@ -203,18 +203,18 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
     }
 
-    public get showRequiredMajority(): `check` | `cancel` | null {
+    public get showRequiredMajority(): string | undefined {
         if (
-            (this.poll.required_majority === RequiredMajorityBase.absolute_majority ||
-                this.poll.required_majority === RequiredMajorityBase.two_third_majority) &&
-            this._chartData[0].label === 'YES'
+            [RequiredMajorityBase.absolute_majority, RequiredMajorityBase.two_third_majority].includes(
+                this.poll.required_majority
+            )
         ) {
             if (this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll)) {
-                return `check`;
+                return this._chartData[0].label === 'YES' ? `check` : `close`;
             }
-            return `cancel`;
+            return `close`;
         }
-        return null;
+        return undefined;
     }
 
     public showRequiredMajorityInTable(votes: number, poll: PollData, row?: OptionData | PollTableData): boolean {

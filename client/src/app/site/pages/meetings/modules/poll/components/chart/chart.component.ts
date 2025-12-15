@@ -55,7 +55,7 @@ export class ChartComponent {
     }
 
     @Input()
-    public chartIcon: null | `check` | `cancel` = null;
+    public chartIcon: string | undefined;
 
     private _circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
 

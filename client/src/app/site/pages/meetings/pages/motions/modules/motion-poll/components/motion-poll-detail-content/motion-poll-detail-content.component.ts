@@ -135,15 +135,16 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
             .filter(result => result.data[0] !== VOTE_UNDOCUMENTED);
     }
 
-    public get showRequiredMajority(): `check` | `cancel` | null {
+    public get showRequiredMajority(): string | null {
         if (
-            this.poll.required_majority === RequiredMajorityBase.absolute_majority ||
-            this.poll.required_majority === RequiredMajorityBase.two_third_majority
+            [RequiredMajorityBase.absolute_majority, RequiredMajorityBase.two_third_majority].includes(
+                this.poll.required_majority
+            )
         ) {
             if (this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll)) {
                 return `check`;
             }
-            return `cancel`;
+            return `close`;
         }
         return null;
     }

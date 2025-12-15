@@ -74,7 +74,7 @@ export class SingleOptionChartTableComponent {
     public shouldShowEntitledPresent = false;
 
     @Input()
-    public shouldShowChartIcon: `check` | `cancel` | null = null;
+    public shouldShowChartIcon: string | undefined;
 
     @Input()
     public title = ``;
