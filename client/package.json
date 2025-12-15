@@ -82,7 +82,7 @@
     "ng2-pdf-viewer": "^10.4.0",
     "ngx-cookie-service": "^20.1.1",
     "ngx-date-fns": "^12.0.1",
-    "ngx-device-detector": "^10.1.0",
+    "ngx-device-detector": "^11.0.0",
     "ngx-file-drop": "^16.0.0",
     "ngx-material-timepicker": "^13.1.1",
     "ngx-papaparse": "^8.0.0",
