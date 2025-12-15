@@ -1,0 +1,115 @@
+<div mat-dialog-title>
+    {{ data.agenda.length > 1 ? ('Copy agenda items' | translate) : ('Copy agenda item' | translate) }}
+</div>
+<mat-dialog-content>
+    <div class="state">
+        {{ data.agenda.length }}
+        {{ 'selected' | translate }}
+    </div>
+
+    @if (showNotTopicWarning) {
+        <div class="warning-text">
+            {{ 'Note: Motions and elections will not be copied.' | translate }}
+        </div>
+    }
+
+    <table class="select-table">
+        <tr>
+            <td colspan="2">
+                <span>{{ 'Title, text, visibility and comment are copied by default.' | translate }}</span>
+            </td>
+        </tr>
+        <!-- Label in front-->
+        @for (rowName of tableRows; track rowName) {
+            <tr>
+                <!-- <ng-container matColumnDef="label"> -->
+                <td>
+                    @if (rowName === 'moderator_notes') {
+                        <span>{{ 'Moderation note' | translate }}</span>
+                    } @else if (rowName === 'speakers') {
+                        <span>{{ 'List of speakers' | translate }}</span>
+                        <br />
+                        <span class="subtitle">
+                            {{ 'Adds participants, structure levels and groups to target meeting.' | translate }}
+                        </span>
+                        <br />
+                        @if (hasForbiddenSpeakers) {
+                            <span class="subtitle-nocolor warn">
+                                {{
+                                    'Warning: List of speakers cannot be copied because person is speaking, has an open point of order or intervention.'
+                                        | translate
+                                }}
+                            </span>
+                        }
+                    } @else if (rowName === 'meeting') {
+                        <span>{{ 'Target meeting' | translate }}</span>
+                        <br />
+                        <span class="subtitle">{{ 'You must be admin in target meeting.' | translate }}</span>
+                    } @else if (rowName === 'attachments') {
+                        <span>{{ 'Attachments' | translate }}</span>
+                    } @else if (rowName === 'info') {
+                        <span>{{ 'Title, text, visibility and comment are copied by default.' | translate }}</span>
+                    }
+                </td>
+                <!-- </ng-container> -->
+
+                <!-- radio checks -->
+                <!-- <ng-container matColumnDef="radio"> -->
+                <td>
+                    @if (rowName === 'moderator_notes') {
+                        <span>
+                            <mat-checkbox [(ngModel)]="withModeratorNotes"></mat-checkbox>
+                        </span>
+                    } @else if (rowName === 'speakers') {
+                        <span>
+                            <mat-checkbox [disabled]="hasForbiddenSpeakers" [(ngModel)]="withSpeakers">
+                                {{ speakerAmount }} {{ 'speakers' | translate }}, {{ participantAmount }}
+                                {{ 'participants' | translate }}
+                            </mat-checkbox>
+                        </span>
+                    } @else if (rowName === 'attachments') {
+                        <span>
+                            <mat-checkbox [(ngModel)]="withAttachments"></mat-checkbox>
+                        </span>
+                    } @else if (rowName === 'meeting') {
+                        <span class="agenda-forward-meeting-list">
+                            @if ((committeeObservable | async)?.meetings?.length) {
+                                <div>
+                                    @for (meeting of (committeeObservable | async)?.meetings; track meeting) {
+                                        <div>
+                                            <mat-checkbox
+                                                [value]="meeting.id"
+                                                [(ngModel)]="checkboxStateMap[meeting.id]"
+                                                (change)="onChangeCheckbox($event)"
+                                            >
+                                                {{ meeting.name }}
+                                                @if (meeting.start_time || meeting.end_time) {
+                                                    <span>
+                                                        &nbsp;&middot;&nbsp;
+                                                        <os-meeting-time
+                                                            [endTime]="meeting.end_time"
+                                                            [startTime]="meeting.start_time"
+                                                        ></os-meeting-time>
+                                                    </span>
+                                                }
+                                            </mat-checkbox>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </span>
+                    }
+                </td>
+            </tr>
+        }
+        <!-- </ng-container> -->
+
+        <tr *matRowDef="let myRowData; columns: ['label', 'radio']" mat-row></tr>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button color="primary" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
+        {{ 'Copy' | translate }}
+    </button>
+    <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
+</mat-dialog-actions>
