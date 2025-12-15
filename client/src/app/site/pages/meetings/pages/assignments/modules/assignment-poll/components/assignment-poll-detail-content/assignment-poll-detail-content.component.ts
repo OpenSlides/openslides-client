@@ -209,10 +209,10 @@ export class AssignmentPollDetailContentComponent implements OnInit {
                 this.poll.required_majority
             )
         ) {
-            if (this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll)) {
-                return this._chartData[0].label === 'YES' ? `check` : `close`;
-            }
-            return `close`;
+            return this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll) &&
+                this._chartData[0].label === `YES`
+                ? `check`
+                : `close`;
         }
         return undefined;
     }
@@ -224,10 +224,9 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): string {
         const requiredMajorityBase = this.pollService.getRequiredMajorityBase(poll, row);
         if (requiredMajorityBase) {
-            if (Number.isInteger(requiredMajorityBase)) {
-                return `${requiredMajorityBase + 1}`;
-            }
-            return `${Math.ceil(requiredMajorityBase)}`;
+            return Number.isInteger(requiredMajorityBase)
+                ? `${requiredMajorityBase + 1}`
+                : `${Math.ceil(requiredMajorityBase)}`;
         }
         return ``;
     }

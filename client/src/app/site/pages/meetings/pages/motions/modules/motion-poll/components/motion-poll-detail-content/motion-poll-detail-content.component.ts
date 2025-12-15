@@ -141,10 +141,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
                 this.poll.required_majority
             )
         ) {
-            if (this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll)) {
-                return `check`;
-            }
-            return `close`;
+            return this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll) ? `check` : `close`;
         }
         return null;
     }

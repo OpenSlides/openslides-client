@@ -298,10 +298,7 @@ export abstract class PollService {
 
     public isRequiredMajority(value: number, poll: PollData, row?: OptionData | PollTableData): boolean {
         const requiredMajorityBase = this.getRequiredMajorityBase(poll, row);
-        if (requiredMajorityBase === null) {
-            return false;
-        }
-        return value > requiredMajorityBase;
+        return requiredMajorityBase !== null && value > requiredMajorityBase;
     }
 
     /**
