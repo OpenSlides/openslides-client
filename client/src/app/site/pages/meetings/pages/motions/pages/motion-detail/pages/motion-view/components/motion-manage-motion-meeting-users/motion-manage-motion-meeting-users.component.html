@@ -18,11 +18,7 @@
         @for (model of intermediateModels$ | async; track model.id) {
             <mat-chip-listbox class="user">
                 @if (model.user) {
-                    <mat-basic-chip class="pre-wrap" disableRipple>
-                        <div>
-                            {{ formatSubmitterName(model.user.getTitle(), 101) }}
-                        </div>
-                    </mat-basic-chip>
+                    <mat-basic-chip class="pre-wrap" disableRipple>{{ model.user.getTitle() }}</mat-basic-chip>
                 } @else {
                     <mat-basic-chip class="pre-wrap" disableRipple>{{ 'Deleted user' | translate }}</mat-basic-chip>
                 }

@@ -335,38 +335,6 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     }
 
     /**
-     * Splits submitter's names if they are too long
-     */
-    public formatSubmitterName(nameToSplit: string, maxLength: number): string {
-        const result: string[] = [];
-
-        if (nameToSplit.includes(' ')) {
-            const parts = nameToSplit.split(' ');
-            for (const part of parts) {
-                if (part.length <= maxLength) {
-                    result.push(part);
-                } else {
-                    for (let i = 0; i < part.length; i += maxLength) {
-                        const chunk = part.slice(i, i + maxLength);
-                        result.push(i + maxLength < part.length ? chunk + ' ' : chunk);
-                    }
-                }
-            }
-        } else {
-            if (nameToSplit.length <= maxLength) {
-                result.push(nameToSplit);
-            } else {
-                for (let i = 0; i < nameToSplit.length; i += maxLength) {
-                    const chunk = nameToSplit.slice(i, i + maxLength);
-                    result.push(i + maxLength < nameToSplit.length ? chunk + ' ' : chunk);
-                }
-            }
-        }
-
-        return result.join(' ');
-    }
-
-    /**
      * helpers for second Selector
      */
     private get secondSelectorSelectedValue(): string {

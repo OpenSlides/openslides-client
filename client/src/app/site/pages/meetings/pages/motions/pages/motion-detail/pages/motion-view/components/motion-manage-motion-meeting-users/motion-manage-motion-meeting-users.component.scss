@@ -29,5 +29,6 @@
     margin: 5px 0;
     border: 1px solid #dddddd;
     height: auto;
-    word-break: keep-all;
+    overflow-wrap: anywhere;
+    max-width: 91%;
 }
