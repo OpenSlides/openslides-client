@@ -9,7 +9,6 @@ import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/me
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { AMENDMENT_LIST_SUBSCRIPTION } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -67,7 +66,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private lineNumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
         super();
@@ -150,7 +148,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     public getAmendmentDiffLines(amendment: ViewMotion): string {
         const diffLines = amendment.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.lineNumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+            return diffLines.map(diffLine => amendment.services().ln.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }
