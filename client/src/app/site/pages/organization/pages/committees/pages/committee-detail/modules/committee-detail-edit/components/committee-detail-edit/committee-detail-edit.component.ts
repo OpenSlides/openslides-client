@@ -45,6 +45,11 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         return this.operator.isOrgaManager;
     }
 
+    public get restrictForwarding(): boolean {
+        // TODO add the setting here
+        return !this.isOrgaManager && true;
+    }
+
     private get managerIdCtrl(): AbstractControl {
         return this.committeeForm.get(`manager_ids`)!;
     }
@@ -130,6 +135,10 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public async onSubmit(): Promise<void> {
         const value = this.committeeForm.value as ViewCommittee;
+        if (this.restrictForwarding) {
+            delete value[`forward_to_committee_ids`];
+            delete value[`receive_forwardings_from_committee_ids`];
+        }
         let id: Id | null = null;
 
         if (this.isCreateView) {
