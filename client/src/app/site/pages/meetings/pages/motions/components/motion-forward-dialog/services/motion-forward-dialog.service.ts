@@ -186,7 +186,7 @@ export class MotionForwardDialogService extends BaseDialogService<
 
     private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
         return (
-            Number(meetingData.id) !== this.activeMeeting.meetingId &&
+            +meetingData.id !== this.activeMeeting.meetingId &&
             meetingData.end_time &&
             new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
         );
