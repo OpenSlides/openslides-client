@@ -13,10 +13,7 @@
     </mat-icon>
 }
 @if (!hide) {
-    <span
-        class="content-node"
-        [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap, 'fill-space': !noFill }"
-    >
+    <span class="content-node" [ngClass]="{ 'single-line': noWrap, 'content-swapped': swap, 'fill-space': !noFill }">
         <ng-content></ng-content>
         <ng-content select="[afterContent]"></ng-content>
     </span>
