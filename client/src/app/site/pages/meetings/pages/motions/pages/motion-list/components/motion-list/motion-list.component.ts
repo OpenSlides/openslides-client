@@ -305,7 +305,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     public getAriaLabel(motion: ViewMotion): string {
         const parts: string[] = [];
         if (motion.getPersonalNote()?.star) {
-            parts.push('is favorite');
+            parts.push(this.translate.instant('is personal favorite'));
         }
         if (motion.number) {
             parts.push(motion.number);
