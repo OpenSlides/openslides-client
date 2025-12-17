@@ -35,7 +35,7 @@ export class GlobalHeadbarComponent {
     public openSearch(): void {
         this.dialog.open(GlobalSearchComponent, {
             autoFocus: false,
-            restoreFocus: false,
+            restoreFocus: true,
             position: {
                 top: `5vh`
             }
