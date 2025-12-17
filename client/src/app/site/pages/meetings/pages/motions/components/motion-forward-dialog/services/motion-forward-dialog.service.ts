@@ -165,7 +165,8 @@ export class MotionForwardDialogService extends BaseDialogService<
                     : [];
             meetings.forEach(
                 committee =>
-                    (committee.meetings = committee.meetings?.filter(m => this.endFilter(m)) ?? committee.meetings)
+                    (committee.meetings =
+                        committee.meetings?.filter(m => this.endAndActiveMeetingFilter(m)) ?? committee.meetings)
             );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
@@ -183,14 +184,12 @@ export class MotionForwardDialogService extends BaseDialogService<
         }
     }
 
-    private endFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
-        const referenceTime = meetingData.start_time ?? meetingData.end_time;
-        if (!referenceTime && referenceTime !== 0) {
-            return false;
-        }
-        const current = new Date();
-        const end = endOfDay(fromUnixTime(meetingData.end_time)) ?? endOfDay(fromUnixTime(meetingData.start_time));
-        return current <= end;
+    private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
+        return (
+            Number(meetingData.id) !== this.activeMeeting.meetingId &&
+            meetingData.end_time &&
+            new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
+        );
     }
 
     private createForwardingSuccessMessage(
