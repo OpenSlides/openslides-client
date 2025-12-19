@@ -6,7 +6,8 @@ import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import {
     PollBackendDurationChoices,
     PollPercentBaseVerbose,
-    PollTypeVerbose
+    PollTypeVerbose,
+    RequiredMajorityBaseVerbose
 } from 'src/app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
@@ -830,6 +831,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         choices: PollPercentBaseVerbose
                     },
                     {
+                        key: `motion_poll_default_required_majority`,
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choices: RequiredMajorityBaseVerbose
+                    },
+                    {
                         key: `motion_poll_default_backend`,
                         label: _(`Default voting duration`),
                         type: `choice`,
@@ -933,6 +940,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default 100 % base`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
+                    },
+                    {
+                        key: `assignment_poll_default_required_majority`,
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choices: RequiredMajorityBaseVerbose
                     },
                     {
                         key: `assignment_poll_default_backend`,

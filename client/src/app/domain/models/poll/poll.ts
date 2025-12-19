@@ -11,7 +11,8 @@ import {
     PollMethod,
     PollPercentBase,
     PollState,
-    PollType
+    PollType,
+    RequiredMajorityBase
 } from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
@@ -29,6 +30,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public live_votes: Record<number, any>;
     public live_voting_enabled: number[];
     public onehundred_percent_base!: PollPercentBase;
+    public required_majority!: RequiredMajorityBase;
 
     /**
      * TODO:
@@ -166,6 +168,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         `global_no`,
         `global_abstain`,
         `onehundred_percent_base`,
+        `required_majority`,
         `votesvalid`,
         `votesinvalid`,
         `votescast`,
