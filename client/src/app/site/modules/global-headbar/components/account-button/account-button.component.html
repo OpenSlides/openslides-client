@@ -76,6 +76,11 @@
                                 <mat-icon class="menu-icon">done</mat-icon>
                                 <span class="menu-text">{{ 'Present' | translate }}</span>
                             </div>
+                        } @else if (!isinMeeting) {
+                            <div mat-menu-item>
+                                <mat-icon class="menu-icon">clear</mat-icon>
+                                <span class="menu-text">{{ 'Not part of meeting' | translate }}</span>
+                            </div>
                         } @else {
                             <div mat-menu-item>
                                 <mat-icon class="menu-icon">clear</mat-icon>
