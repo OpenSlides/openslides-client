@@ -35,6 +35,9 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     @Input()
     public publicAccess: boolean;
 
+    @Input()
+    public isnotPartOfMeeting: boolean;
+
     @Output()
     public updateCrMode = new EventEmitter<ChangeRecoMode>();
 
