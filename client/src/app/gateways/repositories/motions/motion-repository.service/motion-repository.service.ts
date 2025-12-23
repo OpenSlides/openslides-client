@@ -220,7 +220,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             lead_motion_id: partialMotion.lead_motion_id,
             title: partialMotion.title,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids === null ? [] : partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids:
