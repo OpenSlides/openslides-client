@@ -45,7 +45,7 @@ export class ChatGroupDetailMessageFormComponent {
         fb: UntypedFormBuilder,
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        protected translate: TranslateService,
+        private translate: TranslateService,
         private snackBar: MatSnackBar
     ) {
         this.messageForm = fb.control(``, [Validators.maxLength(CHAT_MESSAGE_MAX_LENGTH)]);
