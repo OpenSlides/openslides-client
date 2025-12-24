@@ -9,13 +9,15 @@
         >
             <!-- Title -->
             <div class="title-slot">
-                @if (motion && !newMotion && !vp.isMobile) {
-                    <h2>{{ 'Motion' | translate }}</h2>
-                } @else if (newMotion && !amendmentEdit) {
-                    <h2>{{ 'New motion' | translate }}</h2>
-                } @else if (amendmentEdit) {
-                    <h2>{{ 'New amendment' | translate }}</h2>
-                }
+                <h1 class="mock-h2" translate>
+                    @if (motion && !newMotion && !vp.isMobile) {
+                        Motions
+                    } @else if (newMotion && !amendmentEdit) {
+                        New motion
+                    } @else if (amendmentEdit) {
+                        New amendment
+                    }
+                </h1>
             </div>
         </os-head-bar>
         @if (motion) {

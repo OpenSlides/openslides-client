@@ -8,14 +8,13 @@
     >
         <!-- Title -->
         <div class="title-slot">
-            <h2>
+            <h1 class="mock-h2" translate>
                 @if (!isCurrentListOfSpeakers) {
-                    <span>{{ 'List of speakers' | translate }}</span>
+                    List of speakers
+                } @else {
+                    Current list of speakers
                 }
-                @if (isCurrentListOfSpeakers) {
-                    <span>{{ 'Current list of speakers' | translate }}</span>
-                }
-            </h2>
+            </h1>
         </div>
         <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button

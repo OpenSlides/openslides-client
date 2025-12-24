@@ -11,14 +11,14 @@
         <!-- Title -->
         @if (motion && hasLoaded) {
             <div class="title-slot">
-                <h2>
+                <h1 class="mock-h2">
                     @if (!isMobile) {
                         <span>{{ 'Motion' | translate }}</span>
                         <!-- Whitespace between "Motion" and number -->
                         <span>&nbsp;</span>
                     }
                     <span>{{ motion.number }}</span>
-                </h2>
+                </h1>
             </div>
         }
         <!-- Back and forth buttons -->
