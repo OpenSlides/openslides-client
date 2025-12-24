@@ -51,6 +51,12 @@ a {
     cursor: pointer;
 }
 
+.accountButton {
+    background: var(--theme-headbar);
+    color: var(--theme-headbar-contrast);
+    border: none;
+}
+
 .width-16 {
     margin: 4px;
     width: 20px;

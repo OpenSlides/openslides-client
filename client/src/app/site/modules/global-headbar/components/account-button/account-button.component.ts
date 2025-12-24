@@ -204,4 +204,22 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.operator.shortName;
     }
+
+    public getAriaLabel(): string {
+        let stringForUserPresent: string;
+        if (!this.hasActiveMeeting) {
+            stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
+        } else if (this.user.isPresentInMeeting()) {
+            stringForUserPresent = this.translate.instant(
+                `Account of {} is present. If status just changed focus this element again to get accurate present status.`
+            );
+        } else if (this.user.isInActiveMeeting) {
+            stringForUserPresent = this.translate.instant(
+                `Account of {} is not present. If status just changed focus this element again to get accurate present status.`
+            );
+        } else {
+            stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
+        }
+        return stringForUserPresent.replace(`{}`, this.user.short_name);
+    }
 }
