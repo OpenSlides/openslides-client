@@ -12,12 +12,14 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        @if (isNewUser) {
-            <h2>{{ 'New account' | translate }}</h2>
-        }
-        @if (!isNewUser) {
-            <h2>{{ user?.full_name }}</h2>
-        }
+        <h1 class="mock-h2">
+            @if (isNewUser) {
+                {{ 'New account' | translate }}
+            }
+            @if (!isNewUser) {
+                {{ user?.full_name }}
+            }
+        </h1>
     </div>
 
     <!-- Menu -->

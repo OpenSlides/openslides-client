@@ -12,12 +12,13 @@
         >
             <!-- Title -->
             <div class="title-slot">
-                @if (assignment && !isCreating) {
-                    <h2>{{ 'Election' | translate }}</h2>
-                }
-                @if (isCreating) {
-                    <h2>{{ 'New election' | translate }}</h2>
-                }
+                <h1 class="mock-h2" translate>
+                    @if (assignment && !isCreating) {
+                        Election
+                    } @else if (isCreating) {
+                        New election
+                    }
+                </h1>
             </div>
             <!-- Menu -->
             <ng-container class="menu-slot">
