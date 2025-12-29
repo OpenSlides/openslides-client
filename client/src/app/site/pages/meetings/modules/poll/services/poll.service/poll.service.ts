@@ -224,7 +224,8 @@ export abstract class PollService {
     protected getPercentBase(poll: PollData, row?: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
         let totalByBase = 0;
-        const option = row ?? poll.options[0]; // Assuming that its a motion poll and the first option contains every vote.
+        // Assuming that its a motion poll and the first option contains every vote.
+        const option = row ?? poll.options[0];
         switch (base) {
             case PollPercentBase.YN:
                 totalByBase = this.sumOptionsYN(option);

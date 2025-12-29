@@ -262,7 +262,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     }
 
     /**
-     * Takes note of changes in a specific ViewModel's default-projector and toggles the corresponding checkbox in the `Projector defaults`-selector if neccessary
+     * Takes note of changes in a specific ViewModel's default-projector
+     * and toggles the corresponding checkbox in the `Projector defaults`-selector if neccessary
      * @param key the key of Projectiondefault, that describes the ViewModel
      * @param defaultProjectorIds the new value for the default projector
      */

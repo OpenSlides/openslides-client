@@ -33,7 +33,8 @@ interface HidingConfig {
 export class BaseModelRequestHandlerComponent extends BaseUiComponent implements OnInit, OnDestroy {
     private _destroyed = new EventEmitter<boolean>();
     private _openedSubscriptions: string[] = [];
-    private _currentMeetingId: Id | null | undefined = undefined; // This is to ensure that the if-check in ngOnInit also fires if the application isn't in a meeting
+    // This is to ensure that the if-check in ngOnInit also fires if the application isn't in a meeting
+    private _currentMeetingId: Id | null | undefined = undefined;
     private _currentParams: any = {};
 
     protected modelRequestService: ModelRequestService;

@@ -35,6 +35,7 @@ export interface MotionTitleChangeRecommendationDialogComponentData extends Base
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
+// eslint-disable-next-line
 export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionTitleChangeRecommendationDialogComponentData> {
     /**
      * Creates the forms for the Motion and the MotionVersion

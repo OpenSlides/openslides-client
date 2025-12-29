@@ -285,8 +285,8 @@ export abstract class BaseSearchSelectorComponent
 
     public onChipRemove(itemId: Id): void {
         this.addOrRemoveId(itemId);
-
-        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // To ensure that the checkbox is updated in the view
+        // To ensure that the checkbox is updated in the view
+        this.matSelect.options.find(option => option.value === itemId)?.deselect();
     }
 
     private addOrRemoveId(id: Id): void {
