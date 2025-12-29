@@ -60,6 +60,10 @@ describe(`MotionDiffService`, () => {
         get lineFrom(): number {
             return this.obj.line_from;
         }
+
+        get isRejected(): boolean {
+            return this.isRejected;
+        }
     }
 
     const baseHtml1 =
