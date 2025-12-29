@@ -848,14 +848,17 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
             (otherChange) =>
                 otherChange.identifier !== change.identifier &&
                 (
-                    (change.changeId.includes(`amendment`) && (change.changeId.includes(`amendment`) || !otherChange.isRejected)) || 
-                    !change.isRejected) &&
-                ((otherChange.lineFrom >= change.lineFrom &&
-                    otherChange.lineFrom <= change.lineTo) ||
+                    (change.changeId.includes(`amendment`) && (otherChange.changeId.includes(`amendment`) || !otherChange.isRejected)) || 
+                    !change.isRejected
+                ) &&
+                (
+                    (otherChange.lineFrom >= change.lineFrom &&
+                        otherChange.lineFrom <= change.lineTo) ||
                     (otherChange.lineTo >= change.lineFrom &&
                         otherChange.lineTo <= change.lineTo) ||
-                        (otherChange.lineFrom <= change.lineFrom &&
-                            otherChange.lineTo >= change.lineTo))
+                    (otherChange.lineFrom <= change.lineFrom &&
+                        otherChange.lineTo >= change.lineTo)
+                )
         ).length > 0
     );
 }
