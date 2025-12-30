@@ -58,6 +58,7 @@
                     mat-icon-button
                     matTooltip="{{ mainActionTooltip | translate }}"
                     [disabled]="!isMainButtonEnabled"
+                    [matTooltipShowDelay]="1000"
                     (click)="sendMainEvent()"
                 >
                     <mat-icon>{{ mainButtonIcon }}</mat-icon>
