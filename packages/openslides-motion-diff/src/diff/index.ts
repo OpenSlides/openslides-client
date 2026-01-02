@@ -849,15 +849,12 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
                 otherChange.identifier !== change.identifier &&
                 (
                     (change.changeId.includes(`amendment`) && (otherChange.changeId.includes(`amendment`) || !otherChange.isRejected)) || 
-                    !change.isRejected
+                    (!change.changeId.includes(`amendment`) &&  !change.isRejected )
                 ) &&
                 (
-                    (otherChange.lineFrom >= change.lineFrom &&
-                        otherChange.lineFrom <= change.lineTo) ||
-                    (otherChange.lineTo >= change.lineFrom &&
-                        otherChange.lineTo <= change.lineTo) ||
-                    (otherChange.lineFrom <= change.lineFrom &&
-                        otherChange.lineTo >= change.lineTo)
+                    (otherChange.lineFrom >= change.lineFrom && otherChange.lineFrom <= change.lineTo) ||
+                    (otherChange.lineFrom <= change.lineFrom && otherChange.lineTo >= change.lineTo) ||
+                    (otherChange.lineTo >= change.lineFrom && otherChange.lineTo <= change.lineTo) 
                 )
         ).length > 0
     );
