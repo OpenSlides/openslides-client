@@ -26,12 +26,22 @@
         @if (hasCategories && !isMultiSelect) {
             <div>
                 @if (selectedView === 'list') {
-                    <button mat-button matTooltip="{{ 'Tile view' | translate }}" (click)="onChangeView('tiles')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'Tile view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('tiles')"
+                    >
                         <mat-icon>view_module</mat-icon>
                     </button>
                 }
                 @if (selectedView === 'tiles') {
-                    <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'List view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('list')"
+                    >
                         <mat-icon>view_headline</mat-icon>
                     </button>
                 }
