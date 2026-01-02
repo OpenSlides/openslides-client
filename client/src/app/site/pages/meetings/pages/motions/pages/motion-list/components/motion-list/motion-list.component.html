@@ -195,47 +195,49 @@
                 }
             </div>
         </div>
-        <!-- Category, blocks and tags -->
-        <div
-            *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
-            class="cell-slot fill"
-            tabindex="0"
-            [ngClass]="isMultiSelect ? '' : 'clickable'"
-            (click)="openEditInfo(motion)"
-            (keyup.space)="openEditInfo(motion)"
-        >
-            <div class="column-state innerTable">
-                <!-- Category -->
-                @if (motion.category) {
-                    <div class="ellipsis-overflow">
-                        <os-icon-container icon="category">
-                            @if (motion.category.parent) {
-                                <div class="ellipsis-overflow">
-                                    {{ motion.category.parent.toString() }}
-                                </div>
-                            }
-                            <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
-                        </os-icon-container>
-                    </div>
-                }
-                <!-- Motion Block -->
-                @if (motion.block) {
-                    <div class="ellipsis-overflow spacer-top-5">
-                        <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
-                    </div>
-                }
-                <!-- Tags -->
-                @if (motion.tags && motion.tags.length) {
-                    <div class="ellipsis-overflow spacer-top-5">
-                        <os-icon-container icon="local_offer">
-                            <os-comma-separated-listing [list]="motion.tags">
-                                <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
-                            </os-comma-separated-listing>
-                        </os-icon-container>
-                    </div>
-                }
+        @if (hasCategories || hasMotionBlocks || hasTags) {
+            <!-- Category, blocks and tags -->
+            <div
+                *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
+                class="cell-slot fill"
+                tabindex="0"
+                [ngClass]="isMultiSelect ? '' : 'clickable'"
+                (click)="openEditInfo(motion)"
+                (keyup.space)="openEditInfo(motion)"
+            >
+                <div class="column-state innerTable">
+                    <!-- Category -->
+                    @if (motion.category) {
+                        <div class="ellipsis-overflow">
+                            <os-icon-container icon="category">
+                                @if (motion.category.parent) {
+                                    <div class="ellipsis-overflow">
+                                        {{ motion.category.parent.toString() }}
+                                    </div>
+                                }
+                                <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
+                            </os-icon-container>
+                        </div>
+                    }
+                    <!-- Motion Block -->
+                    @if (motion.block) {
+                        <div class="ellipsis-overflow spacer-top-5">
+                            <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
+                        </div>
+                    }
+                    <!-- Tags -->
+                    @if (motion.tags && motion.tags.length) {
+                        <div class="ellipsis-overflow spacer-top-5">
+                            <os-icon-container icon="local_offer">
+                                <os-comma-separated-listing [list]="motion.tags">
+                                    <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                                </os-comma-separated-listing>
+                            </os-icon-container>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
+        }
         <!-- Menu -->
         <div *osScrollingTableCell="'menu'; config: { width: 40 }; row as motion" class="cell-slot fill">
             <button

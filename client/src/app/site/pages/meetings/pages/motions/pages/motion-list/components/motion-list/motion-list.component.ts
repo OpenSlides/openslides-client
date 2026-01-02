@@ -13,6 +13,7 @@ import { MotionForwardDialogService } from '../../../../components/motion-forwar
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { TagControllerService } from '../../../../modules/tags/services';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
@@ -115,6 +116,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return this._hasAmendments;
     }
 
+    protected get hasTags(): boolean {
+        return this._hasTags;
+    }
+
     /**
      * The recommender of the current meeting.
      */
@@ -122,6 +127,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasCategories = false;
     private _hasMotionBlocks = false;
     private _hasAmendments = false;
+    private _hasTags = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -131,6 +137,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         private infoDialog: MotionListInfoDialogService,
         private categoryController: MotionCategoryControllerService,
         private motionBlockController: MotionBlockControllerService,
+        private tagsRepo: TagControllerService,
         public motionRepo: MotionControllerService,
         public amendmentController: AmendmentControllerService,
         public motionService: MotionForwardDialogService,
@@ -178,6 +185,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
                 }),
             this.motionBlockController.getViewModelListObservable().subscribe(motionBlocks => {
                 this._hasMotionBlocks = motionBlocks.filter(motionBlock => !motionBlock.internal).length > 0;
+            }),
+            this.tagsRepo.getViewModelListObservable().subscribe(tags => {
+                this._hasTags = tags.length > 0;
             }),
             this.motionRepo.getViewModelListObservable().subscribe(motions => {
                 if (motions && motions.length) {
