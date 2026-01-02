@@ -363,7 +363,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      * @param motion the ViewMotion whose content is edited.
      */
     public async openEditInfo(motion: ViewMotion): Promise<void> {
-        if (this.isMultiSelect || !this.perms.isAllowed(`change_metadata`)) {
+        if (this.isMultiSelect) {
+            return;
+        } else if (!this.perms.isAllowed(`change_metadata`)) {
+            this.router.navigate([motion.getDetailStateUrl()]);
             return;
         }
 
