@@ -121,4 +121,5 @@ export type UnifiedChange = {
     lineFrom: number;
     changeType: UnifiedChangeType;
     changeNewText: string;
+    isRejected: boolean;
 }

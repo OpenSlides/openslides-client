@@ -476,7 +476,8 @@ export class MotionDiffService {
             lineTo: change.getLineTo(),
             lineFrom: change.getLineFrom(),
             changeType,
-            changeNewText: change.getChangeNewText()
+            changeNewText: change.getChangeNewText(),
+            isRejected: change.isRejected()
         };
     }
 }
