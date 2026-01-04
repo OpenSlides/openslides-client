@@ -109,6 +109,11 @@
                 <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
                 <br />
             }
+            <!-- Required majority -->
+            @if (poll.required_majority && poll.required_majority !== 'no_majority') {
+                <small>{{ 'Required majority' | translate }}: {{ requiredMajorityVerbose | translate }}</small>
+                <br />
+            }
             <!-- Poll backend duration type -->
             @if (poll.backend) {
                 <small>
