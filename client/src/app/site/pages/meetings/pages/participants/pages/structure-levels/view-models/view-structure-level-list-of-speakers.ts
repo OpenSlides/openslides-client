@@ -34,6 +34,4 @@ interface IViewStructureLevelListOfSpeakersRelations {
     speakers: ViewSpeaker[];
 }
 export interface ViewStructureLevelListOfSpeakers
-    extends StructureLevelListOfSpeakers,
-        ViewModelRelations<IViewStructureLevelListOfSpeakersRelations>,
-        HasMeeting {}
+    extends StructureLevelListOfSpeakers, ViewModelRelations<IViewStructureLevelListOfSpeakersRelations>, HasMeeting {}

@@ -114,7 +114,7 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="column-title innerTable overflow-hidden">
-                <div class="title-line ellipsis-overflow">
+                <h1 aria-label="{{ getAriaLabel(motion) }}" class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     @if (motion.getPersonalNote()?.star) {
                         <span class="favorite-star">
@@ -137,7 +137,7 @@
                         }
                         {{ motion.title }}
                     </span>
-                </div>
+                </h1>
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitterNames.length) {

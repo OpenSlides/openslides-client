@@ -183,7 +183,7 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                                           return model.user_id === val.id;
                                       }
                                       // else is (val instanceof ViewMotionSubmitter/ViewMotionEditor/ViewMotionWorkingGroupSpeaker)
-                                      return model.user_id === val.id;
+                                      return model.id === val.id;
                                   })
                               ),
                               filter(model => !!model)
