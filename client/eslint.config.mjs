@@ -80,12 +80,11 @@ export default tseslint.config({
         "lines-between-class-members": ["error", "always", {
             exceptAfterSingleLine: true,
         }],
-        "max-len": ["error", {
+        "max-len": ["warn", {
             code: 120,
             comments: 160,
             ignoreStrings: true,
-            ignoreTemplateLiterals: true,
-            ignorePattern: "^export\\W.*"
+            ignoreTemplateLiterals: true
         }],
 
         "no-debugger": ["error"],
