@@ -87,7 +87,7 @@
     "ngx-material-timepicker": "^13.1.1",
     "ngx-papaparse": "^8.0.0",
     "pdfjs-dist": "4.8.69",
-    "pdfmake": "^0.2.20",
+    "pdfmake": "^0.2.21",
     "pofile": "^1.1.4",
     "qrcode": "^1.5.4",
     "rxjs": "^7.8.2",
