@@ -848,8 +848,9 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
             (otherChange) =>
                 otherChange.identifier !== change.identifier &&
                 (
-                    (change.changeId.includes(`amendment`) && (otherChange.changeId.includes(`amendment`) || !otherChange.isRejected)) || 
-                    (!change.changeId.includes(`amendment`) &&  !change.isRejected )
+                    // changetype === 1 is an amendment, changetype === 0 is a CR
+                    (change.changeType === 1 && (otherChange.changeType === 1 || !otherChange.isRejected)) || 
+                    (change.changeType === 0 && !change.isRejected)
                 ) &&
                 (
                     (otherChange.lineFrom >= change.lineFrom && otherChange.lineFrom <= change.lineTo) ||
