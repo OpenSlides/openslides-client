@@ -21,9 +21,9 @@ export interface ListOfSpeakersContentObjectRepository<
  * The base repository for objects with a list of speakers.
  */
 export abstract class BaseListOfSpeakersContentObjectRepository<
-        V extends BaseViewModel & HasListOfSpeakers,
-        M extends BaseModel & HasListOfSpeakersId
-    >
+    V extends BaseViewModel & HasListOfSpeakers,
+    M extends BaseModel & HasListOfSpeakersId
+>
     extends BaseMeetingRelatedRepository<V, M>
     implements ListOfSpeakersContentObjectRepository<V, M>
 {
