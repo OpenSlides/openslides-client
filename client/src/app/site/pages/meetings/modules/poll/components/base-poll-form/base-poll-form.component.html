@@ -173,7 +173,7 @@
             </div>
             <div>
                 @if (!hideSelects.requiredMajority) {
-                    <mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Required majority' | translate }}</mat-label>
                         <mat-select formControlName="required_majority" panelClass="required_majority" required>
                             @for (option of requiredMajorityBaseVerbose | keyvalue: keepEntryOrder; track option.key) {
@@ -182,6 +182,21 @@
                                 </mat-option>
                             }
                         </mat-select>
+                        @if (contentForm.get('required_majority').value === 'absolute_majority') {
+                            <mat-hint
+                                [innerText]="
+                                    'Indicates if a majority of more than 50% was reached, dependents on the 100%-base'
+                                        | translate
+                                "
+                            ></mat-hint>
+                        } @else if (contentForm.get('required_majority').value === 'two_third_majority') {
+                            <mat-hint
+                                [innerText]="
+                                    'Indicates if a majority of two-thirds or more was reached, dependents on the 100%-base'
+                                        | translate
+                                "
+                            ></mat-hint>
+                        }
                     </mat-form-field>
                 }
             </div>
