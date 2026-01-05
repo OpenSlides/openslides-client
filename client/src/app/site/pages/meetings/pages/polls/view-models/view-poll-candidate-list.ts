@@ -33,6 +33,4 @@ interface IPollCandidateListRelations {
     option: ViewOption;
 }
 export interface ViewPollCandidateList
-    extends HasMeeting,
-        ViewModelRelations<IPollCandidateListRelations>,
-        PollCandidateList {}
+    extends HasMeeting, ViewModelRelations<IPollCandidateListRelations>, PollCandidateList {}

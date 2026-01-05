@@ -219,7 +219,8 @@ interface IMeetingRelations {
     relevant_history_entries: ViewHistoryEntry[];
 }
 export interface ViewMeeting
-    extends Meeting,
+    extends
+        Meeting,
         ViewModelRelations<IMeetingRelations>,
         HasProjectorTitle,
         HasOrganizationTags,
