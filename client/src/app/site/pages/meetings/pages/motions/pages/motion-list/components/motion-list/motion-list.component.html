@@ -26,12 +26,22 @@
         @if (hasCategories && !isMultiSelect) {
             <div>
                 @if (selectedView === 'list') {
-                    <button mat-button matTooltip="{{ 'Tile view' | translate }}" (click)="onChangeView('tiles')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'Tile view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('tiles')"
+                    >
                         <mat-icon>view_module</mat-icon>
                     </button>
                 }
                 @if (selectedView === 'tiles') {
-                    <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'List view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('list')"
+                    >
                         <mat-icon>view_headline</mat-icon>
                     </button>
                 }
@@ -114,7 +124,7 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="column-title innerTable overflow-hidden">
-                <div class="title-line ellipsis-overflow">
+                <h1 aria-label="{{ getAriaLabel(motion) }}" class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     @if (motion.getPersonalNote()?.star) {
                         <span class="favorite-star">
@@ -137,7 +147,7 @@
                         }
                         {{ motion.title }}
                     </span>
-                </div>
+                </h1>
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitterNames.length) {
