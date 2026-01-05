@@ -156,7 +156,8 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     ];
 }
 export interface Motion
-    extends HasMeetingId,
+    extends
+        HasMeetingId,
         HasAgendaItemId,
         HasListOfSpeakersId,
         HasTagIds,
