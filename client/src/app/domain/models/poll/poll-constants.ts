@@ -212,8 +212,8 @@ export const VoteValuesVerbose = {
 
 export const RequiredMajorityBaseVerbose = {
     no_majority: _('No majority'),
-    two_third_majority: _('Two-third majority'),
-    absolute_majority: _('Absolute majority')
+    absolute_majority: _('Absolute majority'),
+    two_third_majority: _('Two-third majority')
 };
 
 /**
