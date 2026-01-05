@@ -207,7 +207,8 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         if (
             [RequiredMajorityBase.absolute_majority, RequiredMajorityBase.two_third_majority].includes(
                 this.poll.required_majority
-            )
+            ) &&
+            this.poll.onehundred_percent_base !== PollPercentBase.Disabled
         ) {
             return this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll) &&
                 this._chartData[0].label === `YES`
