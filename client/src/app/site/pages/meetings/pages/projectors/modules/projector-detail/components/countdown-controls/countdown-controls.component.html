@@ -1,7 +1,7 @@
 @if (countdown) {
     <mat-card>
         <mat-card-content>
-            <div class="grid-wrapper">
+            <div class="flexbox-wrapper">
                 <div class="projector-button">
                     <os-projector-button
                         [ignoreStable]="true"
@@ -9,7 +9,35 @@
                         [projector]="projector"
                     ></os-projector-button>
                 </div>
-                <div class="title">{{ countdown.getTitle() }}</div>
+                <div class="content">
+                    <div class="timer-title">{{ countdown.getTitle() }}</div>
+                    <div class="timer-time">
+                        <os-countdown-time
+                            class="larger-countdown"
+                            [countdown]="countdown"
+                            [warningTime]="warningTime"
+                        ></os-countdown-time>
+                    </div>
+                    <div class="timer-controls">
+                        <button
+                            class="speaker-control-button"
+                            mat-icon-button
+                            type="button"
+                            [disabled]="!canStop()"
+                            (click)="stop($event)"
+                        >
+                            <mat-icon>stop</mat-icon>
+                        </button>
+                        <button
+                            class="speaker-control-button"
+                            mat-icon-button
+                            type="button"
+                            (click)="countdown.running ? pause($event) : start($event)"
+                        >
+                            <mat-icon>{{ countdown.running ? 'pause' : 'play_arrow' }}</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <div class="action-buttons">
                     <button
                         class="small-mat-icon-button"
@@ -47,37 +75,9 @@
                             type="button"
                             (click)="onDelete()"
                         >
-                            <mat-icon>close</mat-icon>
+                            <mat-icon>delete</mat-icon>
                         </button>
                     }
-                </div>
-                <div class="timer">
-                    <os-countdown-time
-                        class="larger-countdown"
-                        [countdown]="countdown"
-                        [warningTime]="warningTime"
-                    ></os-countdown-time>
-                    <div>
-                        <button
-                            class="small-mat-icon-button"
-                            mat-icon-button
-                            type="button"
-                            [disabled]="!canStop()"
-                            (click)="stop($event)"
-                        >
-                            <mat-icon>stop</mat-icon>
-                        </button>
-                        @if (!countdown.running) {
-                            <button class="small-mat-icon-button" mat-icon-button type="button" (click)="start($event)">
-                                <mat-icon>play_arrow</mat-icon>
-                            </button>
-                        }
-                        @if (countdown.running) {
-                            <button class="small-mat-icon-button" mat-icon-button type="button" (click)="pause($event)">
-                                <mat-icon>pause</mat-icon>
-                            </button>
-                        }
-                    </div>
                 </div>
             </div>
         </mat-card-content>

@@ -1,43 +1,54 @@
 @use 'src/assets/styles/custom-button-styles.scss';
+@use 'src/assets/styles/mixins/button.scss';
 
-.grid-wrapper {
-    display: grid;
+.flexbox-wrapper {
+    display: flex;
     width: 100%;
-    grid-template-areas:
-        'project title buttons'
-        'project controls controls';
-    grid-gap: 10px;
-    grid-template-columns: min-content auto min-content;
-}
+    flex-direction: row;
+    flex-grow: 0 1 0;
+    align-items: center;
+    gap: 10px;
 
-// could be in a shared scss
-.projector-button {
-    grid-area: project;
-    margin: auto 10px auto 0;
-}
+    // could be in a shared scss
+    .projector-button {
+        margin: auto 10px auto 0;
+    }
 
-.title {
-    grid-area: title;
-    padding: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .content {
+        padding: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
 
-// could be in a shared scss
-.action-buttons {
-    grid-area: buttons;
-    text-align: right;
-    display: flex;
-}
+        .mat-mdc-icon-button.speaker-control-button {
+            @include button.custom-size-button(46px, 36px);
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+            margin: 3px;
+        }
+    }
 
-.timer {
-    grid-area: controls;
-    display: flex;
-    justify-content: space-between;
-}
+    .timer {
+        display: flex;
+        justify-content: space-between;
+    }
 
-.larger-countdown {
-    font-size: 150%;
-    min-width: 60px;
+    .timer-title {
+        min-width: 60px;
+    }
+
+    .timer-time {
+        font-size: 150%;
+        min-width: 60px;
+    }
+
+    // could be in a shared scss
+    .action-buttons {
+        text-align: right;
+        width: 30px;
+        margin-left: auto;
+    }
 }
