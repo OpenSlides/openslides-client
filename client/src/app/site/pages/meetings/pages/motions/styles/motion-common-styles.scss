@@ -139,6 +139,13 @@ $bp-phone: 500px;
         word-break: break-all;
     }
 }
+@include variables.tablet {
+    .motion-text > * {
+        max-width: 100%;
+        display: block;
+        word-break: break-all;
+    }
+}
 
 .amendment-view {
     .os-split-after {
