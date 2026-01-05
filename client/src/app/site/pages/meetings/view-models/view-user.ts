@@ -221,7 +221,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public supported_motion_ids(meetingId?: Id): Id[] {
-        return this.getMeetingUser(meetingId)?.supported_motion_ids;
+        return this.getMeetingUser(meetingId)?.motion_supporters?.map(sup => sup.motion_id);
     }
 
     public submitted_motion_ids(meetingId?: Id): Id[] {

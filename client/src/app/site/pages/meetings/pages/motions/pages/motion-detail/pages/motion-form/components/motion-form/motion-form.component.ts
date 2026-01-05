@@ -258,6 +258,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 }
                 await this.createMotion(update);
             } else {
+                delete update.supporter_ids;
+                delete update[`supporter_meeting_user_ids`];
                 await this.updateMotion(update, this.motion);
                 this.leaveEditMotion();
             }

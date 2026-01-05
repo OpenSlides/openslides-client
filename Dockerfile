@@ -28,6 +28,8 @@ CMD ["./command.sh"]
 # Development Image
 FROM base AS dev
 
+COPY ./meta ./meta
+
 RUN apk add --no-cache git
 
 # Testing Image
@@ -44,7 +46,7 @@ RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version
 RUN npm run build
 
 # Prod wants nginx as base image for some reason
-FROM nginx:1.29.3 AS prod
+FROM nginx:1.29.4 AS prod
 
 ## Setup
 ARG CONTEXT

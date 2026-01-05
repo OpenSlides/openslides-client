@@ -246,7 +246,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
             this.meetingSettingsService
                 .get(`assignment_poll_default_group_ids`)
-                .subscribe(group_ids => (this._poll_default_group_ids = group_ids)),
+                .subscribe(group_ids => (this._poll_default_group_ids = Array.from(group_ids))),
             this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
                 group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {

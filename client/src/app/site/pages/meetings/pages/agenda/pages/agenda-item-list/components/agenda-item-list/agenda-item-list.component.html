@@ -10,7 +10,9 @@
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu" (click)="updateForwardingMeetings()">
+            <mat-icon>more_vert</mat-icon>
+        </button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -257,6 +259,16 @@
                     <mat-icon>file_copy</mat-icon>
                     <span>{{ 'Duplicate' | translate }}</span>
                 </button>
+                @if (canForward && isAdmin) {
+                    <button
+                        mat-menu-item
+                        [disabled]="!selectedRows.length"
+                        (click)="forwardAgendaItemsToMeetings(selectedRows)"
+                    >
+                        <mat-icon>forward</mat-icon>
+                        <span>{{ 'Copy to' | translate }} ...</span>
+                    </button>
+                }
                 <!-- Delete selected -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="removeSelected()">
                     <mat-icon>remove</mat-icon>
