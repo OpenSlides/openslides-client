@@ -44,7 +44,6 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
     styleUrls: [`./motion-content-change-recommendation-dialog.component.scss`],
     standalone: false
 })
-// eslint-disable-next-line
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
     /**

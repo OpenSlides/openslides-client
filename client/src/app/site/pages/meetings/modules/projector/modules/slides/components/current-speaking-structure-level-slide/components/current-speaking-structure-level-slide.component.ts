@@ -12,7 +12,6 @@ import { CurrentSpeakingStructureLevelSlideData } from '../current-speaking-stru
     styleUrls: [`./current-speaking-structure-level-slide.component.scss`],
     standalone: false
 })
-// eslint-disable-next-line
 export class CurrentSpeakingStructureLevelSlideComponent extends BaseSlideComponent<CurrentSpeakingStructureLevelSlideData> {
     public SpeechState = SpeechState;
     public icon: string;

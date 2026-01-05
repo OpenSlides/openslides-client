@@ -84,7 +84,8 @@ export default tseslint.config({
             code: 120,
             comments: 160,
             ignoreStrings: true,
-            ignoreTemplateLiterals: true
+            ignoreTemplateLiterals: true,
+            ignorePattern: "^export\\W.*"
         }],
 
         "no-debugger": ["error"],
