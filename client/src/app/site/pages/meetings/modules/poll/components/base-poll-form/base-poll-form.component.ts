@@ -191,8 +191,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.contentForm.get(`onehundred_percent_base`);
     }
 
-    private get requiredMajority(): AbstractControl {
-        return this.contentForm.get(`required_majority`);
+    public get requiredMajority(): string {
+        return this.contentForm.get(`required_majority`).value;
     }
 
     public abstract get hideSelects(): PollFormHideSelectsData;
