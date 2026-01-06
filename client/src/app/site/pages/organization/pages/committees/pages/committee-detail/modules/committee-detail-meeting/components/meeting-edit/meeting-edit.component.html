@@ -7,11 +7,11 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>
+        <h1 class="mock-h2">
             @if (isCreateView) {
-                {{ addMeetingLabel }}
+                {{ addMeetingLabel | translate }}
             } @else {
-                {{ editMeetingLabel }}
+                {{ editMeetingLabel | translate }}
             }
         </h1>
     </div>

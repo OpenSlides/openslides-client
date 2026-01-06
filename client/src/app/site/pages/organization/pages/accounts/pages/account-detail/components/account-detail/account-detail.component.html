@@ -15,8 +15,7 @@
         <h1 class="mock-h2">
             @if (isNewUser) {
                 {{ 'New account' | translate }}
-            }
-            @if (!isNewUser) {
+            } @else {
                 {{ user?.full_name }}
             }
         </h1>

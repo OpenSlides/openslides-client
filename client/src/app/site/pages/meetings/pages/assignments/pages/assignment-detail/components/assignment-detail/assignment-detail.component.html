@@ -12,11 +12,11 @@
         >
             <!-- Title -->
             <div class="title-slot">
-                <h1 class="mock-h2" translate>
-                    @if (assignment && !isCreating) {
-                        Election
-                    } @else if (isCreating) {
-                        New election
+                <h1 class="mock-h2">
+                    @if (isCreating) {
+                        {{ 'New election' | translate }}
+                    } @else {
+                        {{ 'Election' | translate }}
                     }
                 </h1>
             </div>
