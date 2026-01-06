@@ -24,6 +24,7 @@ export class OrganizationSetting {
     public require_duplicate_from!: boolean;
     public disable_forward_with_attachments!: boolean;
     public enable_anonymous!: boolean;
+    public restrict_edit_forward_committees!: boolean;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -77,6 +78,7 @@ export class Organization extends BaseModel<Organization> {
         `require_duplicate_from`,
         `disable_forward_with_attachments`,
         `enable_anonymous`,
+        `restrict_edit_forward_committees`,
         `saml_enabled`,
         `saml_login_button_text`,
         `saml_attr_mapping`,
