@@ -11,31 +11,37 @@
                 </div>
                 <div class="content">
                     <div class="timer-title">{{ countdown.getTitle() }}</div>
-                    <div class="timer-time">
-                        <os-countdown-time
-                            class="larger-countdown"
-                            [countdown]="countdown"
-                            [warningTime]="warningTime"
-                        ></os-countdown-time>
-                    </div>
-                    <div class="timer-controls">
-                        <button
-                            class="speaker-control-button"
-                            mat-icon-button
-                            type="button"
-                            [disabled]="!canStop()"
-                            (click)="stop($event)"
-                        >
-                            <mat-icon>stop</mat-icon>
-                        </button>
-                        <button
-                            class="speaker-control-button"
-                            mat-icon-button
-                            type="button"
-                            (click)="countdown.running ? pause($event) : start($event)"
-                        >
-                            <mat-icon>{{ countdown.running ? 'pause' : 'play_arrow' }}</mat-icon>
-                        </button>
+                    <div class="timer-time-n-button">
+                        <div class="timer-time">
+                            <os-countdown-time
+                                class="larger-countdown"
+                                [countdown]="countdown"
+                                [warningTime]="warningTime"
+                            ></os-countdown-time>
+                        </div>
+                        <div class="timer-controls">
+                            <button
+                                class="speaker-control-button"
+                                color="accent"
+                                mat-icon-button
+                                type="button"
+                                (click)="countdown.running ? pause($event) : start($event)"
+                            >
+                                <mat-icon>
+                                    {{ countdown.running ? 'pause_circle_outline' : ' play_circle_outline ' }}
+                                </mat-icon>
+                            </button>
+                            <button
+                                class="speaker-control-button"
+                                color="accent"
+                                mat-icon-button
+                                type="button"
+                                [disabled]="!canStop()"
+                                (click)="stop($event)"
+                            >
+                                <mat-icon>stop_circle</mat-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="action-buttons">

@@ -1,5 +1,6 @@
 @use 'src/assets/styles/custom-button-styles.scss';
 @use 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/variables.scss';
 
 .flexbox-wrapper {
     display: flex;
@@ -25,24 +26,37 @@
         gap: 5px;
 
         .mat-mdc-icon-button.speaker-control-button {
-            @include button.custom-size-button(46px, 36px);
-            box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-            margin: 3px;
+            @include button.custom-size-button(46px, 46px);
         }
-    }
 
-    .timer {
-        display: flex;
-        justify-content: space-between;
-    }
+        .timer-title {
+            min-width: 60px;
+        }
 
-    .timer-title {
-        min-width: 60px;
-    }
+        .timer-time-n-button {
+            display: flex;
 
-    .timer-time {
-        font-size: 150%;
-        min-width: 60px;
+            @include variables.desktop {
+                flex-direction: row;
+            }
+            
+            @media (min-width: 960px) and (max-width: 1315px) {
+                flex-direction: column;
+            }
+
+            @include variables.tablet {
+                flex-direction: row;
+            }
+
+            @include variables.phone {
+                flex-direction: column;
+            }
+
+            .timer-time {
+                font-size: 150%;
+                min-width: 60px;
+            }
+        }
     }
 
     // could be in a shared scss
