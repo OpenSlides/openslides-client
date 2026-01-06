@@ -16,9 +16,9 @@
             <h1 class="mock-h2">
                 @if (newTopic) {
                     {{ 'New topic' | translate }}
-                } @else if (!newTopic && editTopic) {
+                } @else if (editTopic) {
                     {{ 'Edit topic' | translate }}
-                } @else if (!newTopic && !editTopic && topic) {
+                } @else if (topic) {
                     {{ 'Topic' | translate }}
                 }
             </h1>
