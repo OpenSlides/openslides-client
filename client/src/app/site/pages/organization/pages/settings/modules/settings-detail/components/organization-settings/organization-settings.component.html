@@ -49,6 +49,11 @@
                             {{ 'Attachments to motions cannot be forwarded' | translate }}
                         </mat-checkbox>
                     </section>
+                    <section>
+                        <mat-checkbox formControlName="restrict_editing_same_level_committee_admins">
+                            {{ 'Committee admins may only edit the managers of their sub-committees' | translate }}
+                        </mat-checkbox>
+                    </section>
                 </div>
             </mat-card-content>
         </mat-card>

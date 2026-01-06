@@ -36,6 +36,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
+    public managersDisabled = false;
+
     public isCreateView = false;
     public committeeForm!: UntypedFormGroup;
 
@@ -70,6 +72,23 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
+
+        this.subscriptions.push(
+            this.orgaSettings.get(`restrict_editing_same_level_committee_admins`).subscribe(restricted => {
+                if (this.committeeId) {
+                    const parentId = this.committeeRepo.getViewModel(this.committeeId).parent_id;
+                    this.managersDisabled =
+                        restricted && (!parentId || !this.operator.hasCommitteePermissions(parentId, CML.can_manage));
+                } else {
+                    this.managersDisabled = false;
+                }
+                if (this.managersDisabled) {
+                    this.managerIdCtrl.disable();
+                } else {
+                    this.managerIdCtrl.enable();
+                }
+            })
+        );
     }
 
     public ngOnInit(): void {

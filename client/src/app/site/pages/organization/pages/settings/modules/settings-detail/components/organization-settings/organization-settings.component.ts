@@ -76,7 +76,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 default_language: [this._currentOrgaSettings.default_language],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                 enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
-                disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false]
+                disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
+                restrict_editing_same_level_committee_admins: [
+                    this._currentOrgaSettings.restrict_editing_same_level_committee_admins ?? false
+                ]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
