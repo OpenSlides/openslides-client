@@ -13,13 +13,13 @@
     >
         <!-- Title -->
         <div class="title-slot">
-            <h1 class="mock-h2" translate>
+            <h1 class="mock-h2">
                 @if (newTopic) {
-                    New topic
+                    {{ 'New Topic' | translate }}
                 } @else if (!newTopic && editTopic) {
-                    Edit topic
+                    {{ 'Edit Topic' | translate }}
                 } @else if (!newTopic && !editTopic && topic) {
-                    Topic
+                    {{ 'Topic' | translate }}
                 }
             </h1>
         </div>
