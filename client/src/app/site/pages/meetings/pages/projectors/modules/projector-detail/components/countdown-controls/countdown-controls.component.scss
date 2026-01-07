@@ -25,8 +25,8 @@
         align-items: flex-start;
         gap: 5px;
 
-        .mat-mdc-icon-button.speaker-control-button {
-            @include button.custom-size-button(46px, 46px);
+        .mat-mdc-icon-button.timer-control-button {
+            @include button.custom-size-button(36px, 36px);
         }
 
         .timer-title {
@@ -35,26 +35,17 @@
 
         .timer-time-n-button {
             display: flex;
-
-            @include variables.desktop {
-                flex-direction: row;
-            }
-            
-            @media (min-width: 960px) and (max-width: 1315px) {
-                flex-direction: column;
-            }
-
-            @include variables.tablet {
-                flex-direction: row;
-            }
-
-            @include variables.phone {
-                flex-direction: column;
-            }
+            flex-wrap: wrap;
 
             .timer-time {
                 font-size: 150%;
                 min-width: 60px;
+                align-content: center;
+            }
+
+            .timer-control {
+                display: flex;
+                flex-wrap: wrap;
             }
         }
     }
