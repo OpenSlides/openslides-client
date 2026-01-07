@@ -1,8 +1,9 @@
 @use 'font-variables';
+@use 'src/assets/styles/themes/typography.scss';
 
 #projector {
     * {
-        font-family: customProjectorFont;
+        font-family: typography.$font-family;
     }
     .material-icons {
         font-family: 'Material Icons';
