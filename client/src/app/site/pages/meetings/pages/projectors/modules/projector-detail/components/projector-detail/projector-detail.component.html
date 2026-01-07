@@ -366,7 +366,7 @@
                                     <mat-card class="wifi-card" style="width: 100%">
                                         <mat-card-content>
                                             <div
-                                                class="wifi-button-area"
+                                                class="wifi-button-area cursor-default"
                                                 [ngClass]="{ 'spacer-bottom-10': !hasEnoughWiFiData }"
                                             >
                                                 <os-projector-button
@@ -377,7 +377,7 @@
                                                 <span>{{ 'Wifi access data' | translate }}</span>
                                             </div>
                                             @if (!hasEnoughWiFiData) {
-                                                <small class="wifi-help-text" translate>
+                                                <small class="wifi-help-text cursor-default" translate>
                                                     Attention: First enter the wifi data in [Settings > General]
                                                 </small>
                                             }

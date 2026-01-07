@@ -2,21 +2,21 @@
     <mat-card>
         <mat-card-content>
             <div class="flexbox-wrapper">
-                <div class="projector-button">
-                    <os-projector-button [object]="message" [projector]="projector"></os-projector-button>
-                </div>
-                <div class="message" [innerHTML]="message.getPreview(100)"></div>
-                <div class="action-buttons">
+                <div class="button">
                     <button
-                        class="small-mat-icon-button"
+                        class="small-mat-icon-button projector-button"
                         mat-icon-button
                         matTooltip="{{ 'Open projection dialog' | translate }}"
                         matTooltipPosition="left"
                         type="button"
+                        [color]="isProjected ? 'accent' : 'basic'"
                         (click)="onBringDialog()"
                     >
-                        <mat-icon>open_in_new</mat-icon>
+                        <mat-icon>videocam</mat-icon>
                     </button>
+                </div>
+                <div class="message cursor-default" [innerHTML]="message.getPreview(100)"></div>
+                <div class="action-buttons">
                     <button
                         class="small-mat-icon-button"
                         mat-icon-button
