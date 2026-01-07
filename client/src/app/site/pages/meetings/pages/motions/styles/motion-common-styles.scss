@@ -122,10 +122,6 @@
     }
 }
 
-//mobile-desktop breakpoints
-$bp-desktop: 960px;
-$bp-phone: 500px;
-
 @include variables.desktop {
     .motion-text > * {
         max-width: 100%;
