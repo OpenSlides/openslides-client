@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ViewProjector, ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
@@ -14,7 +14,7 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
     styleUrls: [`./message-controls.component.scss`],
     standalone: false
 })
-export class MessageControlsComponent {
+export class MessageControlsComponent implements OnInit {
     /**
      * Input slot for the projector message model
      */
@@ -37,6 +37,11 @@ export class MessageControlsComponent {
         private projectorService: ProjectorControllerService,
         private dialog: ProjectorMessageDialogService
     ) {}
+
+    public ngOnInit(): void {
+        const projections = this.projectorService.getMatchingProjectionsFromProjector(this.message, this.projector);
+        this.isProjected = !!projections.length;
+    }
 
     /**
      * Fires an edit event
