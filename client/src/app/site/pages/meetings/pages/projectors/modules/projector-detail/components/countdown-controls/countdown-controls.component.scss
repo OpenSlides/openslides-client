@@ -12,7 +12,8 @@
 
     // could be in a shared scss
     .projector-button {
-        margin: auto 10px auto 0;
+        padding: 18px;
+        box-shadow: 0 0 7px rgba(0, 0, 0, 0.6);
     }
 
     .content {
@@ -36,6 +37,7 @@
         .timer-time-n-button {
             display: flex;
             flex-wrap: wrap;
+            gap: 5px;
 
             .timer-time {
                 font-size: 150%;
@@ -46,6 +48,7 @@
             .timer-control {
                 display: flex;
                 flex-wrap: wrap;
+                gap: 2px;
             }
         }
     }
@@ -55,5 +58,10 @@
         text-align: right;
         width: 30px;
         margin-left: auto;
+        height: 60px;
+    }
+
+    .cursor-default {
+        cursor: default;
     }
 }

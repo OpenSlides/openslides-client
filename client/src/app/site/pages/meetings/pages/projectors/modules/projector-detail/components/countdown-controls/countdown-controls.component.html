@@ -2,19 +2,24 @@
     <mat-card>
         <mat-card-content>
             <div class="flexbox-wrapper">
-                <div class="projector-button">
-                    <os-projector-button
-                        [ignoreStable]="true"
-                        [object]="countdown"
-                        [projector]="projector"
-                    ></os-projector-button>
+                <div class="button">
+                    <button
+                        class="small-mat-icon-button projector-button"
+                        mat-icon-button
+                        matTooltip="{{ 'Open projection dialog' | translate }}"
+                        type="button"
+                        [color]="isProjected ? 'accent' : 'basic'"
+                        (click)="onBringDialog()"
+                    >
+                        <mat-icon>videocam</mat-icon>
+                    </button>
                 </div>
                 <div class="content">
-                    <div class="timer-title">{{ countdown.getTitle() }}</div>
+                    <div class="timer-title cursor-default">{{ countdown.getTitle() }}</div>
                     <div class="timer-time-n-button">
                         <div class="timer-time">
                             <os-countdown-time
-                                class="larger-countdown"
+                                class="cursor-default"
                                 [countdown]="countdown"
                                 [warningTime]="warningTime"
                             ></os-countdown-time>
@@ -45,15 +50,6 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button
-                        class="small-mat-icon-button"
-                        mat-icon-button
-                        matTooltip="{{ 'Open projection dialog' | translate }}"
-                        type="button"
-                        (click)="onBringDialog()"
-                    >
-                        <mat-icon>open_in_new</mat-icon>
-                    </button>
                     <button
                         class="small-mat-icon-button"
                         mat-icon-button

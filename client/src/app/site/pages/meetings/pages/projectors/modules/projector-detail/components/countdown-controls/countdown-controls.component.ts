@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
@@ -8,6 +8,7 @@ import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
+import { ProjectorControllerService } from '../../../../services/projector-controller.service';
 import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
 
 @Component({
@@ -16,7 +17,7 @@ import { ProjectorCountdownControllerService } from '../../services/projector-co
     styleUrls: [`./countdown-controls.component.scss`],
     standalone: false
 })
-export class CountdownControlsComponent {
+export class CountdownControlsComponent implements OnInit {
     /**
      * Countdown/Timer as input
      */
@@ -45,6 +46,8 @@ export class CountdownControlsComponent {
      */
     protected warningTime!: number;
 
+    public isProjected = false;
+
     public constructor(
         private translate: TranslateService,
         private repo: ProjectorCountdownControllerService,
@@ -52,11 +55,17 @@ export class CountdownControlsComponent {
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
         private durationService: DurationService,
+        private projectorService: ProjectorControllerService,
         private dialog: ProjectorCountdownDialogService
     ) {
         this.meetingSettingsService
             .get(`projector_countdown_warning_time`)
             .subscribe(time => (this.warningTime = time));
+    }
+
+    public ngOnInit(): void {
+        const projections = this.projectorService.getMatchingProjectionsFromProjector(this.countdown, this.projector);
+        this.isProjected = !!projections.length;
     }
 
     /**
@@ -123,6 +132,8 @@ export class CountdownControlsComponent {
      * Brings the projection dialog
      */
     public onBringDialog(): void {
+        const projections = this.projectorService.getMatchingProjectionsFromProjector(this.countdown, this.projector);
+        this.isProjected = !!projections.length;
         this.projectionDialogService.openProjectDialogFor({
             descriptor: this.countdown.getProjectionBuildDescriptor(),
             allowReferenceProjector: true,
