@@ -1,43 +1,63 @@
 @use 'src/assets/styles/custom-button-styles.scss';
+@use 'src/assets/styles/mixins/button.scss';
+@use 'src/assets/styles/variables.scss';
 
-.grid-wrapper {
-    display: grid;
+.flexbox-wrapper {
+    display: flex;
     width: 100%;
-    grid-template-areas:
-        'project title buttons'
-        'project controls controls';
-    grid-gap: 10px;
-    grid-template-columns: min-content auto min-content;
-}
+    flex-direction: row;
+    flex-grow: 0 1 0;
+    align-items: center;
+    gap: 10px;
 
-// could be in a shared scss
-.projector-button {
-    grid-area: project;
-    margin: auto 10px auto 0;
-}
+    // could be in a shared scss
+    .projector-button {
+        padding: 18px;
+        box-shadow: 0 0 7px rgba(0, 0, 0, 0.6);
+    }
 
-.title {
-    grid-area: title;
-    padding: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .content {
+        padding: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
 
-// could be in a shared scss
-.action-buttons {
-    grid-area: buttons;
-    text-align: right;
-    display: flex;
-}
+        .mat-mdc-icon-button.timer-control-button {
+            @include button.custom-size-button(36px, 36px);
+        }
 
-.timer {
-    grid-area: controls;
-    display: flex;
-    justify-content: space-between;
-}
+        .timer-title {
+            min-width: 60px;
+        }
 
-.larger-countdown {
-    font-size: 150%;
-    min-width: 60px;
+        .timer-time-n-button {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+
+            .timer-time {
+                font-size: 150%;
+                min-width: 60px;
+                align-content: center;
+            }
+
+            .timer-control {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+        }
+    }
+
+    // could be in a shared scss
+    .action-buttons {
+        text-align: right;
+        width: 30px;
+        margin-left: auto;
+        height: 60px;
+    }
 }
