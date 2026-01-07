@@ -7,10 +7,6 @@
     margin-top: 10px;
 }
 
-//mobile-desktop breakpoints
-$bp-desktop: 960px;
-$bp-phone: 500px;
-
 .motion-content {
     div > div {
         @include variables.desktop {
