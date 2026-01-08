@@ -47,7 +47,7 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
  *
  *     <!-- Title -->
  *     <div class="title-slot">
- *         My Component Title
+ *         <h1 class="mock-h2" translate>My Component Title</h1>
  *     </div>
  *
  *     <!-- Menu -->
