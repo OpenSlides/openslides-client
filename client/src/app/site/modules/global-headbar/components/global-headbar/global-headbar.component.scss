@@ -12,9 +12,8 @@
     flex-direction: row;
     padding-left: 26px;
     .mat-icon,
-    os-account-button,
     .display-name {
-        color: var(--theme-primary-contrast-500);
+        color: var(--theme-headbar-contrast);
     }
 }
 
