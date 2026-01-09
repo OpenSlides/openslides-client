@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ pageTitle | translate }}</h2>
+        <h1 class="mock-h2" translate>{{ pageTitle }}</h1>
     </div>
 </os-head-bar>
 
@@ -52,6 +52,11 @@
                     <section>
                         <mat-checkbox formControlName="restrict_editing_same_level_committee_admins">
                             {{ 'Committee admins may only edit the managers of their sub-committees' | translate }}
+                        </mat-checkbox>
+                    </section>
+                    <section>
+                        <mat-checkbox formControlName="restrict_edit_forward_committees">
+                            {{ 'Restrict definition of motion forwarding to organization admins' | translate }}
                         </mat-checkbox>
                     </section>
                 </div>

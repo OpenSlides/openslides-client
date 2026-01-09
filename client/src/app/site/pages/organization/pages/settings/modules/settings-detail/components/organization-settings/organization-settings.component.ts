@@ -79,7 +79,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
                 restrict_editing_same_level_committee_admins: [
                     this._currentOrgaSettings.restrict_editing_same_level_committee_admins ?? false
-                ]
+                ],
+                restrict_edit_forward_committees: [this._currentOrgaSettings.restrict_edit_forward_committees ?? false]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
