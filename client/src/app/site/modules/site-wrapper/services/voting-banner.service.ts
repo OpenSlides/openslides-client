@@ -107,10 +107,17 @@ export class VotingBannerService {
         const text = isSinglePoll
             ? this.getTextForPoll(this.getSinglePoll())
             : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
-        const link = isSinglePoll
-            ? this.getUrlForPoll(this.getSinglePoll())
-            : `/${this.activeMeeting.meetingId}/polls/`;
-        return { text, link };
+        if (isSinglePoll) {
+            const link = isSinglePoll
+                ? this.getUrlForPoll(this.getSinglePoll())
+                : `/${this.activeMeeting.meetingId}/polls/`;
+            return { text, link };
+        } else {
+            const link = isSinglePoll
+                ? this.getUrlForPoll(this.getSinglePoll())
+                : `/${this.activeMeeting.meetingId}/autopilot/`;
+            return { text, link };
+        }
     }
 
     private getSinglePoll(): ViewPoll {
@@ -142,7 +149,7 @@ export class VotingBannerService {
      */
     private getUrlForPoll(poll: ViewPoll): string {
         return this.operator.hasPerms(Permission.meetingCanSeeAutopilot)
-            ? `/${this.activeMeeting.meetingId}/autopilot/`
+            ? `/${this.activeMeeting.meetingId}/polls/`
             : poll.getDetailStateUrl();
     }
 
