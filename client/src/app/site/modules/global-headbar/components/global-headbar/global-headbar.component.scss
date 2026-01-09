@@ -1,3 +1,5 @@
+@use 'src/app/site/modules/global-headbar/components/account-button/account-button.component.scss';
+
 :host {
     display: block;
     position: sticky;
@@ -11,10 +13,15 @@
     display: flex;
     flex-direction: row;
     padding-left: 26px;
-    .mat-icon,
-    os-account-button,
+    .mat-icon {
+        &:hover {
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+    }
     .display-name {
-        color: var(--theme-primary-contrast-500);
+        cursor: default;
+        @extend .accountButtonColors;
     }
 }
 

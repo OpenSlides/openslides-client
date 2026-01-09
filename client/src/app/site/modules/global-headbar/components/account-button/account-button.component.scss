@@ -51,22 +51,20 @@ a {
     cursor: pointer;
 }
 
-.accountButton {
-    background: var(--theme-headbar);
-    color: var(--theme-headbar-contrast);
-    border: none;
-}
-
 .width-16 {
     margin: 4px;
     width: 20px;
     height: 20px;
 }
 
-.accountButton {
+.accountButtonColors {
     background: var(--theme-headbar);
     color: var(--theme-headbar-contrast);
     border: none;
+}
+
+.accountButton {
+    @extend .accountButtonColors;
     &:hover {
         cursor: pointer;
         background: #5f5f5f;
