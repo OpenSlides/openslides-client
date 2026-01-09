@@ -59,7 +59,7 @@ export class ChatGroupDetailMessageFormComponent {
     }
 
     public sendChatMessage(): void {
-        if (!this.isPartOfMetting()) {
+        if (!this.isPartOfMeeting()) {
             const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
             this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
         } else {
@@ -79,7 +79,7 @@ export class ChatGroupDetailMessageFormComponent {
         this.messageForm.markAsPristine();
     }
 
-    public isPartOfMetting(): boolean {
+    public isPartOfMeeting(): boolean {
         return this.operator.isInMeeting(this.activeMeetingIdService.meetingId);
     }
 }

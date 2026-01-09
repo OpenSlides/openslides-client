@@ -1,7 +1,7 @@
 <mat-form-field
     appearance="outline"
     class="chat-form-field full-width"
-    [color]="isPartOfMetting() ? 'accent' : 'warn'"
+    [color]="isPartOfMeeting() ? 'accent' : 'warn'"
     (keydown)="onKeyDown($event)"
 >
     @if (currentMessage) {
@@ -34,13 +34,13 @@
         matSuffix
         matTooltip=" {{ 'Send' | translate }}"
         type="button"
-        [color]="isPartOfMetting() ? 'accent' : 'warn'"
+        [color]="isPartOfMeeting() ? 'accent' : 'warn'"
         [disabled]="!isMessageFormValid"
         (click)="sendChatMessage()"
     >
         <mat-icon>send</mat-icon>
     </button>
-    @if (!isPartOfMetting()) {
+    @if (!isPartOfMeeting()) {
         <mat-hint>
             <span class="warn">
                 {{ 'You have to be part of the meeting to write messages.' | translate }}
