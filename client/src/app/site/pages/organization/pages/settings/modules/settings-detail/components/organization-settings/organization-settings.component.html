@@ -50,6 +50,11 @@
                         </mat-checkbox>
                     </section>
                     <section>
+                        <mat-checkbox formControlName="restrict_editing_same_level_committee_admins">
+                            {{ 'Committee admins may only edit the managers of their sub-committees' | translate }}
+                        </mat-checkbox>
+                    </section>
+                    <section>
                         <mat-checkbox formControlName="restrict_edit_forward_committees">
                             {{ 'Restrict definition of motion forwarding to organization admins' | translate }}
                         </mat-checkbox>
