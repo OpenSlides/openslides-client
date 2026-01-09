@@ -363,6 +363,19 @@
                             </mat-expansion-panel-header>
                             <div class="card-list">
                                 <div class="card-list-item">
+                                    <mat-card class="home-card" style="width: 100%">
+                                        <mat-card-content>
+                                            <div class="home-button-area">
+                                                <os-projector-button
+                                                    [object]="welcomeMessageBuildDesc()"
+                                                    [projector]="projector"
+                                                ></os-projector-button>
+                                                <span>{{ 'Meeting home' | translate }}</span>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                                <div class="card-list-item">
                                     <mat-card class="wifi-card" style="width: 100%">
                                         <mat-card-content>
                                             <div
