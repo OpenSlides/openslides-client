@@ -49,6 +49,11 @@
                             {{ 'Attachments to motions cannot be forwarded' | translate }}
                         </mat-checkbox>
                     </section>
+                    <section>
+                        <mat-checkbox formControlName="restrict_edit_forward_committees">
+                            {{ 'Restrict definition of motion forwarding to organization admins' | translate }}
+                        </mat-checkbox>
+                    </section>
                 </div>
             </mat-card-content>
         </mat-card>

@@ -41,8 +41,14 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public editCommittee!: ViewCommittee;
 
+    private orgaRestrictForwarding = false;
+
     public get isOrgaManager(): boolean {
         return this.operator.isOrgaManager;
+    }
+
+    public get restrictForwarding(): boolean {
+        return !this.isOrgaManager && this.orgaRestrictForwarding;
     }
 
     private get managerIdCtrl(): AbstractControl {
@@ -70,6 +76,11 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
+        this.subscriptions.push(
+            this.orgaSettings
+                .get(`restrict_edit_forward_committees`)
+                .subscribe(value => (this.orgaRestrictForwarding = value))
+        );
     }
 
     public ngOnInit(): void {
@@ -130,6 +141,10 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public async onSubmit(): Promise<void> {
         const value = this.committeeForm.value as ViewCommittee;
+        if (this.restrictForwarding) {
+            delete value[`forward_to_committee_ids`];
+            delete value[`receive_forwardings_from_committee_ids`];
+        }
         let id: Id | null = null;
 
         if (this.isCreateView) {
