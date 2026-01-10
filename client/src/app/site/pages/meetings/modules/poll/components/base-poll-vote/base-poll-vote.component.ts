@@ -75,6 +75,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.user?.isPresentInMeeting();
     }
 
+    public get isUserInMeeting(): boolean {
+        return this.user?.isInActiveMeeting;
+    }
+
     public get isMobile(): boolean {
         return this.viewport.isMobile;
     }

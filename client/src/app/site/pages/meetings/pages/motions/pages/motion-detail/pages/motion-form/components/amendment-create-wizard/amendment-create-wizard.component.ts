@@ -179,6 +179,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
                 amendmentParagraphs[paraNo] = this.contentForm.value[`text_` + paraNo];
             }
         });
+        const submitterId = this.operator.isInMeeting(this.activeMeetingId)
+            ? [this.operator.user.getMeetingUser(this.activeMeetingId)?.id]
+            : [];
         const motionCreate = {
             ...this.contentForm.value,
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
@@ -186,6 +189,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
+            submitter_ids: submitterId,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
