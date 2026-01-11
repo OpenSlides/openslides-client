@@ -172,6 +172,38 @@
                 }
             </div>
             <div>
+                @if (!hideSelects.requiredMajority) {
+                    <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>{{ 'Required majority' | translate }}</mat-label>
+                        <mat-select formControlName="required_majority" panelClass="required_majority" required>
+                            @for (option of requiredMajorityBaseVerbose | keyvalue: keepEntryOrder; track option.key) {
+                                <mat-option [value]="option.key">
+                                    {{ option.value }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if (requiredMajority === 'absolute_majority') {
+                            <mat-hint
+                                [innerText]="
+                                    'Indicates if a majority of more than 50% was reached, dependent on the 100%-base'
+                                        | translate
+                                "
+                            ></mat-hint>
+                        } @else if (requiredMajority === 'two_third_majority') {
+                            <mat-hint
+                                [innerText]="
+                                    'Indicates if a majority of two-thirds or more was reached, dependent on the 100%-base'
+                                        | translate
+                                "
+                            ></mat-hint>
+                        }
+                    </mat-form-field>
+                }
+            </div>
+        </div>
+        <div class="info-grid">
+            <div></div>
+            <div>
                 @if (isEVotingSelected && isCreated && !hideSelects.backendDuration) {
                     <mat-form-field subscriptSizing="dynamic">
                         <mat-label>{{ 'Voting duration' | translate }}</mat-label>

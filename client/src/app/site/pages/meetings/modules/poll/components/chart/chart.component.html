@@ -9,5 +9,14 @@
             [options]="chartOptions"
             [type]="type"
         ></canvas>
+        @if (chartIcon) {
+            <div
+                class="chart-icon"
+                [class.color-green]="chartIcon === 'check'"
+                [class.color-red]="chartIcon === 'close'"
+            >
+                <mat-icon>{{ chartIcon }}</mat-icon>
+            </div>
+        }
     }
 </div>

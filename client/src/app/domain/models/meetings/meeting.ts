@@ -4,7 +4,13 @@ import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
-import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
+import {
+    PollBackendDurationType,
+    PollMethod,
+    PollPercentBase,
+    PollType,
+    RequiredMajorityBase
+} from '../poll/poll-constants';
 import { ApplauseType } from './applause';
 import {
     BallotPaperSelection,
@@ -148,6 +154,7 @@ export class Settings {
     public motion_poll_ballot_paper_number!: number;
     public motion_poll_default_type!: PollType;
     public motion_poll_default_onehundred_percent_base!: PollPercentBase;
+    public motion_poll_default_required_majority!: RequiredMajorityBase;
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
     public motion_poll_default_method!: PollMethod;
@@ -185,6 +192,7 @@ export class Settings {
     public assignment_poll_default_type!: PollType;
     public assignment_poll_default_method!: PollMethod;
     public assignment_poll_default_onehundred_percent_base!: PollPercentBase;
+    public assignment_poll_default_required_majority!: RequiredMajorityBase;
     public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
     public assignment_poll_default_backend!: PollBackendDurationType;
 
@@ -414,6 +422,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_type`,
         `motion_poll_default_method`,
         `motion_poll_default_onehundred_percent_base`,
+        `motion_poll_default_required_majority`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
         `motion_poll_projection_name_order_first`,
@@ -448,6 +457,7 @@ export class Meeting extends BaseModel<Meeting> {
         `assignment_poll_default_type`,
         `assignment_poll_default_method`,
         `assignment_poll_default_onehundred_percent_base`,
+        `assignment_poll_default_required_majority`,
         `assignment_poll_default_group_ids`,
         `assignment_poll_default_backend`,
         `poll_ballot_paper_selection`,
