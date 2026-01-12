@@ -152,11 +152,9 @@
     @if (previewProjector) {
         <mat-dialog-content>
             <h3>{{ 'Preview' | translate }}</h3>
-            <div class="preview-container">
-                @if (previewProjector) {
-                    <os-projector #preview [projector]="previewProjector"></os-projector>
-                }
-            </div>
+            @if (previewProjector) {
+                <iframe #preview class="preview-container"></iframe>
+            }
         </mat-dialog-content>
     }
 </div>
