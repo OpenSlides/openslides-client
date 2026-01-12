@@ -9,12 +9,10 @@ import { AssignmentPollServiceModule } from '../../pages/assignments/modules/ass
 import { MotionPollServiceModule } from '../../pages/motions/modules/motion-poll';
 import { CountdownTimeModule } from './modules/countdown-time/countdown-time.module';
 
-const DECLARATIONS = [];
 const EXPORTED_MODULES = [CountdownTimeModule];
 
 @NgModule({
-    declarations: [...DECLARATIONS],
-    exports: [...DECLARATIONS, ...EXPORTED_MODULES],
+    exports: [...EXPORTED_MODULES],
     imports: [
         CommonModule,
         MatIconModule,
