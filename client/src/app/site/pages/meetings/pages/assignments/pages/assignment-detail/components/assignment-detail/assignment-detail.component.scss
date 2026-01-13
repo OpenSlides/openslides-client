@@ -122,12 +122,12 @@ mat-card mat-card-content h3 {
 
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
+    width: auto;
 
     @include variables.phone {
         padding: 15px 0 0 0;
     }
 
-    width: auto;
 }
 
 :host ::ng-deep .detail-view {
