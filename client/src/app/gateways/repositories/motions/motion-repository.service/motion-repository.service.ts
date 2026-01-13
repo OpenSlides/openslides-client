@@ -217,7 +217,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     public createParagraphBased(
         partialMotion: Partial<
-            Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[]; supporter_meeting_user_ids?: Id[] }
+            Motion & {
+                workflow_id: Id;
+                attachment_mediafile_ids?: Id[];
+                supporter_meeting_user_ids?: Id[];
+                submitter_meeting_user_ids: Id[];
+            }
         >
     ): Action<CreateResponse> {
         const payload = {
