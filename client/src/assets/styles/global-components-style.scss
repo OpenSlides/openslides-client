@@ -15,7 +15,7 @@
 
     $is-dark-theme: map.get($theme, is-dark);
 
-    $percent: if($is-dark-theme, 4%, -4%);
+    $percent: if($is-dark-theme, 0.04, -0.04);
 
     h1,
     h3.accent {
@@ -89,12 +89,12 @@
         color: mat.m2-get-color-from-palette($foreground, disabled-button);
         opacity: 1 !important;
         .mat-icon {
-            color: adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
+            color: color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
             svg path {
                 fill: mat.m2-get-color-from-palette(
                     $foreground,
                     disabled-button
-                        adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
+                        color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
                 ) !important;
             }
         }
@@ -346,6 +346,6 @@
     }
 
     .sidenav-background {
-        background: if($is-dark-theme, color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.5%), white);
+        background: if($is-dark-theme, color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005), white);
     }
 }
