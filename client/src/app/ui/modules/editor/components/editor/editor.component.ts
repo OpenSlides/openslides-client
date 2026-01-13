@@ -337,9 +337,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 .unsetColor()
                 .blur()
                 .run();
-        } catch (error) {
-            console.error(error);
-        }
+        } catch (e) {}
+
         this.editor.chain().focus().selectAll().unsetBold().removeEmptyTextStyle().blur().run();
     }
 
