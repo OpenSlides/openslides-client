@@ -25,7 +25,7 @@ $openslides-dark-theme: mat.m2-define-dark-theme(
  *  The components will get a value from this map.
  */
 $background-dark: map.get($openslides-dark-theme, background);
-$background-dark: map-merge(
+$background-dark: map.merge(
     $background-dark,
     (
         background: $os-background
@@ -35,7 +35,7 @@ $background-dark: map-merge(
 /**
  *  Merge the theme with the custom-background.
  */
-$openslides-dark-theme: map-merge(
+$openslides-dark-theme: map.merge(
     $openslides-dark-theme,
     (
         background: $background-dark
