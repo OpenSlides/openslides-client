@@ -74,6 +74,9 @@ export class SingleOptionChartTableComponent {
     public shouldShowEntitledPresent = false;
 
     @Input()
+    public shouldShowChartIcon: string | undefined;
+
+    @Input()
     public title = ``;
 
     public get chartData(): ChartData {

@@ -142,7 +142,7 @@
         <!-- Chart -->
         @if (shouldShowChart) {
             <div [class.doughnut-chart-normal]="!inSlide" [class.doughnut-chart-slide]="inSlide">
-                <os-chart type="doughnut" [data]="chartData"></os-chart>
+                <os-chart type="doughnut" [chartIcon]="shouldShowChartIcon" [data]="chartData"></os-chart>
             </div>
         }
     </div>
