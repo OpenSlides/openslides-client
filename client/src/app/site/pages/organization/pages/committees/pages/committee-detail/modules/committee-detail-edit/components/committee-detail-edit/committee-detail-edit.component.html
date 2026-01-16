@@ -7,12 +7,13 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        @if (isCreateView) {
-            <h2>{{ addCommitteeLabel | translate }}</h2>
-        }
-        @if (!isCreateView) {
-            <h2>{{ editCommitteeLabel | translate }}</h2>
-        }
+        <h1 class="mock-h2">
+            @if (isCreateView) {
+                {{ addCommitteeLabel | translate }}
+            } @else {
+                {{ editCommitteeLabel | translate }}
+            }
+        </h1>
     </div>
 </os-head-bar>
 
@@ -49,30 +50,32 @@
                         [committeeId]="committeeId"
                     ></os-account-search-selector>
                 </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="forward_to_committee_ids"
-                        [disableOptionWhenFn]="isNotCommitteeAdminFor"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [showChips]="false"
-                        [sortService]="committeeSortService"
-                        (selectionChanged)="onForwardingSelectionChanged($event)"
-                    ></os-repo-search-selector>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
-                    <os-repo-search-selector
-                        formControlName="receive_forwardings_from_committee_ids"
-                        [disableOptionWhenFn]="getDisableOptionWhenFn"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [showChips]="false"
-                        [sortService]="committeeSortService"
-                        [tooltipFn]="getTooltipFn()"
-                    ></os-repo-search-selector>
-                </mat-form-field>
+                @if (!restrictForwarding) {
+                    <mat-form-field>
+                        <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
+                        <os-repo-search-selector
+                            formControlName="forward_to_committee_ids"
+                            [disableOptionWhenFn]="isNotCommitteeAdminFor"
+                            [multiple]="true"
+                            [repo]="committeeRepo"
+                            [showChips]="false"
+                            [sortService]="committeeSortService"
+                            (selectionChanged)="onForwardingSelectionChanged($event)"
+                        ></os-repo-search-selector>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
+                        <os-repo-search-selector
+                            formControlName="receive_forwardings_from_committee_ids"
+                            [disableOptionWhenFn]="getDisableOptionWhenFn"
+                            [multiple]="true"
+                            [repo]="committeeRepo"
+                            [showChips]="false"
+                            [sortService]="committeeSortService"
+                            [tooltipFn]="getTooltipFn()"
+                        ></os-repo-search-selector>
+                    </mat-form-field>
+                }
                 <mat-form-field>
                     <mat-label>{{ 'External ID' | translate }}</mat-label>
                     <input formControlName="external_id" matInput />

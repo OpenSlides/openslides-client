@@ -2,11 +2,16 @@ import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
+import {
+    GetForwardingMeetingsPresenter,
+    GetForwardingMeetingsPresenterMeeting,
+    GetForwardingMeetingsPresenterService
+} from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -91,7 +96,10 @@ export class MotionForwardDialogService extends BaseDialogService<
         const amountSelectedAmendments = toForward.filter(motion => motion.isAmendment()).length;
 
         if (toForward.filter(motion => !motion.isAmendment()).length === 0) {
-            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
+            this.snackbar.open(
+                this.translate.instant(`Items of the type motions, motion blocks and elections cannot be forwarded.`),
+                `Ok`
+            );
             return;
         }
         const dialogRef = await this.open(toForward);
@@ -155,6 +163,11 @@ export class MotionForwardDialogService extends BaseDialogService<
                 this.operator.hasPerms(Permission.motionCanForward) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
+            meetings.forEach(
+                committee =>
+                    (committee.meetings =
+                        committee.meetings?.filter(m => this.endAndActiveMeetingFilter(m)) ?? committee.meetings)
+            );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -169,6 +182,14 @@ export class MotionForwardDialogService extends BaseDialogService<
                 })
             );
         }
+    }
+
+    private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
+        return (
+            +meetingData.id !== this.activeMeeting.meetingId &&
+            meetingData.end_time &&
+            new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
+        );
     }
 
     private createForwardingSuccessMessage(

@@ -1,17 +1,14 @@
 <os-head-bar [multiSelectMode]="isMultiSelect" [nav]="false">
     <!-- Title -->
     <div class="title-slot">
-        @if (parentMotion | async) {
-            <h2>
+        <h1 class="mock-h2">
+            @if (parentMotion | async) {
                 {{ 'Amendments to' | translate }}
                 {{ (parentMotion | async)?.numberOrTitle }}
-            </h2>
-        }
-        @if ((parentMotion | async) === null) {
-            <h2>
+            } @else if ((parentMotion | async) === null) {
                 {{ 'Amendments' | translate }}
-            </h2>
-        }
+            }
+        </h1>
     </div>
 
     <!-- Menu -->
@@ -74,7 +71,7 @@
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequentialNumber) {

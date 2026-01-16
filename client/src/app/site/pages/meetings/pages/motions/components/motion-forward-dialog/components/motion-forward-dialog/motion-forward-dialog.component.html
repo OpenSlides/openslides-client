@@ -121,7 +121,7 @@
                                     <span class="data-preview">
                                         <os-comma-separated-listing [list]="data.motion[0].submitterNames">
                                             <ng-template let-submitter>
-                                                {{ submitter }}
+                                                {{ getSubmitterOrDeletedUser(submitter) }}
                                             </ng-template>
                                         </os-comma-separated-listing>
                                     </span>
@@ -195,7 +195,7 @@
     </table>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button color="primary" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
+    <button color="accent" mat-button [disabled]="!selectedMeetings?.size" (click)="onSaveClicked()">
         {{ 'Forward' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>

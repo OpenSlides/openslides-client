@@ -31,7 +31,8 @@ export const MOTION_PDF_OPTIONS = {
     AddBreaks: `addBreaks`,
     Header: `header`,
     ContinuousText: `continuousText`,
-    OnlyChangedLines: `onlyChangedLines`
+    OnlyChangedLines: `onlyChangedLines`,
+    IncludePdfAttachments: `includePdfAttachments`
 };
 
 /**

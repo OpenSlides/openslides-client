@@ -76,7 +76,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public category_id!: Id; // category/motion_ids;
     public block_id!: Id; // block/motion_ids;
     public submitter_ids!: Id[]; // (motion_submitter/motion_id)[];
-    public supporter_meeting_user_ids!: Id[]; // (_meeting_user/supported_motion_ids)[];
+    public supporter_ids!: Id[]; // (motion_supporter/motion_id)[];
     public editor_ids: Id[]; // motion_editor/motion_id;
     public working_group_speaker_ids: Id[]; // motion_working_group_speaker/motion_id;
     public poll_ids!: Id[]; // (motion_poll/motion_id)[];
@@ -142,7 +142,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `category_id`,
         `block_id`,
         `submitter_ids`,
-        `supporter_meeting_user_ids`,
+        `supporter_ids`,
         `editor_ids`,
         `working_group_speaker_ids`,
         `poll_ids`,
@@ -159,7 +159,8 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     ];
 }
 export interface Motion
-    extends HasMeetingId,
+    extends
+        HasMeetingId,
         HasAgendaItemId,
         HasListOfSpeakersId,
         HasTagIds,

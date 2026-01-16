@@ -1,6 +1,6 @@
 <os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportMotions()">
     <div class="title-slot">
-        <h2>{{ motionsNr }} {{ 'motions' | translate }}</h2>
+        <h1 class="mock-h2">{{ motionsNr }} {{ 'motions' | translate }}</h1>
     </div>
 </os-head-bar>
 
@@ -129,7 +129,19 @@
                             value="attachments"
                             [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
                         >
-                            <span>{{ 'Attachments' | translate }}</span>
+                            <span>{{ 'Attachments (URL)' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #includePdfAttachmentsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="includePdfAttachments"
+                            [matBadgeHidden]="includePdfAttachmentsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>
+                                {{ 'Attachments (PDF embedded)' | translate }}
+                            </span>
+                            <div class="cursive">{{ 'Limited to 100 motions' | translate }}</div>
                         </mat-chip-option>
                     }
                 </mat-chip-listbox>
@@ -304,7 +316,6 @@
                             value="toc"
                             [disabled]="isDisabled(tableOfContentChip.value)"
                             [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
-                            (click)="deselectContinuousTextOption()"
                         >
                             <span>{{ 'Table of contents' | translate }}</span>
                         </mat-chip-option>
@@ -315,7 +326,6 @@
                             value="addBreaks"
                             [disabled]="isDisabled(addBreaksChip.value)"
                             [matBadgeHidden]="addBreaksChip.selected ? 'false' : 'true'"
-                            (click)="deselectContinuousTextOption()"
                         >
                             <span>{{ 'Enforce page breaks' | translate }}</span>
                         </mat-chip-option>
@@ -325,7 +335,6 @@
                             matBadgeOverlap="true"
                             value="continuousText"
                             [matBadgeHidden]="continuousText.selected ? 'false' : 'true'"
-                            (click)="deselectPageLayoutOption()"
                         >
                             <span>{{ 'Continuous text' | translate }}</span>
                         </mat-chip-option>

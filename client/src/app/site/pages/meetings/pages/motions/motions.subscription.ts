@@ -195,12 +195,21 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             {
-                idField: `supporter_meeting_user_ids`,
-                fieldset: `participantListMinimal`,
+                idField: `supporter_ids`,
                 follow: [
                     {
-                        idField: `user_id`,
-                        fieldset: `participantList`
+                        idField: `meeting_user_id`,
+                        fieldset: [`motion_supporter_ids`, `user_id`, `group_ids`, `meeting_id`],
+                        follow: [
+                            {
+                                idField: `user_id`,
+                                fieldset: `participantList`
+                            },
+                            {
+                                idField: `group_ids`,
+                                fieldset: `detail`
+                            }
+                        ]
                     }
                 ]
             },

@@ -10,17 +10,16 @@
 <ng-template #pollArea let-last="last" let-poll="poll">
     <mat-card class="os-card">
         <mat-card-content>
-            <p>
-                <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
+            <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
+                <h2 class="accessibility-h2 accessibility-h2-1 accessibility-h2-2">
                     {{ getPollVoteTitle(poll) }}
-                </a>
-                <br />
-                @if (canManagePoll(poll) && poll.isFinished) {
-                    <i class="small">
-                        {{ 'finished (unpublished)' | translate }}
-                    </i>
-                }
-            </p>
+                </h2>
+            </a>
+            @if (canManagePoll(poll) && poll.isFinished) {
+                <i class="small">
+                    {{ 'finished (unpublished)' | translate }}
+                </i>
+            }
 
             @if (poll.canBeVotedFor()) {
                 <div class="type-and-state italic spacer-bottom-20 break-word">

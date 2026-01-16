@@ -27,9 +27,9 @@ export interface AgendaItemContentObjectRepository<
  * The base repository for objects with an agenda item.
  */
 export abstract class BaseAgendaItemContentObjectRepository<
-        V extends BaseViewModel & HasAgendaItem,
-        M extends BaseModel & HasAgendaItemId
-    >
+    V extends BaseViewModel & HasAgendaItem,
+    M extends BaseModel & HasAgendaItemId
+>
     extends BaseMeetingRelatedRepository<V, M>
     implements AgendaItemContentObjectRepository<V, M>
 {

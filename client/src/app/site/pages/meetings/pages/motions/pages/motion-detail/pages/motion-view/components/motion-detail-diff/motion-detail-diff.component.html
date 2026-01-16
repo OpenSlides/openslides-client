@@ -123,7 +123,9 @@
                                     </mat-icon>
                                 }
                                 <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
-                                <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
+                                <i class="grey">
+                                    &nbsp;- {{ getSubmitterListWithDeletedUsers(change.amendment.submitterNames) }}
+                                </i>
                             </div>
                         }
                     </div>

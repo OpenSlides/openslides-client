@@ -53,15 +53,9 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     public update(
-        update?: NullablePartial<Motion & { workflow_id: Id; supporter_ids: Id[] }>,
+        update?: NullablePartial<Motion & { workflow_id: Id }>,
         ...motions: (Motion & { workflow_id: Id })[]
     ): Action<void> {
-        if (update.supporter_ids) {
-            update.supporter_meeting_user_ids = (update.supporter_meeting_user_ids ?? []).concat(
-                update.supporter_ids.map(id => this.userRepo.getViewModel(id)?.getMeetingUser()?.id).filter(id => !!id)
-            );
-            delete update.supporter_ids;
-        }
         if (update) {
             return this.repo.update(update, ...motions);
         }
@@ -91,14 +85,6 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
 
     public resetRecommendation(...viewMotions: Identifiable[]): Action<void> {
         return this.repo.resetRecommendation(...viewMotions);
-    }
-
-    public support(motion: Identifiable): Promise<void> {
-        return this.repo.support(motion);
-    }
-
-    public unsupport(motion: Identifiable): Promise<void> {
-        return this.repo.unsupport(motion);
     }
 
     public followRecommendation(...motions: Identifiable[]): Promise<void> {

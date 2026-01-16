@@ -60,7 +60,7 @@ if (isFirefox && `serviceWorker` in navigator) {
         httpInterceptorProviders,
         provideHttpClient(withInterceptorsFromDi()),
         provideTranslateService({
-            defaultLanguage: `en`,
+            fallbackLang: `en`,
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,

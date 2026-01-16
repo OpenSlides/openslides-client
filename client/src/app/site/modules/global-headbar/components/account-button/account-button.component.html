@@ -1,4 +1,16 @@
-<div class="flex-center" data-cy="accountButton" [matMenuTriggerFor]="userMenu">
+<button
+    aria-label="{{ getAriaLabel() }}"
+    class="accountButton flex-center"
+    data-cy="accountButton"
+    [matMenuTriggerFor]="userMenu"
+>
+    @if (isPresent) {
+        <div class="fake-fab-button flex-center">
+            <mat-icon class="icon-16">done</mat-icon>
+        </div>
+    } @else {
+        <div class="width-16">&nbsp;</div>
+    }
     <div class="operator-information flex-center">
         <div class="first-line one-line">
             @if (isLoggedIn) {
@@ -9,9 +21,9 @@
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon class="icon-16" color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon class="icon-16">person</mat-icon>
     </div>
-</div>
+</button>
 
 <mat-menu #userMenu="matMenu" class="user-menu">
     <ng-template matMenuContent>
@@ -51,12 +63,30 @@
                 <div>
                     <!-- present toggle -->
                     @if (isAllowedSelfSetPresent && hasActiveMeeting) {
-                        <button mat-menu-item [ngClass]="{ active: isPresent }" (click)="toggleOperatorPresence()">
+                        <button
+                            aria-checked="{{ isPresent }}"
+                            mat-menu-item
+                            role="menuitemcheckbox"
+                            [ngClass]="{ active: isPresent }"
+                            (click)="toggleOperatorPresence()"
+                        >
                             <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
                                 {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
                             </mat-icon>
                             <span class="menu-text">{{ 'Present' | translate }}</span>
                         </button>
+                    } @else if (hasActiveMeeting) {
+                        @if (isPresent) {
+                            <div mat-menu-item>
+                                <mat-icon class="menu-icon">done</mat-icon>
+                                <span class="menu-text">{{ 'Present' | translate }}</span>
+                            </div>
+                        } @else {
+                            <div mat-menu-item>
+                                <mat-icon class="menu-icon">clear</mat-icon>
+                                <span class="menu-text">{{ 'Not present' | translate }}</span>
+                            </div>
+                        }
                     }
                 </div>
             }

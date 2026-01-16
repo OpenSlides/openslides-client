@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import { MeetingSettingsDefinitionService } from '../src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 
-const SOURCE = path.resolve(path.join(__dirname, '../../meta/models.yml'));
+const SOURCE = path.resolve(path.join(__dirname, '../meta/models.yml'));
 const DESTINATION = path.resolve(path.join(__dirname, '../src/app/domain/definitions/meeting-settings-defaults.ts'));
 
 const FILE_TEMPLATE = dedent`

@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, pairwise, Subscription } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
@@ -157,6 +157,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
      */
     private commentsSubject: Observable<ViewMotionCommentSection[]>;
 
+    @ViewChild(`attachmentsChip`)
+    public attachmentsChip!: MatChipOption;
+
+    @ViewChild(`includePdfAttachmentsChip`)
+    public includePdfAttachments!: MatChipOption;
+
     @ViewChild(`tabGroup`)
     public tabGroup!: MatTabGroup;
 
@@ -177,6 +183,12 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
     @ViewChild(`continuousText`)
     public continuousTextChipOption!: MatChipOption;
+
+    @ViewChild(`pageChip`)
+    public pageChip!: MatChipOption;
+
+    @ViewChild(`includePdfAttachmentsChip`)
+    public includePdfAttachmentsChip!: MatChipOption;
 
     @ViewChild(`spokespersonChip`)
     public spokespersonChip!: MatChipOption;
@@ -316,17 +328,61 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             comments: []
         });
         this.dialogForm.patchValue(this.pdfDefaults);
-        this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
-            if (!value) {
-                this.deselectOption(`content`, `text`);
-                this.changeStateOfChipOption(this.textChip, true, `text`);
-            } else {
-                if (!this.dialogForm.get(`content`).value.includes('text')) {
-                    this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+        this.subscriptions.push(
+            this.dialogForm.controls[`crMode`].valueChanges.subscribe(value => {
+                if (!value) {
+                    this.deselectOption(`content`, `text`);
+                    this.changeStateOfChipOption(this.textChip, true, `text`);
+                } else {
+                    if (!this.dialogForm.get(`content`).value.includes('text')) {
+                        this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
+                    }
+                    this.changeStateOfChipOption(this.textChip, false, `text`);
                 }
-                this.changeStateOfChipOption(this.textChip, false, `text`);
+            })
+        );
+
+        const incompatibleFields = {
+            pageLayout: {
+                continuousText: [
+                    [`pageLayout`, `toc`],
+                    [`pageLayout`, `addBreaks`],
+                    [`content`, `includePdfAttachments`]
+                ],
+                toc: [
+                    [`pageLayout`, `continuousText`],
+                    [`content`, `includePdfAttachments`]
+                ],
+                addBreaks: [[`pageLayout`, `continuousText`]]
+            },
+            headerFooter: {
+                page: [[`content`, `includePdfAttachments`]]
+            },
+            content: {
+                includePdfAttachments: [
+                    [`pageLayout`, `toc`],
+                    [`pageLayout`, `continuousText`],
+                    [`headerFooter`, `page`]
+                ]
             }
-        });
+        };
+
+        for (const group of Object.keys(incompatibleFields)) {
+            this.subscriptions.push(
+                this.dialogForm.controls[group].valueChanges.pipe(pairwise()).subscribe(val => {
+                    const a = new Set(val[0]);
+                    const b = new Set(val[1]);
+                    const added = b.difference(a);
+                    for (const field of added) {
+                        const incompatible = incompatibleFields[group][field] || [];
+                        for (const def of incompatible) {
+                            this.deselectOption(def[0], def[1]);
+                        }
+                    }
+                })
+            );
+        }
+
         this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
             if (savedDefaults?.tab_index !== undefined) {
                 this.savedSelections = savedDefaults;
@@ -383,16 +439,24 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         this.filterFormControlAvailableValues(`metaInfo`, `category`, this.categoryChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `block`, this.blockChipOption);
         this.filterFormControlAvailableValues(`metaInfo`, `recommendation`, this.recommendationChipOption);
-        if (
-            this.motions_models.filter(m =>
-                m[`referenced_in_motion_recommendation_extensions`] === null ||
-                m[`referenced_in_motion_recommendation_extensions`]?.length === 0
-                    ? false
-                    : m[`referenced_in_motion_recommendation_extensions`]
-            ).length === 0
-        ) {
+        if (!this.motions_models.some(m => !!m[`referenced_in_motion_recommendation_extensions`]?.length)) {
             this.deselectOption(`metaInfo`, `referring_motions`);
             this.changeStateOfChipOption(this.referringMotionsChip, true, `referring_motions`);
+        }
+        if (!this.motions_models.some(m => !!m[`attachment_meeting_mediafile_ids`]?.length)) {
+            this.deselectOption(`content`, `attachments`);
+            this.changeStateOfChipOption(this.attachmentsChip, true, `attachments`);
+            this.deselectOption(`content`, `includePdfAttachments`);
+            this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
+        }
+        const motionAmount = this.motions_models.length;
+        let PDFamount = 0;
+        for (const motion of this.motions_models) {
+            PDFamount = +motion[`attachment_meeting_mediafile_ids`]?.length;
+        }
+        if (motionAmount > 100 || PDFamount > 100) {
+            this.deselectOption(`content`, `includePdfAttachments`);
+            this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }
         if (this.motions_models.filter(m => (m ? m.hasTags() : false)).length === 0) {
             this.deselectOption(`metaInfo`, `tags`);
@@ -443,22 +507,6 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                 return this.crMode.Original;
             default:
                 return null;
-        }
-    }
-
-    public deselectPageLayoutOption(): void {
-        if (this.continuousTextChipOption.selected) {
-            this.deselectOption(`pageLayout`, `toc`);
-            this.deselectOption(`pageLayout`, `addBreaks`);
-        }
-        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
-            this.deselectOption(`pageLayout`, `continuousText`);
-        }
-    }
-
-    public deselectContinuousTextOption(): void {
-        if (this.tableOfContentChip.selected || this.addBreaksChip.selected) {
-            this.deselectOption(`pageLayout`, `continuousText`);
         }
     }
 
@@ -535,6 +583,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             `page`,
             `date`,
             `attachments`,
+            `includePdfAttachments`,
             `addBreaks`,
             `continuousText`,
             `onlyChangedLines`
@@ -554,7 +603,11 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         const motions_models = this.motions.map(motion => this.motionRepo.getViewModel(motion));
         const exportInfo = this.dialogToExportInfo(this.dialogForm);
         if (exportInfo) {
-            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id)));
+            if (motions_models.length) {
+                await this.modelRequestService.fetch(
+                    getMotionDetailSubscriptionConfig(...motions_models.map(m => m.id))
+                );
+            }
             const amendments = this.amendmentRepo.getViewModelList();
             this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
 

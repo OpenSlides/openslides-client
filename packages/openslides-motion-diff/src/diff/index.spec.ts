@@ -19,6 +19,7 @@ describe(`MotionDiffService`, () => {
             title?: string;
             title_change?: boolean;
             change_type?: UnifiedChangeType;
+            rejected?: boolean;
         }) {}
 
         get isTitleChange(): boolean {
@@ -59,6 +60,10 @@ describe(`MotionDiffService`, () => {
 
         get lineFrom(): number {
             return this.obj.line_from;
+        }
+
+        get isRejected(): boolean {
+            return !!this.obj.rejected;
         }
     }
 
@@ -1602,7 +1607,7 @@ describe(`MotionDiffService`, () => {
             });
             const changeRec = new TestChangeRecommendation({
                 id: 2,
-                // rejected: false,
+                rejected: false,
                 line_from: 1,
                 line_to: 1,
                 text: `<p>Test 1y</p>`,

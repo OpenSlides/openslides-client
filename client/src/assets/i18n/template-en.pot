@@ -66,6 +66,10 @@ msgstr ""
 msgid "About me"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
+msgid "Absent"
+msgstr ""
+
 msgid "Abstain"
 msgstr ""
 
@@ -106,6 +110,10 @@ msgid "Accounts created"
 msgstr ""
 
 msgid "Accounts updated"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "Accounts were set to inactive, except for your own account."
 msgstr ""
 
 msgid "Accounts with errors"
@@ -241,6 +249,10 @@ msgid ""
 "affect the import."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Adds participants, structure levels and groups to target meeting."
+msgstr ""
+
 msgid "Administration roles"
 msgstr ""
 
@@ -287,6 +299,10 @@ msgid "All entitled users"
 msgstr ""
 
 msgid "All lists of speakers will be cleared."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.ts
+msgid "All mandates"
 msgstr ""
 
 msgid "All meetings"
@@ -680,6 +696,18 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Attachments (PDF embedded)"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Attachments (URL)"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Attachments to motions cannot be forwarded"
+msgstr ""
+
 msgid ""
 "Attention: Accounts will add to the default group of each meeting only. If "
 "another group is intended please use the 'Add to meetings' dialog in "
@@ -1013,9 +1041,10 @@ msgstr ""
 msgid "Can see elections"
 msgstr ""
 
+#: app/src/app/domain/definitions/permission.config.ts
 msgid ""
 "Can see email, username, membership number, SSO identification and locked "
-"out state of all participants."
+"out state of all participants and can see mandate check."
 msgstr ""
 
 msgid "Can see files"
@@ -1344,6 +1373,11 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Collision with existing change recommendation"
+msgstr ""
+
 msgid "Color"
 msgstr ""
 
@@ -1463,7 +1497,23 @@ msgstr ""
 msgid "Contributions"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Copy"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Copy agenda item"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Copy agenda items"
+msgstr ""
+
 msgid "Copy report to clipboard"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/modules/topics/pages/topic-detail/components/topic-detail/topic-detail.component.html
+msgid "Copy to"
 msgstr ""
 
 msgid "Count completed requests to speak"
@@ -1500,6 +1550,10 @@ msgid "Create user"
 msgstr ""
 
 msgid "Creating PDF file ..."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/services/export/motion-pdf-export.service/motion-pdf-export.service.ts
+msgid "Creating motion exports"
 msgstr ""
 
 msgid "Creation"
@@ -1779,6 +1833,10 @@ msgid "Download folder"
 msgstr ""
 
 msgid "Download the file"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/services/export/motion-pdf-export.service/motion-pdf-export.service.ts
+msgid "Downloading attachments"
 msgstr ""
 
 msgid "Drop files into this area OR click here to select files"
@@ -2180,6 +2238,10 @@ msgstr ""
 msgid "First state"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "First value must be less or equal than second value."
+msgstr ""
+
 msgid "Follow recommendation"
 msgstr ""
 
@@ -2257,6 +2319,10 @@ msgid "Forwarding created"
 msgstr ""
 
 msgid "Forwarding of motion"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "From"
 msgstr ""
 
 msgid "Front page title"
@@ -2770,6 +2836,10 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/services/motion-forward-dialog.service.ts
+msgid "Items of the type motions, motion blocks and elections cannot be forwarded."
+msgstr ""
+
 msgid "Jitsi domain"
 msgstr ""
 
@@ -2839,6 +2909,10 @@ msgid "Limit of active accounts"
 msgstr ""
 
 msgid "Limit of active meetings"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-export/components/motion-export/motion-export.component.html
+msgid "Limited to 100 motions"
 msgstr ""
 
 msgid "Line"
@@ -2933,6 +3007,10 @@ msgid "Main speaker"
 msgstr ""
 
 msgid "Make background color from meta information box on the projector transparent"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
+msgid "Mandate check"
 msgstr ""
 
 msgid "Mandates switched sucessfully!"
@@ -3115,6 +3193,14 @@ msgid "Motion identifier"
 msgstr ""
 
 msgid "Motion preamble"
+msgstr ""
+
+#: app/src/app/gateways/repositories/motions/motion-supporter/motion-supporter-repository.service.ts
+msgid "Motion supporter"
+msgstr ""
+
+#: app/src/app/gateways/repositories/motions/motion-supporter/motion-supporter-repository.service.ts
+msgid "Motion supporters"
 msgstr ""
 
 msgid "Motion updated"
@@ -3404,7 +3490,8 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-msgid "None of the selected motions can be forwarded."
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/services/agenda-forward-dialog.service.ts
+msgid "None of the selected agenda items can be copied."
 msgstr ""
 
 msgid "Normal (http/2)"
@@ -3414,6 +3501,10 @@ msgid "Not found"
 msgstr ""
 
 msgid "Not locked out"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
+msgid "Not present"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/components/voting-privacy-warning-dialog/voting-privacy-warning-dialog.component.html
@@ -3427,6 +3518,10 @@ msgid "Note: Amendments cannot be forwarded without their parent motion."
 msgstr ""
 
 msgid "Note: Amendments will not be forwarded."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Note: Motions and elections will not be copied."
 msgstr ""
 
 msgid ""
@@ -4864,6 +4959,10 @@ msgstr ""
 msgid "The affected columns will not be imported."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/services/agenda-forward-dialog.service.ts
+msgid "The agenda item was successfully copied to {} meeting(s)"
+msgstr ""
+
 msgid "The assembly may decide:"
 msgstr ""
 
@@ -5151,6 +5250,14 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "Title, text, visibility and comment are copied by default."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "To"
+msgstr ""
+
 msgid "To start your search press Enter or the search icon"
 msgstr ""
 
@@ -5226,9 +5333,6 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
-msgid "Unknown participant"
-msgstr ""
-
 msgid "Unknown user"
 msgstr ""
 
@@ -5291,6 +5395,10 @@ msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
 msgid "Valid votes"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component.html
+msgid "Value must be positive."
 msgstr ""
 
 msgid "View"
@@ -5439,6 +5547,12 @@ msgid ""
 msgstr ""
 
 msgid "Warning: Data loss is possible because accounts are in the same meeting."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid ""
+"Warning: List of speakers cannot be copied because person is speaking, has "
+"an open point of order or intervention."
 msgstr ""
 
 msgid "Warning: This projector will be set to visible"
@@ -5596,6 +5710,10 @@ msgstr ""
 msgid "You cannot enter this meeting because you are not assigned to any group."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/participant-list/components/participant-list/participant-list.component.ts
+msgid "You cannot set yourself as inactive."
+msgstr ""
+
 msgid "You cannot vote since your vote right is delegated."
 msgstr ""
 
@@ -5621,6 +5739,10 @@ msgid "You have to enter six hexadecimal digits"
 msgstr ""
 
 msgid "You have to fill this field."
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "You must be admin in target meeting."
 msgstr ""
 
 msgid "You override the personally set password!"
@@ -5664,6 +5786,12 @@ msgstr ""
 msgid "Your password has been reset successfully!"
 msgstr ""
 
+#: app/src/app/gateways/http.service.ts
+msgid ""
+"Your vote was rejected because your IP address is not in the allowed IP "
+"range."
+msgstr ""
+
 msgid "Your votes"
 msgstr ""
 
@@ -5692,6 +5820,10 @@ msgid "active"
 msgstr ""
 
 msgid "add group(s)"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/services/agenda-forward-dialog.service.ts
+msgid "agenda items were successfully copied to {} meeting(s)"
 msgstr ""
 
 msgid "already exists"
@@ -5916,6 +6048,11 @@ msgstr ""
 msgid "of"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
+msgid "of this"
+msgstr ""
+
 msgid "of which"
 msgstr ""
 
@@ -5980,6 +6117,10 @@ msgstr ""
 msgid "single-line"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/components/agenda-forward-dialog/components/agenda-forward-dialog/agenda-forward-dialog.component.html
+msgid "speakers"
+msgstr ""
+
 msgid "started"
 msgstr ""
 
@@ -5996,6 +6137,10 @@ msgid "to"
 msgstr ""
 
 msgid "today"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
+msgid "total"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/projectors/modules/projector-detail/services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service.ts
