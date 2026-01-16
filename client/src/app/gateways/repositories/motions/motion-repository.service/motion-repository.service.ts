@@ -188,7 +188,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     public createTextBased(
         partialMotion: Partial<
-            Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[]; supporter_meeting_user_ids?: Id[] }
+            Motion & {
+                workflow_id: Id;
+                attachment_mediafile_ids?: Id[];
+                supporter_meeting_user_ids?: Id[];
+                submitter_meeting_user_ids: Id[];
+            }
         >
     ): Action<CreateResponse> {
         const payload = {
@@ -197,7 +202,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             title: partialMotion.title,
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids: partialMotion.attachment_mediafile_ids,
@@ -213,7 +218,12 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     public createParagraphBased(
         partialMotion: Partial<
-            Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[]; supporter_meeting_user_ids?: Id[] }
+            Motion & {
+                workflow_id: Id;
+                attachment_mediafile_ids?: Id[];
+                supporter_meeting_user_ids?: Id[];
+                submitter_meeting_user_ids: Id[];
+            }
         >
     ): Action<CreateResponse> {
         const payload = {
@@ -221,7 +231,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             lead_motion_id: partialMotion.lead_motion_id,
             title: partialMotion.title,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids === null ? [] : partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids:
@@ -321,7 +331,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             title: partialMotion.title,
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             additional_submitter: partialMotion.additional_submitter,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
