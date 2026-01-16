@@ -3,7 +3,7 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines, useCustomHtmlDiff, useCustomLineNumbering } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
@@ -202,6 +202,8 @@ describe(`MotionDiffService`, () => {
         ` Line 4</li></ol>`;
 
     beforeEach(() => {
+        useCustomHtmlDiff(HtmlDiff);
+        useCustomLineNumbering(LineNumbering);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
         insertInternalLineMarkers(baseHtmlDom1);
@@ -1732,6 +1734,24 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toThrow();
+        });
+
+        it(`test with leading line breaks`, () => {
+            const inHtml = `<p>${noMarkup(1)}<br>${noMarkup(2)}first</p><p>${noMarkup(3)}<br>${noMarkup(4)}secoond</p>`;
+
+            expect(
+                getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p class="os-split-before">first as</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<P class="os-split-before merge-before">${noMarkup(2)}first<ins> as</ins></p>`
+            );
         });
     });
 
