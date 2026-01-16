@@ -100,7 +100,7 @@
     "@angular-eslint/schematics": "^20.7.0",
     "@angular-eslint/template-parser": "^20.3.0",
     "@angular/build": "^20.3.14",
-    "@angular/cli": "^20.3.14",
+    "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^20.3.16",
     "@stylistic/eslint-plugin": "^5.7.0",
     "@types/file-saver": "^2.0.7",
