@@ -383,23 +383,22 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
             );
         }
 
-        this.storeService.get<SavedSelections>(`motion-export-selection`).then(savedDefaults => {
-            if (savedDefaults?.tab_index !== undefined) {
-                this.savedSelections = savedDefaults;
-            } else {
-                const defaultLineNumbering = this.meetingSettingsService.instant(`motions_default_line_numbering`);
-                const defaultTextVersion = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
-                if ([this.lnMode.None, this.lnMode.Outside].includes(defaultLineNumbering)) {
-                    (this.savedSelections.tab_selections[0] as any).lnMode = defaultLineNumbering;
-                }
-                (this.savedSelections.tab_selections[0] as any).crMode = defaultTextVersion;
-                if ([this.crMode.Original, this.crMode.Final].includes(defaultTextVersion)) {
-                    (this.savedSelections.tab_selections[1] as any).crMode = defaultTextVersion;
-                }
+        const savedDefaults = await this.storeService.get<SavedSelections>(`motion-export-selection`);
+        if (savedDefaults?.tab_index !== undefined) {
+            this.savedSelections = savedDefaults;
+        } else {
+            const defaultLineNumbering = this.meetingSettingsService.instant(`motions_default_line_numbering`);
+            const defaultTextVersion = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
+            if ([this.lnMode.None, this.lnMode.Outside].includes(defaultLineNumbering)) {
+                (this.savedSelections.tab_selections[0] as any).lnMode = defaultLineNumbering;
             }
-            this.tabGroup.selectedIndex = this.savedSelections.tab_index;
-            this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
-        });
+            (this.savedSelections.tab_selections[0] as any).crMode = defaultTextVersion;
+            if ([this.crMode.Original, this.crMode.Final].includes(defaultTextVersion)) {
+                (this.savedSelections.tab_selections[1] as any).crMode = defaultTextVersion;
+            }
+        }
+        this.tabGroup.selectedIndex = this.savedSelections.tab_index;
+        this.dialogForm.patchValue(this.savedSelections.tab_selections[this.savedSelections.tab_index]);
     }
 
     // Function to determine whioch options are available, set as defaults and disabled
@@ -454,7 +453,8 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
         for (const motion of this.motions_models) {
             PDFamount = +motion[`attachment_meeting_mediafile_ids`]?.length;
         }
-        if (motionAmount > 100 || PDFamount > 100) {
+        const limit = 100;
+        if (motionAmount > limit || PDFamount > limit) {
             this.deselectOption(`content`, `includePdfAttachments`);
             this.changeStateOfChipOption(this.includePdfAttachments, true, `includePdfAttachments`);
         }

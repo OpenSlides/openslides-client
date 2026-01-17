@@ -118,7 +118,4 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
     ];
 }
 export interface MeetingMediafile
-    extends HasProjectionIds,
-        HasListOfSpeakersId,
-        HasMeetingId,
-        HasProperties<MediafileMeetingUsageIdKey, number> {}
+    extends HasProjectionIds, HasListOfSpeakersId, HasMeetingId, HasProperties<MediafileMeetingUsageIdKey, number> {}

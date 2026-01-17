@@ -42,7 +42,8 @@ interface IProjectorRelations {
     used_as_reference_projector_in_meeting?: ViewMeeting;
 }
 export interface ViewProjector
-    extends Projector,
+    extends
+        Projector,
         ViewModelRelations<IProjectorRelations>,
         HasMeeting,
         HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}

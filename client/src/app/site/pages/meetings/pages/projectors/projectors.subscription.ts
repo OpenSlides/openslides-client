@@ -36,7 +36,12 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
                             {
                                 idField: `content_object_id`,
                                 fieldset: projectionContentObjectFieldset,
-                                follow: [{ idField: `mediafile_id`, fieldset: [`owner_id`, `title`, `mimetype`] }]
+                                follow: [
+                                    {
+                                        idField: `mediafile_id`,
+                                        fieldset: [`owner_id`, `pdf_information`, `title`, `mimetype`]
+                                    }
+                                ]
                             }
                         ]
                     },

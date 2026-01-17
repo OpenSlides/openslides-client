@@ -21,6 +21,4 @@ interface IMotionSupporterRelations {
     motion: ViewMotion;
 }
 export interface ViewMotionSupporter
-    extends MotionSupporter,
-        ViewModelRelations<IMotionSupporterRelations>,
-        HasMeeting {}
+    extends MotionSupporter, ViewModelRelations<IMotionSupporterRelations>, HasMeeting {}

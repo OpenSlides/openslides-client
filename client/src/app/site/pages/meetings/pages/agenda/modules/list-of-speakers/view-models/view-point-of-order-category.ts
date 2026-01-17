@@ -16,6 +16,4 @@ interface IPointOfOrderCategoryRelations {
     speakers: ViewSpeaker[];
 }
 export interface ViewPointOfOrderCategory
-    extends PointOfOrderCategory,
-        ViewModelRelations<IPointOfOrderCategoryRelations>,
-        HasMeeting {}
+    extends PointOfOrderCategory, ViewModelRelations<IPointOfOrderCategoryRelations>, HasMeeting {}

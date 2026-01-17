@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - 'feature/**'
-      - 'staging/**'
+      - 'staging**'
 
 env:
   NG_CLI_ANALYTICS: ci
@@ -59,7 +59,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: playwright-report
