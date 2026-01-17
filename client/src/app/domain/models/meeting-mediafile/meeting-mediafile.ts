@@ -22,7 +22,7 @@ export class MeetingMediafile extends BaseModel<MeetingMediafile> {
 
     public mediafile_id: Id;
     public is_public: boolean;
-    public inherited_access_group_ids!: Id[]; // (group/meeting_mediafile_inherited_access_group_ids)[];  // Note: calculated
+    public inherited_access_group_ids!: Id[]; // (group/meeting_mediafile_inherited_access_group_ids)[];  // calculated
     public access_group_ids!: Id[]; // (group/meeting_mediafile_access_group_ids)[];
     public attachment_ids!: Fqid[]; // (*/attachment_meeting_mediafile_ids)[];
 
