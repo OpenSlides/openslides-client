@@ -6,8 +6,10 @@ import { CsvMapping, ImportIdentifiable } from './import-utils';
  * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
  * be created, too, but as a "side effect" during the import process of the main models.
  */
-export interface SideImportHandlerConfig<MainModel = any, SideModel = any>
-    extends BaseImportHandlerConfig<MainModel, SideModel> {
+export interface SideImportHandlerConfig<MainModel = any, SideModel = any> extends BaseImportHandlerConfig<
+    MainModel,
+    SideModel
+> {
     /**
      * Force the usage of arrays instead of single items
      */

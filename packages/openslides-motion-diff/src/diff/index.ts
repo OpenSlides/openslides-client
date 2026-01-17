@@ -847,12 +847,15 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
         changes.filter(
             (otherChange) =>
                 otherChange.identifier !== change.identifier &&
-                ((otherChange.lineFrom >= change.lineFrom &&
-                    otherChange.lineFrom <= change.lineTo) ||
-                    (otherChange.lineTo >= change.lineFrom &&
-                        otherChange.lineTo <= change.lineTo) ||
-                        (otherChange.lineFrom <= change.lineFrom &&
-                            otherChange.lineTo >= change.lineTo))
+                (
+                    (change.changeType === UnifiedChangeType.TYPE_AMENDMENT && (otherChange.changeType === UnifiedChangeType.TYPE_AMENDMENT || !otherChange.isRejected)) || 
+                    (change.changeType === UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION && !change.isRejected)
+                ) &&
+                (
+                    (otherChange.lineFrom >= change.lineFrom && otherChange.lineFrom <= change.lineTo) ||
+                    (otherChange.lineFrom <= change.lineFrom && otherChange.lineTo >= change.lineTo) ||
+                    (otherChange.lineTo >= change.lineFrom && otherChange.lineTo <= change.lineTo) 
+                )
         ).length > 0
     );
 }

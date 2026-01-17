@@ -35,6 +35,12 @@ run-cleanup:
 run-cleanup-standalone: | build-dev
 	$(DOCKER-RUN) npm run cleanup
 
+# GitHub
+run-check-linting: | build-dev
+	docker run -t openslides-client-dev npm run lint
+
+run-check-prettifying: | build-dev
+	docker run -t openslides-client-dev npm run prettify-check
 
 ########################## Deprecation List ##########################
 
@@ -47,8 +53,3 @@ deprecation-warning-alternative: | deprecation-warning
 run-dev run-dev-attach run-dev-attached run-dev-standalone run-bash run-dev-interactive stop-dev:
 	@make deprecation-warning-alternative ALTERNATIVE="dev and derivative maketargets are now only available in main repository. (use 'make dev-help' in main repository for more information)"
 
-run-check-linting: | deprecation-warning build-dev
-	docker run -t openslides-client-dev npm run lint
-
-run-check-prettifying: | deprecation-warning build-dev
-	docker run -t openslides-client-dev npm run prettify-check
