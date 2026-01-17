@@ -54,8 +54,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
             for (const paletteName of this._themePalettes) {
                 const formUpdate: any = this.data ?? this.createFormUpdate(paletteName);
                 this.paletteBuilderForm.patchValue(formUpdate);
-                // Set the initial values
-                Object.keys(formUpdate).forEach(key => (this._currentPalettes[key] = formUpdate[key]));
+                Object.keys(formUpdate).forEach(k => (this._currentPalettes[k] = formUpdate[k])); // initial values
             }
             this.paletteBuilderForm.patchValue({ name: this.getNextThemeName() });
         });

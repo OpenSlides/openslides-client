@@ -12,8 +12,7 @@ export interface Relation<Own = any> {
     generic: boolean;
     order?: string; // may be given on many=true. if not given on many=true, the models are sorted by id.
     isFullList?: boolean; // if this relation requests a full-list of view-models in a specific repo.
-    // if the relation request only contains view-models that are not referenced by other top level view-models
-    isExclusiveList?: boolean;
+    isExclusiveList?: boolean; // if the relation request only contains view-models that are not referenced by other top level view-models
 }
 
 export function makeO2O<A extends BaseViewModel, B extends BaseViewModel>(args: {
