@@ -107,16 +107,39 @@ export class VotingBannerService {
         const text = isSinglePoll
             ? this.getTextForPoll(this.getSinglePoll())
             : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
-        if (isSinglePoll) {
-            const link = isSinglePoll
-                ? this.getUrlForPoll(this.getSinglePoll())
-                : `/${this.activeMeeting.meetingId}/polls/`;
-            return { text, link };
+        let link: string;
+        if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
+            if (!isSinglePoll) {
+                link = `/${this.activeMeeting.meetingId}/autopilot/`;
+            } else {
+                const poll: ViewPoll = this.pollsToVote[0];
+                link = this.getPollComponent(poll);
+            }
         } else {
-            const link = isSinglePoll
-                ? this.getUrlForPoll(this.getSinglePoll())
-                : `/${this.activeMeeting.meetingId}/autopilot/`;
-            return { text, link };
+            link = `/${this.activeMeeting.meetingId}/polls/`;
+            console.log('1<POLLSINPERMISO');
+        }
+        return { text, link };
+    }
+
+    private getPollComponent(poll: ViewPoll): string {
+        switch (poll !== null) {
+            case poll.isTopicPoll:
+                // OK
+                console.log(`IS AGENDA TOPIC POLL`, poll.canBeVotedFor());
+                return `${poll.getDetailStateUrl()}`;
+            case poll.isMotionPoll:
+                // OK
+                console.log('IS MOTION POLL', poll.getDetailStateUrl());
+                return `/${poll.getDetailStateUrl()}`;
+            case poll.isAssignmentPoll:
+                console.log('IS ELECTIONS POLL', poll.getDetailStateUrl());
+                return `/${poll.getDetailStateUrl()}`;
+            case poll.isListPoll:
+                console.log('IS LIST POLL', poll.getDetailStateUrl());
+                return `/${poll.getDetailStateUrl()}`;
+            default:
+                return '';
         }
     }
 
