@@ -7,6 +7,7 @@ import { SharedWorkerService } from 'src/app/openslides-main-module/services/sha
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { ProcessError } from '../../infrastructure/errors';
+import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -51,7 +52,8 @@ export class AuthService {
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private cookie: CookieService,
-        private DS: DataStoreService
+        private DS: DataStoreService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         this.authTokenService.accessTokenObservable.subscribe(token => {
             this._authTokenSubject.next(token);
@@ -145,6 +147,15 @@ export class AuthService {
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();
+
+        // Check if OIDC is enabled (via Traefik middleware)
+        const oidcEnabled = this.orgaSettings.instant(`oidc_enabled`);
+        if (oidcEnabled) {
+            // Redirect to Traefik OIDC logout endpoint
+            location.replace(`/oauth2/logout`);
+            return;
+        }
+
         // In case SAML is enabled, we need to redirect the user to the IDP
         // to complete the logout-flow. Maybe there is a better way to check
         // for activated SAML than checking if the response is a URL.

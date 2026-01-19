@@ -79,11 +79,15 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public samlEnabled = true;
 
+    public oidcEnabled = false;
+
     public guestsEnabled = false;
 
     public isWaitingOnLogin = false;
 
     public loading = true;
+
+    private settingsLoaded = { saml: false, oidc: false };
 
     public orgaPublicAccessEnabled = true;
 
@@ -143,18 +147,39 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.checkDevice();
         }
 
-        // check if global saml auth is enabled
+        // check if global saml/oidc auth is enabled
         this.subscriptions.push(
             this.orgaSettings.getSafe(`saml_enabled`).subscribe(enabled => {
                 this.samlEnabled = enabled;
-                this.loading = false;
+                this.settingsLoaded.saml = true;
+                this.updateLoadingState();
             }),
             this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
                 this.samlLoginButtonText = text;
+            }),
+            this.orgaSettings.getSafe(`oidc_enabled`).subscribe(enabled => {
+                this.oidcEnabled = enabled;
+                this.settingsLoaded.oidc = true;
+                this.updateLoadingState();
+                // When OIDC is enabled via Traefik middleware, the user is already
+                // authenticated when reaching the client. If they somehow land on
+                // the login page, redirect them to the home page.
+                if (enabled && this.authService.isAuthenticated()) {
+                    this.osRouter.navigateAfterLogin(this.currentMeetingId);
+                }
             })
         );
 
         this.checkForUnsecureConnection();
+    }
+
+    /**
+     * Update loading state - only set loading to false when both settings are loaded
+     */
+    private updateLoadingState(): void {
+        if (this.settingsLoaded.saml && this.settingsLoaded.oidc) {
+            this.loading = false;
+        }
     }
 
     /**

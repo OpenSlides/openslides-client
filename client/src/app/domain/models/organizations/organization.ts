@@ -38,6 +38,9 @@ export class OrganizationSetting {
     public saml_metadata_idp!: string;
     public saml_metadata_sp!: string;
     public saml_private_key!: string;
+
+    // OIDC authentication via Traefik middleware
+    public oidc_enabled!: boolean; // default: false
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -87,6 +90,7 @@ export class Organization extends BaseModel<Organization> {
         `saml_metadata_idp`,
         `saml_metadata_sp`,
         `saml_private_key`,
+        `oidc_enabled`,
         `committee_ids`,
         `active_meeting_ids`,
         `archived_meeting_ids`,
