@@ -558,7 +558,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public ngAfterViewInit(): void {
-        this.setLastNumber();
         if (this.scrollToChange) {
             window.setTimeout(() => {
                 this.scrollToChangeElement(this.scrollToChange!);
