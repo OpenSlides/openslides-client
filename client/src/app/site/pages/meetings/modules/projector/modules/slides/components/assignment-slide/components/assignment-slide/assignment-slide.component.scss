@@ -1,5 +1,0 @@
-@use 'src/assets/styles/mixins/detail-view-appearance.scss';
-
-.detail-view-text ::ng-deep {
-    @include detail-view-appearance.detail-view-appearance;
-}

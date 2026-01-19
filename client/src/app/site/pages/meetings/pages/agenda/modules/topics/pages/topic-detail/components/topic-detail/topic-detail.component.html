@@ -13,17 +13,15 @@
     >
         <!-- Title -->
         <div class="title-slot">
-            <h2>
+            <h1 class="mock-h2">
                 @if (newTopic) {
-                    <span>{{ 'New topic' | translate }}</span>
+                    {{ 'New topic' | translate }}
+                } @else if (editTopic) {
+                    {{ 'Edit topic' | translate }}
+                } @else if (topic) {
+                    {{ 'Topic' | translate }}
                 }
-                @if (editTopic && !newTopic) {
-                    <span>{{ 'Edit topic' | translate }}</span>
-                }
-                @if (!newTopic && !editTopic && topic) {
-                    <span>{{ 'Topic' | translate }}</span>
-                }
-            </h2>
+            </h1>
         </div>
 
         <!-- Back and forth buttons -->
