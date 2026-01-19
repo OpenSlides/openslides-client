@@ -78,8 +78,17 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @ViewChild(MatMenuTrigger)
     private changeRecommendationMenu: MatMenuTrigger;
 
+    private _motion: ViewMotion;
+
     @Input()
-    public motion!: ViewMotion;
+    public set motion(motion: ViewMotion) {
+        this._motion = motion;
+        this.setLastNumber();
+    }
+
+    public get motion(): ViewMotion {
+        return this._motion;
+    }
 
     private _changes: ViewUnifiedChange[] = [];
 
