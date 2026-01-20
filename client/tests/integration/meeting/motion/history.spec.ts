@@ -16,7 +16,6 @@ test.describe(`motion history mode test`, () => {
             meeting_id: meeting.id,
             title: `MotionHistoryTestTitle`,
             text: `<p>MotionHistoryTestText</p>`,
-            submitter_ids: [],
             category_id: null,
             attachment_mediafile_ids: [],
             reason: ``,
