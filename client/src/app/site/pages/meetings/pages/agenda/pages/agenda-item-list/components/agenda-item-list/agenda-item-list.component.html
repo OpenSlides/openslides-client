@@ -6,11 +6,13 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Agenda' | translate }}</h2>
+        <h1 class="mock-h2" translate>Agenda</h1>
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="agendaMenu" (click)="updateForwardingMeetings()">
+            <mat-icon>more_vert</mat-icon>
+        </button>
     </ng-container>
 
     <!-- Multiselect info -->
@@ -158,15 +160,10 @@
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
-            <!-- CSV export -->
-            <button *osPerms="permission.agendaItemCanManage" mat-menu-item (click)="csvExportItemList()">
+            <!-- PDF/CSV export -->
+            <button mat-menu-item (click)="exportAgendaItems()">
                 <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as CSV' | translate }}</span>
-            </button>
-            <!-- PDF export -->
-            <button mat-menu-item (click)="onDownloadPdf()">
-                <mat-icon>archive</mat-icon>
-                <span>{{ 'Export as PDF' | translate }}</span>
+                <span>{{ 'Export' | translate }}</span>
             </button>
             <!-- Import -->
             <button
@@ -252,11 +249,26 @@
                     <span>{{ 'Set hidden' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
+                <!-- PDF/CSV export -->
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAgendaItems()">
+                    <mat-icon>archive</mat-icon>
+                    <span>{{ 'Export' | translate }}</span>
+                </button>
                 <!-- Duplicate items -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="duplicateMultipleTopics(selectedRows)">
                     <mat-icon>file_copy</mat-icon>
                     <span>{{ 'Duplicate' | translate }}</span>
                 </button>
+                @if (canForward && isAdmin) {
+                    <button
+                        mat-menu-item
+                        [disabled]="!selectedRows.length"
+                        (click)="forwardAgendaItemsToMeetings(selectedRows)"
+                    >
+                        <mat-icon>forward</mat-icon>
+                        <span>{{ 'Copy to' | translate }} ...</span>
+                    </button>
+                }
                 <!-- Delete selected -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="removeSelected()">
                     <mat-icon>remove</mat-icon>
@@ -294,6 +306,12 @@
             <button mat-menu-item (click)="onPlusButton(item.id)">
                 <mat-icon>add_circle</mat-icon>
                 <span>{{ 'Create subitem' | translate }}</span>
+            </button>
+
+            <!-- PDF/CSV Export -->
+            <button mat-menu-item (click)="exportAgendaItem(item.id)">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export' | translate }}</span>
             </button>
 
             <!-- Duplicate button -->

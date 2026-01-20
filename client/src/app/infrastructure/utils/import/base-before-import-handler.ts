@@ -14,7 +14,8 @@ export interface BeforeImportHandler<ToCreate = any, ToImport = any> extends Sid
 
 export abstract class BaseBeforeImportHandler<ToCreate = any, ToImport = any>
     extends BaseSideImportHandler<ToCreate, ToImport>
-    implements BeforeImportHandler<ToCreate, ToImport> {
+    implements BeforeImportHandler<ToCreate, ToImport>
+{
     public readonly name = BEFORE_IMPORT_HANDLER_NAME;
 
     public constructor(config: BaseSideImportHandlerConfig<ToCreate, ToImport>) {

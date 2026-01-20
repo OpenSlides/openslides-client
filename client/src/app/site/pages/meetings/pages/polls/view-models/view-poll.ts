@@ -26,7 +26,8 @@ import { SlideOptions } from '../../../view-models/slide-options';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
-    implements DetailNavigable, PollData {
+    implements DetailNavigable, PollData
+{
     private _hasVoted: boolean | undefined;
 
     public get poll(): Poll {
@@ -138,13 +139,13 @@ export class ViewPoll<C extends PollContentObject = any>
         const slideOptions: SlideOptions =
             this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
                 ? [
-                        {
-                            key: `single_votes`,
-                            displayName: _(`Which visualization?`),
-                            default: false,
-                            choices
-                        }
-                    ]
+                      {
+                          key: `single_votes`,
+                          displayName: _(`Which visualization?`),
+                          default: !!this.live_voting_enabled,
+                          choices
+                      }
+                  ]
                 : [];
         return {
             content_object_id: this.fqid,
@@ -168,6 +169,4 @@ interface IPollRelations<C extends PollContentObject = any> {
     global_option: ViewOption;
 }
 export interface ViewPoll<C extends PollContentObject = any>
-    extends HasMeeting,
-    ViewModelRelations<IPollRelations<C>>,
-    Poll {}
+    extends HasMeeting, ViewModelRelations<IPollRelations<C>>, Poll {}

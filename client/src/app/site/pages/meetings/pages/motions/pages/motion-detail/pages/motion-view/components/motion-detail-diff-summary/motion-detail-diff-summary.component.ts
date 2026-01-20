@@ -1,9 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { TooltipPosition } from '@angular/material/tooltip';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
 
@@ -45,6 +48,24 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
 
     @Input()
     public elContainer: any;
+
+    private getAmendment(change: ViewUnifiedChange): ViewMotion {
+        const id = +change.getChangeId().split(`-`)[1];
+        return this.motionRepo.getViewModel(id);
+    }
+
+    public originMeetingName(change: ViewUnifiedChange): string {
+        return this.getAmendment(change).all_origins[0].meeting.name;
+    }
+
+    public isAmendmentMarkedForwarded(change: ViewUnifiedChange): boolean {
+        return this.getAmendment(change).isForwardedAmendment;
+    }
+
+    public position = new FormControl(`above` as TooltipPosition);
+
+    @Input()
+    public lastLineNr: number;
 
     /**
      * If only one line is affected, the line number is returned; otherwise, a string like [line] "1 - 5"
@@ -95,6 +116,8 @@ export class MotionDetailDiffSummaryComponent extends BaseMeetingComponent imple
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
         target.scrollIntoView({ behavior: `smooth`, block: `center` });
     }
+
+    protected motionRepo = inject(MotionControllerService);
 
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {
         $event.preventDefault();

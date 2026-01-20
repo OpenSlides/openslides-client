@@ -8,9 +8,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>
-            {{ 'Accounts' | translate }}
-        </h2>
+        <h1 class="mock-h2" translate>Accounts</h1>
     </div>
 
     <!-- Menu -->
@@ -80,6 +78,11 @@
                     }
                     @if (user.member_number) {
                         &middot; {{ user.member_number }}
+                    }
+                    @if (user.home_committee) {
+                        &middot; {{ user.home_committee.getTitle() }}
+                    } @else if (user.external) {
+                        &middot; {{ 'external' | translate }}
                     }
                 </div>
             </div>
@@ -205,6 +208,14 @@
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
                     <mat-icon class="red-warning-text">do_not_disturb_on</mat-icon>
                     <span>{{ 'Enable/disable accounts' | translate }} ...</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignHomeCommitteeToUsers()">
+                    <mat-icon>home_work</mat-icon>
+                    <span>{{ 'Set/remove home committee' | translate }} ...</span>
+                </button>
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeGuest()">
+                    <mat-icon>outbound</mat-icon>
+                    <span>{{ 'Set external' | translate }} ...</span>
                 </button>
                 <button
                     *osOmlPerms="OML.can_manage_users"

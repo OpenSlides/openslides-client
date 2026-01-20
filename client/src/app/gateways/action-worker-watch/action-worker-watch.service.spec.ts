@@ -113,7 +113,9 @@ function getUpdatedActionWorkerData(
 
 class MockWaitForActionDialogService {
     public closingPromptOpenFor: (Partial<ActionWorker> & { closed: number })[] = [];
-    public currentDialogs = new BehaviorSubject<Record<number, { reason: WaitForActionReason; data: WaitForActionData }>>({});
+    public currentDialogs = new BehaviorSubject<
+        Record<number, { reason: WaitForActionReason; data: WaitForActionData }>
+    >({});
 
     public constructor() {}
 

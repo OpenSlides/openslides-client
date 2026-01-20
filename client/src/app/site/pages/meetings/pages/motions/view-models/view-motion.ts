@@ -1,4 +1,5 @@
 import { _ } from '@ngx-translate/core';
+import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
@@ -15,7 +16,6 @@ import { BaseProjectableViewModel } from '../../../view-models/base-projectable-
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeeting } from '../../../view-models/view-meeting';
-import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
@@ -32,6 +32,7 @@ import { HasPersonalNote } from '../modules/personal-notes/view-models/has-perso
 import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
 import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
 import { ViewMotionSubmitter } from '../modules/submitters';
+import { ViewMotionSupporter } from '../modules/supporters/view-models/view-motion-supporter';
 import { HasTags } from '../modules/tags/view-models/has-tags';
 import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
 
@@ -69,6 +70,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get workflow(): ViewMotionWorkflow | null {
         return this.state?.workflow || null;
+    }
+
+    public get isForwardedAmendment(): boolean {
+        return this.marked_forwarded;
     }
 
     public get submittersAsUsers(): ViewUser[] {
@@ -233,12 +238,13 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
-    public get supporters(): ViewUser[] {
-        return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
+    // TODO: replace this with a supporterUsers function, because the name doesn't fit the new schema
+    public get supporterUsers(): ViewUser[] {
+        return this.supporters?.flatMap(sup => sup.meeting_user?.user) ?? [];
     }
 
-    public get supporter_ids(): number[] {
-        return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
+    public get supporter_user_ids(): number[] {
+        return this.supporters?.flatMap(sup => sup.meeting_user?.user_id) ?? [];
     }
 
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
@@ -314,7 +320,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return !!(this.supporter_meeting_users && this.supporter_meeting_users.length > 0);
+        return !!(this.supporters && this.supporters.length > 0);
     }
 
     public hasAttachments(): boolean {
@@ -403,20 +409,23 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
-    supporter_meeting_users: ViewMeetingUser[];
+    supporters: ViewMotionSupporter[];
     editors: ViewMotionEditor[];
     working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     change_recommendations: ViewMotionChangeRecommendation[];
     comments: ViewMotionComment[];
+    marked_forwarded: boolean;
 }
 
 export interface ViewMotion
-    extends Motion,
-    ViewModelRelations<IMotionRelations>,
-    HasMeeting,
-    HasAttachmentMeetingMediafiles,
-    HasPersonalNote,
-    HasTags,
-    HasAgendaItem,
-    HasListOfSpeakers,
-    HasReferencedMotionsInExtension {}
+    extends
+        Motion,
+        ViewModelRelations<IMotionRelations>,
+        HasMeeting,
+        HasAttachmentMeetingMediafiles,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasHistoryEntries,
+        HasReferencedMotionsInExtension {}

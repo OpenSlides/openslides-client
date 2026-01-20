@@ -5,6 +5,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -14,6 +15,9 @@ import {
     ParticipantControllerService
 } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { getCommitteeListMinimalSubscriptionConfig } from 'src/app/site/pages/organization/pages/committees/committees.subscription';
+import { CommitteeSortService } from 'src/app/site/pages/organization/pages/committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
+import { CommitteeControllerService } from 'src/app/site/pages/organization/pages/committees/services/committee-controller.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserService } from 'src/app/site/services/user.service';
@@ -28,7 +32,6 @@ import { areGroupsDiminished } from '../../../participant-list/components/partic
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
-
 @Component({
     selector: `os-participant-detail-edit`,
     templateUrl: `./participant-detail-edit.component.html`,
@@ -41,6 +44,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
     private userDetailView;
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+    public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
     public readonly additionalFormControls = {
         structure_level_ids: [``],
@@ -52,7 +56,9 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
         is_present: [``],
-        locked_out: [``]
+        locked_out: [``],
+        external: [``],
+        home_committee_id: [``]
     };
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
@@ -165,6 +171,12 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         return notChanged && !isLockedOut && (this.checkSelectedGroupsCanManage() || !other);
     }
 
+    public get canManageHomeCommittee(): boolean {
+        return this.user?.home_committee_id
+            ? this.operator.hasCommitteePermissions(this.user?.home_committee_id, CML.can_manage)
+            : this.operator.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     private _userId: Id | undefined = undefined; // Not initialized
     private _userFormLoaded = false;
     private _isVoteWeightEnabled = false;
@@ -178,6 +190,8 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
         public sortService: ParticipantListSortService,
+        public readonly committeeController: CommitteeControllerService,
+        public readonly committeeSortService: CommitteeSortService,
         private operator: OperatorService,
         private promptService: PromptService,
         private groupRepo: GroupControllerService,
@@ -308,8 +322,8 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
                     : null,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                            .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                            .filter(id => !!id)
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
                     : []
             };
             if (payload.member_number === ``) {
@@ -349,6 +363,14 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
 
     public onCancel(): void {
         this.router.navigate([`../`], { relativeTo: this.route });
+    }
+
+    public getTransformSetHomeCommitteeFn(): (value?: string[]) => Id {
+        return () => (this.user ? this.user.home_committee_id : null);
+    }
+
+    public getTransformPropagateFn(): (value?: Id[]) => any {
+        return value => value;
     }
 
     private checkForGroups(user: any): void {

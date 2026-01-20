@@ -1,10 +1,10 @@
 <!-- Moderator Note-->
 @if (listOfSpeakers && canSeeModerationNote && (canManageModerationNote || (moderatorNotes | async))) {
     <mat-card class="spacer-bottom-60 os-card">
-        <mat-card-content>
+        <mat-card-content style="overflow: None">
             <!-- Title edit/save/cancle-->
             <div class="action-title">
-                <p class="subtitle-text" translate>Moderation note</p>
+                <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text" translate>Moderation note</h2>
                 <div class="buttons">
                     @if (canManageModerationNote) {
                         @if (isEditing) {

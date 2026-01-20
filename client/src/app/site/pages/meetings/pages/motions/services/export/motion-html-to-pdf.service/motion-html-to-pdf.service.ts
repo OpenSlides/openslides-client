@@ -296,7 +296,8 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         const elementCopy = element.cloneNode(true) as Element;
         const children = elementCopy.childNodes;
 
-        // using for-of did not work as expected
+        // using for-of does not work as expected
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < children.length; i++) {
             if (this.getLineNumber(children[i] as Element)) {
                 children[i].remove();

@@ -1,6 +1,7 @@
 @use 'src/assets/styles/tables.scss';
 @use 'src/assets/styles/variables.scss';
 @use 'src/app/site/pages/meetings/pages/motions/styles/motion-list-styles.scss';
+@use 'src/assets/styles/themes/typography.scss';
 
 // Determine the distance between the top edge to the start of the table content
 $text-margin-top: 10px;
@@ -16,6 +17,13 @@ $text-margin-top: 10px;
 
 .column-title {
     margin-top: $text-margin-top;
+    & h1 {
+        font-family: typography.$font-family;
+        padding-bottom: 0%;
+        font-weight: 500;
+        font-size: 16px;
+        color: var(--mat-sidenav-content-text-color, var(--mat-sys-on-background));
+    }
 }
 
 .column-state {
@@ -99,4 +107,8 @@ os-grid-layout {
             }
         }
     }
+}
+
+.non-overflowing-chip {
+    max-width: calc(100% - 20px);
 }

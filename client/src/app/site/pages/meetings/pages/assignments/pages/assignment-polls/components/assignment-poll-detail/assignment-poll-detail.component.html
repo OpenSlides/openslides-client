@@ -2,11 +2,11 @@
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">
             @if (!!poll) {
-                <h2>{{ poll.title }}</h2>
+                <h1 class="mock-h2">{{ poll.title }}</h1>
             }
         </div>
 
-        <ng-container *osPerms="permission.assignmentCanManage" class="menu-slot">
+        <ng-container *osPerms="permission.assignmentCanManagePolls" class="menu-slot">
             <button mat-icon-button type="button" [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -40,7 +40,7 @@
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
                     @if (poll.isStarted) {
-                        <os-poll-progress [poll]="poll"></os-poll-progress>
+                        <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
                         <div *osPerms="permission.pollCanManage" class="poll-content">
                             <div class="user-subtitle">
                                 {{ 'Present entitled users' | translate }}:
@@ -103,12 +103,15 @@
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
     <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="poll" />
-    <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="openDialog(poll)">
+    <button *osPerms="permission.assignmentCanManagePolls" mat-menu-item (click)="openDialog(poll)">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="permission.assignmentCanManage; and: poll && poll.type === 'named' && !poll.is_pseudoanonymized"
+        *osPerms="
+            permission.assignmentCanManagePolls;
+            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+        "
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >
@@ -123,7 +126,7 @@
         <span>{{ 'Export' | translate }}</span>
     </button>
 
-    <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="deletePoll()">
+    <button *osPerms="permission.assignmentCanManagePolls" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>
     </button>

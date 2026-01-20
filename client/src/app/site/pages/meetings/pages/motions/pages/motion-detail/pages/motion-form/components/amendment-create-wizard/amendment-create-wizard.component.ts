@@ -149,15 +149,22 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     public checkCanSave(): void {
         this.stepper.next();
-        this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
-            if (
-                this.contentForm.value.selectedParagraphs.find((para: ParagraphToChoose) => para.paragraphNo === paraNo)
-            ) {
-                this.contentForm.controls[`text_` + paraNo].valueChanges.subscribe(value => {
-                    this.canSave = value === this.paragraphs[paraNo].html ? false : true;
-                });
-            }
-        });
+    }
+
+    public changeStepper(index: number): void {
+        if (index === 1) {
+            this.paragraphs.forEach((_: ParagraphToChoose, paraNo: number) => {
+                if (
+                    this.contentForm.value.selectedParagraphs.find(
+                        (para: ParagraphToChoose) => para.paragraphNo === paraNo
+                    )
+                ) {
+                    this.contentForm.controls[`text_` + paraNo].valueChanges.subscribe(value => {
+                        this.canSave = value === this.paragraphs[paraNo].html ? false : true;
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -172,6 +179,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
                 amendmentParagraphs[paraNo] = this.contentForm.value[`text_` + paraNo];
             }
         });
+        const submitterMeetingUserId = this.operator.isInMeeting(this.activeMeetingId)
+            ? [this.operator.user.getMeetingUser(this.activeMeetingId)?.id]
+            : [];
         const motionCreate = {
             ...this.contentForm.value,
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
@@ -179,6 +189,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
+            submitter_meeting_user_ids: submitterMeetingUserId,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 

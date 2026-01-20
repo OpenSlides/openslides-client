@@ -8,14 +8,7 @@
     >
         <!-- Title -->
         <div class="title-slot">
-            <h2>
-                @if (!isCurrentListOfSpeakers) {
-                    <span>{{ 'List of speakers' | translate }}</span>
-                }
-                @if (isCurrentListOfSpeakers) {
-                    <span>{{ 'Current list of speakers' | translate }}</span>
-                }
-            </h2>
+            <h1 class="mock-h2" translate>List of speakers</h1>
         </div>
         <ng-container *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]" class="menu-slot">
             <button
@@ -52,7 +45,7 @@
             <mat-card class="spacer-bottom-60 os-card">
                 <mat-card-content>
                     <os-speaking-times
-                        [currentSpeakingTimes]="viewListOfSpeakers.structure_level_list_of_speakers_ids"
+                        [listOfSpeakers]="viewListOfSpeakers"
                         [showProjectionMenu]="true"
                     ></os-speaking-times>
                 </mat-card-content>

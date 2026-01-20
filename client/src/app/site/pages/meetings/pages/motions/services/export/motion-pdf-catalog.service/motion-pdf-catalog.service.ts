@@ -189,7 +189,9 @@ export class MotionPdfCatalogService {
 
             // only push this array if there is at least one entry
             if (uncatTocBody.length > 0) {
-                catTocBody.push(this.pdfService.getPageBreak());
+                if (catTocBody.length) {
+                    catTocBody.push(this.pdfService.getPageBreak());
+                }
                 catTocBody.push(
                     this.pdfService.createTocTableDef({ tocBody: uncatTocBody, style: StyleType.CATEGORY_SECTION })
                 );
@@ -267,7 +269,11 @@ export class MotionPdfCatalogService {
                 pageReference: `${motion.id}`,
                 style
             },
-            this.pdfService.createTocLineInline(motion.submitterNames.join(`, `)),
+            this.pdfService.createTocLineInline(
+                motion.submitterNames
+                    .map(submitter => (!submitter ? this.translate.instant(`Deleted user`) : submitter))
+                    .join(`, `)
+            ),
             this.pdfService.createTocLineInline(state, true)
         );
     }

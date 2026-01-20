@@ -2,25 +2,37 @@
 @use '@angular/material' as mat;
 @use '@material/typography' as mdc-typography;
 
-$font-family: OSFont, Fira Sans, Roboto, Arial, Helvetica, sans-serif;
+$font-family:
+    OSFont,
+    Fira Sans,
+    Roboto,
+    Arial,
+    Helvetica,
+    sans-serif;
 
-@function typography-config-level($mdc-level, $letter-spacing: normal, $font-size: null, $line-height: null, $font-weight: null) {
-  $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
+@function typography-config-level(
+    $mdc-level,
+    $letter-spacing: normal,
+    $font-size: null,
+    $line-height: null,
+    $font-weight: null
+) {
+    $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
 
-  @return mat.m2-define-typography-level(
-    $font-size: null-fallback($font-size, map.get($mdc-level-config, font-size)),
-    $line-height: null-fallback($line-height, map.get($mdc-level-config, line-height)),
-    $font-weight: null-fallback($font-weight, map.get($mdc-level-config, font-weight)),
-    $letter-spacing: null-fallback($letter-spacing, map.get($mdc-level-config, letter-spacing))
-  );
+    @return mat.m2-define-typography-level(
+        $font-size: null-fallback($font-size, map.get($mdc-level-config, font-size)),
+        $line-height: null-fallback($line-height, map.get($mdc-level-config, line-height)),
+        $font-weight: null-fallback($font-weight, map.get($mdc-level-config, font-weight)),
+        $letter-spacing: null-fallback($letter-spacing, map.get($mdc-level-config, letter-spacing))
+    );
 }
 
 @function null-fallback($value, $default-value) {
-  @if $value == null {
-    @return $default-value;
-  } @else {
-    @return $value;
-  }
+    @if $value == null {
+        @return $default-value;
+    } @else {
+        @return $value;
+    }
 }
 
 $default-typography: mat.m2-define-typography-config(

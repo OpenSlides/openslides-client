@@ -18,6 +18,4 @@ interface IAssignmentCandidateRelations {
     assignment: ViewAssignment;
 }
 export interface ViewAssignmentCandidate
-    extends AssignmentCandidate,
-    ViewModelRelations<IAssignmentCandidateRelations>,
-    HasMeeting {}
+    extends AssignmentCandidate, ViewModelRelations<IAssignmentCandidateRelations>, HasMeeting {}

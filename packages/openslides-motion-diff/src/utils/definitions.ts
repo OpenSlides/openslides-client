@@ -1,0 +1,3 @@
+export const ELEMENT_NODE = Node.ELEMENT_NODE;
+export const TEXT_NODE = Node.TEXT_NODE;
+export const DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;

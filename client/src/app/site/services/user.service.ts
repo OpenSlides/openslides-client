@@ -100,11 +100,7 @@ export class UserService {
                     hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
                 }
                 if (!hasPerms && toCompare.collection === UserScope.MEETING) {
-                    const committee_id = this.meetingRepo.getViewModel(toCompare.id)?.committee_id;
-                    hasPerms =
-                        hasPerms ||
-                        this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage) ||
-                        (committee_id && this.operator.hasCommitteePermissions(committee_id, CML.can_manage));
+                    hasPerms = hasPerms || this.operator.hasPermsInMeeting(toCompare.id, Permission.userCanManage);
                 }
                 return hasPerms;
             });

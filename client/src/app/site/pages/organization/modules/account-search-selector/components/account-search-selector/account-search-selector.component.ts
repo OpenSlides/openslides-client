@@ -3,7 +3,7 @@ import { NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged } from 'rxjs';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter';
@@ -38,6 +38,9 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         }
     }
 
+    @Input()
+    public committeeId: number = undefined;
+
     public readonly controlType = `account-search-selector`;
 
     public override readonly multiple = true;
@@ -55,7 +58,10 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     public override ngOnInit(): void {
         super.ngOnInit();
         this.userSortService.initSorting();
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+        if (
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
+            (this.committeeId && this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage))
+        ) {
             this.initItems();
         }
     }

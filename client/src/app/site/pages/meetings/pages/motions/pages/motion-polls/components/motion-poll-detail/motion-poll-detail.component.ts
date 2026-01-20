@@ -34,6 +34,10 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     public displayDelegation: boolean;
 
+    public get canManagePoll(): boolean {
+        return this.operator.hasPerms(Permission.motionCanManagePolls);
+    }
+
     public constructor(
         protected override translate: TranslateService,
         pollService: MotionPollService,

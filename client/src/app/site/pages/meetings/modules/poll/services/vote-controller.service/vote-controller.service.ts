@@ -25,12 +25,13 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         return new Observable<Record<Id, Id[]>>(subscriber => {
             const current = {};
             for (const poll of viewPolls) {
-                const subscription = !this.operator.isAnonymousLoggedIn
-                    ? this.repo.subscribeVoted(poll, [
-                            this.operator.user.id,
-                            ...(this.operator.user.vote_delegations_from_ids() || [])
-                        ])
-                    : null;
+                const subscription =
+                    !this.operator.isAnonymousLoggedIn && this.operator.user
+                        ? this.repo.subscribeVoted(poll, [
+                              this.operator.user.id,
+                              ...(this.operator.user.vote_delegations_from_ids() || [])
+                          ])
+                        : null;
 
                 if (!subscription) {
                     continue;

@@ -1,0 +1,112 @@
+<os-head-bar [nav]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h1 class="mock-h2" translate>Mandate check</h1>
+    </div>
+</os-head-bar>
+<div class="groups-grid" [formGroup]="form">
+    <mat-form-field>
+        <mat-label>{{ 'Group' | translate }}</mat-label>
+        <mat-select formControlName="groups" multiple>
+            @for (item of groups; track item.id) {
+                <mat-option [value]="item.id">{{ item.name }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</div>
+
+@for (entry of entries; track entry.id) {
+    <div class="border-grid">
+        <div>&nbsp;</div>
+        <mat-card appearance="outlined" class="margin-bottom-20">
+            <mat-card-content>
+                <div class="header-grid">
+                    <div class="text-large-bold color-black">{{ entry.name }}</div>
+                    <div>
+                        <button matIconButton (click)="toggle(entry.id)">
+                            @if (toggleMap.get(entry.id)) {
+                                <mat-icon>keyboard_arrow_up</mat-icon>
+                            } @else {
+                                <mat-icon>keyboard_arrow_down</mat-icon>
+                            }
+                        </button>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <div class="flex-container align-right foreground-active">
+                        <div class="text-medium-bold">{{ 'present' | translate }}</div>
+                        <div class="text-medium-bold">
+                            {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
+                        </div>
+                        <div class="text-medium">{{ 'of this' | translate }}</div>
+                    </div>
+                    <div class="center">
+                        <mat-progress-bar
+                            class="progressbar-colored"
+                            [bufferValue]="100"
+                            [mode]="'determinate'"
+                            [value]="entry.getPercent() * 100"
+                        ></mat-progress-bar>
+                    </div>
+                    <div class="flex-container align-left text">
+                        <div class="text-medium-bold">{{ 'total' | translate }}</div>
+                        <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
+                        <div class="text-medium">{{ 'of this' | translate }}</div>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <div class="flex-container align-right foreground-active">
+                        @for (gender of genders; track gender.id) {
+                            @if (entry.getTotalCount(gender.id)) {
+                                <div class="text-medium">
+                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    {{ entry.genderEntryMap.get(gender.id)?.present }}
+                                    {{
+                                        displayPercent(
+                                            entry.genderEntryMap.get(gender.id)?.present / entry.presentUserIds.length
+                                        )
+                                    }}
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div>&nbsp;</div>
+                    <div class="flex-container align-left text">
+                        @for (gender of genders; track gender.id) {
+                            @if (entry.getTotalCount(gender.id)) {
+                                <div class="text-medium">
+                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    {{ entry.getTotalCount(gender.id) }}
+                                    {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </mat-card-content>
+            @if (toggleMap.get(entry.id)) {
+                <mat-card-footer>
+                    <div class="footer-grid">
+                        <div>
+                            <div class="bold margin-left-medium small-margin-top text">
+                                {{ 'Present' | translate }}
+                            </div>
+                            @for (userId of entry.presentUserIds; track userId) {
+                                <div class="margin-left-large text">{{ getName(userId) }}</div>
+                            }
+                        </div>
+                        <div>
+                            <div class="bold margin-left-medium small-margin-top text">
+                                {{ 'Absent' | translate }}
+                            </div>
+                            @for (userId of entry.absentUserIds; track userId) {
+                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
+                            }
+                        </div>
+                    </div>
+                </mat-card-footer>
+            }
+        </mat-card>
+        <div>&nbsp;</div>
+    </div>
+}

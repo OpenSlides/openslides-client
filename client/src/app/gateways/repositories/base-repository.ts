@@ -159,10 +159,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         lesser: UpdatePipelineAction[];
         active: boolean;
     } = {
-            active: false,
-            priority: [],
-            lesser: []
-        };
+        active: false,
+        priority: [],
+        lesser: []
+    };
 
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
@@ -186,7 +186,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
 
-        this.languageCollator = getIntlCollatorForLang(this.translate.currentLang);
+        this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang());
     }
 
     public onAfterAppsLoaded(): void {
@@ -568,7 +568,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                         (currentType === iType || iType === PipelineActionType.Resort) &&
                         (!this.updateActionPipeline[priority][index].key ||
                             this.updateActionPipeline[priority][index].key ===
-                            this.updateActionPipeline[priority][i].key)
+                                this.updateActionPipeline[priority][i].key)
                     ) {
                         if (this.updateActionPipeline[priority][i].defer) {
                             this.updateActionPipeline[priority][i].defer.resolve();
@@ -661,9 +661,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     if (
                         (this.sortListServices[key]
                             ? await this.sortListServices[key].compare(
-                                newViewModels[j],
-                                this.sortedViewModelLists[key][i]
-                            )
+                                  newViewModels[j],
+                                  this.sortedViewModelLists[key][i]
+                              )
                             : newViewModels[j].id - this.sortedViewModelLists[key][i].id) < 0
                     ) {
                         this.sortedViewModelLists[key].splice(i, 0, newViewModels[j]);

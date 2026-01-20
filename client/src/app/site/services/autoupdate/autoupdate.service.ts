@@ -33,11 +33,14 @@ interface AutoupdateConnectConfig {
     compress?: number;
 }
 
-type AutoupdateSubscriptionMap = Record<number, {
-    modelRequest: ModelRequestObject;
-    modelSubscription: ModelSubscription;
-    description: string;
-}>;
+type AutoupdateSubscriptionMap = Record<
+    number,
+    {
+        modelRequest: ModelRequestObject;
+        modelSubscription: ModelSubscription;
+        description: string;
+    }
+>;
 
 interface AutoupdateIncomingMessage {
     autoupdateData: AutoupdateModelData;
@@ -247,7 +250,12 @@ export class AutoupdateService {
 
     private async handleAutoupdate({ autoupdateData, idDescriptionMap }: AutoupdateIncomingMessage): Promise<void> {
         const requestIds = Object.keys(idDescriptionMap).map(id => +id);
-        if (!this._activeRequestObjects || !requestIds.some(id => this._activeRequestObjects[id])) {
+        const dataKeys = Object.keys(autoupdateData);
+        if (
+            !this._activeRequestObjects ||
+            !requestIds.some(id => this._activeRequestObjects[id]) ||
+            dataKeys.length === 0
+        ) {
             return;
         }
 
@@ -259,12 +267,15 @@ export class AutoupdateService {
         );
 
         const fullListUpdateCollections: Record<string, Ids> = {};
-        const exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }> = {};
+        const exclusiveListUpdateCollections: Record<
+            string,
+            { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }
+        > = {};
 
         for (const id of requestIds) {
             const modelRequest = this._activeRequestObjects[id]?.modelRequest;
             if (modelRequest) {
-                for (const key of Object.keys(autoupdateData)) {
+                for (const key of dataKeys) {
                     const data = key.split(`/`);
                     const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
                     if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
@@ -295,7 +306,10 @@ export class AutoupdateService {
     private async prepareCollectionUpdates(
         modelData: ModelData,
         fullListUpdateCollections: Record<string, Ids>,
-        exclusiveListUpdateCollections: Record<string, { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }>,
+        exclusiveListUpdateCollections: Record<
+            string,
+            { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id }
+        >,
         requestIds: number[]
     ): Promise<void> {
         const unlock = await this._mutex.lock();

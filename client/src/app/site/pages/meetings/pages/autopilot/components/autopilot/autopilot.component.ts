@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -44,9 +45,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public get showPollCollection(): boolean {
-        return (
-            this._currentProjection?.type !== `agenda_item_list` && this._currentProjection?.type !== `wifi_access_data`
-        );
+        return this._currentProjection?.type !== `wifi_access_data`;
     }
 
     public get projectorTitle(): string {
@@ -94,7 +93,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public get lowerProjectionTarget(): `_blank` | `_self` {
-        if (this.projectedViewModel?.COLLECTION === Mediafile.COLLECTION) {
+        if ([Mediafile.COLLECTION, MeetingMediafile.COLLECTION].includes(this.projectedViewModel?.COLLECTION)) {
             return `_blank`;
         } else {
             return `_self`;
@@ -103,6 +102,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public get numDisabledElements(): number {
         return Object.values(this.disabledContentElements).filter(v => v).length;
+    }
+
+    public get isAgendaListProjection(): boolean {
+        return this._currentProjection?.type === `agenda_item_list`;
     }
 
     public structureLevelCountdownEnabled = false;
@@ -138,10 +141,15 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                             ? currentProjections[0]
                             : null;
                     this.projectedViewModel = this._currentProjection?.content_object || null;
+                    if (this.projectedViewModel?.collection === `list_of_speakers`) {
+                        this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
+                    }
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
-                this.listOfSpeakers = clos;
+                if (this.projectedViewModel?.collection !== `list_of_speakers`) {
+                    this.listOfSpeakers = clos;
+                }
             }),
             this.meetingSettingsService
                 .get(`list_of_speakers_default_structure_level_time`)

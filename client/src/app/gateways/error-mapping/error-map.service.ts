@@ -51,8 +51,8 @@ export class ErrorMapService {
         if (/http/.test(urlFragments[0])) {
             urlFragments = urlFragments.slice(2);
         }
-        for (let i = 0; i < urlFragments.length; i++) {
-            let map = UrlFragmentToHttpErrorMap.get(urlFragments[i]);
+        for (const fragments of urlFragments) {
+            let map = UrlFragmentToHttpErrorMap.get(fragments);
             if (map) {
                 if (typeof map === `function`) {
                     map = map(options?.data);

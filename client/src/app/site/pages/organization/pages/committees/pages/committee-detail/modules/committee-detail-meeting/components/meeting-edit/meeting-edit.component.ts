@@ -267,7 +267,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
 
         if (this.isJitsiManipulationAllowed) {
-            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^\/]$/)];
+            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }
@@ -281,7 +281,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        if (!this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && !this.isCreateView) {
+        const canSkip =
+            this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId);
+        if (!canSkip && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
@@ -290,7 +292,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 }
             });
         }
-        if (this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
+        if (canSkip && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
@@ -351,7 +353,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private async doUpdateMeeting(): Promise<void> {
         const options =
-            this.operator.canSkipPermissionCheck && !this.isMeetingAdmin && this.editMeeting?.locked_from_inside
+            (this.operator.canSkipPermissionCheck || this.operator.hasCommitteeManagementRights(this.committeeId)) &&
+            !this.isMeetingAdmin &&
+            this.editMeeting?.locked_from_inside
                 ? {}
                 : this.getUsersToUpdateForMeetingObject();
         await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {

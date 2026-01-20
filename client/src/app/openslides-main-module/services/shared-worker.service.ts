@@ -302,6 +302,6 @@ export class SharedWorkerService {
             throw new Error(`Timeout while waiting for message.`);
         }
 
-        return await promise as MessageEvent;
+        return (await promise) as MessageEvent;
     }
 }

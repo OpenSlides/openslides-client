@@ -4,6 +4,7 @@
         <os-motion-detail-diff-summary
             [changes]="changes"
             [elContainer]="nativeElement"
+            [lastLineNr]="lastLineNr"
             [motion]="motion"
             [scrollToChange]="scrollToChange"
         ></os-motion-detail-diff-summary>
@@ -47,7 +48,7 @@
                 </div>
             </div>
         }
-        @for (change of allTextChangingObjects; track change.getChangeId(); let i = $index) {
+        @for (change of workingTextChangingObjects; track change.getChangeId(); let i = $index) {
             <div>
                 <div
                     class="motion-text"
@@ -57,14 +58,14 @@
                 >
                     <os-motion-detail-original-change-recommendations
                         [changeRecommendations]="[]"
-                        [html]="getTextBetweenChanges(allTextChangingObjects[i - 1], change)"
+                        [html]="getTextBetweenChanges(workingTextChangingObjects[i - 1], change)"
                         [motionId]="motion.id"
                         (createChangeRecommendation)="onCreateChangeRecommendation($event)"
                     ></os-motion-detail-original-change-recommendations>
                 </div>
                 <div
                     class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
-                    [class.collides]="hasCollissions(change, allTextChangingObjects)"
+                    [class.collides]="hasCollissions(change, workingTextChangingObjects)"
                 >
                     <div class="action-row">
                         <button
@@ -89,7 +90,7 @@
                     </div>
                     <div class="status-row">
                         <div class="collission-hint">
-                            @if (hasCollissions(change, allTextChangingObjects)) {
+                            @if (hasCollissions(change, workingTextChangingObjects)) {
                                 <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
                                     warning
                                 </mat-icon>
@@ -108,11 +109,37 @@
                         @if (isAmendment(change) && showAllAmendments) {
                             <div class="status-content">
                                 <i class="grey">{{ change.amendment.number }}</i>
+                                @if (
+                                    change.amendment.isForwardedAmendment && originName(change.amendment) !== undefined
+                                ) {
+                                    <mat-icon
+                                        class="pointer-icon"
+                                        color="primary"
+                                        inline
+                                        [matTooltip]="originName(change.amendment)"
+                                        [matTooltipPosition]="position.value!"
+                                    >
+                                        info
+                                    </mat-icon>
+                                }
                                 <i class="grey">&nbsp;- {{ change.amendment.state!.name }}</i>
-                                <i class="grey">&nbsp;- {{ change.amendment.submitterNames }}</i>
+                                <i class="grey">
+                                    &nbsp;- {{ getSubmitterListWithDeletedUsers(change.amendment.submitterNames) }}
+                                </i>
                             </div>
                         }
                     </div>
+
+                    @if (isAmendment(change) && showAllAmendments && originMotionDisplay) {
+                        @for (origin of change.amendment.all_origins; track origin.id) {
+                            @if (originMotionsLoaded.includes(origin.lead_motion_id)) {
+                                <div class="amendment-origin">
+                                    {{ origin.meeting.name }}:
+                                    {{ origin.state }}
+                                </div>
+                            }
+                        }
+                    }
                     <div
                         class="motion-text motion-text-diff"
                         [attr.data-change-id]="change.getChangeId()"
@@ -148,6 +175,47 @@
             ></os-motion-detail-original-change-recommendations>
         </div>
     </div>
+    @if (brokenTextChangingObjects.length > 0) {
+        <div class="broken-motion-text">
+            <div>
+                <div class="broken-box broken-box-title">
+                    <div class="motion-text motion-text-diff">
+                        <span>
+                            {{ 'Inconsistent data.' | translate }}
+                        </span>
+                        <span>
+                            {{ this.brokenTextChangingObjects.length }}
+                        </span>
+                        <span>
+                            {{ 'change recommendation(s) refer to a nonexistent line number.' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @for (change of brokenTextChangingObjects; track change.getChangeId(); let i = $index) {
+                <div>
+                    <div class="broken-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border">
+                        <div class="broken-action-row">
+                            <button
+                                *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode"
+                                mat-icon-button
+                                type="button"
+                                [matMenuTriggerData]="{ change: change }"
+                                [matMenuTriggerFor]="brokenChangeRecommendation"
+                            >
+                                <mat-icon>more_horiz</mat-icon>
+                            </button>
+                        </div>
+                        <div class="broken-motion-text">
+                            <div>
+                                {{ 'Inconsistent data. Please delete this change recommendation.' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 
     <mat-menu #amendmentMenu="matMenu">
         <ng-template let-change="change" matMenuContent>
@@ -231,6 +299,15 @@
                     <span>{{ 'Edit' | translate }}</span>
                 </button>
             }
+        </ng-template>
+    </mat-menu>
+
+    <mat-menu #brokenChangeRecommendation="matMenu">
+        <ng-template let-change="change" matMenuContent>
+            <button mat-menu-item type="button" (click)="deleteChangeRecommendation(change, $event)">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
         </ng-template>
     </mat-menu>
 </div>

@@ -1,19 +1,30 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Secret voting can not be guaranteed' | translate }}</span>
+    <span>{{ 'Note on secret voting' | translate }}</span>
 </h1>
 
 <mat-dialog-content>
-    <span>
+    <p>
         {{
-            'During non-nominal voting OpenSlides does NOT store the individual user ID of the voter. This in no way means
-        that a non-nominal vote is completely anonymous and secure. The votes cannot track their individual votes after
-        the data has been submitted. The validity of the data cannot always be guaranteed.' | translate
+            'During non-nominal voting, OpenSlides does NOT store the individual user IDs of voters in connection with the votes cast. Once the data has been transmitted, voters can no longer track or check their own votes.'
+                | translate
         }}
-    </span>
+    </p>
+    <p>
+        {{
+            'When hosted by Intevation GmbH, secret, legally compliant voting is ensured by organizational measures (see legal opinion).'
+                | translate
+        }}
+    </p>
+    <p>
+        {{
+            'When self-hosted, OpenSlides cannot guarantee that the requirements for legally compliant, secret voting are met. Responsibility for this lies with the server operator.'
+                | translate
+        }}
+    </p>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-button type="button" [mat-dialog-close]="null">
-        <span>{{ 'I know the risk' | translate }}</span>
+    <button mat-button type="button" [matDialogClose]="true">
+        {{ 'I know the risk' | translate }}
     </button>
 </mat-dialog-actions>

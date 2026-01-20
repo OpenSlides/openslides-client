@@ -44,7 +44,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
         is_present: [``],
-        locked_out: [``]
+        locked_out: [``],
+        home_committee_id: [``],
+        external: [``]
     };
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;

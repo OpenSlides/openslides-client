@@ -18,6 +18,4 @@ interface IMotionCommentSectionRelations {
     write_groups: ViewGroup[];
 }
 export interface ViewMotionCommentSection
-    extends MotionCommentSection,
-    ViewModelRelations<IMotionCommentSectionRelations>,
-    HasMeeting {}
+    extends MotionCommentSection, ViewModelRelations<IMotionCommentSectionRelations>, HasMeeting {}

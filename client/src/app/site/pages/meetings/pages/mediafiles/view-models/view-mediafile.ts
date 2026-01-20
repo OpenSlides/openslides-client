@@ -192,8 +192,9 @@ interface IMediafileRelations {
     published_to_meetings_in_organization: ViewOrganization;
 }
 export interface ViewMediafile
-    extends Mediafile,
-    ViewModelRelations<IMediafileRelations>,
-    /*  Searchable, */ HasMeeting,
-    HasListOfSpeakers,
-    HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}
+    extends
+        Mediafile,
+        ViewModelRelations<IMediafileRelations>,
+        /*  Searchable, */ HasMeeting,
+        HasListOfSpeakers,
+        HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

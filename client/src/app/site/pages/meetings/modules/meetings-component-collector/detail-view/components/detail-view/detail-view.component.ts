@@ -7,9 +7,9 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { _ } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { filter, firstValueFrom, Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -72,6 +72,15 @@ export class DetailViewComponent implements OnInit {
                 }
             });
             this.updateSubscription(ROUTE_SUBSCRIPTION_NAME, subscription);
+
+            firstValueFrom(this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd))).then(
+                async () => {
+                    const params = await firstValueFrom(this.route.params);
+                    if (this._sequential_number === +params[`id`]) {
+                        this.parseSequentialNumber(params);
+                    }
+                }
+            );
         });
     }
 

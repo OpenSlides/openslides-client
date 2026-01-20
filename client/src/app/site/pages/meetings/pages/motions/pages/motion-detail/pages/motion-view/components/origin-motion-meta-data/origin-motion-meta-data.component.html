@@ -45,10 +45,10 @@
                 extensionLabel="{{ 'Extension' | translate }}"
                 title="{{ 'State' | translate }}"
                 [canBeEdited]="false"
-                [chipValue]="stateLabel | translate"
+                [chipValue]="stateLabel"
                 [classes]="motion.stateCssColor"
                 [hasExtension]="!!motionState && motionState.show_state_extension_field"
-                [inputValue]="motion.state_extension"
+                [searchFieldInput]="motion.state_extension"
             ></os-motion-extension-field>
         </div>
     }
@@ -59,11 +59,11 @@
             <os-motion-extension-field
                 extensionLabel="{{ 'Extension' | translate }}"
                 [canBeEdited]="false"
-                [chipValue]="recommendationLabel | translate"
+                [chipValue]="recommendationLabel"
                 [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-                [inputValue]="motion?.recommendation_extension"
                 [internal]="motion?.state?.is_internal"
                 [listValueTransformFns]="[motionTransformFn]"
+                [searchFieldInput]="motion?.recommendation_extension"
                 [searchLists]="searchLists"
                 [title]="motion.meeting?.motions_recommendations_by"
                 (succeeded)="setRecommendationExtension($event)"

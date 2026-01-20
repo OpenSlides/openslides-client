@@ -66,24 +66,25 @@ describe(`ServerTimeService`, () => {
     });
 
     xit(`should retry`, async () => {
-        fetchMock.get(`/assets/time.txt`, {
-            headers: {
-                Date: `invalid`
+        fetchMock.get(
+            `/assets/time.txt`,
+            {
+                headers: {
+                    Date: `invalid`
+                }
+            },
+            {
+                name: `time.txt`
             }
-        }, {
-            name: `time.txt`
-        });
+        );
 
         jasmine.clock().tick(300);
         const updatedPromise = firstValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)));
-        fetchMock.modifyRoute(
-            `time.txt`,
-            {
-                headers: {
-                    Date: new Date().toUTCString()
-                }
+        fetchMock.modifyRoute(`time.txt`, {
+            headers: {
+                Date: new Date().toUTCString()
             }
-        );
+        });
         await expectAsync(updatedPromise).toBeResolved();
         expect(console.error).toHaveBeenCalled();
     });

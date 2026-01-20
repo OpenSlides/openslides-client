@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Files' | translate }}</h2>
+        <h1 class="mock-h2" translate>Files</h1>
     </div>
 
     <!-- Menu -->
@@ -17,6 +17,7 @@
                 mat-icon-button
                 type="button"
                 [matTooltip]="'New folder' | translate"
+                [matTooltipShowDelay]="500"
                 (click)="createNewFolder(newFolderDialog)"
             >
                 <mat-icon>create_new_folder</mat-icon>
@@ -188,7 +189,8 @@
             }
 
             <mat-form-field>
-                <mat-label>{{ 'Access groups' | translate }}</mat-label>
+                <mat-label>{{ 'Restrictions' | translate }}</mat-label>
+                <mat-hint>{{ 'If empty, everyone can access.' | translate }}</mat-hint>
                 <os-list-search-selector
                     formControlName="access_group_ids"
                     [inputListValues]="groupsBehaviorSubject"
@@ -226,7 +228,8 @@
             </mat-form-field>
 
             <mat-form-field>
-                <mat-label>{{ 'Access groups' | translate }}</mat-label>
+                <mat-label>{{ 'Restrictions' | translate }}</mat-label>
+                <mat-hint>{{ 'If empty, everyone can access.' | translate }}</mat-hint>
                 <os-list-search-selector
                     formControlName="access_group_ids"
                     [inputListValues]="groupsBehaviorSubject"

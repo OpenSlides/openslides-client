@@ -1,5 +1,7 @@
 export class MockTranslateService {
-    currentLang = `en`;
+    public getCurrentLang(): string {
+        return `en`;
+    }
 
     public instant(text: string): string {
         return text;

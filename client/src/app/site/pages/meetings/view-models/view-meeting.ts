@@ -8,6 +8,7 @@ import {
     ViewMeetingMediafileUsageKey
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewCommittee } from '../../organization/pages/committees';
@@ -33,6 +34,7 @@ import {
     ViewTag
 } from '../pages/motions';
 import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewMotionSupporter } from '../pages/motions/modules/supporters';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
@@ -182,6 +184,7 @@ interface IMeetingRelations {
     motion_categories: ViewMotionCategory[];
     motion_blocks: ViewMotionBlock[];
     motion_submitters: ViewMotionSubmitter[];
+    motion_supporters: ViewMotionSupporter[];
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     motion_change_recommendations: ViewMotionChangeRecommendation[];
@@ -213,11 +216,13 @@ interface IMeetingRelations {
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
     structure_levels: ViewStructureLevel[];
+    relevant_history_entries: ViewHistoryEntry[];
 }
 export interface ViewMeeting
-    extends Meeting,
-    ViewModelRelations<IMeetingRelations>,
-    HasProjectorTitle,
-    HasOrganizationTags,
-    HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
-    HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
+    extends
+        Meeting,
+        ViewModelRelations<IMeetingRelations>,
+        HasProjectorTitle,
+        HasOrganizationTags,
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

@@ -44,14 +44,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private _langTriggerSubscription: Subscription;
 
+    public get isinMeeting(): boolean {
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous;
+    }
+
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
-            ? this.user.isPresentInMeeting()
-            : false;
+        return this.isinMeeting && this.user.isPresentInMeeting();
     }
 
     public get isAllowedSelfSetPresent(): boolean {
-        return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
+        return this.isinMeeting && this._isAllowedSelfSetPresent;
     }
 
     public get hasActiveMeeting(): boolean {
@@ -107,7 +109,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public getCurrentLanguageName(): string {
-        return this.getLanguageName(this.translate.currentLang);
+        return this.getLanguageName(this.translate.getCurrentLang());
     }
 
     /**
@@ -169,7 +171,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
         this.clickCounter++;
         if (this.clickTimeout) {
-            clearTimeout((this.clickTimeout as any));
+            clearTimeout(this.clickTimeout as any);
         }
 
         if (this.clickCounter === 4) {
@@ -179,7 +181,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             if (match) {
                 config.data = { userId: +match[1] };
             }
-            this.dialog.open(ChessDialogComponent, config);
+            this.dialog.open(ChessDialogComponent, { ...config, disableClose: true });
         } else {
             this.clickTimeout = setTimeout(() => {
                 this.clickCounter = 0;
@@ -203,5 +205,23 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.operator.shortName;
+    }
+
+    public getAriaLabel(): string {
+        let stringForUserPresent: string;
+        if (!this.hasActiveMeeting) {
+            stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
+        } else if (this.user.isPresentInMeeting()) {
+            stringForUserPresent = this.translate.instant(
+                `Account of {} is present. If status just changed focus this element again to get accurate present status.`
+            );
+        } else if (this.user.isInActiveMeeting) {
+            stringForUserPresent = this.translate.instant(
+                `Account of {} is not present. If status just changed focus this element again to get accurate present status.`
+            );
+        } else {
+            stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
+        }
+        return stringForUserPresent.replace(`{}`, this.user.short_name);
     }
 }

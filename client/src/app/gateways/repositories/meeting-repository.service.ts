@@ -23,6 +23,7 @@ export enum MeetingProjectionType {
     CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
     CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
+    Home = `home`,
     WiFiAccess = `wifi_access_data`
 }
 
@@ -121,6 +122,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
+                break;
+            case MeetingProjectionType.Home:
+                title = this.translate.instant(`Meeting home`);
                 break;
             case MeetingProjectionType.WiFiAccess:
                 title = this.translate.instant(`Wifi access data`);
@@ -319,12 +323,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * @returns An object containing user-ids as keys and an array of ids as values, which are the next group-ids
      * for the related user.
      */
-    private getNewGroupsForUsers(
-        data: Record<number, Id[]>,
-        users: ViewUser[] = [],
-        meetingId: Id,
-        groupId: Id
-    ): void {
+    private getNewGroupsForUsers(data: Record<number, Id[]>, users: ViewUser[] = [], meetingId: Id, groupId: Id): void {
         const getNextGroupIds = (groupIds: Id[]): number[] => {
             const index = groupIds.findIndex(id => groupId === id);
             if (index > -1) {

@@ -90,6 +90,4 @@ interface AgendaItemRelations<C extends BaseViewModel & HasAgendaItem> {
     list_of_speakers: ViewListOfSpeakers;
 }
 export interface ViewAgendaItem<C extends BaseViewModel & HasAgendaItem = any>
-    extends AgendaItem,
-    ViewModelRelations<AgendaItemRelations<C>>,
-    HasTags {}
+    extends AgendaItem, ViewModelRelations<AgendaItemRelations<C>>, HasTags {}

@@ -229,7 +229,7 @@ export abstract class BaseGameDialogComponent implements OnInit, OnDestroy {
 
     protected setTimeout(): void {
         if (this.waitTimout) {
-            clearTimeout((this.waitTimout as any));
+            clearTimeout(this.waitTimout as any);
         }
         this.waitTimout = setTimeout(() => {
             this.handleEvent(`waitTimeout`);

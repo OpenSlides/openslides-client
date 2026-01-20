@@ -143,8 +143,11 @@ export const PollPropertyVerbose = {
     global_abstain: _(`General abstain`),
     max_votes_amount: _(`Maximum amount of votes`),
     min_votes_amount: _(`Minimum amount of votes`),
-    max_votes_per_option: _(`Maximum amount of votes per option`)
+    max_votes_per_option: _(`Maximum amount of votes per option`),
+    live_voting_enabled: _(`Live voting enabled`)
 };
+
+export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
 
 export const PollValues: any = {
     votesvalid: `Valid votes`,
@@ -160,8 +163,6 @@ export const PollValues: any = {
     amount_global_abstain: _(`General abstain`)
 };
 
-export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
-
 export const PollMethodVerbose = {
     Y: ``,
     N: ``,
@@ -170,7 +171,7 @@ export const PollMethodVerbose = {
 };
 
 export const PollPercentBaseVerbose = {
-    Y: ``,
+    Y: _(`Sum of votes without general options`),
     YN: _(`Yes/No`),
     YNA: _(`Yes/No/Abstain`),
     valid: _(`All valid ballots`),

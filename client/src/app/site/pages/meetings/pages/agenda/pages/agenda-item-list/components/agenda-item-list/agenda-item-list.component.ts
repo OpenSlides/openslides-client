@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
@@ -16,7 +17,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -26,9 +26,9 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
+import { AgendaForwardDialogService } from '../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
-import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
 import { AgendaItemMultiselectService } from '../../services/agenda-item-multiselect.service/agenda-item-multiselect.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
@@ -81,12 +81,22 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         );
     }
 
+    public get isAdmin(): boolean {
+        return this.operator.isInGroupIds(this.activeMeeting.admin_group_id);
+    }
+
     public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define extra filter properties
      */
     public filterProps = [`item_number`, `comment`, `getListTitle`];
+
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
+    private _forwardingAvailable = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -97,18 +107,20 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private dialog: MatDialog,
         public vp: ViewPortService,
         public durationService: DurationService,
-        private agendaItemExportService: AgendaItemExportService,
         public filterService: AgendaItemFilterService,
         private topicRepo: TopicControllerService,
         private meetingRepo: MeetingControllerService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private treeService: TreeService,
         private tagRepo: TagControllerService,
-        private agendaItemMultiselectService: AgendaItemMultiselectService
+        private agendaItemMultiselectService: AgendaItemMultiselectService,
+        private forwardService: AgendaForwardDialogService
     ) {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = AGENDA_ITEM_LIST_STORAGE_INDEX;
+
+        this.updateForwardingMeetings();
     }
 
     /**
@@ -217,6 +229,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         this.router.navigate([`topics`, `new`], options);
     }
 
+    public async forwardAgendaItemsToMeetings(items: ViewAgendaItem[]): Promise<void> {
+        await this.updateForwardingMeetings();
+        await this.forwardService.forwardAgendaItemsToMeetings(items);
+    }
+
     /**
      * Remove handler for a single item
      *
@@ -312,29 +329,25 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     /**
-     * Export all items as CSV
+     * Triggers the export page of one agenda item
      */
-    public csvExportItemList(): void {
-        this.modelRequestService
-            .fetch({
-                modelRequest: {
-                    viewModelCtor: ViewMeeting,
-                    ids: [this.activeMeetingId],
-                    follow: [{ idField: `topic_ids`, fieldset: [`text`] }]
-                },
-                subscriptionName: `topic_list_texts`
-            })
-            .then(() => {
-                this.agendaItemExportService.exportAsCsv(this.listComponent.source);
-            });
+    public exportAgendaItem(itemId: Id): void {
+        this.componentServiceCollector.router.navigate([`agenda-export`], {
+            relativeTo: this.route,
+            queryParams: { 'agenda-items': itemId }
+        });
     }
 
     /**
-     * Triggers the export of the agenda. Currently filtered items and 'hidden'
-     * items will not be exported
+     * Triggers the export of the agenda.
      */
-    public onDownloadPdf(): void {
-        this.agendaItemExportService.exportAsPdf(this.listComponent.source);
+    public exportAgendaItems(): void {
+        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
+        const ids = agendaItems.map(item => item.id);
+        this.componentServiceCollector.router.navigate([`agenda-export`], {
+            relativeTo: this.route,
+            queryParams: { 'agenda-items': ids }
+        });
     }
 
     /**
@@ -354,7 +367,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             return (
                 result +
                 ` (${this.translate.instant(`Estimated end`)}:
-            ${endTime.toLocaleTimeString(this.translate.currentLang, { hour: `numeric`, minute: `numeric` })} h)`
+            ${endTime.toLocaleTimeString(this.translate.getCurrentLang(), { hour: `numeric`, minute: `numeric` })} h)`
             );
         } else {
             return result;
@@ -411,5 +424,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
         return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
+    }
+
+    public updateForwardingMeetings(): void {
+        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 }

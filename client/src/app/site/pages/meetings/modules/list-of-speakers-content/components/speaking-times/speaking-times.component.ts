@@ -9,21 +9,25 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
 import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from '../../../../view-models';
+import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';
 
 @Component({
     selector: `os-speaking-times`,
@@ -55,11 +59,22 @@ export class SpeakingTimesComponent implements OnDestroy {
     // if some speaker has spoken.
     public hasSpokenFlag = false;
 
+    private _listOfSpeakers: ViewListOfSpeakers;
+
     @Input()
     public showProjectionMenu = false;
 
     @Input()
-    public set currentSpeakingTimes(speakingTimes: Id[]) {
+    public set listOfSpeakers(los: ViewListOfSpeakers) {
+        this._listOfSpeakers = los;
+        this.currentSpeakingTimes = los.structure_level_list_of_speakers_ids;
+    }
+
+    public get listOfSpeakers(): ViewListOfSpeakers {
+        return this._listOfSpeakers;
+    }
+
+    private set currentSpeakingTimes(speakingTimes: Id[]) {
         const newSpeakingTimes = new Set(speakingTimes);
         const subscribedIds = new Set(this.subscriptions.keys());
 
@@ -102,7 +117,8 @@ export class SpeakingTimesComponent implements OnDestroy {
         private promptService: PromptService,
         private currentStructureLevelListSlideService: CurrentStructureLevelListSlideService,
         private currentSpeakingStructureLevelSlideService: CurrentSpeakingStructureLevelSlideService,
-        private translateService: TranslateService
+        private translateService: TranslateService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         this.totalTimeForm = this.formBuilder.group({
             totalTime: [0, [Validators.required, Validators.pattern(/^\d+:\d{2}$/)]]
@@ -234,16 +250,10 @@ export class SpeakingTimesComponent implements OnDestroy {
             if (speakingTime.isInactive) {
                 this.structureLevels.delete(speakingTime.id);
             } else {
-                const remaining = speakingTime.remaining_time;
                 this.structureLevels.set(speakingTime.id, {
                     name: speakingTime.structure_level.getTitle(),
                     color: speakingTime.structure_level.color,
-                    countdown: {
-                        running: !!speakingTime.current_start_time,
-                        countdown_time: speakingTime.current_start_time
-                            ? speakingTime.current_start_time + remaining
-                            : remaining
-                    },
+                    countdown: speakingTime.countdownData,
                     id: speakingTime.id,
                     speakers: speakingTime.speakers
                 });
@@ -284,5 +294,31 @@ export class SpeakingTimesComponent implements OnDestroy {
 
     public getCurrentStructureLevel(): ProjectionBuildDescriptor {
         return this.currentSpeakingStructureLevelSlideService.getProjectionBuildDescriptor(true);
+    }
+
+    public getSpeakerCountdowns(): [string, CountdownData][] {
+        const countdowns = [];
+        if (this.listOfSpeakers) {
+            const interventionSpeakers = this.listOfSpeakers.speakers
+                .filter(
+                    speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time && !speaker.answer
+                )
+                .sort((a, b) => a.weight - b.weight);
+            if (interventionSpeakers.length) {
+                const speaker = interventionSpeakers[0];
+                const default_time = this.meetingSettingsService.instant(`list_of_speakers_intervention_time`) || 0;
+                countdowns.push([_(`Intervention`), speaker.getCountdownData(default_time)]);
+            }
+            const interventionAnswerSpeakers = this.listOfSpeakers.speakers
+                .filter(
+                    speaker => speaker.speech_state === SpeechState.INTERVENTION && !speaker.end_time && speaker.answer
+                )
+                .sort((a, b) => a.weight - b.weight);
+            if (interventionAnswerSpeakers.length) {
+                const speaker = interventionAnswerSpeakers[0];
+                countdowns.push([_(`Answer to intervention`), speaker.getCountupData()]);
+            }
+        }
+        return countdowns;
     }
 }

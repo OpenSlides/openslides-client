@@ -137,8 +137,8 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         while (pw.length < length) {
             const random = new Uint8Array(length - pw.length);
             window.crypto.getRandomValues(random);
-            for (let i = 0; i < random.length; i++) {
-                const r = random[i] % charactersLengthPower2;
+            for (const letter of random) {
+                const r = letter % charactersLengthPower2;
                 if (r < characters.length) {
                     pw += characters.charAt(r);
                 }

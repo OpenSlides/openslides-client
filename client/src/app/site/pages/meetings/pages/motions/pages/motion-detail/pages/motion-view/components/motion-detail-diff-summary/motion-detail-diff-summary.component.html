@@ -11,18 +11,33 @@
             minBufferPx="100"
         >
             <ul class="changes-list">
-                <li *cdkVirtualFor="let change of changes; let index = index">
+                <li *cdkVirtualFor="let change of changes; let i = index">
                     <span class="one-line">
                         <a href="" (click)="scrollToChangeClicked(change, $event)">
-                            @if (!change.isTitleChange()) {
-                                <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
+                            @if (this.lastLineNr >= change.getLineTo()) {
+                                @if (!change.isTitleChange()) {
+                                    <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
+                                } @else {
+                                    <span>{{ 'Title' | translate }}</span>
+                                }
+                                @if (isAmendment(change)) {
+                                    <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
+                                    @if (isAmendmentMarkedForwarded(change)) {
+                                        <mat-icon
+                                            class="pointer-icon"
+                                            color="primary"
+                                            inline
+                                            [matTooltip]="originMeetingName(change)"
+                                            [matTooltipPosition]="position.value!"
+                                        >
+                                            info
+                                        </mat-icon>
+                                    }
+                                } @else {
+                                    <span>&ensp;({{ 'Change recommendation' | translate }})</span>
+                                }
                             } @else {
-                                <span>{{ 'Title' | translate }}</span>
-                            }
-                            @if (isAmendment(change)) {
-                                <span>&ensp;({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
-                            } @else {
-                                <span>&ensp;({{ 'Change recommendation' | translate }})</span>
+                                <span>{{ 'Inconsistent data.' | translate }}</span>
                             }
                         </a>
                         @if (isChangeRecommendation(change)) {

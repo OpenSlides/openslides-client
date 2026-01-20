@@ -44,7 +44,13 @@ mat-card mat-card-content h3 {
 }
 
 .election-document-list mat-list-item {
-    height: 20px;
+    height: auto;
+    height: max-content !important;
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+        word-break: break-word;
+    }
 }
 
 .candidates-list {
@@ -116,14 +122,17 @@ mat-card mat-card-content h3 {
 
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
+    width: auto;
 
     @include variables.phone {
         padding: 15px 0 0 0;
     }
-
-    width: auto;
 }
 
 :host ::ng-deep .detail-view {
     @include detail-view-appearance.detail-view-appearance;
+}
+
+.attachment-icon {
+    vertical-align: text-bottom;
 }

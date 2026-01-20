@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -19,6 +20,7 @@ import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } fr
 })
 export class GlobalSearchService {
     public constructor(
+        private translate: TranslateService,
         private http: HttpService,
         private activeMeeting: ActiveMeetingService
     ) {}
@@ -61,11 +63,15 @@ export class GlobalSearchService {
 
     public getTitle(collection: string, content: any): string {
         if (collection === `user`) {
-            const firstName = content.first_name?.trim() || ``;
-            const lastName = content.last_name?.trim() || ``;
-            const userName = content.username?.trim() || ``;
-            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+            if (content) {
+                const firstName = content.first_name?.trim() || ``;
+                const lastName = content.last_name?.trim() || ``;
+                const userName = content.username?.trim() || ``;
+                const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+                return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
+            } else {
+                return this.translate.instant(`Deleted user`);
+            }
         }
 
         return content.title || content.name;
@@ -173,16 +179,16 @@ export class GlobalSearchService {
         fqid: Fqid,
         results: GlobalSearchResponse
     ): {
-            title: string;
-            text: string;
-            obj: any;
-            fqid: string;
-            collection: string;
-            url: string;
-            meeting: any;
-            committee: any;
-            score: number;
-        } {
+        title: string;
+        text: string;
+        obj: any;
+        fqid: string;
+        collection: string;
+        url: string;
+        meeting: any;
+        committee: any;
+        score: number;
+    } {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);

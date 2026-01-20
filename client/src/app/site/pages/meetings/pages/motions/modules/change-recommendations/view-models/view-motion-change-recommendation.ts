@@ -7,7 +7,8 @@ import { ViewUnifiedChangeType } from '../definitions';
 import { ViewUnifiedChange } from './view-unified-change';
 export class ViewMotionChangeRecommendation
     extends BaseViewModel<MotionChangeRecommendation>
-    implements ViewUnifiedChange {
+    implements ViewUnifiedChange
+{
     public static COLLECTION = MotionChangeRecommendation.COLLECTION;
     protected _collection = MotionChangeRecommendation.COLLECTION;
 
@@ -74,6 +75,4 @@ interface IMotionChangeRecommendationRelations {
     motion: ViewMotion;
 }
 export interface ViewMotionChangeRecommendation
-    extends MotionChangeRecommendation,
-    ViewModelRelations<IMotionChangeRecommendationRelations>,
-    HasMeeting {}
+    extends MotionChangeRecommendation, ViewModelRelations<IMotionChangeRecommendationRelations>, HasMeeting {}

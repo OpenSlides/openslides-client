@@ -38,11 +38,28 @@ export class PollPercentBasePipe implements PipeTransform {
         }
     }
 
-    private getVoteValueInPercent(value: number, poll: PollData, row?: OptionData | PollTableData): string {
+    protected getVoteValueInPercent(value: number, poll: PollData, row?: OptionData | PollTableData): string {
         const service = this.pollServiceMapperService.getService(poll.pollClassType);
         if (service) {
             return service.getVoteValueInPercent(value, { poll, row });
         }
         return this.pollService.getVoteValueInPercent(value, { poll, row });
+    }
+}
+
+@Pipe({
+    name: `pollPercentBaseAlt`
+})
+export class PollPercentBaseAltPipe extends PollPercentBasePipe implements PipeTransform {
+    public override transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
+        // logic handles over the pollService to avoid circular dependencies
+        const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
+
+        if (voteValueInPercent) {
+            // 'Alt' because it displays the percent without parathesis
+            return `${voteValueInPercent}`;
+        } else {
+            return null;
+        }
     }
 }

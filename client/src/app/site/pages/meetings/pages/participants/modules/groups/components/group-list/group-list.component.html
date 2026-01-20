@@ -10,7 +10,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Groups' | translate }}</h2>
+        <h1 class="mock-h2" translate>Groups</h1>
     </div>
 </os-head-bar>
 
@@ -96,7 +96,7 @@
         }
     </h1>
     <mat-dialog-content class="os-form-card-mobile">
-        <form aria-disabled="true" class="edit-form" [formGroup]="groupForm!" (keydown)="keyDownFunction($event)">
+        <form aria-disabled="true" class="edit-form" [formGroup]="groupForm!">
             <mat-form-field>
                 <mat-label>{{ 'Group name' | translate }}</mat-label>
                 <input formControlName="name" matInput osAutofocus type="text" />

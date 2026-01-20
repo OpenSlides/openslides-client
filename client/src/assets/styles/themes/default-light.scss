@@ -1,17 +1,19 @@
 @use '@angular/material' as mat;
 
 @use '../color-palettes/os-dynamic-palette' as colors;
-@import './typography.scss';
+@use './typography.scss';
 
 $openslides-primary: mat.m2-define-palette(colors.$dynamic-theme-primary);
 $openslides-accent: mat.m2-define-palette(colors.$dynamic-theme-accent);
 $openslides-warn: mat.m2-define-palette(colors.$dynamic-theme-warn);
 
-$openslides-light-theme: mat.m2-define-light-theme((
-    color: (
-        primary: $openslides-primary,
-        accent: $openslides-accent,
-        warn: $openslides-warn,
-    ),
-    typography: $default-typography
-));
+$openslides-light-theme: mat.m2-define-light-theme(
+    (
+        color: (
+            primary: $openslides-primary,
+            accent: $openslides-accent,
+            warn: $openslides-warn
+        ),
+        typography: typography.$default-typography
+    )
+);

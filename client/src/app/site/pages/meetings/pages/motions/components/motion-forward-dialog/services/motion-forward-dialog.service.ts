@@ -2,11 +2,16 @@ import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
+import {
+    GetForwardingMeetingsPresenter,
+    GetForwardingMeetingsPresenterMeeting,
+    GetForwardingMeetingsPresenterService
+} from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -35,6 +40,10 @@ export class MotionForwardDialogService extends BaseDialogService<
 > {
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
         return this._forwardingCommitteesSubject;
+    }
+
+    public get forwardingMeetingIds(): number[] {
+        return this._forwardingMeetings.flatMap(obj => obj.meetings?.map(m => +m.id));
     }
 
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
@@ -74,6 +83,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
         return this.dialog.open(module.getComponent(), {
             ...mediumDialogSettings,
+            autoFocus: false,
             data: {
                 motion: data,
                 forwardingMeetings: this._forwardingMeetings
@@ -82,9 +92,14 @@ export class MotionForwardDialogService extends BaseDialogService<
     }
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
-        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding && !motion.isAmendment());
-        if (toForward.length === 0) {
-            this.snackbar.open(this.translate.instant(`None of the selected motions can be forwarded.`), `Ok`);
+        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
+        const amountSelectedAmendments = toForward.filter(motion => motion.isAmendment()).length;
+
+        if (toForward.filter(motion => !motion.isAmendment()).length === 0) {
+            this.snackbar.open(
+                this.translate.instant(`Items of the type motions, motion blocks and elections cannot be forwarded.`),
+                `Ok`
+            );
             return;
         }
         const dialogRef = await this.open(toForward);
@@ -105,18 +120,34 @@ export class MotionForwardDialogService extends BaseDialogService<
                     dialogData.useOriginalSubmitter,
                     dialogData.useOriginalNumber,
                     dialogData.useOriginalVersion,
+                    dialogData.withAttachments,
+                    dialogData.markAmendmentsAsForwarded,
                     ...forwardMotions
                 );
 
                 let numToForwardAmendments = 0;
                 if (dialogData.useOriginalVersion) {
                     toForward.forEach(motion =>
-                        motion.amendments.forEach(amendment => numToForwardAmendments += amendment.state?.allow_amendment_forwarding && amendment.isAmendment() ? 1 : 0
+                        motion.amendments.forEach(
+                            amendment =>
+                                (numToForwardAmendments +=
+                                    amendment.state?.allow_amendment_forwarding && amendment.isAmendment() ? 1 : 0)
                         )
                     );
                 }
-                const numToForwardCR = dialogData.useOriginalVersion && toForward.length === 1 ? toForward[0].change_recommendations.length : 0;
-                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length, numToForwardAmendments, numToForwardCR, result), `Ok`);
+                const numToForwardCR =
+                    dialogData.useOriginalVersion && toForward.length === 1
+                        ? toForward[0].change_recommendations.length
+                        : 0;
+                this.snackbar.open(
+                    this.createForwardingSuccessMessage(
+                        toForward.length - amountSelectedAmendments,
+                        numToForwardAmendments,
+                        numToForwardCR,
+                        result
+                    ),
+                    `Ok`
+                );
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
@@ -132,6 +163,11 @@ export class MotionForwardDialogService extends BaseDialogService<
                 this.operator.hasPerms(Permission.motionCanForward) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
+            meetings.forEach(
+                committee =>
+                    (committee.meetings =
+                        committee.meetings?.filter(m => this.endAndActiveMeetingFilter(m)) ?? committee.meetings)
+            );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -148,6 +184,14 @@ export class MotionForwardDialogService extends BaseDialogService<
         }
     }
 
+    private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
+        return (
+            +meetingData.id !== this.activeMeeting.meetingId &&
+            meetingData.end_time &&
+            new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
+        );
+    }
+
     private createForwardingSuccessMessage(
         selectedMotionsLength: number,
         forwardedAmendmentsAmount: number,
@@ -156,18 +200,27 @@ export class MotionForwardDialogService extends BaseDialogService<
     ): string {
         const ofTranslated = this.translate.instant(`of`);
         const andTranslated = this.translate.instant(`and`);
-        const wereTranslated = selectedMotionsLength === 1 && forwardedAmendmentsAmount === 0 && forwardedCRsAmount === 0 ? this.translate.instant(`was`) : this.translate.instant(`were`);
+        const wereTranslated =
+            selectedMotionsLength === 1 && forwardedAmendmentsAmount === 0 && forwardedCRsAmount === 0
+                ? this.translate.instant(`was`)
+                : this.translate.instant(`were`);
 
         const successfulMessage = wereTranslated + ` ` + this.translate.instant(`successfully forwarded`);
         const partialMessage = this.translate.instant(`partially forwarded`);
 
         const verboseNameMotions = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
-        const verboseNameAmendments = this.translate.instant(this.repo.getVerboseName(forwardedAmendmentsAmount !== 1, true));
+        const verboseNameAmendments = this.translate.instant(
+            this.repo.getVerboseName(forwardedAmendmentsAmount !== 1, true)
+        );
         const verboseNameCR = this.translate.instant(this.changeRecoRepo.getVerboseName(forwardedCRsAmount !== 1));
 
         const additionalInfoMotions = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
-        const additionalInfoAmendments = forwardedAmendmentsAmount === 0 ? `` : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
-        const additionalInfoCR = forwardedCRsAmount === 0 ? `` : `${andTranslated} ${forwardedCRsAmount} ${verboseNameCR} `;
+        const additionalInfoAmendments =
+            forwardedAmendmentsAmount === 0
+                ? ``
+                : `${andTranslated} ${forwardedAmendmentsAmount} ${verboseNameAmendments} `;
+        const additionalInfoCR =
+            forwardedCRsAmount === 0 ? `` : `${andTranslated} ${forwardedCRsAmount} ${verboseNameCR} `;
 
         let resultString = ``;
         if (result.success || !result.partial) {

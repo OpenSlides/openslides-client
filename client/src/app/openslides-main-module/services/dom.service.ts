@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ComponentRef, EmbeddedViewRef, Inject, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { ComponentRef, DOCUMENT, EmbeddedViewRef, Inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 
 interface BodyPortalConstructConfig {
     /**

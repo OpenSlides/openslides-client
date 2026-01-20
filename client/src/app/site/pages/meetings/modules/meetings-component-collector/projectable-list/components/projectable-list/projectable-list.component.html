@@ -8,7 +8,7 @@
     [listObservable]="listObservable"
     [listObservableProvider]="listObservableProvider"
     [multiSelect]="multiSelect"
-    [searchFieldValue]="inputValue"
+    [searchFieldInput]="searchFieldInput"
     [searchService]="searchService"
     [selectedRows]="selectedRows"
     [showFilterBar]="showFilterBar"
@@ -41,16 +41,21 @@
         </div>
     </div>
 
-    <!-- Speaker -->
-    <div
-        *osScrollingTableCell="
-            'speaker';
-            row as viewModel;
-            rowContext as rowContext;
-            config: { width: 60, position: END_POSITION }
-        "
-        class="fill"
-    >
-        <os-speaker-button [disabled]="multiSelect" [object]="_getSpeakerButtonObject(viewModel)"></os-speaker-button>
-    </div>
+    @if (permission.projectorCanSee) {
+        <!-- Speaker -->
+        <div
+            *osScrollingTableCell="
+                'speaker';
+                row as viewModel;
+                rowContext as rowContext;
+                config: { width: 60, position: END_POSITION }
+            "
+            class="fill"
+        >
+            <os-speaker-button
+                [disabled]="multiSelect"
+                [object]="_getSpeakerButtonObject(viewModel)"
+            ></os-speaker-button>
+        </div>
+    }
 </os-view-list>

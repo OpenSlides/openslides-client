@@ -91,7 +91,8 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
      * Opens the dialog to choose options for exporting selected motions.
      */
     public async openExportDialog(): Promise<void> {
-        const motions_ids = this.selectedMotions.map(motion => motion.id);
+        const sortedMotions = await this.sortService.sort(this.selectedMotions);
+        const motions_ids = sortedMotions.map(motion => motion.id);
         this.componentServiceCollector.router.navigate([`motion-export`], {
             relativeTo: this.route,
             queryParams: { motions: motions_ids }

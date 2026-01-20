@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { getOmlVerboseName, OML } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -16,6 +18,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
+import { ViewCommittee } from '../../../../../committees';
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
@@ -65,12 +68,14 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private route: ActivatedRoute,
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
+        private committeeRepo: CommitteeRepositoryService,
         private choiceService: ChoiceService,
         private userController: UserControllerService,
         public searchService: AccountListSearchService,
         private operator: OperatorService,
         private vp: ViewPortService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private snackbar: MatSnackBar
     ) {
         super();
         super.setTitle(`Accounts`);
@@ -116,7 +121,12 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             title,
             choices: this.operator.canSkipPermissionCheck
                 ? meetings.filter(meeting => !meeting.locked_from_inside)
-                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside),
+                : meetings.filter(
+                      meeting =>
+                          (this.operator.isInMeeting(meeting.id) ||
+                              this.operator.isCommitteeManagerForMeeting(meeting.id)) &&
+                          !meeting.locked_from_inside
+                  ),
             multiSelect: true,
             actions,
             content: this.translate.instant(
@@ -139,6 +149,49 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         }
     }
 
+    public async assignHomeCommitteeToUsers(): Promise<void> {
+        const title = this.translate.instant(
+            `This will add or remove the selected accounts to the selected home committee:`
+        );
+        const ADD = _(`Add`);
+        const REMOVE = _(`Remove`);
+        const actions = [ADD, REMOVE];
+        const committees = this.committeeRepo.getViewModelList();
+        const result = await this.choiceService.open<ViewCommittee>({
+            title,
+            choices: committees,
+            actions,
+            content: this.translate.instant(
+                `Attention: Existing home committees and external status will be overwritten.`
+            )
+        });
+        if (result) {
+            if (result.action === ADD) {
+                this.userController
+                    .update({ home_committee_id: result.firstId, external: false }, ...this.selectedRows)
+                    .resolve();
+            } else if (result.action === REMOVE) {
+                this.userController.update({ home_committee_id: null }, ...this.selectedRows).resolve();
+            }
+        }
+    }
+
+    public async changeGuest(): Promise<void> {
+        const title = this.translate.instant(`Set external status for selected accounts`);
+        const SET_EXTERNAL = _(`external`);
+        const SET_NOT_EXTERNAL = _(`not external`);
+        const result = await this.choiceService.open({ title, actions: [SET_EXTERNAL, SET_NOT_EXTERNAL] });
+        if (result) {
+            const isExternal = result.action === SET_EXTERNAL;
+            this.userController
+                .update(
+                    { external: isExternal, home_committee_id: isExternal ? null : undefined },
+                    ...this.selectedRows
+                )
+                .resolve();
+        }
+    }
+
     public async changeActiveState(): Promise<void> {
         const title = this.translate.instant(`Set status for selected accounts`);
         const SET_ACTIVE = _(`active`);
@@ -146,7 +199,28 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
         if (result) {
             const isActive = result.action === SET_ACTIVE;
-            this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
+            if (
+                !isActive &&
+                this.operator.isOrgaManager &&
+                this.selectedRows.some(row => row.id === this.operator.user.id)
+            ) {
+                if (this.selectedRows.length === 1) {
+                    this.snackbar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
+                } else {
+                    this.userController
+                        .update(
+                            { is_active: isActive },
+                            ...this.selectedRows.filter(row => row.id !== this.operator.user.id)
+                        )
+                        .resolve();
+                    this.snackbar.open(
+                        this.translate.instant(`Accounts were set to inactive, except for your own account.`),
+                        `Ok`
+                    );
+                }
+            } else {
+                this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
+            }
         }
     }
 

@@ -62,6 +62,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         useOriginalSubmitter: boolean,
         useOriginalNumber: boolean,
         useOriginalVersion: boolean,
+        withAttachments: boolean,
+        markAmendmentsAsForwarded: boolean,
         ...motions: MotionFormatResult[]
     ): Promise<{ success: number; partial: number }> {
         const payloads: any[][] = [];
@@ -74,6 +76,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                         use_original_number: useOriginalNumber,
                         with_amendments: useOriginalVersion,
                         with_change_recommendations: useOriginalVersion,
+                        with_attachments: withAttachments,
+                        mark_amendments_as_forwarded: markAmendmentsAsForwarded,
                         ...motion
                     };
                 })
@@ -174,26 +178,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     /**
-     * Supports the motion
-     *
-     * @param motion target motion
-     */
-    public async support(motion: Identifiable): Promise<void> {
-        const payload = { motion_id: motion.id, support: true };
-        await this.sendActionToBackend(MotionAction.SET_SUPPORT_SELF, payload);
-    }
-
-    /**
-     * Unsupports the motion
-     *
-     * @param motion target motion
-     */
-    public async unsupport(motion: Identifiable): Promise<void> {
-        const payload = { motion_id: motion.id, support: false };
-        await this.sendActionToBackend(MotionAction.SET_SUPPORT_SELF, payload);
-    }
-
-    /**
      * Signals the acceptance of the current recommendation of this motionBlock
      */
     public async followRecommendation(...motions: Identifiable[]): Promise<void> {
@@ -202,7 +186,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public createTextBased(
-        partialMotion: Partial<Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[] }>
+        partialMotion: Partial<
+            Motion & {
+                workflow_id: Id;
+                attachment_mediafile_ids?: Id[];
+                supporter_meeting_user_ids?: Id[];
+                submitter_meeting_user_ids: Id[];
+            }
+        >
     ): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
@@ -210,7 +201,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             title: partialMotion.title,
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids: partialMotion.attachment_mediafile_ids,
@@ -225,14 +216,21 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public createParagraphBased(
-        partialMotion: Partial<Motion & { workflow_id: Id; attachment_mediafile_ids?: Id[] }>
+        partialMotion: Partial<
+            Motion & {
+                workflow_id: Id;
+                attachment_mediafile_ids?: Id[];
+                supporter_meeting_user_ids?: Id[];
+                submitter_meeting_user_ids: Id[];
+            }
+        >
     ): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
             title: partialMotion.title,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids === null ? [] : partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
             attachment_mediafile_ids:
@@ -287,7 +285,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         const agendaTitle: AgendaListTitle = { title };
 
         if (viewMotion.submitterNames && viewMotion.submitterNames.length) {
-            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.join(`, `)}`;
+            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submitterNames.map(sub => (sub === undefined ? this.translate.instant(`Deleted user`) : sub)).join(`, `)}`;
         }
         return agendaTitle;
     };
@@ -332,7 +330,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             title: partialMotion.title,
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
+            submitter_meeting_user_ids: partialMotion.submitter_meeting_user_ids,
             additional_submitter: partialMotion.additional_submitter,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
@@ -361,8 +359,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return {
             id: viewMotion.id,
             ...updatePayload,
-            supporter_meeting_user_ids:
-                update[`supporter_meeting_user_ids`] === null ? [] : update[`supporter_meeting_user_ids`],
             tag_ids: update[`tag_ids`] === null ? [] : update[`tag_ids`],
             attachment_mediafile_ids:
                 update[`attachment_mediafile_ids`] === null ? [] : update[`attachment_mediafile_ids`]

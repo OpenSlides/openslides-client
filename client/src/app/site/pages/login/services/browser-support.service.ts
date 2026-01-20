@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 
 const SmallestSupportedBrowserVersion: any = {
-    "Chrome": 120,
-    "Safari": 16,
-    "Firefox": 128,
-    "Opera": 86,
+    Chrome: 120,
+    Safari: 16,
+    Firefox: 128,
+    Opera: 86,
     'MS-Edge': 120,
     'MS-Edge-Chromium': 120
 };

@@ -126,8 +126,14 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             options: this.getElectronicOptions(poll.options),
             content_object_id: poll.content_object_id,
             entitled_group_ids: poll.entitled_group_ids,
-            backend: poll.backend
+            backend: poll.backend,
+            live_voting_enabled: poll.live_voting_enabled
         };
+
+        if (poll.type !== PollType.Named) {
+            delete payload.live_voting_enabled;
+        }
+
         return this.sendActionToBackend(PollAction.CREATE, payload);
     }
 
@@ -287,8 +293,18 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.sendActionToBackend(PollAction.RESET, payload);
     }
 
-    public async anonymize(poll: Identifiable): Promise<void> {
+    public async anonymize(poll: Identifiable, updateState?: PollState): Promise<void> {
         const payload: Identifiable = { id: poll.id };
+        if (updateState === PollState.Published) {
+            return this.sendActionsToBackend(
+                [
+                    { action: PollAction.STOP, data: [payload] },
+                    { action: PollAction.ANONYMIZE, data: [payload] },
+                    { action: PollAction.PUBLISH, data: [payload] }
+                ],
+                true
+            );
+        }
         return this.sendActionToBackend(PollAction.ANONYMIZE, payload);
     }
 

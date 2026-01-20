@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { MotionDiffService } from '../../../../../../modules/change-recommendations/services';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
@@ -17,12 +18,22 @@ import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-v
     standalone: false
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
+    public readonly LineNumberingMode = LineNumberingMode;
+
     @Input()
     public formattedText: UnsafeHtml = ``;
+
+    @Input()
+    public lineNumberingMode: LineNumberingMode;
 
     public contentForm!: UntypedFormGroup;
 
     public isEditMode = false;
+
+    /**
+     * Show apply feedback for a short time
+     */
+    public applyFeedback = false;
 
     public constructor(
         protected override translate: TranslateService,
@@ -68,6 +79,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     }
 
     public async applyModifiedFinalVersion(): Promise<void> {
+        this.applyFeedback = true;
+        setTimeout(() => {
+            this.applyFeedback = false;
+            this.cd.markForCheck();
+        }, 2000);
         await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.isEditMode = true;
     }

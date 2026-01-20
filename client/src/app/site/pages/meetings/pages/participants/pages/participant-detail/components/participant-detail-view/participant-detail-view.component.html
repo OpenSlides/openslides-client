@@ -8,11 +8,11 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>
+        <h1 class="mock-h2">
             @if (user) {
-                <span>{{ user.full_name }}</span>
+                {{ user.full_name }}
             }
-        </h2>
+        </h1>
     </div>
 
     <!-- Menu -->
@@ -193,6 +193,16 @@
                             {{ (user?.isLockedOutOfMeeting() ? 'Is locked out' : '') | translate }}
                         </span>
                     }
+                </div>
+            }
+            @if (isAllowed('seeSensitiveData') && user?.home_committee_id) {
+                <h2>{{ 'Organization specific information' | translate }}</h2>
+                <!-- Home committee -->
+                <div>
+                    <h4>{{ 'Home committee' | translate }}</h4>
+                    <a [routerLink]="'/committees/' + user.home_committee_id">
+                        {{ user.home_committee.name }}
+                    </a>
                 </div>
             }
         </ng-template>

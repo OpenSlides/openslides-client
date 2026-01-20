@@ -1,17 +1,21 @@
 // Material theming import
 @use '@angular/material' as mat;
+@use "sass:map";
+@use "sass:color";
 
 /**
  *  Mixin-style to style global classes and tags with theme-related colors.
  */
 @mixin os-component-themes($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $warn: map-get($theme, warn);
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
+    $primary: map.get($theme, primary);
+    $accent: map.get($theme, accent);
+    $warn: map.get($theme, warn);
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
 
-    $is-dark-theme: map-get($theme, is-dark);
+    $is-dark-theme: map.get($theme, is-dark);
+
+    $percent: if($is-dark-theme, 0.04, -0.04);
 
     h1,
     h3.accent {
@@ -26,23 +30,30 @@
         text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
 
         &:hover {
-            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
+            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary))
+                0.175em;
         }
 
         & {
-           a.mat-mdc-button-base {
+            a.mat-mdc-button-base {
                 text-decoration: inherit;
-           }
+            }
         }
     }
 
-    .accentuated-background, .accentuated-background button {
-        background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, background), 4%), darken(mat.m2-get-color-from-palette($background, background), 4%));
+    .select-speaker-button-design {
+        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+    }
+
+    .accentuated-background,
+    .accentuated-background button {
+        background-color: color.adjust(mat.m2-get-color-from-palette($background, background), $hue: $percent);
     }
 
     mat-card {
-        .accentuated-background, .accentuated-background button {
-            background-color: if($is-dark-theme, lighten(mat.m2-get-color-from-palette($background, card), 4%), darken(mat.m2-get-color-from-palette($background, card), 4%));
+        .accentuated-background,
+        .accentuated-background button {
+            background-color: color.adjust(mat.m2-get-color-from-palette($background, card), $hue: $percent);
         }
     }
 
@@ -78,9 +89,13 @@
         color: mat.m2-get-color-from-palette($foreground, disabled-button);
         opacity: 1 !important;
         .mat-icon {
-            color: adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
+            color: color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
             svg path {
-                fill: mat.m2-get-color-from-palette($foreground, disabled-button adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)) !important;
+                fill: mat.m2-get-color-from-palette(
+                    $foreground,
+                    disabled-button
+                        color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
+                ) !important;
             }
         }
     }
@@ -138,7 +153,8 @@
     /* projector components */
     .backgroundColorAccent {
         background-color: mat.m2-get-color-from-palette($accent);
-        &, .mdc-list-item__primary-text {
+        &,
+        .mdc-list-item__primary-text {
             color: mat.m2-get-color-from-palette($accent, default-contrast) !important;
         }
     }
@@ -292,7 +308,8 @@
         color: mat.m2-get-color-from-palette($foreground, text);
     }
 
-    mat-hint, .hint {
+    mat-hint,
+    .hint {
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
@@ -329,6 +346,6 @@
     }
 
     .sidenav-background {
-        background: if($is-dark-theme,  darken(mat.m2-get-color-from-palette($background, background), 0.5%), white);
+        background: if($is-dark-theme, color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005), white);
     }
 }

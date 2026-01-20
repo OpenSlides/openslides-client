@@ -61,7 +61,7 @@ export class MotionCsvExportService {
         private csvExport: MeetingCsvExportService,
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
-        private linenumberingService: LineNumberingService,
+        private lineNumberingService: LineNumberingService,
         private motionService: MotionControllerService,
         private motionFormatService: MotionFormatService,
         private commentRepo: MotionCommentSectionControllerService
@@ -79,7 +79,7 @@ export class MotionCsvExportService {
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`) as number;
         const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
         const text = this.motionFormatService.formatMotion({ targetMotion: motion, crMode, changes, lineLength });
-        const strippedLines = this.linenumberingService.stripLineNumbers(text);
+        const strippedLines = this.lineNumberingService.stripLineNumbers(text);
         return strippedLines;
     }
 
@@ -109,7 +109,12 @@ export class MotionCsvExportService {
                     case `submitters`:
                         return {
                             label: `submitters`,
-                            map: motion => motion.mapSubmittersWithAdditional(s => s.full_name).join(`, `)
+                            map: motion =>
+                                motion
+                                    .mapSubmittersWithAdditional(s =>
+                                        s ? s.full_name : this.translate.instant(`Deleted user`)
+                                    )
+                                    .join(`, `)
                         };
                     case `editors`:
                         return {
@@ -159,7 +164,7 @@ export class MotionCsvExportService {
                 label: `Referring motions`,
                 map: motion =>
                     motion.referenced_in_motion_recommendation_extensions
-                        .naturalSort(this.translate.currentLang, [`number`, `title`])
+                        .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
                         .map(motion => motion.getNumberOrTitle())
                         .join(`, `)
             });
@@ -196,6 +201,7 @@ export class MotionCsvExportService {
      * @param motions All motions in the CSV. They should be ordered by weight correctly.
      */
     public exportCallList(motions: ViewMotion[]): void {
+        motions.sort((a, b) => a.tree_weight - b.tree_weight);
         this.csvExport.export(
             motions,
             [
@@ -203,7 +209,12 @@ export class MotionCsvExportService {
                 { label: `Called with`, map: (motion): string => (!motion.sort_parent_id ? `` : motion.numberOrTitle) },
                 {
                     label: `submitters`,
-                    map: (motion): string => motion.mapSubmittersWithAdditional(s => s.short_name).join(`,`)
+                    map: (motion): string =>
+                        motion
+                            .mapSubmittersWithAdditional(s =>
+                                s ? s.short_name : this.translate.instant(`Deleted user`)
+                            )
+                            .join(`,`)
                 },
                 { property: `title` },
                 {

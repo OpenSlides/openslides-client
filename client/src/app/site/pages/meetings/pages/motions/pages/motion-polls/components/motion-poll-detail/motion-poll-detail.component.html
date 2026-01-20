@@ -1,9 +1,11 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">
-            @if (poll) {
-                <h2>{{ 'Motion' | translate }} {{ poll.title }}</h2>
-            }
+            <h1 class="mock-h2">
+                @if (poll) {
+                    {{ 'Motion' | translate }} {{ poll.title }}
+                }
+            </h1>
         </div>
 
         <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">
@@ -36,7 +38,7 @@
         </div>
         <os-motion-poll-detail-content [poll]="poll" />
         @if (poll.isStarted) {
-            <os-poll-progress [poll]="poll" />
+            <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
             <div *osPerms="permission.motionCanManagePolls" class="poll-content">
                 <div class="user-subtitle">
                     {{ 'Present entitled users' | translate }}:
@@ -102,7 +104,10 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="permission.motionCanManagePolls; and: poll && poll.type === 'named' && !poll.is_pseudoanonymized"
+        *osPerms="
+            permission.motionCanManagePolls;
+            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+        "
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

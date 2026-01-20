@@ -6,6 +6,7 @@ import { filter, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -21,6 +22,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
+import { AgendaForwardDialogService } from '../../../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { AgendaItemControllerService } from '../../../../../../services';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
@@ -77,6 +79,11 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public readonly hasLoaded = new Deferred<boolean>();
 
+    /**
+     * Show apply feedback for a short time
+     */
+    public applyFeedback = false;
+
     private _topicId: Id | null = null;
 
     public getTitleFn = (): string => this.topic.getListTitle();
@@ -96,6 +103,16 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     public get sortedAttachments(): ViewMeetingMediafile[] {
         return this.topic.attachment_meeting_mediafiles.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
     }
+
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
+    public get isAdmin(): boolean {
+        return this.operator.isInGroupIds(this.activeMeeting.admin_group_id);
+    }
+
+    private _forwardingAvailable = false;
 
     private _nextTopic: ViewTopic | null = null;
 
@@ -122,7 +139,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private pollController: PollControllerService,
         private topicPdfService: TopicPdfService,
         private route: ActivatedRoute,
-        private treeService: TreeService
+        private treeService: TreeService,
+        public forwardService: AgendaForwardDialogService
     ) {
         super();
         this.createForm();
@@ -132,6 +150,10 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
             .subscribe(isEnabled => (this._isEVotingEnabled = isEnabled));
 
         this.itemObserver = this.itemRepo.getViewModelListObservable();
+
+        this.forwardService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 
     public ngOnInit(): void {
@@ -325,18 +347,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     }
 
     /**
-     * clicking Shift and Enter will save automatically
-     * Hitting escape while in topicForm should cancel editing
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === `Escape`) {
-            this.setEditMode(false);
-        }
-    }
-
-    /**
      * Save a new topic as agenda item
      */
     private async saveTopic(): Promise<void> {
@@ -359,6 +369,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public async applyTopicContent(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
+        this.applyFeedback = true;
+        setTimeout(() => (this.applyFeedback = false), 2000);
     }
 
     private async createTopic(): Promise<void> {
@@ -371,8 +383,22 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.setEditMode(false);
     }
 
-    public onDownloadPdf(): void {
-        this.topicPdfService.exportSingleTopic(this.topic);
+    public onExport(): void {
+        this.componentServiceCollector.router.navigate([this.activeMeetingId, `agenda`, `agenda-export`], {
+            queryParams: { 'agenda-items': this.topic.agenda_item_id, back: this.topic.sequential_number }
+        });
+    }
+
+    public get agendaItemForwardDisabled(): boolean {
+        return !!this.topic.list_of_speakers.speakers.some(
+            speaker =>
+                speaker.state === SpeakerState.CURRENT ||
+                (speaker.state === SpeakerState.WAITING && speaker.point_of_order)
+        );
+    }
+
+    public async forwardAgendaItemsToMeetings(): Promise<void> {
+        await this.forwardService.forwardAgendaItemsToMeetings([this.topic.agenda_item], true);
     }
 
     /**

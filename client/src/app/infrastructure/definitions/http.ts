@@ -12,12 +12,8 @@ export enum HttpMethod {
 
 export interface HttpOptions {
     body?: any;
-    headers?:
-        | HttpHeaders
-        | Record<string, string | string[]>;
-    params?:
-        | HttpParams
-        | Record<string, string | number | boolean | readonly (string | number | boolean)[]>;
+    headers?: HttpHeaders | Record<string, string | string[]>;
+    params?: HttpParams | Record<string, string | number | boolean | readonly (string | number | boolean)[]>;
     observe?: `body` | `events` | `response`;
     reportProgress?: boolean;
     responseType?: `arraybuffer` | `blob` | `json` | `text`;

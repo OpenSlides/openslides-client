@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, Component, DOCUMENT, Inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -68,13 +67,15 @@ export class OpenSlidesMainComponent implements OnInit {
             if (lang && this.translate.getLangs().includes(lang as string)) {
                 this.translate.use(lang as string);
             } else {
-                // try to use the browser language if it is available. If not, uses english.
-                this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
+                // try to use the browser language if it is available. If not, uses fallback language.
+                this.translate.use(
+                    this.translate.getLangs().includes(browserLang) ? browserLang : this.translate.getFallbackLang()
+                );
             }
 
             // set date-fns locale
             this.updateLocaleByName(
-                this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang
+                this.translate.getCurrentLang() ? this.translate.getCurrentLang() : this.translate.getFallbackLang()
             );
         });
 
@@ -88,8 +89,8 @@ export class OpenSlidesMainComponent implements OnInit {
 
         this.ctService.customTranslationSubject.subscribe(ct => {
             this.translate.setTranslation(`en`, ct || {}, false);
-            if (this.translate.currentLang !== `en`) {
-                this.translate.setTranslation(this.translate.currentLang, {}, true);
+            if (this.translate.getCurrentLang() !== this.translate.getFallbackLang()) {
+                this.translate.setTranslation(this.translate.getCurrentLang(), {}, true);
             }
         });
     }

@@ -145,6 +145,7 @@
                 @if (hasResults && canSeeResults) {
                     <os-single-option-chart-table
                         iconSize="gigantic"
+                        [inSlide]="inSlide"
                         [poll]="poll"
                         [pollService]="assignmentPollService"
                         [shouldShowEntitled]="isPercentBaseEntitled"

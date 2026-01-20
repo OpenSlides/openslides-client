@@ -278,15 +278,15 @@ export function djb2hash(str: string): string {
  */
 export function joinTypedArrays<
     T extends
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
 >(type: new (len: number) => T, a: T, b: T): T {
     const res = new type(a.length + b.length);
     res.set(a);
@@ -305,15 +305,15 @@ export function joinTypedArrays<
  */
 export function splitTypedArray<
     T extends
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
 >(seperator: any, arr: T): T[] {
     const res: T[] = [];
     let start = 0;
@@ -347,9 +347,10 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     );
 
     // Extract strings from JSON
-    const stringRegex = /\"([^\"]*)\"/g;
+    const stringRegex = /"([^"]*)"/g;
     const stringReplacement = `#`;
     let strings: string[] = [...json.match(stringRegex)];
+
     while (stringRegex.test(json)) {
         json = json.replace(stringRegex, stringReplacement);
     }
@@ -429,7 +430,7 @@ export function filterObject(obj: unknown, callbackFn: (keyValue: { key: string;
     return Object.entries(obj)
         .filter(([key, value]) => callbackFn({ key, value }))
         .map(([key, value]) => ({ [key]: value }))
-        .reduce((prev, curr) => Object.assign(prev, curr));
+        .reduce((prev, curr) => Object.assign(prev, curr), {});
 }
 
 export interface ListUpdateData<T extends Identifiable> {

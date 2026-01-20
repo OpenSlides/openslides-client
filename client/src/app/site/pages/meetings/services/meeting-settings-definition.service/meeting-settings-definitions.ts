@@ -636,6 +636,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Show the sequential number for a motion`),
                         helpText: _(`In motion list, motion detail and PDF.`),
                         type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_non_manager`,
+                        label: _(`Limit editor formatting options for users WITHOUT motion manage permission`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motions_enable_restricted_editor_for_manager`,
+                        label: _(`Limit editor formatting options for users WITH motion manage permission`),
+                        type: `boolean`
                     }
                 ]
             },
@@ -797,13 +807,19 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
+                        key: `poll_default_live_voting_enabled`,
+                        label: _(`Set live voting enabled by default`),
+                        type: `boolean`,
+                        helpText: _(`Only available for nominal voting`)
+                    },
+                    {
                         key: `motion_poll_default_group_ids`,
                         label: _(`Default groups with voting rights`),
                         type: `groups`
                     },
                     {
                         key: `motion_poll_default_method`,
-                        label: _(`Default vote method`),
+                        label: _(`Default voting method`),
                         type: `choice`,
                         choices: MotionPollMethodVerbose
                     },

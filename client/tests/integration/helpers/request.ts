@@ -47,7 +47,11 @@ export async function os4request(context: BrowserContext, osAction: string, body
     expect(response.status()).toBe(200);
     expect(responseBody?.success).toBeTruthy();
 
-    return responseBody?.results[0][0];
+    if (responseBody?.results[0]) {
+        return responseBody?.results[0][0];
+    }
+
+    return responseBody?.results[0];
 }
 
 export async function createAccount(

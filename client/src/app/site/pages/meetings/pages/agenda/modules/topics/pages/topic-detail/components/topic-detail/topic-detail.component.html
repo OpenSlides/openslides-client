@@ -13,17 +13,15 @@
     >
         <!-- Title -->
         <div class="title-slot">
-            <h2>
+            <h1 class="mock-h2">
                 @if (newTopic) {
-                    <span>{{ 'New topic' | translate }}</span>
+                    {{ 'New topic' | translate }}
+                } @else if (editTopic) {
+                    {{ 'Edit topic' | translate }}
+                } @else if (topic) {
+                    {{ 'Topic' | translate }}
                 }
-                @if (editTopic && !newTopic) {
-                    <span>{{ 'Edit topic' | translate }}</span>
-                }
-                @if (!newTopic && !editTopic && topic) {
-                    <span>{{ 'Topic' | translate }}</span>
-                }
-            </h2>
+            </h1>
         </div>
 
         <!-- Back and forth buttons -->
@@ -68,7 +66,7 @@
                         @if (topic.text) {
                             <span>
                                 <!-- Render topic text as HTML -->
-                                <div class="detail-view" [innerHTML]="topic.text | trust: 'html'"></div>
+                                <div class="detail-view html-view" [innerHTML]="topic.text | trust: 'html'"></div>
                             </span>
                         }
                     </div>
@@ -81,8 +79,11 @@
                             </h3>
                             <mat-list dense>
                                 @for (file of sortedAttachments; track file) {
-                                    <mat-list-item>
-                                        <a target="_blank" [routerLink]="file.url">{{ file.getTitle() }}</a>
+                                    <mat-list-item class="attachment-entry">
+                                        <a target="_blank" [routerLink]="file.url">
+                                            <mat-icon class="attachment-icon">{{ file.getIcon() }}</mat-icon>
+                                            {{ file.getTitle() }}
+                                        </a>
                                     </mat-list-item>
                                 }
                             </mat-list>
@@ -91,7 +92,7 @@
                 }
 
                 @if (editTopic && topicForm) {
-                    <form tabindex="-1" [formGroup]="topicForm" (keydown)="onKeyDown($event)">
+                    <form tabindex="-1" [formGroup]="topicForm">
                         <div>
                             <mat-form-field>
                                 <mat-label>{{ 'Title' | translate }}</mat-label>
@@ -141,6 +142,11 @@
                             </div>
                         } @else {
                             <div class="apply-button">
+                                @if (applyFeedback) {
+                                    <div class="apply-feedback-icon">
+                                        <mat-icon>check</mat-icon>
+                                    </div>
+                                }
                                 <button mat-stroked-button (click)="applyTopicContent()">
                                     <span>{{ 'Apply' | translate }}</span>
                                 </button>
@@ -171,7 +177,7 @@
                         (click)="openDialog()"
                     >
                         <mat-icon class="main-nav-color">add</mat-icon>
-                        <span>{{ 'New vote' | translate }}</span>
+                        <span>{{ 'New poll' | translate }}</span>
                     </button>
                 </div>
             }
@@ -182,9 +188,9 @@
 <mat-menu #topicExtraMenu="matMenu">
     <ng-template matMenuContent>
         <!-- PDF -->
-        <button mat-menu-item (click)="onDownloadPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'PDF' | translate }}</span>
+        <button mat-menu-item (click)="onExport()">
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export' | translate }}</span>
         </button>
 
         <os-projector-button [menuItem]="true" [object]="topic" />
@@ -196,5 +202,11 @@
                 <span>{{ 'Delete' | translate }}</span>
             </button>
         </div>
+        @if (isAdmin && canForward) {
+            <button mat-menu-item [disabled]="agendaItemForwardDisabled" (click)="forwardAgendaItemsToMeetings()">
+                <mat-icon>forward</mat-icon>
+                <span>{{ 'Copy to' | translate }}</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>

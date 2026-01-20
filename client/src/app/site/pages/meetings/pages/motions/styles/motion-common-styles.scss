@@ -1,4 +1,5 @@
-@import 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/variables.scss';
 
 .motion-text {
     ins,
@@ -121,6 +122,27 @@
     }
 }
 
+@include variables.desktop {
+    .motion-text > * {
+        max-width: 100%;
+        word-break: break-all;
+    }
+}
+@include variables.phone {
+    .motion-text > * {
+        max-width: 100%;
+        display: block;
+        word-break: break-all;
+    }
+}
+@include variables.tablet {
+    .motion-text > * {
+        max-width: 100%;
+        display: block;
+        word-break: break-all;
+    }
+}
+
 .amendment-view {
     .os-split-after {
         margin-bottom: 0;
@@ -135,5 +157,5 @@
         opacity: 1;
     }
 
-    @include detail-view-appearance;
+    @include detail-view-appearance.detail-view-appearance;
 }

@@ -44,6 +44,17 @@
                     </mat-form-field>
                 }
             </div>
+            <div class="margin-bottom-15">
+                <!-- Live voting -->
+                @if (isEVotingSelected && isNamedVotingSelected && isMotionPoll) {
+                    <mat-checkbox formControlName="live_voting_enabled">
+                        {{ PollPropertyVerbose.live_voting_enabled | translate }}
+                    </mat-checkbox>
+                    <mat-hint>
+                        {{ 'Allows single votes projection during voting process' | translate }}
+                    </mat-hint>
+                }
+            </div>
             <div class="flex-info-grid">
                 <!-- Poll Methods -->
                 @if (!isCreatedList && filteredPollMethods && !hideSelects.pollMethod) {

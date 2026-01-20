@@ -29,6 +29,13 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
 
 const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitForActionDialogModule];
 
+// Firefox does not close connections to the autoupdate service
+// when a ServiceWorker is active https://bugzilla.mozilla.org/show_bug.cgi?id=1984032
+const isFirefox = navigator.userAgent.search('Firefox') > -1;
+if (isFirefox && `serviceWorker` in navigator) {
+    navigator.serviceWorker.ready.then(r => r.unregister());
+}
+
 @NgModule({
     declarations: [OpenSlidesMainComponent, OpenSlidesOverlayContainerComponent],
     bootstrap: [OpenSlidesMainComponent],
@@ -38,7 +45,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         BrowserAnimationsModule,
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
-            enabled: environment.production,
+            enabled: environment.production && !isFirefox,
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).
             registrationStrategy: `registerWhenStable:30000`
@@ -53,7 +60,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitFor
         httpInterceptorProviders,
         provideHttpClient(withInterceptorsFromDi()),
         provideTranslateService({
-            defaultLanguage: `en`,
+            fallbackLang: `en`,
             loader: {
                 provide: TranslateLoader,
                 useClass: PruningTranslationLoader,

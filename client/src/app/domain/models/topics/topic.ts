@@ -33,9 +33,10 @@ export class Topic extends BaseModel<Topic> {
     ];
 }
 export interface Topic
-    extends HasMeetingId,
-    HasAgendaItemId,
-    HasListOfSpeakersId,
-    HasAttachmentMeetingMediafileIds,
-    HasSequentialNumber,
-    HasPollIds {}
+    extends
+        HasMeetingId,
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasAttachmentMeetingMediafileIds,
+        HasSequentialNumber,
+        HasPollIds {}

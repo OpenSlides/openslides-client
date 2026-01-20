@@ -72,7 +72,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public get showLanguageWarning(): boolean {
-        return this.translate.currentLang !== `en`;
+        return this.translate.getCurrentLang() !== `en`;
     }
 
     public waitingForResultsSubject = new BehaviorSubject(false);
@@ -111,8 +111,11 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                         this.operator.canSkipPermissionCheck
                             ? meetings.filter(meeting => !meeting.locked_from_inside)
                             : meetings.filter(
-                                    meeting => this.operator.isInMeeting(meeting.id) && !meeting.locked_from_inside
-                                )
+                                  meeting =>
+                                      (this.operator.isInMeeting(meeting.id) ||
+                                          this.operator.isCommitteeManagerForMeeting(meeting.id)) &&
+                                      !meeting.locked_from_inside
+                              )
                     )
                 )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
@@ -166,6 +169,6 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     private updatePermissions(): void {
         this.canManage =
-            this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isCommitteeManager;
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isAnyCommitteeManager;
     }
 }

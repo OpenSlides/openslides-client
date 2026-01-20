@@ -19,8 +19,8 @@ export class ProjectorCountdownDialogService extends BaseDialogService<
         duration = ``,
         count = 0
     }: Partial<CountdownDialogData>): Promise<
-            MatDialogRef<ProjectorCountdownDialogComponent, Partial<CountdownDialogData>>
-        > {
+        MatDialogRef<ProjectorCountdownDialogComponent, Partial<CountdownDialogData>>
+    > {
         const module = await import(`../projector-countdown-dialog.module`).then(m => m.ProjectorCountdownDialogModule);
         return this.dialog.open(module.getComponent(), {
             data: { description, title, count, duration },

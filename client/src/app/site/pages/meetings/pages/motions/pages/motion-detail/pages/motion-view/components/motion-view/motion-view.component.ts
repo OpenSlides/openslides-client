@@ -20,7 +20,8 @@ import {
     Observable,
     startWith,
     Subject,
-    Subscription
+    Subscription,
+    switchMap
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -55,7 +56,6 @@ import { AmendmentListFilterService } from '../../../../../../services/list/amen
 import { AmendmentListSortService } from '../../../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListFilterService } from '../../../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionDetailViewOriginUrlService } from '../../../../services/motion-detail-view-originurl.service';
 import { MotionDeleteDialogComponent } from '../motion-delete-dialog/motion-delete-dialog.component';
 
 @Component({
@@ -95,6 +95,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public showAllAmendments = false;
+    private _forwardingAvailable = false;
 
     /**
      * preloaded next motion for direct navigation
@@ -104,6 +105,21 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
+    }
+
+    public get showForwardMenuEntry(): boolean {
+        const derivedMotionMeetingIds = this.motion.derived_motions?.map(derivedMotion => +derivedMotion.meeting_id);
+        const forwardingMeetingsIds = this.motionForwardingService.forwardingMeetingIds;
+        return (
+            !!this.motion.state?.allow_motion_forwarding &&
+            this.operator.hasPerms(Permission.motionCanForward) &&
+            this._forwardingAvailable &&
+            forwardingMeetingsIds.some(meetingId => !derivedMotionMeetingIds.includes(meetingId))
+        );
+    }
+
+    public get showForwardButton(): boolean {
+        return this.showForwardMenuEntry && !this.motion.derived_motions.length;
     }
 
     private _changeRecoMode: ChangeRecoMode = ChangeRecoMode.Original;
@@ -167,7 +183,6 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private cd: ChangeDetectorRef,
         private dialog: MatDialog,
         private pdfExport: MotionPdfExportService,
-        private originUrlService: MotionDetailViewOriginUrlService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private autoupdateService: AutoupdateService
     ) {
@@ -181,6 +196,13 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                 )
                 .subscribe(() => this.onMotionChange())
         );
+
+        if (operator.hasPerms(Permission.motionCanForward)) {
+            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+                this._forwardingAvailable = forwardingAvailable && !this.motion?.isAmendment();
+                this.cd.markForCheck();
+            });
+        }
     }
 
     /**
@@ -382,20 +404,16 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public hideOriginMotion(id: Id): void {
-        const idx = this.originMotionsLoaded.findIndex(m => m.id === id);
-        if (idx !== -1) {
-            this.originMotionsLoaded.splice(idx, 1);
-        }
+        this.originMotionsLoaded = this.originMotionsLoaded.filter(m => m.id !== id);
     }
 
     private addOriginMotionTab(id: Id): void {
         const originMotion = this.repo.getViewModelUnsafe(id);
-        if (!this.originMotionsLoaded.find(m => m.id === id)) {
+        if (originMotion && !this.originMotionsLoaded.find(m => m.id === id)) {
             const meeting = this.meetingRepo.getViewModelUnsafe(originMotion.meeting_id);
             originMotion.meeting = meeting;
 
-            this.originMotionsLoaded.push(originMotion);
-            this.originMotionsLoaded.sort((a, b) => b.id - a.id);
+            this.originMotionsLoaded = [...this.originMotionsLoaded, originMotion].sort((a, b) => b.id - a.id);
             this.originUnifiedChanges[id] = this.motionLineNumbering.recalcUnifiedChanges(
                 originMotion.meeting?.motions_line_length || this.meetingSettingsService.instant(`motions_line_length`),
                 originMotion.change_recommendations,
@@ -413,21 +431,24 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
         this.subscriptions.updateSubscription(
             `sorted-changes`,
-            this.sortedChangesSubscription(this.motion, this.unifiedChanges$)
+            this.sortedChangesSubscription(this.motion.id, this.unifiedChanges$)
         );
     }
 
-    private sortedChangesSubscription(motion: ViewMotion, subject: Subject<ViewUnifiedChange[]>): Subscription {
+    private sortedChangesSubscription(motionId: Id, subject: Subject<ViewUnifiedChange[]>): Subscription {
         let previousAmendments: ViewMotion[] = null;
 
         return combineLatest([
             this.meetingSettingsService.get(`motions_line_length`),
-            this.changeRecoRepo.getChangeRecosOfMotionObservable(motion.id).pipe(filter(value => !!value)),
-            motion.amendments$.pipe(startWith([]))
+            this.changeRecoRepo.getChangeRecosOfMotionObservable(motionId).pipe(filter(value => !!value)),
+            this.repo.getViewModelObservable(motionId).pipe(
+                filter(m => !!m),
+                switchMap(m => m.amendments$.pipe(startWith([])))
+            )
         ])
             .pipe(auditTime(1)) // Needed to replicate behaviour of base-repository list updates
             .subscribe(([lineLength, changeRecos, amendments]) => {
-                if (motion.id === this.motion.id) {
+                if (motionId === this.motion.id) {
                     if (previousAmendments !== amendments) {
                         this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
                         previousAmendments = amendments;
@@ -441,7 +462,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                         amendments
                     )
                 );
-                if (motion.id === this.motion.id) {
+                if (motionId === this.motion.id) {
                     this.changeRecoMode = this.determineCrMode(this.changeRecoMode);
                 }
                 this.cd.markForCheck();
@@ -450,7 +471,11 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private updateSortedMotionsObservable(): void {
         // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
+        if (
+            this.motion &&
+            this.motion.lead_motion_id &&
+            (!this._amendmentsInMainList || this._navigatedFromAmendmentList)
+        ) {
             // only use the amendments for this motion
             this.amendmentSortService.initSorting();
             this.amendmentFilterService.initFilters(
@@ -459,6 +484,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
                     this.amendmentSortService.repositorySortingKey
                 )
             );
+            if (this._amendmentsInMainList && this._navigatedFromAmendmentList) {
+                this.amendmentFilterService.parentMotionId = null;
+            }
             this._sortedMotionsObservable = this.amendmentFilterService.outputObservable;
         } else {
             this.motionSortService.initSorting();
@@ -506,14 +534,9 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
      * Does nothing on navigation between two motions.
      */
     private isNavigatedFromAmendments(): void {
-        const previousUrl = this.originUrlService.getPreviousUrl();
-        if (previousUrl) {
-            if (previousUrl.endsWith(`amendments`)) {
-                this._navigatedFromAmendmentList = true;
-            } else if (previousUrl.endsWith(`motions`)) {
-                this._navigatedFromAmendmentList = false;
-            }
-        }
+        this.storage.get('motion-navigation-last').then(last => {
+            this._navigatedFromAmendmentList = last === 'amendment-list';
+        });
     }
 
     /**

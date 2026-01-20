@@ -1,4 +1,6 @@
 @use 'src/assets/styles/mixins/detail-view-appearance.scss';
+@use 'src/assets/styles/variables.scss';
+
 .extra-data {
     display: flex;
     flex-direction: column;
@@ -6,7 +8,38 @@
 }
 
 .motion-content {
-    h3 {
-        font-weight: bold;
+    div > div {
+        @include variables.desktop {
+            max-width: 82%;
+            padding-left: 2.5em;
+        }
+        @include variables.phone {
+            max-width: 100%;
+            display: block;
+            word-break: break-all;
+        }
+        @include variables.tablet {
+            max-width: 100%;
+            display: block;
+            word-break: break-all;
+        }
+        h3 {
+            font-weight: bold;
+        }
+    }
+}
+
+.attachment-entry {
+    height: auto;
+    height: max-content !important;
+
+    a {
+        text-wrap: wrap;
+        max-width: 100%;
+        word-break: break-word;
+    }
+
+    .attachment-icon {
+        vertical-align: text-bottom;
     }
 }

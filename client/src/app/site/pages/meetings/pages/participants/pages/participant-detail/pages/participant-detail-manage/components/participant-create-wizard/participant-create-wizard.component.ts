@@ -54,7 +54,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         vote_delegations_from_ids: [``],
         vote_delegated_to_id: [``],
         is_present: [``],
-        locked_out: [``]
+        locked_out: [``],
+        home_committee_id: [``],
+        external: [``]
     };
 
     public get randomPasswordFn(): (() => string) | null {
@@ -272,8 +274,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                     : undefined,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                            .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
-                            .filter((id: Id | undefined) => !!id)
+                          .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter((id: Id | undefined) => !!id)
                     : []
             };
             if (payload.gender_id === 0) {
@@ -366,9 +368,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     private cleanUpGroups(group_ids: number[]): number[] {
         const meeting_group_ids = this.activeMeetingService.meeting.group_ids;
-        group_ids = group_ids.filter(group_id =>
-            meeting_group_ids.includes(group_id)
-        );
+        group_ids = group_ids.filter(group_id => meeting_group_ids.includes(group_id));
         return group_ids;
     }
 }

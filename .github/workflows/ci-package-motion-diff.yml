@@ -1,0 +1,41 @@
+name: CI - Build and Test Motion Diff Package
+
+on:
+  pull_request:
+    path:
+      - 'packages/openslides-motion-diff/**'
+    branches:
+      - main
+      - 'feature/**'
+      - 'staging**'
+
+env:
+  NG_CLI_ANALYTICS: ci
+
+jobs:
+  build-and-test-package-motion-diff:
+    name: build-and-test-package-motion-diff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: 'Install Node'
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - name: 'Install Deps'
+        working-directory: ./packages/openslides-motion-diff
+        run: npm install
+
+      - name: 'Run tests'
+        working-directory: ./packages/openslides-motion-diff
+        run: npm run coverage
+
+      - name: 'Report Coverage'
+        # Set if: always() to also generate the report if tests are failing
+        # Only works if you set `reportOnFailure: true` in your vite config as specified above
+        if: always() 
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: ./packages/openslides-motion-diff

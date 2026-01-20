@@ -1,6 +1,11 @@
 <os-head-bar>
     <div class="title-slot">
-        <h2>{{ 'Autopilot' | translate }}</h2>
+        <h1 class="mock-h2">
+            {{ 'Autopilot' | translate }}
+            @if ((title || '').toLowerCase() === 'axolotl') {
+                ⚞(⚬___⚬)⚟
+            }
+        </h1>
     </div>
 
     <!-- Menu -->
@@ -23,7 +28,16 @@
     </ng-container>
 </os-head-bar>
 
-<div class="content-container">
+<div
+    class="content-container"
+    [ngClass]="{
+        'split-autopilot':
+            disabledContentElements['speaking-times'] !== true &&
+                structureLevelCountdownEnabled &&
+                listOfSpeakers &&
+                showRightCol | async
+    }"
+>
     <div class="col-wrapper">
         <div class="col-main">
             <!-- Title Card -->
@@ -56,13 +70,15 @@
                     <div class="line-and-icon subtitle-text">
                         @if (closUrl) {
                             <a [routerLink]="closUrl">
-                                {{ 'List of speakers' | translate }}
+                                <h2 class="accessibility-h2 accessibility-h2-1">
+                                    {{ 'List of speakers' | translate }}
+                                </h2>
                             </a>
                         }
                         @if (!closUrl) {
-                            <span>
+                            <h2 class="accessibility-h2 accessibility-h2-1">
                                 {{ 'List of speakers' | translate }}
-                            </span>
+                            </h2>
                         }
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
@@ -125,7 +141,7 @@
             </ng-container>
 
             <!-- Moderator Note-->
-            @if (hasCurrentProjection && disabledContentElements['moderation-note'] !== true) {
+            @if (hasCurrentProjection && !!listOfSpeakers && disabledContentElements['moderation-note'] !== true) {
                 <div>
                     <os-moderation-note
                         [listOfSpeakers]="listOfSpeakers"
@@ -141,7 +157,7 @@
             ) {
                 <os-poll-collection
                     [currentProjection]="projectedViewModel"
-                    [disableFinished]="disabledContentElements['poll-finished'] === true"
+                    [disableFinished]="disabledContentElements['poll-finished'] === true || isAgendaListProjection"
                     [disableRunning]="disabledContentElements['poll-running'] === true"
                     [displayInAutopilot]="true"
                 ></os-poll-collection>
@@ -152,7 +168,9 @@
                 <mat-card class="os-card spacer-bottom-60">
                     <mat-card-content>
                         <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
-                            <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                            <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text">
+                                {{ projectorTitle }}
+                            </h2>
                         </a>
                         <a
                             [routerLink]="viewModelUrl || null"
@@ -188,10 +206,7 @@
 <ng-template #speakingTimes>
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
-            <os-speaking-times
-                [currentSpeakingTimes]="listOfSpeakers.structure_level_list_of_speakers_ids"
-                [showProjectionMenu]="false"
-            />
+            <os-speaking-times [listOfSpeakers]="listOfSpeakers" [showProjectionMenu]="false" />
         </mat-card-content>
     </mat-card>
 </ng-template>

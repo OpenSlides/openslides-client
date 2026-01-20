@@ -1,7 +1,7 @@
 /**
  * General settings all dialogs are using.
  */
-const generalSettings = { disableClose: true, maxWidth: `90vw`, maxHeight: `90vh` };
+const generalSettings = { disableClose: false, maxWidth: `90vw`, maxHeight: `90vh` };
 
 /**
  * Settings to display a large (wide) dialog.

@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Motions' | translate }}</h2>
+        <h1 class="mock-h2" translate>Motions</h1>
     </div>
 
     <!-- Menu -->
@@ -26,12 +26,22 @@
         @if (hasCategories && !isMultiSelect) {
             <div>
                 @if (selectedView === 'list') {
-                    <button mat-button matTooltip="{{ 'Tile view' | translate }}" (click)="onChangeView('tiles')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'Tile view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('tiles')"
+                    >
                         <mat-icon>view_module</mat-icon>
                     </button>
                 }
                 @if (selectedView === 'tiles') {
-                    <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
+                    <button
+                        mat-button
+                        matTooltip="{{ 'List view' | translate }}"
+                        [matTooltipShowDelay]="500"
+                        (click)="onChangeView('list')"
+                    >
                         <mat-icon>view_headline</mat-icon>
                     </button>
                 }
@@ -114,7 +124,7 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="column-title innerTable overflow-hidden">
-                <div class="title-line ellipsis-overflow">
+                <h1 aria-label="{{ getAriaLabel(motion) }}" class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     @if (motion.getPersonalNote()?.star) {
                         <span class="favorite-star">
@@ -137,13 +147,13 @@
                         }
                         {{ motion.title }}
                     </span>
-                </div>
+                </h1>
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequential) {
@@ -178,9 +188,9 @@
                 </div>
                 <!-- TODO: These two now appear twice. Might be an own component -->
                 <!-- Workflow state -->
-                <div class="ellipsis-overflow white">
+                <div class="white">
                     @if (motion.state) {
-                        <mat-basic-chip [disabled]="true" [ngClass]="motion.stateCssColor">
+                        <mat-basic-chip class="non-overflowing-chip" [disabled]="true" [ngClass]="motion.stateCssColor">
                             {{ motionRepo.getExtendedStateLabel(motion) | translate }}
                         </mat-basic-chip>
                     }
@@ -188,54 +198,56 @@
                 <!-- Recommendation -->
                 @if (motion.recommendation && motion.state?.next_state_ids?.length) {
                     <div class="ellipsis-overflow white spacer-top-3">
-                        <mat-basic-chip class="bluegrey" [disabled]="true">
+                        <mat-basic-chip class="bluegrey non-overflowing-chip" [disabled]="true">
                             {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
                         </mat-basic-chip>
                     </div>
                 }
             </div>
         </div>
-        <!-- Category, blocks and tags -->
-        <div
-            *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
-            class="cell-slot fill"
-            tabindex="0"
-            [ngClass]="isMultiSelect ? '' : 'clickable'"
-            (click)="openEditInfo(motion)"
-            (keyup.space)="openEditInfo(motion)"
-        >
-            <div class="column-state innerTable">
-                <!-- Category -->
-                @if (motion.category) {
-                    <div class="ellipsis-overflow">
-                        <os-icon-container icon="category">
-                            @if (motion.category.parent) {
-                                <div class="ellipsis-overflow">
-                                    {{ motion.category.parent.toString() }}
-                                </div>
-                            }
-                            <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
-                        </os-icon-container>
-                    </div>
-                }
-                <!-- Motion Block -->
-                @if (motion.block) {
-                    <div class="ellipsis-overflow spacer-top-5">
-                        <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
-                    </div>
-                }
-                <!-- Tags -->
-                @if (motion.tags && motion.tags.length) {
-                    <div class="ellipsis-overflow spacer-top-5">
-                        <os-icon-container icon="local_offer">
-                            <os-comma-separated-listing [list]="motion.tags">
-                                <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
-                            </os-comma-separated-listing>
-                        </os-icon-container>
-                    </div>
-                }
+        @if (hasCategories || hasMotionBlocks || hasTags) {
+            <!-- Category, blocks and tags -->
+            <div
+                *osScrollingTableCell="'state'; row as motion; config: { width: 240 }"
+                class="cell-slot fill"
+                tabindex="0"
+                [ngClass]="isMultiSelect ? '' : 'clickable'"
+                (click)="openEditInfo(motion)"
+                (keyup.space)="openEditInfo(motion)"
+            >
+                <div class="column-state innerTable">
+                    <!-- Category -->
+                    @if (motion.category) {
+                        <div class="ellipsis-overflow">
+                            <os-icon-container icon="category">
+                                @if (motion.category.parent) {
+                                    <div class="ellipsis-overflow">
+                                        {{ motion.category.parent.toString() }}
+                                    </div>
+                                }
+                                <div class="ellipsis-overflow">{{ motion.category.toString() }}</div>
+                            </os-icon-container>
+                        </div>
+                    }
+                    <!-- Motion Block -->
+                    @if (motion.block) {
+                        <div class="ellipsis-overflow spacer-top-5">
+                            <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
+                        </div>
+                    }
+                    <!-- Tags -->
+                    @if (motion.tags && motion.tags.length) {
+                        <div class="ellipsis-overflow spacer-top-5">
+                            <os-icon-container icon="local_offer">
+                                <os-comma-separated-listing [list]="motion.tags">
+                                    <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
+                                </os-comma-separated-listing>
+                            </os-icon-container>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
+        }
         <!-- Menu -->
         <div *osScrollingTableCell="'menu'; config: { width: 40 }; row as motion" class="cell-slot fill">
             <button
@@ -303,13 +315,12 @@
                         {{ motion.title }}
                     </span>
                 </div>
-
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
                     @if (motion.submitterNames.length) {
                         <span>
                             <span>{{ 'by' | translate }}</span>
-                            {{ motion.submitterNames }}
+                            {{ getSubmitterListWithDeletedUsers(motion.submitterNames) }}
                         </span>
                     }
                     @if (showSequential) {

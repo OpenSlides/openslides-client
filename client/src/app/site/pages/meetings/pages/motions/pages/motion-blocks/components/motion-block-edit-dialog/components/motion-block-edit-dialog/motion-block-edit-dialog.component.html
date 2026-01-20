@@ -1,12 +1,6 @@
 <h1 mat-dialog-title>{{ 'Edit details for' | translate }} {{ block.title }}</h1>
 <mat-dialog-content class="os-form-card-mobile">
-    <form
-        class="edit-form"
-        tabindex="-1"
-        [formGroup]="blockEditForm"
-        (keydown)="onKeyDown($event)"
-        (ngSubmit)="saveBlock()"
-    >
+    <form class="edit-form" tabindex="-1" [formGroup]="blockEditForm" (ngSubmit)="saveBlock()">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <input formControlName="title" matInput osAutofocus required />

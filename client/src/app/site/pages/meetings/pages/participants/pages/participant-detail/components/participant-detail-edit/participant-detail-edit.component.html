@@ -8,11 +8,11 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>
+        <h1 class="mock-h2">
             @if (user) {
-                <span>{{ user.full_name }}</span>
+                {{ user.full_name }}
             }
-        </h2>
+        </h1>
     </div>
 </os-head-bar>
 
@@ -162,6 +162,29 @@
                         </mat-form-field>
                     </div>
                 }
+            </div>
+            <h2>{{ 'Organization specific information' | translate }}</h2>
+            <div [formGroup]="form">
+                <!-- Home committee -->
+                <div class="home-committee-area">
+                    <mat-form-field class="form50 force-min-width">
+                        <mat-label>{{ 'Home committee' | translate }}</mat-label>
+                        <os-repo-search-selector
+                            formControlName="home_committee_id"
+                            [disabled]="!canManageHomeCommittee"
+                            [includeNone]="true"
+                            [multiple]="false"
+                            [repo]="committeeController"
+                            [sortService]="committeeSortService"
+                            [subscriptionConfig]="committeeSubscriptionConfig"
+                            [transformPropagateFn]="getTransformPropagateFn()"
+                            [transformSetFn]="getTransformSetHomeCommitteeFn()"
+                        ></os-repo-search-selector>
+                    </mat-form-field>
+                    <mat-checkbox class="form50 external-margin-top force-min-width" formControlName="external">
+                        {{ 'external' | translate }}
+                    </mat-checkbox>
+                </div>
             </div>
         </ng-template>
     </os-user-detail-view>

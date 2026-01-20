@@ -17,7 +17,7 @@
                     [noWrap]="true"
                     [showIcon]="projector.is_internal"
                 >
-                    <h2>{{ projector.name }}</h2>
+                    <h1 class="mock-h2">{{ projector.name }}</h1>
                 </os-icon-container>
             </div>
         }
@@ -66,10 +66,7 @@
                             [routerLink]="['/', activeMeetingId, 'projectors', projector.sequential_number]"
                         >
                             <div id="projector">
-                                <os-projector
-                                    [projector]="projector"
-                                    (loadedSlidesEvent)="loadPDFSizes()"
-                                ></os-projector>
+                                <os-projector [projector]="projector"></os-projector>
                             </div>
                         </a>
                         <!-- Controls under the projector preview -->
@@ -105,19 +102,6 @@
                             <span class="button-size" [ngClass]="projector.scale !== 0 ? 'warn' : ''">
                                 {{ projector.scale }}
                             </span>
-                            <!-- scroll viewport up (projector-height), decrease scroll counter -->
-                            @if (isPdfProjection) {
-                                <button
-                                    class="spacer-left-50"
-                                    mat-icon-button
-                                    matTooltip="{{ 'Previous page' | translate }}"
-                                    type="button"
-                                    [disabled]="projector.scroll <= 4"
-                                    (click)="scrollPdf(scrollScaleDirection.Down)"
-                                >
-                                    <mat-icon>keyboard_double_arrow_up</mat-icon>
-                                </button>
-                            }
                             <!-- scroll viewport up (fast), decrease scroll counter -->
                             <button
                                 mat-icon-button
@@ -156,17 +140,6 @@
                             >
                                 <mat-icon>arrow_downward</mat-icon>
                             </button>
-                            <!-- scroll viewport down (projector-height), increase scroll counter -->
-                            @if (isPdfProjection) {
-                                <button
-                                    mat-icon-button
-                                    matTooltip="{{ 'Next page' | translate }}"
-                                    type="button"
-                                    (click)="scrollPdf(scrollScaleDirection.Up)"
-                                >
-                                    <mat-icon>keyboard_double_arrow_down</mat-icon>
-                                </button>
-                            }
                             <!-- reset button -->
                             <button
                                 mat-icon-button
@@ -363,6 +336,19 @@
                             </mat-expansion-panel-header>
                             <div class="card-list">
                                 <div class="card-list-item">
+                                    <mat-card class="home-card" style="width: 100%">
+                                        <mat-card-content>
+                                            <div class="home-button-area">
+                                                <os-projector-button
+                                                    [object]="welcomeMessageBuildDesc()"
+                                                    [projector]="projector"
+                                                ></os-projector-button>
+                                                <span>{{ 'Meeting home' | translate }}</span>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                                <div class="card-list-item">
                                     <mat-card class="wifi-card" style="width: 100%">
                                         <mat-card-content>
                                             <div
@@ -433,18 +419,16 @@
                                 ></os-projector-button>
                                 <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                             </div>
-                            <!-- Strucutre level current speaker -->
-                            @if (isStructureLevelCountdownEnabled()) {
-                                <div class="projectable-entry">
-                                    <os-projector-button
-                                        [object]="getCurrentStructureLevel()"
-                                        [projector]="projector"
-                                    ></os-projector-button>
-                                    <span class="spacer-left-10">
-                                        {{ 'Speaking time – current contribution' | translate }}
-                                    </span>
-                                </div>
-                            }
+                            <!-- Current speaker -->
+                            <div class="projectable-entry">
+                                <os-projector-button
+                                    [object]="getCurrentStructureLevel()"
+                                    [projector]="projector"
+                                ></os-projector-button>
+                                <span class="spacer-left-10">
+                                    {{ 'Speaking time – current contribution' | translate }}
+                                </span>
+                            </div>
                             <!-- All structure level -->
                             @if (
                                 projectorCount > 1 &&

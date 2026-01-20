@@ -111,7 +111,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `is_active`,
             `meeting_ids`,
             `saml_id`,
-            `member_number`
+            `member_number`,
+            `external`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
@@ -124,14 +125,22 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
             `committee_management_ids`,
-            `default_password`
+            `default_password`,
+            `home_committee_id`
         ]);
 
         const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
             .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`, `default_password`, `committee_ids`, `committee_management_ids`]);
+            .concat([
+                `is_present_in_meeting_ids`,
+                `default_password`,
+                `committee_ids`,
+                `committee_management_ids`,
+                `home_committee_id`,
+                `external`
+            ]);
 
         const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
@@ -151,13 +160,13 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 user: this.sanitizePayload(this.getBaseUserPayloadCreate(user), true),
                 ...(meetingUsers && meetingUsers.length
                     ? {
-                            first_meeting_user: this.sanitizePayload(
-                                this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
-                            ),
-                            rest: meetingUsers.map(meetingUser =>
-                                this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
-                            )
-                        }
+                          first_meeting_user: this.sanitizePayload(
+                              this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
+                          ),
+                          rest: meetingUsers.map(meetingUser =>
+                              this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
+                          )
+                      }
                     : {})
             };
         });
@@ -274,7 +283,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: partialUser.email,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
-            committee_management_ids: partialUser.committee_management_ids
+            committee_management_ids: partialUser.committee_management_ids,
+            home_committee_id: partialUser.home_committee_id,
+            external: partialUser.external
         };
 
         return partialPayload;
@@ -384,6 +395,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         viewModel.isSelfVotingAllowedDespiteDelegation = (): boolean =>
             !this.meetingSettingsService.instant(`users_enable_vote_delegations`) ||
             !this.meetingSettingsService.instant(`users_forbid_delegator_to_vote`);
+        viewModel.getTranslatedExternal = (): string => this.translate.instant(`external`);
         return viewModel;
     }
 
@@ -565,7 +577,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `about_me`,
             `number`,
             `structure_level`,
-            `locked_out`
+            `locked_out`,
+            `home_committee_id`,
+            `external`
         ];
         if (!create) {
             fields.push(`member_number`);

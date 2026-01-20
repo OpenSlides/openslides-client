@@ -1,6 +1,8 @@
 <os-head-bar>
     <!-- Title -->
-    <div class="title-slot">{{ 'History' | translate }}</div>
+    <div class="title-slot">
+        <h1 class="mock-h2" translate>History</h1>
+    </div>
 </os-head-bar>
 
 <mat-card class="os-card spacer-bottom-60">
@@ -28,14 +30,6 @@
                             (openedChange)="resetListValues($event)"
                         ></os-list-search-selector>
                     </mat-form-field>
-                </span>
-                <span class="spacer-left-20">
-                    @if (currentFqid) {
-                        <button mat-button (click)="refresh()">
-                            <mat-icon>refresh</mat-icon>
-                            <span>{{ 'Refresh' | translate }}</span>
-                        </button>
-                    }
                 </span>
             </div>
             <div>

@@ -1,7 +1,9 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     Inject,
     OnInit,
     ViewChild,
@@ -10,7 +12,6 @@ import {
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
 import {
     PROJECTIONDEFAULT,
@@ -18,7 +19,7 @@ import {
     PROJECTIONDEFAULT_VERBOSE
 } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
-import { ProjectorComponent } from 'src/app/site/pages/meetings/modules/projector/components/projector/projector.component';
+import { HttpService } from 'src/app/gateways/http.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -43,13 +44,13 @@ interface ProjectorEditDialogConfig {
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
-export class ProjectorEditDialogComponent extends BaseUiComponent implements OnInit {
+export class ProjectorEditDialogComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     /**
      * import the projector as view child, to determine when to update
      * the preview.
      */
-    @ViewChild(`preview`)
-    public preview: ProjectorComponent | null = null;
+    @ViewChild(`preview`, { read: ElementRef })
+    public preview: ElementRef<HTMLElement> | null = null;
 
     /**
      * aspect ratios
@@ -126,10 +127,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
 
     public constructor(
         formBuilder: UntypedFormBuilder,
-        private translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) private data: ProjectorEditDialogConfig,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private cd: ChangeDetectorRef,
+        private http: HttpService,
         private activeMeeting: ActiveMeetingService
     ) {
         super();
@@ -188,6 +189,12 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         }
     }
 
+    public ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.onChangeForm();
+        }, 100);
+    }
+
     /**
      * Apply changes and close the dialog
      */
@@ -208,15 +215,24 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     /**
      * React to form changes to update the preview
      */
-    public onChangeForm(): void {
+    public async onChangeForm(): Promise<void> {
         if (this.previewProjector && this.data.projector && this.updateForm.valid) {
-            const copy = new Projector(this.data.projector.getModel());
-            this.previewProjector = Object.assign(copy, this.updateForm.value, {
-                scale: this.data.projector.scale,
-                scroll: this.data.projector.scroll,
-                sequential_number: this.data.projector.sequential_number
-            });
-            this.previewProjector.current_projections = this.data.projector.current_projections;
+            const nextProjector = this.fitUpdatePayload(this.updateForm.value);
+
+            const projectorHtml = await this.http.post(
+                `/system/projector/preview/${this.data.projector.id}`,
+                nextProjector,
+                {
+                    responseType: `text`
+                }
+            );
+            const el = this.preview.nativeElement as any;
+            el.contentWindow.document.open();
+            el.contentWindow.document.write(projectorHtml);
+            el.contentWindow.document.close();
+            const width = this.preview.nativeElement.getBoundingClientRect().width;
+            el.style.height =
+                ((width - 2) / nextProjector.aspect_ratio_numerator) * nextProjector.aspect_ratio_denominator + `px`;
             this.cd.markForCheck();
         }
     }
@@ -320,24 +336,20 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     private getProjectionDefaultsPayload(projectiondefaultKeys: string[]): Record<string, any> {
         const payload = {};
         // All defaults that are set to true should be set to the current projectors id
-        for (let i = 0; i < projectiondefaultKeys.length; i++) {
-            payload[projectiondefaultKeys[i]] = [
-                ...new Set([this.projector.id, ...this.getDefaultProjectorIds(projectiondefaultKeys[i])])
-            ];
+        for (const key of projectiondefaultKeys) {
+            payload[key] = [...new Set([this.projector.id, ...this.getDefaultProjectorIds(key)])];
         }
         // All defaults that were set to false should be set to standard, if they were previously set to current projector
         const notSelectedKeys = Object.keys(this.projectiondefaultVerbose).filter(
             key => !projectiondefaultKeys.includes(this.projectiondefaultKeys[key])
         );
-        for (let i = 0; i < notSelectedKeys.length; i++) {
-            const key = this.projectiondefaultKeys[notSelectedKeys[i]];
+        for (const notSelKeys of notSelectedKeys) {
+            const key = this.projectiondefaultKeys[notSelKeys];
             if (this.isCurrentProjectorDefault(key)) {
                 if (this.getDefaultProjectorIds(key).length === 1) {
-                    payload[PROJECTIONDEFAULT[notSelectedKeys[i]]] = [
-                        this.activeMeeting.meeting!.reference_projector_id
-                    ];
+                    payload[PROJECTIONDEFAULT[notSelKeys]] = [this.activeMeeting.meeting!.reference_projector_id];
                 } else {
-                    payload[PROJECTIONDEFAULT[notSelectedKeys[i]]] = this.getDefaultProjectorIds(key).filter(
+                    payload[PROJECTIONDEFAULT[notSelKeys]] = this.getDefaultProjectorIds(key).filter(
                         id => id !== this.projector.id
                     );
                 }

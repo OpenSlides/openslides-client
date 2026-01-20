@@ -35,13 +35,13 @@ export class CurrentSpeakerChyronSlideService {
             slideOptions: [
                 {
                     key: `chyron_type`,
-                    displayName: _(`Current speaker`),
+                    displayName: _(`Current speaker / structure level`),
                     choices: [
-                        { value: `old`, displayName: _(`Classic`) },
-                        { value: `new`, displayName: _(`Modern`) },
+                        { value: `new`, displayName: _(`single-line`) },
+                        { value: `old`, displayName: _(`two-line`) },
                         { value: `none`, displayName: _(`Off`) }
                     ],
-                    default: `old`
+                    default: `new`
                 },
                 {
                     key: `agenda_item`,

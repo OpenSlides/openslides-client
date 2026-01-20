@@ -10,6 +10,10 @@ export class ViewGender extends BaseViewModel<Gender> {
     public get gender(): Gender {
         return this._model;
     }
+
+    public get isPredefined(): boolean {
+        return [`male`, `female`, `diverse`, `non-binary`].includes(this.name);
+    }
 }
 
 interface IGenderRelations {

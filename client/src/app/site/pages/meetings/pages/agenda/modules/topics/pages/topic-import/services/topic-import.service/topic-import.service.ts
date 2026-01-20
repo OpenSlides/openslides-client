@@ -79,8 +79,7 @@ export class TopicImportService extends BaseBackendImportService {
     public parseTextArea(data: string): void {
         const lines = data.split(`\n`);
         const csvLines = [];
-        for (let i = 0; i < lines.length; ++i) {
-            const line = lines[i];
+        for (const line of lines) {
             if (!line.length) {
                 continue;
             }

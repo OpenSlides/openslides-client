@@ -25,7 +25,8 @@ export abstract class BaseListOfSpeakersContentObjectRepository<
     M extends BaseModel & HasListOfSpeakersId
 >
     extends BaseMeetingRelatedRepository<V, M>
-    implements ListOfSpeakersContentObjectRepository<V, M> {
+    implements ListOfSpeakersContentObjectRepository<V, M>
+{
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         baseModelCtor: ModelConstructor<M>
