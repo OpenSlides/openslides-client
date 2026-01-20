@@ -111,10 +111,10 @@ export class VotingBannerService {
         if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
             if (!isSinglePoll) {
                 link = `/${this.activeMeeting.meetingId}/autopilot/`;
-            } else {
-                const poll: ViewPoll = this.pollsToVote[0];
-                link = this.getPollComponent(poll);
             }
+
+            const poll: ViewPoll = this.pollsToVote[0];
+            return { link: this.getPollComponent(poll), text };
         } else {
             link = `/${this.activeMeeting.meetingId}/polls/`;
             console.log('1<POLLSINPERMISO');
