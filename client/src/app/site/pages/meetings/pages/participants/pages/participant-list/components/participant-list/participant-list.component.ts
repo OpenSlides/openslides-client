@@ -358,7 +358,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
             id: user.id,
-            name: user.username,
+            name: user.short_name,
             group_ids: user.group_ids(),
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
