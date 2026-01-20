@@ -112,33 +112,16 @@ export class VotingBannerService {
             if (!isSinglePoll) {
                 link = `/${this.activeMeeting.meetingId}/autopilot/`;
             }
-
             const poll: ViewPoll = this.pollsToVote[0];
             return { link: this.getPollComponent(poll), text };
         } else {
             link = `/${this.activeMeeting.meetingId}/polls/`;
-            console.log('1<POLLSINPERMISO');
         }
         return { text, link };
     }
 
     private getPollComponent(poll: ViewPoll): string {
-        switch (poll !== null) {
-            case poll.isTopicPoll:
-                return `${poll.getDetailStateUrl()}`;
-            case poll.isMotionPoll:
-                // OK
-                console.log('IS MOTION POLL', poll.getDetailStateUrl());
-                return `/${poll.getDetailStateUrl()}`;
-            case poll.isAssignmentPoll:
-                console.log('IS ELECTIONS POLL', poll.getDetailStateUrl());
-                return `/${poll.getDetailStateUrl()}`;
-            case poll.isListPoll:
-                console.log('IS LIST POLL', poll.getDetailStateUrl());
-                return `/${poll.getDetailStateUrl()}`;
-            default:
-                return '';
-        }
+        return `${poll.getDetailStateUrl()}`;
     }
 
     private getSinglePoll(): ViewPoll {
@@ -159,19 +142,6 @@ export class VotingBannerService {
         } else {
             return this.translate.instant(`Voting opened`);
         }
-    }
-
-    /**
-     * Returns for a given poll a url for the banner.
-     *
-     * @param poll The given poll.
-     *
-     * @returns A string containing the url.
-     */
-    private getUrlForPoll(poll: ViewPoll): string {
-        return this.operator.hasPerms(Permission.meetingCanSeeAutopilot)
-            ? `/${this.activeMeeting.meetingId}/polls/`
-            : poll.getDetailStateUrl();
     }
 
     /**
