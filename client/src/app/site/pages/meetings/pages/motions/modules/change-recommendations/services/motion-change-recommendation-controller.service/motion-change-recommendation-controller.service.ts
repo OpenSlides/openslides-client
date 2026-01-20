@@ -93,8 +93,8 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
             otherReco => !(line_from > otherReco.line_to || line_to < otherReco.line_from)
         );
         if (reco?.motion?.text) {
-            const lineRange = this.lineNumberingService.getLineNumberRange(
-                this.lineNumberingService.insertLineNumbers({
+            const lineRange = reco.motion.services().ln.getLineNumberRange(
+                reco.motion.services().ln.insertLineNumbers({
                     html: reco.motion.text,
                     lineLength: this.meetingSettingsService.instant(`motions_line_length`),
                     firstLine: reco.motion.firstLine
