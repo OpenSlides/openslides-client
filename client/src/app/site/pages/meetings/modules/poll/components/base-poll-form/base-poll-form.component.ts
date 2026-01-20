@@ -198,6 +198,22 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.pollClassType === PollClassType.Motion;
     }
 
+    private get isAssignmentPoll(): boolean {
+        return this.pollClassType === PollClassType.Assignment;
+    }
+
+    public get isLiveVotingAvailable(): boolean {
+        return (
+            this.isEVotingSelected &&
+            this.isNamedVotingSelected &&
+            (this.isMotionPoll ||
+                (this.isAssignmentPoll &&
+                    !this.globalYesControl?.value &&
+                    this.pollMethod === FormPollMethod.Y &&
+                    this.contentForm.get(`votes_amount`).get(`max_votes_amount`).value === 1))
+        );
+    }
+
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(VotingPrivacyWarningDialogService);
