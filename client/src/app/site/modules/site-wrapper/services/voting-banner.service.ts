@@ -125,8 +125,6 @@ export class VotingBannerService {
     private getPollComponent(poll: ViewPoll): string {
         switch (poll !== null) {
             case poll.isTopicPoll:
-                // OK
-                console.log(`IS AGENDA TOPIC POLL`, poll.canBeVotedFor());
                 return `${poll.getDetailStateUrl()}`;
             case poll.isMotionPoll:
                 // OK
