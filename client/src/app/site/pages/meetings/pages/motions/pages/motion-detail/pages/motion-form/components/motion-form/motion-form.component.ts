@@ -251,6 +251,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             }
 
             if (this.newMotion) {
+                if (update.submitter_ids.length === 0 && this.operator.isInMeeting(this.activeMeetingId)) {
+                    update.submitter_meeting_user_ids = [this.operator.user.getMeetingUser(this.activeMeetingId).id];
+                } else {
+                    update.submitter_meeting_user_ids = update.submitter_ids;
+                }
                 for (const key in update) {
                     if (update[key] === null || update[key].length === 0) {
                         delete update[key];
@@ -323,7 +328,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
-        this.addNewUserToFormCtrl(newUserObj, `submitter_ids`);
+        this.addNewUserToFormCtrl(newUserObj, `submitter_meeting_user_ids`);
     }
 
     public async createNewSupporter(username: string): Promise<void> {
