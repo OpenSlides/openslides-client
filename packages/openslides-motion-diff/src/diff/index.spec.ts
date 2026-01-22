@@ -1523,6 +1523,24 @@ describe(`MotionDiffService`, () => {
         });
     });
 
+    describe(`stripping ins/del-styles/tags while keeping line numbers in place`, () => {
+        it(`keeps line numbers with del tags`, () => {
+            const inHtml = `<p>` +
+                noMarkup(4) +
+                `<del><strong>Additional context</strong></del><br>` + 
+                noMarkup(5) +
+                `<del>This issue is part of the META issue <a href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</a></del></p>`;
+            const stripped = normalizeHtmlForDiff(HtmlDiff.diffHtmlToFinalText(inHtml, true));
+            expect(stripped).toBe(`<P>${normalizeHtmlForDiff(noMarkup(4))}<BR>${normalizeHtmlForDiff(noMarkup(5))}</P>`);
+        });
+
+        it(`replaces full paragraph with empty line numbered paragraph`, () => {
+            const inHtml = `<P class="delete"><SPAN class="line-number-4 os-line-number" contenteditable="false" data-line-number="4"> </SPAN><STRONG>Additional context</STRONG><BR><SPAN class="line-number-5 os-line-number" contenteditable="false" data-line-number="5"> </SPAN>This issue is part of the META issue <A target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</A></P>`;
+            const stripped = normalizeHtmlForDiff(HtmlDiff.diffHtmlToFinalText(inHtml, true));
+            expect(stripped).toBe(`<P>${normalizeHtmlForDiff(noMarkup(4))}<BR>${normalizeHtmlForDiff(noMarkup(5))}</P>`);
+        });
+    });
+
     describe(`apply unified changes to text: getTextWithChanges`, () => {
         it(`test with no changes`, () => {
                 const inHtml = `<p>Test 1</p><p>Test 2</p>`;

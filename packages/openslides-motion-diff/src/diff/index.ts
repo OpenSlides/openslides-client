@@ -275,12 +275,23 @@ export function detectAffectedLineRange(diffHtml: string): LineRange | null {
   * @param {string} html
   * @returns {string}
   */
-export function diffHtmlToFinalText(html: string): string {
+export function diffHtmlToFinalText(html: string, keepLineNumbers: boolean = false): string {
     const fragment = htmlToFragment(html);
 
     const delNodes = fragment.querySelectorAll(`.delete, del`);
     for (const del of delNodes) {
-        del.parentNode!.removeChild(del);
+        if (keepLineNumbers && del.querySelectorAll(`.os-line-number`).length) {
+            const onlyLineNumbers = document.createElement(`P`);
+            const lineNumbers = del.querySelectorAll(`.os-line-number`);
+            for (const ln of lineNumbers) {
+                onlyLineNumbers.appendChild(ln);
+                onlyLineNumbers.appendChild(document.createElement(`br`));
+            }
+            onlyLineNumbers.lastChild?.remove();
+            del.parentNode!.replaceChild(onlyLineNumbers, del);
+        } else {
+            del.parentNode!.removeChild(del);
+        }
     }
 
     const insNodes = fragment.querySelectorAll(`ins`);
