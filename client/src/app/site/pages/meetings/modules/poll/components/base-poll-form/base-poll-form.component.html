@@ -112,7 +112,7 @@
                     </ng-container>
                 }
                 <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
-                @if (pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)) {
+                @if (pollService.isMaxVotesPerOptionEnabled && isEVotingSelected && showMaxVotesPerOption(data)) {
                     <div class="fourth">
                         <ng-container formGroupName="votes_amount">
                             <!-- Max Amount of Votes per Option -->

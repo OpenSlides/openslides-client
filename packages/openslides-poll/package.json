@@ -1,0 +1,34 @@
+{
+  "name": "@openslides/poll",
+  "version": "0.1.0",
+  "description": "OpenSlides 4 poll algorithms and helpers",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/poll.umd.cjs",
+  "module": "./dist/poll.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/poll.js",
+      "require": "./dist/poll.umd.cjs"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "lit": "^3.3.1"
+  }
+}

@@ -15,15 +15,21 @@ import {
     PollMethod,
     PollPercentBase,
     PollPercentBaseVerbose,
+    PollPercentBaseVerboseKey,
     PollPropertyVerbose,
     PollPropertyVerboseKey,
     PollType,
-    PollTypeVerbose
+    PollTypeVerbose,
+    PollTypeVerboseKey
 } from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
+import {
+    AssignmentPollMethodKey,
+    AssignmentPollMethodVerbose
+} from '../../../../pages/assignments/modules/assignment-poll/definitions';
 import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
@@ -221,7 +227,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             this.checkPollBackend();
             this.patchLiveVotingEnabled();
 
-            if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
+            if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled) {
                 // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
                 // afterwards this features was disabled. The value will be reset as soon as the options
                 // of this poll are edited.
@@ -442,24 +448,19 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         if (this.data) {
             const pollMethod: FormPollMethod = data[`pollmethod`];
             const pollType: PollType = data[`type`];
-            this.pollValues = [
-                [
-                    this.pollService.getVerboseNameForKey(`type`),
-                    this.pollService.getVerboseNameForValue(`type`, data[`type`])
-                ]
-            ];
+            this.pollValues = [[this.getVerboseNameForKey(`type`), this.getVerboseNameForValue(`type`, data[`type`])]];
             // optional pollValues
             if (additionalPollValues) {
                 additionalPollValues.forEach(value => {
                     this.pollValues.push([
-                        this.pollService.getVerboseNameForKey(value),
-                        this.pollService.getVerboseNameForValue(value, data[value])
+                        this.getVerboseNameForKey(value),
+                        this.getVerboseNameForValue(value, data[value])
                     ]);
                 });
             }
             if (pollType !== PollType.Analog) {
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`groups`),
+                    this.getVerboseNameForKey(`groups`),
                     data && data[`entitled_group_ids`] && data[`entitled_group_ids`].length
                         ? this.groupRepo.getNameForIds(...data[`entitled_group_ids`])
                         : `---`
@@ -467,36 +468,21 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             }
 
             if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_yes`), data[`global_yes`]]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_no`), data[`global_no`]]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_abstain`), data[`global_abstain`]]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`votes_amount`), data[`votes_amount`]]);
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`max_votes_amount`),
-                    data[`max_votes_amount`]
-                ]);
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`min_votes_amount`),
-                    data[`min_votes_amount`]
-                ]);
+                this.pollValues.push([this.getVerboseNameForKey(`global_yes`), data[`global_yes`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`global_no`), data[`global_no`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`global_abstain`), data[`global_abstain`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`votes_amount`), data[`votes_amount`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`max_votes_amount`), data[`max_votes_amount`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`min_votes_amount`), data[`min_votes_amount`]]);
             }
 
             if ((pollMethod === FormPollMethod.YNA || pollMethod === FormPollMethod.YN) && this.allowToSetMinMax) {
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`max_votes_amount`),
-                    data[`max_votes_amount`]
-                ]);
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`min_votes_amount`),
-                    data[`min_votes_amount`]
-                ]);
+                this.pollValues.push([this.getVerboseNameForKey(`max_votes_amount`), data[`max_votes_amount`]]);
+                this.pollValues.push([this.getVerboseNameForKey(`min_votes_amount`), data[`min_votes_amount`]]);
             }
 
             if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`max_votes_per_option`),
-                    data[`max_votes_per_option`]
-                ]);
+                this.pollValues.push([this.getVerboseNameForKey(`max_votes_per_option`), data[`max_votes_per_option`]]);
             }
         }
     }
@@ -608,6 +594,25 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 this.disableGlobalVoteControls(`Abstain`);
             }
         }
+    }
+
+    private getVerboseNameForKey(key: PollPropertyVerboseKey): string {
+        return PollPropertyVerbose[key];
+    }
+
+    private getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
+        switch (key) {
+            case `pollmethod`:
+                if (value in AssignmentPollMethodVerbose) {
+                    return AssignmentPollMethodVerbose[value as AssignmentPollMethodKey];
+                }
+                break;
+            case `onehundred_percent_base`:
+                return PollPercentBaseVerbose[value as PollPercentBaseVerboseKey];
+            case `type`:
+                return PollTypeVerbose[value as PollTypeVerboseKey];
+        }
+        return ``;
     }
 
     public openVotingWarning(event: MouseEvent): void {
