@@ -1,4 +1,4 @@
-FROM node:22.21-alpine AS base
+FROM node:22.22-alpine AS base
 
 ## Setup
 ARG CONTEXT
