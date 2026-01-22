@@ -49,13 +49,13 @@
 
 .current-speaker {
     margin: 10px 25px 0 25px;
+    padding: 0 0.75em;
+    border-radius: 4px;
 
     @include variables.phone {
         margin: 10px 0 0 0;
     }
 
-    padding: 0 0.75em;
-    border-radius: 4px;
     .speaker-start {
         .mat-mdc-icon-button.speaker-control-button {
             @include button.custom-size-button(46px, 42px);
@@ -138,14 +138,13 @@ os-sorting-list .line {
 
 .add-self-buttons {
     margin: 10px 20px;
+    display: inline-flex;
+    flex-wrap: wrap;
 
     @include variables.phone {
         padding: 10px 0;
         margin: 10px 0 0 0;
     }
-
-    display: inline-flex;
-    flex-wrap: wrap;
 
     button {
         margin: 5px;
@@ -154,12 +153,11 @@ os-sorting-list .line {
 
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
+    width: auto;
 
     @include variables.phone {
         padding: 15px 0 0 0;
     }
-
-    width: auto;
 }
 
 .centered-text {
