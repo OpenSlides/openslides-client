@@ -46,7 +46,7 @@
             </div>
             <div class="margin-bottom-15">
                 <!-- Live voting -->
-                @if (isEVotingSelected && isNamedVotingSelected && isMotionPoll) {
+                @if (isLiveVotingAvailable) {
                     <mat-checkbox formControlName="live_voting_enabled">
                         {{ PollPropertyVerbose.live_voting_enabled | translate }}
                     </mat-checkbox>
