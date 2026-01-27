@@ -51,6 +51,9 @@
 .footer-grid {
     display: grid;
     grid-template-columns: 50% 50%;
+    @media (max-width: 700px) {
+        grid-template-columns: repeat(auto-fit, 250px);
+    }
     grid-gap: 20px;
     border-top: 2px solid rgba(128, 128, 128, 0.2);
     margin-bottom: 7px;
@@ -70,6 +73,9 @@
 
 .margin-left-large {
     margin-left: 140px;
+    @media (max-width: 700px) {
+        margin-left: 70px;
+    }
 }
 
 .margin-left-medium {
