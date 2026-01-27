@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
+import { RequiredMajorityBase, VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
@@ -133,5 +133,16 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         this._chartData = this.pollService
             .generateChartData(this.poll!)
             .filter(result => result.data[0] !== VOTE_UNDOCUMENTED);
+    }
+
+    public get showRequiredMajority(): string | null {
+        if (
+            [RequiredMajorityBase.absolute_majority, RequiredMajorityBase.two_third_majority].includes(
+                this.poll.required_majority
+            )
+        ) {
+            return this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll) ? `check` : `close`;
+        }
+        return null;
     }
 }

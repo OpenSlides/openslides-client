@@ -50,6 +50,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `type`,
             `pollmethod`,
             `onehundred_percent_base`,
+            `required_majority`,
             `backend`,
             `content_object_id`,
             `is_pseudoanonymized`
@@ -91,6 +92,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             meeting_id: this.activeMeetingId,
             title: poll.title,
             onehundred_percent_base: poll.onehundred_percent_base,
+            required_majority: poll.required_majority,
             pollmethod: poll.pollmethod,
             publish_immediately: poll.publish_immediately,
             type: poll.type,
@@ -114,6 +116,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             meeting_id: this.activeMeetingId,
             title: poll.title,
             onehundred_percent_base: poll.onehundred_percent_base,
+            required_majority: poll.required_majority,
             pollmethod: poll.pollmethod,
             type: poll.type,
             global_abstain: poll.global_abstain,
@@ -167,7 +170,8 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         if (poll.state !== PollState.Created) {
             update = {
                 title: update.title,
-                onehundred_percent_base: update.onehundred_percent_base
+                onehundred_percent_base: update.onehundred_percent_base,
+                required_majority: update.required_majority
             };
         }
         return this.updateCreatedElectronicPoll(update, poll);
@@ -188,6 +192,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             min_votes_amount: update.min_votes_amount,
             max_votes_per_option: update.max_votes_per_option,
             onehundred_percent_base: update.onehundred_percent_base,
+            required_majority: update.required_majority,
             pollmethod: update.pollmethod,
             title: update.title,
             ...this.getAnalogPollVotesValues(update)
@@ -201,6 +206,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             publish_immediately: update.publish_immediately,
             description: update.description,
             onehundred_percent_base: update.onehundred_percent_base,
+            required_majority: update.required_majority,
             title: update.title,
             ...this.getAnalogPollVotesValues(update)
         };
@@ -217,6 +223,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             min_votes_amount: update.min_votes_amount,
             max_votes_per_option: update.max_votes_per_option,
             onehundred_percent_base: update.onehundred_percent_base,
+            required_majority: update.required_majority,
             pollmethod: update.pollmethod,
             title: update.title,
             backend: update.backend,
