@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { pollChartColors, pollChartGreys, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
+import { pollChartColors, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -106,7 +106,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     private generateChartColors(amount: number): { backgroundColor: string[]; hoverBackgroundColor: string[] } {
         let colors = Array.from(pollChartColors.values());
         while (colors.length < amount) {
-            colors = colors.concat(Array.from(pollChartGreys.values()));
+            colors = colors.concat(Array.from(pollChartColors.values()));
         }
         while (colors.length > amount) {
             colors.pop();
