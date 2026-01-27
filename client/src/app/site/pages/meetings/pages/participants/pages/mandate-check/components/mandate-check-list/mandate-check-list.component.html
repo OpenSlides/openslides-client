@@ -17,7 +17,7 @@
 
 @for (entry of entries; track entry.id) {
     <div class="border-grid">
-        <div>&nbsp;</div>
+        <div></div>
         <mat-card appearance="outlined" class="margin-bottom-20">
             <mat-card-content>
                 <div class="header-grid">
@@ -33,12 +33,24 @@
                     </div>
                 </div>
                 <div class="card-grid">
-                    <div class="flex-container align-right foreground-active">
+                    <!-- first row-->
+                    <div></div>
+                    <div class="flex-container align-left foreground-active">
                         <div class="text-medium-bold">{{ 'present' | translate }}</div>
+                    </div>
+                    <div class="flex-container">
+                        <div>&nbsp;</div>
+                    </div>
+                    <div class="flex-container align-left text">
+                        <div class="text-medium-bold">{{ 'total' | translate }}</div>
+                    </div>
+                    <div></div>
+                    <!-- second row -->
+                    <div></div>
+                    <div class="flex-container align-left foreground-active">
                         <div class="text-medium-bold">
                             {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
                         </div>
-                        <div class="text-medium">{{ 'of this' | translate }}</div>
                     </div>
                     <div class="center">
                         <mat-progress-bar
@@ -49,39 +61,41 @@
                         ></mat-progress-bar>
                     </div>
                     <div class="flex-container align-left text">
-                        <div class="text-medium-bold">{{ 'total' | translate }}</div>
                         <div class="text-medium-bold">{{ entry.getTotalCount() }}</div>
-                        <div class="text-medium">{{ 'of this' | translate }}</div>
                     </div>
+                    <div></div>
                 </div>
                 <div class="card-grid">
-                    <div class="flex-container align-right foreground-active">
-                        @for (gender of genders; track gender.id) {
-                            @if (entry.getTotalCount(gender.id)) {
-                                <div class="text-medium">
-                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
-                                    {{ entry.genderEntryMap.get(gender.id)?.present }}
-                                    {{
-                                        displayPercent(
-                                            entry.genderEntryMap.get(gender.id)?.present / entry.presentUserIds.length
-                                        )
-                                    }}
-                                </div>
-                            }
+                    @for (gender of genders; track gender.id) {
+                        @if (entry.getTotalCount(gender.id)) {
+                            <div></div>
+                            <div class="foreground-active align-left">
+                                @if (entry.getTotalCount(gender.id)) {
+                                    <div class="text-medium">
+                                        {{ entry.genderEntryMap.get(gender.id)?.present }}
+                                        {{
+                                            displayPercent(
+                                                entry.genderEntryMap.get(gender.id)?.present /
+                                                    entry.presentUserIds.length
+                                            )
+                                        }}
+                                    </div>
+                                }
+                            </div>
+                            <div class="justify-center bold">
+                                <div>{{ entry.genderEntryMap.get(gender.id)?.label | translate }}</div>
+                            </div>
+                            <div class="text align-left">
+                                @if (entry.getTotalCount(gender.id)) {
+                                    <div class="text-medium">
+                                        {{ entry.getTotalCount(gender.id) }}
+                                        {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
+                                    </div>
+                                }
+                            </div>
+                            <div></div>
                         }
-                    </div>
-                    <div>&nbsp;</div>
-                    <div class="flex-container align-left text">
-                        @for (gender of genders; track gender.id) {
-                            @if (entry.getTotalCount(gender.id)) {
-                                <div class="text-medium">
-                                    {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
-                                    {{ entry.getTotalCount(gender.id) }}
-                                    {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
-                                </div>
-                            }
-                        }
-                    </div>
+                    }
                 </div>
             </mat-card-content>
             @if (toggleMap.get(entry.id)) {
@@ -107,6 +121,6 @@
                 </mat-card-footer>
             }
         </mat-card>
-        <div>&nbsp;</div>
+        <div></div>
     </div>
 }
