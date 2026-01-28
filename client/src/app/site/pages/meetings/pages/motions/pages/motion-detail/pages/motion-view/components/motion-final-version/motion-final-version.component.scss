@@ -1,6 +1,7 @@
 // Note that this class can be either set to the holder element of a collision,
 // or the comment indicating the collision once the text has been manually edited.
-.os-colliding-change {
+.os-colliding-change,
+div[data-change-is-colliding] {
     &:before {
         // TODO: Find way to clean this up.
         // Original from material-design-icons-iconfont/src/material-design-icons.scss

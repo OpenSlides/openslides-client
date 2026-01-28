@@ -272,7 +272,7 @@ export class MotionDiffService {
     ): string {
         const frag = HtmlDiff.htmlToFragment(html);
 
-        frag.querySelectorAll(`.os-colliding-change`).forEach((el: HTMLElement): void => {
+        frag.querySelectorAll(`[data-change-is-colliding]`).forEach((el: HTMLElement): void => {
             formatter.bind(this)(el as HTMLDivElement);
         });
 
@@ -283,7 +283,7 @@ export class MotionDiffService {
         // This callback will only do anything the first time it's called on a generated document.
         // After that, the document should stay as it is. Hence, we remove the ol-colliding-change class
         // from the holder element to the comment.
-        if (el.classList.contains(`os-colliding-change-comment`)) {
+        if (!el.hasAttribute(`data-change-is-colliding`)) {
             return;
         }
         const type = el.getAttribute(`data-change-type`) ?? ``;
@@ -296,7 +296,7 @@ export class MotionDiffService {
             if (!node || !node.nodeName) {
                 return false;
             }
-            if (node.nodeName === `DIV` && (node as HTMLDivElement).classList.contains(`os-colliding-change-holder`)) {
+            if (node.nodeName === `DIV` && (node as HTMLDivElement).hasAttribute(`data-colliding-change-holder`)) {
                 return true;
             }
             if (node.nodeName === `P`) {
@@ -305,7 +305,7 @@ export class MotionDiffService {
                     if (
                         child &&
                         child.nodeName === `SPAN` &&
-                        (child as HTMLSpanElement).classList.contains(`os-colliding-change-holder`)
+                        (child as HTMLSpanElement).hasAttribute(`data-colliding-change-holder`)
                     ) {
                         return true;
                     }
@@ -320,7 +320,7 @@ export class MotionDiffService {
         // Once we start editing, the holder element should not hold the class deciding if to show a warning anymore.
         // The reason is that it might be hard to get rid of it while editing, yet we still want to be able to get rid
         // of the collision warning sign if the collision has been resolved
-        el.classList.remove(`os-colliding-change`);
+        el.removeAttribute(`data-change-is-colliding`);
 
         // In a P, we want to have the collision markers inserted within the P's margins
         let toInsertElement: HTMLElement, commentsInInlineElement: boolean;
@@ -346,8 +346,8 @@ export class MotionDiffService {
         }
 
         const comment = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
-        comment.classList.add(`os-colliding-change`);
-        comment.classList.add(`os-colliding-change-comment`);
+        comment.setAttribute(`data-change-is-colliding`, '');
+        comment.setAttribute(`data-comment-change-is-colliding`, '');
         comment.innerHTML = `&lt;` + replaceHtmlEntities(`!-- ### ` + strTitle + ` ### --`) + `&gt;`;
         if (commentsInInlineElement) {
             comment.innerHTML = comment.innerHTML + `<br>`;
