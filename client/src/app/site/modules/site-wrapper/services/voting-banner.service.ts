@@ -108,15 +108,15 @@ export class VotingBannerService {
             ? this.getTextForPoll(this.getSinglePoll())
             : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
         let link: string;
-        if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
-            if (!isSinglePoll) {
+        if (!isSinglePoll) {
+            if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
                 link = `/${this.activeMeeting.meetingId}/autopilot/`;
                 return { text, link };
             }
-            const poll: ViewPoll = this.pollsToVote[0];
-            return { link: this.getPollComponent(poll), text };
+            link = `/${this.activeMeeting.meetingId}/polls/`;
+            return { text, link };
         }
-        link = `/${this.activeMeeting.meetingId}/polls/`;
+        link = `/${this.getPollComponent(this.pollsToVote[0])}/`;
         return { text, link };
     }
 
