@@ -176,6 +176,4 @@ interface IPollRelations<C extends PollContentObject = any> {
     global_option: ViewOption;
 }
 export interface ViewPoll<C extends PollContentObject = any>
-    extends HasMeeting,
-        ViewModelRelations<IPollRelations<C>>,
-        Poll {}
+    extends HasMeeting, ViewModelRelations<IPollRelations<C>>, Poll {}
