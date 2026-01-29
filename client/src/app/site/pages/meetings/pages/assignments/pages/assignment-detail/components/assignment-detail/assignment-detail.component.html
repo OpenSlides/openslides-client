@@ -173,6 +173,16 @@
                     <div>
                         @if (assignment?.candidates?.length) {
                             <div class="candidates-list">
+                                <div class="candidate-sorting-buttons" *ngIf="assignmentCandidates.length > 1">
+                                    <button mat-button (click)="sortCandidatesByFirstName()">
+                                        <mat-icon>sort_by_alpha</mat-icon>
+                                        {{ 'Sort by first name' | translate }}
+                                    </button>
+                                    <button mat-button (click)="sortCandidatesByLastName()">
+                                        <mat-icon>sort_by_alpha</mat-icon>
+                                        {{ 'Sort by last name' | translate }}
+                                    </button>
+                                </div>
                                 <os-sorting-list
                                     [count]="assignment.number_poll_candidates"
                                     [enable]="hasPerms('manage')"
