@@ -94,7 +94,7 @@ export class AgendaForwardDialogService
                         ?.group_ids.includes((meeting as any).admin_group_id)
                 ) ||
                 this._forwardingMeeting.meetings.some(
-                    meeting => meeting.end_time && meeting.end_time * 1000 < Date.now()
+                    meeting => meeting.end_time && Date.parse(meeting.end_time) < Date.now()
                 ))
         );
     }
