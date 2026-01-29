@@ -1,11 +1,6 @@
-mat-basic-chip::ng-deep {
-    max-width: 91%;
-    & span {
-        white-space: wrap;
-        display: inline;
-        overflow: hidden;
-        overflow-wrap: anywhere;
-    }
+.wrap {
+    white-space: wrap;
+    overflow-wrap: anywhere;
 }
 
 .mat-mdc-chip.chip-stacked {
