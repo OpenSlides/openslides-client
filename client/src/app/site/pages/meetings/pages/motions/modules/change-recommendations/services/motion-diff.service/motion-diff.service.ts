@@ -291,7 +291,7 @@ export class MotionDiffService {
         const lineFrom = el.getAttribute(`data-line-from`) ?? ``;
         const lineTo = el.getAttribute(`data-line-to`) ?? ``;
 
-        // true if either it's a DIV with the class, or a P with a child-SPAN with the class
+        // true if either it's a DIV with the attribute, or a P with a child-SPAN with the attribute
         const nodeIsColliding = (node: ChildNode): boolean => {
             if (!node || !node.nodeName) {
                 return false;
