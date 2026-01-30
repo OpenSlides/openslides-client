@@ -11,8 +11,8 @@ interface GetForwardMeetingsPresenterPayload {
 export interface GetForwardingMeetingsPresenterMeeting {
     id: string;
     name: string;
-    start_time: number;
-    end_time: number;
+    start_time: string;
+    end_time: string;
 }
 
 export interface GetForwardingMeetingsPresenter {
