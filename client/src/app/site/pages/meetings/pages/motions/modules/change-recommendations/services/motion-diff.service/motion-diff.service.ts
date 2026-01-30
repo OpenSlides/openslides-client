@@ -283,7 +283,7 @@ export class MotionDiffService {
         // This callback will only do anything the first time it's called on a generated document.
         // After that, the document should stay as it is. Hence, we remove the ol-colliding-change class
         // from the holder element to the comment.
-        if (!el.hasAttribute(`data-change-is-colliding`)) {
+        if (el.hasAttribute(`data-comment-change-is-colliding`)) {
             return;
         }
         const type = el.getAttribute(`data-change-type`) ?? ``;
