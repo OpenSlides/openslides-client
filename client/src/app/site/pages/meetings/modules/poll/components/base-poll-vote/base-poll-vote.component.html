@@ -1,6 +1,10 @@
 @if (poll && isReady) {
     <!-- own voting -->
-    @if (isUserPresent) {
+    @if (!isUserInMeeting) {
+        <div class="text-center">
+            {{ 'You are not part of the meeting' | translate }}
+        </div>
+    } @else if (isUserPresent) {
         <ng-container [ngTemplateOutlet]="votingArea" />
     } @else {
         <div class="text-center">
