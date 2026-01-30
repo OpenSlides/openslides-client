@@ -3,11 +3,11 @@
         @for (paragraph of selectedParagraphs; track paragraph.paragraphNo) {
             <section>
                 <h3>
-                    @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
+                    @if (paragraph.lineFrom >= paragraph.lineTo) {
                         <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
                     } @else {
                         <span class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
+                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}
                         </span>
                     }
                 </h3>
