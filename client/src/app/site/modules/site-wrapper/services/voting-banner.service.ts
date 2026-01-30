@@ -107,10 +107,21 @@ export class VotingBannerService {
         const text = isSinglePoll
             ? this.getTextForPoll(this.getSinglePoll())
             : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
-        const link = isSinglePoll
-            ? this.getUrlForPoll(this.getSinglePoll())
-            : `/${this.activeMeeting.meetingId}/polls/`;
+        let link: string;
+        if (!isSinglePoll) {
+            if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
+                link = `/${this.activeMeeting.meetingId}/autopilot/`;
+                return { text, link };
+            }
+            link = `/${this.activeMeeting.meetingId}/polls/`;
+            return { text, link };
+        }
+        link = `/${this.getPollComponent(this.pollsToVote[0])}/`;
         return { text, link };
+    }
+
+    private getPollComponent(poll: ViewPoll): string {
+        return `${poll.getDetailStateUrl()}`;
     }
 
     private getSinglePoll(): ViewPoll {
@@ -131,19 +142,6 @@ export class VotingBannerService {
         } else {
             return this.translate.instant(`Voting opened`);
         }
-    }
-
-    /**
-     * Returns for a given poll a url for the banner.
-     *
-     * @param poll The given poll.
-     *
-     * @returns A string containing the url.
-     */
-    private getUrlForPoll(poll: ViewPoll): string {
-        return this.operator.hasPerms(Permission.meetingCanSeeAutopilot)
-            ? `/${this.activeMeeting.meetingId}/autopilot/`
-            : poll.getDetailStateUrl();
     }
 
     /**
