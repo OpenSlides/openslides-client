@@ -1,17 +1,21 @@
 // Material theming import
 @use '@angular/material' as mat;
+@use "sass:map";
+@use "sass:color";
 
 /**
  *  Mixin-style to style global classes and tags with theme-related colors.
  */
 @mixin os-component-themes($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $warn: map-get($theme, warn);
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
+    $primary: map.get($theme, primary);
+    $accent: map.get($theme, accent);
+    $warn: map.get($theme, warn);
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
 
-    $is-dark-theme: map-get($theme, is-dark);
+    $is-dark-theme: map.get($theme, is-dark);
+
+    $percent: if($is-dark-theme, 0.04, -0.04);
 
     h1,
     h3.accent {
@@ -43,21 +47,13 @@
 
     .accentuated-background,
     .accentuated-background button {
-        background-color: if(
-            $is-dark-theme,
-            lighten(mat.m2-get-color-from-palette($background, background), 4%),
-            darken(mat.m2-get-color-from-palette($background, background), 4%)
-        );
+        background-color: color.adjust(mat.m2-get-color-from-palette($background, background), $hue: $percent);
     }
 
     mat-card {
         .accentuated-background,
         .accentuated-background button {
-            background-color: if(
-                $is-dark-theme,
-                lighten(mat.m2-get-color-from-palette($background, card), 4%),
-                darken(mat.m2-get-color-from-palette($background, card), 4%)
-            );
+            background-color: color.adjust(mat.m2-get-color-from-palette($background, card), $hue: $percent);
         }
     }
 
@@ -93,12 +89,12 @@
         color: mat.m2-get-color-from-palette($foreground, disabled-button);
         opacity: 1 !important;
         .mat-icon {
-            color: adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
+            color: color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28) !important;
             svg path {
                 fill: mat.m2-get-color-from-palette(
                     $foreground,
                     disabled-button
-                        adjust-color(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
+                        color.adjust(mat.m2-get-color-from-palette($foreground, disabled-button), $alpha: 0.28)
                 ) !important;
             }
         }
@@ -350,6 +346,6 @@
     }
 
     .sidenav-background {
-        background: if($is-dark-theme, darken(mat.m2-get-color-from-palette($background, background), 0.5%), white);
+        background: if($is-dark-theme, color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005), white);
     }
 }
