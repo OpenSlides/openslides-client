@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -342,6 +343,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
+            diff_version: CURRENT_DIFF_VERSION,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
             ...createAgendaItem(partialMotion, false)
