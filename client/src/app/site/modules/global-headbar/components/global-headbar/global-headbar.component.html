@@ -1,12 +1,12 @@
 <mat-toolbar class="global-headbar background-headbar">
     <div class="one-line display-name">
-        <span>{{ displayName }}</span>
+        {{ displayName }}
     </div>
     <div class="spacer"></div>
     <div class="flex-center">
         <!-- Button to open the global search -->
         @if (isSearchEnabled) {
-            <button mat-icon-button role="Search" (click)="openSearch()">
+            <button aria-label="Global Search" mat-icon-button role="Search" (click)="openSearch()">
                 <mat-icon>search</mat-icon>
             </button>
         }

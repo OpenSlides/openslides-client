@@ -12,9 +12,6 @@
 @use 'assets/styles/fonts.scss';
 @import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
-/** Load projector specific SCSS values */
-@include meta.load-css('assets/styles/projector.scss');
-
 /** Load global scss variables and device mixing */
 @include meta.load-css('assets/styles/variables.scss');
 
