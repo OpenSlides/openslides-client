@@ -343,7 +343,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private patchLiveVotingEnabled(): void {
-        if (this.isMotionPoll) {
+        if (this.isMotionPoll || this.isAssignmentPoll) {
             const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
             this.liveVotingControl.setValue(liveVotingDefault);
         }
