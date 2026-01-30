@@ -94,8 +94,8 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
         this.currentComment = commentSection;
         this.commentFieldForm.reset({
             name: commentSection ? commentSection.name : ``,
-            read_group_ids: [...(commentSection.read_group_ids ?? [])],
-            write_group_ids: [...(commentSection.write_group_ids ?? [])],
+            read_group_ids: [...(commentSection?.read_group_ids ?? [])],
+            write_group_ids: [...(commentSection?.write_group_ids ?? [])],
             submitter_can_write: commentSection ? commentSection.submitter_can_write : false
         });
         this.dialogRef = this.dialog.open(this.motionCommentDialog, infoDialogSettings);
