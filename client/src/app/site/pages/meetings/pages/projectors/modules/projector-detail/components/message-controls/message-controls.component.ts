@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ViewProjector, ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -30,7 +29,6 @@ export class MessageControlsComponent {
         private translate: TranslateService,
         private repo: ProjectorMessageControllerService,
         private promptService: PromptService,
-        private projectionDialogService: ProjectionDialogService,
         private dialog: ProjectorMessageDialogService
     ) {}
 
@@ -49,13 +47,6 @@ export class MessageControlsComponent {
                 this.repo.update(update, this.message);
             }
         });
-    }
-
-    /**
-     * Brings the projection dialog
-     */
-    public onBringDialog(): void {
-        this.projectionDialogService.openProjectDialogFor(this.message.getProjectionBuildDescriptor());
     }
 
     /**
