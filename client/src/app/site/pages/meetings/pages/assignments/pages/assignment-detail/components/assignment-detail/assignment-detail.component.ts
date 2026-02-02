@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -18,6 +18,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meet
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -146,6 +147,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * only get destroyed using ngOnDestroy routine and not on route changes.
      */
     private _navigationSubscription: Subscription | null = null;
+
+    private sequentialNumberMapping = inject(SequentialNumberMappingService);
 
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
@@ -409,7 +412,13 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     private async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
-            await this.navigateAfterCreation(response);
+            const sequentialNumber = await this.sequentialNumberMapping.getSequentialNumberById(
+                ViewAssignment,
+                response.id
+            );
+            await this.navigateAfterCreation({
+                sequential_number: sequentialNumber
+            });
         } catch (e) {
             this.raiseError(e);
         }
