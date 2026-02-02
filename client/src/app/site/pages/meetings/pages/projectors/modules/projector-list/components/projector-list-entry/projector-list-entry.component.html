@@ -26,6 +26,11 @@
                     <mat-icon class="grey-icon">star_border</mat-icon>
                 }
             </button>
+            <button mat-icon-button matTooltip="{{ 'Go projector' | translate }}">
+                <a target="_blank" [routerLink]="getFullScreenLink()">
+                    <mat-icon class="grey-icon">slideshow</mat-icon>
+                </a>
+            </button>
             <button mat-icon-button matTooltip="{{ 'Edit projector' | translate }}" (click)="editProjector()">
                 <mat-icon class="grey-icon">edit</mat-icon>
             </button>
