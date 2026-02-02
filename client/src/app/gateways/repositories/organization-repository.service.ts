@@ -46,9 +46,9 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `saml_metadata_sp`,
             `saml_private_key`,
             `enable_anonymous`,
-            `disable_forward_with_attachments`,
-            `restrict_editing_same_level_committee_admins`,
-            `restrict_edit_forward_committees`
+            `disable_forward_with_attachments`
+            // Note: restrict_editing_same_level_committee_admins and restrict_edit_forward_committees
+            // are not yet implemented in the backend, so we don't request them.
         );
         return {
             ...super.getFieldsets(),

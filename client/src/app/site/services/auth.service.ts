@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -7,7 +7,6 @@ import { SharedWorkerService } from 'src/app/openslides-main-module/services/sha
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { ProcessError } from '../../infrastructure/errors';
-import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
@@ -53,7 +52,7 @@ export class AuthService {
         private sharedWorker: SharedWorkerService,
         private cookie: CookieService,
         private DS: DataStoreService,
-        private orgaSettings: OrganizationSettingsService
+        private injector: Injector
     ) {
         this.authTokenService.accessTokenObservable.subscribe(token => {
             this._authTokenSubject.next(token);
@@ -149,7 +148,12 @@ export class AuthService {
         this.lifecycleService.bootup();
 
         // Check if OIDC is enabled (via Traefik middleware)
-        const oidcEnabled = this.orgaSettings.instant(`oidc_enabled`);
+        // Lazy-load OrganizationSettingsService to avoid circular dependency
+        const { OrganizationSettingsService } = await import(
+            '../pages/organization/services/organization-settings.service'
+        );
+        const orgaSettings = this.injector.get(OrganizationSettingsService);
+        const oidcEnabled = orgaSettings.instant(`oidc_enabled`);
         if (oidcEnabled) {
             // Redirect to Traefik OIDC logout endpoint
             location.replace(`/oauth2/logout`);

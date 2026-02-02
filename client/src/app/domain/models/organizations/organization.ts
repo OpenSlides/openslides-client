@@ -82,15 +82,16 @@ export class Organization extends BaseModel<Organization> {
         `default_language`,
         `require_duplicate_from`,
         `enable_anonymous`,
-        `restrict_editing_same_level_committee_admins`,
-        `restrict_edit_forward_committees`,
+        // Note: restrict_editing_same_level_committee_admins and restrict_edit_forward_committees
+        // are not yet implemented in the backend, so we don't request them.
         `saml_enabled`,
         `saml_login_button_text`,
         `saml_attr_mapping`,
         `saml_metadata_idp`,
         `saml_metadata_sp`,
         `saml_private_key`,
-        `oidc_enabled`,
+        // Note: oidc_enabled is client-side only for Traefik OIDC middleware.
+        // It's not stored in the backend, so we don't request it.
         `committee_ids`,
         `active_meeting_ids`,
         `archived_meeting_ids`,

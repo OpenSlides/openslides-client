@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/playwright:v1.57.0-jammy
+
+WORKDIR /app
+
+# Install dependencies
+COPY ./package.json .
+COPY ./package-lock.json .
+ENV CI=1
+RUN npm ci
+
+# Copy test configuration and fixtures
+COPY ./playwright.oidc.config.ts .
+COPY ./integration ./integration
+
+# Default command runs OIDC tests
+CMD ["npx", "playwright", "test", "--config=playwright.oidc.config.ts"]

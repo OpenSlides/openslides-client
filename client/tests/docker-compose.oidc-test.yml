@@ -1,0 +1,82 @@
+version: '3.8'
+
+#
+# Docker Compose configuration for OIDC E2E tests in CI.
+#
+# This extends the standard test configuration to include Keycloak checks.
+#
+# Usage:
+#   docker compose -f docker-compose.oidc-test.yml up --exit-code-from playwright
+#
+
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile.oidc-test
+    image: playwright-oidc
+    container_name: playwright-oidc
+    environment:
+      - CI=true
+      - BASE_URL=https://localhost:8000
+      - KEYCLOAK_URL=http://localhost:8080
+      - SKIP_OIDC_TESTS=false
+      - KEYCLOAK_AVAILABLE=true
+    volumes:
+      - ./integration:/app/integration
+      - ./fixtures:/app/fixtures
+      - ./playwright.oidc.config.ts:/app/playwright.oidc.config.ts
+      - ./playwright-report-oidc:/app/playwright-report-oidc
+      - ./test-results-oidc:/app/test-results-oidc
+    network_mode: host
+    depends_on:
+      keycloak-health:
+        condition: service_healthy
+      openslides-health:
+        condition: service_healthy
+
+  # Health check sidecar for Keycloak
+  keycloak-health:
+    image: curlimages/curl:latest
+    container_name: keycloak-health
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for Keycloak..."
+        until curl -sf http://localhost:8080/auth/realms/openslides/.well-known/openid-configuration > /dev/null 2>&1; do
+          echo "Keycloak not ready, waiting..."
+          sleep 2
+        done
+        echo "Keycloak is ready!"
+        # Keep container running for health check
+        tail -f /dev/null
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/auth/realms/openslides/.well-known/openid-configuration"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+
+  # Health check sidecar for OpenSlides
+  openslides-health:
+    image: curlimages/curl:latest
+    container_name: openslides-health
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for OpenSlides..."
+        until curl -kf https://localhost:8000/system/auth/ > /dev/null 2>&1; do
+          echo "OpenSlides not ready, waiting..."
+          sleep 2
+        done
+        echo "OpenSlides is ready!"
+        # Keep container running for health check
+        tail -f /dev/null
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "curl", "-kf", "https://localhost:8000/system/auth/"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
