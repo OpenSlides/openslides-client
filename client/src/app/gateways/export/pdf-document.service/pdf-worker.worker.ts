@@ -46,11 +46,21 @@ function applyLayout(content: any): void {
  * Sets the internal PdfMake fonts and VFS
  */
 function initPdfMake(data: any): void {
-    pdfMake.fonts = {
-        PdfFont: data.fonts,
-        LineNumbering: { normal: `fira-sans-latin-400.woff` }
-    };
-    pdfMake.vfs = data.vfs;
+    pdfMake.addFonts({
+        PdfFont: {
+            normal: data.fonts.normal,
+            bold: data.fonts.bold,
+            italics: data.fonts.italics,
+            bolditalics: data.fonts.bolditalics
+        },
+        LineNumbering: {
+            normal: data.fonts.normal,
+            bold: data.fonts.normal,
+            italics: data.fonts.normal,
+            bolditalics: data.fonts.normal
+        }
+    });
+    pdfMake.addVirtualFileSystem(data.vfs);
 }
 
 /**
@@ -93,15 +103,8 @@ addEventListener(`message`, ({ data }) => {
 
     const pdfGenerator = pdfMake.createPdf(data.doc);
 
-    pdfGenerator.getBlob(
-        (blob: any) => {
-            // post the result back to the main thread
-            postMessage(blob);
-        },
-        {
-            progressCallback: (progress: any) => {
-                postMessage(progress);
-            }
-        }
-    );
+    pdfGenerator.getBlob().then((blob: any) => {
+        // post the result back to the main thread
+        postMessage(blob);
+    });
 });
