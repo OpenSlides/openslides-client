@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
-import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
 import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
@@ -23,7 +23,7 @@ import { RepositoryServiceCollectorService } from './repository-service-collecto
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `$`;
 
-export interface CreateResponse extends Identifiable, HasSequentialNumber {}
+export type CreateResponse = Identifiable;
 
 export interface CanPerformListUpdates<M extends BaseModel, UpdateResult = any> {
     listUpdate: (data: ListUpdateData<M>, meeting_id?: Id) => Action<UpdateResult>;
