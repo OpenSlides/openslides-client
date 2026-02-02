@@ -49,14 +49,15 @@
 }
 
 .footer-grid {
+    margin-bottom: 7px;
+    border-top: 2px solid rgba(128, 128, 128, 0.2);
+    
     display: grid;
     grid-template-columns: 50% 50%;
+    grid-gap: 20px;
     @media (max-width: 700px) {
         grid-template-columns: repeat(auto-fit, 250px);
     }
-    grid-gap: 20px;
-    border-top: 2px solid rgba(128, 128, 128, 0.2);
-    margin-bottom: 7px;
 }
 
 .center {
