@@ -38,13 +38,32 @@ export class LoadFontService {
     private loadCustomFont(): void {
         this.mediaManageService.getFontUrlObservable(`regular`).subscribe(regular => {
             if (regular) {
-                this.setCustomProjectorFont(regular, 400);
+                this.setCustomProjectorFont(regular);
             }
         });
 
         this.mediaManageService.getFontUrlObservable(`bold`).subscribe(bold => {
             if (bold) {
-                this.setCustomProjectorFont(bold, 500);
+                this.setCustomProjectorFont(bold, {
+                    weight: `500`
+                });
+            }
+        });
+
+        this.mediaManageService.getFontUrlObservable(`bold_italic`).subscribe(bold => {
+            if (bold) {
+                this.setCustomProjectorFont(bold, {
+                    style: `italic`,
+                    weight: `500`
+                });
+            }
+        });
+
+        this.mediaManageService.getFontUrlObservable(`italic`).subscribe(bold => {
+            if (bold) {
+                this.setCustomProjectorFont(bold, {
+                    style: `italic`
+                });
             }
         });
 
@@ -80,15 +99,15 @@ export class LoadFontService {
      * @param fonturl the font object from the config service
      * @param weight the desired weight of the font
      */
-    private setCustomProjectorFont(fonturl: string, weight: number): void {
+    private setCustomProjectorFont(fonturl: string, descriptors?: FontFaceDescriptors): void {
         if (!fonturl) {
             return;
         }
-        this.setNewFontFace(`customProjectorFont`, fonturl, weight);
+        this.setNewFontFace(`customProjectorFont`, fonturl, descriptors);
     }
 
-    private setNewFontFace(fontName: string, fontPath: string, weight = 400): void {
-        const customFont = new FontFace(fontName, `url(${fontPath})`, { weight });
+    private setNewFontFace(fontName: string, fontPath: string, descriptors?: FontFaceDescriptors): void {
+        const customFont = new FontFace(fontName, `url(${fontPath})`, descriptors);
         customFont
             .load()
             .then((res: any) => {
