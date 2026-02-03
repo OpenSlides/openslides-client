@@ -133,7 +133,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public readonly groups: Observable<ViewGroup[]>;
 
     public get isMeetingAdminAndEditSelf(): boolean {
-        return this.operator.isMeetingAdmin && this.user.username === this.operator.user.username;
+        return this.operator.isMeetingAdmin && this.user.id === this.operator.user?.id;
     }
 
     public get showVoteWeight(): boolean {

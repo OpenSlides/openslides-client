@@ -625,7 +625,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public isMeetingAdminAndSelf(user: ViewUser): boolean {
-        return this.operator.isMeetingAdmin && user.username === this.operator.user.username;
+        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
     }
 
     public get isMeetingAdminAndSelfSelected(): boolean {
