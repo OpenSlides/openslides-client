@@ -18,7 +18,8 @@ export function isMapError(obj: any): obj is MapError {
 }
 
 /**
- * A type of map that maps regular expressions (of error messages) to either a cleaner string-message, a function calculating such a string message, or an Error-object containing such a string message.
+ * A type of map that maps regular expressions (of error messages) to either a cleaner string-message,
+ * a function calculating such a string message, or an Error-object containing such a string message.
  */
 export class ErrorMap extends Map<RegExp, string | MapError | ((input: string) => string | MapError)> {}
 
