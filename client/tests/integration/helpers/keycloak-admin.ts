@@ -32,7 +32,7 @@ export class KeycloakAdminClient {
     private tokenExpiry: number = 0;
 
     constructor(
-        private baseUrl: string = process.env.KEYCLOAK_URL || 'http://localhost:8080',
+        private baseUrl: string = process.env.KEYCLOAK_URL || 'http://localhost:8180',
         private adminUser: string = process.env.KEYCLOAK_ADMIN || 'admin',
         private adminPassword: string = process.env.KEYCLOAK_ADMIN_PASSWORD || 'admin'
     ) {}
@@ -230,6 +230,114 @@ export class KeycloakAdminClient {
             `/realms/${realmName}/client-session-stats`
         );
         return stats.reduce((sum, client) => sum + (client.active || 0), 0);
+    }
+
+    // ============ User CRUD ============
+
+    /**
+     * Create a user in a Keycloak realm.
+     * Returns the user ID extracted from the Location header.
+     */
+    async createUser(
+        realmName: string,
+        userData: {
+            username: string;
+            email?: string;
+            firstName?: string;
+            lastName?: string;
+            enabled?: boolean;
+            attributes?: Record<string, string[]>;
+        }
+    ): Promise<string> {
+        await this.authenticate();
+
+        const response = await fetch(`${this.baseUrl}/auth/admin/realms/${realmName}/users`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: userData.username,
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                enabled: userData.enabled ?? true,
+                attributes: userData.attributes,
+                // Explicitly clear required actions to prevent VERIFY_PROFILE
+                // from blocking the OIDC login flow
+                requiredActions: []
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`Failed to create Keycloak user '${userData.username}': ${response.status} - ${error}`);
+        }
+
+        // Extract user ID from Location header (e.g. .../users/<uuid>)
+        const location = response.headers.get('Location');
+        if (location) {
+            const userId = location.split('/').pop()!;
+            console.log(`[Keycloak Admin] Created user '${userData.username}' with ID: ${userId}`);
+            return userId;
+        }
+
+        // Fallback: look up by username
+        const user = await this.getUserByUsername(realmName, userData.username);
+        if (!user) {
+            throw new Error(`User '${userData.username}' was created but could not be found`);
+        }
+        return user.id;
+    }
+
+    /**
+     * Set a password for a Keycloak user.
+     */
+    async setUserPassword(realmName: string, userId: string, password: string, temporary: boolean = false): Promise<void> {
+        await this.apiRequest('PUT', `/realms/${realmName}/users/${userId}/reset-password`, {
+            type: 'password',
+            value: password,
+            temporary
+        });
+        console.log(`[Keycloak Admin] Set password for user ${userId}`);
+    }
+
+    /**
+     * Delete a user from a Keycloak realm.
+     */
+    async deleteUser(realmName: string, userId: string): Promise<void> {
+        await this.apiRequest('DELETE', `/realms/${realmName}/users/${userId}`);
+        console.log(`[Keycloak Admin] Deleted user ${userId}`);
+    }
+
+    /**
+     * Look up a user by exact username match.
+     */
+    async getUserByUsername(realmName: string, username: string): Promise<KeycloakUser | null> {
+        const users: KeycloakUser[] = await this.apiRequest(
+            'GET',
+            `/realms/${realmName}/users?username=${encodeURIComponent(username)}&exact=true`
+        );
+        return users && users.length > 0 ? users[0] : null;
+    }
+
+    /**
+     * Update an existing Keycloak user.
+     */
+    async updateUser(
+        realmName: string,
+        userId: string,
+        userData: {
+            firstName?: string;
+            lastName?: string;
+            email?: string;
+            enabled?: boolean;
+            attributes?: Record<string, string[]>;
+        }
+    ): Promise<void> {
+        await this.apiRequest('PUT', `/realms/${realmName}/users/${userId}`, userData);
+        console.log(`[Keycloak Admin] Updated user ${userId}`);
     }
 
     // ============ Config Hash Management ============

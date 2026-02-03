@@ -11,7 +11,7 @@ import { loadTestState, clearTestState } from './helpers/test-state';
  * 3. Clean up test state
  */
 
-const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8080';
+const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8180';
 
 async function globalTeardown(config: FullConfig): Promise<void> {
     console.log('[OIDC Teardown] Starting global teardown...');

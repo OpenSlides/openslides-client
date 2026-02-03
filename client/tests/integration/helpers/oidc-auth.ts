@@ -16,7 +16,7 @@ export interface OIDCConfig {
 }
 
 const DEFAULT_OIDC_CONFIG: OIDCConfig = {
-    keycloakBaseUrl: 'http://localhost:8080',
+    keycloakBaseUrl: 'http://localhost:8180',
     realm: 'openslides',
     clientId: 'openslides'
 };
@@ -66,7 +66,7 @@ export class KeycloakLoginPage {
 
     async isOnKeycloakPage(): Promise<boolean> {
         const url = this.page.url();
-        return url.includes('localhost:8080') || url.includes('keycloak') || url.includes('/auth/realms/');
+        return url.includes('localhost:8180') || url.includes('keycloak') || url.includes('/auth/realms/');
     }
 }
 
@@ -254,7 +254,7 @@ export async function setSAMLLoginMode(context: BrowserContext, buttonText: stri
     });
 }
 
-export async function isKeycloakAvailable(baseUrl: string = 'http://localhost:8080'): Promise<boolean> {
+export async function isKeycloakAvailable(baseUrl: string = 'http://localhost:8180'): Promise<boolean> {
     try {
         const response = await fetch(`${baseUrl}/auth/realms/openslides/.well-known/openid-configuration`);
         return response.ok;

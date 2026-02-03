@@ -575,11 +575,16 @@ export class OperatorService {
      */
     private calcPermissions(): Permission[] {
         const permissionSet = new Set<Permission>();
+        console.log('DEBUG calcPermissions: isAnonymous=', this.isAnonymous, 'groupIds=', this._groupIds);
         if (this.isAnonymous) {
+            console.log('DEBUG anonymous_group:', this.activeMeeting?.anonymous_group);
+            console.log('DEBUG anonymous_group.permissions:', this.activeMeeting?.anonymous_group?.permissions);
             this.activeMeeting?.anonymous_group?.permissions?.forEach(perm => permissionSet.add(perm));
         } else {
             if (this._groupIds?.length) {
-                this.DS.getMany(Group, this._groupIds).forEach(group => {
+                const groups = this.DS.getMany(Group, this._groupIds);
+                console.log('DEBUG groups:', groups.map(g => ({ id: g.id, name: g.name, permissions: g.permissions })));
+                groups.forEach(group => {
                     group.permissions?.forEach(permission => {
                         permissionSet.add(permission);
                     });

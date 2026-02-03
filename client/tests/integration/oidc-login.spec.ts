@@ -17,7 +17,7 @@ import { KeycloakLoginPage } from './helpers/oidc-auth';
 import { login, logout } from './helpers/auth';
 import { updateOrganization } from './helpers/request';
 
-const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8080';
+const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8180';
 const OPENSLIDES_BASE_URL = process.env.BASE_URL || 'https://localhost:8000';
 
 const TEST_USERS = {
@@ -198,8 +198,8 @@ test.describe('OIDC Login Flow', () => {
         // Navigate to the OIDC login endpoint
         await page.goto(`${OPENSLIDES_BASE_URL}/oauth2/login`);
 
-        // Should redirect to Keycloak (may use localhost:8080, keycloak hostname, or Docker bridge IP)
-        await page.waitForURL(/localhost:8080.*auth|keycloak|login-actions|172\.17\.0\.1:8080/, { timeout: 15000 });
+        // Should redirect to Keycloak (may use localhost:8180, keycloak hostname, or Docker bridge IP)
+        await page.waitForURL(/localhost:8[01]80.*auth|keycloak|login-actions|172\.17\.0\.1:8[01]80/, { timeout: 15000 });
 
         // Verify Keycloak login form
         const keycloakPage = new KeycloakLoginPage(page);
@@ -270,9 +270,9 @@ test.describe('OIDC Login Flow', () => {
         const currentUrl = page.url();
         expect(
             currentUrl.includes('localhost:8000') ||
-            currentUrl.includes('localhost:8080') ||
+            currentUrl.includes('localhost:8180') ||
             currentUrl.includes('keycloak') ||
-            currentUrl.includes('172.17.0.1:8080')
+            currentUrl.includes('172.17.0.1:8180')
         ).toBeTruthy();
     });
 
@@ -326,7 +326,7 @@ test.describe('Error Handling', () => {
         await keycloakPage.login('admin', 'wrongpassword');
 
         // Should stay on Keycloak with error
-        await expect(page).toHaveURL(/login-actions|localhost:8080|keycloak/, { timeout: 10000 });
+        await expect(page).toHaveURL(/login-actions|localhost:8180|keycloak/, { timeout: 10000 });
 
         // Error message should be visible
         const errorMessage = page.locator('.alert-error, .kc-feedback-text, #input-error');

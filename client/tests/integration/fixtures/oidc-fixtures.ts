@@ -30,7 +30,7 @@ function getOIDCConfig(): OIDCTestConfig {
     const realm = state?.realmName || process.env.KEYCLOAK_REALM || 'openslides';
 
     return {
-        keycloakBaseUrl: process.env.KEYCLOAK_URL || 'http://localhost:8080',
+        keycloakBaseUrl: process.env.KEYCLOAK_URL || 'http://localhost:8180',
         keycloakRealm: realm,
         openslidesBaseUrl: process.env.BASE_URL || 'https://localhost:8000',
         testUsers: {

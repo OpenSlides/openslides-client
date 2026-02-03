@@ -16,7 +16,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
  * 4. Warmup Keycloak endpoints
  */
 
-const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8080';
+const KEYCLOAK_BASE_URL = process.env.KEYCLOAK_URL || 'http://localhost:8180';
 const OPENSLIDES_BASE_URL = process.env.BASE_URL || 'https://localhost:8000';
 const REALM_CONFIG_PATH = path.resolve(__dirname, '../../../../dev/docker/keycloak/realm-openslides.json');
 const MAX_RETRIES = 30;
