@@ -58,7 +58,11 @@
                     <div></div>
                 </div>
                 <div class="header-grid">
-                    <h2 class="text-large-bold color-inherit">{{ 'Gender' | translate }}</h2>
+                    <h2 class="text-large-bold color-inherit">
+                        <button matButton (click)="toggle(entry.id, true)">
+                            {{ 'Gender' | translate }}
+                        </button>
+                    </h2>
                     <div>
                         <button matIconButton (click)="toggle(entry.id, true)">
                             @if (toggleGenderMap.get(entry.id)) {
@@ -105,7 +109,9 @@
                 }
                 <div class="header-grid">
                     <h2 class="text-large-bold color-inherit">
-                        {{ 'Participants' | translate }}
+                        <button matButton (click)="toggle(entry.id)">
+                            {{ 'Participants' | translate }}
+                        </button>
                     </h2>
                     <div>
                         <button matIconButton (click)="toggle(entry.id)">
