@@ -36,58 +36,58 @@ export class LoadFontService {
      * Falls back to the normal OSFont when no custom  font was set.
      */
     private loadCustomFont(): void {
-        this.mediaManageService.getFontUrlObservable(`regular`).subscribe(regular => {
-            if (regular) {
-                this.setCustomProjectorFont(regular);
+        this.mediaManageService.getFontUrlObservable(`regular`).subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`bold`).subscribe(bold => {
-            if (bold) {
-                this.setCustomProjectorFont(bold, {
+        this.mediaManageService.getFontUrlObservable(`bold`).subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url, {
                     weight: `500`
                 });
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`bold_italic`).subscribe(bold => {
-            if (bold) {
-                this.setCustomProjectorFont(bold, {
+        this.mediaManageService.getFontUrlObservable(`bold_italic`).subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url, {
                     style: `italic`,
                     weight: `500`
                 });
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`italic`).subscribe(bold => {
-            if (bold) {
-                this.setCustomProjectorFont(bold, {
+        this.mediaManageService.getFontUrlObservable(`italic`).subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url, {
                     style: `italic`
                 });
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`monospace`).subscribe(mono => {
-            if (mono) {
-                this.setNewFontFace(`OSFont Monospace`, mono);
+        this.mediaManageService.getFontUrlObservable(`monospace`).subscribe(url => {
+            if (url) {
+                this.setNewFontFace(`OSFont Monospace`, url);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`chyron_speaker_name`).subscribe(chyronFont => {
-            if (chyronFont) {
-                this.setNewFontFace(`customChyronNameFont`, chyronFont);
+        this.mediaManageService.getFontUrlObservable(`chyron_speaker_name`).subscribe(url => {
+            if (url) {
+                this.setNewFontFace(`customChyronNameFont`, url);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`projector_h1`).subscribe(projectorH1 => {
-            if (projectorH1) {
-                this.setNewFontFace(`OSFont projectorH1`, projectorH1);
+        this.mediaManageService.getFontUrlObservable(`projector_h1`).subscribe(url => {
+            if (url) {
+                this.setNewFontFace(`OSFont projectorH1`, url);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable(`projector_h2`).subscribe(projectorH2 => {
-            if (projectorH2) {
-                this.setNewFontFace(`OSFont projectorH2`, projectorH2);
+        this.mediaManageService.getFontUrlObservable(`projector_h2`).subscribe(url => {
+            if (url) {
+                this.setNewFontFace(`OSFont projectorH2`, url);
             }
         });
     }
