@@ -583,7 +583,6 @@ export class OperatorService {
                     group.permissions?.forEach(permission => {
                         permissionSet.add(permission);
                     });
-                    console.log(`permissionSet`, permissionSet);
                 });
             }
         }
