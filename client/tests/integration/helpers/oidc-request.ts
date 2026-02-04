@@ -29,17 +29,14 @@ export async function oidcBrowserLogin(page: Page, username: string, password: s
 }
 
 /**
- * Create a BrowserContext that has gone through the OIDC browser flow as admin
- * and also has standard OpenSlides authentication for backend API calls.
+ * Create a BrowserContext that has gone through the OIDC browser flow as admin.
  *
- * The context has two layers of auth:
- * 1. OIDC session cookies - These satisfy the Traefik OIDC middleware so requests
- *    to protected routes (action, presenter, autoupdate) are forwarded to the backend.
- * 2. Standard OpenSlides HS256 auth token - Set via /system/auth/login (which is
- *    excluded from OIDC middleware). This authenticates with the backend's auth handler.
+ * In pure OIDC mode (no auth service), this relies on:
+ * 1. OIDC session cookies - These satisfy the Traefik OIDC middleware
+ * 2. Traefik OIDC middleware forwards the Bearer token to the backend
+ * 3. Backend validates the Bearer token via JWKS
  *
- * This dual approach is needed because the backend's osauthlib auth handler currently
- * only supports HS256 tokens, not OIDC/Keycloak RS256 JWTs.
+ * Falls back to dual-auth mode if the standard auth service is available.
  */
 export async function createOIDCAdminContext(
     browser: Browser,
@@ -68,10 +65,14 @@ export async function createOIDCAdminContext(
 
     await page.close();
 
-    // Step 2: Standard OpenSlides login to get HS256 auth token for backend API calls.
-    // /system/auth/login is excluded from the OIDC middleware, so this works without
-    // OIDC cookies. The login() helper sets the 'authentication' extra header on the context.
-    await login(context, username, password);
+    // Step 2: Try standard OpenSlides login if auth service is available.
+    // In pure OIDC mode (no auth service), skip this step - OIDC cookies are sufficient.
+    try {
+        await login(context, username, password);
+    } catch (e) {
+        // Auth service not available in pure OIDC mode - that's OK
+        console.log(`[OIDC] Standard login not available, using pure OIDC mode`);
+    }
 
     return context;
 }

@@ -15,6 +15,7 @@ export interface KeycloakUser {
     email?: string;
     firstName?: string;
     lastName?: string;
+    enabled?: boolean;
 }
 
 export interface ClientSessionStats {
