@@ -156,19 +156,20 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             }),
             this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
                 this.samlLoginButtonText = text;
-            }),
-            this.orgaSettings.getSafe(`oidc_enabled`).subscribe(enabled => {
-                this.oidcEnabled = enabled;
-                this.settingsLoaded.oidc = true;
-                this.updateLoadingState();
-                // When OIDC is enabled via Traefik middleware, the user is already
-                // authenticated when reaching the client. If they somehow land on
-                // the login page, redirect them to the home page.
-                if (enabled && this.authService.isAuthenticated()) {
-                    this.osRouter.navigateAfterLogin(this.currentMeetingId);
-                }
             })
         );
+
+        // Detect OIDC via Traefik session cookie instead of organization settings
+        // The Traefik OIDC plugin sets cookies like TraefikOidcAuth.Session.*
+        this.oidcEnabled = this.isTraefikOidcSessionActive();
+        this.settingsLoaded.oidc = true;
+        this.updateLoadingState();
+        // When OIDC is enabled via Traefik middleware, the user is already
+        // authenticated when reaching the client. If they somehow land on
+        // the login page and are authenticated, redirect them to the home page.
+        if (this.oidcEnabled && this.authService.isAuthenticated()) {
+            this.osRouter.navigateAfterLogin(this.currentMeetingId);
+        }
 
         this.checkForUnsecureConnection();
     }
@@ -282,6 +283,16 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         if (!this.browserSupport.isBrowserSupported()) {
             this.router.navigate([`./unsupported-browser`], { relativeTo: this.route });
         }
+    }
+
+    /**
+     * Check if a Traefik OIDC session cookie is present.
+     * The Traefik OIDC plugin sets cookies with names like:
+     * - TraefikOidcAuth.Session.Chunks (number of chunks)
+     * - TraefikOidcAuth.Session.1, TraefikOidcAuth.Session.2, etc.
+     */
+    private isTraefikOidcSessionActive(): boolean {
+        return document.cookie.includes(`TraefikOidcAuth.Session`);
     }
 
     /**

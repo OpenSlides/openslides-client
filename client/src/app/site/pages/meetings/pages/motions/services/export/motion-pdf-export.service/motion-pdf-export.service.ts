@@ -142,7 +142,7 @@ export class MotionPdfExportService {
         }
         const mergedPdfFile = await mergedPdf.save();
         if (!canceled) {
-            saveAs(new Blob([mergedPdfFile]), `${this.translate.instant(`Motions`)}.pdf`);
+            saveAs(new Blob([mergedPdfFile as BlobPart]), `${this.translate.instant(`Motions`)}.pdf`);
         }
         this.progressSnackBarService.dismiss();
     }

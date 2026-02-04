@@ -120,7 +120,17 @@ export class WorkerHttpAuth {
                         this.serverTimeOffset = 0;
                     }
 
-                    this.setAuthToken(res.headers.get(`authentication`) || null);
+                    const authHeader = res.headers.get(`authentication`);
+                    if (authHeader) {
+                        // Legacy auth: token in header
+                        this.setAuthToken(authHeader);
+                    } else if (json.user_id) {
+                        // OIDC mode: user_id in response, no token to manage
+                        this.setOidcUser(json.user_id);
+                    } else {
+                        // Anonymous
+                        this.setAuthToken(null);
+                    }
                 } else if (!res.ok && json?.message === `Not signed in`) {
                     this.setAuthToken(null);
                     resolve(false);
@@ -156,6 +166,29 @@ export class WorkerHttpAuth {
         } else {
             this.currentUserId = null;
         }
+
+        if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
+            for (const subscr of WorkerHttpAuth.subscriptions.keys()) {
+                this.notifyUserChange(subscr);
+            }
+        }
+    }
+
+    private setOidcUser(userId: number): void {
+        const lastUserId = this.currentUserId;
+        this.authToken = null;
+        this.currentUserId = userId;
+
+        for (const subscr of WorkerHttpAuth.subscriptions.keys()) {
+            this.notifyTokenChange(subscr);
+        }
+
+        // In OIDC mode, Traefik handles token refresh
+        // Periodic check to verify session validity
+        clearTimeout(this._authTokenRefreshTimeout);
+        this._authTokenRefreshTimeout = setTimeout(() => {
+            this.updateAuthentication();
+        }, 5 * 60 * 1000); // 5 minutes
 
         if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
             for (const subscr of WorkerHttpAuth.subscriptions.keys()) {

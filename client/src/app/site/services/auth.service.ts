@@ -24,6 +24,13 @@ export class AuthService {
     }
 
     /**
+     * Returns the current user ID regardless of auth method (JWT or OIDC).
+     */
+    public get userId(): number | null {
+        return this.authToken?.userId ?? this.authTokenService.oidcUserId;
+    }
+
+    /**
      * "Pings" every time when a user logs out.
      */
     public get logoutObservable(): Observable<void> {
@@ -61,7 +68,17 @@ export class AuthService {
         this.sharedWorker.listenTo(`auth`).subscribe(msg => {
             switch (msg?.action) {
                 case `new-user`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
+                    if (msg.content?.token) {
+                        // Legacy auth mode: JWT token in header
+                        this.authTokenService.setRawAccessToken(msg.content.token);
+                    } else if (msg.content?.user) {
+                        // OIDC mode: user ID from response body, no JWT
+                        this.authTokenService.setOidcUserId(msg.content.user);
+                    } else {
+                        // Anonymous/logged out
+                        this.authTokenService.setRawAccessToken(null);
+                        this.authTokenService.setOidcUserId(null);
+                    }
                     this.updateUser(msg.content?.user);
                     break;
                 case `new-token`:
@@ -173,7 +190,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
+        return this.authTokenService.isAuthenticated || this.cookie.check(`anonymous-auth`);
     }
 
     /**
@@ -185,8 +202,12 @@ export class AuthService {
         console.log(`auth: Do WhoAmI`);
         let online: boolean;
         try {
-            await this.authAdapter.whoAmI();
+            const response = await this.authAdapter.whoAmI();
             online = true;
+            // In OIDC mode, user_id comes in response body (no JWT token)
+            if (response?.user_id && !this.authTokenService.accessToken) {
+                this.authTokenService.setOidcUserId(response.user_id);
+            }
         } catch (e) {
             if (e instanceof ProcessError && e.status >= 400 && e.status < 500) {
                 online = true;
@@ -194,7 +215,7 @@ export class AuthService {
                 online = false;
             }
         }
-        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
+        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, this.authTokenService.isAuthenticated);
         return online;
     }
 }

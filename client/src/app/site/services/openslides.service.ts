@@ -34,7 +34,9 @@ export class OpenSlidesService {
             return;
         }
 
+        console.log(`bootup: isAuthenticated =`, this.authService.isAuthenticated());
         if (!this.authService.isAuthenticated()) {
+            console.log(`bootup: navigating to login because not authenticated`);
             this.osRouter.navigateToLogin();
         }
 

@@ -72,6 +72,7 @@ export class OpenSlidesRouterService {
         private operator: OperatorService
     ) {
         _auth.logoutObservable.subscribe(() => {
+            console.log(`router: logoutObservable triggered, navigating to login`);
             this.navigateToLogin();
         });
         router.events
