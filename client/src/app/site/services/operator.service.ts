@@ -597,10 +597,12 @@ export class OperatorService {
         // copy set beforehand to not iterate over the newly added members
         console.log(`permissionSet`, permissionSet)
         for (const permission of new Set(permissionSet)) {
-            console.log(`permission`, permission)
-            console.log(`permissionChildren[permission]`, permissionChildren[permission])
-            for (const permissionChild of permissionChildren[permission]!) {
-                permissionSet.add(permissionChild);
+            if (permission) {
+                console.log(`permission`, permission)
+                console.log(`permissionChildren[permission]`, permissionChildren[permission])
+                for (const permissionChild of permissionChildren[permission]!) {
+                    permissionSet.add(permissionChild);
+                }
             }
         }
         console.log(`permissionSet`, permissionSet);
