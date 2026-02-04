@@ -354,6 +354,12 @@ export class OperatorService {
             }
             if (this.isAnonymous && group.id === this.anonymousGroupId) {
                 this._groupIds = this._groupIds || [];
+                console.log(`this.user`, this.user);
+                console.log(`this.isAnonymous`, this.isAnonymous);
+                console.log(`this._groupIds`, this._groupIds);
+                console.log(`group.id`, group.id);
+                console.log(`this.anonymousGroupId`, this.anonymousGroupId);
+                console.log(`this.isAnonymous`, this.isAnonymous);
                 this._permissions = this.calcPermissions();
                 this._operatorUpdatedSubject.next();
             } else if (!this.isAnonymous) {
@@ -361,6 +367,16 @@ export class OperatorService {
                     ((!this._groupIds || this._groupIds.length === 0) && group.id === this.defaultGroupId) ||
                     (this._groupIds && this._groupIds.length > 0 && this._groupIds.includes(group.id))
                 ) {
+                    console.log(`this.user`, this.user);
+                    console.log(
+                        `!this._groupIds || this._groupIds.length === 0`,
+                        !this._groupIds || this._groupIds.length === 0
+                    );
+                    console.log(`group.id`, group.id);
+                    console.log(`this.defaultGroupId`, this.defaultGroupId);
+                    console.log(`this._groupIds`, this._groupIds);
+                    console.log(`this._groupIds.length`, this._groupIds.length);
+                    console.log(`this._groupIds.includes(group.id)`, this._groupIds.includes(group.id));
                     this._permissions = this.calcPermissions();
                     this._operatorUpdatedSubject.next();
                 }
@@ -423,6 +439,10 @@ export class OperatorService {
 
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
+            console.log(`this.user`, this.user);
+            console.log(`user`, user);
+            console.log(`this.activeMeetingId`, this.activeMeetingId);
+            console.log(`this._groupIds`, this._groupIds);
             this._permissions = this.calcPermissions();
         }
         // The OML has to be changed only if new data come in.
@@ -575,6 +595,9 @@ export class OperatorService {
      */
     private calcPermissions(): Permission[] {
         const permissionSet = new Set<Permission>();
+        console.log(`this.isAnonymous`, this.isAnonymous);
+        console.log(`this.activeMeeting`, this.activeMeeting);
+        console.log(`this._groupIds?.length`, this._groupIds?.length);
         if (this.isAnonymous) {
             this.activeMeeting?.anonymous_group?.permissions?.forEach(perm => permissionSet.add(perm));
         } else {
@@ -583,6 +606,7 @@ export class OperatorService {
                     group.permissions?.forEach(permission => {
                         permissionSet.add(permission);
                     });
+                    console.log(`permissionSet`, permissionSet);
                 });
             }
         }
@@ -593,6 +617,7 @@ export class OperatorService {
                 permissionSet.add(permissionChild);
             }
         }
+        console.log(`permissionSet`, permissionSet);
         return Array.from(permissionSet.values());
     }
 
