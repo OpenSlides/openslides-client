@@ -147,6 +147,9 @@ export class DataStoreService {
             return [];
         }
         const models = ids.map(id => modelCollection[id]).filter(model => !!model); // remove non valid models.
+        console.log(`models`, models);
+        ids.forEach(id => console.log(`id`, id));
+        ids.forEach(id => console.log(`modelCollection[id]`, modelCollection[id]));
         return models as T[];
     }
 

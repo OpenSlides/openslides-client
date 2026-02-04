@@ -579,6 +579,8 @@ export class OperatorService {
         console.log(`this.activeMeeting`, this.activeMeeting);
         console.log(`this._groupIds?.length`, this._groupIds?.length);
         console.log(`this.DS.getMany(Group, this._groupIds)`, this.DS.getMany(Group, this._groupIds));
+        console.log(`Group`, Group);
+        console.log(`this._groupIds`, this._groupIds);
         if (this.isAnonymous) {
             this.activeMeeting?.anonymous_group?.permissions?.forEach(perm => permissionSet.add(perm));
         } else {
