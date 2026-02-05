@@ -125,6 +125,9 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     }
 
     public get numbering(): string {
+        if (this.list_of_speakers?.content_object.collection === `topic`) {
+            return this.list_of_speakers?.content_object?.getListTitle() ?? ``;
+        }
         return this.list_of_speakers?.content_object?.getTitle() ?? ``;
     }
 
