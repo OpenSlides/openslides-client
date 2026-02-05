@@ -281,7 +281,7 @@ export class MotionDiffService {
 
     public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {
         // This callback will only do anything the first time it's called on a generated document.
-        // After that, the document should stay as it is. Hence, we remove the ol-colliding-change class
+        // After that, the document should stay as it is. Hence, we remove the data-change-is-colliding attribute
         // from the holder element to the comment.
         if (el.hasAttribute(`data-comment-change-is-colliding`)) {
             return;
@@ -317,7 +317,7 @@ export class MotionDiffService {
         const prevIsColliding = nodeIsColliding(el.previousSibling);
         const nextIsColliding = nodeIsColliding(el.nextSibling);
 
-        // Once we start editing, the holder element should not hold the class deciding if to show a warning anymore.
+        // Once we start editing, the holder attribute "data-change-is-collidiing" should not hold the element deciding if to show a warning anymore.
         // The reason is that it might be hard to get rid of it while editing, yet we still want to be able to get rid
         // of the collision warning sign if the collision has been resolved
         el.removeAttribute(`data-change-is-colliding`);
