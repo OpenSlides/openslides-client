@@ -162,17 +162,17 @@ export async function triggerOIDCProvisioning(
 }
 
 /**
- * Ensure the organization has correct OIDC settings for the oidc_who_am_i presenter.
+ * OIDC settings are now configured via environment variables.
+ * This function is kept for test compatibility but is a no-op.
+ *
+ * The backend reads OIDC configuration from:
+ * - OIDC_PROVIDER_URL
+ * - OIDC_CLIENT_ID
+ * - OIDC_CLIENT_SECRET
  */
-export async function ensureOIDCOrgSettings(context: BrowserContext): Promise<void> {
-    await os4request(context, 'organization.update', {
-        id: 1,
-        oidc_enabled: true,
-        oidc_provider_url: OIDC_PROVIDER_URL,
-        oidc_client_id: OIDC_CLIENT_ID,
-        oidc_client_secret: OIDC_CLIENT_SECRET,
-        oidc_login_button_text: 'OIDC Login'
-    });
+export async function ensureOIDCOrgSettings(_context: BrowserContext): Promise<void> {
+    // OIDC settings are now configured via environment variables, not organization settings.
+    // This function is a no-op kept for test compatibility.
 }
 
 /**

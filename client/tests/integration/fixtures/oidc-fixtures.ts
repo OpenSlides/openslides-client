@@ -49,34 +49,19 @@ export interface OIDCFixtures {
     cleanupSession: () => Promise<void>;
 }
 
-async function enableOIDC(context: BrowserContext): Promise<void> {
-    const response = await context.request.post('/system/action/handle_request', {
-        data: [
-            {
-                action: 'organization.update',
-                data: [{ id: 1, oidc_enabled: true }]
-            }
-        ]
-    });
-
-    if (!response.ok()) {
-        throw new Error(`Failed to enable OIDC: ${response.status()}`);
-    }
+/**
+ * OIDC is now configured via environment variables, not organization settings.
+ * These functions are no-ops kept for test compatibility.
+ * OIDC is enabled when the Traefik OIDC middleware is configured.
+ */
+async function enableOIDC(_context: BrowserContext): Promise<void> {
+    // OIDC is enabled via Traefik middleware configuration, not organization settings.
+    // This is a no-op for test compatibility.
 }
 
-async function disableOIDC(context: BrowserContext): Promise<void> {
-    const response = await context.request.post('/system/action/handle_request', {
-        data: [
-            {
-                action: 'organization.update',
-                data: [{ id: 1, oidc_enabled: false }]
-            }
-        ]
-    });
-
-    if (!response.ok()) {
-        throw new Error(`Failed to disable OIDC: ${response.status()}`);
-    }
+async function disableOIDC(_context: BrowserContext): Promise<void> {
+    // OIDC is enabled via Traefik middleware configuration, not organization settings.
+    // This is a no-op for test compatibility.
 }
 
 /**

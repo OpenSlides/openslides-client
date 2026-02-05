@@ -164,14 +164,8 @@ export class AuthService {
         await this.DS.clear();
         this.lifecycleService.bootup();
 
-        // Check if OIDC is enabled (via Traefik middleware)
-        // Lazy-load OrganizationSettingsService to avoid circular dependency
-        const { OrganizationSettingsService } = await import(
-            '../pages/organization/services/organization-settings.service'
-        );
-        const orgaSettings = this.injector.get(OrganizationSettingsService);
-        const oidcEnabled = orgaSettings.instant(`oidc_enabled`);
-        if (oidcEnabled) {
+        // Check if user logged in via OIDC (Traefik middleware sets session cookie)
+        if (document.cookie.includes('TraefikOidcAuth.Session')) {
             // Redirect to Traefik OIDC logout endpoint
             location.replace(`/oauth2/logout`);
             return;

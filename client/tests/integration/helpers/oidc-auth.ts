@@ -160,40 +160,24 @@ export async function oidcLogout(page: Page, context: BrowserContext): Promise<v
     await expect(page).toHaveURL('/login');
 }
 
-export async function enableOIDCForOrganization(context: BrowserContext): Promise<void> {
-    const response = await context.request.post('/system/action/handle_request', {
-        data: [
-            {
-                action: 'organization.update',
-                data: [
-                    {
-                        id: 1,
-                        oidc_enabled: true
-                    }
-                ]
-            }
-        ]
-    });
-
-    expect(response.ok()).toBeTruthy();
+/**
+ * OIDC is now configured via environment variables, not organization settings.
+ * This function is a no-op kept for test compatibility.
+ * OIDC is enabled when the Traefik OIDC middleware is configured.
+ */
+export async function enableOIDCForOrganization(_context: BrowserContext): Promise<void> {
+    // OIDC is enabled via Traefik middleware configuration, not organization settings.
+    // This is a no-op for test compatibility.
 }
 
-export async function disableOIDCForOrganization(context: BrowserContext): Promise<void> {
-    const response = await context.request.post('/system/action/handle_request', {
-        data: [
-            {
-                action: 'organization.update',
-                data: [
-                    {
-                        id: 1,
-                        oidc_enabled: false
-                    }
-                ]
-            }
-        ]
-    });
-
-    expect(response.ok()).toBeTruthy();
+/**
+ * OIDC is now configured via environment variables, not organization settings.
+ * This function is a no-op kept for test compatibility.
+ * OIDC is enabled when the Traefik OIDC middleware is configured.
+ */
+export async function disableOIDCForOrganization(_context: BrowserContext): Promise<void> {
+    // OIDC is enabled via Traefik middleware configuration, not organization settings.
+    // This is a no-op for test compatibility.
 }
 
 export async function enableSAMLForOrganization(context: BrowserContext, buttonText?: string): Promise<void> {
@@ -235,7 +219,7 @@ export async function disableSAMLForOrganization(context: BrowserContext): Promi
 
 /**
  * Set organization to standard login mode (no SAML - shows username/password form).
- * Note: oidc_enabled cannot be modified via organization.update, so we only control saml_enabled.
+ * Note: OIDC is configured via environment variables (Traefik middleware), so we only control saml_enabled.
  */
 export async function setStandardLoginMode(context: BrowserContext): Promise<void> {
     await updateOrganization(context, {
@@ -245,7 +229,7 @@ export async function setStandardLoginMode(context: BrowserContext): Promise<voi
 
 /**
  * Set organization to SAML login mode (shows SSO button).
- * Note: oidc_enabled cannot be modified via organization.update, so we only control saml_enabled.
+ * Note: OIDC is configured via environment variables (Traefik middleware), so we only control saml_enabled.
  */
 export async function setSAMLLoginMode(context: BrowserContext, buttonText: string = 'SSO Login'): Promise<void> {
     await updateOrganization(context, {

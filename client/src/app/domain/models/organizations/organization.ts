@@ -38,9 +38,6 @@ export class OrganizationSetting {
     public saml_metadata_idp!: string;
     public saml_metadata_sp!: string;
     public saml_private_key!: string;
-
-    // OIDC authentication via Traefik middleware
-    public oidc_enabled!: boolean; // default: false
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -90,8 +87,8 @@ export class Organization extends BaseModel<Organization> {
         `saml_metadata_idp`,
         `saml_metadata_sp`,
         `saml_private_key`,
-        // Note: oidc_enabled is client-side only for Traefik OIDC middleware.
-        // It's not stored in the backend, so we don't request it.
+        // Note: OIDC is configured via environment variables (Traefik middleware),
+        // not via organization settings.
         `committee_ids`,
         `active_meeting_ids`,
         `archived_meeting_ids`,
