@@ -122,6 +122,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
     public selectedGroups: Id[] = [];
     public form: UntypedFormGroup = null;
     public toggleMap = new Map<Id, boolean>();
+    public toggleGenderMap = new Map<Id, boolean>();
 
     public constructor(
         private participantRepo: ParticipantControllerService,
@@ -138,7 +139,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         this.subscriptions.push(
             this.structureLevelRepo.getViewModelListObservable().subscribe(strLvls => {
                 this.structureLevels = strLvls;
-                this.updateToggleMap();
+                this.updateToggleMaps();
                 this.cd.markForCheck();
             }),
             this.participantRepo.getViewModelListObservable().subscribe(participants => {
@@ -171,8 +172,12 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         return `(${Number(value * 100).toFixed(0)}%)`;
     }
 
-    public toggle(structureLevelId: Id): void {
-        this.toggleMap.set(structureLevelId, !(this.toggleMap.get(structureLevelId) ?? true));
+    public toggle(structureLevelId: Id, gender?: boolean): void {
+        if (gender) {
+            this.toggleGenderMap.set(structureLevelId, !(this.toggleGenderMap.get(structureLevelId) ?? true));
+        } else {
+            this.toggleMap.set(structureLevelId, !(this.toggleMap.get(structureLevelId) ?? true));
+        }
     }
 
     public getName(userId: Id): string {
@@ -216,12 +221,17 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         this.entriesObservable.next(this.entries);
     }
 
-    private updateToggleMap(): void {
+    private updateToggleMaps(): void {
+        this.toggleMap = this.getUpdatedToggleMap(this.toggleMap);
+        this.toggleGenderMap = this.getUpdatedToggleMap(this.toggleGenderMap);
+    }
+
+    private getUpdatedToggleMap(oldMap: Map<Id, boolean>): Map<Id, boolean> {
         const newMap = new Map<Id, boolean>();
-        newMap.set(ALL_MANDATES_ID, !!this.toggleMap.get(ALL_MANDATES_ID));
+        newMap.set(ALL_MANDATES_ID, !!oldMap.get(ALL_MANDATES_ID));
         for (const strlvl of this.structureLevels) {
-            newMap.set(strlvl.id, !!this.toggleMap.get(strlvl.id));
+            newMap.set(strlvl.id, !!oldMap.get(strlvl.id));
         }
-        this.toggleMap = newMap;
+        return newMap;
     }
 }
