@@ -1,9 +1,11 @@
 <os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">
-            @if (poll) {
-                <h2>{{ 'Motion' | translate }} {{ poll.title }}</h2>
-            }
+            <h1 class="mock-h2">
+                @if (poll) {
+                    {{ 'Motion' | translate }} {{ poll.title }}
+                }
+            </h1>
         </div>
 
         <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">

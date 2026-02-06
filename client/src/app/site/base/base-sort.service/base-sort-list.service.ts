@@ -232,7 +232,8 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     /**
      * Defines the sorting properties and registers this service with the repository.
-     * After this, calling the repositories `getSortedViewModelListObservable` will return an observable wherein the values are sorted according to this services sort definitions.
+     * After this, calling the repositories `getSortedViewModelListObservable` will return an observable
+     * where the values are sorted according to this services sort definitions.
      *
      * exitSortService should be called when the sorting is not required anymore to ensure that the repository isn't doing any unnecessary sorting work.
      *

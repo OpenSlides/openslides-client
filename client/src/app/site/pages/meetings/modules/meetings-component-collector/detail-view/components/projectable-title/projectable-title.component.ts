@@ -21,6 +21,9 @@ export class ProjectableTitleComponent {
     @Input()
     public titleStyle: `h1` | `h2` = `h1`;
 
+    @Input()
+    public mockH2 = false;
+
     public isProjectedObservable = this.projectorService.getViewModelListObservable().pipe(
         distinctUntilChanged(),
         map(_ => this.isBeingProjected())

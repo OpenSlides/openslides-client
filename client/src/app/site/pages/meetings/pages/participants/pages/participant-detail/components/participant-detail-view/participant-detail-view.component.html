@@ -8,11 +8,11 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>
+        <h1 class="mock-h2">
             @if (user) {
-                <span>{{ user.full_name }}</span>
+                {{ user.full_name }}
             }
-        </h2>
+        </h1>
     </div>
 
     <!-- Menu -->
@@ -52,7 +52,7 @@
             </button>
         </div>
         <!-- delete button -->
-        @if (isAllowed('delete')) {
+        @if (isAllowed('delete') && !isMeetingAdminAndEditSelf) {
             <div>
                 <mat-divider></mat-divider>
                 <button class="red-warning-text" mat-menu-item (click)="deleteUserButton()">

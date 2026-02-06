@@ -1,7 +1,7 @@
 <div class="projectable-title-line">
     @if (model) {
         @if (titleStyle === 'h1') {
-            <h1 class="model-title">
+            <h1 class="model-title" [ngClass]="mockH2 ? 'mock-h2 margin-mock-h2' : ''">
                 <ng-container [ngTemplateOutlet]="titleline"></ng-container>
             </h1>
         } @else if (titleStyle === 'h2') {
@@ -14,7 +14,7 @@
         @if (isProjectedObservable | async) {
             <mat-icon
                 matTooltip="{{ 'Is being projected' | translate }}"
-                [ngClass]="{ 'primary-accent-by-theme': titleStyle === 'h1' }"
+                [ngClass]="{ 'primary-accent-by-theme': titleStyle === 'h1' && !mockH2 }"
             >
                 videocam
             </mat-icon>

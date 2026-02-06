@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2>{{ 'Participants' | translate }}</h2>
+        <h1 class="mock-h2" translate>Participants</h1>
     </div>
 
     <!-- Menu -->
@@ -292,15 +292,17 @@
             <span>{{ 'Locked out' | translate }}</span>
         </button>
 
-        <button
-            *osPerms="permission.userCanManage"
-            class="red-warning-text"
-            mat-menu-item
-            (click)="removeUserFromMeeting(user)"
-        >
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+        @if (!isMeetingAdminAndSelf(user)) {
+            <button
+                *osPerms="permission.userCanManage"
+                class="red-warning-text"
+                mat-menu-item
+                (click)="removeUserFromMeeting(user)"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        }
     </ng-template>
 </mat-menu>
 
@@ -372,6 +374,7 @@
     @if (isMultiSelect) {
         <div>
             <os-user-multiselect-actions
+                [canDelete]="!isMeetingAdminAndSelfSelected"
                 [canManage]="canManage"
                 [canUpdate]="canUpdate"
                 [selectedUsers]="selectedRows"
