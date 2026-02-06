@@ -107,17 +107,13 @@ export class VotingBannerService {
         const text = isSinglePoll
             ? this.getTextForPoll(this.getSinglePoll())
             : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
-        let link: string;
         if (!isSinglePoll) {
             if (this.operator.hasPerms(Permission.meetingCanSeeAutopilot)) {
-                link = `/${this.activeMeeting.meetingId}/autopilot/`;
-                return { text, link };
+                return { text, link: `/${this.activeMeeting.meetingId}/autopilot/` };
             }
-            link = `/${this.activeMeeting.meetingId}/polls/`;
-            return { text, link };
+            return { text, link: `/${this.activeMeeting.meetingId}/polls/` };
         }
-        link = `/${this.getPollComponent(this.pollsToVote[0])}/`;
-        return { text, link };
+        return { text, link: `/${this.getPollComponent(this.pollsToVote[0])}/` };
     }
 
     private getPollComponent(poll: ViewPoll): string {
