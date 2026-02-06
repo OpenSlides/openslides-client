@@ -154,6 +154,21 @@ export class AuthService {
 
     public async logout(): Promise<void> {
         this.lifecycleService.shutdown();
+
+        // Check for OIDC session FIRST - in OIDC mode, skip backend logout
+        // (auth service disabled, session managed by Traefik/Keycloak)
+        if (document.cookie.includes('TraefikOidcAuth.Session')) {
+            this.authTokenService.setRawAccessToken(null);
+            this.authTokenService.setOidcUserId(null);
+            this._logoutEvent.emit();
+            this.sharedWorker.sendMessage(`auth`, { action: `update` });
+            this.DS.deleteCollections(...this.DS.getCollections());
+            await this.DS.clear();
+            location.replace(`/oauth2/logout`);
+            return;
+        }
+
+        // Legacy/SAML mode: call backend logout
         const response = await this.authAdapter.logout();
         if (response?.success) {
             this.authTokenService.setRawAccessToken(null);
@@ -163,13 +178,6 @@ export class AuthService {
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();
-
-        // Check if user logged in via OIDC (Traefik middleware sets session cookie)
-        if (document.cookie.includes('TraefikOidcAuth.Session')) {
-            // Redirect to Traefik OIDC logout endpoint
-            location.replace(`/oauth2/logout`);
-            return;
-        }
 
         // In case SAML is enabled, we need to redirect the user to the IDP
         // to complete the logout-flow. Maybe there is a better way to check
