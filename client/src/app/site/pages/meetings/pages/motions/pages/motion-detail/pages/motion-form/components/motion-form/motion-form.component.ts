@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
@@ -23,7 +24,7 @@ import {
 } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { HasSequentialNumber, Selectable } from 'src/app/domain/interfaces';
+import { HasSequentialNumber, Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
@@ -33,6 +34,7 @@ import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -185,6 +187,8 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     private _motionId: Id | null = null;
     private _parentId: Id | null = null;
 
+    private sequentialNumberMapping = inject(SequentialNumberMappingService);
+
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
@@ -251,6 +255,11 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             }
 
             if (this.newMotion) {
+                if (update.submitter_ids.length === 0 && this.operator.isInMeeting(this.activeMeetingId)) {
+                    update.submitter_meeting_user_ids = [this.operator.user.getMeetingUser(this.activeMeetingId).id];
+                } else {
+                    update.submitter_meeting_user_ids = update.submitter_ids;
+                }
                 for (const key in update) {
                     if (update[key] === null || update[key].length === 0) {
                         delete update[key];
@@ -323,7 +332,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
-        this.addNewUserToFormCtrl(newUserObj, `submitter_ids`);
+        this.addNewUserToFormCtrl(newUserObj, `submitter_meeting_user_ids`);
     }
 
     public async createNewSupporter(username: string): Promise<void> {
@@ -340,7 +349,7 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             if (!newMotionValues.additional_submitter || !this.allowAdditionalSubmitter) {
                 delete newMotionValues.additional_submitter;
             }
-            let response: HasSequentialNumber;
+            let response: Identifiable;
             if (this._parentId) {
                 response = await this.amendmentRepo.createTextBased({
                     ...newMotionValues,
@@ -349,7 +358,14 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             } else {
                 response = (await this.motionController.create(newMotionValues))[0];
             }
-            this.leaveEditMotion(response);
+
+            const sequentialNumber = await this.sequentialNumberMapping.getSequentialNumberById(
+                ViewMotion,
+                response.id
+            );
+            this.leaveEditMotion({
+                sequential_number: sequentialNumber
+            });
         } catch (e) {
             this.raiseError(e);
         }

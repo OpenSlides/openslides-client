@@ -358,7 +358,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
             id: user.id,
-            name: user.username,
+            name: user.short_name,
             group_ids: user.group_ids(),
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
@@ -622,6 +622,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public async removeUserFromMeeting(user: ViewUser): Promise<void> {
         await this.repo.removeUsersFromMeeting([user]);
+    }
+
+    public isMeetingAdminAndSelf(user: ViewUser): boolean {
+        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
+    }
+
+    public get isMeetingAdminAndSelfSelected(): boolean {
+        return this.selectedRows.some(user => this.isMeetingAdminAndSelf(user));
     }
 
     public canSeeItemMenu(): boolean {

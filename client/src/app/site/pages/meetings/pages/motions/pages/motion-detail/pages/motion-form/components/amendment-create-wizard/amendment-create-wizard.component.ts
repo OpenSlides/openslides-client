@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
@@ -8,6 +8,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -75,6 +76,8 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     public canSave = false;
 
     private _parentMotionId: Id | null = null;
+
+    private sequentialNumberMapping = inject(SequentialNumberMappingService);
 
     public constructor(
         protected override translate: TranslateService,
@@ -179,6 +182,9 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
                 amendmentParagraphs[paraNo] = this.contentForm.value[`text_` + paraNo];
             }
         });
+        const submitterMeetingUserId = this.operator.isInMeeting(this.activeMeetingId)
+            ? [this.operator.user.getMeetingUser(this.activeMeetingId)?.id]
+            : [];
         const motionCreate = {
             ...this.contentForm.value,
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
@@ -186,11 +192,13 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
+            submitter_meeting_user_ids: submitterMeetingUserId,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
-        const { sequential_number } = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, `motions`, sequential_number], {
+        const { id } = await this.repo.createParagraphBased(motionCreate);
+        const sequentialNumber = await this.sequentialNumberMapping.getSequentialNumberById(ViewMotion, id);
+        this.router.navigate([this.activeMeetingId, `motions`, sequentialNumber], {
             replaceUrl: true,
             state: { canGoBack: true }
         });
