@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { endOfDay, fromUnixTime } from 'date-fns';
-import { BehaviorSubject, filter, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
@@ -11,8 +11,6 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { GetForwardingMeetingsPresenter } from 'src/app/gateways/presenter';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -59,7 +57,6 @@ export class AgendaForwardDialogService
     public constructor(
         private translate: TranslateService,
         private repo: AgendaItemControllerService,
-        private meetingRepo: MeetingControllerService,
         private snackbar: MatSnackBar,
         private activeMeeting: ActiveMeetingService,
         private autoupdate: AutoupdateService,
@@ -94,7 +91,7 @@ export class AgendaForwardDialogService
                         ?.group_ids.includes((meeting as any).admin_group_id)
                 ) ||
                 this._forwardingMeeting.meetings.some(
-                    meeting => meeting.end_time && meeting.end_time * 1000 < Date.now()
+                    meeting => meeting.end_time && Date.parse(meeting.end_time) < Date.now()
                 ))
         );
     }
@@ -180,29 +177,21 @@ export class AgendaForwardDialogService
 
     private async updateForwardMeetings(): Promise<void> {
         if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
-            const meetingId = await firstValueFrom(
-                this.activeMeeting.meetingIdObservable.pipe(filter(id => id !== undefined))
-            );
             const response = await this.autoupdate.single(
                 await this.modelRequestBuilder.build({
-                    ids: [meetingId],
-                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeeting.meeting.committee_id],
+                    viewModelCtor: ViewCommittee,
+                    fieldset: [`name`, `id`, `default_meeting_id`],
                     follow: [
                         {
-                            idField: `committee_id`,
-                            fieldset: [`name`, `id`, `default_meeting_id`],
-                            follow: [
-                                {
-                                    idField: `meeting_ids`,
-                                    fieldset: [
-                                        `id`,
-                                        `name`,
-                                        `start_time`,
-                                        `end_time`,
-                                        `admin_group_id`,
-                                        `is_active_in_organization_id`
-                                    ]
-                                }
+                            idField: `meeting_ids`,
+                            fieldset: [
+                                `id`,
+                                `name`,
+                                `start_time`,
+                                `end_time`,
+                                `admin_group_id`,
+                                `is_active_in_organization_id`
                             ]
                         }
                     ]
@@ -213,7 +202,8 @@ export class AgendaForwardDialogService
                 throw Error(`Copying not possible: No target meetings`);
             }
 
-            const committeeId = response[`meeting`][meetingId][`committee_id`];
+            const meetingId = this.activeMeeting.meetingId;
+            const committeeId = this.activeMeeting.meeting.committee_id;
             const committee = response[`committee`][committeeId];
             const isCommitteeAdmin = this.operator.hasCommitteeManagementRights(committeeId);
             const meetings = {

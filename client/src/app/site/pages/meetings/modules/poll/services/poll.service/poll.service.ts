@@ -181,20 +181,20 @@ export abstract class PollService {
                 amount: poll.global_option?.yes,
                 hide:
                     poll.global_option?.yes === VOTE_UNDOCUMENTED ||
-                    !poll.global_option?.yes ||
+                    !poll.global_yes ||
                     poll.pollmethod === PollMethod.N
             },
             {
                 vote: `amount_global_no`,
                 showPercent: this.showPercentOfValidOrCast(poll),
                 amount: poll.global_option?.no,
-                hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_option?.no
+                hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_no
             },
             {
                 vote: `amount_global_abstain`,
                 showPercent: this.showPercentOfValidOrCast(poll),
                 amount: poll.global_option?.abstain,
-                hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_option?.abstain
+                hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_abstain
             }
         ];
     }
