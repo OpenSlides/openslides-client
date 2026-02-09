@@ -596,8 +596,10 @@ export class OperatorService {
         // add implicitly given children
         // copy set beforehand to not iterate over the newly added members
         for (const permission of new Set(permissionSet)) {
-            for (const permissionChild of permissionChildren[permission]!) {
-                permissionSet.add(permissionChild);
+            if (permission) {
+                for (const permissionChild of permissionChildren[permission]!) {
+                    permissionSet.add(permissionChild);
+                }
             }
         }
         return Array.from(permissionSet.values());

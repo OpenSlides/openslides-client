@@ -188,7 +188,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         return (
             +meetingData.id !== this.activeMeeting.meetingId &&
             meetingData.end_time &&
-            new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
+            new Date() <= endOfDay(fromUnixTime(Date.parse(meetingData.end_time)))
         );
     }
 
