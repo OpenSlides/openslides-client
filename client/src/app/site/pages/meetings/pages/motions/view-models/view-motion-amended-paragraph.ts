@@ -74,10 +74,6 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
         return !this.isAccepted();
     }
 
-    public getNumber(): string {
-        return this.amendment.number;
-    }
-
     /**
      * The state and recommendation of this amendment is considered.
      * The state takes precedence.
@@ -112,7 +108,7 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
     }
 
     public showInFinalView(): boolean {
-        return !!this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES;
+        return this.amendmentState() === MergeAmendment.YES;
     }
 
     public isTitleChange(): boolean {
