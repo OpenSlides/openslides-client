@@ -210,39 +210,44 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
             return;
         }
 
-        this._handleResolvePromise = new Promise(async res => {
-            let cb: CallableFunction;
-            if (stream.failedConnects >= HTTP_POOL_CONFIG.RETRY_AMOUNT) {
-                cb = (s: AutoupdateStream): void => {
-                    for (const subscription of s.subscriptions) {
-                        subscription.sendError({
-                            reason: `Repeated failure or client error`,
-                            terminate: true
-                        });
-                    }
-                };
-            } else if (await this.waitUntilEndpointHealthy()) {
-                cb = async (s: AutoupdateStream): Promise<void> => {
-                    await this.connectStream(s);
-                };
-            } else if (await WorkerHttpAuth.update()) {
-                cb = async (s: AutoupdateStream): Promise<void> => {
-                    s.failedCounter++;
-                    await this.connectStream(s);
-                };
+        let cb: CallableFunction;
+        if (stream.failedConnects >= HTTP_POOL_CONFIG.RETRY_AMOUNT) {
+            cb = (s: AutoupdateStream): void => {
+                for (const subscription of s.subscriptions) {
+                    subscription.sendError({
+                        reason: `Repeated failure or client error`,
+                        terminate: true
+                    });
+                }
+            };
+        } else if (await this.waitUntilEndpointHealthy()) {
+            cb = async (s: AutoupdateStream): Promise<void> => {
+                await this.connectStream(s);
+            };
+        } else if (await WorkerHttpAuth.update()) {
+            cb = async (s: AutoupdateStream): Promise<void> => {
+                s.failedCounter++;
+                await this.connectStream(s);
+            };
+        } else {
+            cb = (s: AutoupdateStream): void => {
+                for (const subscription of s.subscriptions) {
+                    subscription.sendError({
+                        reason: `Logout`,
+                        terminate: true
+                    });
+                }
+            };
+        }
+
+        this._handleResolvePromise = new Promise((resolve, reject) => {
+            if (!cb) {
+                reject(cb);
             } else {
-                cb = (s: AutoupdateStream): void => {
-                    for (const subscription of s.subscriptions) {
-                        subscription.sendError({
-                            reason: `Logout`,
-                            terminate: true
-                        });
-                    }
-                };
+                resolve(cb);
+                cb(stream);
+                setTimeout(() => (this._handleResolvePromise = null), 1000);
             }
-            res(cb);
-            await cb(stream);
-            setTimeout(() => (this._handleResolvePromise = null), 1000);
         });
         await this._handleResolvePromise;
     }
