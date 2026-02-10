@@ -1,3 +1,8 @@
+.wrap {
+    white-space: wrap;
+    overflow-wrap: anywhere;
+}
+
 .mat-mdc-chip.chip-stacked {
     margin: 4px 4px 4px 4px;
 }

@@ -92,7 +92,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         this.lineNumberingService = this.diffServiceFactory.createService(LineNumberingService, value.diffVersion);
 
         this._motion = value;
-        this.updateAllTextChangingObjects();
+        this.setLastNumber();
     }
 
     private _changes: ViewUnifiedChange[] = [];
@@ -566,7 +566,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public ngAfterViewInit(): void {
-        this.setLastNumber();
         if (this.scrollToChange) {
             window.setTimeout(() => {
                 this.scrollToChangeElement(this.scrollToChange!);

@@ -959,7 +959,7 @@ export function getTextWithChanges(
                 const lineFrom = ` data-line-from="` + change.lineFrom.toString(10) + `"`;
                 const lineTo = ` data-line-to="` + change.lineTo.toString(10) + `"`;
                 const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
-                const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
+                const opTag = `<div data-change-is-colliding` + opAttrs + `>`;
                 const insertingHtml = opTag + change.changeNewText + `</div>`;
 
                 html = insertLines(html, change.lineFrom, insertingHtml);

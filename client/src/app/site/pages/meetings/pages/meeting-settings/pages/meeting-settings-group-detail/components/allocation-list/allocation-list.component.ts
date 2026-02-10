@@ -32,7 +32,8 @@ export interface AllocationListConfig {
  * A list that allows one to create string entries and assign them a string or number value.
  *
  * Default input- and return type is a key-value dictionary.
- * There is however an option for this component to remember ids, that can be set via the config. This causes the return type of this component to be an AllocationBox array.
+ * There is an option for this component to remember ids,
+ * that can be set via the config. This causes the return type of this component to be an AllocationBox array.
  *
  * @example:
  * ```html

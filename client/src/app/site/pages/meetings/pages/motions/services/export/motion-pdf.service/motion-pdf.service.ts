@@ -718,6 +718,7 @@ export class MotionPdfService {
 
     private createWarningIcon(text: string): string {
         return text.replace(
+            // eslint-disable-next-line
             /<mat-icon class="margin-[right|left]+-[\d]*">warning<\/mat-icon><span class="amendment-nr">([\s\S]*?)<\/span>/gi,
             (_match: string, ammName: string): string => {
                 return (
