@@ -17,11 +17,15 @@ const ClearTextcolorPastePlugin = new Plugin({
             const elements = doc.getElementsByTagName(`*`);
             for (let i = 0; i < elements.length; i++) {
                 const el = elements.item(i) as HTMLElement;
-                if (el.style && el.style.color && tinycolor(el.style.color).toHex() === `000000`) {
+                if (!el.style) {
+                    continue;
+                }
+
+                const isTextBlack = !el.style.color || tinycolor(el.style.color).toHex() === `000000`;
+                const isBgWhite = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `ffffff`;
+                if (isTextBlack && isBgWhite) {
                     el.style.color = ``;
-                    if (tinycolor(el.style.backgroundColor).toHex() === `ffffff`) {
-                        el.style.backgroundColor = ``;
-                    }
+                    el.style.backgroundColor = ``;
                 }
             }
 
