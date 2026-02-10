@@ -1,12 +1,6 @@
 @use 'src/assets/styles/variables.scss';
 @use 'src/assets/styles/mixins/detail-view-appearance.scss';
-.centered-text {
-    text-align: center;
-}
 
-.my-border-bottom {
-    border-bottom: 1px solid !important;
-}
 .detail-view-appearance-container {
     @include detail-view-appearance.detail-view-appearance;
 }
