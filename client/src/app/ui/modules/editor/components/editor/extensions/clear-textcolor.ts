@@ -19,6 +19,9 @@ const ClearTextcolorPastePlugin = new Plugin({
                 const el = elements.item(i) as HTMLElement;
                 if (el.style && el.style.color && tinycolor(el.style.color).toHex() === `000000`) {
                     el.style.color = ``;
+                    if (tinycolor(el.style.backgroundColor).toHex() === `ffffff`) {
+                        el.style.backgroundColor = ``;
+                    }
                 }
             }
 
