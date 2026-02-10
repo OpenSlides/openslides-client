@@ -88,6 +88,15 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.method === PollMethod.YNA;
     }
 
+    public get classOptionAmount(): string {
+        if (this.isMethodY || this.isMethodN) {
+            return `results-1`;
+        } else if (this.isMethodYN) {
+            return `results-2`;
+        }
+        return `results-3`;
+    }
+
     public get isStarted(): boolean {
         return this.state === PollState.Started;
     }

@@ -1,6 +1,79 @@
 @if (poll) {
     <div>
         @if (hasResults && canSeeResults && !shouldShowChart) {
+            <div class="results" [class]="classOptionAmount">
+                <!-- Header row -->
+                <div class="cell"></div>
+                <div class="cell"></div>
+
+                @if (showYHeader) {
+                    @if (isMethodY) {
+                        <div class="cell header yes" translate>Votes</div>
+                    } @else {
+                        <div class="cell header yes" translate>Yes</div>
+                    }
+                }
+                @if (showNHeader) {
+                    @if (!isMethodN) {
+                        <div class="cell header no" translate>No</div>
+                    }
+                    @if (isMethodN) {
+                        <div class="cell header yes" translate>Votes</div>
+                    }
+                }
+                @if (isMethodYNA) {
+                    <div class="cell header abstain" translate>Abstain</div>
+                }
+
+                @for (row of tableData; track row; let i = $index) {
+                    <div class="cell label placement">
+                        @if (row.class === 'user') {
+                            <div>{{ i + 1 }}.</div>
+                        }
+                    </div>
+                    <div class="cell label candidate-name">
+                        <span class="voting-option">
+                            <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
+                            @if (row.class !== 'list') {
+                                <div>
+                                    <span>
+                                        {{ row.votingOption | pollKeyVerbose | translate }}
+                                    </span>
+                                    @if (row.votingOptionSubtitle) {
+                                        <span class="user-subtitle">
+                                            <br />
+                                            {{ row.votingOptionSubtitle }}
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </span>
+                    </div>
+                    @for (vote of filterRelevantResults(row.value); track vote) {
+                        <div>
+                            <div class="cell option" [ngClass]="getVoteClass(vote)">
+                                <span>
+                                    @if (vote.showPercent) {
+                                        <span>
+                                            {{ getVoteAmount(vote, row) | pollPercentBase: poll : row }}
+                                        </span>
+                                    }
+                                    @if (['user', 'list'].includes(row.class)) {
+                                        <span>
+                                            {{ getVoteAmount(vote, row) | pollParseNumber }}
+                                        </span>
+                                    }
+                                    @if (!['user', 'list'].includes(row.class)) {
+                                        <span>
+                                            {{ vote.amount | pollParseNumber }}
+                                        </span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
             <table class="assignment-result-table">
                 <tbody>
                     @if (!isMethodY) {

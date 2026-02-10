@@ -92,3 +92,44 @@
         }
     }
 }
+.results {
+    display: grid;
+    gap: 5px;
+
+    &-1 {
+        grid-template-columns: 20px minmax(80px, 370px) repeat(1, minmax(80px, 110px));
+    }
+
+    &-2 {
+        grid-template-columns: 20px minmax(80px, 370px) repeat(2, minmax(80px, 110px));
+    }
+
+    &-3 {
+        grid-template-columns: 20px minmax(80px, 370px) repeat(3, minmax(80px, 110px));
+    }
+}
+
+.cell {
+    padding: 8px 0px 8px 16px;
+    border: 1px solid #ddd;
+    text-align: end;
+}
+
+.header {
+    font-weight: 700;
+}
+
+.label {
+    text-align: start;
+}
+
+.placement {
+    padding: 0;
+    text-align: center;
+    justify-content: center;
+    align-self: center;
+}
+
+.candidate-name {
+    padding-left: 0;
+}
