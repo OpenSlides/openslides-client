@@ -121,7 +121,7 @@ export class MotionLineNumberingService {
      * @param {number} lineLength
      * @returns {string[]}
      */
-    public getTextParagraphs(motion: ViewMotion, lineBreaks: boolean, lineLength: number): string[] {
+    public getTextParagraphs(motion: ViewMotion, lineBreaks: boolean, lineLength?: number): string[] {
         if (!motion) {
             return [];
         }
@@ -305,6 +305,56 @@ export class MotionLineNumberingService {
                 }
             })
             .filter((para: DiffLinesInParagraph | null) => !!para) as DiffLinesInParagraph[];
+    }
+
+    /**
+     * Returns the first token that has a change
+     *
+     * Should only be called for paragraph-based amendments.
+     *
+     * @param {ViewMotion} amendment
+     * @param {number} lineLength
+     * @param {ChangeRecoMode} crMode
+     * @param {ViewMotionChangeRecommendation[]} changeRecommendations
+     * @returns {DiffLinesInParagraph}
+     */
+    public getAmendmentFirstChangeIndex(
+        amendment: ViewMotion,
+        lineLength: number,
+        crMode: ChangeRecoMode,
+        changeRecommendations: ViewMotionChangeRecommendation[]
+    ): number | null {
+        const motion = amendment.lead_motion as ViewMotion;
+        const baseParagraphs = this.getTextParagraphs(motion, false);
+
+        let amendmentParagraphs: string[] = [];
+        if (crMode === ChangeRecoMode.Original || changeRecommendations.length === 0) {
+            amendmentParagraphs = baseParagraphs.map(
+                (_: string, paraNo: number) => amendment.amendment_paragraph_text(paraNo) as string
+            );
+        } else {
+            amendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecommendations, true).map(
+                p => (p ? this.lineNumberingService.stripLineNumbers(p) : p)
+            ) as string[];
+        }
+
+        let paragraphStart = 0;
+        for (let paraNo = 0; paraNo < baseParagraphs.length; paraNo++) {
+            const newText = amendmentParagraphs[paraNo];
+            if (baseParagraphs[paraNo] !== undefined) {
+                const origText = baseParagraphs[paraNo].replace(/\n/gm, ``);
+                if (newText !== null) {
+                    const tokenIdx = this.diffService.getFirstChangedTokenIndex(origText, newText);
+                    if (tokenIdx !== null) {
+                        return paragraphStart + tokenIdx;
+                    }
+                }
+
+                paragraphStart += origText.length;
+            }
+        }
+
+        return null;
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
