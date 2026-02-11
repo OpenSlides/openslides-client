@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -127,7 +128,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
         private offlineService: ConnectionStatusService,
         private elementRef: ElementRef,
         private meetingSettingsService: MeetingSettingsService,
-        private authTokenService: AuthTokenService
+        private authTokenService: AuthTokenService,
+        private translate: TranslateService
     ) {
         super();
 
@@ -173,7 +175,10 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
             this.destroyProjector = M.Projector(
                 this.projectorElement.nativeElement,
                 this.projector.id,
-                () => this.authTokenService.rawAccessToken
+                () => this.authTokenService.rawAccessToken,
+                {
+                    lang: this.translate.getCurrentLang()
+                }
             );
         });
     }
