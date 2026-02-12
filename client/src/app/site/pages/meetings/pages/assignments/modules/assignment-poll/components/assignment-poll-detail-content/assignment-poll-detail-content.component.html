@@ -5,21 +5,32 @@
                 <div class="row" role="row" tabindex="-1" [class]="classOptionAmount">
                     <!-- Header row -->
                     <div
+                        #mat
                         aria-label="{{ ariaLabel('place') }}"
                         class="cell"
+                        osArrowNavigation
                         role="columnheader"
                         tabindex="0"
                         [resultMatrix]="resultMatrix"
                     ></div>
                     <div
+                        #mat
                         aria-label="{{ ariaLabel('name') }}"
                         class="cell"
+                        osArrowNavigation
                         role="columnheader"
                         tabindex="-1"
                         [resultMatrix]="resultMatrix"
                     ></div>
                     @if (showYHeader) {
-                        <div class="cell header yes" role="columnheader" tabindex="-1" [resultMatrix]="resultMatrix">
+                        <div
+                            #mat
+                            class="cell header yes"
+                            osArrowNavigation
+                            role="columnheader"
+                            tabindex="-1"
+                            [resultMatrix]="resultMatrix"
+                        >
                             @if (isMethodY) {
                                 {{ 'Votes' | translate }}
                             } @else {
@@ -28,7 +39,14 @@
                         </div>
                     }
                     @if (showNHeader) {
-                        <div class="cell header yes" role="columnheader" tabindex="-1" [resultMatrix]="resultMatrix">
+                        <div
+                            #mat
+                            class="cell header yes"
+                            osArrowNavigation
+                            role="columnheader"
+                            tabindex="-1"
+                            [resultMatrix]="resultMatrix"
+                        >
                             @if (!isMethodN) {
                                 {{ 'No' | translate }}
                             } @else {
@@ -38,7 +56,9 @@
                     }
                     @if (isMethodYNA) {
                         <div
+                            #mat
                             class="cell header abstain"
+                            osArrowNavigation
                             role="columnheader"
                             tabindex="-1"
                             translate
@@ -51,7 +71,14 @@
 
                 @for (row of tableData; track row; let i = $index) {
                     <div class="row" role="row" [class]="classOptionAmount">
-                        <div class="cell label placement" role="gridcell" tabindex="-1" [resultMatrix]="resultMatrix">
+                        <div
+                            #mat
+                            class="cell label placement"
+                            osArrowNavigation
+                            role="gridcell"
+                            tabindex="-1"
+                            [resultMatrix]="resultMatrix"
+                        >
                             @if (row.class === 'user') {
                                 <div>{{ i + 1 }}.</div>
                             } @else {
@@ -59,7 +86,14 @@
                             }
                         </div>
 
-                        <div class="cell label candidate-name" role="gridcell" tabindex="-1">
+                        <div
+                            #mat
+                            class="cell label candidate-name"
+                            osArrowNavigation
+                            role="gridcell"
+                            tabindex="-1"
+                            [resultMatrix]="resultMatrix"
+                        >
                             <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
                             @if (row.class !== 'list') {
                                 {{ row.votingOption | pollKeyVerbose | translate }}
@@ -73,7 +107,9 @@
                         </div>
                         @for (vote of filterRelevantResults(row.value); track vote) {
                             <div
+                                #mat
                                 class="cell option"
+                                osArrowNavigation
                                 role="gridcell"
                                 tabindex="-1"
                                 [ngClass]="getVoteClass(vote)"

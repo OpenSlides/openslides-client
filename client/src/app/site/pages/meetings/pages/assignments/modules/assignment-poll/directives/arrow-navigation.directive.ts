@@ -1,8 +1,8 @@
 import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/core';
 
 @Directive({
-    selector: `[osTabNavigation]`,
-    exportAs: `osTabNavigation`,
+    selector: `[osArrowNavigation]`,
+    exportAs: `osArrowNavigation`,
     standalone: false
 })
 export class ResultsArrowNavigationDirective {
