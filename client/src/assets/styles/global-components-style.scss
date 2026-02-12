@@ -339,8 +339,8 @@
         }
     }
 
-    .assignment-result-table {
-        tr {
+    .assignment-results {
+        .row:not(:last-child) {
             border-bottom: 1px solid mat.m2-get-color-from-palette($background, focused-button);
         }
     }

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
@@ -90,11 +91,11 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public get classOptionAmount(): string {
         if (this.isMethodY || this.isMethodN) {
-            return `results-1`;
+            return `row-1`;
         } else if (this.isMethodYN) {
-            return `results-2`;
+            return `row-2`;
         }
-        return `results-3`;
+        return `row-3`;
     }
 
     public get isStarted(): boolean {
@@ -153,6 +154,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     public constructor(
+        private translate: TranslateService,
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
@@ -251,5 +253,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    public ariaLabel(abba: string): string {
+        if (abba === `place`) {
+            return this.translate.instant(`Candidate placement`);
+        }
+        return this.translate.instant(`Candidate name`);
     }
 }
