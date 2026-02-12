@@ -1,34 +1,57 @@
 @if (poll) {
     <div>
         @if (hasResults && canSeeResults && !shouldShowChart) {
-            <div aria-label="Results-table" class="assignment-results" role="grid" tabindex="0">
-                <div class="row" role="row" [class]="classOptionAmount">
+            <div aria-label="Results-table" class="assignment-results" role="grid" tabindex="-1">
+                <div class="row" role="row" tabindex="-1" [class]="classOptionAmount">
                     <!-- Header row -->
-                    <div aria-label="{{ ariaLabel('place') }}" class="cell" role="columnheader"></div>
-                    <div aria-label="{{ ariaLabel('name') }}" class="cell" role="columnheader"></div>
+                    <div
+                        aria-label="{{ ariaLabel('place') }}"
+                        class="cell"
+                        role="columnheader"
+                        tabindex="0"
+                        [resultMatrix]="resultMatrix"
+                    ></div>
+                    <div
+                        aria-label="{{ ariaLabel('name') }}"
+                        class="cell"
+                        role="columnheader"
+                        tabindex="-1"
+                        [resultMatrix]="resultMatrix"
+                    ></div>
                     @if (showYHeader) {
-                        @if (isMethodY) {
-                            <div class="cell header yes" role="columnheader" translate>Votes</div>
-                        } @else {
-                            <div class="cell header yes" role="columnheader" translate>Yes</div>
-                        }
+                        <div class="cell header yes" role="columnheader" tabindex="-1" [resultMatrix]="resultMatrix">
+                            @if (isMethodY) {
+                                {{ 'Votes' | translate }}
+                            } @else {
+                                {{ 'Yes' | translate }}
+                            }
+                        </div>
                     }
                     @if (showNHeader) {
-                        @if (!isMethodN) {
-                            <div class="cell header no" role="columnheader" translate>No</div>
-                        }
-                        @if (isMethodN) {
-                            <div class="cell header yes" role="columnheader" translate>Votes</div>
-                        }
+                        <div class="cell header yes" role="columnheader" tabindex="-1" [resultMatrix]="resultMatrix">
+                            @if (!isMethodN) {
+                                {{ 'No' | translate }}
+                            } @else {
+                                {{ 'Votes' | translate }}
+                            }
+                        </div>
                     }
                     @if (isMethodYNA) {
-                        <div class="cell header abstain" role="columnheader" translate>Abstain</div>
+                        <div
+                            class="cell header abstain"
+                            role="columnheader"
+                            tabindex="-1"
+                            translate
+                            [resultMatrix]="resultMatrix"
+                        >
+                            {{ 'Abstain' | translate }}
+                        </div>
                     }
                 </div>
 
                 @for (row of tableData; track row; let i = $index) {
                     <div class="row" role="row" [class]="classOptionAmount">
-                        <div class="cell label placement" role="gridcell">
+                        <div class="cell label placement" role="gridcell" tabindex="-1" [resultMatrix]="resultMatrix">
                             @if (row.class === 'user') {
                                 <div>{{ i + 1 }}.</div>
                             } @else {
@@ -36,7 +59,7 @@
                             }
                         </div>
 
-                        <div class="cell label candidate-name" role="gridcell">
+                        <div class="cell label candidate-name" role="gridcell" tabindex="-1">
                             <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
                             @if (row.class !== 'list') {
                                 {{ row.votingOption | pollKeyVerbose | translate }}
@@ -49,7 +72,13 @@
                             }
                         </div>
                         @for (vote of filterRelevantResults(row.value); track vote) {
-                            <div class="cell option" role="gridcell" [ngClass]="getVoteClass(vote)">
+                            <div
+                                class="cell option"
+                                role="gridcell"
+                                tabindex="-1"
+                                [ngClass]="getVoteClass(vote)"
+                                [resultMatrix]="resultMatrix"
+                            >
                                 @if (vote.showPercent) {
                                     {{ getVoteAmount(vote, row) | pollPercentBase: poll : row }}
                                 }

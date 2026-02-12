@@ -33,10 +33,12 @@ import { AssignmentPollDialogComponent } from './components/assignment-poll-dial
 import { AssignmentPollFormComponent } from './components/assignment-poll-form/assignment-poll-form.component';
 import { AssignmentPollMetaInfoComponent } from './components/assignment-poll-meta-info/assignment-poll-meta-info.component';
 import { AssignmentPollVoteComponent } from './components/assignment-poll-vote/assignment-poll-vote.component';
+import { ResultsArrowNavigationDirective } from './directives/arrow-navigation.directive';
 import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
 const COMPONENTS = [
+    ResultsArrowNavigationDirective,
     AssignmentPollComponent,
     AssignmentPollDetailContentComponent,
     AssignmentPollMetaInfoComponent,

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -48,6 +48,9 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     @Input()
     public inSlide = false;
+
+    @ViewChildren(`mat`)
+    public resultMatrix!: QueryList<ElementRef>;
 
     public get chartData(): ChartData {
         return this._chartData;

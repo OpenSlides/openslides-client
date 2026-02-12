@@ -11,7 +11,7 @@
 
 .assignment-results {
     display: grid;
-    
+
     .row {
         display: grid;
 
@@ -31,30 +31,29 @@
         padding: 4px 0px 4px 16px;
         text-align: end;
     }
-    
+
     .header {
         font-weight: 700;
     }
-    
+
     .label {
         text-align: start;
     }
-    
+
     .placement {
         padding: 0;
         text-align: center;
         align-content: center;
     }
-    
+
     .candidate-name {
         padding-left: 0;
         height: 45px;
         align-content: center;
     }
-    
+
     .option {
         padding-right: 3px;
         align-content: center;
     }
 }
-
