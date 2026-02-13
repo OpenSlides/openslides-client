@@ -91,8 +91,6 @@ export class User extends BaseDecimalModel<User> {
         `committee_ids`,
         `committee_management_ids`,
         `meeting_user_ids`,
-        `poll_voted_ids`,
-        `poll_candidate_ids`,
         `home_committee_id`,
         `history_position_ids`,
         `history_entry_ids`,
