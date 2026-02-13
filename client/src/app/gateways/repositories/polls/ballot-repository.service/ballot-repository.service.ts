@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Vote } from 'src/app/domain/models/poll/vote';
+import { Ballot } from 'src/app/domain/models/poll/ballot';
 import { HttpService } from 'src/app/gateways/http.service';
-import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -32,7 +32,7 @@ export interface VotePayload {
 @Injectable({
     providedIn: `root`
 })
-export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
+export class BallotRepositoryService extends BaseMeetingRelatedRepository<ViewBallot, Ballot> {
     private _subscribedPolls = new Map<Id, PollSubscription>();
 
     // Interval for workaround until long polling implemented
@@ -44,7 +44,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         private operator: OperatorService,
         private http: HttpService
     ) {
-        super(repositoryServiceCollector, Vote);
+        super(repositoryServiceCollector, Ballot);
     }
 
     public getTitle = (): string => `Vote`;

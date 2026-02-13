@@ -11,7 +11,7 @@ import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-mo
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewVote } from '../pages/polls';
+import { ViewBallot } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
@@ -44,7 +44,7 @@ interface IMeetingUserRelations {
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
-    vote_delegated_votes: ViewVote[];
+    vote_delegated_votes: ViewBallot[];
     structure_levels: ViewStructureLevel[];
 }
 export interface ViewMeetingUser extends MeetingUser, ViewModelRelations<IMeetingUserRelations> {}

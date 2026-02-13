@@ -1,17 +1,17 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 
-import { Vote } from '../../../../../../domain/models/poll/vote';
+import { Ballot } from '../../../../../../domain/models/poll/ballot';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { ViewOption } from './view-option';
 
-export class ViewVote extends BaseViewModel<Vote> {
-    public static COLLECTION = Vote.COLLECTION;
-    protected _collection = Vote.COLLECTION;
+export class ViewBallot extends BaseViewModel<Ballot> {
+    public static COLLECTION = Ballot.COLLECTION;
+    protected _collection = Ballot.COLLECTION;
 
-    public get vote(): Vote {
+    public get ballot(): Ballot {
         return this._model;
     }
 
@@ -24,10 +24,10 @@ export class ViewVote extends BaseViewModel<Vote> {
     }
 }
 
-interface IViewVoteRelations {
+interface IViewBallotRelations {
     user?: ViewUser;
     delegated_user?: ViewMeetingUser;
     option: ViewOption;
 }
 
-export interface ViewVote extends HasMeeting, ViewModelRelations<IViewVoteRelations>, Vote {}
+export interface ViewBallot extends HasMeeting, ViewModelRelations<IViewBallotRelations>, Ballot {}

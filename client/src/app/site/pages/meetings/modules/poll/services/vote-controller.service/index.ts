@@ -1,1 +1,1 @@
-export * from './vote-controller.service';
+export * from './ballot-controller.service';

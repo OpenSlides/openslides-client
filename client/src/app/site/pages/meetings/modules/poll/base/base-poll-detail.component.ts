@@ -20,7 +20,7 @@ import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table'
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
 import { EntitledUsersTableEntry } from '../definitions';
 import { PollService } from '../services/poll.service';
-import { VoteControllerService } from '../services/vote-controller.service';
+import { BallotControllerService } from '../services/vote-controller.service';
 import { BasePollPdfService } from './base-poll-pdf.service';
 
 export interface BaseVoteData extends Identifiable {
@@ -132,7 +132,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     protected route = inject(ActivatedRoute);
     protected groupRepo = inject(GroupControllerService);
     protected promptService = inject(PromptService);
-    protected votesRepo = inject(VoteControllerService);
+    protected votesRepo = inject(BallotControllerService);
     protected operator = inject(OperatorService);
     protected cd = inject(ChangeDetectorRef);
     protected userRepo = inject(ParticipantControllerService);

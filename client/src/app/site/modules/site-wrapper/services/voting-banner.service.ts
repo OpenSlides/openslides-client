@@ -5,7 +5,7 @@ import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
+import { BallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -37,7 +37,7 @@ export class VotingBannerService {
         private translate: TranslateService,
         private votingService: VotingService,
         private activeMeeting: ActiveMeetingService,
-        private sendVotesService: VoteControllerService,
+        private sendVotesService: BallotControllerService,
         private operator: OperatorService,
         private activePolls: ActivePollsService,
         private meetingSettingsService: MeetingSettingsService
