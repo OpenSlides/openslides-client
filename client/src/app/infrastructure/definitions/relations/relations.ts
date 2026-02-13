@@ -55,7 +55,7 @@ import {
     ViewTag
 } from '../../../site/pages/meetings/pages/motions';
 import { ViewGroup } from '../../../site/pages/meetings/pages/participants';
-import { ViewBallot, ViewOption, ViewPoll } from '../../../site/pages/meetings/pages/polls';
+import { ViewBallot, ViewOption, ViewPoll, ViewPollConfigApproval, ViewPollConfigOption, ViewPollConfigRatingApproval, ViewPollConfigRatingScore, ViewPollConfigSelection, ViewPollConfigStvScottish } from '../../../site/pages/meetings/pages/polls';
 import {
     ViewProjection,
     ViewProjector,
@@ -1045,6 +1045,20 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOption,
         MField: `option`,
         OField: `votes`
+    }),
+    ...makeGenericO2M({
+        OViewModel: ViewPollConfigOption,
+        MPossibleViewModels: [
+            ViewPollConfigSelection,
+            ViewPollConfigRatingApproval,
+            ViewPollConfigRatingScore,
+            ViewPollConfigStvScottish,
+            ViewPollConfigApproval
+        ],
+        OViewModelField: `poll_config`,
+        MPossibleViewModelsField: `poll_config_options`,
+        OViewModelIdField: `poll_config_id`,
+        MPossibleViewModelsIdField: `option_ids`
     }),
     // ########## Assignments
     ...makeM2O({
