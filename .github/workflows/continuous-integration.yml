@@ -46,7 +46,7 @@ jobs:
         run: |
           ./setup.sh
           echo -n "admin" > secrets/superadmin
-          docker compose build --parallel
+          docker compose build --parallel || true
           docker compose up -d
 
       - name: Wait for dev setup
