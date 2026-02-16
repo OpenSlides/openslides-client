@@ -2,6 +2,22 @@ import { _ } from '@ngx-translate/core';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
+export enum PollVisibility {
+    Manually = `manually`,
+    Named = `named`,
+    Open = `open`,
+    Secret = `secret`
+}
+
+export enum PollState {
+    Created = `created`,
+    Started = `started`,
+    Finished = `finished`,
+    Published = `published` // TODO: remove
+}
+
+// TODO: Check if anything below can be removed
+
 export const YES_KEY = `yes`;
 export const NO_KEY = `no`;
 export const ABSTAIN_KEY = `abstain`;
@@ -51,13 +67,6 @@ export const pollChartGreys = new Map<string, string>([
     [`grey4`, `#e4e4e4`],
     [`grey5`, `#f5f5f5`]
 ]);
-
-export enum PollState {
-    Created = `created`,
-    Started = `started`,
-    Finished = `finished`,
-    Published = `published`
-}
 
 export enum PollType {
     Analog = `analog`,
