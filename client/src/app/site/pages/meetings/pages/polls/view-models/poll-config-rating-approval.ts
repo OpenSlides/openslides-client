@@ -1,7 +1,7 @@
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { ViewPoll, ViewPollConfigOption } from '..';
+import { HasPoll, ViewPollConfigOption } from '..';
 
 export class ViewPollConfigRatingApproval extends BaseViewModel<PollConfigRatingApproval> {
     public get poll_config_rating_approval(): PollConfigRatingApproval {
@@ -12,7 +12,7 @@ export class ViewPollConfigRatingApproval extends BaseViewModel<PollConfigRating
 }
 
 interface IPollConfigRatingApprovalRelations {
-    poll: ViewPoll;
     options: ViewPollConfigOption[];
 }
-export interface ViewPollConfigRatingApproval extends ViewModelRelations<IPollConfigRatingApprovalRelations>, PollConfigRatingApproval { }
+export interface ViewPollConfigRatingApproval
+    extends ViewModelRelations<IPollConfigRatingApprovalRelations>, PollConfigRatingApproval, HasPoll {}

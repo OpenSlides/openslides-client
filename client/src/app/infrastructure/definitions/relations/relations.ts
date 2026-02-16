@@ -55,7 +55,18 @@ import {
     ViewTag
 } from '../../../site/pages/meetings/pages/motions';
 import { ViewGroup } from '../../../site/pages/meetings/pages/participants';
-import { ViewBallot, ViewOption, ViewPoll, ViewPollConfigApproval, ViewPollConfigOption, ViewPollConfigRatingApproval, ViewPollConfigRatingScore, ViewPollConfigSelection, ViewPollConfigStvScottish } from '../../../site/pages/meetings/pages/polls';
+import {
+    HasPoll,
+    ViewBallot,
+    ViewOption,
+    ViewPoll,
+    ViewPollConfigApproval,
+    ViewPollConfigOption,
+    ViewPollConfigRatingApproval,
+    ViewPollConfigRatingScore,
+    ViewPollConfigSelection,
+    ViewPollConfigStvScottish
+} from '../../../site/pages/meetings/pages/polls';
 import {
     ViewProjection,
     ViewProjector,
@@ -186,7 +197,7 @@ export const RELATIONS: Relation[] = [
     }),
     // ########## User
     ...makeM2M({
-        AViewModel: ViewUser,
+        AViewModel: ViewMeetingUser,
         BViewModel: ViewPoll,
         AField: `poll_voted`,
         AIdField: `poll_voted_ids`,
@@ -1015,6 +1026,18 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewPoll,
         AField: `used_as_global_option_in_poll`,
         BField: `global_option`
+    }),
+    ...makeGenericO2O<ViewPoll, HasPoll>({
+        viewModel: ViewPoll,
+        possibleViewModels: [
+            ViewPollConfigSelection,
+            ViewPollConfigRatingApproval,
+            ViewPollConfigRatingScore,
+            ViewPollConfigStvScottish,
+            ViewPollConfigApproval
+        ],
+        viewModelField: `config`,
+        possibleViewModelsField: `poll`
     }),
     // ViewOption -> ViewUser, ViewPollCandidateList
     {

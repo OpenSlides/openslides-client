@@ -1,7 +1,7 @@
 import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { ViewPoll, ViewPollConfigOption } from '..';
+import { HasPoll, ViewPollConfigOption } from '..';
 
 export class ViewPollConfigStvScottish extends BaseViewModel<PollConfigStvScottish> {
     public get poll_config_stv_scottish(): PollConfigStvScottish {
@@ -12,7 +12,7 @@ export class ViewPollConfigStvScottish extends BaseViewModel<PollConfigStvScotti
 }
 
 interface IPollConfigStvScottishRelations {
-    poll: ViewPoll;
     options: ViewPollConfigOption[];
 }
-export interface ViewPollConfigStvScottish extends ViewModelRelations<IPollConfigStvScottishRelations>, PollConfigStvScottish { }
+export interface ViewPollConfigStvScottish
+    extends ViewModelRelations<IPollConfigStvScottishRelations>, PollConfigStvScottish, HasPoll {}

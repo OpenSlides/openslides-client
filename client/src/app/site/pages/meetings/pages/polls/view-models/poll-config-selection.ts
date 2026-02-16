@@ -1,7 +1,7 @@
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { ViewPoll, ViewPollConfigOption } from '..';
+import { HasPoll, ViewPollConfigOption } from '..';
 
 export class ViewPollConfigSelection extends BaseViewModel<PollConfigSelection> {
     public get poll_config_selection(): PollConfigSelection {
@@ -12,7 +12,7 @@ export class ViewPollConfigSelection extends BaseViewModel<PollConfigSelection> 
 }
 
 interface IPollConfigSelectionRelations {
-    poll: ViewPoll;
     options: ViewPollConfigOption[];
 }
-export interface ViewPollConfigSelection extends ViewModelRelations<IPollConfigSelectionRelations>, PollConfigSelection { }
+export interface ViewPollConfigSelection
+    extends ViewModelRelations<IPollConfigSelectionRelations>, PollConfigSelection, HasPoll {}

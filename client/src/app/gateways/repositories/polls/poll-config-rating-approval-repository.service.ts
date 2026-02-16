@@ -16,7 +16,8 @@ export class PollConfigRatingApprovalRepositoryService extends BaseMeetingRelate
         super(repositoryServiceCollector, PollConfigRatingApproval);
     }
 
-    public getTitle = (_viewPollConfigRatingApproval: ViewPollConfigRatingApproval): string => `Rating approval poll config`;
+    public getTitle = (_viewPollConfigRatingApproval: ViewPollConfigRatingApproval): string =>
+        `Rating approval poll config`;
 
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Rating approval poll configs` : `Rating approval poll config`);

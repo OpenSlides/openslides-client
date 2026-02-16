@@ -13,17 +13,18 @@ import {
     PollTypeVerbose,
     VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
+import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SlideOptions } from '../../../view-models/slide-options';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
@@ -168,12 +169,16 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 }
 
-interface IPollRelations<C extends PollContentObject = any> {
+interface IPollRelations<C extends PollContentObject = any, D extends BasePollConfigModel = any> {
     content_object?: C;
-    voted: ViewUser[];
+    config: D;
+    voted: ViewMeetingUser[];
+    ballots: ViewBallot[];
     entitled_groups: ViewGroup[];
+
+    // TODO: Remove
     options: ViewOption[];
     global_option: ViewOption;
 }
-export interface ViewPoll<C extends PollContentObject = any>
-    extends HasMeeting, ViewModelRelations<IPollRelations<C>>, Poll {}
+export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigModel = any>
+    extends HasMeeting, ViewModelRelations<IPollRelations<C, D>>, Poll {}
