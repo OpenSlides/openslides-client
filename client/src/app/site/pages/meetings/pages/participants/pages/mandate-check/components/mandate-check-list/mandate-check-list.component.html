@@ -74,13 +74,22 @@
                     </div>
                 </div>
                 @if (toggleGenderMap.get(entry.id)) {
-                    <div class="card-grid">
+                    <div class="gender-map-grid">
                         @for (gender of genders; track gender.id) {
-                            @if (entry.getTotalCount(gender.id)) {
-                                <div></div>
-                                <div class="foreground-active align-left">
-                                    @if (entry.getTotalCount(gender.id)) {
-                                        <div class="text-medium">
+                            <div class="row">
+                                @if (entry.getTotalCount(gender.id)) {
+                                    <!-- LEFT EMPTY -->
+                                    <div></div>
+                                    <div
+                                        class="foreground-active align-left"
+                                        style="
+                                            :not(:last-child) {
+                                                border-bottom: 1px solid rgba(177, 177, 177, 0.637);
+                                            }
+                                        "
+                                    >
+                                        @if (entry.getTotalCount(gender.id)) {
+                                            <!-- FIRST VAL -->
                                             {{ entry.genderEntryMap.get(gender.id)?.present }}
                                             {{
                                                 displayPercent(
@@ -88,22 +97,23 @@
                                                         entry.presentUserIds.length
                                                 )
                                             }}
-                                        </div>
-                                    }
-                                </div>
-                                <div class="justify-center bold">
-                                    <div>{{ entry.genderEntryMap.get(gender.id)?.label | translate }}</div>
-                                </div>
-                                <div class="text align-left">
-                                    @if (entry.getTotalCount(gender.id)) {
-                                        <div class="text-medium">
+                                        }
+                                    </div>
+                                    <div class="justify-center bold">
+                                        <!-- SECOND VAL -->
+                                        {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    </div>
+                                    <div class="text align-right text-medium">
+                                        @if (entry.getTotalCount(gender.id)) {
+                                            <!-- THIRD VAL -->
                                             {{ entry.getTotalCount(gender.id) }}
                                             {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
-                                        </div>
-                                    }
-                                </div>
-                                <div></div>
-                            }
+                                        }
+                                    </div>
+                                    <!-- LEFT EMPTY -->
+                                    <div></div>
+                                }
+                            </div>
                         }
                     </div>
                 }
