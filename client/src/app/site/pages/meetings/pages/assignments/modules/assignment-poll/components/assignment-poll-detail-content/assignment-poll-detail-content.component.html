@@ -41,10 +41,11 @@
                     @if (showNHeader) {
                         <div
                             #mat
-                            class="cell header yes"
+                            class="cell header"
                             osArrowNavigation
                             role="columnheader"
                             tabindex="-1"
+                            [ngClass]="[!isMethodN ? 'no' : 'yes']"
                             [resultMatrix]="resultMatrix"
                         >
                             @if (!isMethodN) {
@@ -73,7 +74,7 @@
                     <div class="row" role="row" [class]="classOptionAmount">
                         <div
                             #mat
-                            class="cell label placement"
+                            class="cell label placement 2RowStart"
                             osArrowNavigation
                             role="gridcell"
                             tabindex="-1"
