@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -10,6 +19,7 @@ import {
     PollTableData,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -25,8 +35,10 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: [`./assignment-poll-detail-content.component.scss`],
     standalone: false
 })
-export class AssignmentPollDetailContentComponent implements OnInit {
+export class AssignmentPollDetailContentComponent implements OnInit, AfterViewInit {
     private _poll: PollData;
+
+    public readonly hasLoaded = new Deferred<boolean>();
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
@@ -184,6 +196,10 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             ).pipe(startWith(null)),
             this.themeService.currentGeneralColorsSubject
         ]).subscribe(() => this.setupTableData());
+    }
+
+    public ngAfterViewInit(): void {
+        setTimeout(() => this.hasLoaded.resolve(true));
     }
 
     private setupTableData(): void {
