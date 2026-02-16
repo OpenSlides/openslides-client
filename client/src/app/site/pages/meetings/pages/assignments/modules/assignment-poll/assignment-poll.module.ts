@@ -38,7 +38,6 @@ import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
 const COMPONENTS = [
-    ResultsArrowNavigationDirective,
     AssignmentPollComponent,
     AssignmentPollDetailContentComponent,
     AssignmentPollMetaInfoComponent,
@@ -72,6 +71,7 @@ const COMPONENTS = [
         PollModule,
         DirectivesModule,
         PipesModule,
+        ResultsArrowNavigationDirective,
         ChoiceDialogComponent,
         MeetingsComponentCollectorModule,
         ExpandableContentWrapperComponent,

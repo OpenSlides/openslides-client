@@ -2,8 +2,7 @@ import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/
 
 @Directive({
     selector: `[osTabNavigation]`,
-    exportAs: `osTabNavigation`,
-    standalone: false
+    exportAs: `osTabNavigation`
 })
 export class EditorTabNavigationDirective {
     @HostListener(`keydown`, [`$event`])

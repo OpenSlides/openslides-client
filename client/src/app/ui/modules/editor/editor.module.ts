@@ -25,7 +25,6 @@ const DECLARATIONS = [
     EditorEmbedDialogComponent,
     EditorLinkDialogComponent,
     EditorHtmlDialogComponent,
-    EditorTabNavigationDirective,
     MotionEditorComponent
 ];
 
@@ -43,6 +42,7 @@ const DECLARATIONS = [
         MatMenuModule,
         MatTooltipModule,
         FormsModule,
+        EditorTabNavigationDirective,
         OpenSlidesTranslationModule.forChild()
     ],
     exports: DECLARATIONS

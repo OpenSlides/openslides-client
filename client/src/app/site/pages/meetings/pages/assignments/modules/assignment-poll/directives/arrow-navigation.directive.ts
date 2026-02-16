@@ -2,8 +2,7 @@ import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/
 
 @Directive({
     selector: `[osArrowNavigation]`,
-    exportAs: `osArrowNavigation`,
-    standalone: false
+    exportAs: `osArrowNavigation`
 })
 export class ResultsArrowNavigationDirective {
     @HostListener(`keydown`, [`$event`])
