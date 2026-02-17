@@ -5,20 +5,20 @@
                 <div class="row" role="row" tabindex="-1" [class]="classOptionAmount">
                     <div
                         #btn
-                        aria-label="{{ ariaLabel('place') }}"
                         class="cell"
                         osArrowNavigation
                         role="columnheader"
                         tabindex="0"
+                        [attr.aria-label]="ariaLabel('place')"
                         [buttonList]="buttonElements"
                     ></div>
                     <div
                         #btn
-                        aria-label="{{ ariaLabel('name') }}"
                         class="cell"
                         osArrowNavigation
                         role="columnheader"
                         tabindex="-1"
+                        [attr.aria-label]="ariaLabel('name')"
                         [buttonList]="buttonElements"
                     ></div>
                     @if (showYHeader) {
