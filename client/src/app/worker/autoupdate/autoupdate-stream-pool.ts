@@ -210,7 +210,7 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
             return;
         }
 
-        this._handleResolvePromise = new Promise(async res => {
+        this._handleResolvePromise = (async (): Promise<CallableFunction> => {
             let cb: CallableFunction;
             if (stream.failedConnects >= HTTP_POOL_CONFIG.RETRY_AMOUNT) {
                 cb = (s: AutoupdateStream): void => {
@@ -240,10 +240,14 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
                     }
                 };
             }
-            res(cb);
             await cb(stream);
-            setTimeout(() => (this._handleResolvePromise = null), 1000);
-        });
+            setTimeout(() => {
+                this._handleResolvePromise = null;
+            }, 1000);
+
+            return cb;
+        })();
+
         await this._handleResolvePromise;
     }
 
