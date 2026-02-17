@@ -21,6 +21,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
+import { ArrowNavigationDirective } from 'src/app/ui/modules/editor/directives/tab-navigation.directive';
 import { ExpandableContentWrapperComponent } from 'src/app/ui/modules/expandable-content-wrapper';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -33,7 +34,6 @@ import { AssignmentPollDialogComponent } from './components/assignment-poll-dial
 import { AssignmentPollFormComponent } from './components/assignment-poll-form/assignment-poll-form.component';
 import { AssignmentPollMetaInfoComponent } from './components/assignment-poll-meta-info/assignment-poll-meta-info.component';
 import { AssignmentPollVoteComponent } from './components/assignment-poll-vote/assignment-poll-vote.component';
-import { ResultsArrowNavigationDirective } from './directives/arrow-navigation.directive';
 import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
@@ -48,6 +48,7 @@ const COMPONENTS = [
     declarations: [...COMPONENTS, AssignmentPollDialogComponent, AssignmentPollFormComponent],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
+        ArrowNavigationDirective,
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,
@@ -71,7 +72,6 @@ const COMPONENTS = [
         PollModule,
         DirectivesModule,
         PipesModule,
-        ResultsArrowNavigationDirective,
         ChoiceDialogComponent,
         MeetingsComponentCollectorModule,
         ExpandableContentWrapperComponent,

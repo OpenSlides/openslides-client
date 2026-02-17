@@ -61,8 +61,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     @Input()
     public inSlide = false;
 
-    @ViewChildren(`mat`)
-    public resultMatrix!: QueryList<ElementRef>;
+    @ViewChildren(`btn`)
+    public buttonElements!: QueryList<ElementRef>;
 
     public get chartData(): ChartData {
         return this._chartData;
@@ -274,8 +274,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         }
     }
 
-    public ariaLabel(abba: string): string {
-        if (abba === `place`) {
+    public ariaLabel(str: string): string {
+        if (str === `place`) {
             return this.translate.instant(`Candidate placement`);
         }
         return this.translate.instant(`Candidate name`);

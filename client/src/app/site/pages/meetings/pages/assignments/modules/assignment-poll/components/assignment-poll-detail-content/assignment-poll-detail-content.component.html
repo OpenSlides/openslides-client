@@ -5,31 +5,31 @@
                 <div class="row" role="row" tabindex="-1" [class]="classOptionAmount">
                     <!-- Header row -->
                     <div
-                        #mat
+                        #btn
                         aria-label="{{ ariaLabel('place') }}"
                         class="cell"
                         osArrowNavigation
                         role="columnheader"
                         tabindex="0"
-                        [resultMatrix]="resultMatrix"
+                        [buttonList]="buttonElements"
                     ></div>
                     <div
-                        #mat
+                        #btn
                         aria-label="{{ ariaLabel('name') }}"
                         class="cell"
                         osArrowNavigation
                         role="columnheader"
                         tabindex="-1"
-                        [resultMatrix]="resultMatrix"
+                        [buttonList]="buttonElements"
                     ></div>
                     @if (showYHeader) {
                         <div
-                            #mat
+                            #btn
                             class="cell header yes"
                             osArrowNavigation
                             role="columnheader"
                             tabindex="-1"
-                            [resultMatrix]="resultMatrix"
+                            [buttonList]="buttonElements"
                         >
                             @if (isMethodY) {
                                 {{ 'Votes' | translate }}
@@ -40,13 +40,13 @@
                     }
                     @if (showNHeader) {
                         <div
-                            #mat
+                            #btn
                             class="cell header"
                             osArrowNavigation
                             role="columnheader"
                             tabindex="-1"
+                            [buttonList]="buttonElements"
                             [ngClass]="[!isMethodN ? 'no' : 'yes']"
-                            [resultMatrix]="resultMatrix"
                         >
                             @if (!isMethodN) {
                                 {{ 'No' | translate }}
@@ -57,13 +57,13 @@
                     }
                     @if (isMethodYNA) {
                         <div
-                            #mat
+                            #btn
                             class="cell header abstain"
                             osArrowNavigation
                             role="columnheader"
                             tabindex="-1"
                             translate
-                            [resultMatrix]="resultMatrix"
+                            [buttonList]="buttonElements"
                         >
                             {{ 'Abstain' | translate }}
                         </div>
@@ -73,12 +73,12 @@
                 @for (row of tableData; track row; let i = $index) {
                     <div class="row" role="row" [class]="classOptionAmount">
                         <div
-                            #mat
+                            #btn
                             class="cell label placement 2RowStart"
                             osArrowNavigation
                             role="gridcell"
                             tabindex="-1"
-                            [resultMatrix]="resultMatrix"
+                            [buttonList]="buttonElements"
                         >
                             @if (row.class === 'user') {
                                 <div>{{ i + 1 }}.</div>
@@ -88,12 +88,12 @@
                         </div>
 
                         <div
-                            #mat
+                            #btn
                             class="cell label candidate-name"
                             osArrowNavigation
                             role="gridcell"
                             tabindex="-1"
-                            [resultMatrix]="resultMatrix"
+                            [buttonList]="buttonElements"
                         >
                             <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
                             @if (row.class !== 'list') {
@@ -108,13 +108,13 @@
                         </div>
                         @for (vote of filterRelevantResults(row.value); track vote) {
                             <div
-                                #mat
+                                #btn
                                 class="cell option"
                                 osArrowNavigation
                                 role="gridcell"
                                 tabindex="-1"
+                                [buttonList]="buttonElements"
                                 [ngClass]="getVoteClass(vote)"
-                                [resultMatrix]="resultMatrix"
                             >
                                 @if (vote.showPercent) {
                                     {{ getVoteAmount(vote, row) | pollPercentBase: poll : row }}
