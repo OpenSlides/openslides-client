@@ -25,6 +25,16 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
         private lineRange: LineRange
     ) {}
 
+    private amendmentState(): MergeAmendment {
+        return this.amendment.state ? this.amendment.state.merge_amendment_into_final : MergeAmendment.UNDEFINED;
+    }
+
+    private amendmentRecommendation(): MergeAmendment {
+        return this.amendment.recommendation
+            ? this.amendment.recommendation.merge_amendment_into_final
+            : MergeAmendment.UNDEFINED;
+    }
+
     public getTitle(): string {
         return this.amendment.getTitle();
     }
@@ -58,6 +68,13 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
     }
 
     /**
+     * @returns {boolean}
+     */
+    public isRejected(): boolean {
+        return !this.isAccepted();
+    }
+
+    /**
      * The state and recommendation of this amendment is considered.
      * The state takes precedence.
      *
@@ -66,18 +83,15 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
      * @returns {boolean}
      */
     public isAccepted(): boolean {
-        const mergeState = this.amendment.state
-            ? this.amendment.state.merge_amendment_into_final
-            : MergeAmendment.UNDEFINED;
+        const mergeState = this.amendmentState();
+        const mergeRecommendation = this.amendmentRecommendation();
+
         switch (mergeState) {
             case MergeAmendment.YES:
                 return true;
             case MergeAmendment.NO:
                 return false;
             default:
-                const mergeRecommendation = this.amendment.recommendation
-                    ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED;
                 switch (mergeRecommendation) {
                     case MergeAmendment.YES:
                         return true;
@@ -87,45 +101,14 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
                         return false;
                 }
         }
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    public isRejected(): boolean {
-        return !this.isAccepted();
-    }
-
-    public getNumber(): string {
-        return this.amendment.number;
     }
 
     public showInDiffView(): boolean {
-        const mergeState = this.amendment.state
-            ? this.amendment.state.merge_amendment_into_final
-            : MergeAmendment.UNDEFINED;
-        switch (mergeState) {
-            case MergeAmendment.YES:
-                return true;
-            case MergeAmendment.NO:
-                return false;
-            default:
-                const mergeRecommendation = this.amendment.recommendation
-                    ? this.amendment.recommendation.merge_amendment_into_final
-                    : MergeAmendment.UNDEFINED;
-                switch (mergeRecommendation) {
-                    case MergeAmendment.YES:
-                        return true;
-                    case MergeAmendment.NO:
-                        return false;
-                    default:
-                        return false;
-                }
-        }
+        return this.isAccepted();
     }
 
     public showInFinalView(): boolean {
-        return !!this.amendment.state && this.amendment.state.merge_amendment_into_final === MergeAmendment.YES;
+        return this.amendmentState() === MergeAmendment.YES;
     }
 
     public isTitleChange(): boolean {

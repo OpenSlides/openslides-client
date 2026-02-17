@@ -98,7 +98,7 @@ export default tseslint.config({
         "@typescript-eslint/ban-ts-comment": ["error"],
         "@typescript-eslint/prefer-for-of": ["error"],
         "no-useless-escape": ["error"],
-        "no-case-declarations": ["warn"],
+        "no-case-declarations": ["error"],
 
         "@typescript-eslint/no-empty-object-type": ["warn"],
         "no-async-promise-executor": ["warn"],

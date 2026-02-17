@@ -314,7 +314,7 @@ export class MotionFormatService {
             }
         } else if (current_text.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
             const amendment = current_text as ViewMotionAmendedParagraph;
-            title = `${amendment.getNumber()} - ${amendment.stateName}`;
+            title = `${amendment.getIdentifier()} - ${amendment.stateName}`;
         }
 
         if (!warning && !title) {
