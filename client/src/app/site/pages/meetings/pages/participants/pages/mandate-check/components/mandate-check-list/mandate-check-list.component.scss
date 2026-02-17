@@ -59,7 +59,9 @@
         grid-template-columns: 10% 2fr 2fr 2fr 10%;
     }
     .row:not(:last-child) {
-        border-bottom: 1px solid rgba(177, 177, 177, 0.637);
+        mat-divider {
+            visibility: hidden;
+        }
     }
 }
 
@@ -101,7 +103,7 @@
 }
 
 .margin-left-medium {
-    margin-left: 70px;
+    margin-left: 115px;
 }
 
 .margin-bottom-20 {
