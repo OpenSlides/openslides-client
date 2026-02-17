@@ -3,7 +3,6 @@
         @if (hasResults && canSeeResults && !shouldShowChart && (hasLoaded | async)) {
             <div aria-label="Results-table" class="assignment-results" role="grid" tabindex="-1">
                 <div class="row" role="row" tabindex="-1" [class]="classOptionAmount">
-                    <!-- Header row -->
                     <div
                         #btn
                         aria-label="{{ ariaLabel('place') }}"
