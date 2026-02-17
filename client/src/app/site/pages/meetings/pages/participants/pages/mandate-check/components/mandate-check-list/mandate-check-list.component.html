@@ -24,7 +24,7 @@
                     <h1 class="text-large-bold color-inherit">{{ entry.name }}</h1>
                     <div>&nbsp;</div>
                 </div>
-                <div class="card-grid">
+                <div class="card-grid" style="max-width: inherit; white-space: wrap">
                     <!-- first row-->
                     <div></div>
                     <div class="flex-container align-left foreground-active">
@@ -76,18 +76,11 @@
                 @if (toggleGenderMap.get(entry.id)) {
                     <div class="gender-map-grid">
                         @for (gender of genders; track gender.id) {
-                            <div class="row">
-                                @if (entry.getTotalCount(gender.id)) {
-                                    <!-- LEFT EMPTY -->
+                            @if (entry.getTotalCount(gender.id)) {
+                                <!-- LEFT EMPTY -->
+                                <div class="row">
                                     <div></div>
-                                    <div
-                                        class="foreground-active align-left"
-                                        style="
-                                            :not(:last-child) {
-                                                border-bottom: 1px solid rgba(177, 177, 177, 0.637);
-                                            }
-                                        "
-                                    >
+                                    <div class="foreground-active align-left">
                                         @if (entry.getTotalCount(gender.id)) {
                                             <!-- FIRST VAL -->
                                             {{ entry.genderEntryMap.get(gender.id)?.present }}
@@ -112,8 +105,8 @@
                                     </div>
                                     <!-- LEFT EMPTY -->
                                     <div></div>
-                                }
-                            </div>
+                                </div>
+                            }
                         }
                     </div>
                 }
@@ -140,7 +133,7 @@
                                 {{ 'Present' | translate }}
                             </div>
                             @for (userId of entry.presentUserIds; track userId) {
-                                <div class="margin-left-large text foreground-active">{{ getName(userId) }}</div>
+                                <div class="margin-left-medium text foreground-active">{{ getName(userId) }}</div>
                             }
                         </div>
                         <div>
@@ -148,7 +141,7 @@
                                 {{ 'Absent' | translate }}
                             </div>
                             @for (userId of entry.absentUserIds; track userId) {
-                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
+                                <div class="margin-left-medium color-black">{{ getName(userId) }}</div>
                             }
                         </div>
                     </div>

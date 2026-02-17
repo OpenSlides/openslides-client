@@ -39,6 +39,12 @@
     grid-template-columns: 95% 5%;
 }
 
+mat-card {
+    overflow-block: auto;
+    display: inline-flex;
+    scrollbar-width: none;
+}
+
 .card-grid {
     display: grid;
     white-space: nowrap;
@@ -101,7 +107,7 @@
 }
 
 .margin-left-medium {
-    margin-left: 70px;
+    margin-left: 115px;
 }
 
 .margin-bottom-20 {
