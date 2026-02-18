@@ -10,9 +10,11 @@ on:
 
 jobs:
   create-pr-for-staging:
+    # contains(join()) to first join all labels into one string and then check
+    # if contains 'staging'
     if: |
       github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'staging')
+      contains(join(github.event.pull_request.labels.*.name, ''), 'staging')
     name: Create PR against staging branch
     runs-on: ubuntu-latest
     strategy:
@@ -76,7 +78,7 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          branch: apply/commit-${{ github.sha }}
+          branch: apply/${{ matrix.label }}/commit-${{ github.sha }}
           delete-branch: true
           title: "[Cherry-Pick] ${{ github.event.pull_request.title }}"
           body: "Triggered by commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n\n${{ steps.cherry-pick.outputs.error && 'There were conflicts during the cherry-pick. These were commited without any resolving. Please resolve them manually and push the result to this branch before merging.' || 'The cherry-pick was successful without any conflicts. You should be able to simply merge this PR.' }}"

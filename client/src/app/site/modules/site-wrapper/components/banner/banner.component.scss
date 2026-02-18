@@ -17,9 +17,23 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
+            display: flex;
+            flex-direction: column;
             &.banner-link {
                 width: 100%;
                 height: 100%;
+            }
+            & h1 {
+                $font-size: 14px;
+                margin: 0.5em 0 0 0;
+                width: fit-content;
+                color: inherit;
+                font-size: $font-size;
+            }
+            div:first-child {
+                display: flex;
+                flex-direction: row;
+                margin: 0 0 -0.75em 0;
             }
         }
 
@@ -28,10 +42,7 @@
             width: $font-size;
             height: $font-size;
             font-size: $font-size;
-
-            & + span {
-                margin-left: 10px;
-            }
+            margin: 0.25em 0.25em 0 0;
         }
     }
 }

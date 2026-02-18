@@ -1,51 +1,15 @@
 export const participantsExportExample: any = [
     {
-        title: `Dr.`,
         first_name: `Max`,
         last_name: `Mustermann`,
-        comment: `It's a comment`,
+        email: `max@example.com`,
+        member_number: `12345678`,
         is_active: true,
         is_physical_person: true,
-        is_present_in_meeting_ids: true,
-        default_password: `initialPassword`,
-        username: `mmustermann`,
+        structure_level: `Berlin`,
+        groups: `Delegates`,
+        number: `D001`,
         gender: `male`,
-        pronoun: `Er`,
-        default_structure_level: `Berlin`,
-        default_vote_weight: 1.0,
-        group_ids: `Delegates, Staff`,
-        member_number: `123`,
-        locked_out: false
-    },
-    {
-        first_name: `John`,
-        last_name: `Doe`,
-        default_structure_level: `Washington`,
-        group_ids: `Committees`,
-        comment: `This is a comment, without doubt`,
-        is_active: true,
-        is_physical_person: true,
-        email: `john.doe@email.com`,
-        username: `jdoe`,
-        gender: `diverse`,
-        default_vote_weight: 2.0,
-        member_number: `135`
-    },
-    {
-        first_name: `Julia`,
-        last_name: `Bloggs`,
-        default_structure_level: `London`,
-        username: `jbloggs`,
-        gender: `female`,
-        default_vote_weight: 1.5,
-        member_number: `234`,
-        locked_out: true
-    },
-    {
-        last_name: `Executive Board`,
-        is_present_in_meeting_ids: true,
-        username: `executive`,
-        default_vote_weight: 2.5,
-        member_number: `55444`
+        pronoun: `he`
     }
 ];

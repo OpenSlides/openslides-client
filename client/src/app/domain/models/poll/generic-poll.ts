@@ -36,6 +36,9 @@ export interface PollData {
     options: OptionData[];
     options$: Observable<OptionData[]>;
     global_option: OptionData;
+    global_yes?: boolean;
+    global_no?: boolean;
+    global_abstain?: boolean;
     content_object?: PollContentObject;
     getContentObjectTitle: () => string | null;
 }

@@ -229,7 +229,8 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             backend: update.backend,
             global_abstain: update.global_abstain,
             global_no: update.global_no,
-            global_yes: update.global_yes
+            global_yes: update.global_yes,
+            live_voting_enabled: update.live_voting_enabled
         };
         return this.sendActionToBackend(PollAction.UPDATE, payload);
     }

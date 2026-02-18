@@ -624,6 +624,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
+    public isMeetingAdminAndSelf(user: ViewUser): boolean {
+        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
+    }
+
+    public get isMeetingAdminAndSelfSelected(): boolean {
+        return this.selectedRows.some(user => this.isMeetingAdminAndSelf(user));
+    }
+
     public canSeeItemMenu(): boolean {
         return (
             this.operator.hasPerms(Permission.userCanUpdate) ||

@@ -195,6 +195,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return this.contentForm.get(`required_majority`).value;
     }
 
+    private get liveVotingControl(): AbstractControl {
+        return this.contentForm.get(`live_voting_enabled`);
+    }
+
     public abstract get hideSelects(): PollFormHideSelectsData;
 
     public get pollMethodChangedToListObservable(): Observable<boolean> {
@@ -203,6 +207,22 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     public get isMotionPoll(): boolean {
         return this.pollClassType === PollClassType.Motion;
+    }
+
+    private get isAssignmentPoll(): boolean {
+        return this.pollClassType === PollClassType.Assignment;
+    }
+
+    public get isLiveVotingAvailable(): boolean {
+        return (
+            this.isEVotingSelected &&
+            this.isNamedVotingSelected &&
+            (this.isMotionPoll ||
+                (this.isAssignmentPoll &&
+                    !this.globalYesControl?.value &&
+                    this.pollMethod === FormPollMethod.Y &&
+                    this.contentForm.get(`votes_amount`).get(`max_votes_amount`).value === 1))
+        );
     }
 
     private fb = inject(UntypedFormBuilder);
@@ -281,6 +301,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         this.updatePollValues(update);
         this.updateGlobalVoteControls(update);
         this.updatePercentBases();
+        this.updateLiveVotingEnabled();
         this.setWarning();
     }
 
@@ -329,9 +350,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private patchLiveVotingEnabled(): void {
-        if (this.isMotionPoll) {
+        if (this.isMotionPoll || this.isAssignmentPoll) {
             const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
-            this.contentForm.get(`live_voting_enabled`).setValue(liveVotingDefault);
+            this.liveVotingControl.setValue(liveVotingDefault);
         }
     }
 
@@ -396,6 +417,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         });
 
         this.validPercentBases = bases;
+    }
+
+    private updateLiveVotingEnabled(): void {
+        if (!this.isLiveVotingAvailable) {
+            this.liveVotingControl.setValue(false, {
+                emitEvent: false
+            });
+        }
     }
 
     private getNormedPercentBase(base: PollPercentBase, method: PollMethod, type: PollType): PollPercentBase {

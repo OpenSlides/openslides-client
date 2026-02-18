@@ -251,7 +251,8 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             if (vote.amount < 0) {
                 return vote.amount;
             } else {
-                return this.poll!.votesvalid - vote.amount;
+                const amount_global_abstain = this.poll.global_option?.abstain ?? 0;
+                return this.poll!.votesvalid - vote.amount - amount_global_abstain;
             }
         } else {
             return vote.amount;
