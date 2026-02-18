@@ -6,33 +6,37 @@ This package includes algorithms helpers for the line numbering and diff of moti
 
 Install the dependencies:
 
-`npm install`
+```npm install```
 
 Build the package:
 
-`npm run build`
+```npm run build```
 
 ## Building in OpenSlides dev setup
 
 Attach to client container
 
-`docker compose -f dev/docker/docker-compose.dev.yml exec client sh`
+```docker compose -f dev/docker/docker-compose.dev.yml exec client sh```
 
 Go into package directory:
 
-`cd ../packages/openslides-motion-diff`
+```cd ../packages/openslides-motion-diff```
 
 Build package
 
-`npm run build`
+```npm run build```
+
+The same commands as one call:
+
+```docker compose -f dev/docker/docker-compose.dev.yml exec client sh -c 'cd ../packages/openslides-motion-diff && npm run build'```
 
 ## Running test
 
-`npm run test`
+```npm run test```
 
 To get coverage reports:
 
-`npm run coverage`
+```npm run coverage```
 
 ## Development
 
