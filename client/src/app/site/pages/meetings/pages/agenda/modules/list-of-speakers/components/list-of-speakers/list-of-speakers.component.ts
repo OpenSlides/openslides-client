@@ -11,7 +11,6 @@ import { CollectionMapperService } from 'src/app/site/services/collection-mapper
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { CurrentListOfSpeakersService } from '../../services/current-list-of-speakers.service';
 import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
 import { ListOfSpeakersControllerService } from '../../services/list-of-speakers-controller.service';
 import { ViewListOfSpeakers } from '../../view-models';
@@ -32,11 +31,6 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
 
     @ViewChild(`content`)
     private readonly _listOfSpeakersContentComponent!: ListOfSpeakersContentComponent;
-
-    /**
-     * Determine if the user is viewing the current list if speakers
-     */
-    public isCurrentListOfSpeakers = false;
 
     /**
      * Holds the view item to the given topic
@@ -88,7 +82,6 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private promptService: PromptService,
-        private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private viewport: ViewPortService,
         private collectionMapper: CollectionMapperService
@@ -110,8 +103,6 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         if (id) {
             this._losId = id;
             this.loadListOfSpeakers();
-        } else {
-            this.loadCurrentListOfSpeakers();
         }
     }
 
@@ -200,21 +191,8 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         this.setupLosSubscription();
     }
 
-    private loadCurrentListOfSpeakers(): void {
-        this.subscriptions.push(
-            this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
-                if (clos) {
-                    this.setListOfSpeakers(clos);
-                }
-            })
-        );
-    }
-
     private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
-        const title = this.isCurrentListOfSpeakers
-            ? `Current list of speakers`
-            : listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`;
-        super.setTitle(title);
+        super.setTitle(listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`);
         this.viewListOfSpeakers = listOfSpeakers;
     }
 
