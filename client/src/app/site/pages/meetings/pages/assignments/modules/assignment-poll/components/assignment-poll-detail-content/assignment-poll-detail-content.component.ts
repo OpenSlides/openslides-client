@@ -225,8 +225,8 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): string {
         const requiredMajorityBase = this.pollService.getRequiredMajorityBase(poll, row);
         if (requiredMajorityBase) {
-            return Number.isInteger(requiredMajorityBase)
-                ? `${requiredMajorityBase + 1}`
+            return poll.required_majority === `absolute_majority` && Number.isInteger(requiredMajorityBase)
+                ? `${Math.ceil(requiredMajorityBase + 1)}`
                 : `${Math.ceil(requiredMajorityBase)}`;
         }
         return ``;
