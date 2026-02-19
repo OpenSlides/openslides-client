@@ -14,6 +14,18 @@ export async function os4request(context: BrowserContext, osAction: string, body
         ]
     });
 
+    // Check for redirect/HTML response (OIDC session expired)
+    const contentType = response.headers()['content-type'] || '';
+    if (contentType.includes('text/html') || response.status() === 302 || response.status() === 307) {
+        const text = await response.text();
+        if (text.includes('<html') || text.includes('login') || text.includes('Keycloak')) {
+            throw new Error(
+                `OIDC session expired or invalid. Got HTML response (status: ${response.status()}) for action '${osAction}'. ` +
+                `The OIDC middleware may have redirected to the login page. Try re-authenticating.`
+            );
+        }
+    }
+
     const responseBody = await response.json();
     if (response.status() === 202) {
         await new Promise(r => setTimeout(r, 1000));
