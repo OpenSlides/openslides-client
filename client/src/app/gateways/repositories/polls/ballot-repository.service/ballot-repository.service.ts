@@ -10,7 +10,6 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 const VOTE_URL = `/system/vote`;
-const HAS_VOTED_URL = `${VOTE_URL}/voted`;
 
 /**
  * keys are poll ids,
@@ -33,12 +32,6 @@ export interface VotePayload {
     providedIn: `root`
 })
 export class BallotRepositoryService extends BaseMeetingRelatedRepository<ViewBallot, Ballot> {
-    private _subscribedPolls = new Map<Id, PollSubscription>();
-
-    // Interval for workaround until long polling implemented
-    private _fetchVotablePollsInterval = null;
-    private _fetchVotablePollsTimeout = null;
-
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         private operator: OperatorService,
@@ -51,13 +44,10 @@ export class BallotRepositoryService extends BaseMeetingRelatedRepository<ViewBa
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Votes` : `Vote`);
 
-    public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
-        const request: Promise<void> = this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
-        request.then(() => {
-            this.updateSubscription();
-        });
+    public async sendVote(_pollId: Id, _payload: VotePayload): Promise<void> {
+        // await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
 
-        return request;
+        throw new Error(`Not implemented`);
     }
 
     /**
@@ -67,77 +57,11 @@ export class BallotRepositoryService extends BaseMeetingRelatedRepository<ViewBa
      * @param poll The poll that should be subscribed
      * @return the ViewPoll
      */
-    public subscribeVoted(poll: ViewPoll, userIds?: number[]): BehaviorSubject<Id[]> | null {
-        if (!userIds || !userIds.length) {
-            userIds = [this.operator.operatorId];
-        }
-
-        if (poll.isStarted) {
-            if (!this._subscribedPolls.has(poll.id)) {
-                this._subscribedPolls.set(poll.id, {
-                    poll,
-                    users: userIds,
-                    current: new BehaviorSubject(undefined)
-                });
-                this.updateSubscription();
-            }
-        } else {
-            if (this._subscribedPolls.has(poll.id)) {
-                this._subscribedPolls.get(poll.id).current.complete();
-                this._subscribedPolls.delete(poll.id);
-            }
-
-            return null;
-        }
-
-        return this._subscribedPolls.get(poll.id).current;
+    public subscribeVoted(_poll: ViewPoll, _userIds?: number[]): BehaviorSubject<Id[]> | null {
+        throw new Error(`Not implemented`);
     }
 
-    public updateStartedPolls(polls: Id[]): void {
-        for (const id of this._subscribedPolls.keys()) {
-            if (polls.indexOf(id) === -1) {
-                this._subscribedPolls.get(id).current.complete();
-                this._subscribedPolls.delete(id);
-            }
-        }
-    }
-
-    private updateSubscription(): void {
-        clearTimeout(this._fetchVotablePollsTimeout);
-        this._fetchVotablePollsTimeout = setTimeout(() => {
-            this.requestHasVoted();
-            clearInterval(this._fetchVotablePollsInterval);
-            this._fetchVotablePollsInterval = setInterval(
-                () => {
-                    if (this._subscribedPolls.size) {
-                        this.requestHasVoted();
-                    } else {
-                        clearInterval(this._fetchVotablePollsInterval);
-                    }
-                },
-                8000 + Math.random() * 2000
-            );
-        }, 500);
-    }
-
-    private async requestHasVoted(): Promise<void> {
-        const ids = Array.from(this._subscribedPolls.keys()).filter(
-            id =>
-                !this._subscribedPolls.get(id).current.value ||
-                !this._subscribedPolls.get(id).users.equals(this._subscribedPolls.get(id).current.value)
-        );
-
-        if (!this.activeMeetingId || !ids.length) {
-            return;
-        }
-
-        const results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
-        for (const pollId of Object.keys(results)) {
-            const subscription = this._subscribedPolls.get(+pollId);
-            const currentVal = subscription.current.value;
-            if (JSON.stringify(currentVal) !== JSON.stringify(results[pollId])) {
-                subscription.current.next(results[pollId]);
-            }
-        }
+    public updateStartedPolls(_polls: Id[]): void {
+        throw new Error(`Not implemented`);
     }
 }

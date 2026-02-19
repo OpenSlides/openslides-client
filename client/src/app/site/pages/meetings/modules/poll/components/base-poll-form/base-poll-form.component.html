@@ -29,6 +29,7 @@
                         <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                     </mat-form-field>
                 }
+
                 <!-- Groups entitled to Vote -->
                 @if (isEVotingSelected && !hideSelects.entitledGroups) {
                     <mat-form-field>
@@ -44,6 +45,7 @@
                     </mat-form-field>
                 }
             </div>
+
             <div class="margin-bottom-15">
                 <!-- Live voting -->
                 @if (isLiveVotingAvailable) {
@@ -55,142 +57,10 @@
                     </mat-hint>
                 }
             </div>
-            <div class="flex-info-grid">
-                <!-- Poll Methods -->
-                @if (!isCreatedList && filteredPollMethods && !hideSelects.pollMethod) {
-                    <mat-form-field class="first">
-                        <mat-label>{{ PollPropertyVerbose.pollmethod | translate }}</mat-label>
-                        <mat-select formControlName="pollmethod" required>
-                            @for (option of filteredPollMethods | keyvalue: keepEntryOrder; track option) {
-                                <mat-option [value]="option.key">
-                                    {{ option.value | translate }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                    </mat-form-field>
-                }
-                @if (isEVotingSelected) {
-                    <ng-container formGroupName="votes_amount">
-                        <!-- Min Amount of Votes -->
-                        @if (showMinMaxVotes(data)) {
-                            <mat-form-field class="second" subscriptSizing="dynamic">
-                                <mat-label>{{ PollPropertyVerbose.min_votes_amount | translate }}</mat-label>
-                                <input
-                                    formControlName="min_votes_amount"
-                                    matInput
-                                    min="1"
-                                    required
-                                    type="number"
-                                    [errorStateMatcher]="parentErrorStateMatcher"
-                                />
-                                @if (contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')) {
-                                    <mat-error>{{ getErrorMessage('notEnoughOptionsError') }}</mat-error>
-                                }
-                                @if (contentForm.controls['votes_amount'].hasError('rangeError')) {
-                                    <mat-error>{{ getErrorMessage('rangeError') }}</mat-error>
-                                }
-                            </mat-form-field>
-                        }
-                        <!-- Max Amount of Votes -->
-                        @if (showMinMaxVotes(data)) {
-                            <mat-form-field class="third">
-                                <mat-label>{{ PollPropertyVerbose.max_votes_amount | translate }}</mat-label>
-                                <input
-                                    formControlName="max_votes_amount"
-                                    matInput
-                                    min="1"
-                                    required
-                                    type="number"
-                                    [errorStateMatcher]="parentErrorStateMatcher"
-                                />
-                                @if (contentForm.controls['votes_amount']?.get('max_votes_amount').hasError('max')) {
-                                    <mat-error>{{ getErrorMessage('max') }}</mat-error>
-                                }
-                            </mat-form-field>
-                        }
-                    </ng-container>
-                }
-                <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
-                @if (pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)) {
-                    <div class="fourth">
-                        <ng-container formGroupName="votes_amount">
-                            <!-- Max Amount of Votes per Option -->
-                            <mat-form-field subscriptSizing="dynamic">
-                                <mat-label>{{ PollPropertyVerbose.max_votes_per_option | translate }}</mat-label>
-                                <input
-                                    formControlName="max_votes_per_option"
-                                    matInput
-                                    min="1"
-                                    required
-                                    type="number"
-                                    [errorStateMatcher]="parentErrorStateMatcher"
-                                />
-                                @if (contentForm.controls['votes_amount'].hasError('rangeErrorMaxPerOption')) {
-                                    <mat-error>{{ getErrorMessage('rangeErrorMaxPerOption') }}</mat-error>
-                                }
-                            </mat-form-field>
-                        </ng-container>
-                    </div>
-                }
-            </div>
-            <!-- Amount of Votes and global options -->
-            @if (!hideSelects.globalOptions) {
-                <div class="global-options">
-                    <mat-checkbox formControlName="global_yes">
-                        {{ PollPropertyVerbose.global_yes | translate }}
-                    </mat-checkbox>
-                    <mat-checkbox formControlName="global_no">
-                        {{ PollPropertyVerbose.global_no | translate }}
-                    </mat-checkbox>
-                    <mat-checkbox formControlName="global_abstain">
-                        {{ PollPropertyVerbose.global_abstain | translate }}
-                    </mat-checkbox>
-                </div>
-            }
         }
-
-        <div class="info-grid">
-            <!-- 100 Percent Base -->
-            <div>
-                @if (!hideSelects.hundredPercentBase) {
-                    <mat-form-field>
-                        <mat-label>{{ PollPropertyVerbose.onehundred_percent_base | translate }}</mat-label>
-                        <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
-                            @for (option of validPercentBases | keyvalue: keepEntryOrder; track option) {
-                                <mat-option [value]="option.key">
-                                    {{
-                                        (isCreatedList || pollMethod === 'yna'
-                                            ? alternativePercentBases[option.key]
-                                            : option.value
-                                        ) | translate
-                                    }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                }
-            </div>
-            <div>
-                @if (isEVotingSelected && isCreated && !hideSelects.backendDuration) {
-                    <mat-form-field subscriptSizing="dynamic">
-                        <mat-label>{{ 'Voting duration' | translate }}</mat-label>
-                        <mat-select formControlName="backend" required>
-                            @for (option of pollBackendDurationChoices | keyvalue; track option) {
-                                <mat-option [value]="option.key">
-                                    {{ option.value | translate }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                        <mat-hint
-                            [innerText]="
-                                'Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.'
-                                    | translate
-                            "
-                        ></mat-hint>
-                    </mat-form-field>
-                }
-            </div>
-        </div>
     </form>
+
+     <ng-content select="poll-config"></ng-content>
+
+     <ng-content select="poll-options"></ng-content>
 </div>
