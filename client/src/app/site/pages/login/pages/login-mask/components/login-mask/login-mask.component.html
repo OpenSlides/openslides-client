@@ -26,13 +26,20 @@
     }
 
     @if (!loading) {
-        @if (!samlEnabled) {
+        @if (oidcEnabled) {
+            <!-- OIDC via Traefik: User should already be authenticated -->
+            <div class="login-container">
+                <p>{{ 'You are being redirected...' | translate }}</p>
+                <os-spinner [height]="40" [showText]="false" [width]="40"></os-spinner>
+            </div>
+        } @else if (!samlEnabled) {
             <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
         } @else {
             <div class="login-container">
                 <button
                     class="login-button"
                     color="primary"
+                    data-testid="sso-login-button"
                     mat-raised-button
                     osAutofocus
                     type="button"

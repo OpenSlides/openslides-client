@@ -44,7 +44,7 @@ const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null
 })
 export class OperatorService {
     public get operatorId(): number | null {
-        return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+        return this.isAnonymous ? null : this.authService.userId;
     }
 
     public get isAnonymousLoggedIn(): boolean {
@@ -52,7 +52,8 @@ export class OperatorService {
     }
 
     public get isAnonymous(): boolean {
-        return !this.authService.authToken;
+        // In OIDC mode, userId comes from response body, not from JWT token
+        return !this.authService.isAuthenticated();
     }
 
     public get isAuthenticated(): boolean {
@@ -286,14 +287,15 @@ export class OperatorService {
             if (token === undefined) {
                 return;
             }
-            const id = token ? token.userId : null;
+            // In OIDC mode, userId comes from authService.userId (not from token)
+            const id = this.authService.userId;
             if (id !== this._lastUserId) {
                 console.debug(`operator: user changed from `, this._lastUserId, `to`, id);
                 this._lastUserId = id;
                 this.resetOperatorData();
                 this.operatorStateChange(true);
             }
-            if (token) {
+            if (id) {
                 this.checkReadyState();
             }
         });
