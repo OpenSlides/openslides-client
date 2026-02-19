@@ -1,54 +1,5 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 
-.assignment-result-table {
-    margin-top: 1em;
-    display: block;
-    overflow-x: auto;
-    border-collapse: collapse;
-
-    tr {
-        height: 45px;
-
-        td:first-child {
-            padding-right: 0.5em;
-        }
-    }
-
-    tr.sums {
-        border-bottom: none;
-    }
-
-    .result {
-        text-align: right;
-        padding-left: 1em;
-    }
-
-    .voting-option {
-        min-width: 200px;
-        width: 100%;
-        text-align: left;
-    }
-
-    .user + .sums {
-        td {
-            padding-top: 0.5em;
-        }
-    }
-
-    .single-result {
-        white-space: pre;
-    }
-
-    .entitled-users-row {
-        border-bottom: none;
-        height: 0;
-    }
-}
-
-.doughnut-chart {
-    display: block;
-}
-
 .result-wrapper {
     cursor: pointer;
     margin-bottom: 2em;
@@ -56,39 +7,53 @@
     .result-title {
         text-align: left;
     }
+}
 
-    .result-grid {
+.assignment-results {
+    display: grid;
+
+    .row {
         display: grid;
-        grid-gap: 2em;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
-        .result-table {
-            // display: block;
-            th {
-                text-align: right;
-                font-weight: initial;
-            }
-
-            tr {
-                height: 48px;
-                border-bottom: none !important;
-                .result {
-                    text-align: right !important;
-                }
-            }
-
-            tr.result-cell-definition {
-                text-align: right;
-            }
-
-            .entitled-users-row {
-                border-bottom: none;
-                height: 0;
-            }
+        &-1 {
+            grid-template-columns: 25px minmax(80px, 610px) minmax(80px, 110px);
         }
 
-        .doughnut-chart {
-            display: block;
+        &-2 {
+            grid-template-columns: 25px minmax(80px, 500px) repeat(2, minmax(80px, 110px));
         }
+
+        &-3 {
+            grid-template-columns: 25px minmax(80px, 390px) repeat(3, minmax(80px, 110px));
+        }
+    }
+    .cell {
+        padding: 4px 0px 4px 16px;
+        text-align: end;
+    }
+
+    .header {
+        font-weight: 700;
+    }
+
+    .label {
+        text-align: start;
+    }
+
+    .placement {
+        padding: 0;
+        text-align: center;
+        align-content: center;
+    }
+
+    .candidate-name {
+        padding-left: 0;
+        height: 45px;
+        align-content: center;
+    }
+
+    .option {
+        padding-right: 3px;
+        align-content: center;
     }
 }
