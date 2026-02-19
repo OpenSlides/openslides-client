@@ -19,7 +19,8 @@ export class TopicPollFormComponent extends BasePollFormComponent {
             pollMethod: true,
             globalOptions: true,
             hundredPercentBase: true,
-            backendDuration: true
+            backendDuration: true,
+            requiredMajority: true
         };
     }
 }

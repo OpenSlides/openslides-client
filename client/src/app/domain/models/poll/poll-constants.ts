@@ -91,6 +91,12 @@ export enum PollPercentBase {
     Disabled = `disabled`
 }
 
+export enum RequiredMajorityBase {
+    no_majority = `no_majority`,
+    two_third_majority = `two_third_majority`,
+    absolute_majority = `absolute_majority`
+}
+
 export interface EntitledUsersEntry {
     user_id: number;
     present: boolean;
@@ -202,6 +208,12 @@ export const VoteValuesVerbose = {
     Y: `Yes`,
     N: `No`,
     A: `Abstain`
+};
+
+export const RequiredMajorityBaseVerbose = {
+    no_majority: _('No majority'),
+    absolute_majority: _('Absolute majority'),
+    two_third_majority: _('Two-third majority')
 };
 
 /**

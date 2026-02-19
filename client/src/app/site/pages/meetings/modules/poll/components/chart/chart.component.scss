@@ -4,3 +4,21 @@
     height: 100%;
     margin: auto;
 }
+.chart-icon {
+    position: absolute;
+    left: 60px;
+    top: 90px;
+    & mat-icon {
+        font-size: 80px;
+        width: 80px;
+        min-width: 80px;
+        height: 80px;
+        margin-top: 0 !important;
+    }
+    &.color-green {
+        color: var(--theme-yes);
+    }
+    &.color-red {
+        color: var(--theme-no);
+    }
+}

@@ -18,6 +18,7 @@ import {
     PollTypeVerbose,
     PollTypeVerboseKey,
     PollValues,
+    RequiredMajorityBase,
     VOTE_MAJORITY,
     VOTE_UNDOCUMENTED,
     VotingResult,
@@ -277,6 +278,32 @@ export abstract class PollService {
             }
         }
         return ``;
+    }
+
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): number | null {
+        const option: OptionData | undefined = isPollTableData(row) ? this.transformToOptionData(row) : row;
+        const totalByBase = this.getPercentBase(poll, option);
+        if (!totalByBase) {
+            return null;
+        }
+        switch (poll.required_majority) {
+            case RequiredMajorityBase.absolute_majority:
+                return totalByBase / 2;
+            case RequiredMajorityBase.two_third_majority:
+                return (totalByBase * 2) / 3;
+            default:
+                return null;
+        }
+    }
+
+    public isRequiredMajority(value: number, poll: PollData, row?: OptionData | PollTableData): boolean {
+        const requiredMajorityBase = this.getRequiredMajorityBase(poll, row);
+        return (
+            requiredMajorityBase !== null &&
+            (poll.required_majority === RequiredMajorityBase.absolute_majority
+                ? value > requiredMajorityBase
+                : value >= requiredMajorityBase)
+        );
     }
 
     /**

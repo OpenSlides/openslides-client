@@ -54,6 +54,9 @@ export class ChartComponent {
         this._circleColors = colors;
     }
 
+    @Input()
+    public chartIcon: string | undefined;
+
     private _circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
 
     public colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];

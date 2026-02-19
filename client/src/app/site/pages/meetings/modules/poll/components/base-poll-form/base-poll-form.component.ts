@@ -18,7 +18,8 @@ import {
     PollPropertyVerbose,
     PollPropertyVerboseKey,
     PollType,
-    PollTypeVerbose
+    PollTypeVerbose,
+    RequiredMajorityBaseVerbose
 } from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -41,6 +42,7 @@ export interface PollFormHideSelectsData {
     globalOptions?: boolean;
     hundredPercentBase?: boolean;
     backendDuration?: boolean;
+    requiredMajority?: boolean;
 }
 
 @Directive()
@@ -68,6 +70,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public percentBases: Record<string, string>;
 
     public alternativePercentBases = PollPercentBaseVerbose;
+    public requiredMajorityBaseVerbose = RequiredMajorityBaseVerbose;
 
     @Input()
     public set data(data: Partial<ViewPoll>) {
@@ -186,6 +189,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private get percentBaseControl(): AbstractControl {
         return this.contentForm.get(`onehundred_percent_base`);
+    }
+
+    public get requiredMajority(): string {
+        return this.contentForm.get(`required_majority`).value;
     }
 
     private get liveVotingControl(): AbstractControl {
@@ -555,6 +562,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             type: [``, Validators.required],
             pollmethod: [``, Validators.required],
             onehundred_percent_base: [``, Validators.required],
+            required_majority: [``, Validators.required],
             votes_amount: this.getVotesAmountControl(),
             entitled_group_ids: [],
             backend: [],

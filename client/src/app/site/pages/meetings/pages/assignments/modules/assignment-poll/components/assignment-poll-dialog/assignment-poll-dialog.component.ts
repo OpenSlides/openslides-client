@@ -58,7 +58,16 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public override onBeforeInit(): void {
         this.subscriptions.push(
-            this.pollForm!.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
+            this.pollForm!.contentForm.valueChanges.pipe(
+                debounceTime(150),
+                distinctUntilChanged(
+                    (prev, current) =>
+                        prev.backend === current.backend &&
+                        prev.pollmethod === current.pollmethod &&
+                        prev.type === current.type &&
+                        prev.onehundred_percent_base === current.onehundred_percent_base
+                )
+            ).subscribe(() => {
                 this.triggerUpdate();
             })
         );

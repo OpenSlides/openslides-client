@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
+import { PollPercentBaseVerboseKey, PollTypeVerboseKey, RequiredMajorityBase } from 'src/app/domain/models/poll';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
@@ -36,6 +36,7 @@ export class AssignmentPollService extends PollService {
     public defaultPercentBase: PollPercentBase | undefined;
     public defaultPollType: PollType | undefined;
     public defaultGroupIds: number[] = [];
+    public defaultRequiredMajority: RequiredMajorityBase;
 
     public constructor(
         pollServiceMapper: PollServiceMapperService,
@@ -63,12 +64,16 @@ export class AssignmentPollService extends PollService {
         this.meetingSettingsService
             .get(`assignment_poll_enable_max_votes_per_option`)
             .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+        this.meetingSettingsService
+            .get(`assignment_poll_default_required_majority`)
+            .subscribe(req_maj => (this.defaultRequiredMajority = req_maj));
     }
 
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Ballot`),
             onehundred_percent_base: this.defaultPercentBase,
+            required_majority: this.defaultRequiredMajority ?? RequiredMajorityBase.no_majority,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog

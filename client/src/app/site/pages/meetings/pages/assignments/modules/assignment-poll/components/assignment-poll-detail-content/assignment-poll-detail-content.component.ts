@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
+import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
     PollMethod,
     PollPercentBase,
     PollState,
     PollTableData,
+    RequiredMajorityBase,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
@@ -200,6 +201,35 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private setChartData(): void {
         this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
+    }
+
+    public get showRequiredMajority(): string | undefined {
+        if (
+            [RequiredMajorityBase.absolute_majority, RequiredMajorityBase.two_third_majority].includes(
+                this.poll.required_majority
+            ) &&
+            this.poll.onehundred_percent_base !== PollPercentBase.Disabled
+        ) {
+            return this.pollService.isRequiredMajority(this._chartData[0].data[0], this.poll) &&
+                this._chartData[0].label === `YES`
+                ? `check`
+                : `close`;
+        }
+        return undefined;
+    }
+
+    public showRequiredMajorityInTable(votes: number, poll: PollData, row?: OptionData | PollTableData): boolean {
+        return this.pollService.isRequiredMajority(votes, poll, row);
+    }
+
+    public getRequiredMajorityBase(poll: PollData, row?: OptionData | PollTableData): string {
+        const requiredMajorityBase = this.pollService.getRequiredMajorityBase(poll, row);
+        if (requiredMajorityBase) {
+            return poll.required_majority === `absolute_majority` && Number.isInteger(requiredMajorityBase)
+                ? `${Math.ceil(requiredMajorityBase + 1)}`
+                : `${Math.ceil(requiredMajorityBase)}`;
+        }
+        return ``;
     }
 
     public getVoteClass(votingResult: VotingResult): string {
