@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -21,6 +21,13 @@ export class AuthService {
 
     public get authToken(): AuthToken | null {
         return this._authTokenSubject.getValue();
+    }
+
+    /**
+     * Returns the current user ID regardless of auth method (JWT or OIDC).
+     */
+    public get userId(): number | null {
+        return this.authToken?.userId ?? this.authTokenService.oidcUserId;
     }
 
     /**
@@ -60,7 +67,17 @@ export class AuthService {
         this.sharedWorker.listenTo(`auth`).subscribe(msg => {
             switch (msg?.action) {
                 case `new-user`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
+                    if (msg.content?.token) {
+                        // Legacy auth mode: JWT token in header
+                        this.authTokenService.setRawAccessToken(msg.content.token);
+                    } else if (msg.content?.user) {
+                        // OIDC mode: user ID from response body, no JWT
+                        this.authTokenService.setOidcUserId(msg.content.user);
+                    } else {
+                        // Anonymous/logged out
+                        this.authTokenService.setRawAccessToken(null);
+                        this.authTokenService.setOidcUserId(null);
+                    }
                     this.updateUser(msg.content?.user);
                     break;
                 case `new-token`:
@@ -136,6 +153,21 @@ export class AuthService {
 
     public async logout(): Promise<void> {
         this.lifecycleService.shutdown();
+
+        // Check for OIDC session FIRST - in OIDC mode, skip backend logout
+        // (auth service disabled, session managed by Traefik/Keycloak)
+        if (AuthTokenService.isOidcSession()) {
+            this.authTokenService.setRawAccessToken(null);
+            this.authTokenService.setOidcUserId(null);
+            this._logoutEvent.emit();
+            this.sharedWorker.sendMessage(`auth`, { action: `update` });
+            this.DS.deleteCollections(...this.DS.getCollections());
+            await this.DS.clear();
+            location.replace(`/oauth2/logout`);
+            return;
+        }
+
+        // Legacy/SAML mode: call backend logout
         const response = await this.authAdapter.logout();
         if (response?.success) {
             this.authTokenService.setRawAccessToken(null);
@@ -145,6 +177,7 @@ export class AuthService {
         this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();
+
         // In case SAML is enabled, we need to redirect the user to the IDP
         // to complete the logout-flow. Maybe there is a better way to check
         // for activated SAML than checking if the response is a URL.
@@ -158,7 +191,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
+        return this.authTokenService.isAuthenticated || this.cookie.check(`anonymous-auth`);
     }
 
     /**
@@ -167,11 +200,14 @@ export class AuthService {
      * @returns true, if the request was successful (=online)
      */
     public async doWhoAmIRequest(): Promise<boolean> {
-        console.log(`auth: Do WhoAmI`);
         let online: boolean;
         try {
-            await this.authAdapter.whoAmI();
+            const response = await this.authAdapter.whoAmI();
             online = true;
+            // In OIDC mode, user_id comes in response body (no JWT token)
+            if (response?.user_id && !this.authTokenService.accessToken) {
+                this.authTokenService.setOidcUserId(response.user_id);
+            }
         } catch (e) {
             if (e instanceof ProcessError && e.status >= 400 && e.status < 500) {
                 online = true;
@@ -179,7 +215,6 @@ export class AuthService {
                 online = false;
             }
         }
-        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
         return online;
     }
 }
