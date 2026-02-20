@@ -11,14 +11,14 @@
         <div class="poll-preview-meta-info-form">
             @if (!data || !data.state || data.isCreated) {
                 <div class="info-grid">
-                    <!-- Poll Type -->
+                    <!-- Poll Visibility -->
                     @if (isEVotingEnabled) {
                         <mat-form-field>
-                            <mat-label>{{ PollPropertyVerbose.type | translate }}</mat-label>
-                            <mat-select formControlName="type" required>
-                                @for (option of pollTypes | keyvalue; track option) {
-                                    <mat-option [value]="option.key">
-                                        {{ option.value | translate }}
+                            <mat-label>{{ 'Visibility' | translate }}</mat-label>
+                            <mat-select formControlName="visibility" required>
+                                @for (entry of visibilityOptions | keyvalue; track entry.key) {
+                                    <mat-option [value]="entry.key">
+                                        {{ entry.value | translate }}
                                     </mat-option>
                                 }
                             </mat-select>

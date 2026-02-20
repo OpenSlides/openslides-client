@@ -10,7 +10,7 @@ import {
     LOWEST_VOTE_VALUE,
     PollClassType,
     PollMethod,
-    PollType,
+    PollVisibility,
     VOTE_UNDOCUMENTED,
     VoteKey,
     VoteValue,
@@ -74,7 +74,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (!this.pollForm) {
             return false;
         }
-        return this.pollForm.pollForm.get(`type`)!.value === PollType.Analog || false;
+        return this.pollForm.pollForm.get(`visibility`)!.value === PollVisibility.Manually || false;
     }
 
     @ViewChild(PollFormComponent, { static: true })

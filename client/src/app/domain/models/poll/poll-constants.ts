@@ -2,6 +2,13 @@ import { _ } from '@ngx-translate/core';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
+export enum PollState {
+    Created = `created`,
+    Started = `started`,
+    Finished = `finished`,
+    Published = `published` // TODO: remove
+}
+
 export enum PollVisibility {
     Manually = `manually`,
     Named = `named`,
@@ -9,12 +16,14 @@ export enum PollVisibility {
     Secret = `secret`
 }
 
-export enum PollState {
-    Created = `created`,
-    Started = `started`,
-    Finished = `finished`,
-    Published = `published` // TODO: remove
-}
+export const PollVisibilityVerbose = {
+    manually: _(`Analog`),
+    named: _(`Named`),
+    open: _(`Open`),
+    secret: _(`Secret`)
+};
+
+export type PollVisibilityVerboseKey = keyof typeof PollVisibilityVerbose;
 
 // TODO: Check if anything below can be removed
 

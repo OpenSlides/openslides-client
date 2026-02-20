@@ -1,1 +1,5 @@
-<p>poll-approval-form works!</p>
+<form [formGroup]="approvalForm">
+    <mat-checkbox formControlName="allow_abstain">
+        {{ 'Allow abstain' | translate }}
+    </mat-checkbox>
+</form>

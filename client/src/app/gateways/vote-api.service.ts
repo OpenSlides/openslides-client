@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
+import { PollVisibility } from '../domain/models/poll';
 import { HttpService } from './http.service';
 
-interface PollCreatePayload {
+export interface PollCreatePayload {
     title: string;
     description?: string;
     content_object_id: string;
     meeting_id: Id;
     method: string;
     config: unknown;
-    visibility: string;
+    visibility: PollVisibility;
     entitled_group_ids?: Id[];
     live_voting_enabled?: boolean;
-    result: unknown;
+    result?: unknown;
     allow_vote_split: boolean;
 }
 
