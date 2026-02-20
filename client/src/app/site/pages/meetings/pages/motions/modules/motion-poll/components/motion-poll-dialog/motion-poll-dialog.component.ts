@@ -1,33 +1,33 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { _ } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollApprovalFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-approval-form/poll-approval-form.component';
+import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { MotionPollService } from '../../services';
 
-export const MotionPollMethodsVerbose = {
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`)
-};
-
 @Component({
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
-    styleUrls: [`./motion-poll-dialog.component.scss`],
-    standalone: false
+    imports: [PollFormComponent, PollApprovalFormComponent, MatDialogModule, MatButtonModule, TranslatePipe],
+    styleUrls: [`./motion-poll-dialog.component.scss`]
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     public PercentBaseVerbose = PollPercentBaseVerbose;
     public majority: string;
 
-    public MotionPollMethodsVerbose = MotionPollMethodsVerbose;
+    public get isEVotingEnabled(): boolean {
+        return this.motionPollService.isElectronicVotingEnabled;
+    }
 
     public constructor(
-        public motionPollService: MotionPollService,
+        private motionPollService: MotionPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
         super(pollData);

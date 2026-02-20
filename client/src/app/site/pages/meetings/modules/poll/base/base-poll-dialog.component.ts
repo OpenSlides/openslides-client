@@ -1,7 +1,7 @@
 import { Directive, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -21,7 +21,7 @@ import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
+import { PollFormComponent } from '../components/poll-form/poll-form.component';
 
 export interface OptionsObject {
     fqid?: Fqid; // Obligatory if optionTypeText===false and this isn't a list
@@ -74,11 +74,11 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (!this.pollForm) {
             return false;
         }
-        return this.pollForm.contentForm.get(`type`)!.value === PollType.Analog || false;
+        return this.pollForm.pollForm.get(`type`)!.value === PollType.Analog || false;
     }
 
-    @ViewChild(BasePollFormComponent, { static: true })
-    protected pollForm: BasePollFormComponent | null = null;
+    @ViewChild(PollFormComponent, { static: true })
+    protected pollForm: PollFormComponent | null = null;
 
     protected _options: OptionsObject[] = [];
 
@@ -92,7 +92,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (!this.pollForm) {
             return false;
         }
-        return this.pollForm.contentForm.valid && this.dialogVoteForm?.valid;
+        return this.pollForm.pollForm.valid && this.dialogVoteForm?.valid;
     }
 
     private isList = false;

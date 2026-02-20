@@ -30,7 +30,6 @@ import { AssignmentCommonServiceModule } from '../../services/assignment-common-
 import { AssignmentPollComponent } from './components/assignment-poll/assignment-poll.component';
 import { AssignmentPollDetailContentComponent } from './components/assignment-poll-detail-content/assignment-poll-detail-content.component';
 import { AssignmentPollDialogComponent } from './components/assignment-poll-dialog/assignment-poll-dialog.component';
-import { AssignmentPollFormComponent } from './components/assignment-poll-form/assignment-poll-form.component';
 import { AssignmentPollMetaInfoComponent } from './components/assignment-poll-meta-info/assignment-poll-meta-info.component';
 import { AssignmentPollVoteComponent } from './components/assignment-poll-vote/assignment-poll-vote.component';
 import { AssignmentPollService } from './services/assignment-poll.service';
@@ -44,7 +43,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    declarations: [...COMPONENTS, AssignmentPollDialogComponent, AssignmentPollFormComponent],
+    declarations: [...COMPONENTS, AssignmentPollDialogComponent],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
         CustomIconComponent,

@@ -1,92 +1,11 @@
-<mat-dialog-content>
-    <!-- Settings -->
-    <os-topic-poll-form
-        #pollForm
-        [data]="pollData"
-        [percentBases]="PollPercentBaseVerbose"
-        [pollClassType]="pollClassType.Topic"
-        [pollMethods]="PollMethodVerbose"
-        [pollService]="topicPollService"
-        [pollTypes]="PollTypes"
-    />
-
-    <!-- Options -->
-    @if (!isEdit) {
-        <div class="option-selection topic-poll-preview-meta-info-form info-grid">
-            <ng-container>
-                <h3>{{ 'Options' | translate }}</h3>
-                <div>
-                    <div #scrollframe class="option-list" (scroll)="scrolled($event)">
-                        @if (newOptions.length) {
-                            <os-sorting-list
-                                [input]="optionsSubject"
-                                [live]="true"
-                                (sortEvent)="onSortingChange($event)"
-                            >
-                                <!-- implicit item references into the component using ng-template slot -->
-                                <ng-template let-item>
-                                    <div #item class="single-option-line">
-                                        <span>{{ item.getTitle() }}</span>
-                                        <span class="delete-button">
-                                            <button
-                                                mat-icon-button
-                                                matTooltip="{{ 'Remove option' | translate }}"
-                                                (click)="removeOption(item)"
-                                            >
-                                                <mat-icon>clear</mat-icon>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </ng-template>
-                            </os-sorting-list>
-                        }
-                    </div>
-                    <div>
-                        <!-- Enter new option -->
-                        <div>
-                            <mat-form-field>
-                                <mat-label>{{ 'New option' | translate }}</mat-label>
-                                <input matInput require type="text" [(ngModel)]="optionInput" />
-                                <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <!-- Add option -->
-                        <div>
-                            <div>
-                                <button
-                                    color="accent"
-                                    mat-button
-                                    [disabled]="optionInput === ''"
-                                    (click)="addNewOption()"
-                                >
-                                    <mat-icon>add</mat-icon>
-                                    <span>{{ 'Add option' | translate }}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-            <!-- Too few options warning -->
-            <div class="potential-warning">
-                @if (!hasEnoughOptions()) {
-                    <i class="foreground-warn">
-                        {{ optionsWarning | translate }}
-                    </i>
-                }
-            </div>
-        </div>
-    }
-</mat-dialog-content>
+<mat-dialog-content></mat-dialog-content>
 
 <!-- Actions -->
 <mat-dialog-actions>
     <!-- Save Button -->
-    @if (pollForm && dialogVoteForm && pollForm.contentForm) {
-        <button mat-button [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)" (click)="submitPoll()">
-            <span>{{ 'Save' | translate }}</span>
-        </button>
-    }
+    <button mat-button [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)" (click)="submitPoll()">
+        <span>{{ 'Save' | translate }}</span>
+    </button>
 
     <!-- Cancel Button -->
     <button mat-button [mat-dialog-close]="false">
