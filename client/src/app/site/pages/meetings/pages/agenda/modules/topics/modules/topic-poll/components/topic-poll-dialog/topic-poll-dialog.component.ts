@@ -98,14 +98,14 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
 
     public override onBeforeInit(): void {
         this.subscriptions.push(
-            this.pollForm.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
+            this.pollForm.pollForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
                 this.triggerUpdate();
             })
         );
     }
 
     protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm.contentForm.get(`pollmethod`).value;
+        const pollmethod = this.pollForm.pollForm.get(`pollmethod`).value;
 
         const analogPollValues: VoteValue[] = [];
 

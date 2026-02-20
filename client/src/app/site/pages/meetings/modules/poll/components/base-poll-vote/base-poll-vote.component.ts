@@ -21,7 +21,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { VoteControllerService } from '../../services/vote-controller.service';
+import { BallotControllerService } from '../../services/vote-controller.service';
 import { VotingProhibition, VotingService } from '../../services/voting.service';
 
 export interface VoteOption {
@@ -151,7 +151,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     private _delegationsMap: Record<number, ViewUser> = {};
     private _canVoteForSubjectMap: Record<number, BehaviorSubject<boolean>> = {};
 
-    private voteRepo = inject(VoteControllerService);
+    private voteRepo = inject(BallotControllerService);
 
     protected votingService = inject(VotingService);
     protected cd = inject(ChangeDetectorRef);

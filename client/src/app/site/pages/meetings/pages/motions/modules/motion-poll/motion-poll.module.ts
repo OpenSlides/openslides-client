@@ -46,6 +46,8 @@ const MODULES = [MotionPollServiceModule];
 @NgModule({
     imports: [
         ...MODULES,
+        MotionPollFormComponent,
+        MotionPollDialogComponent,
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,
@@ -74,7 +76,7 @@ const MODULES = [MotionPollServiceModule];
         IconContainerComponent
     ],
     exports: [...MODULES, ...DECLARATIONS, PollModule],
-    declarations: [MotionPollDialogComponent, MotionPollFormComponent, ...DECLARATIONS],
+    declarations: [...DECLARATIONS],
     providers: [{ provide: PollService, useClass: MotionPollService }]
 })
 export class MotionPollModule {

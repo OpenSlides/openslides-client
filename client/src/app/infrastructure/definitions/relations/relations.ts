@@ -55,7 +55,18 @@ import {
     ViewTag
 } from '../../../site/pages/meetings/pages/motions';
 import { ViewGroup } from '../../../site/pages/meetings/pages/participants';
-import { ViewOption, ViewPoll, ViewVote } from '../../../site/pages/meetings/pages/polls';
+import {
+    HasPoll,
+    ViewBallot,
+    ViewOption,
+    ViewPoll,
+    ViewPollConfigApproval,
+    ViewPollConfigOption,
+    ViewPollConfigRatingApproval,
+    ViewPollConfigRatingScore,
+    ViewPollConfigSelection,
+    ViewPollConfigStvScottish
+} from '../../../site/pages/meetings/pages/polls';
 import {
     ViewProjection,
     ViewProjector,
@@ -186,7 +197,7 @@ export const RELATIONS: Relation[] = [
     }),
     // ########## User
     ...makeM2M({
-        AViewModel: ViewUser,
+        AViewModel: ViewMeetingUser,
         BViewModel: ViewPoll,
         AField: `poll_voted`,
         AIdField: `poll_voted_ids`,
@@ -195,13 +206,13 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewUser,
-        MViewModel: ViewVote,
+        MViewModel: ViewBallot,
         OField: `votes`,
         MField: `user`
     }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
-        MViewModel: ViewVote,
+        MViewModel: ViewBallot,
         OField: `vote_delegated_votes`,
         MField: `delegated_user`
     }),
@@ -620,7 +631,7 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewVote,
+        MViewModel: ViewBallot,
         OField: `votes`,
         MField: `meeting`,
         isFullList: true
@@ -1016,6 +1027,18 @@ export const RELATIONS: Relation[] = [
         AField: `used_as_global_option_in_poll`,
         BField: `global_option`
     }),
+    ...makeGenericO2O<ViewPoll, HasPoll>({
+        viewModel: ViewPoll,
+        possibleViewModels: [
+            ViewPollConfigSelection,
+            ViewPollConfigRatingApproval,
+            ViewPollConfigRatingScore,
+            ViewPollConfigStvScottish,
+            ViewPollConfigApproval
+        ],
+        viewModelField: `config`,
+        possibleViewModelsField: `poll`
+    }),
     // ViewOption -> ViewUser, ViewPollCandidateList
     {
         ownViewModels: [ViewOption],
@@ -1041,10 +1064,24 @@ export const RELATIONS: Relation[] = [
         generic: false
     },
     ...makeM2O({
-        MViewModel: ViewVote,
+        MViewModel: ViewBallot,
         OViewModel: ViewOption,
         MField: `option`,
         OField: `votes`
+    }),
+    ...makeGenericO2M({
+        OViewModel: ViewPollConfigOption,
+        MPossibleViewModels: [
+            ViewPollConfigSelection,
+            ViewPollConfigRatingApproval,
+            ViewPollConfigRatingScore,
+            ViewPollConfigStvScottish,
+            ViewPollConfigApproval
+        ],
+        OViewModelField: `poll_config`,
+        MPossibleViewModelsField: `poll_config_options`,
+        OViewModelIdField: `poll_config_id`,
+        MPossibleViewModelsIdField: `option_ids`
     }),
     // ########## Assignments
     ...makeM2O({

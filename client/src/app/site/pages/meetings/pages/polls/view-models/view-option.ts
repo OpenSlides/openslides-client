@@ -7,8 +7,9 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';
 import { UnknownUserLabel } from '../../assignments/modules/assignment-poll/services/assignment-poll.service';
 import { isSortedList, SortedList } from './sorted-list';
+import { ViewBallot } from './view-ballot';
 import { ViewPoll } from './view-poll';
-import { ViewVote } from './view-vote';
+
 export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Option> implements OptionData {
     public static COLLECTION = Option.COLLECTION;
     protected _collection = Option.COLLECTION;
@@ -59,7 +60,7 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
 
 interface IViewOptionRelations<C extends BaseViewModel = any> {
     content_object?: C;
-    votes: ViewVote[];
+    votes: ViewBallot[];
     poll: ViewPoll;
     used_as_global_option_in_poll: ViewPoll;
 }

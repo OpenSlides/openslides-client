@@ -3,14 +3,14 @@ import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { toDecimal } from 'src/app/infrastructure/utils';
-import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
+import { BallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { VoteRepositoryService } from '../vote-repository.service';
+import { BallotRepositoryService } from '../ballot-repository.service';
 import { PollAction } from './poll.action';
 
 interface AnalogPollVotesValues {
@@ -31,8 +31,8 @@ interface AnalogPollGlobalValues {
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     public constructor(
         repoServiceCollector: RepositoryMeetingServiceCollectorService,
-        private voteController: VoteControllerService,
-        private voteRepo: VoteRepositoryService
+        private voteController: BallotControllerService,
+        private voteRepo: BallotRepositoryService
     ) {
         super(repoServiceCollector, Poll);
     }

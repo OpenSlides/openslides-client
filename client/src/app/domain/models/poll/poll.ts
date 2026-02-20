@@ -11,7 +11,8 @@ import {
     PollMethod,
     PollPercentBase,
     PollState,
-    PollType
+    PollType,
+    PollVisibility
 } from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
@@ -19,32 +20,33 @@ export class Poll extends BaseDecimalModel<Poll> {
     public static readonly DECIMAL_FIELDS: (keyof Poll)[] = [`votesvalid`, `votesinvalid`, `votescast`];
 
     public sequential_number!: number;
-    public content_object_id!: Fqid;
-    public state!: PollState;
-    public type!: PollType;
     public title!: string;
+    public content_object_id!: Fqid;
+
+    public config_id!: Id;
+    public visibility!: PollVisibility;
+    public state!: PollState;
+    public result!: string;
+    public published!: boolean;
+    public allow_invalid!: boolean;
+    public allow_vote_split!: boolean;
+    public ballot_ids!: Id[];
+    public voted_ids!: Id[];
+    public entitled_group_ids!: Id[];
+
+    /* TODO: remove */
+    public type!: PollType;
     public votesvalid!: number;
     public votesinvalid!: number;
     public votescast!: number;
     public live_votes: Record<number, any>;
     public live_voting_enabled: number[];
     public onehundred_percent_base!: PollPercentBase;
-
-    /**
-     * TODO:
-     * Not sure how vote delegations are handled now
-     */
     public user_has_voted_for_delegations!: Id[];
-
     public pollmethod!: PollMethod;
-
-    public voted_ids!: Id[]; // (user/poll_voted_ids)[];
-
-    public entitled_group_ids!: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids!: Id[]; // ((assignment|motion)_option/poll_id)[];
     public global_option_id!: Id; // (motion_option/poll_id)
     public backend!: PollBackendDurationType;
-
     public description!: string;
     public min_votes_amount!: number;
     public max_votes_amount!: number;
@@ -54,6 +56,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public global_abstain!: boolean;
     public entitled_users_at_stop!: EntitledUsersEntry[];
     public is_pseudoanonymized!: boolean;
+    /* end remove */
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -152,30 +155,17 @@ export class Poll extends BaseDecimalModel<Poll> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
         `id`,
-        `description`,
         `title`,
-        `type`,
-        `backend`,
-        `is_pseudoanonymized`,
-        `pollmethod`,
+        `config_id`,
+        `visibility`,
         `state`,
-        `min_votes_amount`,
-        `max_votes_amount`,
-        `max_votes_per_option`,
-        `global_yes`,
-        `global_no`,
-        `global_abstain`,
-        `onehundred_percent_base`,
-        `votesvalid`,
-        `votesinvalid`,
-        `votescast`,
-        `entitled_users_at_stop`,
-        `live_voting_enabled`,
-        `live_votes`,
+        `result`,
+        `published`,
+        `allow_invalid`,
+        `allow_vote_split`,
         `sequential_number`,
         `content_object_id`,
-        `option_ids`,
-        `global_option_id`,
+        `ballot_ids`,
         `voted_ids`,
         `entitled_group_ids`,
         `projection_ids`,

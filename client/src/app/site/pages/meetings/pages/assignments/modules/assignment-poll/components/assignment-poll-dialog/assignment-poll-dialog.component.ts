@@ -58,7 +58,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public override onBeforeInit(): void {
         this.subscriptions.push(
-            this.pollForm!.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
+            this.pollForm!.pollForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
                 this.triggerUpdate();
             })
         );
@@ -81,7 +81,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     }
 
     protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm!.contentForm.get(`pollmethod`)!.value;
+        const pollmethod = this.pollForm!.pollForm.get(`pollmethod`)!.value;
 
         const analogPollValues: VoteValue[] = [];
 

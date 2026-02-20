@@ -1,7 +1,7 @@
 import { Directive, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -10,7 +10,7 @@ import {
     LOWEST_VOTE_VALUE,
     PollClassType,
     PollMethod,
-    PollType,
+    PollVisibility,
     VOTE_UNDOCUMENTED,
     VoteKey,
     VoteValue,
@@ -21,7 +21,7 @@ import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
+import { PollFormComponent } from '../components/poll-form/poll-form.component';
 
 export interface OptionsObject {
     fqid?: Fqid; // Obligatory if optionTypeText===false and this isn't a list
@@ -74,11 +74,11 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (!this.pollForm) {
             return false;
         }
-        return this.pollForm.contentForm.get(`type`)!.value === PollType.Analog || false;
+        return this.pollForm.pollForm.get(`visibility`)!.value === PollVisibility.Manually || false;
     }
 
-    @ViewChild(BasePollFormComponent, { static: true })
-    protected pollForm: BasePollFormComponent | null = null;
+    @ViewChild(PollFormComponent, { static: true })
+    protected pollForm: PollFormComponent | null = null;
 
     protected _options: OptionsObject[] = [];
 
@@ -92,7 +92,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (!this.pollForm) {
             return false;
         }
-        return this.pollForm.contentForm.valid && this.dialogVoteForm?.valid;
+        return this.pollForm.pollForm.valid && this.dialogVoteForm?.valid;
     }
 
     private isList = false;
@@ -108,10 +108,12 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     public ngOnInit(): void {
         this.onBeforeInit();
         this.triggerUpdate(true);
+        /*
         this.pollForm.pollMethodChangedToListObservable.pipe(distinctUntilChanged()).subscribe(isList => {
             this.isList = isList;
             this.triggerUpdate(true);
         });
+        */
     }
 
     private addKeyListener(): void {
@@ -294,6 +296,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      * Create a form group for each option with the user id as key
      */
     private createOptionsForVoteForm(): Record<string, any> {
+        /*
         const isListPoll = this.pollForm.getValues().pollmethod === FormPollMethod.LIST_YNA;
         if (this.optionTypeText === false && !isListPoll) {
             // with content_object_id
@@ -334,6 +337,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                 };
             });
         }
+        */
+        throw new Error(`Not implemented`);
     }
 
     /**
@@ -342,10 +347,12 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     private createDialog(): void {
         if (this._options) {
             this.dialogVoteForm = this.formBuilder.group({
+                /*
                 options: this.formBuilder.group(
                     // create a form group for each option with the user id as key
                     this.createOptionsForVoteForm()
                 ),
+                */
                 amount_global_yes: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
                 amount_global_no: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
                 amount_global_abstain: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
@@ -401,6 +408,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     }
 
     public updateDialogVoteFormOptionKeysSubject(): void {
-        this.dialogVoteFormOptionKeysSubject.next(Object.keys(this.optionsFromVoteForm.controls));
+        // this.dialogVoteFormOptionKeysSubject.next(Object.keys(this.optionsFromVoteForm.controls));
     }
 }
