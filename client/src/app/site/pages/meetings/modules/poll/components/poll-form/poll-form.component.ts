@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import {
-    PollClassType,
     PollPropertyVerbose,
     PollPropertyVerboseKey,
     PollVisibility,
@@ -21,7 +20,6 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
-import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 
 @Component({
@@ -56,6 +54,14 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     @Input()
     public set data(data: Partial<ViewPoll>) {
         this._data = data;
+        if (data && this.pollForm) {
+            const patch: Record<string, any> = {};
+            if (data.title !== undefined) patch[`title`] = data.title;
+            if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
+            if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
+            if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
+            this.pollForm.patchValue(patch);
+        }
     }
 
     public get data(): Partial<ViewPoll> {
@@ -64,9 +70,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     @Input()
     public isEVotingEnabled!: boolean;
-
-    @Input()
-    public pollClassType: PollClassType;
 
     private _data: Partial<ViewPoll>;
 
@@ -86,10 +89,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         return this.isEVotingSelected && this.isNamedVotingSelected;
     }
 
-    private get isMotionPoll(): boolean {
-        return this.pollClassType === PollClassType.Motion;
-    }
-
     private get pollTypeControl(): AbstractControl {
         return this.pollForm.get(`visibility`);
     }
@@ -101,7 +100,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(VotingPrivacyWarningDialogService);
-    protected meetingSettingsService = inject(MeetingSettingsService);
 
     public constructor() {
         super();
@@ -111,7 +109,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         if (this.data) {
             this.checkPollState();
-            this.patchLiveVotingEnabled();
         }
 
         this.subscriptions.push(
@@ -137,13 +134,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     private checkPollState(): void {
         if (this.data.state) {
             this.pollTypeControl.disable();
-        }
-    }
-
-    private patchLiveVotingEnabled(): void {
-        if (this.isMotionPoll) {
-            const liveVotingDefault = this.meetingSettingsService.instant(`poll_default_live_voting_enabled`) ?? false;
-            this.liveVotingControl.setValue(liveVotingDefault);
         }
     }
 

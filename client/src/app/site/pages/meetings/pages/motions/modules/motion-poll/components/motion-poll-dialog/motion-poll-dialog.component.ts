@@ -36,10 +36,6 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
         super(pollData);
-
-        console.log(this.motionPollService.defaultGroupIds);
-        console.log(this.motionPollService.defaultPollVisibility);
-        console.log(this.motionPollService.defaultPollVisibility);
     }
 
     public override submitPoll(): void {

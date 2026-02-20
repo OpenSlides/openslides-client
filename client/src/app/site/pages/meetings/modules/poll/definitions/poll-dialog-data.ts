@@ -13,4 +13,5 @@ export interface PollDialogData {
 
     isPublished?: boolean;
     onehundred_percent_base?: string;
+    live_voting_enabled?: boolean;
 }
