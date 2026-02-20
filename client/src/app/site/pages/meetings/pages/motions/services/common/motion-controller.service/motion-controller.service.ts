@@ -242,8 +242,19 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
                     includeUnchanged
                 );
             };
+
+            viewModel.getAmendmentFirstChangeIndex = (recoMode: ChangeRecoMode): number | null => {
+                const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
+                return this.motionLineNumbering.getAmendmentFirstChangeIndex(
+                    viewModel,
+                    this._lineLength,
+                    recoMode,
+                    changeRecos
+                );
+            };
         } else {
             viewModel.getAmendmentParagraphLines = (): DiffLinesInParagraph[] => [];
+            viewModel.getAmendmentFirstChangeIndex = (): number | null => null;
         }
         viewModel.getExtendedStateLabel = (): string => this.getExtendedStateLabel(viewModel);
         viewModel.getExtendedRecommendationLabel = (): string => this.getExtendedRecommendationLabel(viewModel);
