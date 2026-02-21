@@ -22,10 +22,25 @@
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
         <span>{{ selectedRows.length }}&nbsp;{{ 'selected' | translate }}</span>
     </ng-container>
+
+    <div class="extra-controls-slot">
+        <div>
+            @if (selectedView === 'hierarchy') {
+                <button mat-button matTooltip="{{ 'List view' | translate }}" (click)="onChangeView('list')">
+                    <mat-icon>format_align_justify</mat-icon>
+                </button>
+            } @else {
+                <button mat-button matTooltip="{{ 'Hierarchy view' | translate }}" (click)="onChangeView('hierarchy')">
+                    <mat-icon>format_align_right</mat-icon>
+                </button>
+            }
+        </div>
+    </div>
 </os-head-bar>
 
 <os-list
     [alwaysShowMenu]="true"
+    [class.committee-hierarchy]="selectedView === 'hierarchy'"
     [filterProps]="['name']"
     [filterService]="filterService"
     [hiddenInMobile]="['forwarding', 'managers', 'meta']"
@@ -34,9 +49,31 @@
     [sortService]="sortService"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'name'; row as committee"
+        class="cell-slot fill cell-title"
+        [class.is-child]="!!committee.all_parent_ids?.length"
+        [class.no-children]="!committee.child_ids?.length"
+        [style.--committee-level]="committee.all_parent_ids?.length || 0"
+    >
         @if (!isMultiSelect && committee.canAccess()) {
             <a class="stretch-to-fill-parent" [attr.aria-label]="ariaLabel(committee)" [routerLink]="committee.id"></a>
+        }
+        @if (selectedView === 'hierarchy') {
+            @if (committee.child_ids?.length) {
+                <button
+                    class="toggle-button"
+                    mat-icon-button
+                    [attr.aria-label]="'Toggle sub committee expand' | translate"
+                    (click)="filterService.toggleExpanded(committee.id)"
+                >
+                    <mat-icon>
+                        {{ filterService.isExpanded(committee.id) ? 'keyboard_arrow_down' : 'chevron_right' }}
+                    </mat-icon>
+                </button>
+            }
+
+            <span class="hl"></span>
         }
         <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
