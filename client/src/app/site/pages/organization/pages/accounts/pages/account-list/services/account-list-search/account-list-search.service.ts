@@ -11,7 +11,7 @@ export class AccountListSearchService extends ListSearchService<ViewUser> {
     public constructor() {
         super(
             [`short_name`, `username`, `email`, `saml_id`, `member_number`, `externalString`, `homeCommitteeName`],
-            []
+            [`first_name`]
         );
     }
 }
