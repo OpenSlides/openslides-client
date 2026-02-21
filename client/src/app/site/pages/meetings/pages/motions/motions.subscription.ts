@@ -65,6 +65,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `additional_submitter`,
                     `tag_ids`,
                     `title`,
+                    `diff_version`,
                     `identical_motion_ids`
                 ],
                 follow: [
@@ -186,7 +187,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
-            { idField: `lead_motion_id`, fieldset: [`text`] },
+            { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`] },
             {
                 idField: `amendment_ids`,
                 fieldset: [`text`, `modified_final_version`, `amendment_paragraphs`, `marked_forwarded`],
@@ -219,6 +220,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             }
         ],
         fieldset: [
+            `diff_version`,
             `workflow_timestamp`,
             `reason`,
             `text`,
@@ -351,7 +353,7 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
                         fieldset: [`text`, `amendment_paragraphs`],
                         follow: [
                             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
-                            { idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }
+                            { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`, `modified_final_version`] }
                         ]
                     }
                 ]

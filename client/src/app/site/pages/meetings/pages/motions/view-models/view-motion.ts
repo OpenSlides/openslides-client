@@ -24,6 +24,7 @@ import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
+import { LineNumberingService, MotionDiffService } from '../modules/change-recommendations/services';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
 import { ViewMotionEditor } from '../modules/editors';
@@ -102,6 +103,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get speakerAmount(): number {
         return this.list_of_speakers?.waitingSpeakerAmount ?? 0;
+    }
+
+    public get diffVersion(): string {
+        return this.lead_motion?.diff_version || this.diff_version;
     }
 
     /**
@@ -269,6 +274,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public getNumberOrTitle!: () => string;
     public getExtendedStateLabel!: () => string;
     public getExtendedRecommendationLabel!: () => string;
+    public services!: () => {
+        diff: MotionDiffService;
+        ln: LineNumberingService;
+    };
 
     public getPersonalNote(): ViewPersonalNote | null {
         if (this.personal_notes?.length) {

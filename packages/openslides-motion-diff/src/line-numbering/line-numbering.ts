@@ -86,7 +86,13 @@ export class LineNumbering {
         }
 
         for (let i = 0; i < oldChildren.length; i++) {
-            if (oldChildren[i].nodeType === TEXT_NODE) {
+            if (oldChildren[i].nodeName === `BR` && (i === 0 || oldChildren[i - 1].nodeName === `BR`)) {
+                const ln = this.createLineNumber();
+                if (ln) {
+                    element.appendChild(ln);
+                }
+                element.appendChild(oldChildren[i]);
+            } else if (oldChildren[i].nodeType === TEXT_NODE) {
                 if (!oldChildren[i].nodeValue!.match(/\S/)) {
                     // White space nodes between block elements should be ignored
                     const prevIsBlock = i > 0 && !isInlineElement((oldChildren as Element[])[i - 1]);

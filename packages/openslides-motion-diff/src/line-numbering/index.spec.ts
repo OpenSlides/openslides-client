@@ -501,12 +501,6 @@ describe(`inserting line numbering`, () => {
             expect(insertLineBreaks(outHtml, 80)).toBe(outHtml);
         });
 
-        it(`cancels newlines after br-elements`, () => {
-            const inHtml = `<p>Test 123<br>\nTest 456</p>`;
-            const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
-            expect(outHtml).toBe(`<p>` + noMarkup(1) + `Test 123<br>` + noMarkup(2) + `Test 456</p>`);
-        });
-
         it(`does not force-break words right after an INS`, () => {
             const inHtml = `<p>` + noMarkup(1) + `012345 <ins>78 01 34567</ins>8901234567890123456789</p>`;
             const outHtml = insertLineBreaks(inHtml, 20, true);
@@ -691,6 +685,26 @@ describe(`line highlighting`, () => {
             brMarkup(5) +
             `amet</span>`
         );
+    });
+});
+
+describe(`handling of manual line breaks`, () => {
+    it(`cancels newlines after br-elements`, () => {
+        const inHtml = `<p>Test 123<br>\nTest 456</p>`;
+        const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
+        expect(outHtml).toBe(`<p>` + noMarkup(1) + `Test 123<br>` + noMarkup(2) + `Test 456</p>`);
+    });
+
+    it(`adds newlines if br is at start of paragraph`, () => {
+        const inHtml = `<p><br>\nTest 123<br>\nTest 456</p>`;
+        const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
+        expect(outHtml).toBe(`<p>${noMarkup(1)}<br>${noMarkup(2)}Test 123<br>${noMarkup(3)}Test 456</p>`);
+    });
+
+    it(`adds newlines if no content between br`, () => {
+        const inHtml = `<p>Test 123<br>\n<br>\nTest 456</p>`;
+        const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
+        expect(outHtml).toBe(`<p>${noMarkup(1)}Test 123<br>${noMarkup(2)}<br>${noMarkup(3)}Test 456</p>`);
     });
 });
 
