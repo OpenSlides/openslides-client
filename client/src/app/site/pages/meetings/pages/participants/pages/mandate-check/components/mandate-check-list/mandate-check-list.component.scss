@@ -1,4 +1,14 @@
 @use 'src/assets/styles/tables.scss';
+@use '@angular/material' as mat;
+
+.bar-height {
+    @include mat.progress-bar-overrides(
+        (
+            track-height: 1.5em,
+            active-indicator-height: 1.5em
+        )
+    );
+}
 
 .flex-container {
     display: flex;
