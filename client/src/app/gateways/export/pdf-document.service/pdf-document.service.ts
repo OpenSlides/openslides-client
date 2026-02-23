@@ -768,7 +768,7 @@ export class PdfDocumentService {
                 );
             }
         }
-        const margin: Margins = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
+        const margin: Margins = [lrMargin ? lrMargin[0] : 75, 18, lrMargin ? lrMargin[0] : 0, 35];
         // pdfmake order: [left, top, right, bottom]
 
         return {
