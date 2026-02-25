@@ -416,7 +416,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
                 collection: ViewPoll.COLLECTION,
                 content_object_id: this.topic.fqid,
                 ...this.topicPollService.getDefaultPollData(this.topic)
-            } as Partial<PollDialogData>;
+            } as unknown as Partial<PollDialogData>;
         }
     }
 }
