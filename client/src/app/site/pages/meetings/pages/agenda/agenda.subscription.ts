@@ -218,7 +218,16 @@ export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (.
         follow: [
             {
                 idField: `content_object_id`,
-                fieldset: [`number`, `title`, `agenda_item_id`, `text`, `poll_ids`, ...MEETING_ROUTING_FIELDS],
+                fieldset: [
+                    `number`,
+                    `title`,
+                    `agenda_item_id`,
+                    `text`,
+                    `description`,
+                    `poll_ids`,
+                    `assignment`,
+                    ...MEETING_ROUTING_FIELDS
+                ],
                 follow: [
                     {
                         idField: `list_of_speakers_id`,
@@ -271,6 +280,10 @@ export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (.
                     {
                         idField: `poll_ids`,
                         ...pollModelRequest
+                    },
+                    {
+                        idField: `motion_ids`,
+                        fieldset: [`title`, `meeting_id`, `sequential_number`, `number`, `block_id`]
                     }
                 ]
             }
