@@ -70,7 +70,7 @@
     "@tsparticles/shape-text": "^3.9.1",
     "@tsparticles/slim": "^3.9.1",
     "chart.js": "^4.5.1",
-    "cm-chess": "^3.6.1",
+    "cm-chess": "^3.6.3",
     "cm-chessboard": "^8.11.5",
     "date-fns": "^4.1.0",
     "exceljs": "^4.4.0",
