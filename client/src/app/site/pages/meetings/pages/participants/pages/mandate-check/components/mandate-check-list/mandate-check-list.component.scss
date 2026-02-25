@@ -49,9 +49,19 @@ mat-card {
     display: grid;
     white-space: nowrap;
     --center-width: 60%;
-    grid-template-columns: 10% 2fr var(--center-width) 2fr 10%;
+    --columns-width: 8%;
+    grid-template-columns: var(--columns-width) 2fr var(--center-width) 2fr var(--columns-width);
     grid-gap: 10px;
+    @include media-queries.set-breakpoint-lower(xs) {
+        --columns-width: 6%;
+        --center-width: 40%;
+    }
+    @include media-queries.set-breakpoint-upper(md) {
+        --columns-width: 6.5%;
+        --center-width: 60%;
+    }
     @include media-queries.set-breakpoint-upper(lg) {
+        --columns-width: 9%;
         --center-width: 70%;
     }
 }
@@ -62,7 +72,17 @@ mat-card {
         white-space: nowrap;
         padding: 1em 0em 1em 0em;
         display: grid;
-        grid-template-columns: 10% 2fr 2fr 2fr 10%;
+        --center-width: 60%;
+        --columns-width: 10%;
+        grid-template-columns: var(--columns-width) 2fr var(--center-width) 2fr var(--columns-width);
+        @include media-queries.set-breakpoint-upper(md) {
+            --columns-width: 8%;
+            --center-width: 60%;
+        }
+        @include media-queries.set-breakpoint-upper(lg) {
+            --columns-width: 10%;
+            --center-width: 70%;
+        }
     }
     .row:not(:last-child) {
         border-bottom: 1px solid rgba(177, 177, 177, 0.637);

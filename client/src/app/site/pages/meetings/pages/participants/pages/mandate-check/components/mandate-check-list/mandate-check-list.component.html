@@ -63,15 +63,13 @@
                             {{ 'Gender' | translate }}
                         </button>
                     </h2>
-                    <div>
-                        <button matIconButton (click)="toggle(entry.id, true)">
-                            @if (toggleGenderMap.get(entry.id)) {
-                                <mat-icon>keyboard_arrow_up</mat-icon>
-                            } @else {
-                                <mat-icon>keyboard_arrow_down</mat-icon>
-                            }
-                        </button>
-                    </div>
+                    <button matIconButton (click)="toggle(entry.id, true)">
+                        @if (toggleGenderMap.get(entry.id)) {
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                        } @else {
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                        }
+                    </button>
                 </div>
                 @if (toggleGenderMap.get(entry.id)) {
                     <div class="gender-map-grid">
@@ -112,9 +110,11 @@
                 }
                 <div class="header-grid">
                     <h2 class="text-large-bold color-inherit">
-                        <button matButton (click)="toggle(entry.id)">
-                            {{ 'Participants' | translate }}
-                        </button>
+                        <div class="row">
+                            <button matButton (click)="toggle(entry.id)">
+                                {{ 'Participants' | translate }}
+                            </button>
+                        </div>
                     </h2>
                     <div>
                         <button matIconButton (click)="toggle(entry.id)">
