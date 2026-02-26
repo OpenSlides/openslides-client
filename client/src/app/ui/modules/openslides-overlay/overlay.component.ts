@@ -16,8 +16,7 @@ import { OverlayPosition } from './definitions';
 @Component({
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
-    styleUrls: [`./overlay.component.scss`],
-    imports: []
+    styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent {
     @ViewChild(`viewContainer`, { read: ViewContainerRef, static: true })
