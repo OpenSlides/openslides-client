@@ -97,7 +97,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.isFinished && this.poll?.published;
     }
 
     public get shouldShowChart(): boolean {

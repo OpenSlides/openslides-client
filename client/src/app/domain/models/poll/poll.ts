@@ -71,7 +71,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.state === PollState.Finished && this.published;
     }
 
     public get isPercentBaseCast(): boolean {
@@ -101,16 +101,14 @@ export class Poll extends BaseDecimalModel<Poll> {
         return this.isFinished || this.isPublished;
     }
 
-    public get nextState(): PollState {
+    public get nextState(): PollState | `published` {
         switch (this.state) {
             case PollState.Created:
                 return PollState.Started;
             case PollState.Started:
                 return PollState.Finished;
             case PollState.Finished:
-                return PollState.Published;
-            case PollState.Published:
-                return PollState.Created;
+                return `published`;
         }
     }
 

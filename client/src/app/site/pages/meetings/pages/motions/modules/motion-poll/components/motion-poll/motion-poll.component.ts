@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
+import { VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -61,7 +61,7 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get isPublished(): boolean {
-        return this.poll.state === PollState.Published;
+        return this.poll.isPublished;
     }
 
     public get isSameMeeting(): boolean {

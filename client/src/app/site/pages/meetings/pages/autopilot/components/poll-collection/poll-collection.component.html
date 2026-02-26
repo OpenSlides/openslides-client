@@ -15,7 +15,7 @@
                     {{ getPollVoteTitle(poll) }}
                 </h2>
             </a>
-            @if (canManagePoll(poll) && poll.isFinished) {
+            @if (canManagePoll(poll) && poll.isFinished && !poll.published) {
                 <i class="small">
                     {{ 'finished (unpublished)' | translate }}
                 </i>

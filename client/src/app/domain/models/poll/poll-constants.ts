@@ -5,8 +5,7 @@ import { OptionDataKey, PollDataKey } from './generic-poll';
 export enum PollState {
     Created = `created`,
     Started = `started`,
-    Finished = `finished`,
-    Published = `published` // TODO: remove
+    Finished = `finished`
 }
 
 export enum PollVisibility {
@@ -130,8 +129,7 @@ export const PollClassTypeVerbose = {
 export const PollStateVerbose = {
     created: `created`,
     started: `started`,
-    finished: `finished (unpublished)`,
-    published: `published`
+    finished: `finished`
 };
 
 export const PollStateChangeActionVerbose = {

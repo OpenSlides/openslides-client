@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { VoteApiService } from 'src/app/gateways/vote-api.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { BallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -29,6 +30,8 @@ interface AnalogPollGlobalValues {
     providedIn: `root`
 })
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
+    private voteApi = inject(VoteApiService);
+
     public constructor(
         repoServiceCollector: RepositoryMeetingServiceCollectorService,
         private voteController: BallotControllerService,
@@ -174,8 +177,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async delete(poll: Identifiable): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        return this.sendActionToBackend(PollAction.DELETE, payload);
+        return this.voteApi.deletePoll(poll.id);
     }
 
     private getUpdateCreatedAnalogPollPayload(update: any, poll: Poll): any {
@@ -290,38 +292,30 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async resetPoll(poll: Identifiable): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        return this.sendActionToBackend(PollAction.RESET, payload);
+        return this.voteApi.reset(poll.id);
     }
 
-    public async anonymize(poll: Identifiable, updateState?: PollState): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        if (updateState === PollState.Published) {
-            return this.sendActionsToBackend(
-                [
-                    { action: PollAction.STOP, data: [payload] },
-                    { action: PollAction.ANONYMIZE, data: [payload] },
-                    { action: PollAction.PUBLISH, data: [payload] }
-                ],
-                true
-            );
-        }
-        return this.sendActionToBackend(PollAction.ANONYMIZE, payload);
+    public async anonymize(poll: Identifiable, publish?: boolean): Promise<void> {
+        return this.voteApi.finalize(poll.id, {
+            anonymize: true,
+            publish
+        });
     }
 
     public async startPoll(poll: Identifiable): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        return this.sendActionToBackend(PollAction.START, payload);
+        return this.voteApi.start(poll.id);
     }
 
     public async stopPoll(poll: Identifiable): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        return this.sendActionToBackend(PollAction.STOP, payload);
+        return this.voteApi.finalize(poll.id, {
+            publish: false
+        });
     }
 
     public async publishPoll(poll: Identifiable): Promise<void> {
-        const payload: Identifiable = { id: poll.id };
-        return this.sendActionToBackend(PollAction.PUBLISH, payload);
+        return this.voteApi.finalize(poll.id, {
+            publish: true
+        });
     }
 
     public async updateOptionForPoll(poll: Poll, update: any): Promise<void> {
@@ -352,8 +346,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             case PollState.Finished:
                 await this.stopPoll(poll);
                 break;
-            case PollState.Published:
-                return this.publishPoll(poll);
         }
     }
 

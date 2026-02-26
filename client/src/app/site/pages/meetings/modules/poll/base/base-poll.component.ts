@@ -38,10 +38,6 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
         [PollState.Finished]: {
             icon: `public`,
             css: `publish-poll-button`
-        },
-        [PollState.Published]: {
-            icon: ``,
-            css: ``
         }
     };
 
@@ -60,7 +56,11 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
     public async nextPollState(): Promise<void> {
         const currentState: PollState = this._poll.state;
         if (currentState === PollState.Created || currentState === PollState.Finished) {
-            await this.changeState(this._poll.nextState);
+            if (this._poll.nextState === `published`) {
+                this.repo.publish(this._poll);
+            } else {
+                await this.changeState(this._poll.nextState);
+            }
         } else if (currentState === PollState.Started) {
             const title = this.translate.instant(`Are you sure you want to stop this voting?`);
             const STOP_LABEL = this.translate.instant(`Stop`);
@@ -75,9 +75,9 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
             if (choice?.action === STOP_LABEL) {
                 await this.changeState(PollState.Finished);
             } else if (choice?.action === STOP_PUBLISH_LABEL) {
-                await this.changeState(PollState.Published);
+                await this.repo.publish(this.poll).catch(this.raiseError);
             } else if (choice?.action === STOP_PUBLISH_ANONYMIZE_LABEL) {
-                await this.repo.anonymize(this.poll, PollState.Published).catch(this.raiseError);
+                await this.repo.anonymize(this.poll, true).catch(this.raiseError);
             }
         }
     }
