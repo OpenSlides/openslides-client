@@ -1,8 +1,8 @@
-FROM node:22.21-alpine AS base
+FROM node:24.14-alpine AS base
 
 ## Setup
 ARG CONTEXT
-ENV NODE_VERSION=22.17.0
+ENV NODE_VERSION=24.10.14
 ENV APP_CONTEXT=${CONTEXT}
 
 ## Packages
