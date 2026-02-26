@@ -1,8 +1,4 @@
-<<<<<<< angular-21
 FROM node:24.14-alpine AS base
-=======
-FROM node:22.22-alpine AS base
->>>>>>> main
 
 ## Setup
 ARG CONTEXT
