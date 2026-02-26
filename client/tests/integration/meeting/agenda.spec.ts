@@ -54,8 +54,7 @@ test.describe('agenda tests', () => {
         await logout(context);
     });
 
-    // TODO: Reenable when backend sends sequential numbers again
-    test.skip('visits one topic', async ({ context, page }) => {
+    test('visits one topic', async ({ context, page }) => {
         await login(context, username);
         await page.goto(`/${meeting.id}/agenda`);
         await page.locator(`a[href="/${meeting.id}/agenda/topics/${topic.sequential_number}"]`).click();

@@ -46,6 +46,11 @@ jobs:
         with:
           version: latest
 
+      - name: Build openslides binary
+        run: |
+          make -C openslides-manage-service openslides
+          mv -f openslides-manage-service/openslides dev/localprod/openslides
+
       - name: Start setup
         working-directory: "./dev/localprod"
         run: |
