@@ -59,7 +59,13 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
             payload.live_voting_enabled = formValues?.live_voting_enabled ?? false;
         }
 
-        this.voteApiService.create(payload);
+        if (this.pollData?.id) {
+            delete payload[`meeting_id`];
+            delete payload[`content_object_id`];
+            this.voteApiService.update(this.pollData.id, payload);
+        } else {
+            this.voteApiService.create(payload);
+        }
     }
 
     protected getAnalogVoteFields(): VoteValue[] {

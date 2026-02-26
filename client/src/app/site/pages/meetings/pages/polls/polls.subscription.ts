@@ -11,7 +11,12 @@ export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;
 
 export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
-    follow: []
+    follow: [
+        {
+            idField: `config_id`,
+            fieldset: FULL_FIELDSET
+        }
+    ]
 };
 
 export const getPollListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({

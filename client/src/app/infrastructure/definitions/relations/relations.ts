@@ -1069,6 +1069,18 @@ export const RELATIONS: Relation[] = [
         MField: `option`,
         OField: `votes`
     }),
+    ...makeGenericO2O<ViewPoll, HasPoll>({
+        viewModel: ViewPoll,
+        possibleViewModels: [
+            ViewPollConfigSelection,
+            ViewPollConfigRatingApproval,
+            ViewPollConfigRatingScore,
+            ViewPollConfigStvScottish,
+            ViewPollConfigApproval
+        ],
+        viewModelField: `config`,
+        possibleViewModelsField: `poll`
+    }),
     ...makeGenericO2M({
         OViewModel: ViewPollConfigOption,
         MPossibleViewModels: [

@@ -107,10 +107,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if (this.data) {
-            this.checkPollState();
-        }
-
         this.subscriptions.push(
             combineLatest([
                 this.pollForm.valueChanges.pipe(startWith(``)),
@@ -129,12 +125,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public openVotingWarning(event: MouseEvent): void {
         event.stopPropagation();
         this.dialog.open();
-    }
-
-    private checkPollState(): void {
-        if (this.data.state) {
-            this.pollTypeControl.disable();
-        }
     }
 
     private updateLiveVotingEnabled(): void {
