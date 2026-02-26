@@ -130,7 +130,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     public setState(stateId: Id | null, ...viewMotions: Motion[]): Action<void> {
         const payload = viewMotions
-            .filter(motion => motion.state_id !== stateId)
+            .filter(motion => this.getViewModel(motion.id).state_id !== stateId)
             .map(viewMotion => ({
                 id: viewMotion.id,
                 state_id: stateId
