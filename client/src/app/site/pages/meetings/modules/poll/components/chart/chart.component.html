@@ -1,3 +1,9 @@
 @if (isReadyToShow) {
-    <c-chart width="300" [data]="chartData" [options]="chartOptions" [type]="type"></c-chart>
+    <c-chart
+        width="300"
+        [data]="chartData"
+        [options]="chartOptions"
+        [style.height]="calcBarChartHeight()"
+        [type]="type"
+    ></c-chart>
 }
