@@ -1,11 +1,11 @@
 @if (showPoll) {
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
-            <!-- Poll Infos -->
+            <!-- Poll Infos
             <div class="poll-title-wrapper">
-                <!-- Title Area -->
+                <!-- Title Area --
                 <div class="poll-title-area">
-                    <!-- Title -->
+                    <!-- Title --
                     <span class="poll-title break-word">
                         @if (isSameMeeting) {
                             <a [routerLink]="getDetailLink()">
@@ -16,16 +16,17 @@
                         }
                     </span>
                 </div>
-                <!-- Dot Menu -->
+                <!-- Dot Menu --
                 <span *osPerms="permission.motionCanManagePolls; and: isSameMeeting" class="poll-actions">
                     <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                         <mat-icon class="icon-18">more_horiz</mat-icon>
                     </button>
                 </span>
             </div>
-            <!-- Subtitle -->
+            -->
+            <!-- Subtitle
             <div class="italic spacer-bottom-20">
-                <!-- Type and State -->
+                <!-- Type and State --
                 <div class="type-and-state italic spacer-bottom-20 break-word">
                     <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
                         <os-icon-container
@@ -43,7 +44,7 @@
                         }
                         &middot;&nbsp;
                     </span>
-                    <!-- State -->
+                    <!-- State --
                     <span class="break-word">
                         @if (isAnonymous && poll.canBeVotedFor()) {
                             {{ 'Voting in progress' | translate }}
@@ -53,7 +54,8 @@
                     </span>
                 </div>
             </div>
-            <!-- Change state button -->
+            -->
+            <!-- Change state button
             <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
                 @if (pollStateActions[poll.state]) {
                     <button
@@ -74,7 +76,8 @@
                     </button>
                 }
             </span>
-            <!-- Results -->
+            -->
+            <!-- Results
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {
                     <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
@@ -88,6 +91,7 @@
                     <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
                 </span>
             }
+            -->
             <!-- Detail link -->
             @if (poll.isPublished && isSameMeeting) {
                 <div class="poll-detail-button-wrapper">

@@ -35,10 +35,8 @@ const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, 
 const COMPONENTS = [
     PollProgressComponent,
     PollFilteredVotesChartComponent,
-    ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
-    SingleOptionChartTableComponent,
     VotesTableComponent,
     PollCannotVoteMessageComponent
 ];
@@ -47,6 +45,8 @@ const COMPONENTS = [
     declarations: [...COMPONENTS],
     imports: [
         CommonModule,
+        ChartComponent,
+        SingleOptionChartTableComponent,
         BaseChartDirective,
         MatProgressBarModule,
         MatFormFieldModule,
@@ -68,7 +68,7 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS],
+    exports: [...PIPES, ...MODULES, ...COMPONENTS, SingleOptionChartTableComponent, ChartComponent],
     providers: [...PIPES, provideCharts(withDefaultRegisterables())]
 })
 export class PollModule {}

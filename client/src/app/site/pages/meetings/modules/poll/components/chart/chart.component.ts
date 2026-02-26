@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 export type ChartData = ChartDate[];
 
@@ -23,7 +24,7 @@ type Label = SingleLineLabel | MultiLineLabel;
     selector: `os-chart`,
     templateUrl: `./chart.component.html`,
     styleUrls: [`./chart.component.scss`],
-    standalone: false
+    imports: [BaseChartDirective]
 })
 export class ChartComponent {
     /**
