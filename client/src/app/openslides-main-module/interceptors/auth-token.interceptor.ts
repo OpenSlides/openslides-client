@@ -13,6 +13,8 @@ import { AuthTokenService } from '../../site/services/auth-token.service';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
+    private isRedirecting = false;
+
     public constructor(private authTokenService: AuthTokenService) {}
 
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -33,7 +35,12 @@ export class AuthTokenInterceptor implements HttpInterceptor {
                 },
                 error: (error: unknown) => {
                     if (error instanceof HttpErrorResponse) {
-                        // Here you can cache failed responses and try again
+                        // When OIDC is enabled (via Traefik middleware) and we get 401, the token has expired.
+                        // Redirect to /oauth2/logout to clear Traefik's session cookie and force a fresh login.
+                        if ((error.status === 401) && AuthTokenService.isOidcSession() && !this.isRedirecting) {
+                            this.isRedirecting = true;
+                            location.replace('/oauth2/logout');
+                        }
                     }
                 }
             })

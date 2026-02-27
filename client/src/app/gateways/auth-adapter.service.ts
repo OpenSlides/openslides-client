@@ -7,6 +7,7 @@ interface AuthServiceResponse {
     message: string;
     success: boolean;
     token?: string;
+    user_id?: number;
 }
 
 @Injectable({
