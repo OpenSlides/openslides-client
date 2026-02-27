@@ -6,7 +6,7 @@ import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/
 })
 export class ArrowNavigationDirective {
     @HostListener(`keydown`, [`$event`])
-    private navigate(event: KeyboardEvent): void {
+    public navigate(event: KeyboardEvent): void {
         const key = event.key;
         const buttonIndex = this.findButtonIndex();
         let newIndex = buttonIndex;
