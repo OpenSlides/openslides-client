@@ -335,11 +335,16 @@ export abstract class BaseSearchSelectorComponent
         }
     }
 
-    public onContainerClick(): void {
+    public onContainerClick(e: MouseEvent): void {
         if (!this.matSelect) {
             console.warn(`Warning: No #matSelect was defined.`);
             return;
         }
+
+        if ((e.target as HTMLElement).classList?.contains(`cdk-overlay-backdrop`)) {
+            return;
+        }
+
         this.matSelect.open();
     }
 
