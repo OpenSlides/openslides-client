@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,7 +14,7 @@ import { Dimension } from '../../../../pages/projectors/definitions';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, DirectivesModule, PipesModule],
+    imports: [DirectivesModule, PipesModule],
     selector: `os-projector`,
     templateUrl: `./projector.component.html`,
     styleUrls: [`./projector.component.scss`]
