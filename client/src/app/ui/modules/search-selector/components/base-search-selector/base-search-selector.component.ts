@@ -344,9 +344,19 @@ export abstract class BaseSearchSelectorComponent
     }
 
     public onSearchKeydown(event: any): void {
-        // Only propagate enter, up, down
-        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
-            event.stopPropagation();
+        const key = event.key;
+        switch (key) {
+            case `ArrowUp`:
+                return;
+            case `ArrowDown`:
+                return;
+            case `Enter`:
+                return;
+            case `Escape`:
+                return;
+            default:
+                event.stopPropagation();
+                return;
         }
     }
 
