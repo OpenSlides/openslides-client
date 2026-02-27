@@ -22,7 +22,7 @@ export class PollApprovalFormComponent {
         this._data = data;
         if (data && this.approvalForm) {
             const patch: Record<string, any> = {};
-            if (data.config.allow_abstain !== undefined) patch[`allow_abstain`] = data.title;
+            if (data.config.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
             this.approvalForm.patchValue(patch);
         }
     }
