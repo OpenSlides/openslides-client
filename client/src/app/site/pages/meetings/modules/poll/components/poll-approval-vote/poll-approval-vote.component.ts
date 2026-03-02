@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { ViewPoll } from '../../../../pages/polls';
-import { PollVoteComponent } from '../poll-vote/poll-vote.component';
+import { PollComponent } from '../poll/poll.component';
 
 @Component({
     selector: 'os-poll-approval-vote',
-    imports: [PollVoteComponent],
+    imports: [PollComponent],
     templateUrl: './poll-approval-vote.component.html',
     styleUrl: './poll-approval-vote.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
