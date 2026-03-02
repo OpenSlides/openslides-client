@@ -7,7 +7,7 @@ import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-s
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { Mutex } from 'src/app/infrastructure/utils/promises';
-import { BaseViewModel, ViewModelConstructor } from 'src/app/site/base/base-view-model';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
@@ -32,8 +32,7 @@ const SEQUENTIAL_NUMBER_ID_FIELDS: Record<string, (keyof ViewMeeting)[]> = {
 
 const SEQUENTIAL_NUMBER_REQUIRED_FIELDS = [`sequential_number`, `meeting_id`];
 
-const SN_ID_MODEL_REQUEST_DESCRIPTION = `SequentialNumberIdMappingService:prepare`;
-const ID_SN_MODEL_REQUEST_DESCRIPTION = `IdSequentialNumberMappingService:prepare`;
+const MODEL_REQUEST_DESCRIPTION = `SequentialNumberMappingService:prepare`;
 
 interface SequentialNumberMappingConfig {
     collection: Collection;
@@ -54,12 +53,12 @@ export class SequentialNumberMappingService {
     private _repositories: BaseMeetingRelatedRepository<any, any>[] = [];
 
     public constructor(
-        private collectionMapperService: MeetingCollectionMapperService,
+        collectionMapperService: MeetingCollectionMapperService,
         private activeMeeting: ActiveMeetingService,
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService
     ) {
-        this.collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
+        collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();
         });
@@ -83,19 +82,6 @@ export class SequentialNumberMappingService {
 
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
         return await this.getBehaviorSubject(collection, meetingIdSequentialNumber);
-    }
-
-    public async getSequentialNumberById(model: ViewModelConstructor<any>, id: Id): Promise<Id | null | undefined> {
-        const data = await this.autoupdateService.single(
-            await this.modelRequestBuilder.build(this.getSequentialNumberRequest(model, id)),
-            ID_SN_MODEL_REQUEST_DESCRIPTION + `:` + model.COLLECTION
-        );
-
-        if (!data[model.COLLECTION] || !data[model.COLLECTION][id]) {
-            return null;
-        }
-
-        return data[model.COLLECTION][id][`sequential_number`];
     }
 
     private updateRepositoriesSubscriptions(): void {
@@ -134,7 +120,7 @@ export class SequentialNumberMappingService {
         this.setBehaviorSubject(viewModel.collection, meetingIdSequentialNumber, viewModel.id);
     }
 
-    private getIdRequest(collection: string): SimplifiedModelRequest {
+    private getSequentialNumberRequest(collection: string): SimplifiedModelRequest {
         const createRoutingFollow = (
             idField: keyof ViewMeeting
         ): {
@@ -153,14 +139,6 @@ export class SequentialNumberMappingService {
         };
     }
 
-    private getSequentialNumberRequest(viewModelCtor: ViewModelConstructor<any>, id: Id): SimplifiedModelRequest {
-        return {
-            ids: [id],
-            viewModelCtor,
-            fieldset: [`sequential_number`]
-        };
-    }
-
     private async getBehaviorSubject(
         collection: Collection,
         meetingIdSequentialNumber: string
@@ -173,8 +151,8 @@ export class SequentialNumberMappingService {
         if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
             try {
                 const data = await this.autoupdateService.single(
-                    await this.modelRequestBuilder.build(this.getIdRequest(collection)),
-                    SN_ID_MODEL_REQUEST_DESCRIPTION + `:` + collection
+                    await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
+                    MODEL_REQUEST_DESCRIPTION + `:` + collection
                 );
 
                 const val = Object.values(data[collection]).find(
