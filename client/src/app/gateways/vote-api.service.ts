@@ -25,37 +25,38 @@ export class VoteApiService {
     public constructor(private http: HttpService) {}
 
     public create(payload: PollCreatePayload): Promise<any> {
-        return this.http.post(`${this.BASE}/create`, payload);
+        return this.http.post(`${this.BASE}/poll`, payload);
     }
 
     public update(id: Id, payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}/update?id=${encodeURIComponent(id)}`, payload);
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload);
     }
 
     public deletePoll(id: Id): Promise<any> {
-        return this.http.post(`${this.BASE}/delete?id=${encodeURIComponent(id)}`, {});
+        return this.http.delete(`${this.BASE}/poll/${encodeURIComponent(id)}`, {});
     }
 
     public start(id: Id): Promise<any> {
-        return this.http.post(`${this.BASE}/start?id=${encodeURIComponent(id)}`, {});
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/start`, {});
     }
 
     public finalize(id: Id, options?: { publish?: boolean; anonymize?: boolean }): Promise<any> {
-        let url = `${this.BASE}/finalize?id=${encodeURIComponent(id)}`;
+        const url = `${this.BASE}/poll/${encodeURIComponent(id)}/finalize`;
+        const queryParams: Record<string, any> = {};
         if (options?.publish) {
-            url += '&publish';
+            queryParams[`publish`] = ``;
         }
         if (options?.anonymize) {
-            url += '&anonymize';
+            queryParams[`anonymize`] = ``;
         }
-        return this.http.post(url, {});
+        return this.http.post(url, {}, { queryParams });
     }
 
     public reset(id: Id): Promise<any> {
-        return this.http.post(`${this.BASE}/reset?id=${encodeURIComponent(id)}`, {});
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/reset`, {});
     }
 
-    public vote(payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}`, payload);
+    public vote(id: Id, payload: any): Promise<any> {
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/vote`, payload);
     }
 }
