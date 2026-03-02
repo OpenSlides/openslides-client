@@ -1,3 +1,124 @@
-<p>poll-vote works!</p>
+<!-- Poll Infos -->
+<div class="poll-title-wrapper">
+    <!-- Title Area -->
+    <div class="poll-title-area">
+        <!-- Title -->
+        <span class="poll-title break-word">
+            @if (isSameMeeting()) {
+                <a [routerLink]="getDetailLink()">
+                    {{ poll().title | translate }}
+                </a>
+            } @else {
+                {{ poll().title | translate }}
+            }
+        </span>
+    </div>
+
+    <!-- Dot Menu -->
+    <span *osPerms="permission.motionCanManagePolls; and: isSameMeeting()" class="poll-actions">
+        <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+            <mat-icon class="icon-18">more_horiz</mat-icon>
+        </button>
+    </span>
+</div>
+
+<!-- Subtitle -->
+<div class="italic spacer-bottom-20">
+    <!-- Type and State -->
+    <div class="type-and-state italic spacer-bottom-20 break-word">
+        <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
+            <os-icon-container
+                class="poll-type break-word"
+                color="primary"
+                icon="info"
+                [showIcon]="poll().isAnonymous"
+                [swap]="true"
+                (iconAction)="openVotingWarning()"
+            >
+                {{ poll().typeVerbose | translate }}
+            </os-icon-container>
+            @if (poll().isAnonymous) {
+                <span>&nbsp;</span>
+            }
+            &middot;&nbsp;
+        </span>
+        <!-- State -->
+        <span class="break-word">
+            @if (poll().isAnonymous && poll().canBeVotedFor()) {
+                {{ 'Voting in progress' | translate }}
+            } @else {
+                {{ poll().stateVerbose | translate }}
+            }
+        </span>
+    </div>
+</div>
+
+<!-- Change state button -->
+<span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
+    @if (pollStateAction()) {
+        <button
+            mat-stroked-button
+            [class]="pollStateAction().css"
+            [disabled]="stateChangePending"
+            (click)="nextPollState()"
+        >
+            <mat-icon>{{ pollStateAction().icon }}</mat-icon>
+            <span class="next-state-label">
+                @if (stateChangePending()) {
+                    {{ 'In progress, please wait ...' | translate }}
+                } @else {
+                    {{ poll().nextStateActionVerbose | translate }}
+                }
+            </span>
+        </button>
+    }
+</span>
 
 <ng-content></ng-content>
+
+<!-- More Menu -->
+<mat-menu #pollDetailMenu="matMenu">
+    <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
+        <mat-icon>edit</mat-icon>
+        <span>{{ 'Edit' | translate }}</span>
+    </button>
+    <os-projector-button
+        *osPerms="permission.projectorCanManage"
+        [allowReferenceProjector]="true"
+        [menuItem]="true"
+        [object]="poll().getProjectionBuildDescriptor()"
+    />
+    <button
+        *osPerms="
+            permission.motionCanManagePolls;
+            and: poll &&
+                poll().type === 'named' &&
+                (poll().isFinished || poll().isPublished) &&
+                !poll().is_pseudoanonymized
+        "
+        mat-menu-item
+        (click)="pseudoanonymizePoll()"
+    >
+        <mat-icon>warning</mat-icon>
+        <span>{{ 'Anonymize votes' | translate }}</span>
+    </button>
+    <button mat-menu-item (click)="downloadPdf.emit()">
+        <mat-icon>picture_as_pdf</mat-icon>
+        <span>{{ 'Ballot papers' | translate }}</span>
+    </button>
+    <div *osPerms="permission.motionCanManagePolls">
+        <mat-divider></mat-divider>
+
+        <!-- Reset Button -->
+        <button mat-menu-item (click)="resetState()">
+            <mat-icon color="warn">replay</mat-icon>
+            <span>{{ 'Reset state' | translate }}</span>
+        </button>
+
+        <!-- Delete button -->
+        <button mat-menu-item (click)="deletePoll()">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </div>
+</mat-menu>

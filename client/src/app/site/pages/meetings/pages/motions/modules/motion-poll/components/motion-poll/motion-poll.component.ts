@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +12,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollApprovalVoteComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-approval-vote/poll-approval-vote.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 
@@ -24,9 +26,11 @@ import { MotionPollDetailContentComponent } from '../motion-poll-detail-content/
     selector: `os-motion-poll`,
     imports: [
         MotionPollDetailContentComponent,
+        PollApprovalVoteComponent,
         RouterModule,
         TranslatePipe,
         DirectivesModule,
+        MatButtonModule,
         MatCardModule,
         MatTooltipModule,
         MatIconModule,
