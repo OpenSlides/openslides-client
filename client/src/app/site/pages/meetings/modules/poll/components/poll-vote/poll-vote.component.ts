@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, Signal, signal } from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,7 +48,7 @@ export class PollVoteComponent extends BaseMeetingComponent {
     public dialogOpened = output<void>();
     public downloadPdf = output<void>();
 
-    public stateChangePending = signal(true);
+    public stateChangePending = signal(false);
 
     public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);
     public isSameMeeting = computed(() => {

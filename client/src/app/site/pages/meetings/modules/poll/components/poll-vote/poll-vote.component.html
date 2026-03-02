@@ -54,12 +54,12 @@
 </div>
 
 <!-- Change state button -->
-<span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
+<div *osPerms="permission.motionCanManagePolls; and: !hideChangeState()">
     @if (pollStateAction()) {
         <button
             mat-stroked-button
             [class]="pollStateAction().css"
-            [disabled]="stateChangePending"
+            [disabled]="stateChangePending()"
             (click)="nextPollState()"
         >
             <mat-icon>{{ pollStateAction().icon }}</mat-icon>
@@ -72,7 +72,7 @@
             </span>
         </button>
     }
-</span>
+</div>
 
 @if (!poll().stateHasVotes && poll().visibility !== 'manually') {
     @if (poll().isStarted) {
