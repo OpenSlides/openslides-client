@@ -1,13 +1,9 @@
-<div class="charts-wrapper" [style.height]="calcBarChartHeight()">
-    @if (isReadyToShow) {
-        <canvas
-            baseChart
-            class="chart-js-canvas"
-            [data]="chartData"
-            [labels]="labels"
-            [legend]="legend"
-            [options]="chartOptions"
-            [type]="type"
-        ></canvas>
-    }
-</div>
+@if (isReadyToShow) {
+    <c-chart
+        [customTooltips]="false"
+        [data]="chartData"
+        [options]="chartOptions"
+        [style.height]="calcBarChartHeight()"
+        [type]="type"
+    ></c-chart>
+}

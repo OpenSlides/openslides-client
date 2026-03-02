@@ -1,5 +1,5 @@
 import fetchMock from 'fetch-mock';
-import { NormalizedRequestOptions } from 'fetch-mock/dist/esm/RequestUtils';
+import { NormalizedRequestOptions } from 'node_modules/fetch-mock/dist/esm/RequestUtils';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
