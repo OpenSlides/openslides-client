@@ -23,7 +23,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public title!: string;
     public content_object_id!: Fqid;
 
-    public config_id!: Id;
+    public config_id!: Fqid;
     public visibility!: PollVisibility;
     public state!: PollState;
     public result!: string;

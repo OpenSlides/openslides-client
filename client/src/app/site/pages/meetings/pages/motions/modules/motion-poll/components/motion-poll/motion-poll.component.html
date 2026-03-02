@@ -1,7 +1,7 @@
 @if (showPoll) {
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
-            <os-poll-approval-vote [poll]="poll"></os-poll-approval-vote>
+            <os-poll [poll]="poll"></os-poll>
             <!-- Results
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {
