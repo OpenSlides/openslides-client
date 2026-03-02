@@ -74,6 +74,12 @@
     }
 </span>
 
+@if (!poll().stateHasVotes && poll().visibility !== 'manually') {
+    @if (poll().isStarted) {
+        <os-poll-progress [poll]="poll()" />
+    }
+}
+
 <ng-content></ng-content>
 
 <!-- More Menu -->

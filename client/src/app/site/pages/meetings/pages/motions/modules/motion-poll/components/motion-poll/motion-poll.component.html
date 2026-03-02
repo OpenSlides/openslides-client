@@ -2,28 +2,6 @@
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
             <os-poll-approval-vote [poll]="poll"></os-poll-approval-vote>
-            <!-- Poll Infos
-            <div class="poll-title-wrapper">
-                <!-- Title Area
-                <div class="poll-title-area">
-                    <!-- Title
-                    <span class="poll-title break-word">
-                        @if (isSameMeeting) {
-                            <a [routerLink]="getDetailLink()">
-                                {{ poll.title | translate }}
-                            </a>
-                        } @else {
-                            {{ poll.title | translate }}
-                        }
-                    </span>
-                </div>
-                <!-- Dot Menu
-                <span *osPerms="permission.motionCanManagePolls; and: isSameMeeting" class="poll-actions">
-                    <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
-                        <mat-icon class="icon-18">more_horiz</mat-icon>
-                    </button>
-                </span>
-            </div>
             <!-- Results
             @if (poll && !poll.stateHasVotes && poll.type !== 'analog') {
                 @if (poll && poll.isStarted) {

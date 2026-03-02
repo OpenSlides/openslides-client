@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, Signal, signal } from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +17,7 @@ import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from '../../services/poll-controller.service';
+import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 
 interface PollStateAction {
     icon: string;
@@ -25,6 +27,7 @@ interface PollStateAction {
 @Component({
     selector: 'os-poll-vote',
     imports: [
+        PollProgressComponent,
         IconContainerComponent,
         ProjectorButtonModule,
         TranslatePipe,
@@ -46,7 +49,12 @@ export class PollVoteComponent extends BaseMeetingComponent {
     public downloadPdf = output<void>();
 
     public stateChangePending = signal(true);
-    public isSameMeeting = signal(true);
+
+    public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);
+    public isSameMeeting = computed(() => {
+        return this.poll().meeting_id === this.currentMeetingId();
+    });
+
     public pollStateAction: Signal<PollStateAction | null> = computed(() => {
         return this.pollStateActions[this.poll().state] ?? null;
     });

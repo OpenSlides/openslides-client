@@ -38,7 +38,7 @@
         </div>
         <os-motion-poll-detail-content [poll]="poll" />
         @if (poll.isStarted) {
-            <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
+            <os-poll-progress [poll]="poll" />
             <div *osPerms="permission.motionCanManagePolls" class="poll-content">
                 <div class="user-subtitle">
                     {{ 'Present entitled users' | translate }}:

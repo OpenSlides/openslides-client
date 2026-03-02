@@ -32,7 +32,6 @@ import { PollServiceModule } from './services/poll-service.module';
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
-    PollProgressComponent,
     PollFilteredVotesChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
@@ -45,6 +44,7 @@ const COMPONENTS = [
     imports: [
         CommonModule,
         ChartComponent,
+        PollProgressComponent,
         SingleOptionChartTableComponent,
         MatProgressBarModule,
         MatFormFieldModule,
@@ -66,7 +66,14 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS, SingleOptionChartTableComponent, ChartComponent],
+    exports: [
+        ...PIPES,
+        ...MODULES,
+        ...COMPONENTS,
+        SingleOptionChartTableComponent,
+        ChartComponent,
+        PollProgressComponent
+    ],
     providers: [...PIPES]
 })
 export class PollModule {}
