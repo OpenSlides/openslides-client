@@ -8,8 +8,10 @@
                 <ng-template [cdkPortalOutlet]="createComponentPortal(banner.component)"></ng-template>
             } @else {
                 <a class="banner-link" [routerLink]="banner.link" [style.cursor]="banner.link ? 'pointer' : 'default'">
-                    <mat-icon inline>{{ banner.icon }}</mat-icon>
-                    <span>{{ banner.text | translate }}</span>
+                    <div>
+                        <mat-icon inline>{{ banner.icon }}</mat-icon>
+                        <h1>{{ banner.text | translate }}</h1>
+                    </div>
                     @if (banner.subText) {
                         <div>
                             {{ banner.subText | translate }}

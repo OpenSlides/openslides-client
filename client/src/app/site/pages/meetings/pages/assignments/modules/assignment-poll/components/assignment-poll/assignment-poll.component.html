@@ -76,7 +76,7 @@
                 </div>
                 <!-- Chart / Table -->
                 @if (poll.stateHasVotes) {
-                    <div class="poll-result-wrapper" [routerLink]="getDetailLink()">
+                    <div class="poll-result-wrapper" tabindex="-1" [routerLink]="getDetailLink()">
                         <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
                     </div>
                 }
