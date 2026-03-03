@@ -40,7 +40,8 @@ interface IMotionBlockRelations {
     motions: ViewMotion[];
 }
 export interface ViewMotionBlock
-    extends MotionBlock,
+    extends
+        MotionBlock,
         ViewModelRelations<IMotionBlockRelations>,
         // Searchable,
         HasMeeting,

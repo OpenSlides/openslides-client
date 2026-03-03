@@ -246,7 +246,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
             this.meetingSettingsService
                 .get(`assignment_poll_default_group_ids`)
-                .subscribe(group_ids => (this._poll_default_group_ids = group_ids)),
+                .subscribe(group_ids => (this._poll_default_group_ids = Array.from(group_ids))),
             this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
                 group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {
@@ -358,7 +358,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
             id: user.id,
-            name: user.username,
+            name: user.short_name,
             group_ids: user.group_ids(),
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
@@ -624,6 +624,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
+    public isMeetingAdminAndSelf(user: ViewUser): boolean {
+        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
+    }
+
+    public get isMeetingAdminAndSelfSelected(): boolean {
+        return this.selectedRows.some(user => this.isMeetingAdminAndSelf(user));
+    }
+
     public canSeeItemMenu(): boolean {
         return (
             this.operator.hasPerms(Permission.userCanUpdate) ||
@@ -680,6 +688,22 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                             .replace(`%num%`, missing),
                         this.translate.instant(`Ok`),
                         { duration: 3000 }
+                    );
+                }
+            } else if (
+                field === 'is_active' &&
+                !value &&
+                this.operator.isOrgaManager &&
+                this.selectedRows.some(user => user.id === this.operator.user.id)
+            ) {
+                if (this.selectedRows.length === 1) {
+                    this.matSnackBar.open(this.translate.instant(`You cannot set yourself as inactive.`), `Ok`);
+                } else {
+                    const filteredRows = this.selectedRows.filter(user => user.id !== this.operator.user.id);
+                    this.repo.setState(field, value, ...filteredRows);
+                    this.matSnackBar.open(
+                        this.translate.instant(`Accounts were set to inactive, except for your own account.`),
+                        `Ok`
                     );
                 }
             } else {

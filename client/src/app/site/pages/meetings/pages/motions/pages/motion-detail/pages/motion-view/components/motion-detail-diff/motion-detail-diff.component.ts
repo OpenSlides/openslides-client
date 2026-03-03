@@ -78,8 +78,17 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @ViewChild(MatMenuTrigger)
     private changeRecommendationMenu: MatMenuTrigger;
 
+    private _motion: ViewMotion;
+
     @Input()
-    public motion!: ViewMotion;
+    public set motion(motion: ViewMotion) {
+        this._motion = motion;
+        this.setLastNumber();
+    }
+
+    public get motion(): ViewMotion {
+        return this._motion;
+    }
 
     private _changes: ViewUnifiedChange[] = [];
 
@@ -549,7 +558,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public ngAfterViewInit(): void {
-        this.setLastNumber();
         if (this.scrollToChange) {
             window.setTimeout(() => {
                 this.scrollToChangeElement(this.scrollToChange!);
@@ -585,5 +593,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             top: target!.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
             behavior: `smooth`
         });
+    }
+
+    public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {
+        return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
     }
 }

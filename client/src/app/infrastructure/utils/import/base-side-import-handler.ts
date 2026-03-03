@@ -14,9 +14,7 @@ type FindFn<E, O> = (name: string, originalEntry: O) => E;
  * be created, too, but as a "side effect" during the import process of the main models.
  */
 export interface SideImportHandler<MainModel, SideModel = any>
-    extends ImportHandler<MainModel>,
-        ImportFind<MainModel, SideModel>,
-        ImportResolveHandler {
+    extends ImportHandler<MainModel>, ImportFind<MainModel, SideModel>, ImportResolveHandler {
     getModelsToCreate(): CsvMapping<SideModel>[];
 }
 
@@ -24,8 +22,10 @@ export interface SideImportHandler<MainModel, SideModel = any>
  * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
  * be created, too, but as a "side effect" during the import process of the main models.
  */
-export interface BaseSideImportHandlerConfig<MainModel = any, SideModel = any>
-    extends SideImportHandlerConfig<MainModel, SideModel> {
+export interface BaseSideImportHandlerConfig<MainModel = any, SideModel = any> extends SideImportHandlerConfig<
+    MainModel,
+    SideModel
+> {
     idProperty: keyof MainModel;
     translateFn?: (value: string) => string;
 }

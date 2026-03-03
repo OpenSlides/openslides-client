@@ -847,12 +847,15 @@ export function changeHasCollissions(change: UnifiedChange, changes: UnifiedChan
         changes.filter(
             (otherChange) =>
                 otherChange.identifier !== change.identifier &&
-                ((otherChange.lineFrom >= change.lineFrom &&
-                    otherChange.lineFrom <= change.lineTo) ||
-                    (otherChange.lineTo >= change.lineFrom &&
-                        otherChange.lineTo <= change.lineTo) ||
-                        (otherChange.lineFrom <= change.lineFrom &&
-                            otherChange.lineTo >= change.lineTo))
+                (
+                    (change.changeType === UnifiedChangeType.TYPE_AMENDMENT && (otherChange.changeType === UnifiedChangeType.TYPE_AMENDMENT || !otherChange.isRejected)) || 
+                    (change.changeType === UnifiedChangeType.TYPE_CHANGE_RECOMMENDATION && !change.isRejected)
+                ) &&
+                (
+                    (otherChange.lineFrom >= change.lineFrom && otherChange.lineFrom <= change.lineTo) ||
+                    (otherChange.lineFrom <= change.lineFrom && otherChange.lineTo >= change.lineTo) ||
+                    (otherChange.lineTo >= change.lineFrom && otherChange.lineTo <= change.lineTo) 
+                )
         ).length > 0
     );
 }
@@ -921,7 +924,7 @@ export function getTextWithChanges(
                 const lineFrom = ` data-line-from="` + change.lineFrom.toString(10) + `"`;
                 const lineTo = ` data-line-to="` + change.lineTo.toString(10) + `"`;
                 const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
-                const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
+                const opTag = `<div data-change-is-colliding` + opAttrs + `>`;
                 const insertingHtml = opTag + change.changeNewText + `</div>`;
 
                 html = insertLines(html, change.lineFrom, insertingHtml);
@@ -1051,11 +1054,6 @@ export function getChangeDiff(
         firstLine: change.lineFrom
     });
     let diffText = diff(oldText, change.changeNewText);
-
-    // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
-    // - First, for the official line numbers, ignoring insertions (that's been done some lines before)
-    // - Second, another one to prevent the displayed including insertions to exceed the page width
-    diffText = LineNumbering.insertLineBreaks(diffText, lineLength, true);
 
     if (highlight && highlight > 0) {
         diffText = LineNumbering.highlightLine(diffText, highlight);

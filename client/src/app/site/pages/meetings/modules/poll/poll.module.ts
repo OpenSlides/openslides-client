@@ -11,7 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
@@ -27,15 +26,14 @@ import { PollProgressComponent } from './components/poll-progress/poll-progress.
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from './pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
 import { PollServiceModule } from './services/poll-service.module';
 
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
-const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollParseNumberPipe];
+const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
     PollProgressComponent,
     PollFilteredVotesChartComponent,
-    ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
     SingleOptionChartTableComponent,
@@ -47,7 +45,7 @@ const COMPONENTS = [
     declarations: [...COMPONENTS],
     imports: [
         CommonModule,
-        BaseChartDirective,
+        ChartComponent,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -68,7 +66,7 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS],
-    providers: [...PIPES, provideCharts(withDefaultRegisterables())]
+    exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
+    providers: [...PIPES]
 })
 export class PollModule {}

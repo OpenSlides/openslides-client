@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -162,7 +163,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pollDialog: AssignmentPollDialogService,
         private assignmentPollService: AssignmentPollService,
         private pollController: PollControllerService,
-        private userRepo: UserControllerService
+        private userRepo: UserControllerService,
+        private snackBar: MatSnackBar
     ) {
         super();
         this.assignmentForm = formBuilder.group({
@@ -355,7 +357,12 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Adds the operator to list of candidates
      */
     public async addSelf(): Promise<void> {
-        await this.addCandidate({ userId: this.operator.operatorId! });
+        if (!this.operator.isInMeeting(this.activeMeetingIdService.meetingId)) {
+            const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
+            this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
+        } else {
+            await this.addCandidate({ userId: this.operator.operatorId! });
+        }
     }
 
     /**

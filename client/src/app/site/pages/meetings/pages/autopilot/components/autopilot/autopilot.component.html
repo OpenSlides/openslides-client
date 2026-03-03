@@ -1,11 +1,11 @@
 <os-head-bar>
     <div class="title-slot">
-        <h2>
+        <h1 class="mock-h2">
             {{ 'Autopilot' | translate }}
             @if ((title || '').toLowerCase() === 'axolotl') {
                 ⚞(⚬___⚬)⚟
             }
-        </h2>
+        </h1>
     </div>
 
     <!-- Menu -->
@@ -70,13 +70,15 @@
                     <div class="line-and-icon subtitle-text">
                         @if (closUrl) {
                             <a [routerLink]="closUrl">
-                                {{ 'List of speakers' | translate }}
+                                <h2 class="accessibility-h2 accessibility-h2-1">
+                                    {{ 'List of speakers' | translate }}
+                                </h2>
                             </a>
                         }
                         @if (!closUrl) {
-                            <span>
+                            <h2 class="accessibility-h2 accessibility-h2-1">
                                 {{ 'List of speakers' | translate }}
-                            </span>
+                            </h2>
                         }
 
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
@@ -166,7 +168,9 @@
                 <mat-card class="os-card spacer-bottom-60">
                     <mat-card-content>
                         <a [routerLink]="projectorUrl" [state]="{ back: 'true' }" [target]="projectionTarget">
-                            <p class="subtitle-text">{{ projectorTitle | translate }}</p>
+                            <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text">
+                                {{ projectorTitle }}
+                            </h2>
                         </a>
                         <a
                             [routerLink]="viewModelUrl || null"

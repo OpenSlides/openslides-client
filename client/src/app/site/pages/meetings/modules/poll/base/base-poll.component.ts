@@ -112,6 +112,13 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
         this.loadPoll(this._id);
     }
 
+    public async pseudoanonymizePoll(): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
+        if (await this.promptService.open(title)) {
+            this.repo.anonymize(this.poll).catch(this.raiseError);
+        }
+    }
+
     /**
      * Hook to listen to changes. A poll is already available.
      */

@@ -11,6 +11,7 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
@@ -35,13 +36,21 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
+    public managersDisabled = false;
+
     public isCreateView = false;
     public committeeForm!: UntypedFormGroup;
 
     public editCommittee!: ViewCommittee;
 
+    private orgaRestrictForwarding = false;
+
     public get isOrgaManager(): boolean {
         return this.operator.isOrgaManager;
+    }
+
+    public get restrictForwarding(): boolean {
+        return !this.isOrgaManager && this.orgaRestrictForwarding;
     }
 
     private get managerIdCtrl(): AbstractControl {
@@ -57,7 +66,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         public committeeSortService: CommitteeSortService,
         public orgaTagRepo: OrganizationTagControllerService,
         private route: ActivatedRoute,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         super();
         this.createForm();
@@ -68,6 +78,25 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
+        this.subscriptions.push(
+            this.orgaSettings.get(`restrict_editing_same_level_committee_admins`).subscribe(restricted => {
+                if (this.committeeId) {
+                    const parentId = this.committeeRepo.getViewModel(this.committeeId).parent_id;
+                    this.managersDisabled =
+                        restricted && (!parentId || !this.operator.hasCommitteePermissions(parentId, CML.can_manage));
+                } else {
+                    this.managersDisabled = false;
+                }
+                if (this.managersDisabled) {
+                    this.managerIdCtrl.disable();
+                } else {
+                    this.managerIdCtrl.enable();
+                }
+            }),
+            this.orgaSettings
+                .get(`restrict_edit_forward_committees`)
+                .subscribe(value => (this.orgaRestrictForwarding = value))
+        );
     }
 
     public ngOnInit(): void {
@@ -128,6 +157,10 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public async onSubmit(): Promise<void> {
         const value = this.committeeForm.value as ViewCommittee;
+        if (this.restrictForwarding) {
+            delete value[`forward_to_committee_ids`];
+            delete value[`receive_forwardings_from_committee_ids`];
+        }
         let id: Id | null = null;
 
         if (this.isCreateView) {

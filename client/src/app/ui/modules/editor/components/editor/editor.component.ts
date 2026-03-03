@@ -40,7 +40,7 @@ import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
-import { EditorTabNavigationDirective } from '../../directives/tab-navigation.directive';
+import { ArrowNavigationDirective } from '../../directives/tab-navigation.directive';
 import {
     EditorEmbedDialogComponent,
     EditorEmbedDialogOutput
@@ -99,9 +99,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @ViewChildren(`btn`)
     public buttonElements!: QueryList<ElementRef>;
 
-    @ViewChild(`isDisabled`) public isDisabled: EditorTabNavigationDirective;
+    @ViewChild(`isDisabled`) public isDisabled: ArrowNavigationDirective;
 
-    @ViewChild(`setTab`) public setTab: EditorTabNavigationDirective;
+    @ViewChild(`setTab`) public setTab: ArrowNavigationDirective;
 
     @Input()
     public customSettings: object = {};
@@ -144,7 +144,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public get godButtonText(): string {
-        if (this.editor.isActive(`subscript`)) {
+        if (!['textAlign', 'subscript', 'superscript'].some(this.isExtensionActive)) {
+            return this.translate.instant(`Heading`);
+        } else if (this.editor.isActive(`subscript`)) {
             return this.translate.instant(`Subscript`);
         } else if (this.editor.isActive(`superscript`)) {
             return this.translate.instant(`Superscript`);
@@ -157,87 +159,20 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         return this.translate.instant(`Paragraph`);
     }
 
-    private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+    private dialog: MatDialog = inject(MatDialog);
+    private translate: TranslateService = inject(TranslateService);
 
     private domParser = new DOMParser();
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {
+    public constructor() {
         super();
     }
 
     public ngAfterViewInit(): void {
         const editorConfig = {
             element: this.editorEl.nativeElement,
-            extensions: [
-                OfficePaste,
-                ClearTextcolorPaste,
-                // Nodes
-                Document,
-                Blockquote,
-                HardBreak,
-                Heading,
-                ImageResize.configure({
-                    inline: true
-                }),
-                OsSplitBulletList,
-                OsSplitOrderedList,
-                OsSplitListItem,
-                Paragraph,
-                Text,
-                Table,
-                TableRow,
-                TableHeader,
-                TableCell,
-
-                // Marks
-                Bold,
-                Highlight.configure({
-                    multicolor: true
-                }),
-                Italic,
-                Link.extend({
-                    inclusive: false
-                }),
-                Strike,
-                Subscript,
-                Superscript,
-                TextStyle,
-                Underline,
-
-                // Extensions
-                Color,
-                UndoRedo,
-                TextAlign.configure({
-                    types: [`heading`, `paragraph`]
-                }),
-                OsSplit,
-                Extension.create({
-                    name: `angular-component-ext`,
-                    onCreate: () => {
-                        this.editorReady = true;
-                        this.cd.detectChanges();
-                    },
-                    onDestroy: () => {
-                        this.editorReady = false;
-                        this.leaveFocus.emit();
-                    },
-                    onBlur: () => {
-                        this.leaveFocus.emit();
-                    },
-                    onSelectionUpdate: () => {
-                        this.cd.detectChanges();
-                    },
-                    onUpdate: () => {
-                        const content = this.cleanupOutput(this.editor.getHTML());
-                        if (this.value != content) {
-                            this.updateForm(content);
-                        }
-                    }
-                })
-            ],
+            extensions: this.getExtensions(),
             content: this.value
         };
 
@@ -259,6 +194,83 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         if (this.editor) {
             this.editor.commands.setContent(value);
         }
+    }
+
+    public isExtensionActive = (extension: string): boolean =>
+        !!this.editor.extensionManager.extensions.find(ext => ext.name === extension);
+
+    public getExtensions(): Extension[] {
+        return [
+            OfficePaste,
+            ClearTextcolorPaste,
+            // Nodes
+            Document,
+            Blockquote,
+            HardBreak,
+            Heading,
+            ImageResize.configure({
+                inline: true
+            }),
+            OsSplitBulletList,
+            OsSplitOrderedList,
+            OsSplitListItem,
+            Paragraph,
+            Text,
+            Table,
+            TableRow,
+            TableHeader,
+            TableCell,
+
+            // Marks
+            Bold,
+            Highlight.configure({
+                multicolor: true
+            }),
+            Italic,
+            Link.extend({
+                inclusive: false
+            }),
+            Strike,
+            Subscript,
+            Superscript,
+            TextStyle,
+            Underline,
+
+            // Extensions
+            Color,
+            UndoRedo,
+            TextAlign.configure({
+                types: [`heading`, `paragraph`]
+            }),
+            OsSplit,
+            this.ngExtension()
+        ];
+    }
+
+    public ngExtension(): Extension {
+        return Extension.create({
+            name: `angular-component-ext`,
+            onCreate: () => {
+                this.editorReady = true;
+                this.cd.detectChanges();
+            },
+            onDestroy: () => {
+                this.editorReady = false;
+                this.leaveFocus.emit();
+            },
+            onBlur: () => {
+                this.leaveFocus.emit();
+            },
+            onSelectionUpdate: () => {
+                this.cd.detectChanges();
+            },
+            onUpdate: () => {
+                const content = this.cleanupOutput(this.editor.getHTML());
+                if (this.value != content) {
+                    this.updateForm(content);
+                }
+            }
+        });
     }
 
     public updateColorSets(): void {
@@ -313,17 +325,26 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public clearSelectedFormat(): void {
-        this.editor
-            .chain()
-            .focus()
-            .unsetBold()
-            .unsetStrike()
-            .unsetItalic()
-            .unsetUnderline()
-            .unsetColor()
-            .unsetHighlight()
-            .removeEmptyTextStyle()
-            .run();
+        if (this.isExtensionActive(`highlight`)) {
+            this.editor.commands.unsetHighlight();
+        }
+        if (this.isExtensionActive(`color`)) {
+            this.editor.commands.unsetColor();
+        }
+        if (this.isExtensionActive(`strike`)) {
+            this.editor.commands.unsetStrike();
+        }
+        if (this.isExtensionActive(`underline`)) {
+            this.editor.commands.unsetUnderline();
+        }
+        if (this.isExtensionActive(`italic`)) {
+            this.editor.commands.unsetItalic();
+        }
+        if (this.isExtensionActive(`bold`)) {
+            this.editor.commands.unsetBold();
+        }
+
+        this.editor.commands.removeEmptyTextStyle();
     }
 
     public async setLinkDialog(): Promise<void> {
@@ -443,8 +464,20 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
         // Remove paragraphs inside list elements
         const listParagraphs = dom.querySelectorAll(`li > p`);
-        for (let i = 0; i < listParagraphs.length; i++) {
-            unwrapNode(listParagraphs.item(i));
+        for (const item of listParagraphs) {
+            unwrapNode(item);
+        }
+
+        // if editor is limited remove empty span
+        // color is the only element which we support which produce spans
+        if (!this.isExtensionActive(`color`)) {
+            const spanElements = dom.querySelectorAll(`span`);
+            for (const item of spanElements) {
+                item.style.removeProperty(`color`);
+                if (item.getAttribute(`style`) === ``) {
+                    unwrapNode(item);
+                }
+            }
         }
 
         if (!this.editor.getText() && !dom.images.length) {

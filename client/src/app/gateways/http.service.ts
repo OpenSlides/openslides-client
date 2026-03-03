@@ -91,7 +91,13 @@ export class HttpService {
             return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
-                if (error.error.message) {
+                if (error.status === 451 && path.startsWith(`/system/vote`)) {
+                    const cleanError = this.translate.instant(
+                        `Your vote was rejected because your IP address is not in the allowed IP range.`
+                    );
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    throw new ProcessError(cleanError);
+                } else if (error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
                         data,
                         url: error.url

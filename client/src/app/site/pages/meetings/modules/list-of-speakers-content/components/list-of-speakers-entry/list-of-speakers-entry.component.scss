@@ -7,6 +7,10 @@
 
     .speaker-info {
         flex-grow: 1;
+
+        .select-speaker-button {
+            cursor: pointer;
+        }
     }
 
     .speaker-controls {
@@ -100,4 +104,8 @@
 
 .mat-mdc-icon-button.speaker-stop-button {
     @include button.custom-size-button(40px, 32px);
+}
+
+.hint {
+    font-size: 10.5px;
 }

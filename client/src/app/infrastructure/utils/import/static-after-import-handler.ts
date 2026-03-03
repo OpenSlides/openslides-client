@@ -1,8 +1,10 @@
 import { BaseAfterImportHandler } from './base-after-import-handler';
 import { SideImportHandlerConfig } from './side-import-handler-config';
 
-export interface StaticAfterImportConfig<ToCreate, ToImport = any>
-    extends SideImportHandlerConfig<ToCreate, ToImport> {}
+export interface StaticAfterImportConfig<ToCreate, ToImport = any> extends SideImportHandlerConfig<
+    ToCreate,
+    ToImport
+> {}
 
 export class StaticAfterImportHandler<ToCreate = any, ToImport = any> extends BaseAfterImportHandler<
     ToCreate,

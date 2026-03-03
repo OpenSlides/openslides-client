@@ -66,7 +66,8 @@ interface IMeetingMediafileRelations {
     mediafile?: ViewMediafile;
 }
 export interface ViewMeetingMediafile
-    extends MeetingMediafile,
+    extends
+        MeetingMediafile,
         ViewModelRelations<IMeetingMediafileRelations>,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,

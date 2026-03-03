@@ -141,6 +141,8 @@ export class Settings {
     public motions_export_follow_recommendation!: boolean;
     public motions_hide_metadata_background: boolean;
     public motions_create_enable_additional_submitter_text: boolean;
+    public motions_enable_restricted_editor_for_manager: boolean;
+    public motions_enable_restricted_editor_for_non_manager: boolean;
 
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
@@ -234,6 +236,7 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_comment_ids!: Id[]; // (motion_comment/meeting_id)[];
     public motion_category_ids!: Id[]; // (motion_category/meeting_id)[];
     public motion_block_ids!: Id[]; // (motion_block/meeting_id)[];
+    public motion_supporter_ids!: Id[]; // (motion_supporter/meeting_id)[];
     public motion_submitter_ids!: Id[]; // (motion_submitter/meeting_id)[];
     public motion_editor_ids!: Id[]; // (motion_editor/meeting_id)[];
     public motion_working_group_speaker_ids!: Id[]; // (motion_working_group_speaker/meeting_id)[];
@@ -404,6 +407,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_export_preamble`,
         `motions_export_submitter_recommendation`,
         `motions_export_follow_recommendation`,
+        `motions_enable_restricted_editor_for_manager`,
+        `motions_enable_restricted_editor_for_non_manager`,
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,
@@ -477,6 +482,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_workflow_ids`,
         `motion_comment_ids`,
         `motion_submitter_ids`,
+        `motion_supporter_ids`,
         `motion_editor_ids`,
         `motion_working_group_speaker_ids`,
         `motion_change_recommendation_ids`,
@@ -536,7 +542,8 @@ export class Meeting extends BaseModel<Meeting> {
     ];
 }
 export interface Meeting
-    extends Settings,
+    extends
+        Settings,
         HasProjectionIds,
         HasProperties<MeetingMediafileUsageIdKey, number>,
         HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

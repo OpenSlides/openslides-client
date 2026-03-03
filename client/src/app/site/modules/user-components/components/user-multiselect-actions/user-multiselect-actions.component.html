@@ -40,7 +40,7 @@
         <mat-icon>vpn_key</mat-icon>
         <span>{{ 'Generate new passwords' | translate }}</span>
     </button>
-    @if (canManage) {
+    @if (canManage && canDelete) {
         <mat-divider />
         <button class="red-warning-text" mat-menu-item [disabled]="!selectedUsers.length" (click)="deleteSelected()">
             <mat-icon>delete</mat-icon>

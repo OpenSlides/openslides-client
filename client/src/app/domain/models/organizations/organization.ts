@@ -22,7 +22,10 @@ export class OrganizationSetting {
     public limit_of_users!: number;
     public default_language!: string;
     public require_duplicate_from!: boolean;
+    public disable_forward_with_attachments!: boolean;
     public enable_anonymous!: boolean;
+    public restrict_editing_same_level_committee_admins!: boolean;
+    public restrict_edit_forward_committees!: boolean;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -68,6 +71,7 @@ export class Organization extends BaseModel<Organization> {
         `login_text`,
         `reset_password_verbose_errors`,
         `gender_ids`,
+        `disable_forward_with_attachments`,
         `enable_electronic_voting`,
         `enable_chat`,
         `limit_of_meetings`,
@@ -75,6 +79,8 @@ export class Organization extends BaseModel<Organization> {
         `default_language`,
         `require_duplicate_from`,
         `enable_anonymous`,
+        `restrict_editing_same_level_committee_admins`,
+        `restrict_edit_forward_committees`,
         `saml_enabled`,
         `saml_login_button_text`,
         `saml_attr_mapping`,

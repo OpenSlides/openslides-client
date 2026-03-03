@@ -3,15 +3,15 @@
         @for (paragraph of selectedParagraphs; track paragraph.paragraphNo) {
             <section>
                 <h3>
-                    @if (paragraph.lineFrom >= paragraph.lineTo - 1) {
+                    @if (paragraph.lineFrom >= paragraph.lineTo) {
                         <span class="line-number">{{ 'Line' | translate }} {{ paragraph.lineFrom }}</span>
                     } @else {
                         <span class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
+                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}
                         </span>
                     }
                 </h3>
-                <os-editor [formControlName]="paragraph.paragraphNo"></os-editor>
+                <os-motion-editor [formControlName]="paragraph.paragraphNo"></os-motion-editor>
                 @if (isControlInvalid(paragraph.paragraphNo)) {
                     <div class="red-warning-text">
                         {{ 'This field is required.' | translate }}

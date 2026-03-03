@@ -31,6 +31,7 @@ export class MotionState extends BaseModel<MotionState> {
 
     public name!: string;
     public recommendation_label!: string;
+    public state_button_label!: string;
     public is_internal!: boolean;
     public css_class!: string;
     public restrictions!: Restriction[];
@@ -77,6 +78,7 @@ export class MotionState extends BaseModel<MotionState> {
         `allow_motion_forwarding`,
         `allow_amendment_forwarding`,
         `set_workflow_timestamp`,
+        `state_button_label`,
         `submitter_withdraw_state_id`,
         `submitter_withdraw_back_ids`,
         `next_state_ids`,

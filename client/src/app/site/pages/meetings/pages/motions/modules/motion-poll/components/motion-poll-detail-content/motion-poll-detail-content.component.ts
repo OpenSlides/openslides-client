@@ -54,6 +54,9 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     @Input()
     public iconSize: `medium` | `large` | `gigantic` = `large`;
 
+    @Input()
+    public inSlide = false;
+
     private get state(): PollState | null {
         return this.poll?.state || null;
     }

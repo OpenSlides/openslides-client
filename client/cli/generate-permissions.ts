@@ -7,7 +7,7 @@ import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-fu
 
 overloadJsFunctions();
 
-const SOURCE = path.resolve(path.join(__dirname, '../../meta/permission.yml'));
+const SOURCE = path.resolve(path.join(__dirname, '../meta/permission.yml'));
 
 const BASE_PATH = path.resolve(path.join(__dirname, `..`));
 const DOMAIN_DEFINITIONS_PATH = `src/app/domain/definitions`;

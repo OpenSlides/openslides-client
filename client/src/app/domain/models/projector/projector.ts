@@ -105,6 +105,4 @@ export class Projector extends BaseModel<Projector> {
     ];
 }
 export interface Projector
-    extends HasMeetingId,
-        HasSequentialNumber,
-        HasProperties<ProjectorMeetingUsageIdKey, number> {}
+    extends HasMeetingId, HasSequentialNumber, HasProperties<ProjectorMeetingUsageIdKey, number> {}

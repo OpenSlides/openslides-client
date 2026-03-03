@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -12,10 +12,8 @@ import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presen
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
 import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
@@ -56,12 +54,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public originMotionStatus: Record<number, boolean> = {};
 
-    /**
-     * Determine if the name of supporters are visible
-     */
-    public showSupporters = false;
-
-    public minSupporters$ = this.meetingSettingsService.get(`motions_supporters_min_amount`);
     public showReferringMotions$ = this.meetingSettingsService.get(`motions_show_referring_motions`);
     public originToggleDefault$ = this.meetingSettingsService
         .get(`motions_origin_motion_toggle_default`)
@@ -95,14 +87,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get isDifferedChangeRecoMode(): boolean {
         return this.changeRecoMode === ChangeRecoMode.Diff;
-    }
-
-    public get validSupporters(): number {
-        return this.motion.supporters.filter(g => !this.checkValidSupporter(g)).length;
-    }
-
-    public get validSupportersText(): number {
-        return this.translate.instant(`of which %num% not permissable`).replace(`%num%`, this.validSupporters);
     }
 
     /**
@@ -159,16 +143,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public loadForwardingCommittees: () => Promise<Selectable[]>;
 
-    public get supportersObservable(): Observable<ViewUser[]> {
-        return this._supportersSubject;
-    }
-
-    public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.userCanManage);
-    }
-
-    private _supportersSubject = new BehaviorSubject<ViewUser[]>([]);
-
     /**
      * The subscription to the recommender config variable.
      */
@@ -183,7 +157,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         public motionSubmitterRepo: MotionSubmitterControllerService,
         public motionEditorRepo: MotionEditorControllerService,
         public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private participantSort: ParticipantListSortService,
         private presenter: GetForwardingCommitteesPresenterService
     ) {
         super();
@@ -198,31 +171,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public ngOnInit(): void {
-        this.participantSort.initSorting();
-
         for (const motion of this.activeOriginMotions) {
             this.originMotionStatus[motion.id] = true;
         }
-
-        this.subscriptions.push(
-            this.participantSort.getSortedViewModelListObservable().subscribe(() => {
-                this.updateSupportersSubject();
-            })
-        );
-    }
-
-    public override ngOnDestroy(): void {
-        this.participantSort.exitSortService();
-        super.ngOnDestroy();
     }
 
     protected override onAfterInit(): void {
         this.setupRecommender();
-    }
-
-    protected override onAfterSetMotion(previous: ViewMotion, current: ViewMotion): void {
-        super.onAfterSetMotion(previous, current);
-        this.updateSupportersSubject();
     }
 
     /**
@@ -301,28 +256,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.repo.setBlock(id, this.motion);
     }
 
-    /**
-     * Supports the motion (as requested user)
-     */
-    public support(): void {
-        this.repo.support(this.motion).catch(this.raiseError);
-    }
-
-    /**
-     * Unsupports the motion
-     */
-    public unsupport(): void {
-        this.repo.unsupport(this.motion).catch(this.raiseError);
-    }
-
-    /**
-     * Opens the dialog with all supporters.
-     * TODO: open dialog here!
-     */
-    public openSupportersDialog(): void {
-        this.showSupporters = !this.showSupporters;
-    }
-
     public toggleOriginMotion(e: { checked: boolean }, id: Id): void {
         if (e.checked) {
             this.enableOriginMotion.emit(id);
@@ -393,10 +326,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
-    private async updateSupportersSubject(): Promise<void> {
-        this._supportersSubject.next(await this.participantSort.sort(this.motion.supporters));
-    }
-
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
@@ -434,16 +363,5 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
-    }
-
-    public checkValidSupporter(supporter: ViewUser): boolean {
-        return (
-            supporter.getMeetingUser().groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
-            !(
-                supporter.getMeetingUser().vote_delegated_to_id &&
-                this.activeMeeting.users_forbid_delegator_as_supporter &&
-                this.activeMeeting.users_enable_vote_delegations
-            )
-        );
     }
 }

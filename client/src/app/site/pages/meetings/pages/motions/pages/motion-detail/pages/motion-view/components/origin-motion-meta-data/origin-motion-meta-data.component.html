@@ -45,7 +45,7 @@
                 extensionLabel="{{ 'Extension' | translate }}"
                 title="{{ 'State' | translate }}"
                 [canBeEdited]="false"
-                [chipValue]="stateLabel | translate"
+                [chipValue]="stateLabel"
                 [classes]="motion.stateCssColor"
                 [hasExtension]="!!motionState && motionState.show_state_extension_field"
                 [searchFieldInput]="motion.state_extension"
@@ -59,7 +59,7 @@
             <os-motion-extension-field
                 extensionLabel="{{ 'Extension' | translate }}"
                 [canBeEdited]="false"
-                [chipValue]="recommendationLabel | translate"
+                [chipValue]="recommendationLabel"
                 [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
                 [internal]="motion?.state?.is_internal"
                 [listValueTransformFns]="[motionTransformFn]"

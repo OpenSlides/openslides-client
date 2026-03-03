@@ -13,65 +13,15 @@
         height: auto;
         margin: 10px 0;
     }
-
-    .finished-speakers-grid {
-        font-size: 14px;
-        display: grid;
-        grid-gap: 1em;
-        grid-template-columns: min-content auto min-content min-content;
-
-        .finished-speaker-info {
-            display: flex;
-            .speaker-name {
-                flex-grow: 1;
-            }
-        }
-    }
-
-    .finished-speakers-start {
-        text-align: right;
-        font-size: 14px;
-    }
-
-    .center-text {
-        margin: auto 0;
-    }
-
-    .single-speaker-line {
-        .speaker-index {
-            font-weight: normal;
-        }
-        .speaker-info {
-            padding: 2px 0;
-        }
-    }
 }
 
 .current-speaker {
     margin: 10px 25px 0 25px;
+    padding: 0 0.75em;
+    border-radius: 4px;
 
     @include variables.phone {
         margin: 10px 0 0 0;
-    }
-
-    padding: 0 0.75em;
-    border-radius: 4px;
-    .speaker-start {
-        .mat-mdc-icon-button.speaker-control-button {
-            @include button.custom-size-button(46px, 42px);
-        }
-    }
-
-    .single-speaker-line .countdown {
-        font-size: 24px;
-        line-height: 24px;
-    }
-
-    .speech-type {
-        .user-subtitle,
-        .icon {
-            color: #fff;
-        }
     }
 }
 
@@ -138,14 +88,13 @@ os-sorting-list .line {
 
 .add-self-buttons {
     margin: 10px 20px;
+    display: inline-flex;
+    flex-wrap: wrap;
 
     @include variables.phone {
         padding: 10px 0;
         margin: 10px 0 0 0;
     }
-
-    display: inline-flex;
-    flex-wrap: wrap;
 
     button {
         margin: 5px;
@@ -154,18 +103,13 @@ os-sorting-list .line {
 
 .search-new-speaker-form {
     padding: 15px 25px 0 25px;
+    width: auto;
 
     @include variables.phone {
         padding: 15px 0 0 0;
     }
-
-    width: auto;
 }
 
 .centered-text {
     text-align: center;
-}
-
-.my-border-bottom {
-    border-bottom: 1px solid !important;
 }

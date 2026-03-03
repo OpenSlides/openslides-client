@@ -1,8 +1,8 @@
-FROM node:22.19-alpine as base
+FROM node:24.14-alpine AS base
 
 ## Setup
 ARG CONTEXT
-ENV NODE_VERSION=22.17.0
+ENV NODE_VERSION=24.10.14
 ENV APP_CONTEXT=${CONTEXT}
 
 ## Packages
@@ -26,16 +26,18 @@ RUN chmod +x command.sh
 CMD ["./command.sh"]
 
 # Development Image
-FROM base as dev
+FROM base AS dev
+
+COPY ./meta ./meta
 
 RUN apk add --no-cache git
 
 # Testing Image
 
-FROM dev as tests
+FROM dev AS tests
 
 # Production Image
-FROM base as build
+FROM base AS build
 
 ARG VERSION=dev
 RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version.txt || true
@@ -44,7 +46,7 @@ RUN [ -n "$VERSION" ] && echo "$VERSION ($(date +%Y-%m-%d))" >src/assets/version
 RUN npm run build
 
 # Prod wants nginx as base image for some reason
-FROM nginx:1.29.1 as prod
+FROM nginx:1.29.5 AS prod
 
 ## Setup
 ARG CONTEXT

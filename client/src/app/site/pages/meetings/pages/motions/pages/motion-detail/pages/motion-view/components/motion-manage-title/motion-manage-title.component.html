@@ -27,7 +27,7 @@
                 mat-icon-button
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
                 matTooltipPosition="right"
-                [hidden]="publicAccess"
+                [hidden]="publicAccess || isnotPartOfMeeting"
                 (click)="setFavorite(!isFavorite)"
             >
                 <mat-icon>{{ isFavorite ? 'star' : 'star_border' }}</mat-icon>

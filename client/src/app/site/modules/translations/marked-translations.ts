@@ -12,11 +12,6 @@ import { _ } from '@ngx-translate/core';
  * ```
  */
 
-// Core config strings
-_(
-    `<a href="https://openslides.com">OpenSlides</a> is a free web based presentation and assembly system for visualizing and controlling agenda, motions and elections of an assembly.`
-);
-
 // Backend error messages
 // Workflows
 _(`You cannot delete the last workflow of a meeting.`);
@@ -129,3 +124,4 @@ _(`anonymized`);
 // organization strings
 _(`Amount of meetings`);
 _(`Amount of accounts`);
+_(`The organizer is responsible for the content under press law.`);

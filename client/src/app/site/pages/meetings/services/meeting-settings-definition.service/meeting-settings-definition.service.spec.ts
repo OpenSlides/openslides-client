@@ -191,14 +191,14 @@ describe(`MeetingSettingsDefinitionService`, () => {
         for (let i = 1; i < 4; i++) {
             if (Array.isArray(values[i - 1][properties[i - 1]])) {
                 indices[i] = indices[i] % values[i - 1][properties[i - 1]].length;
+                values.push(values[i - 1][properties[i - 1]][indices[i]]);
+            } else {
+                values.push(values[i - 1][properties[i - 1]]);
             }
-            values.push(
-                Array.isArray(values[i - 1][properties[i - 1]])
-                    ? values[i - 1][properties[i - 1]][indices[i]]
-                    : values[i - 1][properties[i - 1]]
-            );
         }
-        expect(service.settingsMap[values[3]]).toBe(values[2]);
+        if (!values[2]?.text) {
+            expect(service.settingsMap[values[3]]).toBe(values[2]);
+        }
     });
 
     it(`test normal get methods`, () => {

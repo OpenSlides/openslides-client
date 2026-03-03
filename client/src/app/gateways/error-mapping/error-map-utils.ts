@@ -1,5 +1,6 @@
 import { _ } from '@ngx-translate/core';
 
+import { AgendaItemAction } from '../repositories/agenda';
 import { MeetingAction } from '../repositories/meetings';
 import { MotionAction } from '../repositories/motions';
 import { UserAction } from '../repositories/users/user-action';
@@ -17,7 +18,8 @@ export function isMapError(obj: any): obj is MapError {
 }
 
 /**
- * A type of map that maps regular expressions (of error messages) to either a cleaner string-message, a function calculating such a string message, or an Error-object containing such a string message.
+ * A type of map that maps regular expressions (of error messages) to either a cleaner string-message,
+ * a function calculating such a string message, or an Error-object containing such a string message.
  */
 export class ErrorMap extends Map<RegExp, string | MapError | ((input: string) => string | MapError)> {}
 
@@ -59,6 +61,7 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
         case MotionAction.CREATE_FORWARDED:
+        case AgendaItemAction.FORWARD:
         case UserAction.FORGET_PASSWORD_CONFIRM:
         case UserAction.SET_PASSWORD_SELF:
             return MatchAllErrorMap;

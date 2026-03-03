@@ -5,6 +5,7 @@ import {
     PollClassTypeVerbose,
     PollContentObject,
     PollData,
+    PollMethod,
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
@@ -137,12 +138,18 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
+            this.type === `named` &&
+            !this.is_pseudoanonymized &&
+            (this.isMotionPoll ||
+                (this.isAssignmentPoll &&
+                    !this.global_yes &&
+                    this.pollmethod === PollMethod.Y &&
+                    this.max_votes_amount === 1))
                 ? [
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: false,
+                          default: !!this.live_voting_enabled,
                           choices
                       }
                   ]
@@ -169,6 +176,4 @@ interface IPollRelations<C extends PollContentObject = any> {
     global_option: ViewOption;
 }
 export interface ViewPoll<C extends PollContentObject = any>
-    extends HasMeeting,
-        ViewModelRelations<IPollRelations<C>>,
-        Poll {}
+    extends HasMeeting, ViewModelRelations<IPollRelations<C>>, Poll {}

@@ -27,6 +27,11 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { ViewTopic } from '../../../view-models';
 import { TopicPollServiceModule } from './topic-poll-service.module';
 
+interface TopicPollTableEntry {
+    label: string;
+    data: number | undefined;
+}
+
 @Injectable({
     providedIn: TopicPollServiceModule
 })
@@ -115,19 +120,15 @@ export class TopicPollService extends PollService {
         );
     }
 
-    public getSortedChartLabels(poll: PollData): string[] {
+    public getSortedTableData(poll: PollData): TopicPollTableEntry[] {
         const data = this.getResultFromPoll(poll, YES_KEY);
-        const labels = this.getChartLabels(poll, true);
-        let labelsAndData = [];
+        const labels = poll.options.map(option => option.getOptionTitle().title);
+        let labelsAndData: TopicPollTableEntry[] = [];
         labels.forEach((value, index) => labelsAndData.push({ data: data[index], label: labels[index] }));
         labelsAndData = labelsAndData.sort((a: { data: number; label: string }, b: { data: number; label: string }) =>
             compareNumber(a.data, b.data)
         );
-        const sortedLabels = [];
-        labelsAndData.forEach(value => {
-            sortedLabels.push(value.label);
-        });
-        return sortedLabels;
+        return labelsAndData;
     }
 
     public override generateChartData(poll: PollData): ChartDate[] {

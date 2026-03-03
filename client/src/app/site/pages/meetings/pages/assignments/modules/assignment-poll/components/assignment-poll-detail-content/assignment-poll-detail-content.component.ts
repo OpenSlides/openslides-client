@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
@@ -9,6 +19,7 @@ import {
     PollTableData,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -24,8 +35,10 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: [`./assignment-poll-detail-content.component.scss`],
     standalone: false
 })
-export class AssignmentPollDetailContentComponent implements OnInit {
+export class AssignmentPollDetailContentComponent implements OnInit, AfterViewInit {
     private _poll: PollData;
+
+    public readonly hasLoaded = new Deferred<boolean>();
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
@@ -44,6 +57,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     @Input()
     public iconSize: `large` | `gigantic` = `large`;
+
+    @Input()
+    public inSlide = false;
+
+    @ViewChildren(`btn`)
+    public buttonElements!: QueryList<ElementRef>;
 
     public get chartData(): ChartData {
         return this._chartData;
@@ -83,6 +102,15 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public get isMethodYNA(): boolean {
         return this.method === PollMethod.YNA;
+    }
+
+    public get classOptionAmount(): string {
+        if (this.isMethodY || this.isMethodN) {
+            return `row-1`;
+        } else if (this.isMethodYN) {
+            return `row-2`;
+        }
+        return `row-3`;
     }
 
     public get isStarted(): boolean {
@@ -141,6 +169,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     }
 
     public constructor(
+        private translate: TranslateService,
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService,
@@ -167,6 +196,10 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             ).pipe(startWith(null)),
             this.themeService.currentGeneralColorsSubject
         ]).subscribe(() => this.setupTableData());
+    }
+
+    public ngAfterViewInit(): void {
+        setTimeout(() => this.hasLoaded.resolve(true));
     }
 
     private setupTableData(): void {
@@ -218,7 +251,8 @@ export class AssignmentPollDetailContentComponent implements OnInit {
             if (vote.amount < 0) {
                 return vote.amount;
             } else {
-                return this.poll!.votesvalid - vote.amount;
+                const amount_global_abstain = this.poll.global_option?.abstain ?? 0;
+                return this.poll!.votesvalid - vote.amount - amount_global_abstain;
             }
         } else {
             return vote.amount;
@@ -238,5 +272,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    public ariaLabel(str: string): string {
+        if (str === `place`) {
+            return this.translate.instant(`Candidate placement`);
+        }
+        return this.translate.instant(`Candidate name`);
     }
 }

@@ -10,13 +10,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { MotionEditorComponent } from 'src/app/site/pages/meetings/pages/motions/components/motion-editor/motion-editor.component';
 
 import { EditorComponent } from './components/editor/editor.component';
 import { EditorEmbedDialogComponent } from './components/editor-embed-dialog/editor-embed-dialog.component';
 import { EditorHtmlDialogComponent } from './components/editor-html-dialog/editor-html-dialog.component';
 import { EditorImageDialogComponent } from './components/editor-image-dialog/editor-image-dialog.component';
 import { EditorLinkDialogComponent } from './components/editor-link-dialog/editor-link-dialog.component';
-import { EditorTabNavigationDirective } from './directives/tab-navigation.directive';
+import { ArrowNavigationDirective } from './directives/tab-navigation.directive';
 
 const DECLARATIONS = [
     EditorComponent,
@@ -24,7 +25,7 @@ const DECLARATIONS = [
     EditorEmbedDialogComponent,
     EditorLinkDialogComponent,
     EditorHtmlDialogComponent,
-    EditorTabNavigationDirective
+    MotionEditorComponent
 ];
 
 @NgModule({
@@ -41,6 +42,7 @@ const DECLARATIONS = [
         MatMenuModule,
         MatTooltipModule,
         FormsModule,
+        ArrowNavigationDirective,
         OpenSlidesTranslationModule.forChild()
     ],
     exports: DECLARATIONS

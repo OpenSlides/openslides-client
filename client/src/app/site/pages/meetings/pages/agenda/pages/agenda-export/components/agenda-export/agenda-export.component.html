@@ -1,0 +1,218 @@
+<os-head-bar [editMode]="true" [saveText]="'Export'" (cancelEditEvent)="cancelExport()" (saveEvent)="exportAgenda()">
+    <div class="title-slot">
+        <h1 class="mock-h2" translate>Agenda export</h1>
+    </div>
+</os-head-bar>
+
+<div class="export-card">
+    <mat-tab-group
+        #tabGroup
+        mat-stretch-tabs="false"
+        (animationDone)="afterTabChanged()"
+        (selectedTabChange)="tabChanged($event)"
+    >
+        <mat-tab label="PDF">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+        <mat-tab label="CSV">
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #exportPdf>
+    <form [formGroup]="dialogForm">
+        <div class="export-wrapper">
+            <div>
+                <p class="toggle-group-head">{{ 'Content' | translate }}</p>
+                <mat-chip-listbox formControlName="content" multiple>
+                    <mat-chip-option
+                        #itemNumberChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="item_number"
+                        [disabled]="isDisabled(itemNumberChip.value)"
+                        [matBadgeHidden]="itemNumberChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Item number' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #titleChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="title"
+                        [matBadgeHidden]="titleChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Title' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #textChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="text"
+                        [disabled]="isDisabled(textChip.value)"
+                        [matBadgeHidden]="textChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Text' | translate }}</span>
+                    </mat-chip-option>
+                    @if (this.isPDFFormat) {
+                        <mat-chip-option
+                            #attachmentsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="attachments"
+                            [disabled]="isDisabled(attachmentsChip.value)"
+                            [matBadgeHidden]="attachmentsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Attachments' | translate }}</span>
+                        </mat-chip-option>
+                    }
+                    <mat-chip-option
+                        #moderationNotesChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="moderation_notes"
+                        [disabled]="isDisabled(moderationNotesChip.value)"
+                        [matBadgeHidden]="moderationNotesChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Moderation note' | translate }}</span>
+                    </mat-chip-option>
+                    <mat-chip-option
+                        #listOfSpeakersChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="list_of_speakers"
+                        [disabled]="isDisabled(listOfSpeakersChip.value)"
+                        [matBadgeHidden]="listOfSpeakersChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'List of speakers' | translate }}</span>
+                    </mat-chip-option>
+                    @if (this.isPDFFormat) {
+                        <mat-chip-option
+                            #pollsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="polls"
+                            [disabled]="isDisabled(pollsChip.value)"
+                            [matBadgeHidden]="pollsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Polls' | translate }}</span>
+                        </mat-chip-option>
+                    }
+                    <mat-chip-option
+                        #internalCommentaryChip
+                        matBadge="&check;"
+                        matBadgeOverlap="true"
+                        value="internal_commentary"
+                        [disabled]="isDisabled(internalCommentaryChip.value)"
+                        [matBadgeHidden]="internalCommentaryChip.selected ? 'false' : 'true'"
+                    >
+                        <span>{{ 'Comment' | translate }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </div>
+            @if (isPDFFormat) {
+                @if (agendaItems.length > 1) {
+                    <div>
+                        <p class="toggle-group-head">{{ 'Page layout' | translate }}</p>
+                        <mat-chip-listbox formControlName="pageLayout" multiple>
+                            <mat-chip-option
+                                #tableOfContentChip
+                                matBadge="&check;"
+                                matBadgeOverlap="true"
+                                value="table_of_content"
+                                [matBadgeHidden]="tableOfContentChip.selected ? 'false' : 'true'"
+                            >
+                                <span>{{ 'Table of contents' | translate }}</span>
+                            </mat-chip-option>
+                            <mat-chip-option
+                                #lineBreakChip
+                                matBadge="&check;"
+                                matBadgeOverlap="true"
+                                value="line_break"
+                                [matBadgeHidden]="lineBreakChip.selected ? 'false' : 'true'"
+                            >
+                                <span>{{ 'Enforce page breaks' | translate }}</span>
+                            </mat-chip-option>
+                        </mat-chip-listbox>
+                    </div>
+                }
+                <div>
+                    <p class="toggle-group-head">{{ 'Header and footer' | translate }}</p>
+                    <mat-chip-listbox formControlName="headerFooter" multiple>
+                        <mat-chip-option
+                            #headerChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="header"
+                            [matBadgeHidden]="headerChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Header' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #pageChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="page"
+                            [matBadgeHidden]="pageChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Page numbers' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #currentDateChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="current_date"
+                            [matBadgeHidden]="currentDateChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Current date' | translate }}</span>
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+            }
+            @if (isCSVFormat) {
+                <div>
+                    <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
+                    <mat-chip-listbox formControlName="metaInfo" multiple>
+                        <mat-chip-option
+                            #durationChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="duration"
+                            [matBadgeHidden]="durationChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Duration' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #tagsChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="tags"
+                            [matBadgeHidden]="tagsChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Tags' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #agendaVisibilityChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="agenda_visibility"
+                            [matBadgeHidden]="agendaVisibilityChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Agenda visibility' | translate }}</span>
+                        </mat-chip-option>
+                        <mat-chip-option
+                            #doneChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="done"
+                            [matBadgeHidden]="doneChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Done' | translate }}</span>
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+            }
+        </div>
+    </form>
+</ng-template>

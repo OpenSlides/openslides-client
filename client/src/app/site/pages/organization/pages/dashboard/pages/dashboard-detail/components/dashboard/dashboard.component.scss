@@ -280,6 +280,8 @@ os-dashboard {
             .meeting-box {
                 &--mid {
                     font-size: 22px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
                     @media (max-width: 960px) {
                         font-size: 18px;

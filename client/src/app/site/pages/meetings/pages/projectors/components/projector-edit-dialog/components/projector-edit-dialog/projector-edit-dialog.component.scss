@@ -36,10 +36,6 @@ form {
     }
 }
 
-.preview-container {
-    border: 1px solid lightgray;
-}
-
 .no-markup {
     /* Do not let the a tag ruin the projector */
     color: inherit;
@@ -48,4 +44,9 @@ form {
 
 .mat-mdc-dialog-actions {
     display: block;
+}
+
+.preview-container {
+    border: 1px solid lightgray;
+    width: calc(100% - 2px);
 }

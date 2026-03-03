@@ -14,6 +14,9 @@
             <h4>
                 <span>{{ 'Changed version in line' | translate }}</span>
                 {{ lineRange.from }}:
+                @if (editReco) {
+                    <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                }
             </h4>
         }
         @if (lineRange.to !== lineRange.from) {
@@ -22,10 +25,47 @@
                 {{ lineRange.from }}
                 <span>{{ 'to' | translate }}</span>
                 {{ lineRange.to }}:
+                @if (editReco) {
+                    <mat-icon class="small-icon" (click)="toggleLineRange()">edit</mat-icon>
+                }
             </h4>
         }
+        @if (editLineRange) {
+            <div>
+                <mat-form-field class="margin-right-small width-medium">
+                    <mat-label>{{ 'From' | translate }}</mat-label>
+                    <input
+                        formControlName="line_from"
+                        matInput
+                        type="number"
+                        [errorStateMatcher]="parentErrorStateMatcher"
+                    />
+                    @if (contentForm.hasError('range_error')) {
+                        <mat-error>{{ 'First value must be less or equal than second value.' | translate }}</mat-error>
+                    } @else if (contentForm.get(`line_from`).hasError('min')) {
+                        <mat-error>{{ 'Value must be positive.' | translate }}</mat-error>
+                    } @else if (contentForm.hasError('line_check_error')) {
+                        <mat-error>{{ 'Collision with existing change recommendation' | translate }}</mat-error>
+                    }
+                </mat-form-field>
+                <mat-form-field class="width-medium">
+                    <mat-label>{{ 'To' | translate }}</mat-label>
+                    <input
+                        formControlName="line_to"
+                        matInput
+                        type="number"
+                        [errorStateMatcher]="parentErrorStateMatcher"
+                    />
+                    @if (contentForm.hasError('range_error')) {
+                        <mat-error>{{ 'First value must be less or equal than second value.' | translate }}</mat-error>
+                    } @else if (contentForm.hasError('line_check_error')) {
+                        <mat-error>{{ 'Collision with existing change recommendation' | translate }}</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+        }
         <div>
-            <os-editor formControlName="text"></os-editor>
+            <os-motion-editor formControlName="text"></os-motion-editor>
         </div>
 
         <mat-checkbox formControlName="public">{{ 'Public' | translate }}</mat-checkbox>
@@ -33,7 +73,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-    <button mat-button (click)="submitChanges()">
+    <button mat-button [disabled]="contentForm.invalid" (click)="submitChanges()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button mat-dialog-close>

@@ -75,7 +75,8 @@ interface IAssignmentRelations extends HasPolls<ViewAssignment> {
     polls: ViewPoll<ViewAssignment>[];
 }
 export interface ViewAssignment
-    extends Assignment,
+    extends
+        Assignment,
         ViewModelRelations<IAssignmentRelations>,
         HasMeeting,
         HasAttachmentMeetingMediafiles,

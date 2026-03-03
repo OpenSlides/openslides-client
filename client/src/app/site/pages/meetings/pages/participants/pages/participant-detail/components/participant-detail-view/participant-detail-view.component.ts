@@ -132,6 +132,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public readonly groups: Observable<ViewGroup[]>;
 
+    public get isMeetingAdminAndEditSelf(): boolean {
+        return this.operator.isMeetingAdmin && this.user.id === this.operator.user?.id;
+    }
+
     public get showVoteWeight(): boolean {
         const isVoteWeightEnabled = this._isElectronicVotingEnabled && this._isVoteWeightEnabled;
         return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;

@@ -1,5 +1,5 @@
 @if (chatGroupObservable | async; as group) {
-    <div>
+    <div class="flex-column">
         <div class="background-primary flex-vertical-center chat-group-label-wrapper">
             @if (isMobileObservable | async) {
                 <button mat-icon-button (click)="backButtonClicked.emit()">
@@ -58,6 +58,7 @@
 }
 @if (hasWritePermissionsObservable | async) {
     <os-chat-group-detail-message-form
+        class="flex-grow"
         [currentMessage]="toEditChatMessageObservable | async"
         (editingCanceled)="cancelEditingChatMessage()"
         (messageSent)="sendChatMessage($event)"

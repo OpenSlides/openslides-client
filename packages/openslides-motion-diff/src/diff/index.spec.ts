@@ -19,6 +19,7 @@ describe(`MotionDiffService`, () => {
             title?: string;
             title_change?: boolean;
             change_type?: UnifiedChangeType;
+            rejected?: boolean;
         }) {}
 
         get isTitleChange(): boolean {
@@ -59,6 +60,10 @@ describe(`MotionDiffService`, () => {
 
         get lineFrom(): number {
             return this.obj.line_from;
+        }
+
+        get isRejected(): boolean {
+            return !!this.obj.rejected;
         }
     }
 
@@ -1600,7 +1605,7 @@ describe(`MotionDiffService`, () => {
             });
             const changeRec = new TestChangeRecommendation({
                 id: 2,
-                // rejected: false,
+                rejected: false,
                 line_from: 1,
                 line_to: 1,
                 text: `<p>Test 1y</p>`,
@@ -1621,9 +1626,9 @@ describe(`MotionDiffService`, () => {
             );
 
             expect(out).toBe(
-                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
+                `<div data-change-is-colliding="" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
                 `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
-                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
+                `<div data-change-is-colliding="" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
                 `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
                 `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 2x</p>` +
                 `<p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 3</p>`

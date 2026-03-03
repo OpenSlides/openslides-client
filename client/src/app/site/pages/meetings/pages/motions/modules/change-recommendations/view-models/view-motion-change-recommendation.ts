@@ -75,6 +75,4 @@ interface IMotionChangeRecommendationRelations {
     motion: ViewMotion;
 }
 export interface ViewMotionChangeRecommendation
-    extends MotionChangeRecommendation,
-        ViewModelRelations<IMotionChangeRecommendationRelations>,
-        HasMeeting {}
+    extends MotionChangeRecommendation, ViewModelRelations<IMotionChangeRecommendationRelations>, HasMeeting {}

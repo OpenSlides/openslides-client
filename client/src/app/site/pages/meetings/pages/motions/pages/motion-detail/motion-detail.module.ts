@@ -60,6 +60,7 @@ import { MotionFinalVersionComponent } from './pages/motion-view/components/moti
 import { MotionHighlightFormComponent } from './pages/motion-view/components/motion-highlight-form/motion-highlight-form.component';
 import { MotionManageMotionMeetingUsersComponent } from './pages/motion-view/components/motion-manage-motion-meeting-users/motion-manage-motion-meeting-users.component';
 import { MotionManagePollsComponent } from './pages/motion-view/components/motion-manage-polls/motion-manage-polls.component';
+import { MotionManageSupportersComponent } from './pages/motion-view/components/motion-manage-supporters/motion-manage-supporters.component';
 import { MotionManageTimestampComponent } from './pages/motion-view/components/motion-manage-timestamp/motion-manage-timestamp.component';
 import { MotionManageTitleComponent } from './pages/motion-view/components/motion-manage-title/motion-manage-title.component';
 import { MotionMetaDataComponent } from './pages/motion-view/components/motion-meta-data/motion-meta-data.component';
@@ -138,12 +139,12 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         OpenSlidesDateAdapterModule,
         NgxMaterialTimepickerModule,
         DatepickerModule,
-
         // Detail view
         ScrollingModule,
         ChipSelectModule,
         MatBadgeModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MotionManageSupportersComponent
     ]
 })
 export class MotionDetailModule {}
