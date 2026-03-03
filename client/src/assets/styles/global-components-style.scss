@@ -339,9 +339,15 @@
         }
     }
 
-    .assignment-result-table {
-        tr {
+    .assignment-results {
+        .row:not(:last-child) {
             border-bottom: 1px solid mat.m2-get-color-from-palette($background, focused-button);
+        }
+        .cell {
+            &:focus {
+                outline: if($is-dark-theme, rgba(255, 255, 255, 0.55), rgba(0, 0, 0, 0.55)) solid 3px;
+                background-color: if($is-dark-theme, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.05));
+            }
         }
     }
 
