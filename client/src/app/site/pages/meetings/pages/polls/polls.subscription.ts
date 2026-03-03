@@ -15,6 +15,10 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         {
             idField: `config_id`,
             fieldset: FULL_FIELDSET
+        },
+        {
+            idField: `ballot_ids`,
+            fieldset: [`represented_meeting_user_id`, `poll_id`]
         }
     ]
 };

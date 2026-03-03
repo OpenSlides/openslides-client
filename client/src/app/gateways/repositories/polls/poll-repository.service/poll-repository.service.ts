@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { Decimal } from 'src/app/domain/definitions/key-types';
+import { Decimal, Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { VoteApiService } from 'src/app/gateways/vote-api.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { BallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
@@ -13,6 +13,7 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { BallotRepositoryService } from '../ballot-repository.service';
 import { PollAction } from './poll.action';
+import { switchMap, takeWhile, map, Observable } from 'rxjs';
 
 interface AnalogPollVotesValues {
     votescast?: Decimal;
@@ -289,6 +290,21 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         ) {
             throw new Error(`Exactly one of text, content_object_id or poll_candidate_user_ids has to be given!`);
         }
+    }
+
+    /**
+     * This method subscribes to polls and waits until the poll got
+     * voted for or the poll finished
+     *
+     * @param poll The poll that should be subscribed
+     * @return the ViewPoll
+     */
+    public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewBallot[]> {
+        return this.getViewModelObservable(pollId).pipe(
+            takeWhile(poll => poll.state === PollState.Started),
+            switchMap(poll => poll.ballots$),
+            map(ballots => ballots.filter(b => b.represented_meeting_user_id !== meetingUserId))
+        );
     }
 
     public async resetPoll(poll: Identifiable): Promise<void> {

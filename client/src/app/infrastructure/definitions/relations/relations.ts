@@ -1069,6 +1069,12 @@ export const RELATIONS: Relation[] = [
         MField: `option`,
         OField: `votes`
     }),
+    ...makeM2O({
+        MViewModel: ViewBallot,
+        OViewModel: ViewPoll,
+        MField: `option`,
+        OField: `ballots`
+    }),
     ...makeGenericO2O<ViewPoll, HasPoll>({
         viewModel: ViewPoll,
         possibleViewModels: [

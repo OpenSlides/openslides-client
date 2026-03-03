@@ -56,7 +56,11 @@ export class VoteApiService {
         return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/reset`, {});
     }
 
-    public vote(id: Id, payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/vote`, payload);
+    public vote(id: Id, value: unknown, meetingUserId: Id, split = false): Promise<any> {
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/vote`, {
+            meeting_user_id: meetingUserId,
+            value,
+            split
+        });
     }
 }
