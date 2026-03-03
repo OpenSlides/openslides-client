@@ -13,38 +13,6 @@
         height: auto;
         margin: 10px 0;
     }
-
-    .finished-speakers-grid {
-        font-size: 14px;
-        display: grid;
-        grid-gap: 1em;
-        grid-template-columns: min-content auto min-content min-content;
-
-        .finished-speaker-info {
-            display: flex;
-            .speaker-name {
-                flex-grow: 1;
-            }
-        }
-    }
-
-    .finished-speakers-start {
-        text-align: right;
-        font-size: 14px;
-    }
-
-    .center-text {
-        margin: auto 0;
-    }
-
-    .single-speaker-line {
-        .speaker-index {
-            font-weight: normal;
-        }
-        .speaker-info {
-            padding: 2px 0;
-        }
-    }
 }
 
 .current-speaker {
@@ -54,24 +22,6 @@
 
     @include variables.phone {
         margin: 10px 0 0 0;
-    }
-
-    .speaker-start {
-        .mat-mdc-icon-button.speaker-control-button {
-            @include button.custom-size-button(46px, 42px);
-        }
-    }
-
-    .single-speaker-line .countdown {
-        font-size: 24px;
-        line-height: 24px;
-    }
-
-    .speech-type {
-        .user-subtitle,
-        .icon {
-            color: #fff;
-        }
     }
 }
 
@@ -162,8 +112,4 @@ os-sorting-list .line {
 
 .centered-text {
     text-align: center;
-}
-
-.my-border-bottom {
-    border-bottom: 1px solid !important;
 }

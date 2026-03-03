@@ -5,10 +5,10 @@
                 <div class="button-group">
                     <button
                         #btn
-                        #setTab="osTabNavigation"
+                        #setTab="osArrowNavigation"
                         class="text"
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [ngClass]="{ active: isGodButtonActive }"
@@ -22,7 +22,7 @@
                         #btn
                         class="more"
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [matMenuTriggerFor]="formatMenu"
@@ -143,7 +143,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Bold' | translate"
@@ -157,7 +157,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Italic' | translate"
@@ -172,7 +172,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Underline' | translate"
@@ -187,7 +187,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Strikethrough' | translate"
@@ -205,7 +205,7 @@
                     <button
                         #btn
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Text color' | translate"
@@ -229,7 +229,7 @@
                         <input
                             #btn
                             list="text-colors"
-                            osTabNavigation
+                            osArrowNavigation
                             type="color"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Text color' | translate"
@@ -247,7 +247,7 @@
                     <button
                         #btn
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [matTooltip]="'Background color' | translate"
@@ -269,7 +269,7 @@
                         <input
                             #btn
                             list="background-colors"
-                            osTabNavigation
+                            osArrowNavigation
                             type="color"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Background color' | translate"
@@ -284,7 +284,7 @@
             <button
                 #btn
                 mat-ripple
-                osTabNavigation
+                osArrowNavigation
                 type="button"
                 [buttonList]="buttonElements"
                 [matTooltip]="'Clear formatting' | translate"
@@ -299,7 +299,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Bullet list' | translate"
@@ -314,7 +314,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Numbered list' | translate"
@@ -333,7 +333,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Insert/edit link' | translate"
@@ -348,7 +348,7 @@
                         <button
                             #btn
                             mat-ripple
-                            osTabNavigation
+                            osArrowNavigation
                             type="button"
                             [buttonList]="buttonElements"
                             [matTooltip]="'Insert/edit image' | translate"
@@ -365,9 +365,9 @@
                 <div class="button-group">
                     <button
                         #btn
-                        #isDisabled="osTabNavigation"
+                        #isDisabled="osArrowNavigation"
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [disabled]="!editor.can().undo()"
@@ -379,9 +379,9 @@
 
                     <button
                         #btn
-                        #isDisabled="osTabNavigation"
+                        #isDisabled="osArrowNavigation"
                         mat-ripple
-                        osTabNavigation
+                        osArrowNavigation
                         type="button"
                         [buttonList]="buttonElements"
                         [disabled]="!editor.can().redo()"
@@ -396,9 +396,9 @@
             @if (isExtensionActive('clipboardTextSerializer')) {
                 <button
                     #btn
-                    #setTab="osTabNavigation"
+                    #setTab="osArrowNavigation"
                     mat-ripple
-                    osTabNavigation
+                    osArrowNavigation
                     type="button"
                     [buttonList]="buttonElements"
                     [matTooltip]="'Source code' | translate"
