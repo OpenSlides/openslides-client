@@ -127,9 +127,7 @@ export class SequentialNumberMappingService {
     }
 
     private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber & HasMeetingId): void {
-        if (!viewModel.meeting_id && viewModel.getActiveMeetingId()) {
-            viewModel.meeting_id = viewModel.getActiveMeetingId();
-        } else if (!viewModel.meeting_id && !viewModel.getActiveMeetingId()) {
+        if (!viewModel.meeting_id) {
             console.warn(`Added sequential number mapping view without meeting id`, viewModel, viewModel.COLLECTION);
         }
         const meetingIdSequentialNumber = `${viewModel.meeting_id}/${viewModel.sequential_number}`;
