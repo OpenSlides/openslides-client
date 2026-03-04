@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { map, Observable, switchMap, takeWhile } from 'rxjs';
 import { Decimal, Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
@@ -13,7 +14,6 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { BallotRepositoryService } from '../ballot-repository.service';
 import { PollAction } from './poll.action';
-import { switchMap, takeWhile, map, Observable } from 'rxjs';
 
 interface AnalogPollVotesValues {
     votescast?: Decimal;
@@ -303,7 +303,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.getViewModelObservable(pollId).pipe(
             takeWhile(poll => poll.state === PollState.Started),
             switchMap(poll => poll.ballots$),
-            map(ballots => ballots.filter(b => b.represented_meeting_user_id !== meetingUserId))
+            map(ballots => ballots.filter(b => b.represented_meeting_user_id === meetingUserId))
         );
     }
 

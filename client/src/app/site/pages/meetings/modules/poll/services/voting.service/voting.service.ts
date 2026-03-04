@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -40,6 +42,8 @@ export class VotingService {
     private _voteDelegationEnabled = false;
     private _forbidDelegationToVote = false;
 
+    private pollRepo = inject(PollRepositoryService);
+
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private operator: OperatorService,
@@ -52,6 +56,13 @@ export class VotingService {
         this.meetingSettingsService
             .get(`users_forbid_delegator_to_vote`)
             .subscribe(enabled => (this._forbidDelegationToVote = enabled));
+    }
+
+    /**
+     * checks whether the operator can vote on the given poll
+     */
+    public hasVoted(poll: ViewPoll, user?: ViewUser): Observable<boolean> {
+        return this.pollRepo.pollBallotsByUser(poll.id, user.id).pipe(map(ballots => !!ballots.length));
     }
 
     /**

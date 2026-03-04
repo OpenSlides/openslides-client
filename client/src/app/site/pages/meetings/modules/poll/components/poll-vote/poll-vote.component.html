@@ -8,7 +8,14 @@
 
     @switch (configType()) {
         @case ('poll_config_approval') {
-            <os-poll-approval-vote [loading]="loading()" [poll]="poll()" [user]="user()" (voted)="sendVote($event)"></os-poll-approval-vote>
+            <os-poll-approval-vote
+                [loading]="loading()"
+                [poll]="poll()"
+                [user]="user()"
+                (voted)="sendVote($event)"
+            ></os-poll-approval-vote>
         }
     }
+
+    <os-poll-cannot-vote-message [isDeliveringVote]="loading()" [poll]="poll()" [user]="user()" />
 </div>

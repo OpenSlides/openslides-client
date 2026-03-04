@@ -7,10 +7,11 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { PollApprovalVoteComponent } from '../poll-approval-vote/poll-approval-vote.component';
+import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
 
 @Component({
     selector: 'os-poll-vote',
-    imports: [PollApprovalVoteComponent, TranslatePipe],
+    imports: [PollApprovalVoteComponent, PollCannotVoteMessageComponent, TranslatePipe],
     templateUrl: './poll-vote.component.html',
     styleUrl: './poll-vote.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

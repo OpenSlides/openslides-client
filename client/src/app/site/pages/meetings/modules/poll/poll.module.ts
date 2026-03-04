@@ -35,8 +35,7 @@ const COMPONENTS = [
     PollFilteredVotesChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
-    VotesTableComponent,
-    PollCannotVoteMessageComponent
+    VotesTableComponent
 ];
 
 @NgModule({
@@ -44,6 +43,7 @@ const COMPONENTS = [
     imports: [
         CommonModule,
         ChartComponent,
+        PollCannotVoteMessageComponent,
         PollProgressComponent,
         SingleOptionChartTableComponent,
         MatProgressBarModule,
@@ -72,6 +72,7 @@ const COMPONENTS = [
         ...COMPONENTS,
         SingleOptionChartTableComponent,
         ChartComponent,
+        PollCannotVoteMessageComponent,
         PollProgressComponent
     ],
     providers: [...PIPES]

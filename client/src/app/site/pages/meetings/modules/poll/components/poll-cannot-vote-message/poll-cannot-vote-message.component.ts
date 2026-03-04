@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input } from '@angular/core';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
+import { combineLatest, distinctUntilChanged } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
@@ -11,45 +15,32 @@ import { VotingService } from '../../services/voting.service';
     selector: `os-poll-cannot-vote-message`,
     templateUrl: `./poll-cannot-vote-message.component.html`,
     styleUrls: [`./poll-cannot-vote-message.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [TranslatePipe, MatIconModule, MatProgressSpinnerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
-    @Input()
-    public delegationUser: ViewUser;
+    public poll = input.required<ViewPoll>();
+    public user = input.required<ViewUser>();
 
-    @Input()
-    public hasAlreadyVoted: boolean;
+    public isDeliveringVote = input(false);
 
-    @Input()
-    public isDeliveringVote = false;
+    public hasDelegations = input(false);
 
-    @Input()
-    public hasDelegations = false;
-
-    @Input()
-    public poll: ViewPoll;
-
-    public user: ViewUser;
+    public hasAlreadyVoted = computed(() => {
+        return this.hasVoted.hasValue() && this.hasVoted.value();
+    });
 
     public get isUserPresent(): boolean {
-        return this.user?.isPresentInMeeting();
+        return this.actingUser().isPresentInMeeting();
     }
 
-    public constructor(
-        operator: OperatorService,
-        private votingService: VotingService,
-        private cd: ChangeDetectorRef
-    ) {
+    private operator = inject(OperatorService);
+    private votingService = inject(VotingService);
+
+    private actingUser = toSignal(this.operator.userObservable);
+
+    public constructor(private cd: ChangeDetectorRef) {
         super();
-        this.subscriptions.push(
-            operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
-                if (user) {
-                    this.user = user;
-                }
-                this.cd.markForCheck();
-            })
-        );
         this.subscriptions.push(
             combineLatest([
                 this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
@@ -60,8 +51,13 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
         );
     }
 
-    public getVotingError(user: ViewUser = this.user): string {
-        return this.votingService.getVotingProhibitionReasonVerbose(this.poll, user) || ``;
+    public hasVoted = rxResource({
+        params: () => ({ poll: this.poll(), user: this.user() }),
+        stream: ({ params }) => this.votingService.hasVoted(params.poll, params.user)
+    });
+
+    public getVotingError(user: ViewUser = this.actingUser()): string {
+        return this.votingService.getVotingProhibitionReasonVerbose(this.poll(), user) || ``;
     }
 
     public getVotingErrorFromName(errorName: string): string {
