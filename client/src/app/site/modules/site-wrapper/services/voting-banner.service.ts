@@ -63,11 +63,11 @@ export class VotingBannerService {
         });
     }
 
-    private updateBanner(polls: ViewPoll[], voted: Record<Id, Id[]>): void {
+    private updateBanner(polls: ViewPoll[], voted: Record<Id, boolean>): void {
         if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
             const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(
-                poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
+                poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] === false
             );
         } else {
             this.pollsToVote = [];

@@ -44,7 +44,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
-        this.updatePoll();
     }
 
     public get poll(): ViewPoll<C> {
@@ -180,7 +179,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                         this.setupDelegations(this.poll.user_has_voted_for_delegations);
                     }
 
-                    this.setupHasVotedSubscription();
                     this._isReady = true;
                     this.cd.markForCheck();
                 }
@@ -450,51 +448,6 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 this.formControlMap[key].setValue(0);
                 this.formControlMap[key].disable();
             }
-        }
-    }
-
-    private updatePoll(): void {
-        if (this._isReady) {
-            this.setupHasVotedSubscription();
-        }
-        this.defineVoteOptions();
-        this.cd.markForCheck();
-    }
-
-    private setupHasVotedSubscription(): void {
-        if (!this.votedSubscription || this.votedSubscription.closed || this.votedSubscriptionPollId !== this.poll.id) {
-            if (this.votedSubscription) {
-                this.votedSubscription.unsubscribe();
-            }
-
-            this.votedSubscription = this.voteRepo.subscribeVoted(this.poll).subscribe(votedFor => {
-                if (votedFor[this.poll.id] === undefined) {
-                    return;
-                }
-
-                const votes = votedFor[this.poll.id] || [];
-                if (
-                    ((!this.poll.live_votes && votes.length > 0) ||
-                        votes.filter(m => this.poll.live_votes[m] !== undefined).length > 0) &&
-                    this.poll.hasVoted
-                ) {
-                    return;
-                }
-                if (this.user) {
-                    this.alreadyVoted[this.user.id] = votes.includes(this.user.id);
-                    if (this.delegations) {
-                        this.setupDelegations(votes);
-                    }
-                }
-
-                for (const key of Object.keys(this._canVoteForSubjectMap)) {
-                    this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
-                }
-
-                this.cd.markForCheck();
-            });
-            this.votedSubscriptionPollId = this.poll.id;
-            this.subscriptions.push(this.votedSubscription);
         }
     }
 

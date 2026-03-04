@@ -5,7 +5,6 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { VoteApiService } from 'src/app/gateways/vote-api.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
-import { BallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -35,7 +34,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
 
     public constructor(
         repoServiceCollector: RepositoryMeetingServiceCollectorService,
-        private voteController: BallotControllerService,
         private voteRepo: BallotRepositoryService
     ) {
         super(repoServiceCollector, Poll);
@@ -363,13 +361,5 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
                 await this.stopPoll(poll);
                 break;
         }
-    }
-
-    protected override createViewModel(model: Poll): ViewPoll {
-        const viewPoll = super.createViewModel(model);
-
-        this.voteController.subscribeVoted(viewPoll);
-
-        return viewPoll;
     }
 }
