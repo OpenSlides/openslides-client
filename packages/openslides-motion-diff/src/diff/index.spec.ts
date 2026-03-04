@@ -822,6 +822,25 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
+        it(`handles changed text within nested lists (part 2)`, () => {
+            const before = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1` +
+                    `</li><li>Ebene 2.2` +
+                    `</li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1 a</li>` +
+                    `<li>Ebene 2.2</li>` +
+                    `</ul></li></ul>`,
+                expected = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1<del></del><ins> a</ins></li>` +
+                    `<li>Ebene 2.2` +
+                    `</li></ul></li></ul>`
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(expected);
+        });
+
         it(`handles replaced text at the end of nested lists`, () => {
                 // Hint: line number should be moved into first element
                 const before =
