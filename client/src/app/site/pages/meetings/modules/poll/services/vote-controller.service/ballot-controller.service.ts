@@ -38,10 +38,4 @@ export class BallotControllerService extends BaseMeetingControllerService<ViewBa
             })
         );
     }
-
-    public async setHasVotedOnPoll(poll: ViewPoll, voteResp: Id[]): Promise<void> {
-        await this.operator.ready;
-        poll.hasVoted = voteResp?.some(id => id === this.operator.operatorId) ?? false;
-        poll.user_has_voted_for_delegations = voteResp?.filter(id => id !== this.operator.operatorId) ?? [];
-    }
 }
