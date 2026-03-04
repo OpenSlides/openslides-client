@@ -69,7 +69,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
