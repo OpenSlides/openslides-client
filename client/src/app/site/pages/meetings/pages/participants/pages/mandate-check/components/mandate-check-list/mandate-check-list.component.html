@@ -63,24 +63,24 @@
                             {{ 'Gender' | translate }}
                         </button>
                     </h2>
-                    <div>
-                        <button matIconButton (click)="toggle(entry.id, true)">
-                            @if (toggleGenderMap.get(entry.id)) {
-                                <mat-icon>keyboard_arrow_up</mat-icon>
-                            } @else {
-                                <mat-icon>keyboard_arrow_down</mat-icon>
-                            }
-                        </button>
-                    </div>
+                    <button matIconButton (click)="toggle(entry.id, true)">
+                        @if (toggleGenderMap.get(entry.id)) {
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                        } @else {
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                        }
+                    </button>
                 </div>
                 @if (toggleGenderMap.get(entry.id)) {
-                    <div class="card-grid">
+                    <div class="gender-map-grid">
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
-                                <div></div>
-                                <div class="foreground-active align-left">
-                                    @if (entry.getTotalCount(gender.id)) {
-                                        <div class="text-medium">
+                                <!-- LEFT EMPTY -->
+                                <div class="row">
+                                    <div></div>
+                                    <div class="foreground-active align-left">
+                                        @if (entry.getTotalCount(gender.id)) {
+                                            <!-- FIRST VAL -->
                                             {{ entry.genderEntryMap.get(gender.id)?.present }}
                                             {{
                                                 displayPercent(
@@ -88,30 +88,33 @@
                                                         entry.presentUserIds.length
                                                 )
                                             }}
-                                        </div>
-                                    }
-                                </div>
-                                <div class="justify-center bold">
-                                    <div>{{ entry.genderEntryMap.get(gender.id)?.label | translate }}</div>
-                                </div>
-                                <div class="text align-left">
-                                    @if (entry.getTotalCount(gender.id)) {
-                                        <div class="text-medium">
+                                        }
+                                    </div>
+                                    <div class="justify-center bold">
+                                        <!-- SECOND VAL -->
+                                        {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
+                                    </div>
+                                    <div class="text align-right text-medium">
+                                        @if (entry.getTotalCount(gender.id)) {
+                                            <!-- THIRD VAL -->
                                             {{ entry.getTotalCount(gender.id) }}
                                             {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
-                                        </div>
-                                    }
+                                        }
+                                    </div>
+                                    <!-- LEFT EMPTY -->
+                                    <div></div>
                                 </div>
-                                <div></div>
                             }
                         }
                     </div>
                 }
                 <div class="header-grid">
                     <h2 class="text-large-bold color-inherit">
-                        <button matButton (click)="toggle(entry.id)">
-                            {{ 'Participants' | translate }}
-                        </button>
+                        <div class="row">
+                            <button matButton (click)="toggle(entry.id)">
+                                {{ 'Participants' | translate }}
+                            </button>
+                        </div>
                     </h2>
                     <div>
                         <button matIconButton (click)="toggle(entry.id)">
@@ -130,7 +133,7 @@
                                 {{ 'Present' | translate }}
                             </div>
                             @for (userId of entry.presentUserIds; track userId) {
-                                <div class="margin-left-large text foreground-active">{{ getName(userId) }}</div>
+                                <div class="margin-left-medium text foreground-active">{{ getName(userId) }}</div>
                             }
                         </div>
                         <div>
@@ -138,7 +141,7 @@
                                 {{ 'Absent' | translate }}
                             </div>
                             @for (userId of entry.absentUserIds; track userId) {
-                                <div class="margin-left-large color-black">{{ getName(userId) }}</div>
+                                <div class="margin-left-medium color-black">{{ getName(userId) }}</div>
                             }
                         </div>
                     </div>
