@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
-import { combineLatest, distinctUntilChanged } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
-import { VotingService } from '../../services/voting.service';
+import { VotingProhibition, VotingService } from '../../services/voting.service';
 
 @Component({
     selector: `os-poll-cannot-vote-message`,
@@ -22,8 +21,9 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
     public poll = input.required<ViewPoll>();
     public user = input.required<ViewUser>();
 
-    public isDeliveringVote = input(false);
+    public reason = input<VotingProhibition>();
 
+    public isDeliveringVote = input(false);
     public hasDelegations = input(false);
 
     public hasAlreadyVoted = computed(() => {
@@ -39,16 +39,8 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
 
     private actingUser = toSignal(this.operator.userObservable);
 
-    public constructor(private cd: ChangeDetectorRef) {
+    public constructor() {
         super();
-        this.subscriptions.push(
-            combineLatest([
-                this.meetingSettingsService.get(`users_enable_vote_delegations`).pipe(distinctUntilChanged()),
-                this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged())
-            ]).subscribe(_ => {
-                this.cd.markForCheck();
-            })
-        );
     }
 
     public hasVoted = rxResource({
@@ -56,11 +48,7 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
         stream: ({ params }) => this.votingService.hasVoted(params.poll, params.user)
     });
 
-    public getVotingError(user: ViewUser = this.actingUser()): string {
-        return this.votingService.getVotingProhibitionReasonVerbose(this.poll(), user) || ``;
-    }
-
-    public getVotingErrorFromName(errorName: string): string {
+    public getVotingErrorFromName(errorName: VotingProhibition): string {
         return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 }

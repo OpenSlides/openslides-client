@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
@@ -42,6 +43,7 @@ export class VotingService {
     private _voteDelegationEnabled = false;
     private _forbidDelegationToVote = false;
 
+    private userRepo = inject(UserControllerService);
     private pollRepo = inject(PollRepositoryService);
 
     public constructor(
@@ -68,8 +70,66 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
+    public votingProhibited(poll: ViewPoll, user?: ViewUser): Observable<VotingProhibition | null> {
+        return combineLatest([
+            this.userRepo.getViewModelObservable(user.id),
+            this.pollRepo.getViewModelObservable(poll.id),
+            this.pollRepo.pollBallotsByUser(poll.id, user.id)
+        ]).pipe(
+            map(([user, poll, ballots]) => {
+                return this.getVotingProhibitionReason(poll, user, ballots);
+            })
+        );
+        // return this.userRepo.getViewModelObservable(user.id).pipe(map(u => !this.getVotingProhibitionReason(poll, u)));
+    }
+
+    private getVotingProhibitionReason(
+        poll: ViewPoll,
+        user: ViewUser,
+        ballots: ViewBallot[]
+    ): VotingProhibition | null {
+        if (this.operator.isAnonymous) {
+            return VotingProhibition.USER_IS_ANONYMOUS;
+        }
+
+        if (ballots.length) {
+            return VotingProhibition.USER_HAS_VOTED;
+        }
+
+        if (this._currentUser?.id === user?.id) {
+            if (user?.isVoteRightDelegated && this._voteDelegationEnabled && this._forbidDelegationToVote) {
+                return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
+            }
+        }
+
+        if (
+            !(poll.entitled_group_ids || []).some(id =>
+                user.group_ids(this.activeMeetingService.meetingId).includes(id)
+            )
+        ) {
+            return VotingProhibition.USER_HAS_NO_PERMISSION;
+        }
+
+        if (poll.type === PollType.Analog) {
+            return VotingProhibition.POLL_WRONG_TYPE;
+        }
+
+        if (poll.state !== PollState.Started) {
+            return VotingProhibition.POLL_WRONG_STATE;
+        }
+
+        if (!user?.isPresentInMeeting() && !this._currentUser?.canVoteFor(user)) {
+            return VotingProhibition.USER_NOT_PRESENT;
+        }
+
+        return null;
+    }
+
+    /**
+     * checks whether the operator can vote on the given poll
+     */
     public canVote(poll: ViewPoll, user?: ViewUser): boolean {
-        const error = this.getVotingProhibitionReason(poll, user);
+        const error = this.getVotingProhibitionReasonLegacy(poll, user);
         return !error;
     }
 
@@ -77,7 +137,7 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      * @returns null if no errors exist (= user can vote) or else a VotingProhibition reason
      */
-    private getVotingProhibitionReason(
+    private getVotingProhibitionReasonLegacy(
         poll: ViewPoll,
         user: ViewUser | null = this._currentUser
     ): VotingProhibition | void {
@@ -114,13 +174,13 @@ export class VotingService {
     }
 
     public getVotingProhibitionReasonVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
-        const reason = this.getVotingProhibitionReason(poll, user);
+        const reason = this.getVotingProhibitionReasonLegacy(poll, user);
         if (reason) {
             return VotingProhibitionVerbose[reason];
         }
     }
 
-    public getVotingProhibitionReasonVerboseFromName(reasonName: string): string {
-        return VotingProhibitionVerbose[VotingProhibition[reasonName]] ?? _(`There is an unknown voting problem.`);
+    public getVotingProhibitionReasonVerboseFromName(reason: VotingProhibition): string {
+        return VotingProhibitionVerbose[reason] ?? _(`There is an unknown voting problem.`);
     }
 }

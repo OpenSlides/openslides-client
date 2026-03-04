@@ -236,8 +236,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.votingService.getVotingProhibitionReasonVerbose(this.poll, user) || ``;
     }
 
-    public getVotingErrorFromName(errorName: string): string {
-        return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
+    public getVotingErrorFromName(errorName: unknown): string {
+        return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName as VotingProhibition) || ``;
     }
 
     public getVotesCount(user: ViewUser = this.user): number {
