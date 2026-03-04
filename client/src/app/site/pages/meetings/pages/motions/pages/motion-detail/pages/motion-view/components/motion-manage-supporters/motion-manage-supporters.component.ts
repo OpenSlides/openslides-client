@@ -287,6 +287,10 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
         }
     }
 
+    public warn(supporter: ViewMotionSupporter): boolean {
+        return this.canManage && !this.checkValidSupporter(supporter);
+    }
+
     private async updateSupportersSubject(): Promise<void> {
         this._supportersSubject.next(
             this.motion?.supporters.sort((a, b) => {

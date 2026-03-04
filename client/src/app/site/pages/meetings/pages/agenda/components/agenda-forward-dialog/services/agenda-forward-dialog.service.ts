@@ -176,7 +176,11 @@ export class AgendaForwardDialogService
     }
 
     private async updateForwardMeetings(): Promise<void> {
-        if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
+        if (
+            this._forwardingMeetingsUpdateRequired &&
+            !this.activeMeeting.meeting.isArchived &&
+            (this.operator.isMeetingAdmin || this.operator.canSkipPermissionCheckMeetingInternal)
+        ) {
             const response = await this.autoupdate.single(
                 await this.modelRequestBuilder.build({
                     ids: [this.activeMeeting.meeting.committee_id],
