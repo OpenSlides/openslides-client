@@ -18,8 +18,8 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
 @Component({
     selector: `os-poll-progress`,
     templateUrl: `./poll-progress.component.html`,
-    imports: [MatProgressBarModule, TranslateModule],
     styleUrls: [`./poll-progress.component.scss`],
+    imports: [MatProgressBarModule, TranslateModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollProgressComponent extends BaseUiComponent {
@@ -37,7 +37,7 @@ export class PollProgressComponent extends BaseUiComponent {
     });
 
     public votescast = computed(() => {
-        return Object.keys(this.poll().live_votes ?? {}).length;
+        return Object.keys(this.poll().ballot_ids ?? {}).length;
     });
 
     public canSeeProgressBar = computed(() => {
