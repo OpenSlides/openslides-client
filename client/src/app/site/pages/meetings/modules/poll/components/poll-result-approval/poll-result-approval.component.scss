@@ -1,0 +1,83 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+
+:host {
+    outline: none;
+}
+
+.result-wrapper-additional {
+    .result-table {
+        tr {
+            height: 40px;
+        }
+    }
+}
+
+.result-wrapper {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 0 2em;
+    font-size: 16px;
+    margin: 2em 25px;
+
+    .margins {
+        margin-left: 50px;
+    }
+
+    .result-table {
+        border-collapse: collapse;
+        height: fit-content;
+        width: 100%;
+        .right-header {
+            font-weight: initial;
+            text-align: right;
+        }
+        .left-header {
+            text-align: left;
+            font-weight: initial;
+        }
+
+        tr {
+            border-bottom: none !important;
+
+            .result-cell-definition {
+                text-align: right;
+            }
+
+            td {
+                padding: 7px 0;
+            }
+
+            :nth-child(2):not(th) {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        .percent-column {
+            tr {
+                :nth-child(2):not(th) {
+                    min-width: 100px;
+                }
+            }
+        }
+
+        .votesvalid {
+            border-top: 2px solid rgba(128, 128, 128, 0.2);
+        }
+    }
+
+    .doughnut-chart-normal {
+        width: 200px;
+        margin-top: -35px;
+        align-self: start;
+    }
+
+    .doughnut-chart-slide {
+        width: 260px;
+        margin-top: 0px;
+        justify-self: right;
+        margin-right: 50px;
+    }
+}
