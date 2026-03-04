@@ -4,6 +4,6 @@
             <span>{{ votescast() }} / {{ max() }}</span>
         </div>
         <span>{{ 'Received votes' | translate }}</span>
-        <mat-progress-bar class="voting-progress-bar" mode="determinate" [value]="valueInPercent"></mat-progress-bar>
+        <mat-progress-bar class="voting-progress-bar" mode="determinate" [value]="valueInPercent()"></mat-progress-bar>
     </div>
 }
