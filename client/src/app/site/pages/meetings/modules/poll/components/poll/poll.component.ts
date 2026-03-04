@@ -19,6 +19,7 @@ import { ProjectorButtonModule } from '../../../meetings-component-collector/pro
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
+import { PollResultComponent } from '../poll-result/poll-result.component';
 import { PollVoteComponent } from '../poll-vote/poll-vote.component';
 
 interface PollStateAction {
@@ -31,6 +32,7 @@ interface PollStateAction {
     imports: [
         PollVoteComponent,
         PollProgressComponent,
+        PollResultComponent,
         IconContainerComponent,
         ProjectorButtonModule,
         TranslatePipe,
@@ -66,6 +68,7 @@ export class PollComponent extends BaseMeetingComponent {
     });
 
     public getDetailLink(): string {
+        // TODO: Implement
         return ``;
     }
 

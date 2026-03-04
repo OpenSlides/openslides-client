@@ -105,6 +105,8 @@
             }
         }
     }
+} @else if (poll().isFinished) {
+    <os-poll-result [poll]="poll()" />
 }
 
 <!-- More Menu -->
