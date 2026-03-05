@@ -164,8 +164,12 @@
     @if (!editTopic) {
         <div class="spacer-bottom-60">
             @if (topic && topic.poll_ids?.length) {
-                @for (poll of topic.poll_ids | reverse; track trackById($index, poll)) {
-                    <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
+                @for (poll of topic.polls | reverse; track trackById($index, poll)) {
+                    <mat-card class="spacer-bottom-60 os-card">
+                        <mat-card-content>
+                            <os-poll [poll]="poll"></os-poll>
+                        </mat-card-content>
+                    </mat-card>
                 }
             }
             @if (topic && isEVotingEnabled) {

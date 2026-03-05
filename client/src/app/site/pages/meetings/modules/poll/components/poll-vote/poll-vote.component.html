@@ -23,6 +23,14 @@
                     (voted)="sendVote($event)"
                 />
             }
+            @case ('poll_config_selection') {
+                <os-poll-vote-selection
+                    [loading]="loading()"
+                    [poll]="poll()"
+                    [user]="user()"
+                    (voted)="sendVote($event)"
+                />
+            }
         }
     }
 </div>
