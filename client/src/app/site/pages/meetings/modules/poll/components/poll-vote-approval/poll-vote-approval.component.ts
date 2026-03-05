@@ -21,13 +21,13 @@ import { ViewBallot, ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 
 @Component({
-    selector: 'os-poll-approval-vote',
-    templateUrl: './poll-approval-vote.component.html',
-    styleUrl: './poll-approval-vote.component.scss',
+    selector: 'os-poll-vote-approval',
+    templateUrl: './poll-vote-approval.component.html',
+    styleUrl: './poll-vote-approval.component.scss',
     imports: [CustomIconComponent, TranslatePipe, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollApprovalVoteComponent implements OnDestroy {
+export class PollVoteApprovalComponent implements OnDestroy {
     public readonly drawnCross = CustomIcon.DRAWN_CROSS;
 
     public poll = input.required<ViewPoll>();

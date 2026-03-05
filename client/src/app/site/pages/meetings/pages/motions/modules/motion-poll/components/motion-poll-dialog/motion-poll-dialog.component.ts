@@ -6,7 +6,7 @@ import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, PollVisibility, VoteValue } from 'src/app/domain/models/poll';
 import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollApprovalFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-approval-form/poll-approval-form.component';
+import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -16,15 +16,15 @@ import { MotionPollService } from '../../services';
 @Component({
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
-    imports: [PollFormComponent, PollApprovalFormComponent, MatDialogModule, MatButtonModule, TranslatePipe],
+    imports: [PollFormComponent, PollFormApprovalComponent, MatDialogModule, MatButtonModule, TranslatePipe],
     styleUrls: [`./motion-poll-dialog.component.scss`]
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent {
     public PercentBaseVerbose = PollPercentBaseVerbose;
     public majority: string;
 
-    @ViewChild(PollApprovalFormComponent)
-    private approvalForm: PollApprovalFormComponent | null = null;
+    @ViewChild(PollFormApprovalComponent)
+    private approvalForm: PollFormApprovalComponent | null = null;
 
     public get isEVotingEnabled(): boolean {
         return this.motionPollService.isElectronicVotingEnabled;

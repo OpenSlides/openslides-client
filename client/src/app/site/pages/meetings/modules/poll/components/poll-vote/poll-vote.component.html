@@ -16,12 +16,12 @@
     } @else {
         @switch (configType()) {
             @case ('poll_config_approval') {
-                <os-poll-approval-vote
+                <os-poll-vote-approval
                     [loading]="loading()"
                     [poll]="poll()"
                     [user]="user()"
                     (voted)="sendVote($event)"
-                ></os-poll-approval-vote>
+                />
             }
         }
     }

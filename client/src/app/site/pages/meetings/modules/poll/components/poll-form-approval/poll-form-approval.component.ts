@@ -8,11 +8,11 @@ import { ViewPoll } from '../../../../pages/polls';
 @Component({
     selector: 'os-poll-approval-form',
     imports: [ReactiveFormsModule, MatCheckboxModule, TranslatePipe],
-    templateUrl: './poll-approval-form.component.html',
-    styleUrl: './poll-approval-form.component.scss',
+    templateUrl: './poll-form-approval.component.html',
+    styleUrl: './poll-form-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollApprovalFormComponent {
+export class PollFormApprovalComponent {
     public approvalForm: UntypedFormGroup;
 
     private _data: Partial<ViewPoll>;

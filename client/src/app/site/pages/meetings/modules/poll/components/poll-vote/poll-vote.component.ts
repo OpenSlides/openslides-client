@@ -8,12 +8,12 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { VotingService } from '../../services/voting.service';
-import { PollApprovalVoteComponent } from '../poll-approval-vote/poll-approval-vote.component';
+import { PollVoteApprovalComponent } from '../poll-vote-approval/poll-vote-approval.component';
 import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
 
 @Component({
     selector: 'os-poll-vote',
-    imports: [PollApprovalVoteComponent, PollCannotVoteMessageComponent, TranslatePipe],
+    imports: [PollVoteApprovalComponent, PollCannotVoteMessageComponent, TranslatePipe],
     templateUrl: './poll-vote.component.html',
     styleUrl: './poll-vote.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
