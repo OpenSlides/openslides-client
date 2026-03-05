@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
@@ -46,6 +47,7 @@ export class EditorLinkDialogComponent implements OnInit {
     private _repo!: ViewModelListProvider<any>;
 
     protected subscriptions: Subscription[] = [];
+
     @Input()
     public set repo(repo: ViewModelListProvider<any>) {
         this._repo = repo;
@@ -55,6 +57,11 @@ export class EditorLinkDialogComponent implements OnInit {
      * Values selected by radio buttons
      */
     public selectedRepoValue = 0;
+
+    /**
+     * Selected id in repo-search-selector (used as flag to disable buttons)
+     */
+    public selectedId;
 
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     public subscriptionConfig: SubscribeToConfig = getAgendaListMinimalSubscriptionConfig(
@@ -138,17 +145,25 @@ export class EditorLinkDialogComponent implements OnInit {
      */
     public extensionFieldForm: UntypedFormGroup;
 
+    /**
+     * Holds the nav suscription
+     */
+    private navigationSubscription!: Subscription;
+
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
-        private dialogRef: MatDialogRef<EditorLinkDialogComponent>
+        private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
+        private router: Router
     ) {
-        this.link = data.link;
+        this.link = { ...data.link };
         this.isUpdate = !!data.link && !!data.link.href;
         if (!this.link.target) {
             this.link.target = `_self`;
         }
-        this.referenceLink = data.link;
-        this.referenceLink.target = `_self`;
+        this.referenceLink = { ...data.link };
+        if (!this.referenceLink.target) {
+            this.referenceLink.target = `_blank`;
+        }
     }
 
     public ngOnInit(): void {
@@ -162,6 +177,7 @@ export class EditorLinkDialogComponent implements OnInit {
             { observable: this.assignmentItemList, label: 'Assignment' }
         ];
         this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
+        console.log(this.inputControl, this.referenceText);
         this.initInput();
         this.initForm();
     }
@@ -175,14 +191,25 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public save(): void {
-        if (this.link.href && !/^[a-zA-Z]+:\/\//.test(this.link.href)) {
-            this.link.href = `http://` + this.link.href;
-        }
-        console.log(this.link.href);
-        if (this.data.needsText) {
-            // this.dialogRef.close({ action: `set-link`, link: this.link, text: this.text || this.link });
+        if (this.link.href) {
+            console.log('link esiten', this.link.href);
+            console.trace();
+            if (!/^[a-zA-Z]+:\/\//.test(this.link.href)) {
+                console.log('link esiten 2');
+                this.link.href = `http://` + this.link.href;
+            }
+            if (this.data.needsText) {
+                this.dialogRef.close({ action: `set-link`, link: this.link, text: this.text || this.link });
+            } else {
+                this.dialogRef.close({ action: `set-link`, link: this.link });
+            }
         } else {
-            // this.dialogRef.close({ action: `set-link`, link: this.link });
+            console.log('referencelink esiten');
+            if (!/^[a-zA-Z]+:\/\//.test(this.referenceLink.href)) {
+                console.log('referencelink esiten 2');
+                this.sendSuccess();
+                this.dialogRef.close({ action: `set-link`, text: this.referenceText, link: this.referenceLink });
+            }
         }
     }
 
@@ -214,6 +241,7 @@ export class EditorLinkDialogComponent implements OnInit {
         } else {
             this.initForm();
             this.initInput();
+            this.referenceText = ``;
         }
         this.editMode = !this.editMode;
     }
@@ -238,38 +266,55 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     /**
-     * Function to execute, to add the values.
+     * Function to add the values.
      */
     public addToExtensionField(): void {
         const controlName = `${this.searchLists[this.selectedRepoValue].label}FormControl`;
-        const selectedId: number = this.extensionFieldForm.get(controlName)?.value;
+        this.selectedId = this.extensionFieldForm.get(controlName)?.value;
         const repo = this.searchRepos[this.selectedRepoValue];
-        const item = repo.getViewModel(selectedId);
-        console.log(item);
-        // this.referenceText =
-        this.getTitle(item);
+        const item = repo.getViewModel(this.selectedId);
+        this.referenceText = item.getTitle();
         if (!this.getIsDisabled(item)) {
             this.inputControl = `[${item.fqid}]`;
+            this.referenceLink.href = this.urlBuilder(item);
             this.disableItem(item);
-            this.getIsDisabled(item);
         }
     }
 
     public getIsDisabled(item): boolean {
-        console.log('IS DISABLED?', this.searchListDisabledItems?.includes(item.fqid));
         return this.searchListDisabledItems?.includes(item.fqid);
     }
 
     public disableItem(item): void {
         if (!this.getIsDisabled(item.fqid)) this.searchListDisabledItems = [item.fqid];
-        console.log(this.searchListDisabledItems);
     }
 
-    public getTitle(item): void {
-        console.log(item.content_object_id, item.collection, item.id);
+    public urlBuilder(item): string {
+        const setCollection = item.collection === 'agenda_item' ? 'agenda/topic' : item.collection;
+        const setId = item.collection === 'agenda_item' ? item.id : item.content_object_id.split('/')[1];
+        const builtUrl = `${this.activeMeetingIdService.meetingId}/${setCollection}s/${setId}`;
+        const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
+        console.log(
+            'THISURL:',
+            this.router.url,
+            'URL:',
+            url,
+            'SETCOLLECTION:',
+            setCollection,
+            'REFERENCELINK:',
+            this.referenceLink,
+            'RLINK HREF:',
+            item.fqid,
+            this.referenceLink.target,
+            'ITEM COID: ',
+            item.content_object_id.split(`/`)[1],
+            'ITEM: ',
+            item
+        );
+        return url;
     }
 
     public sendSuccess(): void {
-        this.succeeded.emit(this.inputControl);
+        this.succeeded.emit(this.referenceLink.href);
     }
 }
