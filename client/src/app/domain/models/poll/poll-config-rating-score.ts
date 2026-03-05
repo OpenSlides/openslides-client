@@ -1,5 +1,8 @@
 import { HasMeetingId } from '../../interfaces';
 import { BasePollConfigModel } from './base-poll-config';
+import { BaseOnehundredPercentBase } from './poll-config-types';
+
+export type RatingScoreOnehundredPercentBase = BaseOnehundredPercentBase | `YN`;
 
 export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingScore> {
     public static COLLECTION = `poll_config_rating_score`;
@@ -9,6 +12,7 @@ export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingS
     public max_votes_per_option!: number;
     public max_vote_sum!: number;
     public min_vote_sum!: number;
+    public onehundred_percent_base!: RatingScoreOnehundredPercentBase;
 
     public constructor(input?: Partial<PollConfigRatingScore>) {
         super(PollConfigRatingScore.COLLECTION, input);

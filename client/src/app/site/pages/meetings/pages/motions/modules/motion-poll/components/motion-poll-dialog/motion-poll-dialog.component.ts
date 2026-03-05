@@ -6,8 +6,8 @@ import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, PollVisibility, VoteValue } from 'src/app/domain/models/poll';
 import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
@@ -66,6 +66,8 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         } else {
             this.voteApiService.create(payload);
         }
+
+        this.dialogRef.close();
     }
 
     protected getAnalogVoteFields(): VoteValue[] {
