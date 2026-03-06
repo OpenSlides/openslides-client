@@ -3,7 +3,7 @@
     <div>
         <mat-form-field>
             <mat-label translate>URL</mat-label>
-            <input matInput [disabled]="referenceText!= ``" [(ngModel)]="link.href" /> <!-- Line 6 -->
+            <input matInput [disabled]="referenceText !== ``" [(ngModel)]="link.href" />
         </mat-form-field>
     </div>
 
@@ -11,7 +11,7 @@
         @if (data.needsText) {
             <mat-form-field>
                 <mat-label translate>Text to display</mat-label>
-                <input matInput [disabled]="referenceText!= ``" [(ngModel)]="text" />
+                <input matInput [disabled]="referenceText !== ``" [(ngModel)]="text" />
             </mat-form-field>
         }
     </div>
@@ -19,7 +19,7 @@
     <div>
         <mat-form-field>
             <mat-label translate>Open link in ...</mat-label>
-            <select matNativeControl [disabled]="referenceText!= ``" [(ngModel)]="link.target">
+            <select matNativeControl [disabled]="referenceText !== ``" [(ngModel)]="link.target">
                 <option translate value="_self">Current window</option>
                 <option translate value="_blank">New window</option>
             </select>
@@ -48,11 +48,7 @@
                 />
             </mat-form-field>
             <div>
-                <mat-radio-group
-                    aria-label="Select an option"
-                    class="radio-group"
-                    [(ngModel)]="selectedRepoValue"
-                >
+                <mat-radio-group aria-label="Select an option" class="radio-group" [(ngModel)]="selectedRepoValue">
                     <mat-radio-button aria-label="Topics" translate [value]="0" (click)="initForm()">
                         Topics
                     </mat-radio-button>
@@ -69,22 +65,27 @@
                 <mat-label translate>
                     {{ searchLists[selectedRepoValue].label }}
                 </mat-label>
-                    @for (searchRepo of searchRepos; track $index) {
-                        @if (selectedRepoValue === $index) {
-                            <os-repo-search-selector [disabled]="!!link.href"
-                                formControlName="{{ searchLists[$index].label }}FormControl"
-                                [keepOpen]="searchRepo.keepOpen"
-                                [repo]="searchRepo"
-                                [subscriptionConfig]="subscriptionConfig"
-                                [wider]="searchRepo.wider"
-                            ></os-repo-search-selector>
-                        }
+                @for (searchRepo of searchRepos; track $index) {
+                    @if (selectedRepoValue === $index) {
+                        <os-repo-search-selector
+                            formControlName="{{ searchLists[$index].label }}FormControl"
+                            [disabled]="!!link.href"
+                            [keepOpen]="searchRepo.keepOpen"
+                            [repo]="searchRepo"
+                            [subscriptionConfig]="subscriptionConfig"
+                            [wider]="searchRepo.wider"
+                        ></os-repo-search-selector>
                     }
+                }
             </mat-form-field>
         </div>
         <div class="matDialogLinkActions">
-            <button color="warn" [disabled]="!!link.href" mat-icon-button (click)="changeEditMode(true)"><mat-icon>done</mat-icon></button>
-            <button mat-icon-button [disabled]="!!link.href" (click)="changeEditMode()"><mat-icon>close</mat-icon></button>
+            <button color="warn" mat-icon-button [disabled]="!!link.href" (click)="changeEditMode(true)">
+                <mat-icon>done</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!!link.href" (click)="changeEditMode()">
+                <mat-icon>close</mat-icon>
+            </button>
         </div>
     }
 </div>
