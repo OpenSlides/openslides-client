@@ -1,12 +1,12 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
+import { EditableListComponent } from 'src/app/ui/modules/editable-list';
 
 import { ViewPoll } from '../../../../pages/polls';
 
@@ -14,10 +14,9 @@ import { ViewPoll } from '../../../../pages/polls';
     selector: 'os-poll-form-selection',
     imports: [
         ReactiveFormsModule,
-        FormsModule,
-        MatButtonModule,
-        MatInputModule,
+        EditableListComponent,
         MatCheckboxModule,
+        MatInputModule,
         MatSelectModule,
         TranslatePipe,
         KeyValuePipe
@@ -42,8 +41,6 @@ export class PollFormSelectionComponent {
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
 
-    public optionInputValue = signal<string>('');
-
     private fb = inject(UntypedFormBuilder);
 
     public constructor() {
@@ -60,15 +57,8 @@ export class PollFormSelectionComponent {
         effect(this.onDataUpdated.bind(this));
     }
 
-    public addOption(): void {
-        if (this.optionInputValue() === ``) {
-            return;
-        }
-
-        const options = this.form.get('options').value || [];
-        options.push(this.optionInputValue());
-        this.optionInputValue.set('');
-        this.form.get('options').setValue(options);
+    public onOptionsChange(items: string[]): void {
+        this.form.get('options').setValue(items);
     }
 
     private onDataUpdated(): void {
