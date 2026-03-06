@@ -53,7 +53,6 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
             visibility,
             allow_vote_split: false
         };
-        console.log(payload, topic, this.pollData);
 
         if (visibility !== PollVisibility.Manually) {
             payload.entitled_group_ids = formValues?.entitled_group_ids ?? [];
