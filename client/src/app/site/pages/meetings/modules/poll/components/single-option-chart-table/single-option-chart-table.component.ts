@@ -1,15 +1,26 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { ThemeService } from 'src/app/site/services/theme.service';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
+import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from '../../pipes';
 import { PollService } from '../../services/poll.service';
-import { ChartData } from '../chart/chart.component';
+import { ChartComponent, ChartData } from '../chart/chart.component';
 
 @Component({
     selector: `os-single-option-chart-table`,
     templateUrl: `./single-option-chart-table.component.html`,
     styleUrls: [`./single-option-chart-table.component.scss`],
-    standalone: false
+    imports: [
+        TranslatePipe,
+        IconContainerComponent,
+        ChartComponent,
+        PollKeyVerbosePipe,
+        PollParseNumberPipe,
+        PollPercentBasePipe,
+        PollPercentBaseAltPipe
+    ]
 })
 export class SingleOptionChartTableComponent {
     private _poll: PollData;

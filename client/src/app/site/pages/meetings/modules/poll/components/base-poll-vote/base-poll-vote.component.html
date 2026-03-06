@@ -371,11 +371,10 @@
             }
         }
         <os-poll-cannot-vote-message
-            [delegationUser]="delegation"
-            [hasAlreadyVoted]="hasAlreadyVoted(delegation)"
             [hasDelegations]="!delegations.length"
             [isDeliveringVote]="isDeliveringVote(delegation)"
             [poll]="poll"
+            [user]="delegation"
         />
     }
 </ng-template>

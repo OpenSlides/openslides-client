@@ -1,0 +1,102 @@
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    OnDestroy,
+    output,
+    signal
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
+import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
+import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
+
+import { ViewBallot, ViewPoll, ViewPollConfigOption } from '../../../../pages/polls';
+import { ViewUser } from '../../../../view-models/view-user';
+
+@Component({
+    selector: 'os-poll-vote-selection',
+    imports: [CustomIconComponent, MatIconModule, MatButtonModule, TranslatePipe],
+    templateUrl: './poll-vote-selection.component.html',
+    styleUrl: './poll-vote-selection.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PollVoteSelectionComponent implements OnDestroy {
+    public readonly drawnCross = CustomIcon.DRAWN_CROSS;
+
+    public poll = input.required<ViewPoll>();
+    public user = input.required<ViewUser>();
+    public loading = input<boolean>(false);
+
+    public voted = output<unknown>();
+
+    public ballots = signal<ViewBallot[]>([]);
+    public selectedOptionIds = signal<Set<number>>(new Set());
+
+    public isSingleSelect = computed(() => {
+        const config = this.poll().config;
+        return (config?.max_options_amount ?? 1) === 1;
+    });
+
+    public options = computed<ViewPollConfigOption[]>(() => {
+        return (this.poll().config?.options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
+    });
+
+    private pollRepo = inject(PollRepositoryService);
+    private pollBallotSubscription: Subscription;
+
+    public constructor() {
+        effect(() => {
+            if (this.pollBallotSubscription) {
+                this.pollBallotSubscription.unsubscribe();
+            }
+            this.pollBallotSubscription = this.pollRepo
+                .pollBallotsByUser(this.poll().id, this.user().getMeetingUser().id)
+                .subscribe(ballots => {
+                    this.ballots.set(ballots);
+                });
+        });
+    }
+
+    public ngOnDestroy(): void {
+        if (this.pollBallotSubscription) {
+            this.pollBallotSubscription.unsubscribe();
+        }
+    }
+
+    public isSelected(optionId: number): boolean {
+        return this.selectedOptionIds().has(optionId);
+    }
+
+    public toggleOption(optionId: number): void {
+        const selected = new Set(this.selectedOptionIds());
+        if (selected.has(optionId)) {
+            selected.delete(optionId);
+        } else {
+            if (this.isSingleSelect()) {
+                selected.clear();
+            } else {
+                const maxAmount = this.poll().config?.max_options_amount ?? 1;
+                if (selected.size >= maxAmount) {
+                    return;
+                }
+            }
+            selected.add(optionId);
+        }
+        this.selectedOptionIds.set(selected);
+    }
+
+    public submitVote(): void {
+        const selected = this.selectedOptionIds();
+        if (selected.size === 0) {
+            return;
+        }
+        this.voted.emit([...selected]);
+    }
+}

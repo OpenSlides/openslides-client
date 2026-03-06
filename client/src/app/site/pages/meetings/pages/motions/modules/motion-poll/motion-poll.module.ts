@@ -36,9 +36,7 @@ import { MotionPollService } from './services';
 import { MotionPollServiceModule } from './services/motion-poll-service.module';
 
 const DECLARATIONS = [
-    MotionPollComponent,
     MotionPollMetaInformationComponent,
-    MotionPollDetailContentComponent,
     MotionPollVoteComponent // TODO: Only exported to have access to it in the autopilot
 ];
 const MODULES = [MotionPollServiceModule];
@@ -46,6 +44,10 @@ const MODULES = [MotionPollServiceModule];
 @NgModule({
     imports: [
         ...MODULES,
+        MotionPollComponent,
+        MotionPollDetailContentComponent,
+        MotionPollFormComponent,
+        MotionPollDialogComponent,
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,
@@ -73,8 +75,8 @@ const MODULES = [MotionPollServiceModule];
         OpenSlidesTranslationModule.forChild(),
         IconContainerComponent
     ],
-    exports: [...MODULES, ...DECLARATIONS, PollModule],
-    declarations: [MotionPollDialogComponent, MotionPollFormComponent, ...DECLARATIONS],
+    exports: [...MODULES, ...DECLARATIONS, PollModule, MotionPollComponent, MotionPollDetailContentComponent],
+    declarations: [...DECLARATIONS],
     providers: [{ provide: PollService, useClass: MotionPollService }]
 })
 export class MotionPollModule {

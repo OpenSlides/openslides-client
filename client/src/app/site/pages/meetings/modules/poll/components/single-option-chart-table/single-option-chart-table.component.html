@@ -1,18 +1,16 @@
 @if (poll) {
     <div
-        [ngClass]="{
-            'result-wrapper': true,
-            'result-wrapper-additional': iconSize !== 'medium',
-            'extra-grid-normal': !inSlide,
-            'extra-grid-slide': inSlide
-        }"
+        class="result-wrapper"
+        [class.extra-grid-normal]="!inSlide"
+        [class.extra-grid-slide]="inSlide"
+        [class.result-wrapper-additional]="iconSize !== 'medium'"
     >
-        <table class="result-table" [ngClass]="{ margins: iconSize === 'gigantic' }">
+        <table class="result-table" [class.margins]="iconSize === 'gigantic'">
             <tbody
+                [class]="textSizeClass"
                 [class.column-padding-width-slide]="inSlide"
                 [class.percent-column-width-gigantic]="!inSlide && iconSize === 'gigantic'"
                 [class.percent-column-width-large]="!inSlide && iconSize === 'large'"
-                [ngClass]="textSizeClass"
             >
                 @if (shouldShowHead && !inSlide) {
                     <tr>
@@ -26,7 +24,7 @@
                 }
                 @for (row of tableData; track row; let i = $index) {
                     @if (['user', 'list'].includes(row.class)) {
-                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class]="row.votingOption" [class.slide]="inSlide" [class.text-big-bold]="inSlide">
                             <td class="label-column">
                                 @if (row.value[0].icon) {
                                     <os-icon-container [icon]="row.value[0].icon" [size]="iconSize">
@@ -65,7 +63,7 @@
                         </tr>
                     }
                     @if (!['user', 'list'].includes(row.class)) {
-                        <tr [class.slide]="inSlide" [class.text-big-bold]="inSlide" [ngClass]="row.votingOption">
+                        <tr [class]="row.votingOption" [class.slide]="inSlide" [class.text-big-bold]="inSlide">
                             <!-- YNA/Valid etc -->
                             <td class="label-column">
                                 @if (row.value[0].icon) {

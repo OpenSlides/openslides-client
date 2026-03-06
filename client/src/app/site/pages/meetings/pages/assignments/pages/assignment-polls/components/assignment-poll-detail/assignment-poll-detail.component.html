@@ -40,7 +40,7 @@
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
                     @if (poll.isStarted) {
-                        <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
+                        <os-poll-progress [poll]="poll"></os-poll-progress>
                         <div *osPerms="permission.pollCanManage" class="poll-content">
                             <div class="user-subtitle">
                                 {{ 'Present entitled users' | translate }}:

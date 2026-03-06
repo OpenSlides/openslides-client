@@ -459,7 +459,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 content_object_id: this.assignment.fqid,
                 content_object: this.assignment,
                 ...this.assignmentPollService.getDefaultPollData(this.assignment)
-            } as PollDialogData;
+            } as unknown as PollDialogData;
         }
     }
 

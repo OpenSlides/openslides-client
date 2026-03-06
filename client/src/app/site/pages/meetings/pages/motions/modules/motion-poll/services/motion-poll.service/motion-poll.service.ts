@@ -12,13 +12,12 @@ import {
     PollMethod,
     PollPercentBase,
     PollTableData,
-    PollType,
+    PollVisibility,
     VOTE_MAJORITY,
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 
@@ -38,19 +37,20 @@ export interface TableDataEntryCreationInput {
 export class MotionPollService extends PollService {
     public defaultPercentBase!: PollPercentBase;
     public defaultPollMethod: PollMethod | undefined;
-    public defaultPollType!: PollType;
+    public defaultPollVisibility!: PollVisibility;
     public defaultGroupIds!: number[];
 
     public constructor(
         protected override translate: TranslateService,
-        private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private repo: MotionPollControllerService
     ) {
         super();
         this.meetingSettingsService
             .get(`motion_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingSettingsService.get(`motion_poll_default_type`).subscribe(type => (this.defaultPollType = type));
+        this.meetingSettingsService
+            .get(`motion_poll_default_type`)
+            .subscribe(type => (this.defaultPollVisibility = type as any));
         this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(ids => (this.defaultGroupIds = ids));
         this.meetingSettingsService
             .get(`motion_poll_default_method`)
@@ -61,7 +61,7 @@ export class MotionPollService extends PollService {
         const poll: Partial<Poll> = {
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
+            visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually,
             pollmethod: this.defaultPollMethod
         };
 

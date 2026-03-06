@@ -3,7 +3,7 @@ import { PollPercentBase, VoteValue, VoteValueVerbose } from 'src/app/domain/mod
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { ViewPoll, ViewVote } from '../../../../pages/polls';
+import { ViewBallot, ViewPoll } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 
@@ -46,7 +46,7 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         this.subscriptions.push(this.filterService.outputObservable.subscribe(votes => this.onVotesUpdated(votes)));
     }
 
-    private onVotesUpdated(votes: ViewVote[]): void {
+    private onVotesUpdated(votes: ViewBallot[]): void {
         this.voteAmounts = [];
         const voteValues: VoteValue[] = this.poll.isMethodYN ? [`Y`, `N`] : [`Y`, `N`, `A`];
         const baseVoteValues: VoteValue[] =

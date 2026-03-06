@@ -3,6 +3,9 @@ import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewPoll } from './view-poll';
 
+export type HasPoll<C extends PollContentObject = any> = ViewModelRelations<{
+    poll: ViewPoll<C>;
+}>;
 export type VotingTextContext<C extends PollContentObject = any> = ViewModelRelations<{
     poll: ViewPoll<C>;
 }> & {

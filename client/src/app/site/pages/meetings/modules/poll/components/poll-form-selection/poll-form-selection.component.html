@@ -1,0 +1,53 @@
+<form [formGroup]="form">
+    <div class="margin-bottom-15">
+        <mat-checkbox formControlName="strike_out">
+            {{ 'Strike out' | translate }}
+        </mat-checkbox>
+    </div>
+
+    <div class="poll-preview-meta-info-form">
+        <div class="info-grid">
+            <mat-checkbox formControlName="allow_nota">
+                @if (form.get('strike_out').value) {
+                    {{ 'General approval' | translate }}
+                } @else {
+                    {{ 'General rejection' | translate }}
+                }
+            </mat-checkbox>
+
+            <mat-form-field>
+                <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
+                <input formControlName="min_options_amount" matInput required type="number" />
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
+                <input formControlName="max_options_amount" matInput required type="number" />
+            </mat-form-field>
+        </div>
+
+        <div class="margin-bottom-15">
+            <mat-form-field>
+                <mat-label>{{ '100% base' | translate }}</mat-label>
+                <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+                    @for (option of validPercentBases | keyvalue; track option) {
+                        <mat-option [value]="option.key">
+                            {{ option.value | translate }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+
+@if (optionEdit()) {
+    <div class="option-section">
+        <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
+        <os-editable-list
+            placeholder="New option"
+            [items]="form.get('options').value"
+            (itemsChange)="onOptionsChange($event)"
+        />
+    </div>
+}

@@ -16,7 +16,6 @@ import {
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
@@ -40,8 +39,7 @@ export class AssignmentPollService extends PollService {
     public constructor(
         pollServiceMapper: PollServiceMapperService,
         protected override translate: TranslateService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private pollRepo: PollControllerService
     ) {
         super();
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
