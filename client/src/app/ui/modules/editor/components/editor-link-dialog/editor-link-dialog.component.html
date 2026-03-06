@@ -3,7 +3,7 @@
     <div>
         <mat-form-field>
             <mat-label translate>URL</mat-label>
-            <input matInput [(ngModel)]="link.href" />
+            <input matInput [disabled]="referenceText !== ``" [(ngModel)]="link.href" />
         </mat-form-field>
     </div>
 
@@ -11,7 +11,7 @@
         @if (data.needsText) {
             <mat-form-field>
                 <mat-label translate>Text to display</mat-label>
-                <input matInput [(ngModel)]="text" />
+                <input matInput [disabled]="referenceText !== ``" [(ngModel)]="text" />
             </mat-form-field>
         }
     </div>
@@ -19,15 +19,78 @@
     <div>
         <mat-form-field>
             <mat-label translate>Open link in ...</mat-label>
-            <select matNativeControl [(ngModel)]="link.target">
+            <select matNativeControl [disabled]="referenceText !== ``" [(ngModel)]="link.target">
                 <option translate value="_self">Current window</option>
                 <option translate value="_blank">New window</option>
             </select>
         </mat-form-field>
     </div>
+    <div class="internalReferences">
+        <h2 class="internalReferencesTitle">Link topic/motion/assignment</h2>
+        <button class="internalReferencesArrows" matIconButton (click)="toggle()">
+            @if (toggleInsert) {
+                <mat-icon>keyboard_arrow_up</mat-icon>
+            } @else {
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            }
+        </button>
+    </div>
+    @if (toggleInsert) {
+        <div class="card-grid">
+            <mat-form-field class="mat-form-margin-top">
+                <mat-label translate>Selected item</mat-label>
+                <input
+                    autocomplete="off"
+                    matInput
+                    osAutofocus
+                    [(ngModel)]="inputControl"
+                    (keydown)="keyDownFunction($event)"
+                />
+            </mat-form-field>
+            <div>
+                <mat-radio-group aria-label="Select an option" class="radio-group" [(ngModel)]="selectedRepoValue">
+                    <mat-radio-button aria-label="Topics" translate [value]="0" (click)="initForm()">
+                        Topics
+                    </mat-radio-button>
+                    <mat-radio-button aria-label="Motions" translate [value]="1" (click)="initForm()">
+                        Motions
+                    </mat-radio-button>
+                    <mat-radio-button aria-label="Assignments" translate [value]="2" (click)="initForm()">
+                        Assignments
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <mat-form-field [formGroup]="extensionFieldForm">
+                <mat-label translate>
+                    {{ searchLists[selectedRepoValue].label }}
+                </mat-label>
+                @for (searchRepo of searchRepos; track $index) {
+                    @if (selectedRepoValue === $index) {
+                        <os-repo-search-selector
+                            formControlName="{{ searchLists[$index].label }}FormControl"
+                            [disabled]="!!link.href"
+                            [keepOpen]="searchRepo.keepOpen"
+                            [repo]="searchRepo"
+                            [subscriptionConfig]="subscriptionConfig"
+                            [wider]="searchRepo.wider"
+                        ></os-repo-search-selector>
+                    }
+                }
+            </mat-form-field>
+        </div>
+        <div class="matDialogLinkActions">
+            <button color="warn" mat-icon-button [disabled]="!!link.href" (click)="changeEditMode(true)">
+                <mat-icon>done</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!!link.href" (click)="changeEditMode()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    }
 </div>
-<div mat-dialog-actions>
-    <button color="accent" mat-button translate [disabled]="!link.href" (click)="save()">Ok</button>
+<div class="matDialogActions" mat-dialog-actions>
+    <button color="accent" mat-button translate [disabled]="!link.href && !referenceText" (click)="save()">Ok</button>
     @if (isUpdate) {
         <button color="warn" mat-button translate (click)="removeLink()">Remove link</button>
     }
