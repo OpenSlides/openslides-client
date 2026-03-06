@@ -35,8 +35,8 @@ export class PollFormApprovalComponent {
         this._data = data;
         if (data && this.approvalForm) {
             const patch: Record<string, any> = {};
-            if (data.config.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
-            if (data.config.onehundred_percent_base !== undefined)
+            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
+            if (data.config?.onehundred_percent_base !== undefined)
                 patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
             this.approvalForm.patchValue(patch);
         }

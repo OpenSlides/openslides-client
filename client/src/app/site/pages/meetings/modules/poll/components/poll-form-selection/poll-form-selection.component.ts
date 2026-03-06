@@ -78,7 +78,7 @@ export class PollFormSelectionComponent {
 
         const patch: Record<string, any> = {};
         for (const field of [`onehundred_percent_base`, `allow_nota`, `max_options_amount`, `min_options_amount`]) {
-            if (this.data().config[field] !== undefined) patch[field] = this.data().config[field];
+            if (this.data().config && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
         }
 
         patch[`option_type`] = this.optionType();
