@@ -3,7 +3,7 @@
     <div>
         <mat-form-field>
             <mat-label translate>URL</mat-label>
-            <input matInput [disabled]="referenceText!= ``" [(ngModel)]="link.href" />
+            <input matInput [disabled]="referenceText!= ``" [(ngModel)]="link.href" /> <!-- Line 6 -->
         </mat-form-field>
     </div>
 
@@ -44,14 +44,13 @@
                     matInput
                     osAutofocus
                     [(ngModel)]="inputControl"
-                    (change)="inputChanged()"
                     (keydown)="keyDownFunction($event)"
                 />
             </mat-form-field>
             <div>
                 <mat-radio-group
                     aria-label="Select an option"
-                    style="display: flex; gap: 15px; margin-bottom: 5px"
+                    class="radio-group"
                     [(ngModel)]="selectedRepoValue"
                 >
                     <mat-radio-button aria-label="Topics" translate [value]="0" (click)="initForm()">
