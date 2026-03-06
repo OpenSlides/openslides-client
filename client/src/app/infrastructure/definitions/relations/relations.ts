@@ -1097,7 +1097,7 @@ export const RELATIONS: Relation[] = [
             ViewPollConfigApproval
         ],
         OViewModelField: `poll_config`,
-        MPossibleViewModelsField: `poll_config_options`,
+        MPossibleViewModelsField: `options`,
         OViewModelIdField: `poll_config_id`,
         MPossibleViewModelsIdField: `option_ids`
     }),
