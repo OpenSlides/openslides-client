@@ -217,14 +217,20 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     /**
-     * Get the number of the first diff line, in case a motion is an amendment
+     * Get the index of the first diff change, in case a motion is an amendment
      */
-    public get parentAndLineNumber(): string | null {
+    public get parentAndChangeIndex(): string | null {
         if (this.isParagraphBasedAmendment() && this.lead_motion && this.changedAmendmentLines?.length) {
-            return `${this.lead_motion.number} ${this.changedAmendmentLines[0].diffLineFrom}`;
-        } else {
-            return null;
+            if (this._firstChangeIndex === undefined) {
+                this._firstChangeIndex = this.getAmendmentFirstChangeIndex(ChangeRecoMode.Changed);
+            }
+
+            if (this._firstChangeIndex !== null) {
+                return `${this.lead_motion.number} ${this._firstChangeIndex}`;
+            }
         }
+
+        return null;
     }
 
     public get forwardingStatus(): ForwardingStatus {
@@ -249,6 +255,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
+    private _firstChangeIndex: number | null | undefined = undefined;
 
     public getVotingText(context: VotingTextContext<ViewMotion>): string {
         const motionTranslation = context.translateFn(`Motion`);
@@ -263,6 +270,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         recoMode: ChangeRecoMode,
         includeUnchanged?: boolean
     ) => DiffLinesInParagraph[] = () => [];
+
+    public getAmendmentFirstChangeIndex: (recoMode: ChangeRecoMode) => number | null = () => null;
 
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
