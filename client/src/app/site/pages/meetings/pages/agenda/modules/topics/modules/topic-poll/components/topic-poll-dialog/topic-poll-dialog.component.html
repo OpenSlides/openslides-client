@@ -1,9 +1,13 @@
-<mat-dialog-content></mat-dialog-content>
+<mat-dialog-content>
+    <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
+        <os-poll-form-selection optionType="text" [data]="pollData" [optionEdit]="true" />
+    </os-poll-form>
+</mat-dialog-content>
 
 <!-- Actions -->
 <mat-dialog-actions>
     <!-- Save Button -->
-    <button mat-button [disabled]="!formsValid || (!hasEnoughOptions() && !isEdit)" (click)="submitPoll()">
+    <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
         <span>{{ 'Save' | translate }}</span>
     </button>
 

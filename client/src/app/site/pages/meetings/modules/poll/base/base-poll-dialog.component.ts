@@ -187,7 +187,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     protected triggerUpdate(createOptions = false): void {
         if (createOptions) {
             this.reloading = true;
-            this.createOptions();
+            // this.createOptions();
         }
         this.analogVoteFields = this.getAnalogVoteFields();
         this.createDialog();

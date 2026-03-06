@@ -37,7 +37,6 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
     declarations: [
         TopicPollComponent,
         TopicPollDetailContentComponent,
-        TopicPollDialogComponent,
         TopicPollMetaInfoComponent,
         TopicPollVoteComponent
     ],
@@ -45,6 +44,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,
+        TopicPollDialogComponent,
         TopicPollServiceModule,
         TopicCommonServiceModule,
         FormsModule,

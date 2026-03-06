@@ -1,10 +1,88 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KeyValuePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
+
+import { ViewPoll } from '../../../../pages/polls';
 
 @Component({
     selector: 'os-poll-form-selection',
-    imports: [],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatSelectModule,
+        TranslatePipe,
+        KeyValuePipe
+    ],
     templateUrl: './poll-form-selection.component.html',
-    styleUrl: './poll-form-selection.component.scss',
+    styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollFormSelectionComponent {}
+export class PollFormSelectionComponent {
+    public form: UntypedFormGroup;
+
+    public validPercentBases: Record<SelectionOnehundredPercentBase, string> = {
+        no_general: 'Valid no general',
+        valid: 'Valid',
+        cast: 'Cast',
+        entitled: 'Entitled',
+        entitled_present: 'Entitled present',
+        disabled: 'Disabled'
+    };
+
+    public data = input.required<Partial<ViewPoll>>();
+    public optionType = input<'meeting_user' | 'text'>('text');
+    public optionEdit = input<boolean>(false);
+
+    public optionInputValue = signal<string>('');
+
+    private fb = inject(UntypedFormBuilder);
+
+    public constructor() {
+        this.form = this.fb.group({
+            onehundred_percent_base: [`valid`],
+            strike_out: [false],
+            allow_nota: [false],
+            max_options_amount: [1],
+            min_options_amount: [1],
+            option_type: ['text'],
+            options: [[]]
+        });
+
+        effect(this.onDataUpdated.bind(this));
+    }
+
+    public addOption(): void {
+        if (this.optionInputValue() === ``) {
+            return;
+        }
+
+        const options = this.form.get('options').value || [];
+        options.push(this.optionInputValue());
+        this.optionInputValue.set('');
+        this.form.get('options').setValue(options);
+    }
+
+    private onDataUpdated(): void {
+        if (!this.data() || !this.form) {
+            return;
+        }
+
+        const patch: Record<string, any> = {};
+        for (const field of [`onehundred_percent_base`, `allow_nota`, `max_options_amount`, `min_options_amount`]) {
+            if (this.data().config[field] !== undefined) patch[field] = this.data().config[field];
+        }
+
+        patch[`option_type`] = this.optionType();
+
+        this.form.patchValue(patch);
+    }
+}

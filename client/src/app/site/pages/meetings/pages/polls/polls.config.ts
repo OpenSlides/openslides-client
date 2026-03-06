@@ -4,6 +4,7 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import { PollConfigOption } from 'src/app/domain/models/poll/poll-config-option';
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
+import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
 import { PollCandidate } from 'src/app/domain/models/poll-candidate-lists/poll-candidate';
@@ -15,6 +16,7 @@ import { OptionRepositoryService } from 'src/app/gateways/repositories/polls/opt
 import { PollConfigApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-approval-repository.service';
 import { PollConfigOptionRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-option-repository.service';
 import { PollConfigRatingApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
+import { PollConfigRatingScoreRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-score-repository.service';
 import { PollConfigSelectionRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-selection-repository.service';
 import { PollConfigStvScottishRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-stv-scottish-repository.service';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
@@ -27,6 +29,7 @@ import {
     ViewPollConfigApproval,
     ViewPollConfigOption,
     ViewPollConfigRatingApproval,
+    ViewPollConfigRatingScore,
     ViewPollConfigSelection,
     ViewPollConfigStvScottish
 } from './view-models';
@@ -55,6 +58,11 @@ export const PollsAppConfig: AppConfig = {
             model: PollConfigRatingApproval,
             viewModel: ViewPollConfigRatingApproval,
             repository: PollConfigRatingApprovalRepositoryService
+        },
+        {
+            model: PollConfigRatingScore,
+            viewModel: ViewPollConfigRatingScore,
+            repository: PollConfigRatingScoreRepositoryService
         },
         {
             model: PollConfigSelection,
