@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Inject, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
@@ -12,7 +12,6 @@ import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments/vi
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { SubscribeToConfig } from 'src/app/site/services/model-request.service';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 interface EditorLinkDialogInput {
     link?: { href: string; target?: string };
@@ -44,15 +43,6 @@ export class EditorLinkDialogComponent implements OnInit {
 
     public toggleInsert: boolean;
 
-    private _repo!: ViewModelListProvider<any>;
-
-    protected subscriptions: Subscription[] = [];
-
-    @Input()
-    public set repo(repo: ViewModelListProvider<any>) {
-        this._repo = repo;
-    }
-
     /**
      * Values selected by radio buttons
      */
@@ -68,30 +58,6 @@ export class EditorLinkDialogComponent implements OnInit {
      */
     @Input()
     public searchFieldInput!: string;
-
-    /**
-     * Optional label for the input.
-     */
-    @Input()
-    public extensionLabel!: string;
-
-    /**
-     * Title for this component.
-     */
-    @Input()
-    public title!: string;
-
-    /**
-     * Boolean, whether the input and the search-list can be changed.
-     */
-    @Input()
-    public canBeEdited = true;
-
-    /**
-     * EventEmitter, when clicking on the 'save'-button.
-     */
-    @Output()
-    public succeeded = new EventEmitter<string>();
 
     /**
      * Boolean to decide, whether to open the extension-input and search-list.
@@ -265,8 +231,14 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public urlBuilder(item): string {
-        const setCollection = item.collection === 'agenda_item' ? 'agenda/topic' : item.collection;
-        const setId = item.collection === 'agenda_item' ? item.content_object_id?.split('/')[1] : item.id;
+        const parts = item.content_object_id?.split('/');
+        const isAgendaItem = item.collection === 'agenda_item' && item.content_object_id?.split('/')[0] === 'topic';
+        const setCollection: string = isAgendaItem
+            ? 'agenda/topic'
+            : item.collection === 'agenda_item'
+              ? parts?.[0]
+              : item.collection;
+        const setId: number = isAgendaItem ? parts?.[1] : item.content_object_id ? parts?.[1] : item.id;
         const builtUrl = `${this.activeMeetingIdService.meetingId}/${setCollection}s/${setId}`;
         const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
         return url;
