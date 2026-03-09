@@ -106,7 +106,7 @@
     "@angular/compiler-cli": "^21.2.1",
     "@angular/language-server": "^21.2.1",
     "@coreui/angular-chartjs": "^5.6.18",
-    "@stylistic/eslint-plugin": "^5.8.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.15",
     "@types/js-yaml": "^4.0.9",
