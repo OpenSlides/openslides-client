@@ -251,10 +251,15 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
             }
 
             if (this.newMotion) {
+                update.submitter_meeting_user_ids = [];
                 if (update.submitter_ids.length === 0 && this.operator.isInMeeting(this.activeMeetingId)) {
                     update.submitter_meeting_user_ids = [this.operator.user.getMeetingUser(this.activeMeetingId).id];
                 } else {
-                    update.submitter_meeting_user_ids = update.submitter_ids;
+                    update.submitter_ids.forEach(id => {
+                        update.submitter_meeting_user_ids.push(
+                            this.userRepo.getViewModel(id).getMeetingUser(this.activeMeetingId).id
+                        );
+                    });
                 }
                 for (const key in update) {
                     if (update[key] === null || update[key].length === 0) {
