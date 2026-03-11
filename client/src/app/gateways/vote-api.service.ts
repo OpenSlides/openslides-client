@@ -10,7 +10,7 @@ export interface PollCreatePayload {
     content_object_id: string;
     meeting_id: Id;
     method: string;
-    config: unknown;
+    method_config: unknown;
     visibility: PollVisibility;
     entitled_group_ids?: Id[];
     live_voting_enabled?: boolean;

@@ -49,7 +49,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
             content_object_id: motion?.fqid,
             meeting_id: motion?.meeting_id,
             method: `approval`,
-            config,
+            method_config: config,
             visibility,
             allow_vote_split: false
         };

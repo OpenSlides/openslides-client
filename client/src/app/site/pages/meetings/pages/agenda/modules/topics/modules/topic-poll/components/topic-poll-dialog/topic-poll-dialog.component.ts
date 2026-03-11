@@ -49,7 +49,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
             content_object_id: topic?.fqid,
             meeting_id: topic?.meeting_id,
             method: `selection`,
-            config,
+            method_config: config,
             visibility,
             allow_vote_split: false
         };
