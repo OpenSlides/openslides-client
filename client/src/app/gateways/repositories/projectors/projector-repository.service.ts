@@ -6,6 +6,7 @@ import { Projector } from 'src/app/domain/models/projector/projector';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
+import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';
@@ -37,13 +38,14 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         return await this.sendActionToBackend(ProjectorAction.CREATE, payload);
     }
 
-    public async update(update: Partial<Projector>, viewModel: Identifiable): Promise<void> {
+    public update(update: Partial<Projector>, viewModel: Identifiable): Action<void> {
         const payload: any = {
             id: viewModel.id,
             name: update.name,
             ...this.getPartialPayload(update)
         };
-        return await this.sendActionToBackend(ProjectorAction.UPDATE, payload);
+
+        return Action.from(this.createAction(ProjectorAction.UPDATE, payload));
     }
 
     private getPartialPayload(projector: Partial<Projector>): any {
