@@ -1,4 +1,18 @@
-<mat-dialog-content></mat-dialog-content>
+<mat-dialog-content>
+    <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
+        @switch (method) {
+            @case ('approval') {
+                <os-poll-form-approval [data]="pollData" />
+            }
+            @case ('selection') {
+                <os-poll-form-selection [data]="pollData" />
+            }
+            @case ('rating_approval') {
+                <os-poll-form-rating-approval [data]="pollData" />
+            }
+        }
+    </os-poll-form>
+</mat-dialog-content>
 
 <mat-dialog-actions>
     <!-- Save Button -->

@@ -93,11 +93,17 @@
                     }
                     <!-- New Ballot button -->
                     @if (assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')) {
-                        <div class="new-ballot-button">
-                            <button mat-stroked-button (click)="openDialog()">
-                                <mat-icon>add</mat-icon>
-                                <span>{{ 'New ballot' | translate }}</span>
-                            </button>
+                        <div class="new-ballot-button-container">
+                            <div class="new-ballot-button">
+                                <button mat-stroked-button (click)="openCreateDialog()">
+                                    <mat-icon>add</mat-icon>
+                                    <span>{{ 'New ballot' | translate }}</span>
+                                </button>
+
+                                <button class="menu-button" mat-icon-button [matMenuTriggerFor]="ballotMenu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                            </div>
                         </div>
                     }
                     <!-- candidates list -->
@@ -107,6 +113,18 @@
         </div>
     }
 </os-detail-view>
+
+<mat-menu #ballotMenu="matMenu">
+    <button mat-menu-item (click)="openCreateDialog('approval')">
+        <span>New list vote</span>
+    </button>
+    <button mat-menu-item (click)="openCreateDialog('selection')">
+        <span>New selection ballot</span>
+    </button>
+    <button mat-menu-item (click)="openCreateDialog('rating_approval')">
+        <span>New selection approval ballot</span>
+    </button>
+</mat-menu>
 
 <ng-template #metaInfoTemplate>
     @if (assignment) {

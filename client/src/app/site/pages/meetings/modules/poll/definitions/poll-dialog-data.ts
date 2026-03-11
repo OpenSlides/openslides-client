@@ -6,6 +6,7 @@ export interface PollDialogData {
     // Required
     title: string;
     type: string;
+    method: string;
     pollmethod: string;
     content_object_id?: Fqid;
     content_object: BaseModel;

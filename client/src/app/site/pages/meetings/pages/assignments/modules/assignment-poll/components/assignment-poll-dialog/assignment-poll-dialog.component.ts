@@ -1,103 +1,95 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
-import {
-    GeneralValueVerbose,
-    GlobalOptionKey,
-    PollMethod,
-    PollPercentBaseVerbose,
-    PollPropertyVerbose,
-    VoteValue
-} from 'src/app/domain/models/poll';
-import {
-    BasePollDialogComponent,
-    OptionsObject
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
+import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
+import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollFormRatingApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
-import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
-import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
+import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
-    standalone: false
+    imports: [
+        PollFormComponent,
+        PollFormApprovalComponent,
+        PollFormSelectionComponent,
+        PollFormRatingApprovalComponent,
+        MatDialogModule,
+        MatButtonModule,
+        TranslatePipe
+    ]
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
-    public unknownUserLabel = UnknownUserLabel;
+    @ViewChild(PollFormApprovalComponent)
+    private approvalForm: PollFormApprovalComponent | null = null;
 
-    /**
-     * List of accepted special non-numerical values.
-     * See {@link PollService.specialPollVotes}
-     */
-    public specialValues: [number, string][] = [];
+    @ViewChild(PollFormSelectionComponent)
+    private selectionForm: PollFormSelectionComponent | null = null;
 
-    public generalValueVerbose = GeneralValueVerbose;
-    public PollPropertyVerbose = PollPropertyVerbose;
+    @ViewChild(PollFormRatingApprovalComponent)
+    private ratingApprovalForm: PollFormRatingApprovalComponent | null = null;
 
-    public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
-    public get AssignmentPollPercentBaseVerbose(): Record<string, string> {
-        return this.pollData.isListPoll ? PollPercentBaseVerbose : AssignmentPollPercentBaseVerbose;
+    public method = `rating_approval`;
+
+    public get isEVotingEnabled(): boolean {
+        return this.assignmentPollService.isElectronicVotingEnabled;
     }
 
-    public readonly globalValues: GlobalOptionKey[] = [`global_yes`, `global_no`, `global_abstain`];
-
-    /**
-     * Constructor. Retrieves necessary metadata from the pollService,
-     * injects the poll itself
-     */
     public constructor(
-        public readonly assignmentPollService: AssignmentPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
+        private voteApiService: VoteApiService,
+        private assignmentPollService: AssignmentPollService,
+        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewAssignment>
     ) {
         super(pollData);
     }
 
-    public override onBeforeInit(): void {
-        this.subscriptions.push(
-            this.pollForm!.pollForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
-                this.triggerUpdate();
-            })
-        );
-    }
+    public override submitPoll(): void {
+        const formValues = this.pollForm?.getValues();
+        const config = { ...this.approvalForm?.approvalForm.value };
+        const motion = this.pollData?.content_object;
+        const visibility: PollVisibility = formValues?.visibility;
 
-    public getOptionAmount(): number {
-        return this._options?.length;
-    }
+        const payload: PollCreatePayload = {
+            title: formValues?.title,
+            content_object_id: motion?.fqid,
+            meeting_id: motion?.meeting_id,
+            method: `approval`,
+            method_config: config,
+            visibility,
+            allow_vote_split: false
+        };
 
-    public optionIsList(option: OptionsObject): boolean {
-        return !!option.poll_candidate_user_ids?.length;
-    }
-
-    protected getContentObjectsForOptions(): BaseModel[] {
-        if (!this.pollData) {
-            return [];
+        if (visibility !== PollVisibility.Manually) {
+            payload.entitled_group_ids = formValues?.entitled_group_ids ?? [];
+            payload.live_voting_enabled = formValues?.live_voting_enabled ?? false;
         }
-        const contentObject = this.pollData.content_object as ViewAssignment;
-        return contentObject.candidatesAsUsers;
+
+        if (this.pollData?.id) {
+            delete payload[`meeting_id`];
+            delete payload[`content_object_id`];
+            this.voteApiService.update(this.pollData.id, payload);
+        } else {
+            this.voteApiService.create(payload);
+        }
+
+        this.dialogRef.close();
     }
 
     protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm!.pollForm.get(`pollmethod`)!.value;
+        return [`Y`, `N`, `A`];
+    }
 
-        const analogPollValues: VoteValue[] = [];
-
-        if (pollmethod === PollMethod.N) {
-            analogPollValues.push(`N`);
-        } else {
-            analogPollValues.push(`Y`);
-
-            if (pollmethod !== PollMethod.Y) {
-                analogPollValues.push(`N`);
-            }
-            if ((pollmethod as string).toUpperCase() === PollMethod.YNA) {
-                analogPollValues.push(`A`);
-            }
-        }
-
-        return analogPollValues;
+    protected getContentObjectsForOptions(): BaseModel[] {
+        return [this.pollData.content_object];
     }
 }

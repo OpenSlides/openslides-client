@@ -316,10 +316,19 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
+     * Updates an existing Poll
+     */
+    public openDialog(pollId: Id): void {
+        this.pollDialog.open(this.getDialogData(pollId));
+    }
+
+    /**
      * Creates a new Poll
      */
-    public openDialog(pollId?: Id): void {
-        this.pollDialog.open(this.getDialogData(pollId));
+    public openCreateDialog(type?: string): void {
+        const data = this.getDialogData() as PollDialogData;
+        data.method = type || `selection`;
+        this.pollDialog.open(data);
     }
 
     /**

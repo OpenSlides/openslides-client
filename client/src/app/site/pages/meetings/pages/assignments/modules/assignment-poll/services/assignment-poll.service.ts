@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
+import { PollPercentBaseVerboseKey, PollTypeVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
@@ -69,7 +69,9 @@ export class AssignmentPollService extends PollService {
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
-            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
+            visibility: this.isElectronicVotingEnabled
+                ? (this.defaultPollType as unknown as PollVisibility)
+                : PollVisibility.Manually
         };
 
         if (contentObject) {

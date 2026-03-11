@@ -44,9 +44,10 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    declarations: [...COMPONENTS, AssignmentPollDialogComponent],
+    declarations: [...COMPONENTS],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
+        AssignmentPollDialogComponent,
         ArrowNavigationDirective,
         CustomIconComponent,
         CommonModule,

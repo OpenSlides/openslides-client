@@ -8,6 +8,10 @@
         display: grid;
         column-gap: 1em;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+        > mat-checkbox {
+            padding-top: 10px;
+        }
     }
 
     .flex-info-grid {

@@ -10,7 +10,7 @@ import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-c
 import { ViewPoll } from '../../../../pages/polls';
 
 @Component({
-    selector: 'os-poll-approval-form',
+    selector: 'os-poll-form-approval',
     imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatCheckboxModule, TranslatePipe, KeyValuePipe],
     templateUrl: './poll-form-approval.component.html',
     styleUrl: './poll-form-approval.component.scss',
