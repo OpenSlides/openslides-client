@@ -1,4 +1,5 @@
 @use 'src/assets/styles/tables.scss';
+@use 'src/assets/styles/media-queries.scss';
 
 .flex-container {
     display: flex;
@@ -11,6 +12,10 @@
 
 .align-left {
     align-items: start;
+}
+
+.align-right {
+    align-items: end;
 }
 
 .groups-grid {
@@ -34,17 +39,53 @@
     grid-template-columns: 95% 5%;
 }
 
+mat-card {
+    overflow-block: auto;
+    display: inline-flex;
+    scrollbar-width: none;
+}
+
 .card-grid {
     display: grid;
-    grid-template-columns: 1fr 70px 1fr 55px 1fr;
-    grid-column-gap: 10px;
-    @media (max-width: 700px) {
-        grid-template-columns: 1fr 70px 1fr 55px 1fr;
-        grid-column-gap: 5px;
+    white-space: nowrap;
+    --center-width: 60%;
+    --columns-width: 8%;
+    grid-template-columns: var(--columns-width) 2fr var(--center-width) 2fr var(--columns-width);
+    grid-gap: 10px;
+    @include media-queries.set-breakpoint-lower(xs) {
+        --columns-width: 6%;
+        --center-width: 40%;
     }
-    @media (min-width: 1500px) {
-        grid-template-columns: 1fr 70px 200px 55px 1fr;
-        grid-column-gap: 10px;
+    @include media-queries.set-breakpoint-upper(md) {
+        --columns-width: 6.5%;
+        --center-width: 60%;
+    }
+    @include media-queries.set-breakpoint-upper(lg) {
+        --columns-width: 9%;
+        --center-width: 70%;
+    }
+}
+
+.gender-map-grid {
+    display: grid;
+    .row {
+        white-space: nowrap;
+        padding: 1em 0em 1em 0em;
+        display: grid;
+        --center-width: 60%;
+        --columns-width: 10%;
+        grid-template-columns: var(--columns-width) 2fr var(--center-width) 2fr var(--columns-width);
+        @include media-queries.set-breakpoint-upper(md) {
+            --columns-width: 8%;
+            --center-width: 60%;
+        }
+        @include media-queries.set-breakpoint-upper(lg) {
+            --columns-width: 10%;
+            --center-width: 70%;
+        }
+    }
+    .row:not(:last-child) {
+        border-bottom: 1px solid rgba(177, 177, 177, 0.637);
     }
 }
 
@@ -86,7 +127,7 @@
 }
 
 .margin-left-medium {
-    margin-left: 70px;
+    margin-left: 115px;
 }
 
 .margin-bottom-20 {
