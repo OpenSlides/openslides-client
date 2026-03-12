@@ -41,7 +41,8 @@ export class EditorLinkDialogComponent implements OnInit {
 
     public referenceText = ``;
 
-    public toggleInsert: boolean;
+    public toggleInternalReference: boolean;
+    public toggleExternalReference: boolean;
 
     /**
      * Values selected by radio buttons
@@ -70,11 +71,6 @@ export class EditorLinkDialogComponent implements OnInit {
     public inputControl;
 
     /**
-     * Prevent selecting the same value twice.
-     */
-    private searchListDisabledItems = [];
-
-    /**
      * The item from the list that will be added to the editor.
      */
     public itemToReference;
@@ -97,6 +93,11 @@ export class EditorLinkDialogComponent implements OnInit {
      * FormGroup for the search-list.
      */
     public extensionFieldForm: UntypedFormGroup;
+
+    /**
+     * The selected internal item
+     */
+    public item;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
@@ -148,6 +149,7 @@ export class EditorLinkDialogComponent implements OnInit {
                 this.dialogRef.close({ action: `set-link`, link: this.link });
             }
         } else {
+            this.changeEditMode(true);
             if (!/^[a-zA-Z]+:\/\//.test(this.referenceLink.href)) {
                 this.dialogRef.close({
                     action: `set-link`,
@@ -158,8 +160,8 @@ export class EditorLinkDialogComponent implements OnInit {
         }
     }
 
-    public toggle(): void {
-        this.toggleInsert = !this.toggleInsert;
+    public toggleArrow(prop: 'toggleInternalReference' | 'toggleExternalReference'): void {
+        this[prop] = !this[prop];
     }
 
     /**
@@ -178,7 +180,7 @@ export class EditorLinkDialogComponent implements OnInit {
      */
     public changeEditMode(save = false): void {
         if (save) {
-            this.addToExtensionField();
+            this.addReference();
         } else {
             this.initForm();
             this.initInput();
@@ -192,7 +194,6 @@ export class EditorLinkDialogComponent implements OnInit {
      */
     public initInput(): void {
         this.inputControl = this.searchFieldInput;
-        this.searchListDisabledItems = [];
     }
 
     /**
@@ -204,30 +205,21 @@ export class EditorLinkDialogComponent implements OnInit {
             MotionFormControl: new FormControl(this.motionItemRepo),
             AssignmentFormControl: new FormControl(this.assignmentItemRepo)
         });
+        this.extensionFieldForm.valueChanges.subscribe(() => {
+            const controlName = `${this.searchLists[this.selectedRepoValue].label}FormControl`;
+            const selectedId = this.extensionFieldForm.get(controlName)?.value;
+            const repo = this.searchRepos[this.selectedRepoValue];
+            this.item = repo.getViewModel(selectedId);
+            this.addReference();
+        });
     }
 
     /**
      * Function to add the values.
      */
-    public addToExtensionField(): void {
-        const controlName = `${this.searchLists[this.selectedRepoValue].label}FormControl`;
-        const selectedId = this.extensionFieldForm.get(controlName)?.value;
-        const repo = this.searchRepos[this.selectedRepoValue];
-        const item = repo.getViewModel(selectedId);
-        this.referenceText = ' ' + item.getTitle() + ' ';
-        if (!this.getIsDisabled(item)) {
-            this.inputControl = `[${item.fqid}]`;
-            this.referenceLink.href = this.urlBuilder(item);
-            this.disableItem(item);
-        }
-    }
-
-    public getIsDisabled(item): boolean {
-        return this.searchListDisabledItems?.includes(item.fqid);
-    }
-
-    public disableItem(item): void {
-        if (!this.getIsDisabled(item.fqid)) this.searchListDisabledItems = [item.fqid];
+    public addReference(): void {
+        this.referenceText = this.item ? `${this.item.getTitle()}` : '';
+        this.referenceLink.href = this.item ? this.urlBuilder(this.item) : '';
     }
 
     public urlBuilder(item): string {
@@ -238,7 +230,11 @@ export class EditorLinkDialogComponent implements OnInit {
             : item.collection === 'agenda_item'
               ? parts?.[0]
               : item.collection;
-        const setId: number = isAgendaItem ? parts?.[1] : item.content_object_id ? parts?.[1] : item.id;
+        const setId: number = isAgendaItem
+            ? item.content_object.sequential_number
+            : item.content_object_id
+              ? parts?.[1]
+              : item.sequential_number;
         const builtUrl = `${this.activeMeetingIdService.meetingId}/${setCollection}s/${setId}`;
         const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
         return url;

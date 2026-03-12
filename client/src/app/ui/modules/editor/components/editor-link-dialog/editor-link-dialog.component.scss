@@ -2,18 +2,6 @@ mat-form-field {
     width: 100%;
 }
 
-.matDialogLinkActions {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-bottom: -20px;
-    margin-top: -15px;
-}
-
-.matDialogActions {
-    margin-top: -15px;
-}
-
 .mat-form-margin-top {
     margin-top: 10px;
 }
@@ -24,16 +12,18 @@ mat-form-field {
     margin-bottom: 5px;
 }
 
-.internalReferences {
+.references {
     display: flex;
 
     .internalReferencesTitle {
         margin-bottom: 7px;
-        padding-right: 29px;
+        justify-self: start;
     }
 
-    .internalReferencesArrows {
+    .arrows {
         display: flex;
         margin-top: 7px;
+        margin-left: auto;
+        transform: translateX(-20px);
     }
 }
