@@ -220,7 +220,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      * Get the index of the first diff change, in case a motion is an amendment
      */
     public get parentAndChangeIndex(): string | null {
-        if (this.isParagraphBasedAmendment() && this.lead_motion && this.changedAmendmentLines?.length) {
+        if (this.isParagraphBasedAmendment() && this.lead_motion) {
             if (this._firstChangeIndex === undefined) {
                 this._firstChangeIndex = this.getAmendmentFirstChangeIndex(ChangeRecoMode.Changed);
             }
