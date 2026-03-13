@@ -169,8 +169,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     private announcer(): void {
         const liveAnnounceTitle = this.translate.instant(`The projected title is`) + `: `;
-        // const liveAnnouncePollNum = this.translate.instant(`There are %num% polls running`) `;
-        // liveAnnouncePollNum.replace(%num%, number_of_polls)
         this.liveAnnouncer.announce(liveAnnounceTitle + this._currentProjection.getTitle());
     }
 
