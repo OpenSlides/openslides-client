@@ -39,7 +39,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public get title(): string {
         if (this._currentProjection) {
-            this.announcer();
             return this._currentProjection.getTitle();
         } else {
             return ``;
@@ -147,6 +146,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                     if (this.projectedViewModel?.collection === `list_of_speakers`) {
                         this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
                     }
+                    this.announcer();
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
