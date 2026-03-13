@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -124,7 +125,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         breakpoint: BreakpointObserver,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private liveAnnouncer: LiveAnnouncer
     ) {
         super();
 
@@ -144,6 +146,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                     if (this.projectedViewModel?.collection === `list_of_speakers`) {
                         this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
                     }
+                    this.announcer();
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
@@ -162,6 +165,11 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public ngOnInit(): void {
         super.setTitle(`Autopilot`);
+    }
+
+    private announcer(): void {
+        const liveAnnounceTitle = this.translate.instant(`The projected title is`) + `: `;
+        this.liveAnnouncer.announce(liveAnnounceTitle + this._currentProjection.getTitle());
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
