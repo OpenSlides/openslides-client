@@ -30,6 +30,7 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { PollServiceModule } from '../poll-service.module';
 
 const PollChartBarThickness = 20;
@@ -40,6 +41,12 @@ export abstract class PollService {
     protected sortByVote = false;
     protected enableMaxVotesPerOption = false;
 
+    public get defaultPollLiveVotingEnabled(): boolean {
+        return this._defaultPollLiveVotingEnabled;
+    }
+
+    private _defaultPollLiveVotingEnabled = false;
+
     public get isElectronicVotingEnabled(): boolean {
         return this._isElectronicVotingEnabled;
     }
@@ -47,6 +54,7 @@ export abstract class PollService {
     private _isElectronicVotingEnabled = false;
 
     private organizationSettingsService = inject(OrganizationSettingsService);
+    protected meetingSettingsService = inject(MeetingSettingsService);
     protected translate = inject(TranslateService);
     protected themeService = inject(ThemeService);
     protected activeMeeting = inject(ActiveMeetingService);
@@ -55,6 +63,10 @@ export abstract class PollService {
         this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));
+
+        this.meetingSettingsService
+            .get(`poll_default_live_voting_enabled`)
+            .subscribe(is => (this._defaultPollLiveVotingEnabled = is));
     }
 
     public generateTableData(poll: PollData): PollTableData[] {

@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { SingleOptionChartTableComponent } from 'src/app/site/pages/meetings/modules/poll/components/single-option-chart-table/single-option-chart-table.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
@@ -17,9 +19,9 @@ const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
 @Component({
     selector: `os-motion-poll-detail-content`,
     templateUrl: `./motion-poll-detail-content.component.html`,
+    imports: [TranslatePipe, SingleOptionChartTableComponent],
     styleUrls: [`./motion-poll-detail-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy, OnInit {
     private _poll!: PollData | null;
@@ -74,7 +76,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.isFinished && this.poll?.published;
     }
 
     public get canSeeResults(): boolean {

@@ -34,7 +34,7 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
      * TODO: Can be removed, when OpenSlides/openslides-autoupdate-service#262 is resolved.
      */
     public canBeVoteFor(poll: ViewPoll): boolean {
-        if (poll.state === PollState.Finished || poll.state === PollState.Published) {
+        if (poll.state === PollState.Finished) {
             return false;
         }
         return poll.canBeVotedFor() && !poll.hasVoted;

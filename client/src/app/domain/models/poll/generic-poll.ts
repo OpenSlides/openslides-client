@@ -15,6 +15,7 @@ export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
  * use this interface, so the poll services can work on this shared view on the data.
  */
 export interface PollData {
+    published: boolean;
     pollClassType?: PollClassType;
     pollmethod: PollMethod;
     state: PollState;

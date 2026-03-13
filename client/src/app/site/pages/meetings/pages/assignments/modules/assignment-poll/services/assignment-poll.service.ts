@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
+import { PollPercentBaseVerboseKey, PollTypeVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
@@ -16,7 +16,6 @@ import {
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
@@ -40,8 +39,7 @@ export class AssignmentPollService extends PollService {
     public constructor(
         pollServiceMapper: PollServiceMapperService,
         protected override translate: TranslateService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private pollRepo: PollControllerService
     ) {
         super();
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
@@ -71,7 +69,9 @@ export class AssignmentPollService extends PollService {
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             pollmethod: this.defaultPollMethod,
-            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
+            visibility: this.isElectronicVotingEnabled
+                ? (this.defaultPollType as unknown as PollVisibility)
+                : PollVisibility.Manually
         };
 
         if (contentObject) {

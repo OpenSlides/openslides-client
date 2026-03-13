@@ -122,7 +122,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.isFinished && this.poll?.published;
     }
 
     public get shouldShowChart(): boolean {

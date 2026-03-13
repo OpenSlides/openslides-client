@@ -9,7 +9,7 @@ import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewBallot, ViewOption, ViewPoll } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
@@ -376,7 +376,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     /**
      * Returns all votes given by the user in a given meeting.
      */
-    public getAllVotes(meetingId?: number): ViewVote[] {
+    public getAllVotes(meetingId?: number): ViewBallot[] {
         const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
         return this.votes
             .filter(vote => vote.meeting_id === meetingID)
@@ -406,7 +406,7 @@ interface IUserRelations {
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
     options: ViewOption[];
-    votes: ViewVote[];
+    votes: ViewBallot[];
     poll_candidates: ViewPollCandidate[];
     gender?: ViewGender;
     history_positions: ViewHistoryPosition[];

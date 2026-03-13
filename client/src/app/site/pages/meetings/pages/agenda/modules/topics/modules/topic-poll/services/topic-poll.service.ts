@@ -22,7 +22,6 @@ import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/c
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewTopic } from '../../../view-models';
 import { TopicPollServiceModule } from './topic-poll-service.module';
@@ -42,8 +41,7 @@ export class TopicPollService extends PollService {
 
     public constructor(
         pollServiceMapper: PollServiceMapperService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private pollRepo: PollControllerService
     ) {
         super();
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);

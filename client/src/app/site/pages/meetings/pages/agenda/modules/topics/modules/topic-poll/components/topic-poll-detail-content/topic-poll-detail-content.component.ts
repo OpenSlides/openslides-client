@@ -65,7 +65,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.isFinished && this.poll?.published;
     }
 
     public get canSeeResults(): boolean {

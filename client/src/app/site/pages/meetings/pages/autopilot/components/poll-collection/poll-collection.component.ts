@@ -1,4 +1,6 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -12,6 +14,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
 
@@ -19,7 +22,7 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
-    standalone: false
+    imports: [MatCardModule, NgTemplateOutlet, PollComponent]
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];

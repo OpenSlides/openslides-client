@@ -38,7 +38,7 @@ import { ViewMotionSupporter } from '../pages/motions/modules/supporters';
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewBallot, ViewOption, ViewPoll } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
@@ -195,7 +195,7 @@ interface IMeetingRelations {
     poll_candidates: ViewPollCandidate[];
     poll_candidate_lists: ViewPollCandidateList[];
     options: ViewOption[];
-    votes: ViewVote[];
+    votes: ViewBallot[];
     assignments: ViewAssignment[];
     assignment_candidates: ViewAssignmentCandidate[];
     chat_groups: ViewChatGroup[];

@@ -55,7 +55,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         if (extendedVoteData) {
             extendedVoteData.map(
                 (element, index) =>
-                    (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
+                    (element.vote_verbose_translated = this.translate.instant(voteData[index].ballot.valueVerbose))
             );
         }
         return extendedVoteData;

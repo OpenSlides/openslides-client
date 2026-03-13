@@ -1,0 +1,40 @@
+@for (option of options(); track option.id; let i = $index) {
+    <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+        <div class="vote-option-title grid-name-area" role="rowheader">
+            <span>{{ option.text }}</span>
+        </div>
+        <div class="vote-button-area" role="gridcell">
+            <button
+                class="vote-button"
+                mat-raised-button
+                role="radio"
+                [ariaLabel]="option.text"
+                [attr.aria-checked]="isSelected(option.id) ? 'true' : 'false'"
+                [disabled]="loading()"
+                (click)="toggleOption(option.id)"
+            >
+                <div class="vote-button-content" [class.button-content-opaque]="!isSelected(option.id)">
+                    <os-custom-icon
+                        class="vote-button-cross"
+                        [class.voted-yes]="isSelected(option.id)"
+                        [customIcon]="drawnCross"
+                    ></os-custom-icon>
+                    <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                </div>
+            </button>
+        </div>
+    </div>
+}
+
+@if (options().length > 0) {
+    <div class="submit-area">
+        <button
+            color="accent"
+            mat-raised-button
+            [disabled]="loading() || selectedOptionIds().size === 0"
+            (click)="submitVote()"
+        >
+            {{ 'Submit vote' | translate }}
+        </button>
+    </div>
+}

@@ -316,10 +316,19 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
+     * Updates an existing Poll
+     */
+    public openDialog(pollId: Id): void {
+        this.pollDialog.open(this.getDialogData(pollId));
+    }
+
+    /**
      * Creates a new Poll
      */
-    public openDialog(pollId?: Id): void {
-        this.pollDialog.open(this.getDialogData(pollId));
+    public openCreateDialog(type?: string): void {
+        const data = this.getDialogData() as PollDialogData;
+        data.method = type || `selection`;
+        this.pollDialog.open(data);
     }
 
     /**
@@ -459,7 +468,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 content_object_id: this.assignment.fqid,
                 content_object: this.assignment,
                 ...this.assignmentPollService.getDefaultPollData(this.assignment)
-            } as PollDialogData;
+            } as unknown as PollDialogData;
         }
     }
 

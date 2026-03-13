@@ -6,6 +6,7 @@ export interface PollDialogData {
     // Required
     title: string;
     type: string;
+    method: string;
     pollmethod: string;
     content_object_id?: Fqid;
     content_object: BaseModel;
@@ -13,4 +14,5 @@ export interface PollDialogData {
 
     isPublished?: boolean;
     onehundred_percent_base?: string;
+    live_voting_enabled?: boolean;
 }
