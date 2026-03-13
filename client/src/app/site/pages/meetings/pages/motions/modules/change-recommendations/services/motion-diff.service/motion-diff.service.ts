@@ -424,7 +424,16 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        return HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
+        const cacheKey = `getChangeDiff` + lineLength + ` ` + djb2hash(html) + djb2hash(change.getChangeNewText());
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const diff = HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
+        this.diffCache.put(cacheKey, diff);
+
+        return diff;
     }
 
     /**
@@ -469,7 +478,32 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
-        return HtmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
+        const cacheKey =
+            `extractMotionLineRange ` +
+            lineLength +
+            ` ` +
+            lineNumbers +
+            ` ` +
+            lineRange.from +
+            ` ` +
+            lineRange.to +
+            ` ` +
+            djb2hash(motionText);
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const extractedLineRange = HtmlDiff.extractMotionLineRange(
+            motionText,
+            lineRange,
+            lineNumbers,
+            lineLength,
+            highlightedLine
+        );
+        this.diffCache.put(cacheKey, extractedLineRange);
+
+        return extractedLineRange;
     }
 
     private convertViewUnifiedChanges(changes: ViewUnifiedChange[]): HtmlDiff.UnifiedChange[] {
