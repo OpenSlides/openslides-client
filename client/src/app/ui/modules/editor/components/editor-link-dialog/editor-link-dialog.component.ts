@@ -1,5 +1,5 @@
 import { Component, Inject, inject, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -44,11 +44,6 @@ export class EditorLinkDialogComponent implements OnInit {
     public toggleInternalReference: boolean;
     public toggleExternalReference: boolean;
 
-    /**
-     * Values selected by radio buttons
-     */
-    public selectedRepoValue = 0;
-
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     public subscriptionConfig: SubscribeToConfig = getAgendaListMinimalSubscriptionConfig(
         this.activeMeetingIdService.meetingId
@@ -71,10 +66,6 @@ export class EditorLinkDialogComponent implements OnInit {
     public inputControl;
 
     /**
-     * The item from the list that will be added to the editor.
-     */
-    public itemToReference;
-    /**
      * Init Repos
      */
     public agendaItemRepo = inject(AgendaItemRepositoryService);
@@ -92,17 +83,24 @@ export class EditorLinkDialogComponent implements OnInit {
     /**
      * FormGroup for the search-list.
      */
-    public extensionFieldForm: UntypedFormGroup;
+    public internalReferenceForm: UntypedFormGroup;
 
     /**
      * The selected internal item
      */
     public item;
 
+    /**
+     * Values selected by radio buttons
+     */
+    public internalRadioOptions: FormGroup;
+    public selectedRepoValue = 0;
+
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
-        private router: Router
+        private router: Router,
+        private fb: FormBuilder
     ) {
         this.link = { ...data.link };
         this.isUpdate = !!data.link && !!data.link.href;
@@ -113,6 +111,12 @@ export class EditorLinkDialogComponent implements OnInit {
         if (!this.referenceLink.target) {
             this.referenceLink.target = `_blank`;
         }
+        this.internalRadioOptions = this.fb.group({
+            options: [0]
+        });
+        this.internalRadioOptions.valueChanges.subscribe(() => {
+            this.selectedRepoValue = this.internalRadioOptions.get('options').value;
+        });
     }
 
     public ngOnInit(): void {
@@ -165,15 +169,6 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     /**
-     * Hitting enter on the input field should save the content
-     */
-    public keyDownFunction(event: any): void {
-        if (event.key === `Enter`) {
-            this.changeEditMode(true);
-        }
-    }
-
-    /**
      * Function to switch to or from editing-mode.
      *
      * @param save Boolean, whether the changes should be saved or resetted.
@@ -200,14 +195,14 @@ export class EditorLinkDialogComponent implements OnInit {
      * Initializes the form.
      */
     public initForm(): void {
-        this.extensionFieldForm = new FormGroup({
+        this.internalReferenceForm = new FormGroup({
             TopicFormControl: new FormControl(this.agendaItemRepo),
             MotionFormControl: new FormControl(this.motionItemRepo),
             AssignmentFormControl: new FormControl(this.assignmentItemRepo)
         });
-        this.extensionFieldForm.valueChanges.subscribe(() => {
+        this.internalReferenceForm.valueChanges.subscribe(() => {
             const controlName = `${this.searchLists[this.selectedRepoValue].label}FormControl`;
-            const selectedId = this.extensionFieldForm.get(controlName)?.value;
+            const selectedId = this.internalReferenceForm.get(controlName)?.value;
             const repo = this.searchRepos[this.selectedRepoValue];
             this.item = repo.getViewModel(selectedId);
             this.addReference();

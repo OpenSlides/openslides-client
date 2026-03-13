@@ -47,8 +47,8 @@
 </div>
 @if (toggleInternalReference) {
     <div mat-dialog-content>
-        <div class="card-grid">
-            <mat-radio-group aria-label="Select an option" class="radio-group" [(ngModel)]="selectedRepoValue">
+        <div class="card-grid" [formGroup]="internalRadioOptions">
+            <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="options">
                 <mat-radio-button
                     aria-label="Topics"
                     translate
@@ -77,7 +77,7 @@
                     Assignments
                 </mat-radio-button>
             </mat-radio-group>
-            <mat-form-field [formGroup]="extensionFieldForm">
+            <mat-form-field [formGroup]="internalReferenceForm">
                 <mat-label translate>
                     {{ searchLists[selectedRepoValue].label }}
                 </mat-label>
@@ -99,9 +99,11 @@
 }
 
 <div class="matDialogActions" mat-dialog-actions>
-    <button color="accent" mat-button translate [disabled]="!link.href && !referenceText" (click)="save()">Ok</button>
+    <button aria-label="Ok" color="accent" mat-button translate [disabled]="!link.href && !this.item" (click)="save()">
+        Ok
+    </button>
     @if (isUpdate) {
-        <button color="warn" mat-button translate (click)="removeLink()">Remove link</button>
+        <button aria-label="Remove link" color="warn" mat-button translate (click)="removeLink()">Remove link</button>
     }
-    <button mat-button translate (click)="cancel()">Cancel</button>
+    <button aria-label="Cancel" mat-button translate (click)="cancel()">Cancel</button>
 </div>

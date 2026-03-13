@@ -2,10 +2,6 @@ mat-form-field {
     width: 100%;
 }
 
-.mat-form-margin-top {
-    margin-top: 10px;
-}
-
 .radio-group {
     display: flex;
     gap: 15px;
@@ -14,11 +10,6 @@ mat-form-field {
 
 .references {
     display: flex;
-
-    .internalReferencesTitle {
-        margin-bottom: 7px;
-        justify-self: start;
-    }
 
     .arrows {
         display: flex;
