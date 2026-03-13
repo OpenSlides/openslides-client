@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -29,6 +29,7 @@ export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
     projector?: ViewProjector;
+    hideMainButton?: boolean;
 }
 
 @Component({
@@ -64,6 +65,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private currentProjectionOptions: Record<string, any> = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
+
+    @Input()
+    public hideMainButton = false;
 
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,

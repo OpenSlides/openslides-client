@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
@@ -41,6 +42,12 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
 
     @Input()
     public menuItem = false;
+
+    @Input()
+    public projectorLabel = `Project`;
+
+    @Input()
+    public hideMainButton = false;
 
     @Output()
     public changeEvent = new EventEmitter<void>();
@@ -99,7 +106,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                allowReferenceProjector: this.allowReferenceProjector
+                allowReferenceProjector: this.allowReferenceProjector,
+                hideMainButton: this.hideMainButton
             });
         }
     };
@@ -118,7 +126,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      */
     public constructor(
         private projectionDialogService: ProjectionDialogService,
-        private projectorService: ProjectorControllerService
+        private projectorService: ProjectorControllerService,
+        private translate: TranslateService
     ) {}
 
     /**
