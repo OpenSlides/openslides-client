@@ -439,6 +439,29 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.itemRepo.removeFromAgenda(this.assignment.agenda_item_id!);
     }
 
+    /**
+     * Sorts the assignment candidates by their last name in ascending order.
+     * Calls onSortingChange with the sorted array.
+     */
+    public async sortCandidatesByLastName(): Promise<void> {
+        const sorted = [...this.assignmentCandidates].sort((a, b) =>
+            a.user?.last_name?.localeCompare(b.user?.last_name ?? '') ?? 0
+        );
+        await this.onSortingChange(sorted);
+    }
+
+    /**
+     * Sorts the assignment candidates by their first name in ascending order.
+     * Calls onSortingChange with the sorted array.
+     */
+    public async sortCandidatesByFirstName(): Promise<void> {
+        const sorted = [...this.assignmentCandidates].sort((a, b) =>
+            a.user?.first_name?.localeCompare(b.user?.first_name ?? '') ?? 0
+        );
+        await this.onSortingChange(sorted);
+    }
+
+
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         if (this._navigationSubscription) {
@@ -464,6 +487,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     public goToHistory(): void {
-        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.assignment.fqid } });
+        this.router.navigate([this.activeMeetingId!, `history`], {queryParams: {fqid: this.assignment.fqid}});
     }
 }
