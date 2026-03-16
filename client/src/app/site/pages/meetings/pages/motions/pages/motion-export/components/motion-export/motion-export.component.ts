@@ -199,6 +199,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     @ViewChild(`tableOfContentChip`)
     public tableOfContentChip!: MatChipOption;
 
+    @ViewChild(`continuousDirectoryChip`)
+    public continuousDirectoryChip!: MatChipOption;
+
     @ViewChild(`addBreaksChip`)
     public addBreaksChip!: MatChipOption;
 
@@ -579,6 +582,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
         intersection = [
             `toc`,
+            `continuousDirectory`,
             `header`,
             `page`,
             `date`,
