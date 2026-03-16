@@ -37,9 +37,9 @@ export class EditorLinkDialogComponent implements OnInit {
 
     public text = ``;
 
-    public referenceLink: { href: string; target?: string };
+    public internalLink: { href: string; target?: string };
 
-    public referenceText = ``;
+    public internalText = ``;
 
     public toggleInternalReference: boolean;
     public toggleExternalReference: boolean;
@@ -96,20 +96,41 @@ export class EditorLinkDialogComponent implements OnInit {
     public internalRadioOptions: FormGroup;
     public selectedRepoValue = 0;
 
+    /**
+     * Values for external link
+     */
+    public externalLink: FormGroup;
+    public externalUrl: string;
+    public externalText: string;
+    public externalDisplayMode: string;
+
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
         private router: Router,
         private fb: FormBuilder
     ) {
+        // External reference
         this.link = { ...data.link };
         this.isUpdate = !!data.link && !!data.link.href;
         if (!this.link.target) {
             this.link.target = `_self`;
         }
-        this.referenceLink = { ...data.link };
-        if (!this.referenceLink.target) {
-            this.referenceLink.target = `_blank`;
+        this.externalLink = this.fb.group({
+            extUrl: new FormControl(),
+            extText: new FormControl(),
+            extDisplayMode: new FormControl()
+        });
+        this.externalLink.valueChanges.subscribe(() => {
+            this.externalUrl = this.externalLink.get('extUrl').value;
+            this.externalText = this.externalLink.get('extText').value;
+            this.externalDisplayMode = this.externalLink.get('extDisplayMode').value;
+        });
+
+        // Internal reference
+        this.internalLink = { ...data.link };
+        if (!this.internalLink.target) {
+            this.internalLink.target = `_blank`;
         }
         this.internalRadioOptions = this.fb.group({
             options: [0]
@@ -143,22 +164,22 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public save(): void {
-        if (this.link.href) {
+        if (this.externalUrl) {
             if (!/^[a-zA-Z]+:\/\//.test(this.link.href)) {
-                this.link.href = `http://` + this.link.href;
+                this.link.href = this.externalUrl.includes(`http`) ? this.externalUrl : `http://` + this.externalUrl;
             }
             if (this.data.needsText) {
-                this.dialogRef.close({ action: `set-link`, link: this.link, text: this.text || this.link });
+                this.dialogRef.close({ action: `set-link`, link: this.link, text: this.externalText || this.link });
             } else {
                 this.dialogRef.close({ action: `set-link`, link: this.link });
             }
         } else {
             this.changeEditMode(true);
-            if (!/^[a-zA-Z]+:\/\//.test(this.referenceLink.href)) {
+            if (!/^[a-zA-Z]+:\/\//.test(this.internalLink.href)) {
                 this.dialogRef.close({
                     action: `set-link`,
-                    text: this.referenceText,
-                    link: this.referenceLink
+                    text: this.internalText,
+                    link: this.internalLink
                 });
             }
         }
@@ -179,7 +200,7 @@ export class EditorLinkDialogComponent implements OnInit {
         } else {
             this.initForm();
             this.initInput();
-            this.referenceText = ``;
+            this.internalText = ``;
         }
         this.editMode = !this.editMode;
     }
@@ -205,6 +226,9 @@ export class EditorLinkDialogComponent implements OnInit {
             const selectedId = this.internalReferenceForm.get(controlName)?.value;
             const repo = this.searchRepos[this.selectedRepoValue];
             this.item = repo.getViewModel(selectedId);
+            const action = this.item ? 'disable' : 'enable';
+            ['extUrl', 'extText', 'extDisplayMode'].forEach(name => this.externalLink.get(name)?.[action]());
+
             this.addReference();
         });
     }
@@ -213,8 +237,8 @@ export class EditorLinkDialogComponent implements OnInit {
      * Function to add the values.
      */
     public addReference(): void {
-        this.referenceText = this.item ? `${this.item.getTitle()}` : '';
-        this.referenceLink.href = this.item ? this.urlBuilder(this.item) : '';
+        this.internalText = this.item ? `${this.item.getTitle()}` : '';
+        this.internalLink.href = this.item ? this.urlBuilder(this.item) : '';
     }
 
     public urlBuilder(item): string {

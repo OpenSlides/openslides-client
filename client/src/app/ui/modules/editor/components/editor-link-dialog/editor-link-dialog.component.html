@@ -9,25 +9,25 @@
     </button>
 </div>
 @if (toggleExternalReference) {
-    <div mat-dialog-content>
+    <div mat-dialog-content [formGroup]="externalLink">
         <div class="card-grid">
             <mat-form-field>
                 <mat-label translate>URL</mat-label>
-                <input matInput [disabled]="referenceText !== ``" [(ngModel)]="link.href" />
+                <input formControlName="extUrl" matInput />
             </mat-form-field>
         </div>
         <div>
             @if (data.needsText) {
                 <mat-form-field>
                     <mat-label translate>Text to display</mat-label>
-                    <input matInput [disabled]="referenceText !== ``" [(ngModel)]="text" />
+                    <input formControlName="extText" matInput />
                 </mat-form-field>
             }
         </div>
         <div>
             <mat-form-field>
                 <mat-label translate>Open link in ...</mat-label>
-                <select matNativeControl [disabled]="referenceText !== ``" [(ngModel)]="link.target">
+                <select formControlName="extDisplayMode" matNativeControl>
                     <option translate value="_self">Current window</option>
                     <option translate value="_blank">New window</option>
                 </select>
@@ -52,7 +52,7 @@
                 <mat-radio-button
                     aria-label="Topics"
                     translate
-                    [disabled]="!!link.href"
+                    [disabled]="!!externalUrl"
                     [value]="0"
                     (click)="changeEditMode()"
                 >
@@ -61,7 +61,7 @@
                 <mat-radio-button
                     aria-label="Motions"
                     translate
-                    [disabled]="!!link.href"
+                    [disabled]="!!externalUrl"
                     [value]="1"
                     (click)="changeEditMode()"
                 >
@@ -70,7 +70,7 @@
                 <mat-radio-button
                     aria-label="Assignments"
                     translate
-                    [disabled]="!!link.href"
+                    [disabled]="!!externalUrl"
                     [value]="2"
                     (click)="changeEditMode()"
                 >
@@ -85,7 +85,7 @@
                     @if (selectedRepoValue === $index) {
                         <os-repo-search-selector
                             formControlName="{{ searchLists[$index].label }}FormControl"
-                            [disabled]="!!link.href"
+                            [disabled]="!!externalUrl"
                             [keepOpen]="searchRepo.keepOpen"
                             [repo]="searchRepo"
                             [subscriptionConfig]="subscriptionConfig"
@@ -99,7 +99,14 @@
 }
 
 <div class="matDialogActions" mat-dialog-actions>
-    <button aria-label="Ok" color="accent" mat-button translate [disabled]="!link.href && !this.item" (click)="save()">
+    <button
+        aria-label="Ok"
+        color="accent"
+        mat-button
+        translate
+        [disabled]="!externalUrl && !this.item"
+        (click)="save()"
+    >
         Ok
     </button>
     @if (isUpdate) {
