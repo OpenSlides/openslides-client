@@ -1,6 +1,7 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
@@ -15,6 +16,8 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
+const TAB_METHOD_MAP = [`selection`, `rating_approval`, `approval`];
+
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
@@ -26,6 +29,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
         PollFormRatingApprovalComponent,
         MatDialogModule,
         MatButtonModule,
+        MatTabsModule,
         TranslatePipe
     ]
 })
@@ -45,6 +49,8 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return this.assignmentPollService.isElectronicVotingEnabled;
     }
 
+    public selectedTab = signal(0);
+
     public constructor(
         private voteApiService: VoteApiService,
         private assignmentPollService: AssignmentPollService,
@@ -55,7 +61,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public override submitPoll(): void {
         const formValues = this.pollForm?.getValues();
-        const config = { ...this.approvalForm?.approvalForm.value };
         const motion = this.pollData?.content_object;
         const visibility: PollVisibility = formValues?.visibility;
 
@@ -63,8 +68,8 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
             title: formValues?.title,
             content_object_id: motion?.fqid,
             meeting_id: motion?.meeting_id,
-            method: `approval`,
-            method_config: config,
+            method: TAB_METHOD_MAP[this.selectedTab()],
+            method_config: this.getMethodConfig(),
             visibility,
             allow_vote_split: false
         };
@@ -91,5 +96,17 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     protected getContentObjectsForOptions(): BaseModel[] {
         return [this.pollData.content_object];
+    }
+
+    private getMethodConfig(): unknown {
+        switch (TAB_METHOD_MAP[this.selectedTab()]) {
+            case `approval`:
+                return { ...this.approvalForm?.approvalForm.value };
+            case `selection`:
+                return { ...this.selectionForm?.form.value };
+            case `rating_approval`:
+                return { ...this.ratingApprovalForm?.form.value };
+        }
+        return {};
     }
 }

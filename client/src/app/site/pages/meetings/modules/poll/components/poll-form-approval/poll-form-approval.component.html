@@ -1,7 +1,9 @@
 <form [formGroup]="approvalForm">
-    <mat-checkbox formControlName="allow_abstain">
-        {{ 'Allow abstain' | translate }}
-    </mat-checkbox>
+    <div class="margin-bottom-15 info-grid">
+        <mat-checkbox formControlName="allow_abstain">
+            {{ 'Allow abstain' | translate }}
+        </mat-checkbox>
+    </div>
 
     <mat-form-field>
         <mat-label>{{ '100% base' | translate }}</mat-label>
