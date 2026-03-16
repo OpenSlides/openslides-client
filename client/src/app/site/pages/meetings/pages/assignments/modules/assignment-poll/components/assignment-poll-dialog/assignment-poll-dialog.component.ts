@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Ids } from 'src/app/domain/definitions/key-types';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
 import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
@@ -61,15 +62,17 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public override submitPoll(): void {
         const formValues = this.pollForm?.getValues();
-        const motion = this.pollData?.content_object;
         const visibility: PollVisibility = formValues?.visibility;
+
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        const options = assignment.candidates.map(c => c.meeting_user_id);
 
         const payload: PollCreatePayload = {
             title: formValues?.title,
-            content_object_id: motion?.fqid,
-            meeting_id: motion?.meeting_id,
+            content_object_id: assignment?.fqid,
+            meeting_id: assignment?.meeting_id,
             method: TAB_METHOD_MAP[this.selectedTab()],
-            method_config: this.getMethodConfig(),
+            method_config: this.getMethodConfig(options),
             visibility,
             allow_vote_split: false
         };
@@ -98,14 +101,14 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return [this.pollData.content_object];
     }
 
-    private getMethodConfig(): unknown {
+    private getMethodConfig(options: Ids): unknown {
         switch (TAB_METHOD_MAP[this.selectedTab()]) {
             case `approval`:
                 return { ...this.approvalForm?.approvalForm.value };
             case `selection`:
-                return { ...this.selectionForm?.form.value };
+                return { ...this.selectionForm?.form.value, options };
             case `rating_approval`:
-                return { ...this.ratingApprovalForm?.form.value };
+                return { ...this.ratingApprovalForm?.form.value, options };
         }
         return {};
     }
