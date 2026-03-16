@@ -134,6 +134,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             this.autopilotService.disabledContentElements.subscribe(keys => {
                 this.disabledContentElements = keys || {};
             }),
+            projectorRepo
+                .getReferenceProjectorObservable()
+                .pipe(distinctUntilChanged((prev, curr) => prev.getTitle() != curr.getTitle()))
+                .subscribe(_ => this.announcer()),
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 if (refProjector) {
                     this.projector = refProjector;
@@ -160,11 +164,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                 this.showRightCol.next(state.matches);
             })
         );
-
-        this.projectorRepo
-            .getReferenceProjectorObservable()
-            .pipe(distinctUntilChanged())
-            .subscribe(_ => this.announcer());
     }
 
     public ngOnInit(): void {
