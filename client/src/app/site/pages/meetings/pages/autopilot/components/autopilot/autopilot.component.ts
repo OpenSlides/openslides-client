@@ -3,7 +3,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -121,7 +121,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         protected override translate: TranslateService,
         private operator: OperatorService,
         private autopilotService: AutopilotService,
-        projectorRepo: ProjectorControllerService,
+        private projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         breakpoint: BreakpointObserver,
@@ -146,7 +146,6 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                     if (this.projectedViewModel?.collection === `list_of_speakers`) {
                         this.listOfSpeakers = this.projectedViewModel as ViewListOfSpeakers;
                     }
-                    this.announcer();
                 }
             }),
             closService.currentListOfSpeakersObservable.subscribe(clos => {
@@ -161,6 +160,11 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
                 this.showRightCol.next(state.matches);
             })
         );
+
+        this.projectorRepo
+            .getReferenceProjectorObservable()
+            .pipe(distinctUntilChanged())
+            .subscribe(_ => this.announcer());
     }
 
     public ngOnInit(): void {
@@ -168,8 +172,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     }
 
     private announcer(): void {
-        const liveAnnounceTitle = this.translate.instant(`The projected title is`) + `: `;
-        this.liveAnnouncer.announce(liveAnnounceTitle + this._currentProjection.getTitle());
+        if (this._currentProjection) {
+            const liveAnnounceTitle = this.translate.instant(`The projected title is`) + `: `;
+            this.liveAnnouncer.announce(liveAnnounceTitle + this._currentProjection.getTitle());
+        }
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
