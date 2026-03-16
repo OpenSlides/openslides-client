@@ -121,7 +121,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         protected override translate: TranslateService,
         private operator: OperatorService,
         private autopilotService: AutopilotService,
-        private projectorRepo: ProjectorControllerService,
+        projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         breakpoint: BreakpointObserver,
