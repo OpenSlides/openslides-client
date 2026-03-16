@@ -73,9 +73,9 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
     switch (actionName) {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
-        case MotionAction.CREATE_FORWARDED:
         case MeetingAction.ARCHIVE:
             return MeetingArchiveErrorMap;
+        case MotionAction.CREATE_FORWARDED:
         case AgendaItemAction.FORWARD:
         case UserAction.FORGET_PASSWORD_CONFIRM:
         case UserAction.SET_PASSWORD_SELF:
