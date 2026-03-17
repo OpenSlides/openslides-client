@@ -35,6 +35,7 @@
     border-radius: 3px;
     margin-bottom: 0;
     padding-top: 0;
+    max-height: 22px;
     padding-right: 40px;
 
     &:hover {
@@ -45,6 +46,7 @@
     & {
         .action-row {
             position: absolute;
+            margin-top: -12px;
             right: 0;
             font-size: 0.8em;
             opacity: 0.5;
