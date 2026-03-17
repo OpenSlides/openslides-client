@@ -2,7 +2,7 @@ import { HasMeetingId } from '../../interfaces';
 import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
-export type ApprovalOnehundredPercentBase = BaseOnehundredPercentBase | `YN`;
+export type ApprovalOnehundredPercentBase = BaseOnehundredPercentBase | `yes_no`;
 
 export class PollConfigApproval extends BasePollConfigModel<PollConfigApproval> {
     public static COLLECTION = `poll_config_approval`;
@@ -18,7 +18,8 @@ export class PollConfigApproval extends BasePollConfigModel<PollConfigApproval> 
         `id`,
         `poll_id`,
         `option_ids`,
-        `allow_abstain`
+        `allow_abstain`,
+        `onehundred_percent_base`
     ];
 }
 

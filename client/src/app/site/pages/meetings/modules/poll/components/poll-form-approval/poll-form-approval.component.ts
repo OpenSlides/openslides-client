@@ -22,7 +22,7 @@ export class PollFormApprovalComponent {
     private _data: Partial<ViewPoll>;
 
     public validPercentBases: Record<ApprovalOnehundredPercentBase, string> = {
-        YN: 'Valid',
+        yes_no: 'Valid (Yes/No)',
         valid: 'Valid',
         cast: 'Cast',
         entitled: 'Entitled',

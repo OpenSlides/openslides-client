@@ -53,6 +53,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `assignment_candidate_ids`,
         `vote_delegated_to_id`,
         `vote_delegations_from_ids`,
+        `poll_voted_ids`,
         `chat_message_ids`,
         `group_ids`,
         `structure_level_ids`

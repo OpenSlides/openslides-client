@@ -29,7 +29,7 @@ export class PollFormRatingApprovalComponent {
     public form: UntypedFormGroup;
 
     public validPercentBases: Record<RatingApprovalOnehundredPercentBase, string> = {
-        YN: 'Valid (Yes/No)',
+        yes_no: 'Valid (Yes/No)',
         valid: 'Valid',
         cast: 'Cast',
         entitled: 'Entitled',

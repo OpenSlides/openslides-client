@@ -2,7 +2,7 @@ import { HasMeetingId } from '../../interfaces';
 import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
-export type RatingScoreOnehundredPercentBase = BaseOnehundredPercentBase | `YN`;
+export type RatingScoreOnehundredPercentBase = BaseOnehundredPercentBase | `yes_no`;
 
 export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingScore> {
     public static COLLECTION = `poll_config_rating_score`;
@@ -26,7 +26,8 @@ export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingS
         `min_options_amount`,
         `max_votes_per_option`,
         `max_vote_sum`,
-        `min_vote_sum`
+        `min_vote_sum`,
+        `onehundred_percent_base`
     ];
 }
 

@@ -821,25 +821,10 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `groups`
                     },
                     {
-                        key: `motion_poll_default_method`,
-                        label: _(`Default voting method`),
-                        type: `choice`,
-                        choices: MotionPollMethodVerbose
-                    },
-                    {
                         key: `motion_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `motion_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
                     },
                     {
                         key: `motion_poll_projection_name_order_first`,
@@ -936,15 +921,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default 100 % base`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `assignment_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
                     },
                     {
                         key: `assignment_poll_enable_max_votes_per_option`,

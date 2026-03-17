@@ -22,7 +22,8 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
         `option_ids`,
         `max_options_amount`,
         `min_options_amount`,
-        `allow_nota`
+        `allow_nota`,
+        `onehundred_percent_base`
     ];
 }
 

@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/models.yml`));
+const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/collection-meta.yml`));
 const SOURCE_COLLECTIONS = path.resolve(path.join(__dirname, `../../meta/collections/`));
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
