@@ -342,6 +342,13 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                     }
                     this.changeStateOfChipOption(this.textChip, false, `text`);
                 }
+            }),
+            this.dialogForm.controls[`pageLayout`].valueChanges.subscribe(value => {
+                if (value?.includes(`toc`)) {
+                    this.changeStateOfChipOption(this.continuousDirectoryChip, false, `continuousDirectory`);
+                } else {
+                    this.changeStateOfChipOption(this.continuousDirectoryChip, true, `continuousDirectory`);
+                }
             })
         );
 

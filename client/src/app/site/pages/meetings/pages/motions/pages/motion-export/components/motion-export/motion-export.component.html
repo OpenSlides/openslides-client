@@ -319,18 +319,16 @@
                         >
                             <span>{{ 'Table of contents' | translate }}</span>
                         </mat-chip-option>
-                        @if (tableOfContentChip.selected) {
-                            <mat-chip-option
-                                #continuousDirectoryChip
-                                matBadge="&check;"
-                                matBadgeOverlap="true"
-                                value="continuousDirectory"
-                                [disabled]="isDisabled(continuousDirectoryChip.value)"
-                                [matBadgeHidden]="continuousDirectoryChip.selected ? 'false' : 'true'"
-                            >
-                                <span>{{ 'Continuous Directory' | translate }}</span>
-                            </mat-chip-option>
-                        }
+                        <mat-chip-option
+                            #continuousDirectoryChip
+                            matBadge="&check;"
+                            matBadgeOverlap="true"
+                            value="continuousDirectory"
+                            [disabled]="isDisabled(continuousDirectoryChip.value)"
+                            [matBadgeHidden]="continuousDirectoryChip.selected ? 'false' : 'true'"
+                        >
+                            <span>{{ 'Continuous Directory' | translate }}</span>
+                        </mat-chip-option>
                         <mat-chip-option
                             #addBreaksChip
                             matBadge="&check;"
