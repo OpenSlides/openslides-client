@@ -77,6 +77,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         return !this.data?.state || this.data.isCreated;
     }
 
+    public get isOpenVotingSelected(): boolean {
+        return this.pollTypeControl?.value === PollVisibility.Open || false;
+    }
+
     public get isNamedVotingSelected(): boolean {
         return this.pollTypeControl?.value === PollVisibility.Named || false;
     }
@@ -86,7 +90,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     }
 
     public get isLiveVotingAvailable(): boolean {
-        return this.isEVotingSelected && this.isNamedVotingSelected;
+        return this.isEVotingSelected && (this.isNamedVotingSelected || this.isOpenVotingSelected);
     }
 
     private get pollTypeControl(): AbstractControl {
