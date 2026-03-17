@@ -52,7 +52,7 @@ const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
 ]);
 const MeetingArchiveErrorMap: ErrorMap = new ErrorMap([
     [
-        /Cannot archive meeting with active speaker\./,
+        /Cannot archive meeting with active speakers\./,
         _(`Cannot archive meeting with active speakers. Check who is speaking in > Participants > Contributions.`)
     ],
     [/Cannot archive meeting with active polls\./, _(`Cannot archive meeting with active polls.`)],
