@@ -1,7 +1,7 @@
 @for (option of options(); track option.id; let i = $index) {
     <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
         <div class="vote-option-title grid-name-area" role="rowheader">
-            <span>{{ option.text }}</span>
+            <os-poll-vote-option [option]="option" />
         </div>
         <div class="vote-button-area" role="gridcell">
             <button

@@ -19,10 +19,11 @@ import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 
 import { ViewBallot, ViewPoll, ViewPollConfigOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
+import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
 @Component({
     selector: 'os-poll-vote-selection',
-    imports: [CustomIconComponent, MatIconModule, MatButtonModule, TranslatePipe],
+    imports: [CustomIconComponent, PollVoteOptionComponent, MatIconModule, MatButtonModule, TranslatePipe],
     templateUrl: './poll-vote-selection.component.html',
     styleUrl: './poll-vote-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

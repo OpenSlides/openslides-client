@@ -3,17 +3,12 @@ import { _ } from '@ngx-translate/core';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import {
-    PollBackendDurationChoices,
-    PollPercentBaseVerbose,
-    PollTypeVerbose
-} from 'src/app/domain/models/poll/poll-constants';
+import { PollPercentBaseVerbose, PollTypeVerbose } from 'src/app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
-import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };

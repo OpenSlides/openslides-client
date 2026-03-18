@@ -37,7 +37,6 @@ import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
 const COMPONENTS = [
-    AssignmentPollComponent,
     AssignmentPollDetailContentComponent,
     AssignmentPollMetaInfoComponent,
     AssignmentPollVoteComponent // TODO: Only exported to have access to it in the autopilot
@@ -45,8 +44,9 @@ const COMPONENTS = [
 
 @NgModule({
     declarations: [...COMPONENTS],
-    exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
+    exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule, AssignmentPollComponent],
     imports: [
+        AssignmentPollComponent,
         AssignmentPollDialogComponent,
         ArrowNavigationDirective,
         CustomIconComponent,

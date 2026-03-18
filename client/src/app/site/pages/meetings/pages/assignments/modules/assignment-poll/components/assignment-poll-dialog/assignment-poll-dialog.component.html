@@ -3,12 +3,12 @@
         <mat-tab-group [(selectedIndex)]="selectedTab">
             <mat-tab label="Selection">
                 <div class="tab-content">
-                    <os-poll-form-selection [data]="pollData" />
+                    <os-poll-form-selection optionType="meeting_user" [data]="pollData" />
                 </div>
             </mat-tab>
             <mat-tab label="Approval per candidate">
                 <div class="tab-content">
-                    <os-poll-form-rating-approval [data]="pollData" />
+                    <os-poll-form-rating-approval optionType="meeting_user" [data]="pollData" />
                 </div>
             </mat-tab>
             <mat-tab label="List">
