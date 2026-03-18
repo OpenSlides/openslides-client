@@ -42,9 +42,14 @@ jobs:
         run: cp example-data.json initial-data.json
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           version: latest
+
+      - name: Build openslides binary
+        run: |
+          make -C openslides-manage-service openslides
+          mv -f openslides-manage-service/openslides dev/localprod/openslides
 
       - name: Start setup
         working-directory: "./dev/localprod"
@@ -64,7 +69,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
