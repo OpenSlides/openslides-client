@@ -1,6 +1,14 @@
-<div cdkFocusInitial class="references" tabindex="-1">
+<div
+    cdkFocusInitial
+    class="references"
+    role="button"
+    tabindex="0"
+    (click)="toggleArrow('toggleExternalReference')"
+    (keydown.enter)="toggleArrow('toggleExternalReference')"
+    (keydown.space)="toggleArrow('toggleExternalReference')"
+>
     <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
-    <button #btn class="arrows" matIconButton (click)="toggleArrow('toggleExternalReference')">
+    <button #btn class="arrows" matIconButton>
         @if (toggleExternalReference) {
             <mat-icon>keyboard_arrow_up</mat-icon>
         } @else {
@@ -35,9 +43,17 @@
         </div>
     </div>
 }
-<div class="references">
+<div
+    cdkTrapFocus
+    class="references"
+    role="button"
+    tabindex="0"
+    (click)="toggleArrow('toggleInternalReference')"
+    (keydown.enter)="toggleArrow('toggleInternalReference')"
+    (keydown.space)="toggleArrow('toggleInternalReference')"
+>
     <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>Link a topic/motion/assignment</h1>
-    <button class="arrows" matIconButton (click)="toggleArrow('toggleInternalReference')">
+    <button class="arrows" matIconButton>
         @if (toggleInternalReference) {
             <mat-icon>keyboard_arrow_up</mat-icon>
         } @else {
@@ -94,6 +110,11 @@
                     }
                 }
             </mat-form-field>
+        </div>
+        <div class="clear-button">
+            <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm()">
+                <mat-icon>clear</mat-icon>
+            </button>
         </div>
     </div>
 }
