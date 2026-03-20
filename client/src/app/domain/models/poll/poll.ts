@@ -152,8 +152,8 @@ export class Poll extends BaseDecimalModel<Poll> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
         `id`,
-        `description`,
         `title`,
+        `description`,
         `type`,
         `backend`,
         `is_pseudoanonymized`,
