@@ -391,6 +391,24 @@ export class MotionDiffService {
     }
 
     /**
+     * Returns the index of the first difference between two texts
+     *
+     * @param {string} origText The original text
+     * @param {string} newText The changed text
+     * @return {number | null} Token index of first change, or null if no changes
+     */
+    public getFirstChangedTokenIndex(origText: string, newText: string): number | null {
+        if (origText === newText) return null;
+
+        const minLen = Math.min(origText.length, newText.length);
+        for (let i = 0; i < minLen; i += 1) {
+            if (origText[i] !== newText[i]) return i;
+        }
+
+        return minLen;
+    }
+
+    /**
      * Returns the HTML with the changes, optionally with a highlighted line.
      * The original motion needs to be provided.
      *
@@ -406,7 +424,16 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        return HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
+        const cacheKey = `getChangeDiff` + lineLength + ` ` + djb2hash(html) + djb2hash(change.getChangeNewText());
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const diff = HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
+        this.diffCache.put(cacheKey, diff);
+
+        return diff;
     }
 
     /**
@@ -451,7 +478,32 @@ export class MotionDiffService {
         lineLength: number,
         highlightedLine?: number
     ): string {
-        return HtmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
+        const cacheKey =
+            `extractMotionLineRange ` +
+            lineLength +
+            ` ` +
+            lineNumbers +
+            ` ` +
+            lineRange.from +
+            ` ` +
+            lineRange.to +
+            ` ` +
+            djb2hash(motionText);
+        const cached = this.diffCache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const extractedLineRange = HtmlDiff.extractMotionLineRange(
+            motionText,
+            lineRange,
+            lineNumbers,
+            lineLength,
+            highlightedLine
+        );
+        this.diffCache.put(cacheKey, extractedLineRange);
+
+        return extractedLineRange;
     }
 
     private convertViewUnifiedChanges(changes: ViewUnifiedChange[]): HtmlDiff.UnifiedChange[] {
