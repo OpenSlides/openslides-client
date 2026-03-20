@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { ViewPollConfigOption } from '../../../../pages/polls';
+import { ViewPollOption } from '../../../../pages/polls';
 
 @Component({
     selector: 'os-poll-vote-option',
@@ -10,5 +10,5 @@ import { ViewPollConfigOption } from '../../../../pages/polls';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollVoteOptionComponent {
-    public option = input.required<ViewPollConfigOption>();
+    public option = input.required<ViewPollOption>();
 }

@@ -1,28 +1,17 @@
-import { PollConfigOption } from 'src/app/domain/models/poll/poll-config-option';
+import { PollOption } from 'src/app/domain/models/poll/poll-option';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import {
-    ViewPollConfigApproval,
-    ViewPollConfigRatingApproval,
-    ViewPollConfigRatingScore,
-    ViewPollConfigSelection,
-    ViewPollConfigStvScottish
-} from '..';
+import { ViewPoll } from '..';
 
-export class ViewPollConfigOption extends BaseViewModel<PollConfigOption> {
-    public get poll_config_option(): PollConfigOption {
+export class ViewPollOption extends BaseViewModel<PollOption> {
+    public get poll_config_option(): PollOption {
         return this._model;
     }
 
-    public static COLLECTION = PollConfigOption.COLLECTION;
+    public static COLLECTION = PollOption.COLLECTION;
 }
 
 interface IPollConfigOptionRelations {
-    poll_config:
-        | ViewPollConfigSelection
-        | ViewPollConfigRatingApproval
-        | ViewPollConfigRatingScore
-        | ViewPollConfigStvScottish
-        | ViewPollConfigApproval;
+    poll: ViewPoll;
 }
-export interface ViewPollConfigOption extends ViewModelRelations<IPollConfigOptionRelations>, PollConfigOption {}
+export interface ViewPollOption extends ViewModelRelations<IPollConfigOptionRelations>, PollOption {}

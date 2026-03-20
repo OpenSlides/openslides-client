@@ -2,7 +2,7 @@ import { Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces';
 import { BaseModel } from '../base/base-model';
 
-export class PollConfigOption extends BaseModel<PollConfigOption> {
+export class PollOption extends BaseModel<PollOption> {
     public static COLLECTION = `poll_config_option`;
 
     public poll_config_id: Id;
@@ -11,11 +11,11 @@ export class PollConfigOption extends BaseModel<PollConfigOption> {
     public text: number;
     public meeting_user_id: Id;
 
-    public constructor(input?: Partial<PollConfigOption>) {
-        super(PollConfigOption.COLLECTION, input);
+    public constructor(input?: Partial<PollOption>) {
+        super(PollOption.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollConfigOption)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PollOption)[] = [
         `id`,
         `poll_config_id`,
         `weight`,
@@ -24,4 +24,4 @@ export class PollConfigOption extends BaseModel<PollConfigOption> {
     ];
 }
 
-export interface PollConfigOption extends HasMeetingId {}
+export interface PollOption extends HasMeetingId {}

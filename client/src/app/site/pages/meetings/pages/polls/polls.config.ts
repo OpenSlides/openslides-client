@@ -2,7 +2,7 @@ import { Ballot } from 'src/app/domain/models/poll/ballot';
 import { Option } from 'src/app/domain/models/poll/option';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
-import { PollConfigOption } from 'src/app/domain/models/poll/poll-config-option';
+import { PollOption } from 'src/app/domain/models/poll/poll-option';
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
@@ -14,7 +14,7 @@ import { PollCandidateListRepositoryService } from 'src/app/gateways/repositorie
 import { BallotRepositoryService } from 'src/app/gateways/repositories/polls/ballot-repository.service';
 import { OptionRepositoryService } from 'src/app/gateways/repositories/polls/option-repository.service';
 import { PollConfigApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-approval-repository.service';
-import { PollConfigOptionRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-option-repository.service';
+import { PollOptionRepositoryService } from 'src/app/gateways/repositories/polls/poll-option-repository.service';
 import { PollConfigRatingApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
 import { PollConfigRatingScoreRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-score-repository.service';
 import { PollConfigSelectionRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-selection-repository.service';
@@ -27,7 +27,7 @@ import {
     ViewOption,
     ViewPoll,
     ViewPollConfigApproval,
-    ViewPollConfigOption,
+    ViewPollOption,
     ViewPollConfigRatingApproval,
     ViewPollConfigRatingScore,
     ViewPollConfigSelection,
@@ -75,9 +75,9 @@ export const PollsAppConfig: AppConfig = {
             repository: PollConfigStvScottishRepositoryService
         },
         {
-            model: PollConfigOption,
-            viewModel: ViewPollConfigOption,
-            repository: PollConfigOptionRepositoryService
+            model: PollOption,
+            viewModel: ViewPollOption,
+            repository: PollOptionRepositoryService
         },
         {
             model: Option,

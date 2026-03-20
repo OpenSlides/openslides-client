@@ -17,7 +17,7 @@ import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 
-import { ViewBallot, ViewPoll, ViewPollConfigOption } from '../../../../pages/polls';
+import { ViewBallot, ViewPoll, ViewPollOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
@@ -45,7 +45,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
         return (config?.max_options_amount ?? 1) === 1;
     });
 
-    public options = computed<ViewPollConfigOption[]>(() => {
+    public options = computed<ViewPollOption[]>(() => {
         return (this.poll().config?.options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
     });
 
