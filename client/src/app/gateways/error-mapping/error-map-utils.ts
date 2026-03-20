@@ -50,6 +50,19 @@ const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
     ],
     [/Cannot create non-template meeting without admin_ids/, _(`Cannot create meeting without administrator.`)]
 ]);
+const MeetingArchiveErrorMap: ErrorMap = new ErrorMap([
+    [
+        /Cannot archive meeting with active speakers\./,
+        _(`Cannot archive meeting with active speakers. Check who is speaking in > Participants > Contributions.`)
+    ],
+    [/Cannot archive meeting with active polls\./, _(`Cannot archive meeting with active polls.`)],
+    [
+        /Cannot archive meeting with active speakers and polls\./,
+        _(
+            `Cannot archive meeting with active speakers and polls. Check who is speaking in > Participants > Contributions.`
+        )
+    ]
+]);
 
 /**
  * Finds the correct error map for an action response by the original requests action name
@@ -60,6 +73,8 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
     switch (actionName) {
         case MeetingAction.CREATE:
             return MeetingCreateErrorMap;
+        case MeetingAction.ARCHIVE:
+            return MeetingArchiveErrorMap;
         case MotionAction.CREATE_FORWARDED:
         case AgendaItemAction.FORWARD:
         case UserAction.FORGET_PASSWORD_CONFIRM:
