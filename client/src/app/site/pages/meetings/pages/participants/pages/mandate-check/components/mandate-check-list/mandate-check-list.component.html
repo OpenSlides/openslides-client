@@ -23,7 +23,7 @@
                 <div class="header-grid">
                     <h1 class="text-large-bold color-inherit">{{ entry.name }}</h1>
                 </div>
-                <div class="gender-map-grid1">
+                <div class="map-grid">
                     <!-- first row-->
                     <div class="row">
                         <!-- first col -->
@@ -88,7 +88,7 @@
                     </button>
                 </div>
                 @if (toggleGenderMap.get(entry.id)) {
-                    <div class="gender-map-grid1">
+                    <div class="map-grid">
                         @for (gender of genders; track gender.id) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <!-- LEFT EMPTY -->
