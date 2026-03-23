@@ -40,14 +40,3 @@
         </div>
     </div>
 </form>
-
-@if (optionEdit()) {
-    <div class="option-section">
-        <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
-        <os-editable-list
-            placeholder="New option"
-            [items]="form.get('options').value"
-            (itemsChange)="onOptionsChange($event)"
-        />
-    </div>
-}

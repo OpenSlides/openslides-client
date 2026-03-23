@@ -5,7 +5,7 @@ import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
-import { ViewOption } from './view-option';
+import { ViewPoll } from '..';
 
 export class ViewBallot extends BaseViewModel<Ballot> {
     public static COLLECTION = Ballot.COLLECTION;
@@ -25,9 +25,9 @@ export class ViewBallot extends BaseViewModel<Ballot> {
 }
 
 interface IViewBallotRelations {
+    poll: ViewPoll;
     user?: ViewUser;
     delegated_user?: ViewMeetingUser;
-    option: ViewOption;
 }
 
 export interface ViewBallot extends HasMeeting, ViewModelRelations<IViewBallotRelations>, Ballot {}

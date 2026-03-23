@@ -76,10 +76,6 @@
                 @if (poll && poll.isStarted) {
                     <os-poll-progress [poll]="poll"></os-poll-progress>
                 }
-                <!-- The Vote -->
-                @if (poll.canBeVotedFor()) {
-                    <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
-                }
                 <!-- Meta-Info -->
                 @if (showMetaInfo) {
                     <os-topic-poll-meta-info [poll]="poll"></os-topic-poll-meta-info>

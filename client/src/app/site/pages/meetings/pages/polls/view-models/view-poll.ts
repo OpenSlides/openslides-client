@@ -18,7 +18,7 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ViewBallot, ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
@@ -59,7 +59,9 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get isListPoll(): boolean {
-        return this.options[0]?.isListOption;
+        // return this.options[0]?.isListOption;
+        // TODO: Decide by checking config type == `approval` and options present
+        return !!this.options.length;
     }
 
     public get isMotionPoll(): boolean {
@@ -115,9 +117,12 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get hasVotes(): boolean {
-        return this.results
-            .flatMap(option => option.votes)
-            .some(vote => vote.weight > 0 || +vote.weight === VOTE_MAJORITY);
+        // TODO: Check results property
+        return (
+            this.results
+                // .flatMap(option => option.votes)
+                .some(vote => vote.weight > 0 || +vote.weight === VOTE_MAJORITY)
+        );
     }
 
     public hasVotedForDelegations(userId?: number): boolean {
@@ -164,8 +169,9 @@ export class ViewPoll<C extends PollContentObject = any>
         };
     }
 
-    private get results(): ViewOption[] {
-        return (this.options || []).concat(this.global_option).filter(option => !!option);
+    private get results(): ViewPollOption[] {
+        // TODO: Concat gloabl option
+        return (this.options || []).filter(option => !!option);
     }
 }
 
@@ -175,10 +181,7 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     voted: ViewMeetingUser[];
     ballots: ViewBallot[];
     entitled_groups: ViewGroup[];
-
-    // TODO: Remove
-    options: ViewOption[];
-    global_option: ViewOption;
+    options: ViewPollOption[];
 }
 export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigModel = any>
     extends HasMeeting, ViewModelRelations<IPollRelations<C, D>>, Poll {}

@@ -46,9 +46,7 @@ export class PollFormRatingApprovalComponent {
             onehundred_percent_base: [`valid`],
             allow_abstain: [false],
             max_options_amount: [1],
-            min_options_amount: [1],
-            option_type: ['text'],
-            options: [[]]
+            min_options_amount: [1]
         });
     }
 }

@@ -9,8 +9,7 @@ import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewBallot, ViewOption, ViewPoll } from '../pages/polls';
-import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
+import { ViewBallot, ViewPoll, ViewPollOption } from '../pages/polls';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 import { ViewMeetingUser } from './view-meeting-user';
@@ -405,9 +404,8 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    options: ViewOption[];
+    options: ViewPollOption[];
     votes: ViewBallot[];
-    poll_candidates: ViewPollCandidate[];
     gender?: ViewGender;
     history_positions: ViewHistoryPosition[];
 }

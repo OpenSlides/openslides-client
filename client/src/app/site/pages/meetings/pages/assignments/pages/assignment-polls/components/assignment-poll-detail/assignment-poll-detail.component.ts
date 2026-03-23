@@ -6,7 +6,7 @@ import {
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewBallot, ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { isSortedList, SortedList } from '../../../../../polls/view-models/sorted-list';
@@ -66,6 +66,7 @@ export class AssignmentPollDetailComponent
     }
 
     protected createVotesData(): BaseVoteData[] {
+        /*
         const votes: any = {};
         const pollOptions: ViewOption<ViewAssignment>[] = this.poll.options;
         for (const option of pollOptions) {
@@ -109,6 +110,9 @@ export class AssignmentPollDetailComponent
             }
         }
         return Object.values(votes);
+        */
+
+        return [];
     }
 
     protected override onAfterSetVotesData(): void {

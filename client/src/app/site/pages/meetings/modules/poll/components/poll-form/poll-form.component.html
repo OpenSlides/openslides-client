@@ -61,4 +61,15 @@
     </form>
 
     <ng-content></ng-content>
+
+    @if (optionEdit()) {
+        <div class="option-section">
+            <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
+            <os-editable-list
+                placeholder="New option"
+                [items]="pollForm.get('options').value"
+                (itemsChange)="onOptionsChange($event)"
+            />
+        </div>
+    }
 </div>

@@ -177,6 +177,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     ) {}
 
     public ngOnInit(): void {
+        /*
         combineLatest([
             this.poll.options$,
             iif(
@@ -196,6 +197,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
             ).pipe(startWith(null)),
             this.themeService.currentGeneralColorsSubject
         ]).subscribe(() => this.setupTableData());
+        */
     }
 
     public ngAfterViewInit(): void {
@@ -246,6 +248,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     }
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
+        /*
         vote.amount = vote.amount ?? 0;
         if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (vote.amount < 0) {
@@ -257,6 +260,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         } else {
             return vote.amount;
         }
+        */
+        return 0;
     }
 
     public voteFitsMethod(result: VotingResult): boolean {

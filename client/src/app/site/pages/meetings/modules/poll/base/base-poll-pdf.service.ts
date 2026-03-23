@@ -5,7 +5,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
 import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
@@ -409,7 +409,7 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createListEntriesTable(option: ViewOption, enumerate = false): object {
+    private createListEntriesTable(option: ViewPollOption, enumerate = false): object {
         if (!option.isListOption) {
             throw new Error(`Can't generate entry list for non-list option`);
         }

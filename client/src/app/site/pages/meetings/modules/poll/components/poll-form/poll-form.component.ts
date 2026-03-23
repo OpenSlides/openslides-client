@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import {
 } from 'src/app/domain/models/poll';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { EditableListComponent } from 'src/app/ui/modules/editable-list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -27,6 +28,7 @@ import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-
     templateUrl: `./poll-form.component.html`,
     styleUrls: [`./poll-form.component.scss`],
     imports: [
+        EditableListComponent,
         TranslatePipe,
         MatInputModule,
         MatFormFieldModule,
@@ -48,6 +50,9 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public readonly visibilityOptions = PollVisibilityVerbose;
 
     public showNonNominalWarning = false;
+
+    public optionType = input<'meeting_user' | 'text'>('text');
+    public optionEdit = input<boolean>(false);
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
@@ -131,6 +136,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         this.dialog.open();
     }
 
+    public onOptionsChange(items: string[]): void {
+        this.pollForm.get('options').setValue(items);
+    }
+
     private updateLiveVotingEnabled(): void {
         if (!this.isLiveVotingAvailable) {
             this.liveVotingControl.setValue(false, { emitEvent: false });
@@ -151,7 +160,9 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             title: [``, Validators.required],
             visibility: [PollVisibility.Open, Validators.required],
             entitled_group_ids: [],
-            live_voting_enabled: [false]
+            live_voting_enabled: [false],
+            option_type: ['text'],
+            options: [[]]
         });
     }
 }

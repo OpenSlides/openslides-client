@@ -9,7 +9,6 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
@@ -73,11 +72,15 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get canSeeVotes(): boolean {
+        /*
         const option = this.poll.options[0];
         return (
             (this.poll.hasVotes && this.poll.stateHasVotes) ||
             [option?.yes, option?.no, option?.abstain].some(value => value === VOTE_MAJORITY)
         );
+        */
+
+        return this.poll.hasVotes;
     }
 
     public get isEVotingEnabled(): boolean {

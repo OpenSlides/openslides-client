@@ -29,17 +29,11 @@ import { TopicPollComponent } from './components/topic-poll/topic-poll.component
 import { TopicPollDetailContentComponent } from './components/topic-poll-detail-content/topic-poll-detail-content.component';
 import { TopicPollDialogComponent } from './components/topic-poll-dialog/topic-poll-dialog.component';
 import { TopicPollMetaInfoComponent } from './components/topic-poll-meta-info/topic-poll-meta-info.component';
-import { TopicPollVoteComponent } from './components/topic-poll-vote/topic-poll-vote.component';
 import { TopicPollService } from './services/topic-poll.service';
 import { TopicPollServiceModule } from './services/topic-poll-service.module';
 
 @NgModule({
-    declarations: [
-        TopicPollComponent,
-        TopicPollDetailContentComponent,
-        TopicPollMetaInfoComponent,
-        TopicPollVoteComponent
-    ],
+    declarations: [TopicPollComponent, TopicPollDetailContentComponent, TopicPollMetaInfoComponent],
     imports: [
         CustomIconComponent,
         CommonModule,
@@ -69,7 +63,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [TopicPollComponent, TopicPollVoteComponent, TopicPollDetailContentComponent],
+    exports: [TopicPollComponent, TopicPollDetailContentComponent],
     providers: [{ provide: PollService, useClass: TopicPollService }]
 })
 export class TopicPollModule {}

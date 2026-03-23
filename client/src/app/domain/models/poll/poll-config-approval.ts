@@ -17,7 +17,6 @@ export class PollConfigApproval extends BasePollConfigModel<PollConfigApproval> 
     public static readonly REQUESTABLE_FIELDS: (keyof PollConfigApproval)[] = [
         `id`,
         `poll_id`,
-        `option_ids`,
         `allow_abstain`,
         `onehundred_percent_base`
     ];

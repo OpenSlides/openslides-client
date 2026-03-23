@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PollOption } from 'src/app/domain/models/poll/poll-option';
-import { ViewPollOption } from 'src/app/site/pages/meetings/pages/polls/view-models/poll-config-option';
+import { ViewPollOption } from 'src/app/site/pages/meetings/pages/polls/view-models/poll-option';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

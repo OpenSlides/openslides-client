@@ -50,6 +50,8 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
             meeting_id: topic?.meeting_id,
             method: `selection`,
             method_config: config,
+            options: formValues.options,
+            option_type: `text`,
             visibility,
             allow_vote_split: false
         };

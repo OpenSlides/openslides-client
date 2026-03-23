@@ -3,12 +3,12 @@ import { HasMeetingId } from '../../interfaces';
 import { BaseModel } from '../base/base-model';
 
 export class PollOption extends BaseModel<PollOption> {
-    public static COLLECTION = `poll_config_option`;
+    public static COLLECTION = `poll_option`;
 
-    public poll_config_id: Id;
+    public poll_id: Id;
 
     public weight: number;
-    public text: number;
+    public text: string;
     public meeting_user_id: Id;
 
     public constructor(input?: Partial<PollOption>) {
@@ -17,7 +17,7 @@ export class PollOption extends BaseModel<PollOption> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof PollOption)[] = [
         `id`,
-        `poll_config_id`,
+        `poll_id`,
         `weight`,
         `text`,
         `meeting_user_id`

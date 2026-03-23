@@ -50,6 +50,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     }
 
     protected createVotesData(): ExtendedVoteData[] {
+        /*
         const voteData = this.poll?.options[0]?.votes;
         const extendedVoteData: ExtendedVoteData[] = this.poll?.options[0]?.votes;
         if (extendedVoteData) {
@@ -59,6 +60,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             );
         }
         return extendedVoteData;
+        */
+        return [];
     }
 
     public openDialog(): void {

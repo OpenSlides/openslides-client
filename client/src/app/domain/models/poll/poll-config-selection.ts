@@ -19,7 +19,6 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
     public static readonly REQUESTABLE_FIELDS: (keyof PollConfigSelection)[] = [
         `id`,
         `poll_id`,
-        `option_ids`,
         `max_options_amount`,
         `min_options_amount`,
         `allow_nota`,

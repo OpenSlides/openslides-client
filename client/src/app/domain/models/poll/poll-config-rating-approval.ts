@@ -19,7 +19,6 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
     public static readonly REQUESTABLE_FIELDS: (keyof PollConfigRatingApproval)[] = [
         `id`,
         `poll_id`,
-        `option_ids`,
         `max_options_amount`,
         `min_options_amount`,
         `allow_abstain`,

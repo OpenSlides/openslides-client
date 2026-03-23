@@ -9,14 +9,13 @@ import {
     FormPollMethod,
     LOWEST_VOTE_VALUE,
     PollClassType,
-    PollMethod,
     PollVisibility,
     VOTE_UNDOCUMENTED,
     VoteKey,
     VoteValue,
     VoteValueVerbose
 } from 'src/app/domain/models/poll';
-import { Option } from 'src/app/domain/models/poll/option';
+import { PollOption } from 'src/app/domain/models/poll/poll-option';
 import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -237,7 +236,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return result;
     }
 
-    private getOptions(options: any, is_list_poll = false): (Partial<Option> & Identifiable)[] {
+    private getOptions(options: any, is_list_poll = false): (Partial<PollOption> & Identifiable)[] {
         const result: any[] = [];
         const optionKeys = Object.keys(options);
         if (is_list_poll) {
@@ -371,6 +370,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     }
 
     private updateDialogVoteForm(data: Partial<ViewPoll>): void {
+        /*
         const update: any = {
             options: {},
             votesvalid: data.votesvalid,
@@ -396,6 +396,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             const result = this.undoReplaceEmptyValues(update);
             this.dialogVoteForm.patchValue(result);
         }
+        */
     }
 
     public get optionsFromVoteForm(): UntypedFormGroup | null {

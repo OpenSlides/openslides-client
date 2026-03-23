@@ -451,10 +451,11 @@ export class AgendaPdfCatalogExportService {
                 let optionIndex = 0;
                 for (const option of poll.options) {
                     let votesForOption: string | number = ``;
+                    // TODO: Readd votes for option
                     if (poll.stateHasVotes && useVoteWeight) {
-                        votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
+                        // votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
                     } else if (poll.stateHasVotes) {
-                        votesForOption = option.votes.length;
+                        // votesForOption = option.votes.length;
                     }
                     const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
                     tableCells.push([

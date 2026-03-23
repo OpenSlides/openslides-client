@@ -10,12 +10,7 @@ export class PollConfigStvScottish extends BasePollConfigModel<PollConfigStvScot
         super(PollConfigStvScottish.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollConfigStvScottish)[] = [
-        `id`,
-        `poll_id`,
-        `option_ids`,
-        `posts`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof PollConfigStvScottish)[] = [`id`, `poll_id`, `posts`];
 }
 
 export interface PollConfigStvScottish extends HasMeetingId {}

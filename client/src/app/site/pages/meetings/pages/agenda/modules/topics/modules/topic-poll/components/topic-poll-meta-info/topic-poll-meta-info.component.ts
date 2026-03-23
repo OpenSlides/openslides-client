@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { PollPropertyVerbose } from 'src/app/domain/models/poll';
 import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 
 import { TopicPollMethodVerbose } from '../../definitions';
 
@@ -25,7 +25,7 @@ export class TopicPollMetaInfoComponent extends BasePollMetaInformationComponent
         return this.poll.canBeVotedFor();
     }
 
-    public getOptionTitle(option: ViewOption): string {
+    public getOptionTitle(option: ViewPollOption): string {
         return option.text;
     }
 

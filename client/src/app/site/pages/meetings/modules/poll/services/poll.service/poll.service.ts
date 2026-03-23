@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
-import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -23,12 +22,10 @@ import {
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { compareNumber } from 'src/app/infrastructure/utils';
 import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
-import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { PollServiceModule } from '../poll-service.module';
@@ -70,6 +67,8 @@ export abstract class PollService {
     }
 
     public generateTableData(poll: PollData): PollTableData[] {
+        return [];
+        /*
         const tableData: PollTableData[] = poll.options
             .sort((a, b) => {
                 if (this.sortByVote) {
@@ -130,6 +129,7 @@ export abstract class PollService {
         tableData.push(...this.formatVotingResultToTableData(this.getSumTableKeys(poll), poll));
 
         return tableData;
+        */
     }
 
     public getChartLabels(poll: PollData, excludeYNALabels = false): string[] {
@@ -187,6 +187,7 @@ export abstract class PollService {
 
     private getGlobalVoteKeys(poll: PollData): VotingResult[] {
         return [
+            /*
             {
                 vote: `amount_global_yes`,
                 showPercent: this.showPercentOfValidOrCast(poll),
@@ -208,6 +209,7 @@ export abstract class PollService {
                 amount: poll.global_option?.abstain,
                 hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_abstain
             }
+            */
         ];
     }
 
@@ -401,7 +403,8 @@ export abstract class PollService {
      * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
      */
     protected getResultFromPoll(poll: PollData, key: CalculablePollKey): (number | undefined)[] {
-        return (poll ? [...poll.options, poll.global_option] : []).map(option => (option ? option[key] : undefined));
+        // return (poll ? [...poll.options, poll.global_option] : []).map(option => (option ? option[key] : undefined));
+        return [];
     }
 
     protected getPollDataFields(_poll: PollData): CalculablePollKey[] {

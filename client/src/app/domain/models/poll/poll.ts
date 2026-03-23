@@ -155,6 +155,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         `id`,
         `title`,
         `config_id`,
+        `option_ids`,
         `visibility`,
         `state`,
         `result`,

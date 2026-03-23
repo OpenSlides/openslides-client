@@ -21,7 +21,6 @@ export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingS
     public static readonly REQUESTABLE_FIELDS: (keyof PollConfigRatingScore)[] = [
         `id`,
         `poll_id`,
-        `option_ids`,
         `max_options_amount`,
         `min_options_amount`,
         `max_votes_per_option`,

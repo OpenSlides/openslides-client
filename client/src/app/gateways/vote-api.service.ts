@@ -14,6 +14,8 @@ export interface PollCreatePayload {
     visibility: PollVisibility;
     entitled_group_ids?: Id[];
     live_voting_enabled?: boolean;
+    options?: (number | string)[];
+    option_type?: 'text' | 'meeting_user';
     result?: unknown;
     allow_vote_split: boolean;
 }

@@ -2,8 +2,7 @@ import { Observable } from 'rxjs';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 
 import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
@@ -27,7 +26,6 @@ export interface PollData {
     entitled_users_at_stop: EntitledUsersEntry[];
     options: OptionData[];
     options$: Observable<OptionData[]>;
-    global_option: OptionData;
     global_yes?: boolean;
     global_no?: boolean;
     global_abstain?: boolean;
@@ -54,7 +52,8 @@ export interface OptionData {
     amount_global_yes?: number;
     amount_global_no?: number;
     amount_global_abstain?: number;
-    content_object?: ViewUser | ViewMotion | ViewPollCandidateList;
+    meeting_user?: ViewMeetingUser;
+    text?: string;
     entries_amount?: number;
 }
 

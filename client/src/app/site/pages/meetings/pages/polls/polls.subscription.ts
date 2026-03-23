@@ -14,13 +14,13 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     follow: [
         {
             idField: `config_id`,
-            fieldset: FULL_FIELDSET,
-            follow: [{ idField: `option_ids`, fieldset: FULL_FIELDSET }]
+            fieldset: FULL_FIELDSET
         },
         {
             idField: `ballot_ids`,
             fieldset: [`represented_meeting_user_id`, `poll_id`]
-        }
+        },
+        { idField: `option_ids`, fieldset: FULL_FIELDSET }
     ]
 };
 

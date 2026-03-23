@@ -31,14 +31,10 @@ import { MotionPollDetailContentComponent } from './components/motion-poll-detai
 import { MotionPollDialogComponent } from './components/motion-poll-dialog/motion-poll-dialog.component';
 import { MotionPollFormComponent } from './components/motion-poll-form/motion-poll-form.component';
 import { MotionPollMetaInformationComponent } from './components/motion-poll-meta-information/motion-poll-meta-information.component';
-import { MotionPollVoteComponent } from './components/motion-poll-vote/motion-poll-vote.component';
 import { MotionPollService } from './services';
 import { MotionPollServiceModule } from './services/motion-poll-service.module';
 
-const DECLARATIONS = [
-    MotionPollMetaInformationComponent,
-    MotionPollVoteComponent // TODO: Only exported to have access to it in the autopilot
-];
+const DECLARATIONS = [MotionPollMetaInformationComponent];
 const MODULES = [MotionPollServiceModule];
 
 @NgModule({

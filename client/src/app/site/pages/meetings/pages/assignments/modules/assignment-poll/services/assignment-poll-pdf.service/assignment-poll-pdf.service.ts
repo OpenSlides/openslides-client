@@ -94,7 +94,8 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         };
     }
 
-    private createOptionFields(poll: ViewPoll): object {
+    private createOptionFields(_poll: ViewPoll): object {
+        /*
         const options = poll.options.sort((a, b) => a.weight - b.weight);
         const resultObject = options.map(opt => {
             let optionName = ``;
@@ -132,6 +133,9 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             }
         }
         return resultObject;
+        */
+
+        return {};
     }
 
     private createYNBallotEntry(option: string, method: PollMethod): object {
