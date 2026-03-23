@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/models.yml`));
+const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/collection-meta.yml`));
 const SOURCE_COLLECTIONS = path.resolve(path.join(__dirname, `../../meta/collections/`));
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
@@ -82,9 +82,9 @@ function snakeToPascal(input: string): string {
             .concat(...classNode.getBaseTypes().map(t => t.getProperties().map(p => p.getName())));
 
         const fieldset = [];
-        for (const modelProp of Object.keys(models[modelName])) {
+        for (const modelProp of Object.keys(models[modelName][`fields`])) {
             if (!existingProps.includes(modelProp)) {
-                if (models[modelName][modelProp]?.restriction_mode !== `G`) {
+                if (models[modelName][`fields`][modelProp]?.restriction_mode !== `G`) {
                     console.warn(`${classNode.getName()}: ${modelProp} missing`);
                 }
             } else {
