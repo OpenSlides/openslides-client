@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,15 +14,7 @@ import { ChoiceAnswer, ChoiceDialogConfig } from './definitions';
     templateUrl: `./choice-dialog.component.html`,
     styleUrls: [`./choice-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    imports: [
-        CommonModule,
-        MatDialogModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        SearchSelectorModule,
-        TranslatePipe
-    ]
+    imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule, FormsModule, SearchSelectorModule, TranslatePipe]
 })
 export class ChoiceDialogComponent {
     /**
