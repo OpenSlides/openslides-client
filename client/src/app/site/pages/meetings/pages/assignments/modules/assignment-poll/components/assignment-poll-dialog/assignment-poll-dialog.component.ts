@@ -72,7 +72,9 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
             content_object_id: assignment?.fqid,
             meeting_id: assignment?.meeting_id,
             method: TAB_METHOD_MAP[this.selectedTab()],
-            method_config: this.getMethodConfig(options),
+            method_config: this.getMethodConfig(),
+            option_type: `meeting_user`,
+            options,
             visibility,
             allow_vote_split: false
         };
@@ -101,14 +103,14 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return [this.pollData.content_object];
     }
 
-    private getMethodConfig(options: Ids): unknown {
+    private getMethodConfig(): unknown {
         switch (TAB_METHOD_MAP[this.selectedTab()]) {
             case `approval`:
                 return { ...this.approvalForm?.approvalForm.value };
             case `selection`:
-                return { ...this.selectionForm?.form.value, options };
+                return { ...this.selectionForm?.form.value };
             case `rating_approval`:
-                return { ...this.ratingApprovalForm?.form.value, options };
+                return { ...this.ratingApprovalForm?.form.value };
         }
         return {};
     }

@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -14,7 +16,7 @@ import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
     styleUrls: [`./topic-poll.component.scss`],
-    standalone: false
+    imports: [PollComponent, MatCardModule]
 })
 export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
     @Input()

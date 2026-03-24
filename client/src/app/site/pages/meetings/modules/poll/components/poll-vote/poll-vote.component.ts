@@ -26,7 +26,7 @@ export class PollVoteComponent {
     public loading = signal(false);
 
     public configType = computed(() => {
-        return collectionFromFqid(this.poll().config_id);
+        return this.poll().config_id ? collectionFromFqid(this.poll().config_id) : null;
     });
 
     private operator = inject(OperatorService);

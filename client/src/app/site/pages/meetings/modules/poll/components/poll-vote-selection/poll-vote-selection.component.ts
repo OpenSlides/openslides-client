@@ -46,7 +46,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
     });
 
     public options = computed<ViewPollOption[]>(() => {
-        return (this.poll().config?.options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
+        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
     });
 
     private pollRepo = inject(PollRepositoryService);
