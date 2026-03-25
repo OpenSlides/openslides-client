@@ -706,6 +706,12 @@ describe(`handling of manual line breaks`, () => {
         const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
         expect(outHtml).toBe(`<p>${noMarkup(1)}Test 123<br>${noMarkup(2)}<br>${noMarkup(3)}Test 456</p>`);
     });
+
+    it(`adds newlines if br is at end of paragraph`, () => {
+        const inHtml = `<p><br>\nTest 123<br>\n</p>`;
+        const outHtml = insert({ html: inHtml, lineLength: 80, firstLine: 1 });
+        expect(outHtml).toBe(`<p>${noMarkup(1)}<br>${noMarkup(2)}Test 123<br>${noMarkup(3)}</p>`);
+    });
 });
 
 // TODO: Testing some internals

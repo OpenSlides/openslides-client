@@ -92,6 +92,13 @@ export class LineNumbering {
                     element.appendChild(ln);
                 }
                 element.appendChild(oldChildren[i]);
+            } else if (oldChildren[i].nodeName === `BR` && i === oldChildren.length - 1) {
+                element.appendChild(oldChildren[i]);
+
+                const ln = this.createLineNumber();
+                if (ln) {
+                    element.appendChild(ln);
+                }
             } else if (oldChildren[i].nodeType === TEXT_NODE) {
                 if (!oldChildren[i].nodeValue!.match(/\S/)) {
                     // White space nodes between block elements should be ignored
