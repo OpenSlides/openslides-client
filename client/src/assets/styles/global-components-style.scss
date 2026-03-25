@@ -15,23 +15,37 @@
 
     $is-dark-theme: map.get($theme, is-dark);
 
-    $percent: if($is-dark-theme, 0.04, -0.04);
+    $percent: -0.04;
+    @if $is-dark-theme {
+        $percent: 0.04;
+    }
 
     h1,
     h3.accent {
-        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            color: mat.m2-get-color-from-palette($accent);
+        }
     }
 
     a {
-        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            color: mat.m2-get-color-from-palette($accent);
+        }
     }
 
     .underlined-links a {
-        text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
+        text-decoration: solid underline mat.m2-get-color-from-palette($primary) 0.15em;
+        @if $is-dark-theme {
+            text-decoration: solid underline mat.m2-get-color-from-palette($accent) 0.15em;
+        }
 
         &:hover {
-            text-decoration: solid underline mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary))
-                0.175em;
+            text-decoration: solid underline mat.m2-get-color-from-palette($primary) 0.175em;
+            @if $is-dark-theme {
+                text-decoration: solid underline mat.m2-get-color-from-palette($accent) 0.175em;
+            }
         }
 
         & {
@@ -42,7 +56,10 @@
     }
 
     .select-speaker-button-design {
-        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            color: mat.m2-get-color-from-palette($accent);
+        }
     }
 
     .accentuated-background,
@@ -67,7 +84,10 @@
     }
 
     .primary-accent-by-theme {
-        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            color: mat.m2-get-color-from-palette($accent);
+        }
     }
 
     /**
@@ -122,7 +142,10 @@
     }
 
     .subtitle-text {
-        color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            color: mat.m2-get-color-from-palette($accent);
+        }
     }
 
     .main-nav-color {
@@ -257,7 +280,10 @@
     }
 
     .foreground-active {
-        $color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        $color: mat.m2-get-color-from-palette($primary);
+        @if $is-dark-theme {
+            $color: mat.m2-get-color-from-palette($accent);
+        }
         color: $color !important;
         * {
             color: $color !important;
@@ -296,7 +322,10 @@
             color: mat.m2-get-color-from-palette($foreground, text);
         }
         &.active {
-            $color: mat.m2-get-color-from-palette(if($is-dark-theme, $accent, $primary));
+            $color: mat.m2-get-color-from-palette($primary);
+            @if $is-dark-theme {
+                $color: mat.m2-get-color-from-palette($accent);
+            }
             color: $color;
             * {
                 color: $color;
@@ -320,7 +349,10 @@
     }
 
     .light-gray-by-theme {
-        color: if($is-dark-theme, white, rgba(0, 0, 0, 0.65));
+        color: rgba(0, 0, 0, 0.65);
+        @if $is-dark-theme {
+            color: white;
+        }
     }
 
     .divider {
@@ -339,13 +371,26 @@
         }
     }
 
-    .assignment-result-table {
-        tr {
+    .assignment-results {
+        .row:not(:last-child) {
             border-bottom: 1px solid mat.m2-get-color-from-palette($background, focused-button);
+        }
+        .cell {
+            &:focus {
+                outline: rgba(0, 0, 0, 0.55) solid 3px;
+                background-color: rgba(0, 0, 0, 0.05);
+                @if $is-dark-theme {
+                    outline: rgba(255, 255, 255, 0.55) solid 3px;
+                    background-color: rgba(255, 255, 255, 0.15);
+                }
+            }
         }
     }
 
     .sidenav-background {
-        background: if($is-dark-theme, color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005), white);
+        background: white;
+        @if $is-dark-theme {
+            background: color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005);
+        }
     }
 }

@@ -41,6 +41,16 @@ jobs:
         working-directory: "./openslides-backend/data/"
         run: cp example-data.json initial-data.json
 
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          version: latest
+
+      - name: Build openslides binary
+        run: |
+          make -C openslides-manage-service openslides
+          mv -f openslides-manage-service/openslides dev/localprod/openslides
+
       - name: Start setup
         working-directory: "./dev/localprod"
         run: |
@@ -59,7 +69,7 @@ jobs:
         working-directory: "./openslides-client"
         run: make run-playwright
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
@@ -76,15 +86,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: "recursive"
 
-      - name: create docker dev image
-        run: make build-dev
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: client/
 
       - name: Check linting
-        run: make run-check-linting
+        run: npm run lint
+        working-directory: client/
 
       - name: Check prettifying
-        run: make run-check-prettifying
+        run: npm run prettify-check
+        working-directory: client/
 
-      - name: Run karma tests
-        run: make run-karma-tests
+      - name: Check generated models are up to date
+        run: npm run generate-models && git diff --exit-code -- src/app/domain/models
+        working-directory: client/
+
+      - uses: browser-actions/setup-chrome@v2
+
+      - name: Build motion diff
+        run: npm ci && npm run build
+        working-directory: packages/openslides-motion-diff/
+
+      - name: Build and run karma tests
+        run: npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox
+        working-directory: client/
