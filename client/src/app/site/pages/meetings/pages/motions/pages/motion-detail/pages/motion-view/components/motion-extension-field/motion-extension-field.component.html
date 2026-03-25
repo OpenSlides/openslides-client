@@ -15,7 +15,7 @@
         (iconAction)="changeEditMode()"
     >
         @if (canBeEdited) {
-            <mat-basic-chip class="pointer" disableRipple [matMenuTriggerFor]="triggerMenu" [ngClass]="classes">
+            <mat-basic-chip disableRipple [matMenuTriggerFor]="triggerMenu" [ngClass]="classes">
                 <span class="wrap-chip">{{ chipValue || '–' }}</span>
             </mat-basic-chip>
         } @else {
