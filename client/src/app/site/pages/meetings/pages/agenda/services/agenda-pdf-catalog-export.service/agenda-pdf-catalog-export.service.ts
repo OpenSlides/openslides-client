@@ -106,7 +106,7 @@ export class AgendaPdfCatalogExportService {
             {
                 text: this.translate.instant(`Agenda`),
                 style: this.getStyle(`header1`),
-                margin: this.getStyle(`margin-header1`)
+                margin: this.getStyle(`agenda-title`)
             }
         ]);
 
@@ -233,10 +233,11 @@ export class AgendaPdfCatalogExportService {
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
         let styleName = `header2`;
-        let margin = ``;
+        let margin: string | number[] = `margin-header1`;
         if (agendaItem.level > 0) {
             styleName = `header-child`;
-            margin = `margin-header-child`;
+            const indentationLevel = agendaItem.level * 10 + 10;
+            margin = [indentationLevel, 10, 0, 0];
         }
         let numberOrTitle = ``;
         if (agendaItem.content_object?.collection === `motion`) {
@@ -280,13 +281,15 @@ export class AgendaPdfCatalogExportService {
         return {
             style: this.getStyle(styleName),
             text: numberOrTitle,
-            margin: this.getStyle(margin)
+            margin: margin === 'margin-header1' ? this.getStyle(margin) : margin
         };
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
         const style = this.getStyle(`body-text`);
-        const margin = this.getStyle(`margin-body-text`);
+        // The operation calculates the correct intentation level
+        const indentationLevel = agendaItem.level * 10 + 10;
+        const margin = agendaItem.level > 0 ? [indentationLevel, 10, 0, 0] : this.getStyle(`margin-body-text`);
         if (!this.isTopic(agendaItem.content_object)) {
             // MOTION
             if (agendaItem.content_object?.collection === 'motion') {
@@ -328,21 +331,28 @@ export class AgendaPdfCatalogExportService {
         }
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
+        console.log(moderationNotes, entry, agendaItem.getTitle());
         if (moderationNotes) {
             this._addExtraSpace = true;
             const moderationText = {
                 text: entry
             };
             const text = this.translate.instant(`Moderation note`);
-            const style = [this.getStyle(`header3`), this.getStyle(`body-text`)];
+            const style = [this.getStyle(`header3`), this.getStyle(`margin-body-text`)];
             const margin: [
                 [number, number, number, number],
                 [number, number, number, number],
                 [number, number, number, number],
                 [number, number, number, number]
-            ] = [[20, 10, 0, 0], [25, 10, 0, 0], this.getStyle(`margin-header3`), this.getStyle(`margin-body-text`)];
+            ] = [
+                [20, 10, 0, 0],
+                [20, 10, 0, 0],
+                this.getStyle(`margin-header3`),
+                this.getStyle(`margin-moderation-note`)
+            ];
             // Indents the moderation note inside a subitem
             if (agendaItem.level > 0) {
+                margin[0][0] = margin[0][0] + agendaItem.level * 10;
                 return [
                     {
                         text: text,
@@ -352,7 +362,7 @@ export class AgendaPdfCatalogExportService {
                     {
                         text: moderationText,
                         style: style[1],
-                        margin: margin[1]
+                        margin: margin[0]
                     }
                 ];
             } else {
@@ -607,17 +617,21 @@ export class AgendaPdfCatalogExportService {
                 return { layout: TABLEROW_GREY };
             case `italics`:
                 return { italics: true };
+            //      [L,U,R,D]
+            case `agenda-title`:
+                return [0, 15, 0, 20];
             case `margin-header1`:
-                //      [L,U,R,D]
-                return [0, 10, 0, 0];
+                return [0, 0, 0, 0];
             case `margin-header3`:
                 return [15, 10, 0, 0];
             case `margin-header-child`:
-                return [15, 10, 0, 0];
+                return [15, 0, 0, 0];
             case `margin-type-text`:
-                return [12, 10, 0, 0];
+                return [12, 0, 0, 0];
             case `margin-body-text`:
-                return [20, 10, 0, 5];
+                return [0, 10, 0, 5];
+            case `margin-moderation-note`:
+                return [15, 10, 0, 5];
             case `margin-item`:
                 return [0, 0, 0, 0];
             case `margin-item-2`:
