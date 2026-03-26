@@ -83,8 +83,7 @@ jobs:
         with:
           dest: './logs'
 
-      - name: Tar logs
-        if: failure()
+      - if: failure()
         run: tar cvzf ./logs.tgz ./logs
 
       - name: Upload docker logs
