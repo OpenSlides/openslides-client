@@ -169,6 +169,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         if (!update.id && !meeting) {
             throw new Error(`Either a meeting or an update.id has to be given`);
         }
+        if (update.external_id === ``) {
+            update.external_id = null;
+        }
         const actions: any[] = [
             {
                 ...update,
@@ -267,11 +270,15 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     }
 
     private getPartialPayload(meeting: Partial<Meeting>): any {
-        return {
+        const payload = {
             ...meeting,
             start_time: this.anyDateToUnix(meeting.start_time),
             end_time: this.anyDateToUnix(meeting.end_time)
         };
+        if (payload.external_id === ``) {
+            payload.external_id = null;
+        }
+        return payload;
     }
 
     /**
