@@ -82,9 +82,9 @@ function snakeToPascal(input: string): string {
             .concat(...classNode.getBaseTypes().map(t => t.getProperties().map(p => p.getName())));
 
         const fieldset = [];
-        for (const modelProp of Object.keys(models[modelName])) {
+        for (const modelProp of Object.keys(models[modelName][`fields`])) {
             if (!existingProps.includes(modelProp)) {
-                if (models[modelName][modelProp]?.restriction_mode !== `G`) {
+                if (models[modelName][`fields`][modelProp]?.restriction_mode !== `G`) {
                     console.warn(`${classNode.getName()}: ${modelProp} missing`);
                 }
             } else {

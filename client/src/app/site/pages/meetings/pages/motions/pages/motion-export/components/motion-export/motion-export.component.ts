@@ -199,6 +199,9 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
     @ViewChild(`tableOfContentChip`)
     public tableOfContentChip!: MatChipOption;
 
+    @ViewChild(`continuousDirectoryChip`)
+    public continuousDirectoryChip!: MatChipOption;
+
     @ViewChild(`addBreaksChip`)
     public addBreaksChip!: MatChipOption;
 
@@ -338,6 +341,13 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
                         this.dialogForm.get(`content`).setValue([...this.dialogForm.get(`content`).value, ...[`text`]]);
                     }
                     this.changeStateOfChipOption(this.textChip, false, `text`);
+                }
+            }),
+            this.dialogForm.controls[`pageLayout`].valueChanges.subscribe(value => {
+                if (value?.includes(`toc`)) {
+                    this.changeStateOfChipOption(this.continuousDirectoryChip, false, `continuousDirectory`);
+                } else {
+                    this.changeStateOfChipOption(this.continuousDirectoryChip, true, `continuousDirectory`);
                 }
             })
         );
@@ -579,6 +589,7 @@ export class MotionExportComponent extends BaseComponent implements AfterViewIni
 
         intersection = [
             `toc`,
+            `continuousDirectory`,
             `header`,
             `page`,
             `date`,
