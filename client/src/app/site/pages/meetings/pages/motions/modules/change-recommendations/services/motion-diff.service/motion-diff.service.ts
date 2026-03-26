@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DiffCompat, HtmlDiff } from '@openslides/motion-diff';
+import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
@@ -84,10 +84,10 @@ export class MotionDiffService {
         @Inject(DIFF_VERSION) diffVersion: string,
         private translate: TranslateService
     ) {
-        if (diffVersion) {
-            this.htmlDiff = DiffCompat.getForVersion(diffVersion)[1];
-        } else {
+        if (diffVersion === VERSION) {
             this.htmlDiff = HtmlDiff;
+        } else {
+            this.htmlDiff = DiffCompat.getForVersion(diffVersion || `0.0.0`)[1];
         }
     }
 

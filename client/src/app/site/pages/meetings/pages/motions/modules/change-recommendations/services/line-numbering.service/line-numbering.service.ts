@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { DiffCompat, LineNumbering } from '@openslides/motion-diff';
+import { DiffCompat, LineNumbering, VERSION } from '@openslides/motion-diff';
 import { djb2hash } from 'src/app/infrastructure/utils';
 
 import { DiffCache } from '../../../../definitions';
@@ -85,10 +85,10 @@ export class LineNumberingService {
     private lineNumberCache = new DiffCache();
 
     public constructor(@Inject(DIFF_VERSION) diffVersion: string) {
-        if (diffVersion) {
-            this.ln = DiffCompat.getForVersion(diffVersion)[0];
-        } else {
+        if (diffVersion === VERSION) {
             this.ln = LineNumbering;
+        } else {
+            this.ln = DiffCompat.getForVersion(diffVersion || `0.0.0`)[0];
         }
     }
 
