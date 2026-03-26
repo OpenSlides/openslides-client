@@ -244,6 +244,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
             ...createAgendaItem(partialMotion, false)
         };
+        if (payload.number === ``) {
+            payload.number = null;
+        }
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
@@ -325,7 +328,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getCreatePayload(partialMotion: any): any {
-        return {
+        const payload = {
             meeting_id: this.activeMeetingId,
             title: partialMotion.title,
             text: partialMotion.text,
@@ -346,6 +349,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
             ...createAgendaItem(partialMotion, false)
         };
+        if (payload['number'] === ``) {
+            payload['number'] = null;
+        }
+        return payload;
     }
 
     private getUpdatePayload(update: any, viewMotion: Motion & { workflow_id: Id }): any {
@@ -356,13 +363,17 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             }
             return {};
         });
-        return {
+        const payload = {
             id: viewMotion.id,
             ...updatePayload,
             tag_ids: update[`tag_ids`] === null ? [] : update[`tag_ids`],
             attachment_mediafile_ids:
                 update[`attachment_mediafile_ids`] === null ? [] : update[`attachment_mediafile_ids`]
         };
+        if (payload['number'] === ``) {
+            payload['number'] = null;
+        }
+        return payload;
     }
 
     /**
