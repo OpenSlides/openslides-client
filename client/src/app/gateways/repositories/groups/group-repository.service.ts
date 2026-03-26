@@ -48,6 +48,9 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
             name: update.name,
             external_id: update.external_id
         };
+        if (payload.external_id === ``) {
+            payload.external_id = null;
+        }
         return this.sendActionToBackend(GroupAction.UPDATE, payload);
     }
 
@@ -60,11 +63,15 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     }
 
     private getCreatePayload(partialGroup: Partial<Group>): Partial<Group> {
-        return {
+        const payload = {
             meeting_id: this.activeMeetingId!,
             name: partialGroup.name,
             external_id: partialGroup.external_id,
             permissions: partialGroup.permissions
         };
+        if (payload.external_id === ``) {
+            payload.external_id = null;
+        }
+        return payload;
     }
 }
