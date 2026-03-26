@@ -369,7 +369,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         }
     }
 
-    private updateDialogVoteForm(data: Partial<ViewPoll>): void {
+    private updateDialogVoteForm(_data: Partial<ViewPoll>): void {
         /*
         const update: any = {
             options: {},

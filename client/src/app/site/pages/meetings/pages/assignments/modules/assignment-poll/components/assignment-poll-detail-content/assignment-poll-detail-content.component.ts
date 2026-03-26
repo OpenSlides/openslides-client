@@ -1,15 +1,5 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -25,7 +15,6 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
-import { ViewPoll } from '../../../../../polls';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -35,7 +24,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: [`./assignment-poll-detail-content.component.scss`],
     standalone: false
 })
-export class AssignmentPollDetailContentComponent implements OnInit, AfterViewInit {
+export class AssignmentPollDetailContentComponent implements AfterViewInit {
     private _poll: PollData;
 
     public readonly hasLoaded = new Deferred<boolean>();
@@ -176,7 +165,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         private themeService: ThemeService
     ) {}
 
-    public ngOnInit(): void {
+    public _ngOnInit(): void {
         /*
         combineLatest([
             this.poll.options$,
@@ -247,7 +236,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         return votingResult.filter(result => result && this.voteFitsMethod(result));
     }
 
-    public getVoteAmount(vote: VotingResult, row: PollTableData): number {
+    public getVoteAmount(_vote: VotingResult, _row: PollTableData): number {
         /*
         vote.amount = vote.amount ?? 0;
         if (this.isMethodN && [`user`, `list`].includes(row.class)) {

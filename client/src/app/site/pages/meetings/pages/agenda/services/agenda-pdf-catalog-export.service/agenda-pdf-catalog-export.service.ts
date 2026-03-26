@@ -450,7 +450,7 @@ export class AgendaPdfCatalogExportService {
                 // poll table rows
                 let optionIndex = 0;
                 for (const option of poll.options) {
-                    let votesForOption: string | number = ``;
+                    const votesForOption: string | number = ``;
                     // TODO: Readd votes for option
                     if (poll.stateHasVotes && useVoteWeight) {
                         // votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);

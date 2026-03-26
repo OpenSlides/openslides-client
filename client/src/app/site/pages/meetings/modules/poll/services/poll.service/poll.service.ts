@@ -66,7 +66,7 @@ export abstract class PollService {
             .subscribe(is => (this._defaultPollLiveVotingEnabled = is));
     }
 
-    public generateTableData(poll: PollData): PollTableData[] {
+    public generateTableData(_poll: PollData): PollTableData[] {
         return [];
         /*
         const tableData: PollTableData[] = poll.options
@@ -185,7 +185,7 @@ export abstract class PollService {
         }
     }
 
-    private getGlobalVoteKeys(poll: PollData): VotingResult[] {
+    private getGlobalVoteKeys(_poll: PollData): VotingResult[] {
         return [
             /*
             {
@@ -402,7 +402,7 @@ export abstract class PollService {
     /**
      * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
      */
-    protected getResultFromPoll(poll: PollData, key: CalculablePollKey): (number | undefined)[] {
+    protected getResultFromPoll(_poll: PollData, _key: CalculablePollKey): (number | undefined)[] {
         // return (poll ? [...poll.options, poll.global_option] : []).map(option => (option ? option[key] : undefined));
         return [];
     }

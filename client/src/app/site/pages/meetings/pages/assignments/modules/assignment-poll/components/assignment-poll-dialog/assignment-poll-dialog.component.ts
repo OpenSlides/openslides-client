@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Ids } from 'src/app/domain/definitions/key-types';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
 import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
