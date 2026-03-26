@@ -15,6 +15,7 @@ import { ViewMotion } from '../../../motions';
 import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models';
+import { InfoToExport } from '../../pages/agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
@@ -58,7 +59,7 @@ export class AgendaPdfCatalogExportService {
      * @param pdfMeta
      * @returns pdfmake doc definition as object
      */
-    public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: any, pdfMeta: string[]): Content {
+    public agendaListToDocDef(agendaItems: ViewAgendaItem[], exportInfo: InfoToExport[], pdfMeta: string[]): Content {
         const addedAgendaItems = this.getMissingAgendaItems(agendaItems);
         this.addedAgendaItemIds = addedAgendaItems.map(item => item.id);
         const tree = this.treeService.makeSortedTree(agendaItems.concat(addedAgendaItems), `weight`, `parent_id`);
@@ -70,22 +71,29 @@ export class AgendaPdfCatalogExportService {
 
         for (let agendaItemIndex = 0; agendaItemIndex < sortedAgendaItems.length; ++agendaItemIndex) {
             try {
+                const agendaItem: string | null =
+                    agendaItems[agendaItemIndex].content_object.description === undefined
+                        ? agendaItems[agendaItemIndex].content_object.text
+                        : agendaItems[agendaItemIndex].content_object.description;
                 const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
+
                 agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
                 if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length) {
-                    if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
-                        agendaDocDef.push({
-                            text: ``,
-                            marginBottom: this._addExtraSpace ? 25 : 20
-                        });
-                    } else {
-                        agendaDocDef.push({
-                            text: ``,
-                            marginBottom: this._addExtraSpace ? 15 : 10
-                        });
+                    if (agendaItem != '') {
+                        if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
+                            agendaDocDef.push({
+                                text: ``,
+                                marginBottom: this._addExtraSpace ? 25 : 20
+                            });
+                        } else {
+                            agendaDocDef.push({
+                                text: ``,
+                                marginBottom: this._addExtraSpace ? 15 : 10
+                            });
+                        }
+                        this._addExtraSpace = false;
                     }
-                    this._addExtraSpace = false;
                 }
 
                 agendaDocList.push(agendaDocDef);
@@ -306,12 +314,22 @@ export class AgendaPdfCatalogExportService {
                 // MOTION BLOCK
             } else if (agendaItem.content_object?.collection === 'motion_block') {
                 const motions: ViewMotion[] = agendaItem.content_object?.motions || [];
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText:
-                        motions.map(m => `Motion ${m.number}: ${m.title}`).join('<br><br>') ??
-                        `EMPTY ${agendaItem.content_object.collection}`
-                });
-                return { text: entry, style: this.getStyle(`header3`), margin: margin };
+                margin[3] -= 5;
+                return motions.length
+                    ? motions.map(m => ({
+                          text: this.htmlToPdfService.convertHtml({
+                              htmlText: `Motion ${m.number}: ${m.title}`
+                          }),
+                          style: this.getStyle('header3'),
+                          margin: margin
+                      }))
+                    : [
+                          {
+                              text: `EMPTY ${agendaItem.content_object.collection}`,
+                              style: this.getStyle('header3'),
+                              margin: margin
+                          }
+                      ];
             } else {
                 return { text: agendaItem.content_object?.collection, style: style, margin: margin };
             }
@@ -331,7 +349,6 @@ export class AgendaPdfCatalogExportService {
         }
         const moderationNotes = agendaItem.content_object?.list_of_speakers?.moderator_notes ?? ``;
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
-        console.log(moderationNotes, entry, agendaItem.getTitle());
         if (moderationNotes) {
             this._addExtraSpace = true;
             const moderationText = {
@@ -619,7 +636,7 @@ export class AgendaPdfCatalogExportService {
                 return { italics: true };
             //      [L,U,R,D]
             case `agenda-title`:
-                return [0, 15, 0, 20];
+                return [0, 0, 0, 20];
             case `margin-header1`:
                 return [0, 0, 0, 0];
             case `margin-header3`:
