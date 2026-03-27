@@ -1,8 +1,9 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -124,7 +125,8 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         breakpoint: BreakpointObserver,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private liveAnnouncer: LiveAnnouncer
     ) {
         super();
 
@@ -132,6 +134,10 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             this.autopilotService.disabledContentElements.subscribe(keys => {
                 this.disabledContentElements = keys || {};
             }),
+            projectorRepo
+                .getReferenceProjectorObservable()
+                .pipe(distinctUntilChanged((prev, curr) => prev.getTitle() != curr.getTitle()))
+                .subscribe(_ => this.announcer()),
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 if (refProjector) {
                     this.projector = refProjector;
@@ -162,6 +168,13 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
 
     public ngOnInit(): void {
         super.setTitle(`Autopilot`);
+    }
+
+    private announcer(): void {
+        if (this._currentProjection) {
+            const liveAnnounceTitle = this.translate.instant(`The projected title is`) + `: `;
+            this.liveAnnouncer.announce(liveAnnounceTitle + this._currentProjection.getTitle());
+        }
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
