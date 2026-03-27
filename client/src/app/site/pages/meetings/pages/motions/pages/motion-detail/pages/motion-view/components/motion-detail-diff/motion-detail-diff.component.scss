@@ -3,6 +3,7 @@
 :host ::ng-deep .underlined-links {
     @include detail-view-appearance.detail-view-appearance;
 }
+
 .broken-box {
     position: relative;
     margin-bottom: 15px;
@@ -35,7 +36,7 @@
     border-radius: 3px;
     margin-bottom: 0;
     padding-top: 0;
-    max-height: 22px;
+    max-height: fit-content;
     padding-right: 40px;
 
     &:hover {
@@ -43,6 +44,7 @@
             opacity: 1;
         }
     }
+
     & {
         .action-row {
             position: absolute;
@@ -50,7 +52,6 @@
             right: 0;
             font-size: 0.8em;
             opacity: 0.5;
-            overflow: hidden;
 
             .btn-delete {
                 margin-left: 5px;
@@ -80,6 +81,7 @@
             display: flex;
             align-items: flex-start;
             flex-wrap: wrap;
+
             .collission-hint {
                 padding-right: 4px;
             }
@@ -89,6 +91,10 @@
                 color: gray;
                 content: ':';
             }
+        }
+
+        p {
+            margin-bottom: 0;
         }
     }
 }
