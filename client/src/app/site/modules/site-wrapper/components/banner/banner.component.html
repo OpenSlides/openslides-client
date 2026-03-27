@@ -10,7 +10,7 @@
                 <a class="banner-link" [routerLink]="banner.link" [style.cursor]="banner.link ? 'pointer' : 'default'">
                     <div>
                         <mat-icon inline>{{ banner.icon }}</mat-icon>
-                        <h1>{{ banner.text | translate }}</h1>
+                        <h1 aria-live="assertive">{{ banner.text | translate }}</h1>
                     </div>
                     @if (banner.subText) {
                         <div>
