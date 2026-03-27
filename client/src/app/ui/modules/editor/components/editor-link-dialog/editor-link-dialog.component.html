@@ -1,20 +1,23 @@
 <div
+    aria-label="Insert/edit external link"
     cdkFocusInitial
-    class="references"
+    class="title"
     role="button"
     tabindex="0"
     (click)="toggleArrow('toggleExternalReference')"
     (keydown.enter)="toggleArrow('toggleExternalReference')"
     (keydown.space)="toggleArrow('toggleExternalReference')"
 >
-    <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
-    <button #btn class="arrows" matIconButton>
-        @if (toggleExternalReference) {
-            <mat-icon>keyboard_arrow_up</mat-icon>
-        } @else {
-            <mat-icon>keyboard_arrow_down</mat-icon>
-        }
-    </button>
+    <div class="references">
+        <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
+        <button #btn class="arrows" matIconButton (click)="toggleArrow('toggleExternalReference')">
+            @if (toggleExternalReference) {
+                <mat-icon>keyboard_arrow_up</mat-icon>
+            } @else {
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            }
+        </button>
+    </div>
 </div>
 @if (toggleExternalReference) {
     <div mat-dialog-content [formGroup]="externalLink">
@@ -45,21 +48,23 @@
 }
 <div
     cdkTrapFocus
-    class="references"
+    class="title"
     role="button"
     tabindex="0"
     (click)="toggleArrow('toggleInternalReference')"
     (keydown.enter)="toggleArrow('toggleInternalReference')"
     (keydown.space)="toggleArrow('toggleInternalReference')"
 >
-    <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>Link a topic/motion/assignment</h1>
-    <button class="arrows" matIconButton>
-        @if (toggleInternalReference) {
-            <mat-icon>keyboard_arrow_up</mat-icon>
-        } @else {
-            <mat-icon>keyboard_arrow_down</mat-icon>
-        }
-    </button>
+    <div class="references">
+        <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>Link a topic/motion/assignment</h1>
+        <button class="arrows" matIconButton (click)="toggleArrow('toggleInternalReference')">
+            @if (toggleInternalReference) {
+                <mat-icon>keyboard_arrow_up</mat-icon>
+            } @else {
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            }
+        </button>
+    </div>
 </div>
 @if (toggleInternalReference) {
     <div mat-dialog-content>

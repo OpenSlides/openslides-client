@@ -19,6 +19,22 @@ mat-form-field {
     }
 }
 
+// How the focus is highlighted must be discussed further. Actual style is provisional.
+
+.title {
+    padding: 0;
+}
+
+.title:focus {
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+    & h1 {
+        background-color: #eee;
+        border-radius: 25px;
+    }
+}
+
 .clear-button {
     display: flex;
     justify-content: flex-end;

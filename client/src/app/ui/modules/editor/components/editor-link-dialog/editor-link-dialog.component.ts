@@ -2,6 +2,7 @@ import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
@@ -108,7 +109,8 @@ export class EditorLinkDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
         private router: Router,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private translate: TranslateService
     ) {
         // External reference
         this.link = { ...data.link };
@@ -146,9 +148,9 @@ export class EditorLinkDialogComponent implements OnInit {
         this.assignmentItemList = this.assignmentItemRepo.getSortedViewModelListObservable();
 
         this.searchLists = [
-            { observable: this.agendaItemList, label: 'Topic' },
-            { observable: this.motionItemList, label: 'Motion' },
-            { observable: this.assignmentItemList, label: 'Assignment' }
+            { observable: this.agendaItemList, label: this.translate.instant('Topic') },
+            { observable: this.motionItemList, label: this.translate.instant('Motion') },
+            { observable: this.assignmentItemList, label: this.translate.instant('Assignment') }
         ];
         this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
         this.initInput();
