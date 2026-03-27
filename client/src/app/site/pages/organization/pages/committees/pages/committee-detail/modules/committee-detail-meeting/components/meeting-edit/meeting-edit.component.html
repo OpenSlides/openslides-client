@@ -64,6 +64,17 @@
                 <input formControlName="location" matInput />
             </mat-form-field>
 
+            <mat-form-field>
+                <mat-label>{{ 'Time zone' | translate }}</mat-label>
+                <mat-select formControlName="time_zone">
+                    @for (tz of time_zones | keyvalue; track tz) {
+                        <mat-option [value]="tz.key">
+                            {{ tz.value }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
             <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
             <mat-form-field>

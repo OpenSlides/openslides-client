@@ -7,6 +7,7 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { OML } from 'src/app/domain/definitions/organization-permission';
+import { availableTimezones } from 'src/app/domain/definitions/timezones';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -42,6 +43,7 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
+    public readonly time_zones = availableTimezones;
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -134,6 +136,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
             this.meetingForm.get(`language`)?.disable();
+            this.meetingForm.get(`time_zone`)?.disable();
         }
 
         this.availableUsers = userRepo.getViewModelListObservable();
@@ -196,8 +199,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         if (id) {
             this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
             this.meetingForm.get(`language`)?.disable();
+            // this.meetingForm.get(`time_zone`)?.setValue(this.meetingRepo.getViewModel(id).time_zone);
+            this.meetingForm.get(`time_zone`)?.disable();
         } else {
             this.meetingForm.get(`language`)?.enable();
+            this.meetingForm.get(`time_zone`)?.enable();
         }
     }
 
@@ -265,6 +271,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
+        rawForm[`time_zone`] = [`Europe/Berlin`];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
@@ -288,6 +295,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();
                 } else if (!this.isCreateView && controlName === `language`) {
+                    this.meetingForm.get(controlName)!.disable();
+                } else if (!this.isCreateView && controlName === `time_zone`) {
                     this.meetingForm.get(controlName)!.disable();
                 }
             });
@@ -405,7 +414,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private enableFormControls(): void {
         Object.keys(this.meetingForm.controls).forEach(controlName => {
-            if (this.isCreateView || controlName !== `language`) {
+            if (this.isCreateView || ![`language`, `time_zone`].includes(controlName)) {
                 this.meetingForm.get(controlName)!.enable();
             }
         });
