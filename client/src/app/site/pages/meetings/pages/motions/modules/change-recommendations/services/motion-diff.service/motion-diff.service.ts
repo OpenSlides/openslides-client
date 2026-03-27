@@ -424,7 +424,17 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        const cacheKey = `getChangeDiff` + lineLength + ` ` + djb2hash(html) + djb2hash(change.getChangeNewText());
+        const cacheKey =
+            `getChangeDiff` +
+            lineLength +
+            ` ` +
+            djb2hash(html) +
+            ` ` +
+            djb2hash(change.getChangeNewText()) +
+            ` ` +
+            change.getChangeId() +
+            ` ` +
+            change.getChangeType();
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
