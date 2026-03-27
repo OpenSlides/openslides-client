@@ -225,7 +225,6 @@ export const getAgendaExportSubscriptionConfig: SubscriptionConfigGenerator = (.
                     `text`,
                     `description`,
                     `poll_ids`,
-                    `assignment`,
                     ...MEETING_ROUTING_FIELDS
                 ],
                 follow: [

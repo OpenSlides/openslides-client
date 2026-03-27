@@ -78,7 +78,11 @@ export class AgendaPdfCatalogExportService {
                 const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
                 agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
-                if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length && agendaItem !== '') {
+                if (
+                    !enforcePageBreaks &&
+                    agendaItemIndex + 1 < sortedAgendaItems.length &&
+                    (agendaItem !== '' || agendaItem === null)
+                ) {
                     if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
                         agendaDocDef.push({
                             text: ``,
@@ -271,8 +275,8 @@ export class AgendaPdfCatalogExportService {
             }
             numberOrTitle = numberOrTitle.concat(
                 election.number
-                    ? `${(this.translate.instant('Wahl'), election.number)}: ${election.title}`
-                    : `${this.translate.instant('Wahl')}: ${election.title}`
+                    ? `${(this.translate.instant('Election'), election.number)}: ${election.title}`
+                    : `${this.translate.instant('Election')}: ${election.title}`
             );
         } else {
             if (useItemNumber && itemNumber && useTitle) {
@@ -292,50 +296,17 @@ export class AgendaPdfCatalogExportService {
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
         const style = this.getStyle(`body-text`);
-        // The operation calculates the correct intentation level
-        const indentationLevel = agendaItem.level * 10 + 10;
-        const margin = agendaItem.level > 0 ? [indentationLevel, 10, 0, 0] : this.getStyle(`margin-body-text`);
+        const margin = this.getMargin(agendaItem);
+        const contentObject = agendaItem.content_object;
+        const text = contentObject.text ?? contentObject.description;
+
         if (!this.isTopic(agendaItem.content_object)) {
-            // MOTION
-            if (agendaItem.content_object?.collection === 'motion') {
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText:
-                        agendaItem.content_object?.text ??
-                        this.translate.instant(`EMPTY ${agendaItem.content_object?.collection}`)
-                });
-                return { text: [...entry], style: style, margin: margin };
-                // ASSIGNMENT / ELECTION
-            } else if (agendaItem.content_object?.collection === `assignment`) {
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText:
-                        agendaItem.content_object.description ??
-                        this.translate.instant(`EMPTY`) + `${agendaItem.content_object?.collection}`
-                });
-                return { text: [...entry], style: style, margin: margin };
-                // MOTION BLOCK
-            } else if (agendaItem.content_object?.collection === 'motion_block') {
-                const motions: ViewMotion[] = agendaItem.content_object?.motions || [];
-                margin[3] -= 5;
-                return motions.length
-                    ? motions.map(m => ({
-                          text: this.htmlToPdfService.convertHtml({
-                              htmlText: this.translate.instant(`Motion`) + ` ${m.number}: ${m.title}`
-                          }),
-                          style: this.getStyle('header3'),
-                          margin
-                      }))
-                    : [
-                          {
-                              text: this.translate.instant(`EMPTY`) + `${agendaItem.content_object.collection}`,
-                              style: this.getStyle('header3'),
-                              margin
-                          }
-                      ];
-            } else {
-                return { text: agendaItem.content_object?.collection, style: style, margin };
-            }
-            // AGENDA TOPIC
+            // If not agenda topic and no motion block, it's motion or assignment
+            if (contentObject.collection === 'motion_block') {
+                return this.motionBlockEntry(contentObject, margin);
+            } else return this.createHtmlEntry(text, contentObject.collection, style, margin);
         } else if (agendaItem.content_object?.getCSVExportText) {
+            // AGENDA TOPIC
             const entry = this.htmlToPdfService.convertHtml({
                 htmlText:
                     agendaItem.content_object?.text ??
@@ -708,5 +679,40 @@ export class AgendaPdfCatalogExportService {
     private isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
         return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
+    }
+
+    public getMargin(agendaItem: ViewAgendaItem): any {
+        const indentationLevel = agendaItem.level * 10 + 10;
+        return agendaItem.level > 0 ? [indentationLevel, 10, 0, 0] : this.getStyle(`margin-body-text`);
+    }
+
+    public createHtmlEntry(text: string | undefined, collection: string, style: any, margin: number[]): any {
+        const htmlText = text ?? this.translate.instant('EMPTY') + collection;
+        const entry = this.htmlToPdfService.convertHtml({ htmlText });
+        return { text: [...entry], style, margin };
+    }
+
+    public motionBlockEntry(contentObject: any, margin: number[]): any {
+        const motions: ViewMotion[] = contentObject?.motions || [];
+        const adjustedMargin = [...margin];
+        adjustedMargin[3] -= 5;
+
+        if (!motions.length) {
+            return [
+                {
+                    text: this.translate.instant('EMPTY') + contentObject.collection,
+                    style: this.getStyle('header3'),
+                    margin: adjustedMargin
+                }
+            ];
+        }
+
+        return motions.map(m => ({
+            text: this.htmlToPdfService.convertHtml({
+                htmlText: `${this.translate.instant('Motion')} ${m.number}: ${m.title}`
+            }),
+            style: this.getStyle('header3'),
+            margin: adjustedMargin
+        }));
     }
 }
