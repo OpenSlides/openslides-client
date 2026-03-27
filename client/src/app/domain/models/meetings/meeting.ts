@@ -31,6 +31,7 @@ export class Settings {
     // in the committee-list-view is finished.
     public enable_anonymous!: boolean;
     public language!: string;
+    public time_zone!: string;
 
     // Jitsi/Livestream settings
     public jitsi_domain!: string;
@@ -310,6 +311,7 @@ export class Meeting extends BaseModel<Meeting> {
         `locked_from_inside`,
         `imported_at`,
         `language`,
+        `time_zone`,
         `jitsi_domain`,
         `jitsi_room_name`,
         `jitsi_room_password`,

@@ -105,7 +105,8 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
             `jitsi_room_name`,
             `jitsi_room_password`,
             `language`,
-            `external_id`
+            `external_id`,
+            `time_zone`
         ],
         follow: [
             {

@@ -197,9 +197,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public onUpdateDuplicateFrom(id: Id | null): void {
         this.theDuplicateFromId = id;
         if (id) {
-            this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+            const meeting = this.meetingRepo.getViewModel(id);
+            this.meetingForm.get(`language`)?.setValue(meeting.language);
             this.meetingForm.get(`language`)?.disable();
-            // this.meetingForm.get(`time_zone`)?.setValue(this.meetingRepo.getViewModel(id).time_zone);
+            this.meetingForm.get(`time_zone`)?.setValue(meeting.time_zone);
             this.meetingForm.get(`time_zone`)?.disable();
         } else {
             this.meetingForm.get(`language`)?.enable();
