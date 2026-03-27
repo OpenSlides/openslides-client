@@ -1,5 +1,1 @@
-export const availableTimezones = {
-    'Europe/Berlin': 'Europe/Berlin',
-    'Europe/London': 'Europe/London',
-    'America/New_York': 'America/New_York'
-};
+export const availableTimezones = Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`));

@@ -67,9 +67,9 @@
             <mat-form-field>
                 <mat-label>{{ 'Time zone' | translate }}</mat-label>
                 <mat-select formControlName="time_zone">
-                    @for (tz of time_zones | keyvalue; track tz) {
-                        <mat-option [value]="tz.key">
-                            {{ tz.value }}
+                    @for (tz of time_zones; track tz) {
+                        <mat-option [value]="tz">
+                            {{ tz }}
                         </mat-option>
                     }
                 </mat-select>
