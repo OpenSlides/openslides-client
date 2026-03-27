@@ -72,28 +72,25 @@ export class AgendaPdfCatalogExportService {
         for (let agendaItemIndex = 0; agendaItemIndex < sortedAgendaItems.length; ++agendaItemIndex) {
             try {
                 const agendaItem: string | null =
-                    agendaItems[agendaItemIndex].content_object.description === undefined
-                        ? agendaItems[agendaItemIndex].content_object.text
-                        : agendaItems[agendaItemIndex].content_object.description;
+                    agendaItems[agendaItemIndex].content_object?.description ??
+                    agendaItems[agendaItemIndex].content_object?.text ??
+                    null;
                 const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
-
                 agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
-                if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length) {
-                    if (agendaItem != '') {
-                        if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
-                            agendaDocDef.push({
-                                text: ``,
-                                marginBottom: this._addExtraSpace ? 25 : 20
-                            });
-                        } else {
-                            agendaDocDef.push({
-                                text: ``,
-                                marginBottom: this._addExtraSpace ? 15 : 10
-                            });
-                        }
-                        this._addExtraSpace = false;
+                if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length && agendaItem !== '') {
+                    if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
+                        agendaDocDef.push({
+                            text: ``,
+                            marginBottom: this._addExtraSpace ? 25 : 20
+                        });
+                    } else {
+                        agendaDocDef.push({
+                            text: ``,
+                            marginBottom: this._addExtraSpace ? 15 : 10
+                        });
                     }
+                    this._addExtraSpace = false;
                 }
 
                 agendaDocList.push(agendaDocDef);
@@ -302,13 +299,17 @@ export class AgendaPdfCatalogExportService {
             // MOTION
             if (agendaItem.content_object?.collection === 'motion') {
                 const entry = this.htmlToPdfService.convertHtml({
-                    htmlText: agendaItem.content_object?.text ?? `EMPTY ${agendaItem.content_object?.collection}`
+                    htmlText:
+                        agendaItem.content_object?.text ??
+                        this.translate.instant(`EMPTY ${agendaItem.content_object?.collection}`)
                 });
                 return { text: [...entry], style: style, margin: margin };
                 // ASSIGNMENT / ELECTION
             } else if (agendaItem.content_object?.collection === `assignment`) {
                 const entry = this.htmlToPdfService.convertHtml({
-                    htmlText: agendaItem.content_object.description ?? `EMPTY ${agendaItem.content_object?.collection}`
+                    htmlText:
+                        agendaItem.content_object.description ??
+                        this.translate.instant(`EMPTY`) + `${agendaItem.content_object?.collection}`
                 });
                 return { text: [...entry], style: style, margin: margin };
                 // MOTION BLOCK
@@ -318,27 +319,29 @@ export class AgendaPdfCatalogExportService {
                 return motions.length
                     ? motions.map(m => ({
                           text: this.htmlToPdfService.convertHtml({
-                              htmlText: `Motion ${m.number}: ${m.title}`
+                              htmlText: this.translate.instant(`Motion`) + ` ${m.number}: ${m.title}`
                           }),
                           style: this.getStyle('header3'),
-                          margin: margin
+                          margin
                       }))
                     : [
                           {
-                              text: `EMPTY ${agendaItem.content_object.collection}`,
+                              text: this.translate.instant(`EMPTY`) + `${agendaItem.content_object.collection}`,
                               style: this.getStyle('header3'),
-                              margin: margin
+                              margin
                           }
                       ];
             } else {
-                return { text: agendaItem.content_object?.collection, style: style, margin: margin };
+                return { text: agendaItem.content_object?.collection, style: style, margin };
             }
             // AGENDA TOPIC
         } else if (agendaItem.content_object?.getCSVExportText) {
             const entry = this.htmlToPdfService.convertHtml({
-                htmlText: agendaItem.content_object?.text ?? `EMPTY ${agendaItem.content_object?.collection}`
+                htmlText:
+                    agendaItem.content_object?.text ??
+                    this.translate.instant(`EMPTY ${agendaItem.content_object?.collection}`)
             });
-            return { text: [...entry], style: style, margin: margin };
+            return { text: [...entry], style: style, margin };
         }
         return [];
     }
