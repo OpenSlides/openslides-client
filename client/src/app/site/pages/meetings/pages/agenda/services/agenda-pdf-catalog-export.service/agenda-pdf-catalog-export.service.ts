@@ -11,7 +11,6 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { ViewMotion } from '../../../motions';
 import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models';
@@ -232,12 +231,7 @@ export class AgendaPdfCatalogExportService {
         const useTitle: boolean = info.includes(`title`);
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
-        let styleName = `header2`;
-        let margin = ``;
-        if (agendaItem.level > 0) {
-            styleName = `header-child`;
-            margin = `margin-header-child`;
-        }
+        const styleName = agendaItem.level ? `header-child` : `header2`;
         let numberOrTitle = ``;
         if (agendaItem.content_object?.collection === `motion`) {
             const motion = agendaItem.content_object;
@@ -258,16 +252,6 @@ export class AgendaPdfCatalogExportService {
                 numberOrTitle = `${itemNumber} `;
             }
             numberOrTitle = numberOrTitle.concat(`${this.translate.instant('Motion block')}: ${motionBlock.title}`);
-        } else if (agendaItem.content_object?.collection === `assignment`) {
-            const election = agendaItem.content_object;
-            if (useItemNumber && itemNumber) {
-                numberOrTitle = `${itemNumber} `;
-            }
-            numberOrTitle = numberOrTitle.concat(
-                election.number
-                    ? `${(this.translate.instant('Wahl'), election.number)}: ${election.title}`
-                    : `${this.translate.instant('Wahl')}: ${election.title}`
-            );
         } else {
             if (useItemNumber && itemNumber && useTitle) {
                 numberOrTitle = `${itemNumber}: ${title}`;
@@ -279,45 +263,17 @@ export class AgendaPdfCatalogExportService {
         }
         return {
             style: this.getStyle(styleName),
-            text: numberOrTitle,
-            margin: this.getStyle(margin)
+            text: numberOrTitle
         };
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
-        const style = this.getStyle(`body-text`);
-        const margin = this.getStyle(`margin-body-text`);
         if (!this.isTopic(agendaItem.content_object)) {
-            // MOTION
-            if (agendaItem.content_object?.collection === 'motion') {
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText: agendaItem.content_object?.text ?? `EMPTY ${agendaItem.content_object?.collection}`
-                });
-                return { text: [...entry], style: style, margin: margin };
-                // ASSIGNMENT / ELECTION
-            } else if (agendaItem.content_object?.collection === `assignment`) {
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText: agendaItem.content_object.description ?? `EMPTY ${agendaItem.content_object?.collection}`
-                });
-                return { text: [...entry], style: style, margin: margin };
-                // MOTION BLOCK
-            } else if (agendaItem.content_object?.collection === 'motion_block') {
-                const motions: ViewMotion[] = agendaItem.content_object?.motions || [];
-                const entry = this.htmlToPdfService.convertHtml({
-                    htmlText:
-                        motions.map(m => `Motion ${m.number}: ${m.title}`).join('<br><br>') ??
-                        `EMPTY ${agendaItem.content_object.collection}`
-                });
-                return { text: entry, style: this.getStyle(`header3`), margin: margin };
-            } else {
-                return { text: agendaItem.content_object?.collection, style: style, margin: margin };
-            }
-            // AGENDA TOPIC
-        } else if (agendaItem.content_object?.getCSVExportText) {
-            const entry = this.htmlToPdfService.convertHtml({
-                htmlText: agendaItem.content_object?.text ?? `EMPTY ${agendaItem.content_object?.collection}`
-            });
-            return { text: [...entry], style: style, margin: margin };
+            return [];
+        }
+        if (agendaItem.content_object?.getCSVExportText) {
+            const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
+            return entry;
         }
         return [];
     }
@@ -330,45 +286,14 @@ export class AgendaPdfCatalogExportService {
         const entry = this.htmlToPdfService.convertHtml({ htmlText: moderationNotes });
         if (moderationNotes) {
             this._addExtraSpace = true;
-            const moderationText = {
-                text: entry
-            };
-            const text = this.translate.instant(`Moderation note`);
-            const style = [this.getStyle(`header3`), this.getStyle(`body-text`)];
-            const margin: [
-                [number, number, number, number],
-                [number, number, number, number],
-                [number, number, number, number],
-                [number, number, number, number]
-            ] = [[20, 10, 0, 0], [25, 10, 0, 0], this.getStyle(`margin-header3`), this.getStyle(`margin-body-text`)];
-            // Indents the moderation note inside a subitem
-            if (agendaItem.level > 0) {
-                return [
-                    {
-                        text: text,
-                        style: style[0],
-                        margin: margin[0]
-                    },
-                    {
-                        text: moderationText,
-                        style: style[1],
-                        margin: margin[1]
-                    }
-                ];
-            } else {
-                return [
-                    {
-                        text: text,
-                        style: style[0],
-                        margin: margin[2]
-                    },
-                    {
-                        text: moderationText,
-                        style: style[1],
-                        margin: margin[3]
-                    }
-                ];
-            }
+            return [
+                {
+                    text: this.translate.instant(`Moderation note`),
+                    style: this.getStyle(`header3`),
+                    margin: this.getStyle(`margin-header3`)
+                },
+                entry
+            ];
         } else {
             return [];
         }
@@ -592,34 +517,27 @@ export class AgendaPdfCatalogExportService {
     private getStyle(name: string): any {
         switch (name) {
             case `header1`:
-                return { bold: true, fontSize: 20 };
+                return { bold: true, fontSize: 24 };
             case `header2`:
-                return { bold: true, fontSize: 16 };
+                return { bold: true, fontSize: 20 };
             case `header3`:
-                return { bold: true, fontSize: 12 };
-            case `header-child`:
                 return { bold: true, fontSize: 14 };
+            case `header-child`:
+                return { bold: true, fontSize: 16 };
             case `table-header`:
-                return { bold: true, fontSize: 10 };
-            case `body-text`:
-                return { fontSize: 10 };
+                return { bold: true, fontSize: 12 };
             case `grey`:
                 return { layout: TABLEROW_GREY };
             case `italics`:
                 return { italics: true };
             case `margin-header1`:
-                //      [L,U,R,D]
-                return [0, 10, 0, 0];
+                return [0, 0, 0, 20];
             case `margin-header3`:
-                return [15, 10, 0, 0];
-            case `margin-header-child`:
-                return [15, 10, 0, 0];
+                return [0, 15, 0, 10];
             case `margin-type-text`:
-                return [12, 10, 0, 0];
-            case `margin-body-text`:
-                return [20, 10, 0, 5];
+                return [0, 0, 0, 10];
             case `margin-item`:
-                return [0, 0, 0, 0];
+                return [0, 0, 0, 5];
             case `margin-item-2`:
                 return [0, 10, 0, 5];
             default:
