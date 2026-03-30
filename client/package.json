@@ -47,6 +47,7 @@
     "@cantoo/pdf-lib": "^2.6.5",
     "@coreui/angular-chartjs": "~5.6.20",
     "@coreui/chartjs": "^4.1.0",
+    "@date-fns/tz": "^1.4.1",
     "@intevation/tiptap-extension-office-paste": "^0.1.2",
     "@material/typography": "^14.0.0",
     "@ngx-pwa/local-storage": "^21.0.0",
