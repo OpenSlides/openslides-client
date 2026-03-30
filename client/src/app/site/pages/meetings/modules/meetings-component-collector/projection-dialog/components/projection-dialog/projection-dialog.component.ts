@@ -66,7 +66,6 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
-    @Input()
     public hideMainButton = false;
 
     public constructor(
@@ -90,6 +89,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             if (projections.length === 1) {
                 this.currentProjectionOptions = projections[0].options || {};
             }
+        }
+        if (data && !isProjectionBuildDescriptor(data)) {
+            this.hideMainButton = data.hideMainButton;
         }
     }
 
