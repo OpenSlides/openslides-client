@@ -1,10 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TZDate } from '@date-fns/tz';
+
+import { ORGANIZATION_ID } from '../pages/organization/services/organization.service';
+import { OrganizationControllerService } from '../pages/organization/services/organization-controller.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class TimeZoneService {
+    private organizationRepo = inject(OrganizationControllerService);
+
     public getTimeZone(): string {
         return 'Europe/Berlin';
     }
@@ -14,6 +19,9 @@ export class TimeZoneService {
     }
 
     public transformFromDate(value: Date, tz?: string): Date {
+        if (!value) {
+            return value;
+        }
         const year = value.getFullYear();
         const month = value.getMonth();
         const day = value.getDate();
@@ -24,5 +32,9 @@ export class TimeZoneService {
     public transformFromTS(value: number, tz?: string): Date {
         const timezone = tz ?? 'UTC';
         return new TZDate(value * 1000, timezone);
+    }
+
+    public getOrganizationTimeZone(): string {
+        return this.organizationRepo.getViewModel(ORGANIZATION_ID).time_zone ?? 'UTC';
     }
 }
