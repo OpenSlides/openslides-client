@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
-import { TZDate } from '@date-fns/tz';
 import { Locale } from 'date-fns';
 import { DateFnsConfigurationService, DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
+import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
 @Pipe({
     name: `localizedDateRange`,
@@ -9,6 +9,7 @@ import { DateFnsConfigurationService, DateFnsInputDate, FormatPipe } from 'ngx-d
     standalone: false
 })
 export class LocalizedDateRangePipe implements PipeTransform {
+    private timeZone = inject(TimeZoneService);
     private cd = inject(ChangeDetectorRef);
     private inputDate = inject(DateFnsConfigurationService);
     private formatter = new FormatPipe(this.inputDate, this.cd);
@@ -20,12 +21,12 @@ export class LocalizedDateRangePipe implements PipeTransform {
 
         if (!value.start && value.start !== 0) {
             if (value.end || value.end === 0) {
-                const date = new TZDate(value.end * 1000, timezone);
+                const date = this.timeZone.transformFromTS(value.end, timezone);
                 return this.formatter.transform(date, dateFormat);
             }
             return ``;
         } else if (!value.end && value.end !== 0) {
-            const date = new TZDate(value.start * 1000, timezone);
+            const date = this.timeZone.transformFromTS(value.start, timezone);
             return this.formatter.transform(date, dateFormat);
         }
 
@@ -40,8 +41,12 @@ export class LocalizedDateRangePipe implements PipeTransform {
         dateFormat: string,
         timezone: string
     ): { startString: string; startArray: string[]; endString: string; endArray: string[] } {
-        const start = typeof interval.start === `number` ? new TZDate(interval.start * 1000, timezone) : interval.start;
-        const end = typeof interval.end === `number` ? new TZDate(interval.end * 1000, timezone) : interval.end;
+        const start =
+            typeof interval.start === `number`
+                ? this.timeZone.transformFromTS(interval.start, timezone)
+                : interval.start;
+        const end =
+            typeof interval.end === `number` ? this.timeZone.transformFromTS(interval.end, timezone) : interval.end;
         const startString = this.formatter.transform(start, dateFormat);
         const startArray = startString.split(/[\s,]+/);
         const endString = this.formatter.transform(end, dateFormat);
