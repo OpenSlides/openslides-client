@@ -86,7 +86,8 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
                     `organization_tag_ids`,
                     `start_time`,
                     `user_ids`,
-                    `template_for_organization_id`
+                    `template_for_organization_id`,
+                    `time_zone`
                 ]
             }
         ]

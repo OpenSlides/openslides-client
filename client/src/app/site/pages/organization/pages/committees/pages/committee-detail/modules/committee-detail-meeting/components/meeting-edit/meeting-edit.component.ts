@@ -392,7 +392,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private transformToTZDate(value: Date, tz: undefined | string): Date {
         const year = value.getFullYear();
-        const month = value.getMonth() + 1;
+        const month = value.getMonth();
         const day = value.getDate();
         const timezone = tz ?? 'UTC';
         return new TZDate(year, month, day, timezone);
