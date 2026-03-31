@@ -8,7 +8,6 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { availableTimezones } from 'src/app/domain/definitions/timezones';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -22,6 +21,7 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
 
@@ -44,7 +44,7 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
-    public readonly time_zones = availableTimezones;
+    public readonly time_zones = this.timeZone.getAvailableTimeZones();
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -125,7 +125,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
         private orga: OrganizationService,
-        private routingState: RoutingStateService
+        private routingState: RoutingStateService,
+        private timeZone: TimeZoneService
     ) {
         super();
         this.checkCreateView();
