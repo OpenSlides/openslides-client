@@ -43,7 +43,7 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
-    public readonly time_zones = this.timeZone.getAvailableTimeZones();
+    public time_zones = [];
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -130,6 +130,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         super();
         this.checkCreateView();
         this.createForm();
+        this.initTimezones();
         this.init();
 
         if (this.isCreateView) {
@@ -167,6 +168,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             })
         );
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
+    }
+
+    private async initTimezones(): Promise<void> {
+        this.timeZone.getAvailableTimeZones().then(values => (this.time_zones = values));
     }
 
     public getSaveAction(): () => Promise<void> {

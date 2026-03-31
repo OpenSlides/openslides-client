@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { TZDate } from '@date-fns/tz';
+import { GetValidTimezonesPresenterService } from 'src/app/gateways/presenter/get-valid-timezones';
 
 import { ORGANIZATION_ID } from '../pages/organization/services/organization.service';
 import { OrganizationControllerService } from '../pages/organization/services/organization-controller.service';
@@ -9,13 +10,15 @@ import { OrganizationControllerService } from '../pages/organization/services/or
 })
 export class TimeZoneService {
     private organizationRepo = inject(OrganizationControllerService);
+    private presenter = inject(GetValidTimezonesPresenterService);
 
     public getTimeZone(): string {
         return 'Europe/Berlin';
     }
 
-    public getAvailableTimeZones(): string[] {
-        return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`));
+    public async getAvailableTimeZones(): Promise<string[]> {
+        const timezones = await this.presenter.call();
+        return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`) && timezones[value]);
     }
 
     public transformFromDate(value: Date, tz?: string): Date {
