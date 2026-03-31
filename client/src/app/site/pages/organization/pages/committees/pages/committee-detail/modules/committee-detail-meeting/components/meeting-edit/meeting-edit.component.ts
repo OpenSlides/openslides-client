@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TZDate } from '@date-fns/tz';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -383,20 +382,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
-                start_time: this.transformToTZDate(start_time, rawPayload.time_zone),
-                end_time: this.transformToTZDate(end_time, rawPayload.time_zone),
+                start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
+                end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
                 ...rawPayload
             };
         }
         return { ...rawPayload };
-    }
-
-    private transformToTZDate(value: Date, tz: undefined | string): Date {
-        const year = value.getFullYear();
-        const month = value.getMonth();
-        const day = value.getDate();
-        const timezone = tz ?? 'UTC';
-        return new TZDate(year, month, day, timezone);
     }
 
     /**

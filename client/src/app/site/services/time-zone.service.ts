@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TZDate } from '@date-fns/tz';
 
 @Injectable({
     providedIn: `root`
@@ -10,5 +11,13 @@ export class TimeZoneService {
 
     public getAvailableTimeZones(): string[] {
         return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`));
+    }
+
+    public transformFromDate(value: Date, tz: undefined | string): Date {
+        const year = value.getFullYear();
+        const month = value.getMonth();
+        const day = value.getDate();
+        const timezone = tz ?? 'UTC';
+        return new TZDate(year, month, day, timezone);
     }
 }
