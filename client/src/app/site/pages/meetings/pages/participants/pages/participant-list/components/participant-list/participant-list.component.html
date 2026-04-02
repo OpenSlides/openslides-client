@@ -333,7 +333,7 @@
                     </button>
                 </div>
             }
-            <button *osPerms="permission.userCanUpdate" mat-menu-item routerLink="speaker-list">
+            <button *osPerms="permission.userCanUpdate; and: canSeeListOfSpeakers(operator.user)" mat-menu-item routerLink="speaker-list">
                 <mat-icon>record_voice_over</mat-icon>
                 <span translate>Contributions</span>
             </button>
