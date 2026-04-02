@@ -23,9 +23,9 @@ const ClearTextcolorPastePlugin = new Plugin({
 
                 const isTextBlack = !el.style.color || tinycolor(el.style.color).toHex() === `000000`;
                 const isBgWhite = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `ffffff`;
-                const IsTextWhite = !el.style.color || tinycolor(el.style.color).toHex() === `ffffff`;
-                const IsBgDark = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `424242`;
-                if ((isTextBlack && isBgWhite) || (IsTextWhite && IsBgDark)) {
+                const isTextWhite = !el.style.color || tinycolor(el.style.color).toHex() === `ffffff`;
+                const isBgDark = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `424242`;
+                if ((isTextBlack && isBgWhite) || (isTextWhite && isBgDark)) {
                     el.style.color = ``;
                     el.style.backgroundColor = ``;
                 }
