@@ -72,20 +72,6 @@ export class AgendaPdfCatalogExportService {
                 const agendaDocDef: any = this.agendaItemToDoc(sortedAgendaItems[agendaItemIndex], exportInfo);
                 // add id field to the first page of a agenda item to make it findable over TOC
                 agendaDocDef[0].id = `${sortedAgendaItems[agendaItemIndex].id}`;
-                if (!enforcePageBreaks && agendaItemIndex + 1 < sortedAgendaItems.length) {
-                    if (!sortedAgendaItems[agendaItemIndex + 1].parent) {
-                        agendaDocDef.push({
-                            text: ``,
-                            marginBottom: this._addExtraSpace ? 25 : 20
-                        });
-                    } else {
-                        agendaDocDef.push({
-                            text: ``,
-                            marginBottom: this._addExtraSpace ? 15 : 10
-                        });
-                    }
-                    this._addExtraSpace = false;
-                }
 
                 agendaDocList.push(agendaDocDef);
 
@@ -232,6 +218,10 @@ export class AgendaPdfCatalogExportService {
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
         const styleName = agendaItem.level ? `header-child` : `header2`;
+        let itemMargin = `level-${agendaItem.level}-margin`;
+        if (agendaItem.level > 7) {
+            itemMargin = `level-8-margin`;
+        }
         let numberOrTitle = ``;
         if (agendaItem.content_object?.collection === `motion`) {
             const motion = agendaItem.content_object;
@@ -263,6 +253,7 @@ export class AgendaPdfCatalogExportService {
         }
         return {
             style: this.getStyle(styleName),
+            margin: this.getStyle(itemMargin),
             text: numberOrTitle
         };
     }
@@ -517,21 +508,21 @@ export class AgendaPdfCatalogExportService {
     private getStyle(name: string): any {
         switch (name) {
             case `header1`:
-                return { bold: true, fontSize: 24 };
-            case `header2`:
-                return { bold: true, fontSize: 20 };
-            case `header3`:
-                return { bold: true, fontSize: 14 };
-            case `header-child`:
                 return { bold: true, fontSize: 16 };
+            case `header2`:
+                return { fontSize: 14 };
+            case `header3`:
+                return { fontSize: 12 };
+            case `header-child`:
+                return { fontSize: 12 };
             case `table-header`:
-                return { bold: true, fontSize: 12 };
+                return { fontSize: 12 };
             case `grey`:
                 return { layout: TABLEROW_GREY };
             case `italics`:
                 return { italics: true };
             case `margin-header1`:
-                return [0, 0, 0, 20];
+                return [0, 0, 30, 12];
             case `margin-header3`:
                 return [0, 15, 0, 10];
             case `margin-type-text`:
@@ -539,7 +530,25 @@ export class AgendaPdfCatalogExportService {
             case `margin-item`:
                 return [0, 0, 0, 5];
             case `margin-item-2`:
-                return [0, 10, 0, 5];
+                return [0, 0, 0, 5];
+            case `level-0-margin`:
+                return [0, 0, 0, 0];
+            case `level-1-margin`:
+                return [15, 0, 0, 0];
+            case `level-2-margin`:
+                return [30, 0, 0, 0];
+            case `level-3-margin`:
+                return [45, 0, 0, 0];
+            case `level-4-margin`:
+                return [60, 0, 0, 0];
+            case `level-5-margin`:
+                return [75, 0, 0, 0];
+            case `level-6-margin`:
+                return [80, 0, 0, 0];
+            case `level-7-margin`:
+                return [95, 0, 0, 0];
+            case `level-8-margin`:
+                return [100, 0, 0, 0];
             default:
                 return {};
         }
