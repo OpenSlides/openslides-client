@@ -21,11 +21,13 @@ const ClearTextcolorPastePlugin = new Plugin({
                     continue;
                 }
 
-                const isTextBlack = !el.style.color || tinycolor(el.style.color).toHex() === `000000`;
-                const isBgWhite = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `ffffff`;
-                const isTextWhite = !el.style.color || tinycolor(el.style.color).toHex() === `ffffff`;
-                const isBgDark = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex() === `424242`;
-                if ((isTextBlack && isBgWhite) || (isTextWhite && isBgDark)) {
+                const textColor = !el.style.color || tinycolor(el.style.color).toHex();
+                const bgColor = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex();
+
+                if (
+                    (textColor === `000000` && bgColor === `ffffff`) ||
+                    (textColor === `ffffff` && bgColor === `424242`)
+                ) {
                     el.style.color = ``;
                     el.style.backgroundColor = ``;
                 }
