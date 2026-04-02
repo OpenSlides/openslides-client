@@ -304,7 +304,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         }
     }
 
-    public canSeeListOfSpeakers(user: ViewUser): boolean {
+    public canSeeListOfSpeakers(): boolean {
         return (
             this.operator.hasPerms(Permission.listOfSpeakersCanSee) ||
             this.operator.hasPerms(Permission.listOfSpeakersCanBeSpeaker)
