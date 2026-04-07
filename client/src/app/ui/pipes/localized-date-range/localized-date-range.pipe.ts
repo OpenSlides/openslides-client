@@ -33,7 +33,11 @@ export class LocalizedDateRangePipe implements PipeTransform {
         const data = this.generateAndSplitIntervalStrings(value, dateFormat, timezone);
 
         const fn = this.getDateIntervalAbbreviationFunctionForLocale(this.inputDate?.locale(), dateFormat);
-        return fn(data.startString, data.startArray, data.endString, data.endArray);
+        const result = fn(data.startString, data.startArray, data.endString, data.endArray);
+        if (new Intl.DateTimeFormat().resolvedOptions()?.timeZone != timezone) {
+            return result + ` ${timezone}`;
+        }
+        return result;
     }
 
     private generateAndSplitIntervalStrings(
