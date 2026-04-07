@@ -12,7 +12,7 @@ export class LocalizedDateRangePipe implements PipeTransform {
     private timeZone = inject(TimeZoneService);
     private cd = inject(ChangeDetectorRef);
     private inputDate = inject(DateFnsConfigurationService);
-    private formatter = new FormatPipe(this.inputDate, this.cd);
+    public formatter = new FormatPipe(this.inputDate, this.cd);
 
     public transform(value: any, dateFormat = `PPp`, timezone = ``): any {
         if (!value) {
