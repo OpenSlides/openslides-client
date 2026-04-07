@@ -12,10 +12,6 @@ export class TimeZoneService {
     private organizationRepo = inject(OrganizationControllerService);
     private presenter = inject(GetValidTimezonesPresenterService);
 
-    public getTimeZone(): string {
-        return 'Europe/Berlin';
-    }
-
     public async getAvailableTimeZones(): Promise<string[]> {
         const timezones = await this.presenter.call();
         return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`) && timezones[value]);
