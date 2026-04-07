@@ -12,5 +12,10 @@
 </span>
 
 <ng-template #timeTemplate let-endTime="endTime" let-startTime="startTime">
-    <span>{{ { start: startTime, end: endTime } | localizedDateRange: 'PP' : meeting?.time_zone ?? `UTC` }}</span>
+    <span>
+        {{
+            { start: startTime, end: endTime }
+                | localizedDateRange: 'PP' : meeting.time_zone ?? timeZoneService.getActiveMeetingTZ()
+        }}
+    </span>
 </ng-template>

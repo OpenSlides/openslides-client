@@ -14,7 +14,7 @@ export class LocalizedDateRangePipe implements PipeTransform {
     private inputDate = inject(DateFnsConfigurationService);
     private formatter = new FormatPipe(this.inputDate, this.cd);
 
-    public transform(value: any, dateFormat = `PPp`, timezone = `UTC`): any {
+    public transform(value: any, dateFormat = `PPp`, timezone = ``): any {
         if (!value) {
             return ``;
         }

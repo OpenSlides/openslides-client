@@ -385,6 +385,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
+        if (rawPayload.time_zone === '') {
+            rawPayload.time_zone = undefined;
+        }
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
