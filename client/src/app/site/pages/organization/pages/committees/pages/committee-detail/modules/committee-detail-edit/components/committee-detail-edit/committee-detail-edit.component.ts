@@ -81,9 +81,14 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         this.subscriptions.push(
             this.orgaSettings.get(`restrict_editing_same_level_committee_admins`).subscribe(restricted => {
                 if (this.committeeId) {
-                    const parentId = this.committeeRepo.getViewModel(this.committeeId).parent_id;
-                    this.managersDisabled =
-                        restricted && (!parentId || !this.operator.hasCommitteePermissions(parentId, CML.can_manage));
+                    if (this.isOrgaManager) {
+                        this.managersDisabled = false;
+                    } else {
+                        const parentId = this.committeeRepo.getViewModel(this.committeeId).parent_id;
+                        this.managersDisabled =
+                            restricted &&
+                            (!parentId || !this.operator.hasCommitteePermissions(parentId, CML.can_manage));
+                    }
                 } else {
                     this.managersDisabled = false;
                 }
