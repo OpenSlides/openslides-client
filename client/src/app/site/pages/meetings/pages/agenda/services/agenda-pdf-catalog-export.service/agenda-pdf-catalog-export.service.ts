@@ -216,7 +216,7 @@ export class AgendaPdfCatalogExportService {
         const useTitle: boolean = info.includes(`title`);
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
-        const styleName = agendaItem.level ? `header-child` : `header2`;
+        const styleName = agendaItem.level ? `header3` : `header2`;
         let numberOrTitle = ``;
         if (agendaItem.content_object?.collection === `motion`) {
             const motion = agendaItem.content_object;
@@ -247,18 +247,19 @@ export class AgendaPdfCatalogExportService {
             }
         }
         return {
+            text: numberOrTitle,
             style: this.getStyle(styleName),
-            margin: this.getStyle(this.levelMargin(agendaItem.level)),
-            text: numberOrTitle
+            margin: this.getStyle(this.levelMargin(agendaItem.level))
         };
     }
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
-        if (!this.isTopic(agendaItem.content_object)) {
-            return [];
+        let entry: Content[];
+        if (agendaItem.content_object && !(agendaItem.content_object.collection === `motion_block`)) {
+            const text = agendaItem.content_object.text ?? agendaItem.content_object.description;
+            entry = this.htmlToPdfService.convertHtml({ htmlText: text ?? `` });
         }
-        if (agendaItem.content_object?.getCSVExportText) {
-            const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
+        if (entry) {
             return {
                 text: entry,
                 margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
@@ -393,7 +394,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`List of speakers`),
                     style: this.getStyle(`header3`),
-                    margin: this.getStyle(this.levelMargin(agendaItem.level))
+                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
                 },
                 {
                     table: {
@@ -404,7 +405,7 @@ export class AgendaPdfCatalogExportService {
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    margin: this.getStyle(this.levelMargin(agendaItem.level + 2))
                 }
             ];
         }
@@ -470,8 +471,6 @@ export class AgendaPdfCatalogExportService {
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
                     margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
                 });
-
-                entries.push({ text: ``, margin: this.getStyle(this.levelMargin(agendaItem.level)) });
             }
             return [
                 {
@@ -555,6 +554,10 @@ export class AgendaPdfCatalogExportService {
     }
 
     private levelMargin(level: number): string {
+        const isA4 = this.pdfService.pageSize === `A4`;
+        if (!isA4 && level > 4) {
+            return `level-5-margin`;
+        }
         if (level > 7) {
             return `level-8-margin`;
         }
@@ -562,7 +565,7 @@ export class AgendaPdfCatalogExportService {
     }
 
     private getStyle(name: string): any {
-        const marginBot = 10;
+        const marginBottom = 7;
         switch (name) {
             case `header1`:
                 return { bold: true, fontSize: 16 };
@@ -570,38 +573,29 @@ export class AgendaPdfCatalogExportService {
                 return { fontSize: 14 };
             case `header3`:
                 return { fontSize: 12 };
-            case `header-child`:
-                return { fontSize: 12 };
-            case `table-header`:
-                return { fontSize: 12 };
-            case `grey`:
-                return { layout: TABLEROW_GREY };
             case `italics`:
                 return { italics: true };
+            // margins
             case `margin-header1`:
                 return [0, 0, 30, 12];
-            case `margin-item`:
-                return [0, 0, 0, 5];
-            case `margin-item-2`:
-                return [0, 0, 0, 5];
             case `level-0-margin`:
-                return [0, marginBot, 0, 0];
+                return [0, 10, 0, 0];
             case `level-1-margin`:
-                return [15, marginBot, 0, 0];
+                return [15, marginBottom, 0, 0];
             case `level-2-margin`:
-                return [30, marginBot, 0, 0];
+                return [30, marginBottom, 0, 0];
             case `level-3-margin`:
-                return [45, marginBot, 0, 0];
+                return [45, marginBottom, 0, 0];
             case `level-4-margin`:
-                return [60, marginBot, 0, 0];
+                return [60, marginBottom, 0, 0];
             case `level-5-margin`:
-                return [75, marginBot, 0, 0];
+                return [75, marginBottom, 0, 0];
             case `level-6-margin`:
-                return [80, marginBot, 0, 0];
+                return [80, marginBottom, 0, 0];
             case `level-7-margin`:
-                return [95, marginBot, 0, 0];
+                return [95, marginBottom, 0, 0];
             case `level-8-margin`:
-                return [100, marginBot, 0, 0];
+                return [100, marginBottom, 0, 0];
             default:
                 return {};
         }
