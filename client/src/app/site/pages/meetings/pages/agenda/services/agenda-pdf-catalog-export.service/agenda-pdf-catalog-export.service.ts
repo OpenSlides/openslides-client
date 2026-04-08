@@ -255,7 +255,7 @@ export class AgendaPdfCatalogExportService {
 
     private createTextDoc(agendaItem: ViewAgendaItem): Content {
         let entry: Content[];
-        if (agendaItem.content_object && !(agendaItem.content_object.collection === `motion_block`)) {
+        if (agendaItem.content_object && agendaItem.content_object.collection !== `motion_block`) {
             const text = agendaItem.content_object.text ?? agendaItem.content_object.description;
             entry = this.htmlToPdfService.convertHtml({ htmlText: text ?? `` });
         }
