@@ -36,7 +36,7 @@ export class TimeZoneService {
     }
 
     public getOrganizationTimeZone(): string {
-        return this.organizationRepo.getViewModel(ORGANIZATION_ID).time_zone ?? 'UTC';
+        return this.organizationRepo.getViewModel(ORGANIZATION_ID)?.time_zone ?? 'UTC';
     }
 
     public getActiveMeetingTZ(): string {
