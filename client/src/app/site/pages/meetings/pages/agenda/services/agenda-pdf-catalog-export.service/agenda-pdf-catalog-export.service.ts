@@ -565,37 +565,35 @@ export class AgendaPdfCatalogExportService {
     }
 
     private getStyle(name: string): any {
-        const marginBottom = 7;
+        const marginBottom = 3;
         switch (name) {
             case `header1`:
                 return { bold: true, fontSize: 16 };
             case `header2`:
-                return { fontSize: 14 };
+                return { bold: true, fontSize: 14 };
             case `header3`:
                 return { fontSize: 12 };
             case `italics`:
                 return { italics: true };
             // margins
             case `margin-header1`:
-                return [0, 0, 30, 12];
-            case `level-0-margin`:
-                return [0, 10, 0, 0];
+                return [0, 0, 0, 10];
             case `level-1-margin`:
-                return [15, marginBottom, 0, 0];
+                return [15, 0, 0, marginBottom];
             case `level-2-margin`:
-                return [30, marginBottom, 0, 0];
+                return [30, 0, 0, marginBottom];
             case `level-3-margin`:
-                return [45, marginBottom, 0, 0];
+                return [45, 0, 0, marginBottom];
             case `level-4-margin`:
-                return [60, marginBottom, 0, 0];
+                return [60, 0, 0, marginBottom];
             case `level-5-margin`:
-                return [75, marginBottom, 0, 0];
+                return [75, 0, 0, marginBottom];
             case `level-6-margin`:
-                return [80, marginBottom, 0, 0];
+                return [80, 0, 0, marginBottom];
             case `level-7-margin`:
-                return [95, marginBottom, 0, 0];
+                return [95, 0, 0, marginBottom];
             case `level-8-margin`:
-                return [100, marginBottom, 0, 0];
+                return [110, 0, 0, marginBottom];
             default:
                 return {};
         }
