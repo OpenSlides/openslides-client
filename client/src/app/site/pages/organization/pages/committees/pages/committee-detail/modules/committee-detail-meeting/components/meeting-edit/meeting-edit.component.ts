@@ -138,7 +138,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
             this.meetingForm.get(`language`)?.disable();
-            this.meetingForm.get(`time_zone`)?.disable();
         }
 
         this.availableUsers = userRepo.getViewModelListObservable();
@@ -206,11 +205,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             const meeting = this.meetingRepo.getViewModel(id);
             this.meetingForm.get(`language`)?.setValue(meeting.language);
             this.meetingForm.get(`language`)?.disable();
-            this.meetingForm.get(`time_zone`)?.setValue(meeting.time_zone);
-            this.meetingForm.get(`time_zone`)?.disable();
         } else {
             this.meetingForm.get(`language`)?.enable();
-            this.meetingForm.get(`time_zone`)?.enable();
         }
     }
 
@@ -303,8 +299,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                     this.meetingForm.get(controlName)!.disable();
                 } else if (!this.isCreateView && controlName === `language`) {
                     this.meetingForm.get(controlName)!.disable();
-                } else if (!this.isCreateView && controlName === `time_zone`) {
-                    this.meetingForm.get(controlName)!.disable();
                 }
             });
         }
@@ -385,9 +379,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
-        if (rawPayload.time_zone === '') {
-            rawPayload.time_zone = undefined;
-        }
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
@@ -428,7 +419,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private enableFormControls(): void {
         Object.keys(this.meetingForm.controls).forEach(controlName => {
-            if (this.isCreateView || ![`language`, `time_zone`].includes(controlName)) {
+            if (this.isCreateView || controlName != `language`) {
                 this.meetingForm.get(controlName)!.enable();
             }
         });
