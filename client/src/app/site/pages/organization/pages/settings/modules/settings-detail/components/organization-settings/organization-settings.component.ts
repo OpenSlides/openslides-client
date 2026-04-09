@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
@@ -79,7 +79,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language],
-                time_zone: [this._currentOrgaSettings.time_zone],
+                time_zone: [this._currentOrgaSettings.time_zone, Validators.required],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                 enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
                 disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
