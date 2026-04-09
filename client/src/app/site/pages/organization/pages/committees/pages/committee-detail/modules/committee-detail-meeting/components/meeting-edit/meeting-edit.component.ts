@@ -274,7 +274,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
-        rawForm[`time_zone`] = [this.timeZone.getOrganizationTimeZone()];
+        rawForm[`time_zone`] = [this.timeZone.getOrganizationTimeZone(), Validators.required];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];

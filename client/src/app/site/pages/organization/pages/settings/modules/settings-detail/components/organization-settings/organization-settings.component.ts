@@ -10,6 +10,7 @@ import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organi
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
 @Component({
     selector: `os-organization-settings`,
@@ -21,6 +22,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
     public readonly translations = availableTranslations;
+
+    public time_zones = [];
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -40,7 +43,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
         protected override translate: TranslateService,
         private controller: OrganizationControllerService,
         private formBuilder: UntypedFormBuilder,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private timeZone: TimeZoneService
     ) {
         super();
         super.setTitle(this.pageTitle);
@@ -58,6 +62,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 }
             })
         );
+        this.initTimezones();
     }
 
     private createForm(): UntypedFormGroup {
@@ -74,6 +79,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language],
+                time_zone: [this._currentOrgaSettings.time_zone],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                 enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
                 disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
@@ -135,6 +141,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
         this.orgaSettingsForm!.patchValue(patchMeeting);
+    }
+
+    private async initTimezones(): Promise<void> {
+        this.timeZone.getAvailableTimeZones().then(values => (this.time_zones = values));
     }
 
     public onSubmit(): void {
