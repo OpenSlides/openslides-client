@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,10 +44,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
         private controller: OrganizationControllerService,
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
-        private timeZone: TimeZoneService
+        private timeZone: TimeZoneService,
+        private cd: ChangeDetectorRef
     ) {
         super();
         super.setTitle(this.pageTitle);
+        this.initTimezones();
 
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
@@ -62,7 +64,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 }
             })
         );
-        this.initTimezones();
     }
 
     private createForm(): UntypedFormGroup {
@@ -144,7 +145,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
     }
 
     private async initTimezones(): Promise<void> {
-        this.timeZone.getAvailableTimeZones().then(values => (this.time_zones = values));
+        this.timeZone.getAvailableTimeZones().then(values => {
+            this.time_zones = values;
+            this.cd.markForCheck();
+        });
     }
 
     public onSubmit(): void {
