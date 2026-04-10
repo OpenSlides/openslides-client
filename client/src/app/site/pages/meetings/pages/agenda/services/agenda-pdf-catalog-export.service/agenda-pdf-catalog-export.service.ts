@@ -277,7 +277,6 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Moderation note`),
-                    style: this.getStyle(`header-subitem`),
                     margin: this.getStyle(this.levelMargin(agendaItem.level))
                 },
                 {
@@ -392,7 +391,6 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`List of speakers`),
-                    style: this.getStyle(`header-subitem`),
                     margin: this.getStyle(this.levelMargin(agendaItem.level))
                 },
                 {
@@ -428,7 +426,6 @@ export class AgendaPdfCatalogExportService {
                 const tableCells: Content[][] = [];
                 entries.push({
                     text: poll.title,
-                    style: this.getStyle(`header-subitem`),
                     margin: this.getStyle(this.levelMargin(agendaItem.level))
                 });
                 // poll table header
@@ -474,7 +471,6 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Polls`),
-                    style: this.getStyle(`header-subitem`),
                     margin: this.getStyle(this.levelMargin(agendaItem.level))
                 },
                 ...entries
@@ -491,7 +487,6 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Comment`),
-                    style: this.getStyle(`header-subitem`),
                     margin: this.getStyle(this.levelMargin(agendaItem.level))
                 },
                 {
@@ -516,7 +511,6 @@ export class AgendaPdfCatalogExportService {
         if (agendaItem.content_object?.attachment_meeting_mediafiles.length > 0) {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
-                style: this.getStyle(`header-subitem`),
                 margin: this.getStyle(this.levelMargin(agendaItem.level))
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
@@ -572,8 +566,6 @@ export class AgendaPdfCatalogExportService {
                 return { bold: true, fontSize: 14 };
             case `header3`:
                 return { fontSize: 12 };
-            case `header-subitem`:
-                return { fontSize: 10 };
             case `italics`:
                 return { italics: true };
             // margins
