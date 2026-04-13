@@ -89,7 +89,7 @@ export class AgendaPdfCatalogExportService {
         doc.push([
             {
                 text: this.translate.instant(`Agenda`),
-                style: this.getStyle(`header1`),
+                style: this.getStyle(`title-style`),
                 margin: this.getStyle(`title-margin`)
             }
         ]);
@@ -216,8 +216,6 @@ export class AgendaPdfCatalogExportService {
         const useTitle: boolean = info.includes(`title`);
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
-        const styleName = agendaItem.level ? `header3` : `header2`;
-        const margin = agendaItem.level ? this.levelMargin(agendaItem.level) : `header2-margin`;
         let numberOrTitle = ``;
         if (agendaItem.content_object?.collection === `motion`) {
             const motion = agendaItem.content_object;
@@ -249,8 +247,8 @@ export class AgendaPdfCatalogExportService {
         }
         return {
             text: numberOrTitle,
-            style: this.getStyle(styleName),
-            margin: this.getStyle(margin)
+            style: this.getStyle(this.level(agendaItem.level)),
+            margin: this.getStyle(this.level(agendaItem.level, true))
         };
     }
 
@@ -275,7 +273,8 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Moderation note`),
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 },
                 entry
             ];
@@ -386,7 +385,8 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`List of speakers`),
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 },
                 {
                     table: {
@@ -396,8 +396,7 @@ export class AgendaPdfCatalogExportService {
                         widths: isA4 ? [`auto`, `*`, 50, 110] : [`auto`, `*`, 50, 55],
                         body: tableCells
                     },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES
                 }
             ];
         }
@@ -421,7 +420,8 @@ export class AgendaPdfCatalogExportService {
                 const tableCells: Content[][] = [];
                 entries.push({
                     text: poll.title,
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 });
                 // poll table header
                 tableCells.push([
@@ -459,14 +459,14 @@ export class AgendaPdfCatalogExportService {
                         widths: [firstPlaceWidth, optionWidth, votesWidth],
                         body: tableCells
                     },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES
                 });
             }
             return [
                 {
                     text: this.translate.instant(`Polls`),
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 },
                 ...entries
             ];
@@ -482,11 +482,12 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Comment`),
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 },
                 {
                     text: agendaItem.comment,
-                    margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                    margin: this.getStyle(this.level(agendaItem.level + 1, true))
                 }
             ];
         }
@@ -506,7 +507,8 @@ export class AgendaPdfCatalogExportService {
         if (agendaItem.content_object?.attachment_meeting_mediafiles.length > 0) {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
-                margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                style: this.getStyle(this.level(agendaItem.level + 1)),
+                margin: this.getStyle(this.level(agendaItem.level + 1, true))
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
                 const attachment = agendaItem.content_object?.attachment_meeting_mediafiles[key];
@@ -516,7 +518,7 @@ export class AgendaPdfCatalogExportService {
                     attachments.push({
                         image: fileUrl,
                         width: width,
-                        margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                        margin: this.getStyle(this.level(agendaItem.level + 1, true))
                     });
                 } else {
                     const link = Location.joinWithSlash(instanceUrl, fileUrl);
@@ -525,7 +527,7 @@ export class AgendaPdfCatalogExportService {
                             {
                                 text: attachment.getTitle() + `: ` + link,
                                 link: link,
-                                margin: this.getStyle(this.levelMargin(agendaItem.level + 1))
+                                margin: this.getStyle(this.level(agendaItem.level + 1, true))
                             }
                         ]
                     });
@@ -541,49 +543,42 @@ export class AgendaPdfCatalogExportService {
         return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
     }
 
-    private levelMargin(level: number): string {
-        const isA4 = this.pdfService.pageSize === `A4`;
-        if (!isA4 && level > 4) {
-            return `level-5-margin`;
+    private level(level: number, wMargin = false): string {
+        const marginString = wMargin ? `-margin` : ``;
+        if (level > 2) {
+            return `level-3${marginString}`;
         }
-        if (level > 7) {
-            return `level-8-margin`;
-        }
-        return `level-${level}-margin`;
+        return `level-${level}${marginString}`;
     }
 
     private getStyle(name: string): any {
-        const marginBottom = 3;
+        const marginBottom = 15;
         switch (name) {
-            case `header1`:
+            case `title-style`:
+                return { bold: true, fontSize: 24 };
+            case `level-0`:
                 return { bold: true, fontSize: 16 };
-            case `header2`:
-                return { bold: true, fontSize: 14 };
-            case `header3`:
-                return { fontSize: 12 };
+            case `level-1`:
+                return { bold: true, fontSize: 12 };
+            case `level-2`:
+                return { bold: true, fontSize: 10 };
+            case `level-3`:
+                return { italics: true, fontSize: 10 };
             case `italics`:
                 return { italics: true };
             // margins
             case `title-margin`:
                 return [0, 0, 0, 10];
-            case `header2-margin`:
-                return [0, 2, 0, 2];
+            case `level-0-margin`:
+                return [0, 2, 0, marginBottom];
             case `level-1-margin`:
-                return [15, 0, 0, marginBottom];
+                return [0, 0, 0, marginBottom];
             case `level-2-margin`:
-                return [30, 0, 0, marginBottom];
+                return [0, 0, 0, marginBottom];
             case `level-3-margin`:
-                return [45, 0, 0, marginBottom];
+                return [0, 0, 0, marginBottom];
             case `level-4-margin`:
-                return [60, 0, 0, marginBottom];
-            case `level-5-margin`:
-                return [75, 0, 0, marginBottom];
-            case `level-6-margin`:
-                return [80, 0, 0, marginBottom];
-            case `level-7-margin`:
-                return [95, 0, 0, marginBottom];
-            case `level-8-margin`:
-                return [110, 0, 0, marginBottom];
+                return [0, 0, 0, marginBottom];
             default:
                 return {};
         }
