@@ -396,7 +396,8 @@ export class AgendaPdfCatalogExportService {
                         widths: isA4 ? [`auto`, `*`, 50, 110] : [`auto`, `*`, 50, 55],
                         body: tableCells
                     },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
+                    margin: this.getStyle(`level-margin`)
                 }
             ];
         }
@@ -468,7 +469,11 @@ export class AgendaPdfCatalogExportService {
                     style: this.getStyle(this.level(agendaItem.level + 1)),
                     margin: this.getStyle(`level-margin`)
                 },
-                ...entries
+                ...entries,
+                {
+                    text: ``,
+                    margin: this.getStyle(`level-margin`)
+                }
             ];
         }
         return [];
