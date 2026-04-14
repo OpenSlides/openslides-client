@@ -134,7 +134,7 @@
                     }
                     <div class="current-phase">
                         <h4>{{ 'Phase' | translate }}</h4>
-                        <os-chip-select chipClass="bluegrey" [canOpen]="hasPerms('manage')">
+                        <os-chip-select chipClass="bg-primary" [canOpen]="hasPerms('manage')">
                             @for (option of phaseOptions; track option) {
                                 <button mat-menu-item menu (click)="onSetPhaseButton(option.value)">
                                     {{ option.display_name | translate }}
