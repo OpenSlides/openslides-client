@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
@@ -10,10 +9,7 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
     standalone: false
 })
 export class InfoActionsComponent extends BaseComponent {
-    public constructor(
-        private lifecycleService: LifecycleService,
-        protected override translate: TranslateService
-    ) {
+    public constructor(private lifecycleService: LifecycleService) {
         super();
     }
 
