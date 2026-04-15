@@ -10,7 +10,5 @@ export enum Presenter {
     GET_VALID_TIMEZONES = `get_valid_timezones`,
     SEARCH_USERS = `search_users`,
     SEARCH_DELETED_MODELS = `search_deleted_models`,
-    EXPORT_MEETING = `export_meeting`,
-    CHECK_DATABASE = `check_database`,
-    CHECK_DATABASE_ALL = `check_database_all`
+    EXPORT_MEETING = `export_meeting`
 }
