@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { tzName } from '@date-fns/tz';
 import { Locale } from 'date-fns';
 import { DateFnsConfigurationService, DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
 import { TimeZoneService } from 'src/app/site/services/time-zone.service';
@@ -35,7 +36,7 @@ export class LocalizedDateRangePipe implements PipeTransform {
         const fn = this.getDateIntervalAbbreviationFunctionForLocale(this.inputDate?.locale(), dateFormat);
         const result = fn(data.startString, data.startArray, data.endString, data.endArray);
         if (new Intl.DateTimeFormat().resolvedOptions()?.timeZone != timezone) {
-            return result + ` ${timezone}`;
+            return result + ` ${tzName(timezone, this.timeZone.transformFromTS(value.start, timezone), 'short')}`;
         }
         return result;
     }
