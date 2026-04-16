@@ -2,7 +2,6 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
-import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -11,6 +10,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service';
 import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models';
@@ -40,7 +40,7 @@ export class AgendaPdfCatalogExportService {
     public constructor(
         private translate: TranslateService,
         private pdfService: MeetingPdfExportService,
-        private htmlToPdfService: HtmlToPdfService,
+        private htmlToPdfService: MotionHtmlToPdfService,
         private organizationSettingsService: OrganizationSettingsService,
         private meetingSettingsService: MeetingSettingsService,
         private pdfImagesService: PdfImagesService,
