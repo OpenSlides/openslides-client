@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TZDate } from '@date-fns/tz';
 import { GetValidTimezonesPresenterService } from 'src/app/gateways/presenter/get-valid-timezones';
 
@@ -10,9 +10,11 @@ import { OrganizationControllerService } from '../pages/organization/services/or
     providedIn: `root`
 })
 export class TimeZoneService {
-    private aktiveMeetingRepo = inject(ActiveMeetingService);
-    private organizationRepo = inject(OrganizationControllerService);
-    private presenter = inject(GetValidTimezonesPresenterService);
+    public constructor(
+        private activeMeetingRepo: ActiveMeetingService,
+        private organizationRepo: OrganizationControllerService,
+        private presenter: GetValidTimezonesPresenterService
+    ) {}
 
     public async getAvailableTimeZones(): Promise<string[]> {
         const timezones = await this.presenter.call();
@@ -40,6 +42,6 @@ export class TimeZoneService {
     }
 
     public getActiveMeetingTZ(): string {
-        return this.aktiveMeetingRepo.meeting?.time_zone ?? this.getOrganizationTimeZone();
+        return this.activeMeetingRepo.meeting?.time_zone ?? this.getOrganizationTimeZone();
     }
 }

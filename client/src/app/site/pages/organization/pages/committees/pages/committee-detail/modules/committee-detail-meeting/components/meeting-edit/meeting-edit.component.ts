@@ -419,7 +419,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private enableFormControls(): void {
         Object.keys(this.meetingForm.controls).forEach(controlName => {
-            if (this.isCreateView || controlName != `language`) {
+            if (this.isCreateView || controlName !== `language`) {
                 this.meetingForm.get(controlName)!.enable();
             }
         });
