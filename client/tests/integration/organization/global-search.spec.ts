@@ -35,9 +35,9 @@ test.describe('Testing global search', () => {
         await login(context);
         await page.goto('/');
         await page.locator('button[aria-label="Global Search"]').click();
-        await page.locator('input[placeholder="Search"]').fill('Demo');
+        await page.getByPlaceholder('Search').fill('Demo');
         await page.locator('input[value="meetings"]').click();
-        await page.locator('input[placeholder="Search"]').press('Enter');
+        await page.getByPlaceholder('Search').press('Enter');
         await expect(page.locator('.search-results-category')).toContainText('Demo Meeting');
         await logout(context);
     });
@@ -46,9 +46,9 @@ test.describe('Testing global search', () => {
         await login(context);
         await page.goto('/');
         await page.locator('button[aria-label="Global Search"]').click();
-        await page.locator('input[placeholder="Search"]').fill('blup');
+        await page.getByPlaceholder('Search').fill('blup');
         await page.locator('input[value="meetings"]').click();
-        await page.locator('input[placeholder="Search"]').press('Enter');
+        await page.getByPlaceholder('Search').press('Enter');
         await expect(page.locator('h3.search-no-results')).toContainText('No results found');
         await logout(context);
     });
