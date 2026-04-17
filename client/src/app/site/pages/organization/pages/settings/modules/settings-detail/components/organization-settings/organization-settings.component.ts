@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { Selectable } from 'src/app/domain/interfaces';
 import { objectToFormattedString } from 'src/app/infrastructure/utils';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -23,7 +25,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
     public readonly translations = availableTranslations;
 
-    public time_zones = [];
+    public time_zones = new BehaviorSubject<Selectable[]>([]);
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -135,24 +137,44 @@ export class OrganizationSettingsComponent extends BaseComponent {
         if (!this.orgaSettingsForm) {
             this.orgaSettingsForm = this.createForm();
         }
-        const patchMeeting: any = viewOrganization.organization;
+        const { time_zone, ...patchMeeting }: any = viewOrganization.organization;
         if (patchMeeting.saml_attr_mapping) {
             const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
             patchMeeting.saml_attr_mapping = attrMapping;
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
+        patchMeeting.time_zone = this.timeZone.getTimezoneIdByName(time_zone);
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 
     private async initTimezones(): Promise<void> {
-        this.timeZone.getAvailableTimeZones().then(values => {
-            this.time_zones = values;
+        this.timeZone.getTZForSearchSelector().then(values => {
+            this.time_zones.next(values);
+            this.orgaSettingsForm
+                .get('time_zone')
+                .patchValue(this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone));
             this.cd.markForCheck();
         });
     }
 
+    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
+        return [item.getTitle()];
+    }
+
+    private mapTZIdToTZ(TZId: number): string {
+        return this.time_zones
+            .getValue()
+            .find(item => item.id === TZId)
+            ?.getTitle();
+    }
+
+    private getTZIdbyTZ(TZname: string): number {
+        return this.time_zones.getValue().find(item => item.getTitle() === TZname)?.id;
+    }
+
     public onSubmit(): void {
-        const payload: any = this.orgaSettingsForm!.value;
+        const { time_zone, ...payload }: any = this.orgaSettingsForm!.value;
+        payload.time_zone = this.mapTZIdToTZ(time_zone);
         if (this.operator.isSuperAdmin) {
             payload.saml_attr_mapping = payload.saml_attr_mapping
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))

@@ -40,13 +40,11 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Time zone' | translate }}</mat-label>
-                        <mat-select formControlName="time_zone">
-                            @for (tz of time_zones; track tz) {
-                                <mat-option [value]="tz">
-                                    {{ tz }}
-                                </mat-option>
-                            }
-                        </mat-select>
+                        <os-list-search-selector
+                            formControlName="time_zone"
+                            [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
+                            [inputListValues]="time_zones"
+                        ></os-list-search-selector>
                     </mat-form-field>
                     <section>
                         <mat-checkbox formControlName="require_duplicate_from">

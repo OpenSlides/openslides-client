@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -43,7 +43,7 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
-    public time_zones = [];
+    public time_zones = new BehaviorSubject([]);
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -170,7 +170,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async initTimezones(): Promise<void> {
-        this.timeZone.getAvailableTimeZones().then(values => (this.time_zones = values));
+        this.timeZone.getTZForSearchSelector().then(values => this.time_zones.next(values));
+    }
+
+    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
+        return [item.getTitle()];
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -274,7 +278,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
-        rawForm[`time_zone`] = [this.timeZone.getOrganizationTimeZone(), Validators.required];
+        rawForm[`time_zone`] = [this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone())];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
@@ -317,6 +321,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const {
             start_time: start,
             end_time: end,
+            time_zone,
             ...patchMeeting
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
@@ -328,6 +333,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             end
         };
         this.meetingForm.patchValue(patchMeeting);
+        this.meetingForm.get(`time_zone`).patchValue(this.timeZone.getTimezoneIdByName(time_zone));
         this.daterangeControl?.patchValue(patchDaterange);
         this.onAfterCreateForm();
     }
@@ -376,13 +382,19 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private getPayload(): any {
-        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
+        const {
+            daterange: { start: start_time, end: end_time } = { start: null, end: null },
+            time_zone,
+            ...rawPayload
+        } = {
             ...this.meetingForm.value
         };
+        const time_zone_string = this.timeZone.getTimezoneNameById(time_zone);
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
                 end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
+                time_zone: time_zone_string,
                 ...rawPayload
             };
         }
