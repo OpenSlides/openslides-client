@@ -12,9 +12,6 @@ env:
 
 jobs:
   build-and-test-prod-image:
-    permissions:
-      contents: read
-      actions: write
     name: build-and-test-prod-image
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -44,6 +41,10 @@ jobs:
         working-directory: "./openslides-backend/data/"
         run: cp example-data.json initial-data.json
 
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
         with:
@@ -59,12 +60,8 @@ jobs:
         run: |
           ./setup.sh
           echo -n "admin" > secrets/superadmin
-          docker buildx bake \
-            --load \
-            --allow=fs.read=${{ github.workspace }} \
-            --set '*.cache-from=type=gha' \
-            --set '*.cache-to=type=gha,mode=max'
-          docker compose up -d --no-build
+          docker compose build --parallel
+          docker compose up -d
 
       - name: Wait for dev setup
         uses: iFaxity/wait-on-action@v1.2.1
@@ -73,13 +70,8 @@ jobs:
           timeout: 30000
 
       - name: Start tests
-        working-directory: "./openslides-client/client/tests/"
-        run: |
-          docker buildx bake -f docker-compose.test.yml \
-            --load \
-            --set '*.cache-from=type=gha' \
-            --set '*.cache-to=type=gha,mode=max'
-          docker compose -f docker-compose.test.yml up --exit-code-from playwright
+        working-directory: "./openslides-client"
+        run: make run-playwright
 
       - name: Upload playwright logs
         uses: actions/upload-artifact@v7
