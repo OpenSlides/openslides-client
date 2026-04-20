@@ -161,20 +161,9 @@ export class OrganizationSettingsComponent extends BaseComponent {
         return [item.getTitle()];
     }
 
-    private mapTZIdToTZ(TZId: number): string {
-        return this.time_zones
-            .getValue()
-            .find(item => item.id === TZId)
-            ?.getTitle();
-    }
-
-    private getTZIdbyTZ(TZname: string): number {
-        return this.time_zones.getValue().find(item => item.getTitle() === TZname)?.id;
-    }
-
     public onSubmit(): void {
         const { time_zone, ...payload }: any = this.orgaSettingsForm!.value;
-        payload.time_zone = this.mapTZIdToTZ(time_zone);
+        payload.time_zone = this.timeZone.getTimezoneNameById(time_zone);
         if (this.operator.isSuperAdmin) {
             payload.saml_attr_mapping = payload.saml_attr_mapping
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
