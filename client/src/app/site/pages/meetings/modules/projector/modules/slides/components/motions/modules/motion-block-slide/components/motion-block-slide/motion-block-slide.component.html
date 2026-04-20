@@ -23,16 +23,15 @@
                             @if (getMotion(i, j)) {
                                 <div
                                     class="spacer-top-5"
-                                    [ngClass]="
+                                    [ngClass]="[
                                         !commonRecommendation && getMotion(i, j).recommendationLabel
                                             ? 'motion-wrapper'
-                                            : 'motion-wrapper-single'
-                                    "
+                                            : 'motion-wrapper-single',
+                                        shortDisplayStyle ? 'short-layout' : 'long-layout'
+                                    ]"
                                 >
                                     <div class="motion-title">{{ getMotionTitle(i, j) }}</div>
-                                    @if (!shortDisplayStyle) {
-                                        <br />
-                                    }
+
                                     @if (!commonRecommendation && getMotion(i, j).recommendationLabel) {
                                         <div class="white recommendation-chip-wrapper">
                                             <mat-basic-chip
