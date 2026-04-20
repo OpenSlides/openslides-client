@@ -57,6 +57,7 @@ export class Organization extends BaseModel<Organization> {
     public mediafile_ids!: Id[];
     public gender_ids!: Id[]; // (gender/organization_id);
     public published_mediafile_ids!: Id[];
+    public time_zone!: string;
 
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);
@@ -78,6 +79,7 @@ export class Organization extends BaseModel<Organization> {
         `limit_of_meetings`,
         `limit_of_users`,
         `default_language`,
+        `time_zone`,
         `require_duplicate_from`,
         `enable_anonymous`,
         `restrict_editing_same_level_committee_admins`,

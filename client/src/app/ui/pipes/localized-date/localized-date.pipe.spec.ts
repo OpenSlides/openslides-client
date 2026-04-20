@@ -1,5 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 import { LocalizedDatePipe } from './localized-date.pipe';
 
@@ -8,7 +10,12 @@ describe(`LocalizedDatePipe`, () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [LocalizedDatePipe, ChangeDetectorRef]
+            providers: [
+                LocalizedDatePipe,
+                ChangeDetectorRef,
+                { provide: TranslateService, useValue: { getCurrentLang: () => 'de' } },
+                { provide: ActiveMeetingService, useValue: {} }
+            ]
         }).compileComponents();
 
         pipe = TestBed.inject(LocalizedDatePipe);

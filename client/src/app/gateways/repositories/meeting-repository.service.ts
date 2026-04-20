@@ -75,14 +75,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `group_ids`,
             `language`,
             `locked_from_inside`,
-            `enable_anonymous`
+            `enable_anonymous`,
+            `time_zone`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
             `jitsi_room_password`,
-            `language`
+            `language`,
+            `time_zone`
         ];
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
