@@ -267,13 +267,7 @@ export class AgendaPdfCatalogExportService {
         }
         if (agendaItem.content_object?.getCSVExportText) {
             const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
-            return [
-                entry,
-                {
-                    text: ``,
-                    margin: this.getStyle(`level-margin`)
-                }
-            ];
+            return entry;
         }
         return [];
     }
@@ -291,11 +285,7 @@ export class AgendaPdfCatalogExportService {
                     style: this.getStyle(this.level(agendaItem.level + 1)),
                     margin: this.getStyle(`level-margin`)
                 },
-                entry,
-                {
-                    text: ``,
-                    margin: this.getStyle(`level-margin`)
-                }
+                entry
             ];
         } else {
             return [];
