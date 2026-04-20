@@ -1,12 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { login, logout } from '../helpers/auth';
-import {
-    createAccount,
-    createMeeting,
-    deleteAccounts,
-    deleteCommittees,
-    deleteMeetings
-} from '../helpers/request';
+import { createAccount, createMeeting, deleteAccounts, deleteCommittees, deleteMeetings } from '../helpers/request';
 
 test.describe('Testing global search', () => {
     let username = 'GlobalSearchTestUser';
@@ -31,7 +25,7 @@ test.describe('Testing global search', () => {
         await logout(context);
     });
 
-    test('search for demo meeting' , async ({ context, page }) => {
+    test('search for demo meeting', async ({ context, page }) => {
         await login(context);
         await page.goto('/');
         await page.locator('button[aria-label="Global Search"]').click();
@@ -42,7 +36,7 @@ test.describe('Testing global search', () => {
         await logout(context);
     });
 
-    test('search for blup meeting and find nothing' , async ({ context, page }) => {
+    test('search for blup meeting and find nothing', async ({ context, page }) => {
         await login(context);
         await page.goto('/');
         await page.locator('button[aria-label="Global Search"]').click();
