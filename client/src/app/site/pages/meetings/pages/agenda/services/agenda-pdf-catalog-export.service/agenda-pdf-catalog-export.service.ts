@@ -214,6 +214,15 @@ export class AgendaPdfCatalogExportService {
     private createNumberTitleDoc(agendaItem: ViewAgendaItem, info: any): ContentText {
         const useItemNumber: boolean = info.includes(`item_number`);
         const useTitle: boolean = info.includes(`title`);
+        const contentItems = [
+            `text`,
+            `attachments`,
+            `moderation_notes`,
+            `list_of_speakers`,
+            `polls`,
+            `internal_commentary`
+        ];
+        const onlyMainMargins = !contentItems.some(item => info.includes(item));
         const itemNumber: string = agendaItem.item_number ?? ``;
         const title: string = agendaItem.content_object!.getTitle();
         let numberOrTitle = ``;
@@ -248,7 +257,7 @@ export class AgendaPdfCatalogExportService {
         return {
             text: numberOrTitle,
             style: this.getStyle(this.level(agendaItem.level)),
-            margin: this.getStyle(`level-margin`)
+            margin: this.getStyle(onlyMainMargins ? `level-margin` : `main-margin-w-content`)
         };
     }
 
@@ -549,10 +558,7 @@ export class AgendaPdfCatalogExportService {
     }
 
     private level(level: number): string {
-        if (level > 1) {
-            return `level-2`;
-        }
-        return `level-${level}`;
+        return `level-${Math.min(level, 2)}`;
     }
 
     private getStyle(name: string): any {
@@ -572,7 +578,13 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 10];
             case `level-margin`:
                 return [0, 0, 0, 7];
+            case `main-margin-w-content`:
+                return [0, 0, 0, 11];
             default:
+                const warn_string = this.translate.instant(
+                    `An undefined class was called. Please add the class: _class_name_`
+                );
+                console.warn(warn_string.replace(`_class_name_`, name));
                 return {};
         }
     }
