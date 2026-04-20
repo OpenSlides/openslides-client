@@ -66,7 +66,10 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
                 return true;
             }
 
-            if (this.isIncludedInProperty(item, trimmedInput, this.alsoFilterByProperties)) {
+            if (
+                this.isIncludedInProperty(item, trimmedInput, this.alsoFilterByProperties) ||
+                this.isIncludedInProperty(item, trimmedInput, this.filterProps)
+            ) {
                 return true;
             }
 
@@ -88,7 +91,12 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private isIncludedInProperty(item: V, trimmedInput: string, properties: string[]): boolean {
         if (properties.length > 0 && !!item[properties[0]]) {
             const propertyValueString = `` + item[properties[0]];
-            const foundPropertyValue = propertyValueString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
+            const foundPropertyValue = propertyValueString
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .includes(trimmedInput);
             if (foundPropertyValue) {
                 return true;
             }
