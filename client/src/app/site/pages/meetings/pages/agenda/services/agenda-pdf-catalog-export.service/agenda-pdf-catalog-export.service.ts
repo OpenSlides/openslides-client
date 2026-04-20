@@ -492,11 +492,7 @@ export class AgendaPdfCatalogExportService {
                     style: this.getStyle(this.level(agendaItem.level + 1)),
                     margin: this.getStyle(`level-margin`)
                 },
-                ...entries,
-                {
-                    text: ``,
-                    margin: this.getStyle(`level-margin`)
-                }
+                ...entries
             ];
         }
         return [];
