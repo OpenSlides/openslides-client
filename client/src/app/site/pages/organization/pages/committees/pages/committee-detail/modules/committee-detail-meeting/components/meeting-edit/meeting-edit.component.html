@@ -64,6 +64,17 @@
                 <input formControlName="location" matInput />
             </mat-form-field>
 
+            <mat-form-field>
+                <mat-label>{{ 'Time zone' | translate }}</mat-label>
+                <os-list-search-selector
+                    formControlName="time_zone"
+                    [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
+                    [inputListValues]="time_zones"
+                    [keepOpen]="false"
+                    [multiple]="false"
+                ></os-list-search-selector>
+            </mat-form-field>
+
             <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
             <mat-form-field>
