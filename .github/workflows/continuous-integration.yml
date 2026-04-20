@@ -60,6 +60,7 @@ jobs:
           ./setup.sh
           echo -n "admin" > secrets/superadmin
           docker buildx bake \
+            --load \
             --allow=fs.read=${{ github.workspace }} \
             --set '*.cache-from=type=gha' \
             --set '*.cache-to=type=gha,mode=max'
@@ -75,6 +76,7 @@ jobs:
         working-directory: "./openslides-client/client/tests/"
         run: |
           docker buildx bake -f docker-compose.test.yml \
+            --load \
             --set '*.cache-from=type=gha' \
             --set '*.cache-to=type=gha,mode=max'
           docker compose -f docker-compose.test.yml up --exit-code-from playwright
