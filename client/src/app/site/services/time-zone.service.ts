@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TZDate } from '@date-fns/tz';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -30,11 +30,9 @@ class SearchSelectorHelper implements Selectable {
     providedIn: `root`
 })
 export class TimeZoneService {
-    public constructor(
-        private activeMeetingRepo: ActiveMeetingService,
-        private organizationRepo: OrganizationControllerService,
-        private presenter: GetValidTimezonesPresenterService
-    ) {}
+    private activeMeetingRepo = inject(ActiveMeetingService);
+    private organizationRepo = inject(OrganizationControllerService);
+    private presenter = inject(GetValidTimezonesPresenterService);
 
     private timezonesCache: Selectable[] | null = null;
 
