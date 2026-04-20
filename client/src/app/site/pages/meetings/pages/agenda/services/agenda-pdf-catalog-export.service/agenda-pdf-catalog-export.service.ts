@@ -267,7 +267,13 @@ export class AgendaPdfCatalogExportService {
         }
         if (agendaItem.content_object?.getCSVExportText) {
             const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
-            return entry;
+            return [
+                entry,
+                {
+                    text: ``,
+                    margin: this.getStyle(`level-margin`)
+                }
+            ];
         }
         return [];
     }
@@ -285,7 +291,11 @@ export class AgendaPdfCatalogExportService {
                     style: this.getStyle(this.level(agendaItem.level + 1)),
                     margin: this.getStyle(`level-margin`)
                 },
-                entry
+                entry,
+                {
+                    text: ``,
+                    margin: this.getStyle(`level-margin`)
+                }
             ];
         } else {
             return [];
@@ -405,7 +415,10 @@ export class AgendaPdfCatalogExportService {
                         widths: isA4 ? [`auto`, `*`, 50, 110] : [`auto`, `*`, 50, 55],
                         body: tableCells
                     },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES
+                },
+                {
+                    text: ``,
                     margin: this.getStyle(`level-margin`)
                 }
             ];
@@ -469,7 +482,8 @@ export class AgendaPdfCatalogExportService {
                         widths: [firstPlaceWidth, optionWidth, votesWidth],
                         body: tableCells
                     },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES
+                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
+                    margin: this.getStyle(`level-margin`)
                 });
             }
             return [
@@ -547,6 +561,10 @@ export class AgendaPdfCatalogExportService {
                     });
                 }
             }
+            attachments.push({
+                text: ``,
+                margin: this.getStyle(`level-margin`)
+            });
         }
 
         return attachments;
@@ -582,7 +600,9 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 11];
             default:
                 console.warn(
-                    `An undefined class was called. Please add the class: _class_name_`.replace(`_class_name_`, name)
+                    this.translate
+                        .instant(`An undefined class was called. Please add the class: _class_name_`)
+                        .replace(`_class_name_`, name)
                 );
                 return {};
         }
