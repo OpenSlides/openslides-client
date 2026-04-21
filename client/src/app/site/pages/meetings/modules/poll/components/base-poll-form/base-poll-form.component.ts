@@ -212,9 +212,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             this.isNamedVotingSelected &&
             (this.isMotionPoll ||
                 (this.isAssignmentPoll &&
-                    !this.globalYesControl?.value &&
-                    this.pollMethod === FormPollMethod.Y &&
-                    this.contentForm.get(`votes_amount`).get(`max_votes_amount`).value === 1))
+                    ((!this.globalYesControl?.value &&
+                        this.pollMethod === FormPollMethod.Y &&
+                        this.contentForm.get(`votes_amount`).get(`max_votes_amount`).value === 1) ||
+                        this.pollMethod === FormPollMethod.LIST_YNA ||
+                        ((this.pollMethod === FormPollMethod.YNA || this.pollMethod === FormPollMethod.YN) &&
+                            this.pollOptionAmount === 1))))
         );
     }
 
