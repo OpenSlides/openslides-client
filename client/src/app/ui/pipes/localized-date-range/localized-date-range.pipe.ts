@@ -1,44 +1,60 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { fromUnixTime, Locale } from 'date-fns';
-import { DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
+import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { tzName } from '@date-fns/tz';
+import { Locale } from 'date-fns';
+import { DateFnsConfigurationService, DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
+import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
 @Pipe({
     name: `localizedDateRange`,
     pure: false,
     standalone: false
 })
-export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform {
-    public override transform(value: any, dateFormat = `PPp`): any {
+export class LocalizedDateRangePipe implements PipeTransform {
+    private inputDate = inject(DateFnsConfigurationService);
+    private timeZone = inject(TimeZoneService);
+    private cd = inject(ChangeDetectorRef);
+    public formatter = new FormatPipe(this.inputDate, this.cd);
+
+    public transform(value: any, dateFormat = `PPp`, timezone = ``): any {
         if (!value) {
             return ``;
         }
 
         if (!value.start && value.start !== 0) {
             if (value.end || value.end === 0) {
-                const date = fromUnixTime(value.end);
-                return super.transform(date, dateFormat);
+                const date = this.timeZone.transformFromTS(value.end, timezone);
+                return this.formatter.transform(date, dateFormat);
             }
             return ``;
         } else if (!value.end && value.end !== 0) {
-            const date = fromUnixTime(value.start);
-            return super.transform(date, dateFormat);
+            const date = this.timeZone.transformFromTS(value.start, timezone);
+            return this.formatter.transform(date, dateFormat);
         }
 
-        const data = this.generateAndSplitIntervalStrings(value, dateFormat);
+        const data = this.generateAndSplitIntervalStrings(value, dateFormat, timezone);
 
-        const fn = this.getDateIntervalAbbreviationFunctionForLocale(this.config?.locale(), dateFormat);
-        return fn(data.startString, data.startArray, data.endString, data.endArray);
+        const fn = this.getDateIntervalAbbreviationFunctionForLocale(this.inputDate?.locale(), dateFormat);
+        const result = fn(data.startString, data.startArray, data.endString, data.endArray);
+        if (new Intl.DateTimeFormat().resolvedOptions()?.timeZone != timezone) {
+            return result + ` ${tzName(timezone, this.timeZone.transformFromTS(value.start, timezone), 'short')}`;
+        }
+        return result;
     }
 
     private generateAndSplitIntervalStrings(
         interval: { start: DateFnsInputDate; end: DateFnsInputDate },
-        dateFormat: string
+        dateFormat: string,
+        timezone: string
     ): { startString: string; startArray: string[]; endString: string; endArray: string[] } {
-        const start = typeof interval.start === `number` ? fromUnixTime(interval.start) : interval.start;
-        const end = typeof interval.end === `number` ? fromUnixTime(interval.end) : interval.end;
-        const startString = super.transform(start, dateFormat);
+        const start =
+            typeof interval.start === `number`
+                ? this.timeZone.transformFromTS(interval.start, timezone)
+                : interval.start;
+        const end =
+            typeof interval.end === `number` ? this.timeZone.transformFromTS(interval.end, timezone) : interval.end;
+        const startString = this.formatter.transform(start, dateFormat);
         const startArray = startString.split(/[\s,]+/);
-        const endString = super.transform(end, dateFormat);
+        const endString = this.formatter.transform(end, dateFormat);
         const endArray = endString.split(/[\s,]+/);
         return { startString, startArray, endString, endArray };
     }
