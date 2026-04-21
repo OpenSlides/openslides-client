@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
@@ -47,6 +47,7 @@ export class AuthService {
     public constructor(
         private lifecycleService: LifecycleService,
         private router: Router,
+        private activatedRoute: ActivatedRoute,
         private authAdapter: AuthAdapterService,
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
@@ -106,6 +107,11 @@ export class AuthService {
         if (userId) {
             this._loginEvent.emit();
             this.lifecycleService.reboot();
+            const paramMap = this.activatedRoute.snapshot.queryParamMap;
+            if (paramMap.has(`prevUrl`) && (await this.router.navigate([paramMap.get(`prevUrl`)]))) {
+                return;
+            }
+
             this.router.navigate([`/`]);
         } else {
             this.lifecycleService.shutdown();
