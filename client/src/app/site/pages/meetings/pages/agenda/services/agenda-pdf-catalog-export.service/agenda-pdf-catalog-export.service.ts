@@ -45,7 +45,7 @@ export class AgendaPdfCatalogExportService {
         private pdfImagesService: PdfImagesService,
         private durationService: DurationService,
         private treeService: TreeService
-    ) { }
+    ) {}
 
     /**
      * Converts the list of agenda items to pdfmake doc definition.
@@ -78,8 +78,9 @@ export class AgendaPdfCatalogExportService {
                     agendaDocList.push(this.pdfService.getPageBreak());
                 }
             } catch (err) {
-                const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${sortedAgendaItems[agendaItemIndex].item_number
-                    }`;
+                const errorText = `${this.translate.instant(`Error during PDF creation of agenda item:`)} ${
+                    sortedAgendaItems[agendaItemIndex].item_number
+                }`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
                 throw new PdfError(errorText);
             }
@@ -359,9 +360,9 @@ export class AgendaPdfCatalogExportService {
             const remainingTimes =
                 speaker.isWaiting && speaker.structure_level_list_of_speakers
                     ? this.durationService.durationToString(
-                        speaker.structure_level_list_of_speakers.remaining_time,
-                        'm'
-                    )
+                          speaker.structure_level_list_of_speakers.remaining_time,
+                          'm'
+                      )
                     : ``;
             const extraBorder: [boolean, boolean, boolean, boolean] = state
                 ? [false, true, false, false]
