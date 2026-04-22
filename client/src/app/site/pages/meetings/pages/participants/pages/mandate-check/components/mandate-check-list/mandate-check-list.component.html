@@ -25,11 +25,13 @@
                 </div>
                 <div class="map-grid">
                     <!-- first row-->
-                    <div class="row">
+                    <div class="row-mandate">
                         <!-- first col -->
                         <div class="flex-container"></div>
                         <!-- second col -->
-                        <div class="flex-container margin-auto foreground-active text-medium-bold min-width-98">
+                        <div
+                            class="flex-container margin-auto foreground-active text-medium-bold min-width-50 align-right"
+                        >
                             {{ 'present' | translate }}
                         </div>
                         <!-- third col -->
@@ -43,7 +45,7 @@
                             <div></div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row-mandate">
                         <!-- second row -->
                         <!-- first col -->
                         <div class="flex-container">
@@ -77,12 +79,12 @@
                     </div>
                 </div>
                 <!-- Gender field-->
-                <div class="header-grid">
-                    <h2 class="text-large-bold color-inherit">
-                        <button matButton (click)="toggle(entry.id, true)">
+                <div class="header-grid stroke">
+                    <h1 class="text-large-bold color-inherit">
+                        <button class="text-medium-bold" matButton (click)="toggle(entry.id, true)">
                             {{ 'Gender' | translate }}
                         </button>
-                    </h2>
+                    </h1>
                     <button matIconButton (click)="toggle(entry.id, true)">
                         @if (toggleGenderMap.get(entry.id)) {
                             <mat-icon>keyboard_arrow_up</mat-icon>
@@ -100,23 +102,23 @@
                                     <div class="flex-container">
                                         <div></div>
                                     </div>
-                                    <div class="foreground-active align-left min-width-50">
+                                    <div class="foreground-active min-width-50 align-right cell-width">
                                         @if (entry.getTotalCount(gender.id)) {
                                             <!-- FIRST VAL -->
-                                            {{ entry.genderEntryMap.get(gender.id)?.present }}
                                             {{
                                                 displayPercent(
                                                     entry.genderEntryMap.get(gender.id)?.present /
                                                         entry.presentUserIds.length
                                                 )
                                             }}
+                                            {{ entry.genderEntryMap.get(gender.id)?.present }}
                                         }
                                     </div>
                                     <div class="center bold margin-auto">
                                         <!-- SECOND VAL -->
                                         {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
                                     </div>
-                                    <div class="text align-right text-medium margin-auto">
+                                    <div class="text text-medium margin-auto align-left">
                                         @if (entry.getTotalCount(gender.id)) {
                                             <!-- THIRD VAL -->
                                             {{ entry.getTotalCount(gender.id) }}
@@ -132,14 +134,14 @@
                         }
                     </div>
                 }
-                <div class="header-grid">
-                    <h2 class="text-large-bold color-inherit">
+                <div class="header-grid stroke">
+                    <h1 class="text-large-bold color-inherit">
                         <div class="row">
-                            <button matButton (click)="toggle(entry.id)">
+                            <button class="text-medium-bold" matButton (click)="toggle(entry.id)">
                                 {{ 'Participants' | translate }}
                             </button>
                         </div>
-                    </h2>
+                    </h1>
                     <div>
                         <button matIconButton (click)="toggle(entry.id)">
                             @if (toggleMap.get(entry.id)) {
@@ -152,22 +154,33 @@
                 </div>
                 @if (toggleMap.get(entry.id)) {
                     <div class="footer-grid">
-                        <div>
-                            <div class="bold margin-left-medium small-margin-top text foreground-active">
-                                {{ 'Present' | translate }}
+                        <!-- Empty cell -->
+                        <div class="flex-container"><div></div></div>
+                        <!-- central cell -->
+                        <div class="participants-cell">
+                            <div class="present">
+                                <div class="bold small-margin-top text foreground-active">
+                                    {{ 'Present' | translate }}
+                                </div>
+                                @for (userId of entry.presentUserIds; track userId) {
+                                    <div class="text foreground-active">
+                                        {{ getName(userId) }}
+                                    </div>
+                                }
                             </div>
-                            @for (userId of entry.presentUserIds; track userId) {
-                                <div class="margin-left-medium text foreground-active">{{ getName(userId) }}</div>
-                            }
-                        </div>
-                        <div>
-                            <div class="bold margin-left-medium small-margin-top text">
-                                {{ 'Absent' | translate }}
+                            <div class="absent">
+                                <div class="bold small-margin-top text">
+                                    {{ 'Absent' | translate }}
+                                </div>
+                                @for (userId of entry.absentUserIds; track userId) {
+                                    <div class="color-black">
+                                        {{ getName(userId) }}
+                                    </div>
+                                }
                             </div>
-                            @for (userId of entry.absentUserIds; track userId) {
-                                <div class="margin-left-medium color-black">{{ getName(userId) }}</div>
-                            }
                         </div>
+                        <!-- Empty cell -->
+                        <div class="flex-container"><div></div></div>
                     </div>
                 }
             </mat-card-content>

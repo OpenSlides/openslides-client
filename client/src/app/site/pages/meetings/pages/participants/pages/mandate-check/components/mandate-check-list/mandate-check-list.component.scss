@@ -33,6 +33,9 @@
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    mat-form-field {
+        min-width: 25%;
+    }
 }
 
 .border-grid {
@@ -81,13 +84,12 @@ mat-progress-bar * {
 .map-grid {
     max-width: inherit;
     display: grid;
-    gap: 10px;
-    .row {
+    .row,
+    .row-mandate {
         max-width: inherit;
         display: grid;
         white-space: nowrap;
-        padding: 1em 0em 1em 0em;
-        grid-template-columns: 8fr 10fr 60fr 10fr 8fr;
+        grid-template-columns: 8fr 5fr 50fr 5fr 8fr;
         & div {
             width: 100%;
         }
@@ -96,8 +98,15 @@ mat-progress-bar * {
             align-self: center;
         }
     }
-    .row:not(:last-child) {
-        border-bottom: 1px solid rgba(177, 177, 177, 0.637);
+    .row {
+        padding: 1em 0em 1em 0em;
+    }
+    .cell-width {
+        width: fit-content;
+        text-align: end;
+    }
+    .row:nth-child(odd) {
+        background-color: #fafafa;
     }
 }
 
@@ -126,7 +135,20 @@ mat-progress-bar * {
         }
     }
     @media (max-width: 700px) {
-        grid-template-columns: repeat(auto-fit, 250px);
+        .participants-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0%;
+            div {
+                overflow-wrap: anywhere;
+            }
+            .present {
+                margin-left: 0px;
+            }
+            .absent {
+                margin-left: 0px;
+            }
+        }
     }
 }
 
