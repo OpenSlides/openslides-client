@@ -301,7 +301,7 @@ export class AgendaPdfCatalogExportService {
                 return { text: [...entry], style: style, margin: margin };
                 // MOTION BLOCK
             } else if (agendaItem.content_object?.collection === 'motion_block') {
-                const motions: ViewMotion[] = agendaItem.content_object?.motions || [];
+                const motions = agendaItem.content_object?.motions || [];
                 const entry = this.htmlToPdfService.convertHtml({
                     htmlText:
                         motions.map(m => `Motion ${m.number}: ${m.title}`).join('<br><br>') ??

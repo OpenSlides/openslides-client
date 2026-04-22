@@ -70,6 +70,7 @@ mat-progress-bar,
 mat-progress-bar * {
     width: 100%;
     min-width: 0;
+    margin-right: 3em;
     @include media-queries.set-breakpoint-lower(430px) {
         max-width: 20%;
         min-width: 0;
@@ -92,7 +93,7 @@ mat-progress-bar * {
         }
         .central-element {
             max-width: 90%;
-            min-width: 0;
+            align-self: center;
         }
     }
     .row:not(:last-child) {
@@ -102,8 +103,28 @@ mat-progress-bar * {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-gap: 20px;
+    max-width: inherit;
+    width: inherit;
+    grid-template-columns: 8fr 60fr 8fr;
+    gap: 0em;
+    .participants-cell {
+        width: inherit;
+        display: grid;
+        grid-template-columns: 50% 25%;
+        gap: 20%;
+        div {
+            width: inherit;
+            overflow-wrap: break-word;
+            min-width: 0;
+        }
+        .present {
+            margin-left: 8%;
+        }
+        .absent {
+            width: calc(100% + 10px);
+            margin-right: -4%;
+        }
+    }
     @media (max-width: 700px) {
         grid-template-columns: repeat(auto-fit, 250px);
     }
@@ -185,4 +206,12 @@ button {
 
 .padding-right {
     padding-right: 1em;
+}
+
+.stroke {
+    border-top: 1px solid #bbb8b8;
+}
+
+.fit-content {
+    width: fit-content;
 }

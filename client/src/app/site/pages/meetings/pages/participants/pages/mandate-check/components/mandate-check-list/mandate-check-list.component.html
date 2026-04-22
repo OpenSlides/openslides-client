@@ -50,17 +50,21 @@
                             <div></div>
                         </div>
                         <!-- second col -->
-                        <div class="flex-container foreground-active text-medium-bold min-width-98">
-                            {{ entry.presentUserIds.length }} {{ displayPercent(entry.getPercent()) }}
+                        <div
+                            class="flex-container foreground-active text-medium-bold min-width-50 align-right fit-content"
+                        >
+                            {{ displayPercent(entry.getPercent()) }} {{ entry.presentUserIds.length }}
                         </div>
                         <!-- third col -->
                         <div class="center flex-container">
-                            <mat-progress-bar
-                                class="progressbar-colored flex-container central-element bar-height"
-                                [bufferValue]="100"
-                                [mode]="'determinate'"
-                                [value]="entry.getPercent() * 100"
-                            ></mat-progress-bar>
+                            <div class="central-element">
+                                <mat-progress-bar
+                                    class="progressbar-colored bar-height"
+                                    [bufferValue]="100"
+                                    [mode]="'determinate'"
+                                    [value]="entry.getPercent() * 100"
+                                ></mat-progress-bar>
+                            </div>
                         </div>
                         <!-- fourth col -->
                         <div class="flex-container margin-auto text align-left text-medium-bold min-width-50">
