@@ -5,10 +5,9 @@ import { ExportMeetingPresenterService } from 'src/app/gateways/presenter/export
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { AccountFilterService } from '../../../accounts/services/common/account-filter.service';
-import { CommitteeComponentsServiceModule } from './committee-components-service.module';
 
 @Injectable({
-    providedIn: CommitteeComponentsServiceModule
+    providedIn: 'root'
 })
 export class MeetingService {
     public constructor(
