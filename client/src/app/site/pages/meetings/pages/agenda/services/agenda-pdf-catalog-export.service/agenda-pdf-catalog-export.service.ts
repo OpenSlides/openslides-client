@@ -480,14 +480,14 @@ export class AgendaPdfCatalogExportService {
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 });
             }
             return [
                 {
                     text: this.translate.instant(`Polls`),
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 },
                 ...entries,
                 {
@@ -533,7 +533,7 @@ export class AgendaPdfCatalogExportService {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
                 style: this.getStyle(`level-content`),
-                margin: this.getStyle(`level-margin`)
+                margin: this.getStyle(`level-margin-normal`)
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
                 const attachment = agendaItem.content_object?.attachment_meeting_mediafiles[key];
@@ -543,7 +543,7 @@ export class AgendaPdfCatalogExportService {
                     attachments.push({
                         image: fileUrl,
                         width: width,
-                        margin: this.getStyle(`level-margin`)
+                        margin: this.getStyle(`level-margin-normal`)
                     });
                 } else {
                     const link = Location.joinWithSlash(instanceUrl, fileUrl);
@@ -552,7 +552,7 @@ export class AgendaPdfCatalogExportService {
                             {
                                 text: attachment.getTitle() + `: ` + link,
                                 link: link,
-                                margin: this.getStyle(`level-margin`)
+                                margin: this.getStyle(`level-margin-normal`)
                             }
                         ]
                     });
