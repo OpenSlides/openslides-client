@@ -5,7 +5,7 @@ import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/act
 
 import { ViewAgendaItem } from '../../../../pages/agenda';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AgendaContentObjectFormService {
     public constructor(
         private repo: AgendaItemRepositoryService,

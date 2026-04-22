@@ -5,10 +5,9 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { MotionBlockEditDialogComponent } from '../components/motion-block-edit-dialog/motion-block-edit-dialog.component';
-import { MotionBlockEditDialogModule } from '../motion-block-edit-dialog.module';
 
 @Injectable({
-    providedIn: MotionBlockEditDialogModule
+    providedIn: 'root'
 })
 export class MotionBlockEditDialogService extends BaseDialogService<
     MotionBlockEditDialogComponent,
