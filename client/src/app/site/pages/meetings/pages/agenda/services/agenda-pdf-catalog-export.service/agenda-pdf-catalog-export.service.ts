@@ -15,7 +15,6 @@ import { ViewPoll } from '../../../polls';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models';
 import { ViewAgendaItem } from '../../view-models';
-import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
 const PDF_A4_POINTS_WIDTH = 595.296;
 const PDF_A5_POINTS_WIDTH = 419.544;
@@ -29,7 +28,7 @@ const AGENDA_PDF_OPTIONS = {
 };
 
 @Injectable({
-    providedIn: AgendaItemCommonServiceModule
+    providedIn: 'root'
 })
 export class AgendaPdfCatalogExportService {
     // parent agenda items which are not in the export are handled different
