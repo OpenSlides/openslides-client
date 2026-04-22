@@ -289,7 +289,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`Moderation note`),
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 },
                 entry,
                 {
@@ -405,7 +405,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`List of speakers`),
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 },
                 {
                     table: {
@@ -441,7 +441,7 @@ export class AgendaPdfCatalogExportService {
                 entries.push({
                     text: poll.title,
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 });
                 // poll table header
                 tableCells.push([
@@ -480,14 +480,14 @@ export class AgendaPdfCatalogExportService {
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 });
             }
             return [
                 {
                     text: this.translate.instant(`Polls`),
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 },
                 ...entries,
                 {
@@ -508,7 +508,7 @@ export class AgendaPdfCatalogExportService {
                 {
                     text: this.translate.instant(`Comment`),
                     style: this.getStyle(`level-content`),
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-normal`)
                 },
                 {
                     text: agendaItem.comment,
@@ -533,7 +533,7 @@ export class AgendaPdfCatalogExportService {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
                 style: this.getStyle(`level-content`),
-                margin: this.getStyle(`level-margin`)
+                margin: this.getStyle(`level-margin-normal`)
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
                 const attachment = agendaItem.content_object?.attachment_meeting_mediafiles[key];
@@ -543,7 +543,7 @@ export class AgendaPdfCatalogExportService {
                     attachments.push({
                         image: fileUrl,
                         width: width,
-                        margin: this.getStyle(`level-margin`)
+                        margin: this.getStyle(`level-margin-normal`)
                     });
                 } else {
                     const link = Location.joinWithSlash(instanceUrl, fileUrl);
@@ -552,7 +552,7 @@ export class AgendaPdfCatalogExportService {
                             {
                                 text: attachment.getTitle() + `: ` + link,
                                 link: link,
-                                margin: this.getStyle(`level-margin`)
+                                margin: this.getStyle(`level-margin-normal`)
                             }
                         ]
                     });
@@ -599,6 +599,8 @@ export class AgendaPdfCatalogExportService {
                 return [0, 0, 0, 16];
             case `level-margin-middle`:
                 return [0, 0, 0, 14];
+            case `level-margin-normal`:
+                return [0, 0, 0, 7];
             case `main-margin-bigger`:
                 return [0, 0, 0, 11];
             case `main-margin`:
