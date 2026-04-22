@@ -6,10 +6,9 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { AccountCsvExportExample } from '../../export/csv-export-example';
 import { accountColumns } from '../../pages/account-import/definitions';
-import { AccountExportServiceModule } from '../account-export-service.module';
 
 @Injectable({
-    providedIn: AccountExportServiceModule
+    providedIn: 'root'
 })
 export class AccountExportService {
     public constructor(

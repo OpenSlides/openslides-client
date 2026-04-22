@@ -16,10 +16,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { AccountCommonServiceModule } from './account-common-service.module';
-
 @Injectable({
-    providedIn: AccountCommonServiceModule
+    providedIn: 'root'
 })
 export class AccountControllerService extends BaseController<ViewUser, User> {
     private _committee_users_set = new Set<Id>();
