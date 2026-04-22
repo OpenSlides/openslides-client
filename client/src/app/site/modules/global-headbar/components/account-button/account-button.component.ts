@@ -20,7 +20,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 
-import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
+import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
 
 @Component({
     selector: `os-account-button`,
@@ -137,7 +137,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public openAccountDialog(): void {
-        this.dialog.open(AccountDialogComponent, {
+        this.dialog.open(AccountDialogMainComponent, {
             ...largeDialogSettings,
             height: `530px`
         });
