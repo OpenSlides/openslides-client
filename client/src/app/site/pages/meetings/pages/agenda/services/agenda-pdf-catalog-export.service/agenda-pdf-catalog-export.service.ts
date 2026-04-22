@@ -257,7 +257,7 @@ export class AgendaPdfCatalogExportService {
         return {
             text: numberOrTitle,
             style: this.getStyle(this.level(agendaItem.level)),
-            margin: this.getStyle(onlyMainMargins ? `level-margin` : `main-margin-w-content`)
+            margin: this.getStyle(onlyMainMargins ? `main-margin` : `main-margin-bigger`)
         };
     }
 
@@ -267,7 +267,13 @@ export class AgendaPdfCatalogExportService {
         }
         if (agendaItem.content_object?.getCSVExportText) {
             const entry = this.htmlToPdfService.convertHtml({ htmlText: agendaItem.content_object?.text ?? `` });
-            return entry;
+            return [
+                entry,
+                {
+                    text: ``,
+                    style: this.getStyle(`small`)
+                }
+            ];
         }
         return [];
     }
@@ -282,10 +288,14 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Moderation note`),
-                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin`)
                 },
-                entry
+                entry,
+                {
+                    text: ``,
+                    style: this.getStyle(`small`)
+                }
             ];
         } else {
             return [];
@@ -394,7 +404,7 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`List of speakers`),
-                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin`)
                 },
                 {
@@ -406,7 +416,7 @@ export class AgendaPdfCatalogExportService {
                         body: tableCells
                     },
                     layout: BorderType.LIGHT_HORIZONTAL_LINES,
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-bigger`)
                 }
             ];
         }
@@ -430,7 +440,7 @@ export class AgendaPdfCatalogExportService {
                 const tableCells: Content[][] = [];
                 entries.push({
                     text: poll.title,
-                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin`)
                 });
                 // poll table header
@@ -476,10 +486,14 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Polls`),
-                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin`)
                 },
-                ...entries
+                ...entries,
+                {
+                    text: ``,
+                    style: this.getStyle(`small`)
+                }
             ];
         }
         return [];
@@ -493,12 +507,12 @@ export class AgendaPdfCatalogExportService {
             return [
                 {
                     text: this.translate.instant(`Comment`),
-                    style: this.getStyle(this.level(agendaItem.level + 1)),
+                    style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin`)
                 },
                 {
                     text: agendaItem.comment,
-                    margin: this.getStyle(`level-margin`)
+                    margin: this.getStyle(`level-margin-middle`)
                 }
             ];
         }
@@ -518,7 +532,7 @@ export class AgendaPdfCatalogExportService {
         if (agendaItem.content_object?.attachment_meeting_mediafiles.length > 0) {
             attachments.push({
                 text: this.translate.instant(`Attachments`),
-                style: this.getStyle(this.level(agendaItem.level + 1)),
+                style: this.getStyle(`level-content`),
                 margin: this.getStyle(`level-margin`)
             });
             for (const key of Object.keys(agendaItem.content_object?.attachment_meeting_mediafiles)) {
@@ -544,6 +558,10 @@ export class AgendaPdfCatalogExportService {
                     });
                 }
             }
+            attachments.push({
+                text: ``,
+                style: this.getStyle(`small`)
+            });
         }
 
         return attachments;
@@ -568,15 +586,23 @@ export class AgendaPdfCatalogExportService {
                 return { bold: true, fontSize: 12 };
             case `level-2`:
                 return { bold: true, fontSize: 10 };
+            case `level-content`:
+                return { bold: true, fontSize: 10 };
             case `italics`:
                 return { italics: true };
+            case `small`:
+                return { fontSize: 7 };
             // margins
             case `title-margin`:
                 return [0, 0, 0, 10];
-            case `level-margin`:
-                return [0, 0, 0, 7];
-            case `main-margin-w-content`:
+            case `level-margin-bigger`:
+                return [0, 0, 0, 16];
+            case `level-margin-middle`:
+                return [0, 0, 0, 14];
+            case `main-margin-bigger`:
                 return [0, 0, 0, 11];
+            case `main-margin`:
+                return [0, 0, 0, 7];
             default:
                 console.warn(
                     this.translate
