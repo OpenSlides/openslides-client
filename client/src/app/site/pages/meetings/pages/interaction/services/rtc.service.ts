@@ -5,7 +5,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { CallRestrictionService } from './call-restriction.service';
-import { InteractionServiceModule } from './interaction-service.module';
 import { OperatorMediaPermissionService } from './operator-media-permission.service';
 
 interface JitsiMember {
@@ -97,7 +96,7 @@ export interface JitsiConfig {
 export const RTC_LOGGED_STORAGE_KEY = `rtcIsLoggedIn`;
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class RtcService {
     private jitsiConfig!: JitsiConfig;
