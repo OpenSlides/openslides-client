@@ -95,6 +95,9 @@
 
         p {
             margin-bottom: 0;
+            br {
+                display: none;
+            }
         }
     }
 }
@@ -141,6 +144,10 @@
     .mat-badge-content {
         top: -8px !important;
     }
+}
+
+.margin-top {
+    margin-top: 20px;
 }
 
 .active-indicator {
