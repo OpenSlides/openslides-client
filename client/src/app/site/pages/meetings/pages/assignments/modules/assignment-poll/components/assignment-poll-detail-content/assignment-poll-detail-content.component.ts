@@ -1,7 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
     PollMethod,
     PollPercentBase,
@@ -15,6 +14,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewPoll } from '../../../../../polls';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -25,7 +25,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     standalone: false
 })
 export class AssignmentPollDetailContentComponent implements AfterViewInit {
-    private _poll: PollData;
+    private _poll: ViewPoll;
 
     public readonly hasLoaded = new Deferred<boolean>();
 
@@ -34,13 +34,13 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
     public reformedTableData: PollTableData[];
 
     @Input()
-    public set poll(pollData: PollData) {
+    public set poll(pollData: ViewPoll) {
         this._poll = pollData;
         this.setupTableData();
         this.cd.markForCheck();
     }
 
-    public get poll(): PollData {
+    public get poll(): ViewPoll {
         return this._poll;
     }
 
@@ -62,7 +62,8 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
     }
 
     private get method(): string | null {
-        return this.poll?.pollmethod || null;
+        // TODO: Replace
+        return null;
     }
 
     private get state(): PollState | null {
@@ -115,9 +116,9 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
     }
 
     public get shouldShowChart(): boolean {
-        const validOptions = this.poll.options.some(
+        const validOptions = false; /* this.poll.options.some(
             option => option.yes! >= 0 && option.no! >= 0 && option.abstain! >= 0
-        );
+        ); */
         return this.poll.options.length === 1 && this.chartData.length > 0 && validOptions;
     }
 
@@ -130,15 +131,16 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
     }
 
     public get isPercentBaseEntitled(): boolean {
-        return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
+        return this.poll?.config?.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
     public get isPercentBaseEntitledPresent(): boolean {
-        return this.poll?.onehundred_percent_base === PollPercentBase.EntitledPresent;
+        return this.poll?.config?.onehundred_percent_base === PollPercentBase.EntitledPresent;
     }
 
     public get entitledPresentUsersCount(): number {
-        return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
+        // return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
+        return 0;
     }
 
     public get assignmentPollService(): PollService {
@@ -154,7 +156,8 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
     }
 
     public get showEntriesAmount(): boolean {
-        return !!this.poll.options[0]?.entries_amount;
+        // return !!this.poll.options[0]?.entries_amount;
+        return false;
     }
 
     public constructor(

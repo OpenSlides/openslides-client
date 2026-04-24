@@ -18,7 +18,7 @@ import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic
     styleUrls: [`./topic-poll.component.scss`],
     imports: [PollComponent, MatCardModule]
 })
-export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
+export class TopicPollComponent extends BasePollComponent<ViewTopic> {
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);
@@ -28,18 +28,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     public readonly dialogOpened = new EventEmitter<void>();
 
     public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get isDescriptionDirty(): boolean {
-        return this.descriptionForm.get(`description`).value !== this.poll.description;
-    }
 
     public get shouldShowPoll(): boolean {
         if (this.poll) {
@@ -74,12 +62,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         private pdfService: TopicPollPdfService
     ) {
         super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
     }
 
     /**

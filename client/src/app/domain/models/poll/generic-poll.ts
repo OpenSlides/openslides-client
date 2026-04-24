@@ -1,10 +1,7 @@
-import { Observable } from 'rxjs';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-
-import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
 
@@ -13,27 +10,6 @@ export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
  * This is a unification of the data received in the projector and ViewPoll; both
  * use this interface, so the poll services can work on this shared view on the data.
  */
-export interface PollData {
-    published: boolean;
-    pollClassType?: PollClassType;
-    pollmethod: PollMethod;
-    state: PollState;
-    onehundred_percent_base: PollPercentBase;
-    votesvalid: number;
-    votesinvalid: number;
-    votescast: number;
-    type: PollType;
-    entitled_users_at_stop: EntitledUsersEntry[];
-    options: OptionData[];
-    options$: Observable<OptionData[]>;
-    global_yes?: boolean;
-    global_no?: boolean;
-    global_abstain?: boolean;
-    content_object?: PollContentObject;
-    getContentObjectTitle: () => string | null;
-}
-
-export type PollDataKey = keyof PollData;
 
 export interface OptionTitle {
     title: string;

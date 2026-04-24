@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { pollChartColors, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
+import { pollChartColors, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -10,13 +11,13 @@ import { TopicPollService } from '../../services/topic-poll.service';
 const SUBSCRIPTION_NAME = `tableData`;
 @Component({
     selector: `os-topic-poll-detail-content`,
-    templateUrl: `./topic-poll-detail-content.component.html`,
+    template: `TODO`,
     styleUrls: [`./topic-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class TopicPollDetailContentComponent extends BaseUiComponent {
-    private _poll: PollData;
+    private _poll: ViewPoll;
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
@@ -39,13 +40,13 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     @Input()
-    public set poll(pollData: PollData) {
+    public set poll(pollData: ViewPoll) {
         this._poll = pollData;
         this.setupTableData();
         this.cd.markForCheck();
     }
 
-    public get poll(): PollData {
+    public get poll(): ViewPoll {
         return this._poll;
     }
 

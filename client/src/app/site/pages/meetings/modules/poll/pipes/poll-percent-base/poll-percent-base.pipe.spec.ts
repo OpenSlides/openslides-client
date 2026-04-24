@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import {
     OptionData,
     PollClassType,
-    PollData,
     PollMethod,
     PollPercentBase,
     PollState,

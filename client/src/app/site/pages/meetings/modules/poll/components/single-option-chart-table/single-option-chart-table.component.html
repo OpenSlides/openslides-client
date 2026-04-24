@@ -85,7 +85,7 @@
                                 } @else {
                                     @if (
                                         row.value[0].showPercent ||
-                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                        (shouldShowEntitled && poll.config?.onehundred_percent_base !== 'entitled')
                                     ) {
                                         <span>
                                             {{ row.value[0].amount! | pollPercentBase: poll }}
@@ -98,7 +98,7 @@
                                 @if (inSlide) {
                                     @if (
                                         row.value[0].showPercent ||
-                                        (shouldShowEntitled && poll.onehundred_percent_base !== 'entitled')
+                                        (shouldShowEntitled && poll.config?.onehundred_percent_base !== 'entitled')
                                     ) {
                                         <span>
                                             {{ row.value[0].amount! | pollPercentBaseAlt: poll }}
@@ -115,7 +115,7 @@
                     <tr class="entitled-users-row">
                         <td>{{ 'Entitled users' | translate }}</td>
                         <td class="result-cell-definition">
-                            @if (poll.onehundred_percent_base === 'entitled') {
+                            @if (poll.config?.onehundred_percent_base === 'entitled') {
                                 {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
                             }
                         </td>

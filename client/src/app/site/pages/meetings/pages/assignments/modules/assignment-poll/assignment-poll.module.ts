@@ -31,11 +31,10 @@ import { AssignmentCommonServiceModule } from '../../services/assignment-common-
 import { AssignmentPollComponent } from './components/assignment-poll/assignment-poll.component';
 import { AssignmentPollDetailContentComponent } from './components/assignment-poll-detail-content/assignment-poll-detail-content.component';
 import { AssignmentPollDialogComponent } from './components/assignment-poll-dialog/assignment-poll-dialog.component';
-import { AssignmentPollMetaInfoComponent } from './components/assignment-poll-meta-info/assignment-poll-meta-info.component';
 import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
-const COMPONENTS = [AssignmentPollDetailContentComponent, AssignmentPollMetaInfoComponent];
+const COMPONENTS = [AssignmentPollDetailContentComponent];
 
 @NgModule({
     declarations: [...COMPONENTS],

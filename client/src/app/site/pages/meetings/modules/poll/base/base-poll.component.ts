@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { PollContentObject } from 'src/app/domain/models/poll';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
@@ -42,7 +42,7 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
     };
 
     public get hideChangeState(): boolean {
-        return this._poll.isPublished || (this._poll.isCreated && this._poll.type === PollType.Analog);
+        return this._poll.isPublished || (this._poll.isCreated && this._poll.isAnalog);
     }
 
     protected _id!: Id;

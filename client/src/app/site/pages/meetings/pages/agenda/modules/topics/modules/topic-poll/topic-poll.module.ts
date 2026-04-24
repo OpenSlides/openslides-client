@@ -28,12 +28,11 @@ import { TopicCommonServiceModule } from '../../services/topic-common-service.mo
 import { TopicPollComponent } from './components/topic-poll/topic-poll.component';
 import { TopicPollDetailContentComponent } from './components/topic-poll-detail-content/topic-poll-detail-content.component';
 import { TopicPollDialogComponent } from './components/topic-poll-dialog/topic-poll-dialog.component';
-import { TopicPollMetaInfoComponent } from './components/topic-poll-meta-info/topic-poll-meta-info.component';
 import { TopicPollService } from './services/topic-poll.service';
 import { TopicPollServiceModule } from './services/topic-poll-service.module';
 
 @NgModule({
-    declarations: [TopicPollDetailContentComponent, TopicPollMetaInfoComponent],
+    declarations: [TopicPollDetailContentComponent],
     imports: [
         CustomIconComponent,
         CommonModule,

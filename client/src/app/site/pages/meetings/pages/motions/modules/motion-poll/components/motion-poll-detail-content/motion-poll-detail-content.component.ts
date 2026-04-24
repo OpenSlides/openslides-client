@@ -3,7 +3,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { SingleOptionChartTableComponent } from 'src/app/site/pages/meetings/modules/poll/components/single-option-chart-table/single-option-chart-table.component';
@@ -12,6 +11,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { ViewPoll } from '../../../../../polls';
 import { MotionPollService } from '../../services';
 
 const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
@@ -24,7 +24,7 @@ const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy, OnInit {
-    private _poll!: PollData | null;
+    private _poll!: ViewPoll | null;
 
     public get chartData(): ChartData {
         return this._chartData!;
@@ -35,7 +35,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     @Input()
-    public set poll(pollData: PollData | null) {
+    public set poll(pollData: ViewPoll | null) {
         this._poll = pollData;
         if (this._poll) {
             this.setupTableData();
@@ -43,7 +43,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         }
     }
 
-    public get poll(): PollData | null {
+    public get poll(): ViewPoll | null {
         return this._poll;
     }
 

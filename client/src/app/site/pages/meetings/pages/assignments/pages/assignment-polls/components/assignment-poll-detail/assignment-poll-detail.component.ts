@@ -19,7 +19,7 @@ import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/se
 
 @Component({
     selector: `os-assignment-poll-detail`,
-    templateUrl: `./assignment-poll-detail.component.html`,
+    template: `TODO`,
     styleUrls: [`./assignment-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -142,7 +142,7 @@ export class AssignmentPollDetailComponent
     }
 
     private getMethodYVoteLabel(vote: ViewBallot, optionContent: ViewUser | SortedList): string {
-        if (this.poll.max_votes_per_option > 1) {
+        if (this.poll.config?.max_votes_per_option > 1) {
             // Show how often the option was selected
             return Math.floor(vote.weight).toString() + `x ` + this.getFullTitle(optionContent);
         } else {

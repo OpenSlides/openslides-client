@@ -48,9 +48,9 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
 
     private onVotesUpdated(votes: ViewBallot[]): void {
         this.voteAmounts = [];
-        const voteValues: VoteValue[] = this.poll.isMethodYN ? [`Y`, `N`] : [`Y`, `N`, `A`];
+        const voteValues: VoteValue[] = !this.poll.config?.allow_abstain ? [`Y`, `N`] : [`Y`, `N`, `A`];
         const baseVoteValues: VoteValue[] =
-            this.poll.onehundred_percent_base === PollPercentBase.YN ? [`Y`, `N`] : [`Y`, `N`, `A`];
+            this.poll.config?.onehundred_percent_base === PollPercentBase.YN ? [`Y`, `N`] : [`Y`, `N`, `A`];
         const countedVotes = votes.filter(v => baseVoteValues.indexOf(v.value) !== -1);
         for (const i in voteValues) {
             const voteValue = voteValues[i];

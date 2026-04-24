@@ -49,12 +49,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `entitled_group_ids`,
             `state`,
             `title`,
-            `type`,
-            `pollmethod`,
-            `onehundred_percent_base`,
-            `backend`,
+            `visibility`,
             `content_object_id`,
-            `is_pseudoanonymized`
+            `config_id`
         ];
         return {
             ...super.getFieldsets(),
@@ -73,6 +70,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
                 `Poll creation aborted because the minimum amount of votes was set higher than the number of available options`
             );
         }
+        // TODO: `type` does not exist anymore
         if (poll.type === PollType.Analog) {
             return this.createAnalogPoll(poll);
         } else {
@@ -92,17 +90,11 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         const payload = {
             meeting_id: this.activeMeetingId,
             title: poll.title,
-            onehundred_percent_base: poll.onehundred_percent_base,
-            pollmethod: poll.pollmethod,
             publish_immediately: poll.publish_immediately,
             type: poll.type,
             global_abstain: poll.global_abstain,
             global_no: poll.global_no,
             global_yes: poll.global_yes,
-            max_votes_amount: poll.max_votes_amount,
-            max_votes_per_option: poll.max_votes_per_option,
-            min_votes_amount: poll.min_votes_amount,
-            description: poll.description,
             options: this.getAnalogOptions(poll.options),
             content_object_id: poll.content_object_id,
             ...this.getAnalogPollVotesValues(poll),
@@ -115,23 +107,17 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         const payload = {
             meeting_id: this.activeMeetingId,
             title: poll.title,
-            onehundred_percent_base: poll.onehundred_percent_base,
-            pollmethod: poll.pollmethod,
             type: poll.type,
             global_abstain: poll.global_abstain,
             global_no: poll.global_no,
             global_yes: poll.global_yes,
-            max_votes_amount: poll.max_votes_amount,
-            min_votes_amount: poll.min_votes_amount,
-            max_votes_per_option: poll.max_votes_per_option,
-            description: poll.description,
             options: this.getElectronicOptions(poll.options),
             content_object_id: poll.content_object_id,
             entitled_group_ids: poll.entitled_group_ids,
-            backend: poll.backend,
             live_voting_enabled: poll.live_voting_enabled
         };
 
+        // TODO: `type` does not exist anymore
         if (poll.type !== PollType.Named) {
             delete payload.live_voting_enabled;
         }
@@ -168,8 +154,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
          */
         if (poll.state !== PollState.Created) {
             update = {
-                title: update.title,
-                onehundred_percent_base: update.onehundred_percent_base
+                title: update.title
             };
         }
         return this.updateCreatedElectronicPoll(update, poll);
@@ -185,11 +170,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             publish_immediately: update.publish_immediately,
             allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
             description: update.description,
-            max_votes_amount: update.max_votes_amount,
-            min_votes_amount: update.min_votes_amount,
-            max_votes_per_option: update.max_votes_per_option,
-            onehundred_percent_base: update.onehundred_percent_base,
-            pollmethod: update.pollmethod,
             title: update.title,
             ...this.getAnalogPollVotesValues(update)
         };
@@ -201,7 +181,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             id: poll.id,
             publish_immediately: update.publish_immediately,
             description: update.description,
-            onehundred_percent_base: update.onehundred_percent_base,
             title: update.title,
             ...this.getAnalogPollVotesValues(update)
         };
@@ -214,11 +193,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             entitled_group_ids: update.entitled_group_ids,
             allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
             description: update.description,
-            max_votes_amount: update.max_votes_amount,
-            min_votes_amount: update.min_votes_amount,
-            max_votes_per_option: update.max_votes_per_option,
-            onehundred_percent_base: update.onehundred_percent_base,
-            pollmethod: update.pollmethod,
             title: update.title,
             backend: update.backend,
             global_abstain: update.global_abstain,
@@ -333,7 +307,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async updateOptionForPoll(poll: Poll, update: any): Promise<void> {
-        if (poll.type !== PollType.Analog) {
+        if (!poll.isAnalog) {
             throw new Error(`Cannot update an option for an electronic poll!`);
         }
         const payload = {

@@ -9,6 +9,7 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models';
 import { AssignmentExportServiceModule } from './assignment-export-service.module';
+import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 
 /**
  * Creates a PDF document from a single assignment
@@ -251,9 +252,9 @@ export class AssignmentPdfService {
     private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === PollMethod.Y) {
+                if (poll.config instanceof PollConfigSelection) {
                     return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (poll.pollmethod === PollMethod.YN) {
+                } else if (!poll.config?.allow_abstain) {
                     return singleResult.vote !== `abstain`;
                 } else {
                     return true;

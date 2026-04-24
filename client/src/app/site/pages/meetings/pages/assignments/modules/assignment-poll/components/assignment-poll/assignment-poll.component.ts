@@ -22,7 +22,7 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
     styleUrls: [`./assignment-poll.component.scss`],
     imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
-export class AssignmentPollComponent extends BasePollComponent implements OnInit {
+export class AssignmentPollComponent extends BasePollComponent {
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);
@@ -32,18 +32,6 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     public readonly dialogOpened = new EventEmitter<void>();
 
     public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm!: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get dirtyDescription(): boolean {
-        return this.descriptionForm.get(`description`)?.value !== this.poll.description;
-    }
 
     public get showPoll(): boolean {
         if (this.poll) {
@@ -83,12 +71,6 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
         super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
     }
 
     /**

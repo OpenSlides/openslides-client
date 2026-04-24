@@ -28,8 +28,8 @@
         <h1>{{ poll.title | translate }}</h1>
         <div>
             <!-- Voting type -->
-            @if (poll.type !== 'analog') {
-                <span>{{ poll.typeVerbose | translate }} &middot;</span>
+            @if (poll.isAnalog) {
+                <span>{{ `poll_visibility.${poll.visibility}` | translateKey }} &middot;</span>
             }
             <!-- State -->
             <span>
@@ -51,7 +51,7 @@
             </div>
         }
         <!-- Named table: only show if votes are present -->
-        @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.type === 'named') {
+        @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.isNamed) {
             <os-poll-filted-votes-chart [poll]="poll" />
         }
 
@@ -93,7 +93,8 @@
             </mat-tab-group>
         }
     }
-    <os-motion-poll-meta-information [poll]="poll" />
+
+    <!-- TODO: Readd poll meta info -->
 </ng-template>
 
 <!-- More Menu -->
@@ -104,10 +105,7 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="
-            permission.motionCanManagePolls;
-            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
-        "
+        *osPerms="permission.motionCanManagePolls; and: poll.canAnonymize"
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

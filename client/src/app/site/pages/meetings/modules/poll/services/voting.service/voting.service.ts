@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -110,7 +110,7 @@ export class VotingService {
             return VotingProhibition.USER_HAS_NO_PERMISSION;
         }
 
-        if (poll.type === PollType.Analog) {
+        if (poll.isAnalog) {
             return VotingProhibition.POLL_WRONG_TYPE;
         }
 
@@ -162,7 +162,7 @@ export class VotingService {
         ) {
             return VotingProhibition.USER_HAS_NO_PERMISSION;
         }
-        if (poll.type === PollType.Analog) {
+        if (poll.isAnalog) {
             return VotingProhibition.POLL_WRONG_TYPE;
         }
         if (poll.state !== PollState.Started) {

@@ -4,13 +4,8 @@ import {
     PollClassType,
     PollClassTypeVerbose,
     PollContentObject,
-    PollData,
-    PollMethod,
-    PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
-    PollType,
-    PollTypeVerbose,
     VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
 import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
@@ -28,7 +23,7 @@ import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
-    implements DetailNavigable, PollData
+    implements DetailNavigable
 {
     private _hasVoted: boolean | undefined;
 
@@ -72,10 +67,6 @@ export class ViewPoll<C extends PollContentObject = any>
         return this.content_object?.collection === PollClassType.Topic;
     }
 
-    public get percentBaseVerbose(): string {
-        return PollPercentBaseVerbose[this.onehundred_percent_base];
-    }
-
     public get pollClassTypeVerbose(): string {
         return this.pollClassType ? PollClassTypeVerbose[this.pollClassType] : ``;
     }
@@ -86,14 +77,6 @@ export class ViewPoll<C extends PollContentObject = any>
 
     public get nextStateActionVerbose(): string {
         return PollStateChangeActionVerbose[this.nextState];
-    }
-
-    public get typeVerbose(): string {
-        const suffix = ``;
-        if (this.is_pseudoanonymized && this.type === PollType.Named) {
-            return _(`nominal (anonymized)`);
-        }
-        return PollTypeVerbose[this.type] + suffix;
     }
 
     public getContentObjectTitle(): string | null {
@@ -125,13 +108,6 @@ export class ViewPoll<C extends PollContentObject = any>
         );
     }
 
-    public hasVotedForDelegations(userId?: number): boolean {
-        if (!userId) {
-            return false;
-        }
-        return this.user_has_voted_for_delegations?.includes(userId);
-    }
-
     public getContentObject(): C | undefined {
         return this.content_object;
     }
@@ -144,18 +120,12 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.type === `named` &&
-            !this.is_pseudoanonymized &&
-            (this.isMotionPoll ||
-                (this.isAssignmentPoll &&
-                    !this.global_yes &&
-                    this.pollmethod === PollMethod.Y &&
-                    this.max_votes_amount === 1))
+            this.isNamed || this.isOpen
                 ? [
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: !!this.live_voting_enabled,
+                          default: !!this.published, // TODO: Check if poll is live vote enabled
                           choices
                       }
                   ]

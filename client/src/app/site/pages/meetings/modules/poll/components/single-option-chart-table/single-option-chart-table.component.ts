@@ -1,17 +1,15 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
+import { Component, Input } from '@angular/core';
+import { PollTableData } from 'src/app/domain/models/poll';
 
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from '../../pipes';
+import { ViewPoll } from '../../../../pages/polls';
 import { PollService } from '../../services/poll.service';
-import { ChartComponent, ChartData } from '../chart/chart.component';
+import { ChartData } from '../chart/chart.component';
 
 @Component({
     selector: `os-single-option-chart-table`,
-    templateUrl: `./single-option-chart-table.component.html`,
-    styleUrls: [`./single-option-chart-table.component.scss`],
+    template: ``,
+    styleUrls: [`./single-option-chart-table.component.scss`]
+    /*
     imports: [
         TranslatePipe,
         IconContainerComponent,
@@ -21,9 +19,10 @@ import { ChartComponent, ChartData } from '../chart/chart.component';
         PollPercentBasePipe,
         PollPercentBaseAltPipe
     ]
+    */
 })
 export class SingleOptionChartTableComponent {
-    private _poll: PollData;
+    private _poll: ViewPoll;
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
@@ -40,8 +39,8 @@ export class SingleOptionChartTableComponent {
     public set tableData(tableData: PollTableData[]) {
         this._tableData = tableData;
         if (this._poll) {
-            this.setChartData();
-            this.cd.markForCheck();
+            // this.setChartData();
+            // this.cd.markForCheck();
         }
     }
 
@@ -52,27 +51,23 @@ export class SingleOptionChartTableComponent {
     @Input()
     public set pollService(pollService: PollService) {
         this._pollService = pollService;
-        this.setChartData();
-        this.cd.markForCheck();
+        // this.setChartData();
+        // this.cd.markForCheck();
     }
 
     public get pollService(): PollService {
-        return this._pollService || this.defaultPollService;
+        return this._pollService;
     }
 
     @Input()
-    public set poll(pollData: PollData) {
+    public set poll(pollData: ViewPoll) {
         this._poll = pollData;
-        this.setChartData();
-        this.cd.markForCheck();
+        // this.setChartData();
+        // this.cd.markForCheck();
     }
 
-    public get poll(): PollData {
+    public get poll(): ViewPoll {
         return this._poll;
-    }
-
-    private get method(): string | null {
-        return this.poll?.pollmethod || null;
     }
 
     @Input()
@@ -91,6 +86,7 @@ export class SingleOptionChartTableComponent {
         return this._chartData;
     }
 
+    /*
     public get isMethodY(): boolean {
         return this.method === PollMethod.Y;
     }
@@ -179,4 +175,5 @@ export class SingleOptionChartTableComponent {
             return amount;
         }
     }
+    */
 }

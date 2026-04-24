@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { OptionData } from 'src/app/domain/models/poll/generic-poll';
 import { PollTableData } from 'src/app/domain/models/poll/poll-constants';
 
+import { ViewPoll } from '../../../../pages/polls';
 import { PollService } from '../../services/poll.service/poll.service';
 import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 
@@ -27,7 +28,7 @@ export class PollPercentBasePipe implements PipeTransform {
         private pollServiceMapperService: PollServiceMapperService
     ) {}
 
-    public transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
+    public transform(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
         const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
 
@@ -38,7 +39,7 @@ export class PollPercentBasePipe implements PipeTransform {
         }
     }
 
-    protected getVoteValueInPercent(value: number, poll: PollData, row?: OptionData | PollTableData): string {
+    protected getVoteValueInPercent(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string {
         const service = this.pollServiceMapperService.getService(poll.pollClassType);
         if (service) {
             return service.getVoteValueInPercent(value, { poll, row });
@@ -51,7 +52,7 @@ export class PollPercentBasePipe implements PipeTransform {
     name: `pollPercentBaseAlt`
 })
 export class PollPercentBaseAltPipe extends PollPercentBasePipe implements PipeTransform {
-    public override transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
+    public override transform(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
         const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
 

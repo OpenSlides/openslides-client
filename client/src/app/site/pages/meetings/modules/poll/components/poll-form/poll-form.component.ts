@@ -64,7 +64,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.title !== undefined) patch[`title`] = data.title;
             if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
             if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
-            if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
+            // if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
             this.pollForm.patchValue(patch);
         }
     }

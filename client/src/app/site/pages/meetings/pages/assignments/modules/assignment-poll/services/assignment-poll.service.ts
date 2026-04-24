@@ -2,24 +2,14 @@ import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
-import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { PollVisibility } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import {
-    ABSTAIN_KEY,
-    CalculablePollKey,
-    NO_KEY,
-    PollMethod,
-    PollPercentBase,
-    PollType,
-    YES_KEY
-} from 'src/app/domain/models/poll/poll-constants';
+import { PollMethod, PollPercentBase, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { AssignmentPollMethodKey, AssignmentPollMethodVerbose } from '../definitions';
 import { AssignmentPollServiceModule } from './assignment-poll-service.module';
 
 export const UnknownUserLabel = _(`Deleted user`);
@@ -66,9 +56,9 @@ export class AssignmentPollService extends PollService {
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Ballot`),
-            onehundred_percent_base: this.defaultPercentBase,
+            // onehundred_percent_base: this.defaultPercentBase,
+            // pollmethod: this.defaultPollMethod,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            pollmethod: this.defaultPollMethod,
             visibility: this.isElectronicVotingEnabled
                 ? (this.defaultPollType as unknown as PollVisibility)
                 : PollVisibility.Manually
@@ -82,61 +72,5 @@ export class AssignmentPollService extends PollService {
         }
 
         return poll;
-    }
-
-    /**
-     * @deprecated Please rewrite this function
-     *
-     * @param key
-     * @param value
-     * @returns
-     */
-    public override getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
-        switch (key) {
-            case `pollmethod`:
-                if (value in AssignmentPollMethodVerbose) {
-                    return AssignmentPollMethodVerbose[value as AssignmentPollMethodKey];
-                }
-        }
-        return super.getVerboseNameForValue(key, value);
-    }
-
-    protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        switch (poll.pollmethod) {
-            case PollMethod.YNA: {
-                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
-            }
-            case PollMethod.YN: {
-                return [YES_KEY, NO_KEY];
-            }
-            case PollMethod.N: {
-                return [NO_KEY];
-            }
-            default: {
-                return [YES_KEY];
-            }
-        }
-    }
-
-    protected override getPercentBase(poll: PollData, row?: OptionData): number {
-        const base = poll.onehundred_percent_base as PollPercentBase;
-        switch (base) {
-            case PollPercentBase.Y:
-                return this.getSumOptionsY(poll);
-            default:
-                return super.getPercentBase(poll, row);
-        }
-    }
-
-    private getSumOptionsY(_poll: PollData): number {
-        /*
-        if (!poll.options?.length) {
-            return 0;
-        }
-
-        const generalOptions = (poll.global_option.abstain || 0) + (poll.global_option.no || 0);
-        return poll.votesvalid - generalOptions;
-        */
-        return 0;
     }
 }

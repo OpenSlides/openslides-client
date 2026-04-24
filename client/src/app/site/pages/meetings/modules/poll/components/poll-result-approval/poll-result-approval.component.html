@@ -22,7 +22,7 @@
 
                     <!-- Percent numbers -->
                     <td class="result-cell-definition percent-column">
-                        @if (row.showPercent || (shouldShowEntitled && poll().onehundred_percent_base !== 'entitled')) {
+                        @if (row.showPercent || (shouldShowEntitled && poll().config?.onehundred_percent_base !== 'entitled')) {
                             <span>
                                 {{ row.amount! | pollPercentBase: poll() }}
                             </span>

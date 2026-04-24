@@ -1,6 +1,6 @@
 import { _ } from '@ngx-translate/core';
 
-import { OptionDataKey, PollDataKey } from './generic-poll';
+import { OptionDataKey } from './generic-poll';
 
 export enum PollState {
     Created = `created`,
@@ -239,7 +239,7 @@ export function isPollTableData(data: any): data is PollTableData {
 }
 
 export interface VotingResult {
-    vote?: OptionDataKey | PollDataKey;
+    vote?: OptionDataKey;
     amount?: number;
     icon?: string;
     hide?: boolean;

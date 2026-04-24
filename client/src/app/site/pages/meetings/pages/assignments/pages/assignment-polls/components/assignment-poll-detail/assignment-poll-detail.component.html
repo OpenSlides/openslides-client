@@ -27,7 +27,7 @@
             <h1>{{ poll.title }}</h1>
             <div>
                 <!-- Voting type -->
-                @if (poll.type !== 'analog') {
+                @if (!poll.isAnalog) {
                     <span>{{ poll.typeVerbose | translate }} &middot;</span>
                 }
                 <!-- State -->
@@ -96,8 +96,7 @@
         </div>
     }
 
-    <!-- Meta Infos -->
-    <os-assignment-poll-meta-info [poll]="poll" />
+    <!-- TODO: Meta Infos -->
 </ng-template>
 
 <!-- More Menu -->
@@ -110,7 +109,7 @@
     <button
         *osPerms="
             permission.assignmentCanManagePolls;
-            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+            and: poll && poll.canAnonymize
         "
         mat-menu-item
         (click)="pseudoanonymizePoll()"

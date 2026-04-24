@@ -14,13 +14,6 @@ export class Ballot extends BaseModel<Ballot> {
     public acting_meeting_user_id: Id;
     public represented_meeting_user_id: Id;
 
-    public option_id!: Id; // TODO: Remove
-    public user_id!: Id; // TODO: Remove
-
-    /** Id of the MeetingUser the vote got delegated to */
-    public delegated_user_id!: Id; // TODO: Remove
-    public user_token!: string; // TODO: Remove
-
     public get valueVerbose(): string {
         return VoteValueVerbose[this.value];
     }

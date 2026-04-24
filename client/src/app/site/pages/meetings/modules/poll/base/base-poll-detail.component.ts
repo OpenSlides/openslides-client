@@ -244,7 +244,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         }
         const userIds = new Set<number>();
 
-        for (const entry of this.poll.entitled_users_at_stop || []) {
+        // TODO: this.poll.entitled_users_at_stop ||
+        for (const entry of []) {
             userIds.add(entry.user_id);
             if (entry.vote_delegated_to_user_id) {
                 userIds.add(entry.vote_delegated_to_user_id);
@@ -265,7 +266,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                 )
                 .subscribe(users => {
                     const entries: EntitledUsersTableEntry[] = [];
-                    for (const entry of this.poll.entitled_users_at_stop || []) {
+                    // TODO: this.poll.entitled_users_at_stop ||
+                    for (const entry of []) {
                         entries.push({
                             ...entry,
                             id: entry.user_id,
@@ -317,6 +319,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                 )
                 .subscribe(users => {
                     const entries: EntitledUsersTableEntry[] = [];
+                    /* TODO: Reenable
                     for (const user of users || []) {
                         const delegateToId = user.vote_delegated_to_id();
                         const voted = this.poll.live_votes && this.poll.live_votes[user.id] !== undefined;
@@ -331,6 +334,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             vote_delegated_to: delegateToId ? users.find(utmp => utmp.id === delegateToId) : null
                         });
                     }
+                    */
                     this.countVoteAllowedAndPresent = entries.filter(entry => {
                         const countable = entry.user.isVoteCountable;
                         const inVoteGroup = this.poll.entitled_group_ids.intersect(entry.user.group_ids()).length;
