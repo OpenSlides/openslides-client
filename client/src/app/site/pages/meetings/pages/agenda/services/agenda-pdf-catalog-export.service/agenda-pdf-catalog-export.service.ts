@@ -466,7 +466,8 @@ export class AgendaPdfCatalogExportService {
                     optionIndex++;
                 }
                 // poll table valid votes line
-                const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
+                // TODO: Reenable
+                const amount = ``; // poll.votesvalid ? String(poll.votesvalid) : ``;
                 tableCells.push([{ text: `` }, { text: this.translate.instant(`Valid votes`) }, { text: amount }]);
 
                 // table configuration

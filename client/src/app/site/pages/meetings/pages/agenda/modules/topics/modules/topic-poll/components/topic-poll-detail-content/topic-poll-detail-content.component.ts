@@ -11,7 +11,9 @@ import { TopicPollService } from '../../services/topic-poll.service';
 const SUBSCRIPTION_NAME = `tableData`;
 @Component({
     selector: `os-topic-poll-detail-content`,
-    template: `TODO`,
+    template: `
+        TODO
+    `,
     styleUrls: [`./topic-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
@@ -74,7 +76,8 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     public get shouldShowChart(): boolean {
-        return this.pollService.shouldShowChart(this.poll);
+        // return this.pollService.shouldShowChart(this.poll);
+        return false;
     }
 
     public get chartColors(): [{ backgroundColor: string[] }] {
@@ -90,6 +93,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     private setupTableData(): void {
+        /* TODO: Update
         this.updateSubscription(
             SUBSCRIPTION_NAME,
             this.pollService.generateTableDataAsObservable(this.poll).subscribe(tableData => {
@@ -98,6 +102,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
                 this.cd.markForCheck();
             })
         );
+        */
     }
 
     private setChartData(): void {

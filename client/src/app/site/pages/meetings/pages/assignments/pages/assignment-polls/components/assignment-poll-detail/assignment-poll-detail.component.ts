@@ -19,7 +19,9 @@ import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/se
 
 @Component({
     selector: `os-assignment-poll-detail`,
-    template: `TODO`,
+    template: `
+        TODO
+    `,
     styleUrls: [`./assignment-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

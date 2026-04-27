@@ -12,7 +12,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
-import { PollProgressComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-progress/poll-progress.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 

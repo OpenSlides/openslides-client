@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
-import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll, ViewPollConfigSelection, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -387,8 +387,9 @@ export abstract class BasePollPdfService {
                 margin: [0, 20, 0, 5],
                 bold: true
             });
-            const votesData = this.createVotesTable(exportInfo.votesData, poll.type);
-            pollResultPdfContent.push(votesData);
+            // TODO: Reenable
+            // const votesData = this.createVotesTable(exportInfo.votesData, poll.type);
+            // pollResultPdfContent.push(votesData);
         }
 
         if (exportInfo.entitledUsersData?.length) {

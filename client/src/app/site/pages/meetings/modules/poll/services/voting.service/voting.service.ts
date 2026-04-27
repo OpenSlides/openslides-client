@@ -149,7 +149,8 @@ export class VotingService {
                 return VotingProhibition.USER_HAS_VOTED;
             }
         }
-        if (this._currentUser?.id !== user?.id && poll.hasVotedForDelegations(user?.id)) {
+        // TODO: Check if voted for delegation && poll.hasVotedForDelegations(user?.id)
+        if (this._currentUser?.id !== user?.id) {
             return VotingProhibition.USER_HAS_VOTED;
         }
         if (this.operator.isAnonymous) {

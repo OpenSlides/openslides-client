@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
-import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
+import { PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 

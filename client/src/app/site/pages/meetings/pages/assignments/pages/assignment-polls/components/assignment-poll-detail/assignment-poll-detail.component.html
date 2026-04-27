@@ -107,10 +107,7 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="
-            permission.assignmentCanManagePolls;
-            and: poll && poll.canAnonymize
-        "
+        *osPerms="permission.assignmentCanManagePolls; and: poll && poll.canAnonymize"
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

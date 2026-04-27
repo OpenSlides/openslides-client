@@ -6,14 +6,12 @@ import {
     CalculablePollKey,
     isPollTableData,
     NO_KEY,
-    PollMethod,
     PollPercentBase,
     PollPercentBaseVerbose,
     PollPercentBaseVerboseKey,
     PollPropertyVerbose,
     PollPropertyVerboseKey,
     PollTableData,
-    PollType,
     PollTypeVerbose,
     PollTypeVerboseKey,
     PollValues,
@@ -186,6 +184,10 @@ export abstract class PollService {
         }
     }
 
+    public shouldShowChart(_poll: ViewPoll): boolean {
+        return false;
+    }
+
     private getGlobalVoteKeys(_poll: ViewPoll): VotingResult[] {
         return [
             /*
@@ -238,8 +240,9 @@ export abstract class PollService {
      */
     protected getPercentBase(poll: ViewPoll, row?: OptionData): number {
         const base: PollPercentBase = poll.config?.onehundred_percent_base as PollPercentBase;
-        let totalByBase = 0;
+        const totalByBase = 0;
         const option = row ?? poll.options[0]; // Assuming a motion poll and the first option contains every vote
+        /* TODO: Reenable
         switch (base) {
             case PollPercentBase.YN:
                 totalByBase = this.sumOptionsYN(option);
@@ -265,6 +268,7 @@ export abstract class PollService {
             default:
                 break;
         }
+                */
         return totalByBase;
     }
 
@@ -358,6 +362,8 @@ export abstract class PollService {
     }
 
     public getSumTableKeys(poll: ViewPoll): VotingResult[] {
+        return [];
+        /*
         return [
             {
                 vote: `votesvalid`,
@@ -375,6 +381,7 @@ export abstract class PollService {
                 showPercent: poll.config?.onehundred_percent_base === PollPercentBase.Cast
             }
         ];
+        */
     }
 
     public generateChartData(poll: ViewPoll): ChartData {

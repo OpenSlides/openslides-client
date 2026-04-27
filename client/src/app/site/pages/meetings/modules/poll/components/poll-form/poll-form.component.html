@@ -49,7 +49,7 @@
                     <!-- Live voting -->
                     @if (isLiveVotingAvailable) {
                         <mat-checkbox formControlName="live_voting_enabled">
-                            {{ PollPropertyVerbose.isLiveVoting | translate }}
+                            <!-- TODO: Replace {{ PollPropertyVerbose.isLiveVoting | translate }} -->
                         </mat-checkbox>
                         <mat-hint>
                             {{ 'Allows single votes projection during voting process' | translate }}

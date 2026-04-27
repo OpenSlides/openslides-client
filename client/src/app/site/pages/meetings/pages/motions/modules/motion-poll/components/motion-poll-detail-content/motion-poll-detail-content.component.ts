@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
@@ -115,6 +114,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     private setupTableData(): void {
+        /* TODO: update
         this.updateSubscription(
             CHART_DATA_SUBSCRIPTION_NAME,
             this.pollService
@@ -129,6 +129,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
                     this.cd.markForCheck();
                 })
         );
+        */
     }
 
     private setChartData(): void {
