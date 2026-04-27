@@ -3,8 +3,12 @@
 @use 'src/assets/styles/media-queries.scss';
 
 .bar-height {
-    @include mat.progress-bar-overrides((track-height: 1.5em,
-            active-indicator-height: 1.5em));
+    @include mat.progress-bar-overrides(
+        (
+            track-height: 1.5em,
+            active-indicator-height: 1.5em
+        )
+    );
 }
 
 .flex-container {
