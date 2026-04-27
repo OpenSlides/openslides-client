@@ -7,6 +7,7 @@ export type SelectionOnehundredPercentBase = BaseOnehundredPercentBase | `no_gen
 export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection> {
     public static COLLECTION = `poll_config_selection`;
 
+    public strike_out!: boolean;
     public max_options_amount!: number;
     public min_options_amount!: number;
     public allow_nota!: boolean;
@@ -22,6 +23,7 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
         `max_options_amount`,
         `min_options_amount`,
         `allow_nota`,
+        `strike_out`,
         `onehundred_percent_base`
     ];
 }
