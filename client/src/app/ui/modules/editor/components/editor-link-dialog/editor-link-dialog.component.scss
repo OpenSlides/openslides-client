@@ -19,8 +19,6 @@ mat-form-field {
     }
 }
 
-// How the focus is highlighted must be discussed further. Actual style is provisional.
-
 .title {
     padding: 0;
 }
@@ -30,7 +28,7 @@ mat-form-field {
     outline: none;
     box-shadow: none;
     & h1 {
-        background-color: #eee;
+        text-decoration: underline 2px #ccc;
         border-radius: 25px;
     }
 }

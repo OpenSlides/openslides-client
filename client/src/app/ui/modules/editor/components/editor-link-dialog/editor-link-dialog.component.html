@@ -10,7 +10,7 @@
 >
     <div class="references">
         <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
-        <button #btn class="arrows" matIconButton (click)="toggleArrow('toggleExternalReference')">
+        <button #btn class="arrows" matIconButton>
             @if (toggleExternalReference) {
                 <mat-icon>keyboard_arrow_up</mat-icon>
             } @else {
@@ -19,7 +19,7 @@
         </button>
     </div>
 </div>
-@if (toggleExternalReference) {
+@if (toggleExternalReference || !canEmbed) {
     <div mat-dialog-content [formGroup]="externalLink">
         <div class="card-grid">
             <mat-form-field>
@@ -46,82 +46,86 @@
         </div>
     </div>
 }
-<div
-    cdkTrapFocus
-    class="title"
-    role="button"
-    tabindex="0"
-    (click)="toggleArrow('toggleInternalReference')"
-    (keydown.enter)="toggleArrow('toggleInternalReference')"
-    (keydown.space)="toggleArrow('toggleInternalReference')"
->
-    <div class="references">
-        <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>Link a topic/motion/assignment</h1>
-        <button class="arrows" matIconButton (click)="toggleArrow('toggleInternalReference')">
-            @if (toggleInternalReference) {
-                <mat-icon>keyboard_arrow_up</mat-icon>
-            } @else {
-                <mat-icon>keyboard_arrow_down</mat-icon>
-            }
-        </button>
-    </div>
-</div>
-@if (toggleInternalReference) {
-    <div mat-dialog-content>
-        <div class="card-grid" [formGroup]="internalRadioOptions">
-            <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="options">
-                <mat-radio-button
-                    aria-label="Topics"
-                    translate
-                    [disabled]="!!externalUrl"
-                    [value]="0"
-                    (click)="changeEditMode()"
-                >
-                    Topics
-                </mat-radio-button>
-                <mat-radio-button
-                    aria-label="Motions"
-                    translate
-                    [disabled]="!!externalUrl"
-                    [value]="1"
-                    (click)="changeEditMode()"
-                >
-                    Motions
-                </mat-radio-button>
-                <mat-radio-button
-                    aria-label="Assignments"
-                    translate
-                    [disabled]="!!externalUrl"
-                    [value]="2"
-                    (click)="changeEditMode()"
-                >
-                    Assignments
-                </mat-radio-button>
-            </mat-radio-group>
-            <mat-form-field [formGroup]="internalReferenceForm">
-                <mat-label translate>
-                    {{ searchLists[selectedRepoValue].label }}
-                </mat-label>
-                @for (searchRepo of searchRepos; track $index) {
-                    @if (selectedRepoValue === $index) {
-                        <os-repo-search-selector
-                            formControlName="{{ searchLists[$index].label }}FormControl"
-                            [disabled]="!!externalUrl"
-                            [keepOpen]="searchRepo.keepOpen"
-                            [repo]="searchRepo"
-                            [subscriptionConfig]="subscriptionConfig"
-                            [wider]="searchRepo.wider"
-                        ></os-repo-search-selector>
-                    }
+@if (canEmbed) {
+    <div
+        cdkTrapFocus
+        class="title"
+        role="button"
+        tabindex="0"
+        (click)="toggleArrow('toggleInternalReference')"
+        (keydown.enter)="toggleArrow('toggleInternalReference')"
+        (keydown.space)="toggleArrow('toggleInternalReference')"
+    >
+        <div class="references">
+            <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>
+                Link a topic/motion/assignment
+            </h1>
+            <button class="arrows" matIconButton>
+                @if (toggleInternalReference) {
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                } @else {
+                    <mat-icon>keyboard_arrow_down</mat-icon>
                 }
-            </mat-form-field>
-        </div>
-        <div class="clear-button">
-            <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm()">
-                <mat-icon>clear</mat-icon>
             </button>
         </div>
     </div>
+    @if (toggleInternalReference) {
+        <div mat-dialog-content>
+            <div class="card-grid" [formGroup]="internalRadioOptions">
+                <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="options">
+                    <mat-radio-button
+                        aria-label="Topics"
+                        translate
+                        [disabled]="!!externalUrl"
+                        [value]="0"
+                        (click)="changeEditMode()"
+                    >
+                        {{ this.translate.instant('Topics') }}
+                    </mat-radio-button>
+                    <mat-radio-button
+                        aria-label="Motions"
+                        translate
+                        [disabled]="!!externalUrl"
+                        [value]="1"
+                        (click)="changeEditMode()"
+                    >
+                        {{ this.translate.instant('Motions') }}
+                    </mat-radio-button>
+                    <mat-radio-button
+                        aria-label="Assignments"
+                        translate
+                        [disabled]="!!externalUrl"
+                        [value]="2"
+                        (click)="changeEditMode()"
+                    >
+                        {{ this.translate.instant('Assignments') }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field [formGroup]="internalReferenceForm">
+                    <mat-label translate>
+                        {{ this.translate.instant(searchLists[selectedRepoValue]) }}
+                    </mat-label>
+                    @for (searchRepo of searchRepos; track $index) {
+                        @if (selectedRepoValue === $index) {
+                            <os-repo-search-selector
+                                formControlName="{{ searchLists[$index] }}FormControl"
+                                [disabled]="!!externalUrl"
+                                [keepOpen]="searchRepo.keepOpen"
+                                [repo]="searchRepo"
+                                [subscriptionConfig]="searchSubscriptionConfig[$index]"
+                                [wider]="searchRepo.wider"
+                            ></os-repo-search-selector>
+                        }
+                    }
+                </mat-form-field>
+            </div>
+            <div class="clear-button">
+                <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm()">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+        </div>
+    }
 }
 
 <div class="matDialogActions" mat-dialog-actions>

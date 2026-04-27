@@ -1,16 +1,14 @@
-import { Component, Inject, inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
 import { getAgendaListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.subscription';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments/view-models/view-assignment';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion';
+import { getAssignmentListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.subscription';
+import { getMotionListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/motions/motions.subscription';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
@@ -35,26 +33,22 @@ export class EditorLinkDialogComponent implements OnInit {
     public isUpdate: boolean;
 
     public link: { href: string; target?: string };
-
     public text = ``;
 
     public internalLink: { href: string; target?: string };
-
     public internalText = ``;
+
+    public canEmbed: boolean;
 
     public toggleInternalReference: boolean;
     public toggleExternalReference: boolean;
 
+    // Subscriptions config
+    public searchSubscriptionConfig;
     private activeMeetingIdService = inject(ActiveMeetingIdService);
-    public subscriptionConfig: SubscribeToConfig = getAgendaListMinimalSubscriptionConfig(
-        this.activeMeetingIdService.meetingId
-    );
-
-    /**
-     * Initial value of the input-field.
-     */
-    @Input()
-    public searchFieldInput!: string;
+    public subscriptionTopicConfig: SubscribeToConfig;
+    public subscriptionMotionConfig: SubscribeToConfig;
+    public subscriptionAssignmentConfig: SubscribeToConfig;
 
     /**
      * Boolean to decide, whether to open the extension-input and search-list.
@@ -62,25 +56,15 @@ export class EditorLinkDialogComponent implements OnInit {
     public editMode = false;
 
     /**
-     * Model for the input-field.
-     */
-    public inputControl;
-
-    /**
      * Init Repos
      */
-    public agendaItemRepo = inject(AgendaItemRepositoryService);
+    public agendaItemRepo = inject(TopicRepositoryService);
     public motionItemRepo = inject(MotionRepositoryService);
     public assignmentItemRepo = inject(AssignmentRepositoryService);
-    /**
-     * Define lists
-     */
-    protected agendaItemList: Observable<ViewAgendaItem<any>[]>;
-    protected motionItemList: Observable<ViewMotion[]>;
-    protected assignmentItemList: Observable<ViewAssignment[]>;
 
-    public searchLists;
+    public searchLists = ['Topic', 'Motion', 'Assignment'];
     public searchRepos;
+
     /**
      * FormGroup for the search-list.
      */
@@ -103,14 +87,13 @@ export class EditorLinkDialogComponent implements OnInit {
     public externalLink: FormGroup;
     public externalUrl: string;
     public externalText: string;
-    public externalDisplayMode: string;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
         private router: Router,
         private fb: FormBuilder,
-        private translate: TranslateService
+        public translate: TranslateService
     ) {
         // External reference
         this.link = { ...data.link };
@@ -126,7 +109,7 @@ export class EditorLinkDialogComponent implements OnInit {
         this.externalLink.valueChanges.subscribe(() => {
             this.externalUrl = this.externalLink.get('extUrl').value;
             this.externalText = this.externalLink.get('extText').value;
-            this.externalDisplayMode = this.externalLink.get('extDisplayMode').value;
+            this.link.target = this.externalLink.get('extDisplayMode').value;
         });
 
         // Internal reference
@@ -143,18 +126,21 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.agendaItemList = this.agendaItemRepo.getSortedViewModelListObservable();
-        this.motionItemList = this.motionItemRepo.getSortedViewModelListObservable();
-        this.assignmentItemList = this.assignmentItemRepo.getSortedViewModelListObservable();
-
-        this.searchLists = [
-            { observable: this.agendaItemList, label: this.translate.instant('Topic') },
-            { observable: this.motionItemList, label: this.translate.instant('Motion') },
-            { observable: this.assignmentItemList, label: this.translate.instant('Assignment') }
-        ];
-        this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
-        this.initInput();
-        this.initForm();
+        if ((this.canEmbed = !this.router.url.includes('motions') ? true : false)) {
+            this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
+            this.searchSubscriptionConfig = [
+                (this.subscriptionTopicConfig = getAgendaListMinimalSubscriptionConfig(
+                    this.activeMeetingIdService.meetingId
+                )),
+                (this.subscriptionMotionConfig = getMotionListMinimalSubscriptionConfig(
+                    this.activeMeetingIdService.meetingId
+                )),
+                (this.subscriptionAssignmentConfig = getAssignmentListMinimalSubscriptionConfig(
+                    this.activeMeetingIdService.meetingId
+                ))
+            ];
+            this.initForm();
+        }
     }
 
     public removeLink(): void {
@@ -167,17 +153,21 @@ export class EditorLinkDialogComponent implements OnInit {
 
     public save(): void {
         if (this.externalUrl) {
-            if (!/^[a-zA-Z]+:\/\//.test(this.link.href)) {
-                this.link.href = this.externalUrl.includes(`http`) ? this.externalUrl : `http://` + this.externalUrl;
-            }
+            this.link.href = !/^[a-zA-Z]+:\/\//.test(this.externalUrl)
+                ? `http://` + this.externalUrl
+                : this.externalUrl;
             if (this.data.needsText) {
-                this.dialogRef.close({ action: `set-link`, link: this.link, text: this.externalText || this.link });
+                this.dialogRef.close({
+                    action: `set-link`,
+                    link: this.link,
+                    text: this.externalText || this.link.href
+                });
             } else {
                 this.dialogRef.close({ action: `set-link`, link: this.link });
             }
         } else {
             this.changeEditMode(true);
-            if (!/^[a-zA-Z]+:\/\//.test(this.internalLink.href)) {
+            if (this.internalLink.href) {
                 this.dialogRef.close({
                     action: `set-link`,
                     text: this.internalText,
@@ -201,17 +191,9 @@ export class EditorLinkDialogComponent implements OnInit {
             this.addReference();
         } else {
             this.initForm();
-            this.initInput();
             this.internalText = ``;
         }
         this.editMode = !this.editMode;
-    }
-
-    /**
-     * Initialize the value of the input.
-     */
-    public initInput(): void {
-        this.inputControl = this.searchFieldInput;
     }
 
     /**
@@ -224,7 +206,7 @@ export class EditorLinkDialogComponent implements OnInit {
             AssignmentFormControl: new FormControl(this.assignmentItemRepo)
         });
         this.internalReferenceForm.valueChanges.subscribe(() => {
-            const controlName = `${this.searchLists[this.selectedRepoValue].label}FormControl`;
+            const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
             const selectedId = this.internalReferenceForm.get(controlName)?.value;
             const repo = this.searchRepos[this.selectedRepoValue];
             this.item = repo.getViewModel(selectedId);
@@ -244,18 +226,8 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public urlBuilder(item): string {
-        const parts = item.content_object_id?.split('/');
-        const isAgendaItem = item.collection === 'agenda_item' && item.content_object_id?.split('/')[0] === 'topic';
-        const setCollection: string = isAgendaItem
-            ? 'agenda/topic'
-            : item.collection === 'agenda_item'
-              ? parts?.[0]
-              : item.collection;
-        const setId: number = isAgendaItem
-            ? item.content_object.sequential_number
-            : item.content_object_id
-              ? parts?.[1]
-              : item.sequential_number;
+        const setCollection: string = item.collection === 'topic' ? 'agenda/topic' : item.collection;
+        const setId: number = item.collection === 'assignment' ? item.id : item.sequential_number;
         const builtUrl = `${this.activeMeetingIdService.meetingId}/${setCollection}s/${setId}`;
         const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
         return url;
