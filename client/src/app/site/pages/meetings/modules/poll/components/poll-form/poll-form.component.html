@@ -12,7 +12,7 @@
             @if (!data || !data.state || data.isCreated) {
                 <div class="info-grid">
                     <!-- Poll Visibility -->
-                    @if (isEVotingEnabled) {
+                    @if (isEVotingEnabled()) {
                         <mat-form-field>
                             <mat-label>{{ 'Visibility' | translate }}</mat-label>
                             <mat-select formControlName="visibility" required>

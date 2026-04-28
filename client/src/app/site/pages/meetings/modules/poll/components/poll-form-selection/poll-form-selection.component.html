@@ -1,8 +1,12 @@
 <form [formGroup]="form">
     <div class="margin-bottom-15">
-        <mat-checkbox formControlName="strike_out">
-            {{ 'Strike out' | translate }}
-        </mat-checkbox>
+        <mat-form-field>
+            <mat-label>{{ 'Election method' | translate }}</mat-label>
+            <mat-select formControlName="strike_out">
+                <mat-option [value]="false">{{ 'Approval voting' | translate }}</mat-option>
+                <mat-option [value]="true">{{ 'Disapproval voting' | translate }}</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 
     <div class="poll-preview-meta-info-form">

@@ -1,9 +1,13 @@
 <form [formGroup]="form">
     <div class="poll-preview-meta-info-form">
         <div class="margin-bottom-15 info-grid">
-            <mat-checkbox formControlName="allow_abstain">
-                {{ 'Allow abstain' | translate }}
-            </mat-checkbox>
+            <mat-form-field>
+                <mat-label>{{ 'Election method' | translate }}</mat-label>
+                <mat-select formControlName="allow_abstain">
+                    <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
+                    <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
+                </mat-select>
+            </mat-form-field>
 
             <mat-form-field>
                 <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>

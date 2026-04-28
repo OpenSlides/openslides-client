@@ -48,8 +48,11 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
+    public isEVotingEnabled = input.required<boolean>();
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
+
+    private _data: Partial<ViewPoll>;
 
     @Input()
     public set data(data: Partial<ViewPoll>) {
@@ -59,7 +62,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.title !== undefined) patch[`title`] = data.title;
             if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
             if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
-            // if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
+            if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
             this.pollForm.patchValue(patch);
         }
     }
@@ -67,11 +70,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public get data(): Partial<ViewPoll> {
         return this._data;
     }
-
-    @Input()
-    public isEVotingEnabled!: boolean;
-
-    private _data: Partial<ViewPoll>;
 
     public get isCreated(): boolean {
         return !this.data?.state || this.data.isCreated;
@@ -86,7 +84,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     }
 
     public get isEVotingSelected(): boolean {
-        return this.isEVotingEnabled && this.pollTypeControl?.value !== PollVisibility.Manually;
+        return this.isEVotingEnabled() && this.pollTypeControl?.value !== PollVisibility.Manually;
     }
 
     public get isLiveVotingAvailable(): boolean {
