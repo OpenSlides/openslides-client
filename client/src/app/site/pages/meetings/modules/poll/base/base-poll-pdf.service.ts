@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
-import { PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { PollTableData, PollVisibility, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll, ViewPollConfigSelection, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -568,9 +568,10 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createVotesTable(votesData: BaseVoteData[], pollType: PollType): object {
+    private createVotesTable(votesData: BaseVoteData[], pollVisibility: PollVisibility): object {
         const isAnonymised: boolean = votesData[0].user ? false : true;
-        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named && !isAnonymised;
+        const showVoteWeight: boolean =
+            this.activeVoteWeight && pollVisibility == PollVisibility.Named && !isAnonymised;
         let pollTableBody: any[] = [];
         const pollTableHeader = [
             {

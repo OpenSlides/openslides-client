@@ -6,7 +6,6 @@ import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollContentObject } from 'src/app/domain/models/poll';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -131,11 +130,11 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
      * @param poll
      */
     public canManagePoll(poll: ViewPoll): boolean {
-        if (poll.pollClassType === PollClassType.Motion) {
+        if (poll.isMotionPoll) {
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Assignment) {
+        } else if (poll.isAssignmentPoll) {
             return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Topic) {
+        } else if (poll.isTopicPoll) {
             return this.operator.hasPerms(this.permission.pollCanManage);
         }
         return false;

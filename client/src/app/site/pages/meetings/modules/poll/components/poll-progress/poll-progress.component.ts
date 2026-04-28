@@ -4,7 +4,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollClassType } from 'src/app/domain/models/poll';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -26,11 +25,11 @@ export class PollProgressComponent extends BaseUiComponent {
     public poll = input.required<ViewPoll>();
 
     public canManagePoll = computed(() => {
-        if (this.poll().pollClassType === PollClassType.Motion) {
+        if (this.poll().isMotionPoll) {
             return this.operator.hasPerms(Permission.motionCanManagePolls);
-        } else if (this.poll().pollClassType === PollClassType.Assignment) {
+        } else if (this.poll().isAssignmentPoll) {
             return this.operator.hasPerms(Permission.assignmentCanManagePolls);
-        } else if (this.poll().pollClassType === PollClassType.Topic) {
+        } else if (this.poll().isTopicPoll) {
             return this.operator.hasPerms(Permission.pollCanManage);
         }
         return false;

@@ -17,7 +17,9 @@ export interface ExtendedVoteData extends BaseVoteData {
 
 @Component({
     selector: `os-motion-poll-detail`,
-    templateUrl: `./motion-poll-detail.component.html`,
+    template: `
+        TODO
+    `,
     styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

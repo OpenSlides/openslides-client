@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { PollPercentBaseVerbose, PollVisibility, VoteValue } from 'src/app/domain/models/poll';
+import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
 import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
@@ -20,7 +20,6 @@ import { MotionPollService } from '../../services';
     styleUrls: [`./motion-poll-dialog.component.scss`]
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent {
-    public PercentBaseVerbose = PollPercentBaseVerbose;
     public majority: string;
 
     @ViewChild(PollFormApprovalComponent)

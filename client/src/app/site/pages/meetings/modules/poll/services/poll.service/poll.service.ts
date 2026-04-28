@@ -1,19 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData } from 'src/app/domain/models/poll/generic-poll';
+import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
     isPollTableData,
     NO_KEY,
-    PollPercentBase,
-    PollPercentBaseVerbose,
-    PollPercentBaseVerboseKey,
-    PollPropertyVerbose,
-    PollPropertyVerboseKey,
     PollTableData,
-    PollTypeVerbose,
-    PollTypeVerboseKey,
     PollValues,
     VOTE_MAJORITY,
     VOTE_UNDOCUMENTED,
@@ -238,11 +232,11 @@ export abstract class PollService {
     /**
      * returns the total number of votes depending on the selected percent base
      */
-    protected getPercentBase(poll: ViewPoll, row?: OptionData): number {
+    protected getPercentBase(_poll: ViewPoll, _row?: OptionData): number {
+        /* TODO: Reenable
         const base: PollPercentBase = poll.config?.onehundred_percent_base as PollPercentBase;
         const totalByBase = 0;
         const option = row ?? poll.options[0]; // Assuming a motion poll and the first option contains every vote
-        /* TODO: Reenable
         switch (base) {
             case PollPercentBase.YN:
                 totalByBase = this.sumOptionsYN(option);
@@ -268,8 +262,9 @@ export abstract class PollService {
             default:
                 break;
         }
-                */
         return totalByBase;
+                */
+        return 1;
     }
 
     private sumOptionsYN(option: OptionData): number {
@@ -298,27 +293,6 @@ export abstract class PollService {
         return ``;
     }
 
-    /**
-     * @deprecated Please rewrite this function
-     *
-     * @param key
-     * @param value
-     * @returns
-     */
-    public getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
-        switch (key) {
-            case `onehundred_percent_base`:
-                return PollPercentBaseVerbose[value as PollPercentBaseVerboseKey];
-            case `type`:
-                return PollTypeVerbose[value as PollTypeVerboseKey];
-        }
-        return ``;
-    }
-
-    public getVerboseNameForKey(key: PollPropertyVerboseKey): string {
-        return PollPropertyVerbose[key];
-    }
-
     public getVoteTableKeys(poll: ViewPoll): VotingResult[] {
         const keys: VotingResult[] = [
             {
@@ -345,23 +319,19 @@ export abstract class PollService {
     }
 
     private showAbstainPercent(poll: ViewPoll): boolean {
+        const base: BaseOnehundredPercentBase = poll.config?.onehundred_percent_base;
         return (
-            poll.config?.onehundred_percent_base === PollPercentBase.YNA ||
-            poll.config?.onehundred_percent_base === PollPercentBase.Valid ||
-            poll.config?.onehundred_percent_base === PollPercentBase.Cast
+            // TODO: YNA replacement
+            base === `valid` || base === `cast`
         );
     }
 
     public showPercentOfValidOrCast(poll: ViewPoll): boolean {
-        return (
-            poll.config?.onehundred_percent_base === PollPercentBase.Valid ||
-            poll.config?.onehundred_percent_base === PollPercentBase.Cast ||
-            poll.config?.onehundred_percent_base === PollPercentBase.Entitled ||
-            poll.config?.onehundred_percent_base === PollPercentBase.EntitledPresent
-        );
+        const base: BaseOnehundredPercentBase = poll.config?.onehundred_percent_base;
+        return base === `valid` || base === `cast` || base === `entitled` || base === `entitled_present`;
     }
 
-    public getSumTableKeys(poll: ViewPoll): VotingResult[] {
+    public getSumTableKeys(_poll: ViewPoll): VotingResult[] {
         return [];
         /*
         return [
@@ -386,7 +356,7 @@ export abstract class PollService {
 
     public generateChartData(poll: ViewPoll): ChartData {
         let fields = this.getPollDataFields(poll);
-        if (poll.config?.onehundred_percent_base === PollPercentBase.YN || !poll.config?.allow_abstain) {
+        if (poll.config?.onehundred_percent_base === `yes_no` || !poll.config?.allow_abstain) {
             fields = fields.filter(key => key === YES_KEY || key === NO_KEY);
         }
 

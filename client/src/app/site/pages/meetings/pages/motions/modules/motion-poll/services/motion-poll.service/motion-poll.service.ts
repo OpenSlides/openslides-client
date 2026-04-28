@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollMethod, PollPercentBase, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
+import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
+import { PollVisibility } from 'src/app/domain/models/poll/poll-constants';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
@@ -14,8 +15,7 @@ import { MotionPollControllerService } from '../motion-poll-controller.service';
     providedIn: `root`
 })
 export class MotionPollService extends PollService {
-    public defaultPercentBase!: PollPercentBase;
-    public defaultPollMethod: PollMethod | undefined;
+    public defaultPercentBase!: BaseOnehundredPercentBase;
     public defaultPollVisibility!: PollVisibility;
     public defaultGroupIds!: number[];
 
@@ -31,9 +31,6 @@ export class MotionPollService extends PollService {
             .get(`motion_poll_default_type`)
             .subscribe(type => (this.defaultPollVisibility = type as any));
         this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(ids => (this.defaultGroupIds = ids));
-        this.meetingSettingsService
-            .get(`motion_poll_default_method`)
-            .subscribe(method => (this.defaultPollMethod = method));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {

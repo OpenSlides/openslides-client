@@ -6,9 +6,7 @@ import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
-    FormPollMethod,
     LOWEST_VOTE_VALUE,
-    PollClassType,
     PollVisibility,
     VOTE_UNDOCUMENTED,
     VoteKey,
@@ -55,8 +53,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     protected optionTypeText = false;
 
     public voteValueVerbose = VoteValueVerbose;
-
-    public pollClassType = PollClassType;
 
     /**
      * The summary values that will have fields in the dialog
@@ -136,13 +132,13 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         const pollForm = this.pollForm?.getValues();
         const voteForm = this.dialogVoteForm.value;
         const payload: any = { ...pollForm, ...voteForm, publish_immediately: this.publishImmediately };
-        payload.options = this.getOptions(voteForm.options, payload.pollmethod === FormPollMethod.LIST_YNA);
+        // payload.options = this.getOptions(voteForm.options, payload.pollmethod === FormPollMethod.LIST_YNA);
         this.formatPayload(payload);
         this.dialogRef.close(payload);
     }
 
     private formatPayload(payload: any): void {
-        payload.pollmethod = (payload.pollmethod as FormPollMethod).toUpperCase();
+        // payload.pollmethod = (payload.pollmethod as FormPollMethod).toUpperCase();
         if (this.isList) {
             payload.min_votes_amount = 1;
             payload.max_votes_amount = 1;

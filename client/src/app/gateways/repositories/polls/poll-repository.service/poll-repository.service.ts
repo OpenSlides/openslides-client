@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable, switchMap, takeWhile } from 'rxjs';
 import { Decimal, Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { PollState, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
 import { VoteApiService } from 'src/app/gateways/vote-api.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -71,7 +71,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             );
         }
         // TODO: `type` does not exist anymore
-        if (poll.type === PollType.Analog) {
+        if (poll.visibility === PollVisibility.Manually) {
             return this.createAnalogPoll(poll);
         } else {
             return this.createElectronicPoll(poll);
@@ -79,7 +79,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async update(update: any, viewPoll: ViewPoll, option: any[] = []): Promise<void> {
-        if (update.type === PollType.Analog) {
+        if (update.visibility === PollVisibility.Manually) {
             return this.updateAnalogPoll(update, viewPoll, option);
         } else {
             return this.updateElectronicPoll(update, viewPoll);
@@ -117,8 +117,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             live_voting_enabled: poll.live_voting_enabled
         };
 
-        // TODO: `type` does not exist anymore
-        if (poll.type !== PollType.Named) {
+        if (poll.visibility !== PollVisibility.Named) {
             delete payload.live_voting_enabled;
         }
 

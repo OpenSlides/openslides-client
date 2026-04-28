@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollVisibility } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollMethod, PollPercentBase, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
@@ -21,9 +21,8 @@ export const UnknownUserLabel = _(`Deleted user`);
  */
 @Injectable({ providedIn: AssignmentPollServiceModule })
 export class AssignmentPollService extends PollService {
-    public defaultPollMethod: PollMethod | undefined;
-    public defaultPercentBase: PollPercentBase | undefined;
-    public defaultPollType: PollType | undefined;
+    public defaultPercentBase: BaseOnehundredPercentBase | undefined;
+    public defaultPollType: PollVisibility | undefined;
     public defaultGroupIds: number[] = [];
 
     public constructor(
@@ -39,12 +38,6 @@ export class AssignmentPollService extends PollService {
         this.meetingSettingsService
             .get(`assignment_poll_default_group_ids`)
             .subscribe(ids => (this.defaultGroupIds = ids));
-        this.meetingSettingsService
-            .get(`assignment_poll_default_method`)
-            .subscribe(method => (this.defaultPollMethod = method));
-        this.meetingSettingsService
-            .get(`assignment_poll_default_type`)
-            .subscribe(type => (this.defaultPollType = type));
         this.meetingSettingsService
             .get(`assignment_poll_sort_poll_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));

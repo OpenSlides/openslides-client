@@ -35,7 +35,7 @@
                 [swap]="true"
                 (iconAction)="openVotingWarning()"
             >
-                <!-- TODO: Poll type {{ poll().typeVerbose | translate }} -->
+                {{ poll().visibility | translateKey: 'poll_visibility' }}
             </os-icon-container>
             @if (poll().isAnonymous) {
                 <span>&nbsp;</span>
@@ -47,7 +47,7 @@
             @if (poll().isAnonymous && poll().canBeVotedFor()) {
                 {{ 'Voting in progress' | translate }}
             } @else {
-                {{ poll().stateVerbose | translate }}
+                {{ poll().state | translateKey: 'poll_state' }}
             }
         </span>
     </div>
@@ -67,7 +67,7 @@
                 @if (stateChangePending()) {
                     {{ 'In progress, please wait ...' | translate }}
                 } @else {
-                    {{ poll().nextStateActionVerbose | translate }}
+                    {{ poll().nextState | translateKey: 'poll_state_change_action' }}
                 }
             </span>
         </button>

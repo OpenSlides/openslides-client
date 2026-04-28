@@ -12,6 +12,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
@@ -36,6 +37,7 @@ interface PollStateAction {
         IconContainerComponent,
         ProjectorButtonModule,
         TranslatePipe,
+        TranslateKeyPipe,
         DirectivesModule,
         RouterLink,
         MatButtonModule,

@@ -16,9 +16,9 @@
                         <mat-form-field>
                             <mat-label>{{ 'Visibility' | translate }}</mat-label>
                             <mat-select formControlName="visibility" required>
-                                @for (entry of visibilityOptions | keyvalue; track entry.key) {
-                                    <mat-option [value]="entry.key">
-                                        {{ entry.value | translate }}
+                                @for (entry of visibilityOptions | keyvalue; track entry.value) {
+                                    <mat-option [value]="entry.value">
+                                        {{ entry.value | translateKey: 'poll_visibility' }}
                                     </mat-option>
                                 }
                             </mat-select>
@@ -49,7 +49,7 @@
                     <!-- Live voting -->
                     @if (isLiveVotingAvailable) {
                         <mat-checkbox formControlName="live_voting_enabled">
-                            <!-- TODO: Replace {{ PollPropertyVerbose.isLiveVoting | translate }} -->
+                            {{ 'Live voting' | translate }}
                         </mat-checkbox>
                         <mat-hint>
                             {{ 'Allows single votes projection during voting process' | translate }}

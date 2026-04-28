@@ -15,42 +15,6 @@ export enum PollVisibility {
     Secret = `secret`
 }
 
-export const PollVisibilityVerbose = {
-    manually: _(`Analog`),
-    named: _(`Named`),
-    open: _(`Open`),
-    secret: _(`Secret`)
-};
-
-export type PollVisibilityVerboseKey = keyof typeof PollVisibilityVerbose;
-
-// TODO: Check if anything below can be removed
-
-export const YES_KEY = `yes`;
-export const NO_KEY = `no`;
-export const ABSTAIN_KEY = `abstain`;
-export const INVALID_VOTES_KEY = `votesinvalid`;
-
-export enum PollBackendDurationType {
-    LONG = `long`,
-    FAST = `fast`
-}
-
-export const PollBackendDurationChoices = {
-    [PollBackendDurationType.FAST]: _(`short running`),
-    [PollBackendDurationType.LONG]: _(`long running`)
-};
-
-export type PollMethodYNA = `Y` | `N` | `A`;
-export type PollMethodYN = `Y` | `N`;
-export type GlobalVote = `Y` | `A` | `N`;
-
-export enum PollClassType {
-    Motion = `motion`,
-    Assignment = `assignment`,
-    Topic = `topic`
-}
-
 /**
  * Colors for chart color generation
  * Keys are freely invented and not in sync with html color names
@@ -76,37 +40,11 @@ export const pollChartGreys = new Map<string, string>([
     [`grey5`, `#f5f5f5`]
 ]);
 
-export enum PollType {
-    Analog = `analog`,
-    Named = `named`,
-    Pseudoanonymous = `pseudoanonymous`
-}
+// TODO: Check if anything below can be removed
 
-export enum PollMethod {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    N = `N`
-}
-
-export enum FormPollMethod {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    N = `N`,
-    LIST_YNA = `yna`
-}
-
-export enum PollPercentBase {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    Valid = `valid`,
-    Cast = `cast`,
-    Entitled = `entitled`,
-    EntitledPresent = `entitled_present`,
-    Disabled = `disabled`
-}
+export const YES_KEY = `yes`;
+export const NO_KEY = `no`;
+export const ABSTAIN_KEY = `abstain`;
 
 export interface EntitledUsersEntry {
     user_id: number;
@@ -120,32 +58,6 @@ export interface EntitledUsersEntry {
 export const VOTE_MAJORITY = -1;
 export const VOTE_UNDOCUMENTED = -2;
 export const LOWEST_VOTE_VALUE = VOTE_UNDOCUMENTED;
-
-export const PollClassTypeVerbose = {
-    motion: `Vote`,
-    assignment: `Ballot`
-};
-
-export const PollStateVerbose = {
-    created: `created`,
-    started: `started`,
-    finished: `finished`
-};
-
-export const PollStateChangeActionVerbose = {
-    created: _(`Reset`),
-    started: _(`Start voting`),
-    finished: _(`Stop voting`),
-    published: _(`Publish`)
-};
-
-export const PollTypeVerbose = {
-    analog: _(`analog`),
-    named: _(`nominal`),
-    pseudoanonymous: _(`non-nominal`)
-};
-
-export type PollTypeVerboseKey = keyof typeof PollTypeVerbose;
 
 export const PollPropertyVerbose = {
     onehundred_percent_base: _(`100% base`),
@@ -178,26 +90,6 @@ export const PollValues: any = {
     amount_global_no: _(`General rejection`),
     amount_global_abstain: _(`General abstain`)
 };
-
-export const PollMethodVerbose = {
-    Y: ``,
-    N: ``,
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`)
-};
-
-export const PollPercentBaseVerbose = {
-    Y: _(`Sum of votes without general options`),
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`),
-    valid: _(`All valid ballots`),
-    cast: _(`All casted ballots`),
-    entitled: _(`All entitled users`),
-    entitled_present: _(`Present entitled users`),
-    disabled: _(`Disabled (no percents)`)
-};
-
-export type PollPercentBaseVerboseKey = keyof typeof PollPercentBaseVerbose;
 
 export type GlobalOptionKey = `global_yes` | `global_no` | `global_abstain`;
 export type VoteKey = `votesvalid` | `votesinvalid` | `votescast`;

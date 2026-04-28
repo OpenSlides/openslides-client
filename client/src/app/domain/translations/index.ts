@@ -1,4 +1,4 @@
-import * as polls from './poll';
+import polls from './poll';
 
 export const KeyedTranslations = {
     ...polls

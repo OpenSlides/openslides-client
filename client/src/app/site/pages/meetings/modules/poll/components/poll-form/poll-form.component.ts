@@ -7,12 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
-import {
-    PollPropertyVerbose,
-    PollPropertyVerboseKey,
-    PollVisibility,
-    PollVisibilityVerbose
-} from 'src/app/domain/models/poll';
+import { PollPropertyVerbose, PollPropertyVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { EditableListComponent } from 'src/app/ui/modules/editable-list';
@@ -47,7 +42,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = PollPropertyVerbose;
 
-    public readonly visibilityOptions = PollVisibilityVerbose;
+    public readonly visibilityOptions = PollVisibility;
 
     public showNonNominalWarning = false;
 

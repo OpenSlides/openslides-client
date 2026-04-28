@@ -29,11 +29,11 @@
         <div>
             <!-- Voting type -->
             @if (poll.isAnalog) {
-                <span>{{ `poll_visibility.${poll.visibility}` | translateKey }} &middot;</span>
+                <span>{{ poll.visibility | translateKey: 'poll_visibility' }} &middot;</span>
             }
             <!-- State -->
             <span>
-                {{ poll.stateVerbose | translate }}
+                {{ poll.state | translateKey: 'poll_state' }}
             </span>
         </div>
         <os-motion-poll-detail-content [poll]="poll" />

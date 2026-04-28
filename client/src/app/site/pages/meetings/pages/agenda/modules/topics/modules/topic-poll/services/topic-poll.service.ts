@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Poll, PollMethod, PollPercentBase } from 'src/app/domain/models/poll';
+import { Poll } from 'src/app/domain/models/poll';
+import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
+import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
@@ -12,8 +14,7 @@ import { TopicPollServiceModule } from './topic-poll-service.module';
     providedIn: TopicPollServiceModule
 })
 export class TopicPollService extends PollService {
-    public defaultPollMethod: PollMethod;
-    public defaultPercentBase: PollPercentBase;
+    public defaultPercentBase: BaseOnehundredPercentBase | SelectionOnehundredPercentBase;
     public defaultGroupIds: number[];
 
     public constructor(
@@ -24,15 +25,11 @@ export class TopicPollService extends PollService {
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`poll_default_onehundred_percent_base`)
-            .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
+            .subscribe(base => (this.defaultPercentBase = base ?? `valid`));
 
         this.meetingSettingsService
             .get(`topic_poll_default_group_ids`)
             .subscribe(ids => (this.defaultGroupIds = ids ?? []));
-
-        this.meetingSettingsService
-            .get(`poll_default_method`)
-            .subscribe(method => (this.defaultPollMethod = method ?? PollMethod.Y));
 
         this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }

@@ -1,16 +1,12 @@
 import { _ } from '@ngx-translate/core';
 import { DetailNavigable } from 'src/app/domain/interfaces';
-import {
-    PollClassType,
-    PollClassTypeVerbose,
-    PollContentObject,
-    PollStateChangeActionVerbose,
-    PollStateVerbose,
-    VOTE_MAJORITY
-} from 'src/app/domain/models/poll';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { Motion } from 'src/app/domain/models/motions';
+import { PollContentObject, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewBallot, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
@@ -45,38 +41,22 @@ export class ViewPoll<C extends PollContentObject = any>
         return this._hasVoted;
     }
 
-    public get pollClassType(): PollClassType | undefined {
-        return this.content_object?.collection as PollClassType;
-    }
-
-    public get isAssignmentPoll(): boolean {
-        return this.content_object?.collection === PollClassType.Assignment;
-    }
-
     public get isListPoll(): boolean {
         // return this.options[0]?.isListOption;
         // TODO: Decide by checking config type == `approval` and options present
         return !!this.options.length;
     }
 
+    public get isAssignmentPoll(): boolean {
+        return this.content_object?.collection === Assignment.COLLECTION;
+    }
+
     public get isMotionPoll(): boolean {
-        return this.content_object?.collection === PollClassType.Motion;
+        return this.content_object?.collection === Motion.COLLECTION;
     }
 
     public get isTopicPoll(): boolean {
-        return this.content_object?.collection === PollClassType.Topic;
-    }
-
-    public get pollClassTypeVerbose(): string {
-        return this.pollClassType ? PollClassTypeVerbose[this.pollClassType] : ``;
-    }
-
-    public get stateVerbose(): string {
-        return PollStateVerbose[this.state];
-    }
-
-    public get nextStateActionVerbose(): string {
-        return PollStateChangeActionVerbose[this.nextState];
+        return this.content_object?.collection === Topic.COLLECTION;
     }
 
     public getContentObjectTitle(): string | null {

@@ -6,7 +6,11 @@ import { KeyedTranslations } from 'src/app/domain/translations';
     name: `translateKey`
 })
 export class TranslateKeyPipe extends TranslatePipe implements PipeTransform {
-    public override transform(query: string | undefined | null, ...args: any[]): any {
+    public override transform(query: string | undefined | null, prefix?: string, ...args: any[]): any {
+        if (prefix) {
+            query = `${prefix}.${query}`;
+        }
+
         return super.transform(KeyedTranslations[query] ?? query, ...args);
     }
 }

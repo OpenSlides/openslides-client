@@ -4,7 +4,6 @@ import { PollTableData } from 'src/app/domain/models/poll/poll-constants';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollService } from '../../services/poll.service/poll.service';
-import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 
 /**
  * Uses a number and a ViewPoll-object.
@@ -23,10 +22,7 @@ import { PollServiceMapperService } from '../../services/poll-service-mapper.ser
     name: `pollPercentBase`
 })
 export class PollPercentBasePipe implements PipeTransform {
-    public constructor(
-        private pollService: PollService,
-        private pollServiceMapperService: PollServiceMapperService
-    ) {}
+    public constructor(private pollService: PollService) {}
 
     public transform(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
@@ -40,10 +36,6 @@ export class PollPercentBasePipe implements PipeTransform {
     }
 
     protected getVoteValueInPercent(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string {
-        const service = this.pollServiceMapperService.getService(poll.pollClassType);
-        if (service) {
-            return service.getVoteValueInPercent(value, { poll, row });
-        }
         return this.pollService.getVoteValueInPercent(value, { poll, row });
     }
 }
