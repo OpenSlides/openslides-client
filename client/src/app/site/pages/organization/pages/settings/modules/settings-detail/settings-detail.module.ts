@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
 import { OrganizationSettingsComponent } from './components/organization-settings/organization-settings.component';
 import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
@@ -27,7 +28,8 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         MatCardModule,
         MatCheckboxModule,
         OpenSlidesTranslationModule.forChild(),
-        DirectivesModule
+        DirectivesModule,
+        SearchSelectorModule
     ]
 })
 export class SettingsDetailModule {}

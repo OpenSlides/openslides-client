@@ -1,5 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import * as cs from 'date-fns/locale/cs';
 import * as de from 'date-fns/locale/de';
 import * as enUS from 'date-fns/locale/en-US';
@@ -7,6 +8,7 @@ import * as es from 'date-fns/locale/es';
 import * as ita from 'date-fns/locale/it';
 import * as ru from 'date-fns/locale/ru';
 import { langToTimeLocale } from 'src/app/infrastructure/utils';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 import { LocalizedDateRangePipe } from './localized-date-range.pipe';
 
@@ -162,34 +164,39 @@ describe(`LocalizedDateRangePipe`, () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [LocalizedDateRangePipe, { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } }]
+            providers: [
+                LocalizedDateRangePipe,
+                { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } },
+                { provide: TranslateService, useValue: { getCurrentLang: () => 'de' } },
+                { provide: ActiveMeetingService, useValue: {} }
+            ]
         }).compileComponents();
 
         pipe = TestBed.inject(LocalizedDateRangePipe);
     });
 
     it(`test with timestamp 0`, async () => {
-        pipe.config.setLocale(await langToTimeLocale(`en`));
-        expect(pipe.transform({ start: 0 })).toBe(`Jan 1, 1970, 12:00 AM`);
-        expect(pipe.transform({ end: 0 }, `PP`)).toBe(`Jan 1, 1970`);
+        pipe.formatter.config.setLocale(await langToTimeLocale(`en`));
+        expect(pipe.transform({ start: 0 }, undefined, `UTC`)).toBe(`Jan 1, 1970, 12:00 AM`);
+        expect(pipe.transform({ end: 0 }, `PP`, `UTC`)).toBe(`Jan 1, 1970`);
     });
 
     for (const data of Object.values(testData)) {
         for (const lang of Object.keys(data.expect)) {
             for (const dateFormat of Object.keys(data.expect[lang])) {
                 it(`${data.title} for locale '${lang}' in format '${dateFormat}'`, () => {
-                    pipe.config.setLocale(getLocale(lang));
-                    expect(pipe.transform(data.range, dateFormat)).toBe(data.expect[lang][dateFormat]);
+                    pipe.formatter.config.setLocale(getLocale(lang));
+                    expect(pipe.transform(data.range, dateFormat, `UTC`)).toBe(data.expect[lang][dateFormat]);
                 });
             }
         }
     }
 
     it(`test with invalid parameters`, async () => {
-        pipe.config.setLocale(await langToTimeLocale(`en`));
-        expect(pipe.transform({ start: Number.NaN })).toBe(``);
-        expect(pipe.transform(undefined)).toBe(``);
-        expect(pipe.transform(null)).toBe(``);
-        expect(pipe.transform({ start: Number.NEGATIVE_INFINITY, end: Number.POSITIVE_INFINITY })).toBe(``);
+        pipe.formatter.config.setLocale(await langToTimeLocale(`en`));
+        expect(pipe.transform({ start: Number.NaN }, undefined, `UTC`)).toBe(``);
+        expect(pipe.transform(undefined, undefined, `UTC`)).toBe(``);
+        expect(pipe.transform(null, undefined, `UTC`)).toBe(``);
+        expect(pipe.transform({ start: Number.NEGATIVE_INFINITY, end: Number.POSITIVE_INFINITY }, ``, `UTC`)).toBe(``);
     });
 });

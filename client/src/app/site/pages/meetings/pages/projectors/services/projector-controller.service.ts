@@ -4,6 +4,7 @@ import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
+import { Action } from 'src/app/gateways/actions';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
@@ -29,14 +30,17 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.create(payload);
     }
 
-    public update(payload: any, projector: Identifiable): Promise<void> | Promise<[void, void]> {
+    public update(payload: any, projector: Identifiable): Promise<void | void[]> {
         if (payload.projectiondefault_ids) {
-            const defaultsPromise = this.updateProjectordefaults(payload.projectiondefault_ids);
+            const defaultsAction = this.updateProjectordefaults(payload.projectiondefault_ids);
             delete payload[`projectiondefault_ids`];
-            const updatePromise = this.repo.update(payload, projector);
-            return Promise.all([updatePromise, defaultsPromise]);
+            let updateAction = this.repo.update(payload, projector);
+            if (defaultsAction) {
+                updateAction = updateAction.concat(defaultsAction);
+            }
+            return updateAction.resolve();
         } else {
-            return this.repo.update(payload, projector);
+            return this.repo.update(payload, projector).resolve();
         }
     }
 
@@ -162,13 +166,11 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         );
     }
 
-    private async updateProjectordefaults(defaultKeys: Record<string, number[]>): Promise<void> {
+    private updateProjectordefaults(defaultKeys: Record<string, number[]>): Action<void> | null {
         if (Object.keys(defaultKeys).length) {
-            await this.meetingRepo
-                .update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) })
-                .resolve();
+            return this.meetingRepo.update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) });
         }
-        return;
+        return null;
     }
 
     private formatDefaultProjectors(defaultKeys: Record<string, number[]>): Record<string, number[]> {

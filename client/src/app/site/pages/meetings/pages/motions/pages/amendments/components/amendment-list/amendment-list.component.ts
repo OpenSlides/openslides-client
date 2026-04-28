@@ -9,7 +9,6 @@ import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/me
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { AMENDMENT_LIST_SUBSCRIPTION } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -57,6 +56,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     public filterProps = [`submitters`, `additional_submitter`, `title`, `number`];
 
     private _amendmentDiffLinesMap: Record<number, string> = {};
+    private _amendmentChangedLinesMap: Record<number, string> = {};
 
     public constructor(
         protected override translate: TranslateService,
@@ -67,26 +67,31 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private lineNumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
         super();
         super.setTitle(`Amendments`);
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;
-        this.modelRequestService.waitSubscriptionReady(AMENDMENT_LIST_SUBSCRIPTION).then(() => (this.ready = true));
+        this.modelRequestService.waitSubscriptionReady(AMENDMENT_LIST_SUBSCRIPTION).then(() => {
+            this.ready = true;
+        });
         this.storage.set('motion-navigation-last', 'amendment-list');
     }
 
     public ngOnInit(): void {
         // determine if a paramter exists.
         if (this.route.snapshot.paramMap.get(`id`)) {
+            this.parentMotionId = +this.route.snapshot.paramMap.get(`id`)!;
+            this.amendmentFilterService.parentMotionId = this.parentMotionId;
+
             // set the parentMotion observable. This will "only" fire
             // if there is a subscription to the parent motion
             this.parentMotion = this.route.paramMap.pipe(
                 switchMap((params: ParamMap) => {
                     this.parentMotionId = +params.get(`id`)!;
                     this.amendmentFilterService.parentMotionId = this.parentMotionId;
+
                     return this.amendmentRepo.getViewModelObservable(this.parentMotionId);
                 })
             );
@@ -147,17 +152,21 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         this.pdfExport.exportAmendmentList(this.listComponent.source, parentMotion);
     }
 
-    public getAmendmentDiffLines(amendment: ViewMotion): string {
+    private getAmendmentDiffLines(amendment: ViewMotion): string {
         const diffLines = amendment.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.lineNumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+            return diffLines.map(diffLine => amendment.services().ln.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }
     }
 
     public getChangedLinesFromAmendment(amendment: ViewMotion): string | null {
-        return amendment.getChangedLines();
+        if (!this._amendmentChangedLinesMap[amendment.id]) {
+            this._amendmentChangedLinesMap[amendment.id] = amendment.getChangedLines();
+        }
+
+        return this._amendmentChangedLinesMap[amendment.id];
     }
 
     public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {

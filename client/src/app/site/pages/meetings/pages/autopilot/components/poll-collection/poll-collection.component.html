@@ -11,7 +11,7 @@
     <mat-card class="os-card">
         <mat-card-content>
             <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
-                <h2 class="accessibility-h2 accessibility-h2-1 accessibility-h2-2">
+                <h2 aria-live="polite" class="accessibility-h2 accessibility-h2-1 accessibility-h2-2">
                     {{ getPollVoteTitle(poll) }}
                 </h2>
             </a>
