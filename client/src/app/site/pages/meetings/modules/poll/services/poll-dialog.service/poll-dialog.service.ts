@@ -4,10 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
-import { PollServiceModule } from '../poll-service.module';
-
 @Injectable({
-    providedIn: PollServiceModule
+    providedIn: 'root'
 })
 export class PollDialogService {
     public constructor(private dialog: MatDialog) {}

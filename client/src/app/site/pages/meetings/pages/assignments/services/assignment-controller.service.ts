@@ -6,9 +6,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { AssignmentCommonServiceModule } from './assignment-common-service.module';
-
-@Injectable({ providedIn: AssignmentCommonServiceModule })
+@Injectable({ providedIn: 'root' })
 export class AssignmentControllerService extends BaseMeetingControllerService<ViewAssignment, Assignment> {
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,

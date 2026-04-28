@@ -14,7 +14,6 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BannerDefinition, BannerService } from './banner.service';
-import { SiteWrapperServiceModule } from './site-wrapper-service.module';
 
 interface BannerCreationData {
     text: string;
@@ -22,7 +21,7 @@ interface BannerCreationData {
 }
 
 @Injectable({
-    providedIn: SiteWrapperServiceModule
+    providedIn: 'root'
 })
 export class VotingBannerService {
     private currentBanner: BannerDefinition;

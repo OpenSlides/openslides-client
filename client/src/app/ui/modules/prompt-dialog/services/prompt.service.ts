@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { PromptDialogComponent } from '../prompt-dialog.component';
 
 @Injectable({
-    providedIn: PromptDialogComponent
+    providedIn: 'root'
 })
 export class PromptService {
     private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;

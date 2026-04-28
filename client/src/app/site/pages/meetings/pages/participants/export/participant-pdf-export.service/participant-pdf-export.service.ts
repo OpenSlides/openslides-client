@@ -4,14 +4,13 @@ import { Content } from 'pdfmake/interfaces';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export/meeting-pdf-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-import { ParticipantExportModule } from '../participant-export.module';
 import { ParticipantPdfService } from '../participant-pdf.service';
 
 /**
  * Export service to handle various kind of exporting necessities for participants.
  */
 @Injectable({
-    providedIn: ParticipantExportModule
+    providedIn: 'root'
 })
 export class ParticipantPdfExportService {
     public constructor(

@@ -8,10 +8,9 @@ import { ImportServiceCollectorService } from 'src/app/site/services/import-serv
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { TopicExportService } from '../topic-export.service';
-import { TopicImportServiceModule } from '../topic-import-service.module';
 
 @Injectable({
-    providedIn: TopicImportServiceModule
+    providedIn: 'root'
 })
 export class TopicImportService extends BaseBackendImportService {
     /**
