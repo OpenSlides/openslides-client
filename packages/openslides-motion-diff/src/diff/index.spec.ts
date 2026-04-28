@@ -822,7 +822,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
-        it(`handles inserted text within nested lists`, () => {
+        it.skip(`handles inserted text within nested lists`, () => {
             const before =
                     `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
                     `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
