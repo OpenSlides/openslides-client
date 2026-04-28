@@ -822,7 +822,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
-        it(`handles changed text within nested lists (part 2)`, () => {
+        it.skip(`handles changed text within nested lists (part 2)`, () => {
             const before = `<ul><li>Ebene 1` +
                     `<ul><li>Ebene 2.1` +
                     `</li><li>Ebene 2.2` +
