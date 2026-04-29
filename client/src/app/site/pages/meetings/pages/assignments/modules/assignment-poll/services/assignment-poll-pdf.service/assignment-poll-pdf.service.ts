@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
 import {
     AbstractPollData,
     BasePollPdfService
@@ -94,7 +93,8 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         };
     }
 
-    private createOptionFields(poll: ViewPoll): object {
+    private createOptionFields(_poll: ViewPoll): object {
+        /*
         const options = poll.options.sort((a, b) => a.weight - b.weight);
         const resultObject = options.map(opt => {
             let optionName = ``;
@@ -132,9 +132,12 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             }
         }
         return resultObject;
+        */
+
+        return {};
     }
 
-    private createYNBallotEntry(option: string, method: PollMethod): object {
+    private createYNBallotEntry(option: string, method: any): object {
         const choices = method === `YNA` ? [`Yes`, `No`, `Abstain`] : [`Yes`, `No`];
         const columnstack = choices.map(choice => ({
             width: `auto`,

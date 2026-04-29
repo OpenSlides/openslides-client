@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { OptionData } from 'src/app/domain/models/poll/generic-poll';
 import { PollTableData } from 'src/app/domain/models/poll/poll-constants';
 
+import { ViewPoll } from '../../../../pages/polls';
 import { PollService } from '../../services/poll.service/poll.service';
-import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 
 /**
  * Uses a number and a ViewPoll-object.
@@ -22,12 +22,9 @@ import { PollServiceMapperService } from '../../services/poll-service-mapper.ser
     name: `pollPercentBase`
 })
 export class PollPercentBasePipe implements PipeTransform {
-    public constructor(
-        private pollService: PollService,
-        private pollServiceMapperService: PollServiceMapperService
-    ) {}
+    public constructor(private pollService: PollService) {}
 
-    public transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
+    public transform(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
         const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
 
@@ -38,11 +35,7 @@ export class PollPercentBasePipe implements PipeTransform {
         }
     }
 
-    protected getVoteValueInPercent(value: number, poll: PollData, row?: OptionData | PollTableData): string {
-        const service = this.pollServiceMapperService.getService(poll.pollClassType);
-        if (service) {
-            return service.getVoteValueInPercent(value, { poll, row });
-        }
+    protected getVoteValueInPercent(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string {
         return this.pollService.getVoteValueInPercent(value, { poll, row });
     }
 }
@@ -51,7 +44,7 @@ export class PollPercentBasePipe implements PipeTransform {
     name: `pollPercentBaseAlt`
 })
 export class PollPercentBaseAltPipe extends PollPercentBasePipe implements PipeTransform {
-    public override transform(value: number, poll: PollData, row?: OptionData | PollTableData): string | null {
+    public override transform(value: number, poll: ViewPoll, row?: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
         const voteValueInPercent: string = this.getVoteValueInPercent(value, poll, row);
 

@@ -3,57 +3,30 @@ import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
-import { BaseDecimalModel } from '../base/base-decimal-model';
-import {
-    CalculablePollKey,
-    EntitledUsersEntry,
-    PollBackendDurationType,
-    PollMethod,
-    PollPercentBase,
-    PollState,
-    PollType
-} from './poll-constants';
+import { BaseModel } from '../base/base-model';
+import { PollState, PollVisibility } from './poll-constants';
 
-export class Poll extends BaseDecimalModel<Poll> {
+export class Poll extends BaseModel<Poll> {
     public static readonly COLLECTION = `poll`;
-    public static readonly DECIMAL_FIELDS: (keyof Poll)[] = [`votesvalid`, `votesinvalid`, `votescast`];
 
     public sequential_number!: number;
-    public content_object_id!: Fqid;
-    public state!: PollState;
-    public type!: PollType;
     public title!: string;
-    public votesvalid!: number;
-    public votesinvalid!: number;
-    public votescast!: number;
-    public live_votes: Record<number, any>;
-    public live_voting_enabled: number[];
-    public onehundred_percent_base!: PollPercentBase;
+    public content_object_id!: Fqid;
 
-    /**
-     * TODO:
-     * Not sure how vote delegations are handled now
-     */
-    public user_has_voted_for_delegations!: Id[];
+    public config_id!: Fqid;
+    public visibility!: PollVisibility;
+    public state!: PollState;
+    public result!: string;
+    public published!: boolean;
+    public allow_invalid!: boolean;
+    public allow_vote_split!: boolean;
+    public option_ids!: Id[];
+    public ballot_ids!: Id[];
+    public voted_ids!: Id[];
+    public entitled_group_ids!: Id[];
 
-    public pollmethod!: PollMethod;
-
-    public voted_ids!: Id[]; // (user/poll_voted_ids)[];
-
-    public entitled_group_ids!: Id[]; // (group/(assignment|motion)_poll_ids)[];
-    public option_ids!: Id[]; // ((assignment|motion)_option/poll_id)[];
-    public global_option_id!: Id; // (motion_option/poll_id)
-    public backend!: PollBackendDurationType;
-
-    public description!: string;
-    public min_votes_amount!: number;
-    public max_votes_amount!: number;
-    public max_votes_per_option!: number;
-    public global_yes!: boolean;
-    public global_no!: boolean;
-    public global_abstain!: boolean;
-    public entitled_users_at_stop!: EntitledUsersEntry[];
-    public is_pseudoanonymized!: boolean;
+    // TODO: Currently missing in backend
+    public live_voting_enabled!: boolean;
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -67,28 +40,37 @@ export class Poll extends BaseDecimalModel<Poll> {
         return this.state === PollState.Finished;
     }
 
-    public get isPublished(): boolean {
-        return this.state === PollState.Published;
+    public get isAnonymized(): boolean {
+        // TODO: Implement if field is available to decide this
+        return !this.isNamed && !this.isAnalog && false;
     }
 
-    public get isPercentBaseCast(): boolean {
-        return this.onehundred_percent_base === PollPercentBase.Cast;
+    public get canAnonymize(): boolean {
+        return !this.isAnonymized && !this.isAnalog && !this.isNamed && (this.isFinished || this.isPublished);
+    }
+
+    public get isPublished(): boolean {
+        return this.state === PollState.Finished && this.published;
     }
 
     public get isAnalog(): boolean {
-        return this.type === PollType.Analog;
+        return this.visibility === PollVisibility.Manually;
     }
 
     public get isNamed(): boolean {
-        return this.type === PollType.Named;
+        return this.visibility === PollVisibility.Named;
+    }
+
+    public get isOpen(): boolean {
+        return this.visibility === PollVisibility.Open;
     }
 
     public get isAnonymous(): boolean {
-        return this.type === PollType.Pseudoanonymous;
+        return this.visibility === PollVisibility.Secret;
     }
 
     public get isEVoting(): boolean {
-        return this.isNamed || this.isAnonymous;
+        return this.isNamed || this.isOpen || this.isAnonymous;
     }
 
     /**
@@ -98,16 +80,14 @@ export class Poll extends BaseDecimalModel<Poll> {
         return this.isFinished || this.isPublished;
     }
 
-    public get nextState(): PollState {
+    public get nextState(): PollState | `published` {
         switch (this.state) {
             case PollState.Created:
                 return PollState.Started;
             case PollState.Started:
                 return PollState.Finished;
             case PollState.Finished:
-                return PollState.Published;
-            case PollState.Published:
-                return PollState.Created;
+                return `published`;
         }
     }
 
@@ -115,67 +95,20 @@ export class Poll extends BaseDecimalModel<Poll> {
         super(Poll.COLLECTION, input);
     }
 
-    public get isMethodY(): boolean {
-        return this.pollmethod === PollMethod.Y;
-    }
-
-    public get isMethodN(): boolean {
-        return this.pollmethod === PollMethod.N;
-    }
-
-    public get isMethodYN(): boolean {
-        return this.pollmethod === PollMethod.YN;
-    }
-
-    public get isMethodYNA(): boolean {
-        return this.pollmethod === PollMethod.YNA;
-    }
-
-    public get hasGlobalOptionEnabled(): boolean {
-        return this.global_yes || this.global_no || this.global_abstain;
-    }
-
-    public get pollmethodFields(): CalculablePollKey[] {
-        if (this.pollmethod === PollMethod.YN) {
-            return [`yes`, `no`];
-        } else if (this.pollmethod === PollMethod.YNA) {
-            return [`yes`, `no`, `abstain`];
-        } else if (this.pollmethod === PollMethod.Y) {
-            return [`yes`];
-        }
-        return [];
-    }
-
-    protected getDecimalFields(): (keyof Poll)[] {
-        return Poll.DECIMAL_FIELDS;
-    }
-
     public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
         `id`,
         `title`,
-        `description`,
-        `type`,
-        `backend`,
-        `is_pseudoanonymized`,
-        `pollmethod`,
+        `config_id`,
+        `option_ids`,
+        `visibility`,
         `state`,
-        `min_votes_amount`,
-        `max_votes_amount`,
-        `max_votes_per_option`,
-        `global_yes`,
-        `global_no`,
-        `global_abstain`,
-        `onehundred_percent_base`,
-        `votesvalid`,
-        `votesinvalid`,
-        `votescast`,
-        `entitled_users_at_stop`,
-        `live_voting_enabled`,
-        `live_votes`,
+        `result`,
+        `published`,
+        `allow_invalid`,
+        `allow_vote_split`,
         `sequential_number`,
         `content_object_id`,
-        `option_ids`,
-        `global_option_id`,
+        `ballot_ids`,
         `voted_ids`,
         `entitled_group_ids`,
         `projection_ids`,

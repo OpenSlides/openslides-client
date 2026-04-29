@@ -4,7 +4,8 @@ import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
-import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
+import { PollVisibility } from '../poll';
+import { BaseOnehundredPercentBase } from '../poll/poll-config-types';
 import { ApplauseType } from './applause';
 import {
     BallotPaperSelection,
@@ -146,11 +147,9 @@ export class Settings {
 
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
-    public motion_poll_default_type!: PollType;
-    public motion_poll_default_onehundred_percent_base!: PollPercentBase;
+    public motion_poll_default_type!: PollVisibility;
+    public motion_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
-    public motion_poll_default_backend!: PollBackendDurationType;
-    public motion_poll_default_method!: PollMethod;
     public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
     public motion_poll_projection_max_columns!: number;
 
@@ -182,11 +181,9 @@ export class Settings {
     public assignment_poll_add_candidates_to_list_of_speakers!: boolean;
     public assignment_poll_enable_max_votes_per_option!: boolean;
     public assignment_poll_sort_poll_result_by_votes!: boolean;
-    public assignment_poll_default_type!: PollType;
-    public assignment_poll_default_method!: PollMethod;
-    public assignment_poll_default_onehundred_percent_base!: PollPercentBase;
+    public assignment_poll_default_type!: PollVisibility;
+    public assignment_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
     public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
-    public assignment_poll_default_backend!: PollBackendDurationType;
 
     // topic poll
     public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
@@ -195,11 +192,9 @@ export class Settings {
     public poll_ballot_paper_selection: BallotPaperSelection;
     public poll_ballot_paper_number: number;
     public poll_sort_poll_result_by_votes: boolean;
-    public poll_default_type: PollType;
-    public poll_default_method: PollMethod;
-    public poll_default_onehundred_percent_base: PollPercentBase;
+    public poll_default_type: PollVisibility;
+    public poll_default_onehundred_percent_base: BaseOnehundredPercentBase;
     public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    public poll_default_backend: PollBackendDurationType;
     public poll_default_live_voting_enabled: boolean;
 
     // SSO
@@ -412,14 +407,10 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,
-        `motion_poll_default_method`,
         `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
-        `motion_poll_default_backend`,
         `motion_poll_projection_name_order_first`,
         `motion_poll_projection_max_columns`,
-        `poll_candidate_list_ids`,
-        `poll_candidate_ids`,
         `meeting_user_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
@@ -446,18 +437,14 @@ export class Meeting extends BaseModel<Meeting> {
         `assignment_poll_enable_max_votes_per_option`,
         `assignment_poll_sort_poll_result_by_votes`,
         `assignment_poll_default_type`,
-        `assignment_poll_default_method`,
         `assignment_poll_default_onehundred_percent_base`,
         `assignment_poll_default_group_ids`,
-        `assignment_poll_default_backend`,
         `poll_ballot_paper_selection`,
         `poll_ballot_paper_number`,
         `poll_sort_poll_result_by_votes`,
         `poll_default_type`,
-        `poll_default_method`,
         `poll_default_onehundred_percent_base`,
         `poll_default_group_ids`,
-        `poll_default_backend`,
         `poll_default_live_voting_enabled`,
         `topic_poll_default_group_ids`,
         `projector_ids`,
@@ -488,8 +475,6 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_change_recommendation_ids`,
         `motion_state_ids`,
         `poll_ids`,
-        `option_ids`,
-        `vote_ids`,
         `assignment_ids`,
         `assignment_candidate_ids`,
         `personal_note_ids`,

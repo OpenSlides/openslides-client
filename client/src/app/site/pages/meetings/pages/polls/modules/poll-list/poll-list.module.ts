@@ -5,6 +5,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
 import { PollListComponent } from './components/poll-list/poll-list.component';
 import { PollListRoutingModule } from './poll-list-routing.module';
@@ -18,9 +19,10 @@ import { PollListServiceModule } from './services/poll-list-service.module';
         PollListServiceModule,
         MeetingsComponentCollectorModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        TranslateKeyPipe,
+        OpenSlidesTranslationModule.forChild()
     ]
 })
 export class PollListModule {}

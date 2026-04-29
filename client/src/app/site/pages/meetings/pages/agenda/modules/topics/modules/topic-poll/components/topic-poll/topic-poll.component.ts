@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -14,9 +16,9 @@ import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
     styleUrls: [`./topic-poll.component.scss`],
-    standalone: false
+    imports: [PollComponent, MatCardModule]
 })
-export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
+export class TopicPollComponent extends BasePollComponent<ViewTopic> {
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);
@@ -26,18 +28,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     public readonly dialogOpened = new EventEmitter<void>();
 
     public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get isDescriptionDirty(): boolean {
-        return this.descriptionForm.get(`description`).value !== this.poll.description;
-    }
 
     public get shouldShowPoll(): boolean {
         if (this.poll) {
@@ -72,12 +62,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         private pdfService: TopicPollPdfService
     ) {
         super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
     }
 
     /**

@@ -1,11 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
@@ -14,9 +20,9 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
-    standalone: false
+    imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
-export class AssignmentPollComponent extends BasePollComponent implements OnInit {
+export class AssignmentPollComponent extends BasePollComponent {
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);
@@ -26,18 +32,6 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     public readonly dialogOpened = new EventEmitter<void>();
 
     public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm!: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get dirtyDescription(): boolean {
-        return this.descriptionForm.get(`description`)?.value !== this.poll.description;
-    }
 
     public get showPoll(): boolean {
         if (this.poll) {
@@ -77,12 +71,6 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
         super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
     }
 
     /**

@@ -32,13 +32,10 @@ import { PollServiceModule } from './services/poll-service.module';
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
-    PollProgressComponent,
     PollFilteredVotesChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
-    SingleOptionChartTableComponent,
-    VotesTableComponent,
-    PollCannotVoteMessageComponent
+    VotesTableComponent
 ];
 
 @NgModule({
@@ -46,6 +43,9 @@ const COMPONENTS = [
     imports: [
         CommonModule,
         ChartComponent,
+        PollCannotVoteMessageComponent,
+        PollProgressComponent,
+        SingleOptionChartTableComponent,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -66,7 +66,15 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
+    exports: [
+        ...PIPES,
+        ...MODULES,
+        ...COMPONENTS,
+        SingleOptionChartTableComponent,
+        ChartComponent,
+        PollCannotVoteMessageComponent,
+        PollProgressComponent
+    ],
     providers: [...PIPES]
 })
 export class PollModule {}

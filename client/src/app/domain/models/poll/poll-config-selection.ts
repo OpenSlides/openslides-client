@@ -1,0 +1,31 @@
+import { HasMeetingId } from '../../interfaces';
+import { BasePollConfigModel } from './base-poll-config';
+import { BaseOnehundredPercentBase } from './poll-config-types';
+
+export type SelectionOnehundredPercentBase = BaseOnehundredPercentBase | `no_general`;
+
+export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection> {
+    public static COLLECTION = `poll_config_selection`;
+
+    public strike_out!: boolean;
+    public max_options_amount!: number;
+    public min_options_amount!: number;
+    public allow_nota!: boolean;
+    public onehundred_percent_base!: SelectionOnehundredPercentBase;
+
+    public constructor(input?: Partial<PollConfigSelection>) {
+        super(PollConfigSelection.COLLECTION, input);
+    }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof PollConfigSelection)[] = [
+        `id`,
+        `poll_id`,
+        `max_options_amount`,
+        `min_options_amount`,
+        `allow_nota`,
+        `strike_out`,
+        `onehundred_percent_base`
+    ];
+}
+
+export interface PollConfigSelection extends HasMeetingId {}

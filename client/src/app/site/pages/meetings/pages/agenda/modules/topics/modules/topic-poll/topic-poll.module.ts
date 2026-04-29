@@ -28,25 +28,17 @@ import { TopicCommonServiceModule } from '../../services/topic-common-service.mo
 import { TopicPollComponent } from './components/topic-poll/topic-poll.component';
 import { TopicPollDetailContentComponent } from './components/topic-poll-detail-content/topic-poll-detail-content.component';
 import { TopicPollDialogComponent } from './components/topic-poll-dialog/topic-poll-dialog.component';
-import { TopicPollFormComponent } from './components/topic-poll-form/topic-poll-form.component';
-import { TopicPollMetaInfoComponent } from './components/topic-poll-meta-info/topic-poll-meta-info.component';
-import { TopicPollVoteComponent } from './components/topic-poll-vote/topic-poll-vote.component';
 import { TopicPollService } from './services/topic-poll.service';
 import { TopicPollServiceModule } from './services/topic-poll-service.module';
 
 @NgModule({
-    declarations: [
-        TopicPollComponent,
-        TopicPollDetailContentComponent,
-        TopicPollDialogComponent,
-        TopicPollMetaInfoComponent,
-        TopicPollVoteComponent,
-        TopicPollFormComponent
-    ],
+    declarations: [TopicPollDetailContentComponent],
     imports: [
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,
+        TopicPollComponent,
+        TopicPollDialogComponent,
         TopicPollServiceModule,
         TopicCommonServiceModule,
         FormsModule,
@@ -71,7 +63,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [TopicPollComponent, TopicPollVoteComponent, TopicPollDetailContentComponent],
+    exports: [TopicPollDetailContentComponent, TopicPollComponent],
     providers: [{ provide: PollService, useClass: TopicPollService }]
 })
 export class TopicPollModule {}

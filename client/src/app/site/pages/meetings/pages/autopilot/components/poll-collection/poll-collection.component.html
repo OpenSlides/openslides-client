@@ -10,70 +10,7 @@
 <ng-template #pollArea let-last="last" let-poll="poll">
     <mat-card class="os-card">
         <mat-card-content>
-            <a class="subtitle-text" [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }">
-                <h2 class="accessibility-h2 accessibility-h2-1 accessibility-h2-2">
-                    {{ getPollVoteTitle(poll) }}
-                </h2>
-            </a>
-            @if (canManagePoll(poll) && poll.isFinished) {
-                <i class="small">
-                    {{ 'finished (unpublished)' | translate }}
-                </i>
-            }
-
-            @if (poll.canBeVotedFor()) {
-                <div class="type-and-state italic spacer-bottom-20 break-word">
-                    <!-- State -->
-                    <i>
-                        {{ 'Voting in progress' | translate }}
-                    </i>
-                </div>
-
-                <os-poll-progress [poll]="poll"></os-poll-progress>
-            }
-            @if (poll.isMotionPoll) {
-                <div>
-                    @if (poll.canBeVotedFor() && !last) {
-                        <os-motion-poll-vote
-                            [displayInAutopilot]="displayInAutopilot"
-                            [poll]="poll"
-                        ></os-motion-poll-vote>
-                    }
-                    @if (last) {
-                        <os-motion-poll-detail-content [poll]="lastPublishedPoll"></os-motion-poll-detail-content>
-                    }
-                </div>
-            }
-            @if (poll.isAssignmentPoll) {
-                <div>
-                    @if (poll.canBeVotedFor() && !last) {
-                        <os-assignment-poll-vote [poll]="poll"></os-assignment-poll-vote>
-                    }
-                    @if (last) {
-                        <os-assignment-poll-detail-content
-                            [poll]="lastPublishedPoll"
-                        ></os-assignment-poll-detail-content>
-                    }
-                    @if (poll.isListPoll) {
-                        <os-assignment-poll-meta-info
-                            [poll]="poll"
-                            [shortenList]="true"
-                            [showCandidates]="poll.isListPoll"
-                            [showStats]="false"
-                        ></os-assignment-poll-meta-info>
-                    }
-                </div>
-            }
-            @if (poll.isTopicPoll) {
-                <div>
-                    @if (poll.canBeVotedFor() && !last) {
-                        <os-topic-poll-vote [poll]="poll"></os-topic-poll-vote>
-                    }
-                    @if (last) {
-                        <os-topic-poll-detail-content [poll]="lastPublishedPoll"></os-topic-poll-detail-content>
-                    }
-                </div>
-            }
+            <os-poll [poll]="poll" />
         </mat-card-content>
     </mat-card>
 </ng-template>

@@ -450,11 +450,12 @@ export class AgendaPdfCatalogExportService {
                 // poll table rows
                 let optionIndex = 0;
                 for (const option of poll.options) {
-                    let votesForOption: string | number = ``;
+                    const votesForOption: string | number = ``;
+                    // TODO: Readd votes for option
                     if (poll.stateHasVotes && useVoteWeight) {
-                        votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
+                        // votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
                     } else if (poll.stateHasVotes) {
-                        votesForOption = option.votes.length;
+                        // votesForOption = option.votes.length;
                     }
                     const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
                     tableCells.push([
@@ -465,7 +466,8 @@ export class AgendaPdfCatalogExportService {
                     optionIndex++;
                 }
                 // poll table valid votes line
-                const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
+                // TODO: Reenable
+                const amount = ``; // poll.votesvalid ? String(poll.votesvalid) : ``;
                 tableCells.push([{ text: `` }, { text: this.translate.instant(`Valid votes`) }, { text: amount }]);
 
                 // table configuration

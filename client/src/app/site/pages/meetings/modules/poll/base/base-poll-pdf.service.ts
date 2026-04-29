@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
-import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { PollTableData, PollVisibility, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll, ViewPollConfigSelection, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
@@ -290,7 +290,7 @@ export abstract class BasePollPdfService {
     }
 
     protected getRowsPerPage(poll: ViewPoll): number {
-        if (poll.pollmethod === PollMethod.Y) {
+        if (poll.config instanceof ViewPollConfigSelection) {
             if (poll.options.length <= 2) {
                 return 4;
             } else if (poll.options.length <= 5) {
@@ -381,14 +381,15 @@ export abstract class BasePollPdfService {
             pollResultPdfContent.push(resultsData);
         }
 
-        if (exportInfo.votesData?.length && poll.type !== PollType.Analog) {
+        if (exportInfo.votesData?.length && !poll.isAnalog) {
             pollResultPdfContent.push({
                 text: this.translate.instant(`Single votes`),
                 margin: [0, 20, 0, 5],
                 bold: true
             });
-            const votesData = this.createVotesTable(exportInfo.votesData, poll.type);
-            pollResultPdfContent.push(votesData);
+            // TODO: Reenable
+            // const votesData = this.createVotesTable(exportInfo.votesData, poll.type);
+            // pollResultPdfContent.push(votesData);
         }
 
         if (exportInfo.entitledUsersData?.length) {
@@ -409,7 +410,7 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createListEntriesTable(option: ViewOption, enumerate = false): object {
+    private createListEntriesTable(option: ViewPollOption, enumerate = false): object {
         if (!option.isListOption) {
             throw new Error(`Can't generate entry list for non-list option`);
         }
@@ -479,10 +480,11 @@ export abstract class BasePollPdfService {
      */
     private createResultsTable(poll: ViewPoll, resultsTableData: PollTableData[]): object {
         const resultsTable = (JSON.parse(JSON.stringify(resultsTableData)) as PollTableData[]).map(date => {
-            const forbidden = [`yes`, `no`, `abstain`].filter(
-                option => !poll.pollmethod.includes(option.charAt(0).toUpperCase())
-            );
-            date.value = date.value?.filter(val => !forbidden.includes(val.vote));
+            // TODO: Reimplement
+            // const forbidden = [`yes`, `no`, `abstain`].filter(
+            //     option => !poll.pollmethod.includes(option.charAt(0).toUpperCase())
+            // );
+            // date.value = date.value?.filter(val => !forbidden.includes(val.vote));
             return date;
         });
         const amountColumns = Math.max(...resultsTable.map(row => row.value.length));
@@ -566,9 +568,10 @@ export abstract class BasePollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createVotesTable(votesData: BaseVoteData[], pollType: PollType): object {
+    private createVotesTable(votesData: BaseVoteData[], pollVisibility: PollVisibility): object {
         const isAnonymised: boolean = votesData[0].user ? false : true;
-        const showVoteWeight: boolean = this.activeVoteWeight && pollType == PollType.Named && !isAnonymised;
+        const showVoteWeight: boolean =
+            this.activeVoteWeight && pollVisibility == PollVisibility.Named && !isAnonymised;
         let pollTableBody: any[] = [];
         const pollTableHeader = [
             {

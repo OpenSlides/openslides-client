@@ -1,0 +1,27 @@
+<div class="vote-container">
+    @for (action of voteActions(); track action.vote) {
+        <div class="vote-button-area" role="gridcell">
+            <button
+                class="vote-button"
+                mat-raised-button
+                role="radio"
+                [ariaLabel]="action.label | translate"
+                [attr.aria-checked]="isOptionSelected(action.vote) ? 'true' : 'false'"
+                [disabled]="loading()"
+                (click)="voted.emit(action.vote)"
+            >
+                <div class="vote-button-content" [class.button-content-opaque]="!isOptionSelected(action.vote)">
+                    <os-custom-icon
+                        class="vote-button-cross"
+                        [class]="isOptionSelected(action.vote) ? action.css : ''"
+                        [customIcon]="drawnCross"
+                    ></os-custom-icon>
+                    <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                </div>
+            </button>
+            <span aria-hidden="true" class="vote-label">
+                {{ action.label | translate }}
+            </span>
+        </div>
+    }
+</div>
