@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -186,6 +186,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public onAddToPreview(): void {
+        console.log(`keey:`);
         this.dialogRef.close({
             action: `addToPreview`,
             resultDescriptor: this.descriptor,

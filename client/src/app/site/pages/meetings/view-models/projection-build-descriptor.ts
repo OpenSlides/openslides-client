@@ -8,7 +8,7 @@ export function isProjectionBuildDescriptor(obj: any): obj is ProjectionBuildDes
 }
 
 export interface ProjectionBuildDescriptor {
-    content_object_id: Fqid;
+    content_object_id: Fqid | Fqid[];
     stable?: boolean;
     stableToggle?: string;
     type?: string;

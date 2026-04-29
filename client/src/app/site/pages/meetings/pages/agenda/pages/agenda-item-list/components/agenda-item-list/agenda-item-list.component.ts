@@ -151,15 +151,8 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                         projectionDefault: PROJECTIONDEFAULT.agendaItemList,
                         getDialogTitle: (): string => this.translate.instant(`Agenda`)
                     };
-                    this.multiQueue = {
-                        content_object_id: `meeting/${id}`,
-                        type: MeetingProjectionType.AgendaItemList,
-                        projectionDefault: PROJECTIONDEFAULT.agendaItemList,
-                        getDialogTitle: (): string => this.translate.instant(`Agenda`)
-                    };
                 } else {
                     this.itemListSlide = null;
-                    this.multiQueue = null;
                 }
             }),
             this.tagRepo.getViewModelListObservable().subscribe(tags => (this.tags = tags))
@@ -337,6 +330,27 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         }
     }
 
+    public addToProjectorQueue(): ProjectionBuildDescriptor {
+        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+
+        if (agendaItems) {
+            const ids = agendaItems.map(item => item.content_object_id);
+            return {
+                content_object_id: ids,
+                type: MeetingProjectionType.AgendaItemList,
+                projectionDefault: PROJECTIONDEFAULT.agendaItemList,
+                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+            };
+        } else {
+            return {
+                content_object_id: null,
+                type: MeetingProjectionType.AgendaItemList,
+                projectionDefault: PROJECTIONDEFAULT.agendaItemList,
+                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+            };
+        }
+    }
+
     /**
      * Triggers the export page of one agenda item
      */
@@ -351,18 +365,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Triggers the export of the agenda.
      */
     public exportAgendaItems(): void {
-        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
-        const ids = agendaItems.map(item => item.id);
-        this.componentServiceCollector.router.navigate([`agenda-export`], {
-            relativeTo: this.route,
-            queryParams: { 'agenda-items': ids }
-        });
-    }
-
-    /**
-     * Triggers the export of the agenda.
-     */
-    public addToProjectorQueue(): void {
         const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
         const ids = agendaItems.map(item => item.id);
         this.componentServiceCollector.router.navigate([`agenda-export`], {
