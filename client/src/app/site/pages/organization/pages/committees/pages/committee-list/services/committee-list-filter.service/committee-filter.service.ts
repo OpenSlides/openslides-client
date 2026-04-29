@@ -5,10 +5,9 @@ import { OrganizationTagControllerService } from 'src/app/site/pages/organizatio
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewCommittee } from '../../../../view-models';
-import { CommitteeListServiceModule } from '../committee-list-service.module';
 
 @Injectable({
-    providedIn: CommitteeListServiceModule
+    providedIn: 'root'
 })
 export class CommitteeFilterService extends BaseFilterListService<ViewCommittee> {
     protected storageKey = `CommitteeList`;

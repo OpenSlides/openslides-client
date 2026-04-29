@@ -3,10 +3,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
-import { ThemeBuilderDialogModule } from '../theme-builder-dialog.module';
-
 @Injectable({
-    providedIn: ThemeBuilderDialogModule
+    providedIn: 'root'
 })
 export class ThemeBuilderDialogService extends BaseDialogService {
     public async open(data: any): Promise<MatDialogRef<any, any>> {

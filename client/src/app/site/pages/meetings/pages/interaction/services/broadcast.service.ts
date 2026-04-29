@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { InteractionServiceModule } from './interaction-service.module';
-
 /**
  * Implements the BroadcastChannel API.
  * Documentation at mdb:
@@ -18,7 +16,7 @@ export interface BroadcastMessage {
 const BroadcastChannelName = `OpenSlidesBrowserBroadcast`;
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class BroadcastService {
     private broadcastChannel: BroadcastChannel;

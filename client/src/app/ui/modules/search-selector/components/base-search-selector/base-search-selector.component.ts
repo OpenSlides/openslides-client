@@ -345,7 +345,9 @@ export abstract class BaseSearchSelectorComponent
             return;
         }
 
-        this.matSelect.open();
+        if (this.multiple) {
+            this.matSelect.open();
+        }
     }
 
     public onSearchKeydown(event: any): void {

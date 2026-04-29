@@ -5,7 +5,6 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { PointOfOrderDialogComponent } from '../components/point-of-order-dialog/point-of-order-dialog.component';
-import { PointOfOrderDialogModule } from '../point-of-order-dialog.module';
 
 export interface PointOfOrderData {
     note?: string;
@@ -13,7 +12,7 @@ export interface PointOfOrderData {
 }
 
 @Injectable({
-    providedIn: PointOfOrderDialogModule
+    providedIn: 'root'
 })
 export class PointOfOrderDialogService extends BaseDialogService<
     PointOfOrderDialogComponent,

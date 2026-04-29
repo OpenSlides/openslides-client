@@ -1,12 +1,22 @@
-import { LineNumbering } from "../index";
+import { HtmlDiff as HtmlDiffOrig, LineNumbering as LineNumberingOrig } from "../index";
 import { LineNumberedString, LineNumberRange } from "../line-numbering/definitions";
 import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, fragmentToHtml, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChangeType } from "./definitions";
 import type { UnifiedChange } from "./definitions";
-import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
 import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
+
+let LineNumbering = LineNumberingOrig;
+export function useCustomLineNumbering(newLn: typeof LineNumbering) {
+    LineNumbering = newLn;
+}
+
+let HtmlDiff = HtmlDiffOrig;
+export function useCustomHtmlDiff(newDiff: typeof HtmlDiff) {
+    HtmlDiff = newDiff;
+}
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -221,6 +231,20 @@ export function formatDiff(diff: ExtractedContent): string {
 }
 
 /**
+ * Convenience method that takes the html-attribute from an extractRangeByLineNumbers()-method,
+ * wraps it with the context and adds line numbers.
+ *
+ * @param {ExtractedContent} diff
+ * @param {number} lineLength
+ * @param {number} firstLine
+ */
+export function formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    let text = HtmlDiff.formatDiff(diff);
+    text = LineNumbering.insert({ html: text, lineLength, firstLine });
+    return text;
+}
+
+/**
   * This returns the line number range in which changes (insertions, deletions) are encountered.
   * As in extractRangeByLineNumbers(), "to" refers to the line breaking element at the end, i.e. the start of the
   * following line.
@@ -315,7 +339,7 @@ export function diffHtmlToFinalText(html: string): string {
   * @param {number} toLine
   */
 export function replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-    const data = extractRangeByLineNumbers(oldHtml, fromLine, toLine);
+    const data = HtmlDiff.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
     const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
     const previousFragment = htmlToFragment(previousHtml);
     const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
@@ -792,7 +816,18 @@ export function diff(
 
     let diff: string;
     if (diffDetectBrokenDiffHtml(diffUnnormalized)) {
-        diff = diffParagraphs(htmlOld, htmlNew, lineLength!, firstLineNumber!);
+        let lineNumberedOld = htmlOld;
+        let lineNumberedNew = htmlNew;
+        if (lineLength !== null) {
+            lineNumberedOld = LineNumbering.insert({
+                html: htmlOld,
+                lineLength,
+                firstLine: firstLineNumber!
+            });
+            lineNumberedNew = LineNumbering.insertLineBreaks(htmlNew, lineLength);
+        }
+
+        diff = diffParagraphs(lineNumberedOld, lineNumberedNew);
     } else {
         let node: Element = document.createElement(`div`);
         node.innerHTML = diffUnnormalized;
@@ -808,10 +843,10 @@ export function diff(
     }
 
     if (isSplitAfter) {
-        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
+        diff = HtmlDiff.readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
     }
     if (isSplitBefore) {
-        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
+        diff = HtmlDiff.readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
     }
 
     return diff;
@@ -891,7 +926,7 @@ export function getTextWithChanges(
 
     changes = changes.filter(change => !change.isTitleChange);
     // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-    changes = sortChangeRequests(changes).reverse();
+    changes = HtmlDiff.sortChangeRequests(changes).reverse();
 
     if (showAllCollisions) {
         let lastReplacedLine: number | null = null;
@@ -899,7 +934,7 @@ export function getTextWithChanges(
         changes.forEach(change => {
             html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
 
-            if (changeHasCollissions(change, changes)) {
+            if (HtmlDiff.changeHasCollissions(change, changes)) {
                 // In case of colliding amendments, we remove the original text first before inserting the amendments one by one.
                 // Note: if amendment 1 affects line 3-5, we remove 3-5. If amendment 2 affects line 2-4, we only need to remove
                 // line 2, as 3-5 is already removed. If Amendment 3 affects 2-4 too, we don't have to remove anything anymore.
@@ -931,13 +966,13 @@ export function getTextWithChanges(
 
                 lastReplacedLine = change.lineFrom;
             } else {
-                html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
+                html = HtmlDiff.replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
             }
         });
     } else {
         changes.forEach((change: UnifiedChange) => {
             html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
-            html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
+            html = HtmlDiff.replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
         });
     }
 
@@ -970,8 +1005,8 @@ export function getAmendmentParagraphsLines(
     changeRecos?: UnifiedChange[]
 ): DiffLinesInParagraph | null {
     const paragraph_line_range: LineNumberRange = LineNumbering.getRange(origText);
-    let diffText = diff(origText, newText);
-    const affected_lines = detectAffectedLineRange(diffText) as LineRange;
+    let diffText = HtmlDiff.diff(origText, newText);
+    const affected_lines = HtmlDiff.detectAffectedLineRange(diffText) as LineRange;
 
     /**
         * If the affect line has change recos, overwirte the diff with the change reco
@@ -990,21 +1025,21 @@ export function getAmendmentParagraphsLines(
     let textPre = ``;
     let textPost = ``;
     if (affected_lines.from > paragraph_line_range.from!) {
-        textPre = formatDiffWithLineNumbers(
-            extractRangeByLineNumbers(diffText, paragraph_line_range.from!, affected_lines.from - 1),
+        textPre = HtmlDiff.formatDiffWithLineNumbers(
+            HtmlDiff.extractRangeByLineNumbers(diffText, paragraph_line_range.from!, affected_lines.from - 1),
             lineLength,
             paragraph_line_range.from!
         );
     }
     if (paragraph_line_range.to! > affected_lines.to) {
-        textPost = formatDiffWithLineNumbers(
-            extractRangeByLineNumbers(diffText, affected_lines.to + 1, paragraph_line_range.to!),
+        textPost = HtmlDiff.formatDiffWithLineNumbers(
+            HtmlDiff.extractRangeByLineNumbers(diffText, affected_lines.to + 1, paragraph_line_range.to!),
             lineLength,
             affected_lines.to + 1
         );
     }
-    const text = formatDiffWithLineNumbers(
-        extractRangeByLineNumbers(diffText, affected_lines.from, affected_lines.to),
+    const text = HtmlDiff.formatDiffWithLineNumbers(
+        HtmlDiff.extractRangeByLineNumbers(diffText, affected_lines.from, affected_lines.to),
         lineLength,
         affected_lines.from
     );
@@ -1040,7 +1075,7 @@ export function getChangeDiff(
     if ((LineNumbering.getRange(html).to || 0) < change.lineTo) {
         throw new Error(`Invalid call - The change is outside of the motion`);
     }
-    const data: ExtractedContent = extractRangeByLineNumbers(html, change.lineFrom, change.lineTo);
+    const data: ExtractedContent = HtmlDiff.extractRangeByLineNumbers(html, change.lineFrom, change.lineTo);
     let oldText =
         data.outerContextStart +
         data.innerContextStart +
@@ -1105,7 +1140,7 @@ export function getTextRemainderAfterLastChange(
         return ``;
     }
 
-    const data: ExtractedContent = extractRangeByLineNumbers(
+    const data: ExtractedContent = HtmlDiff.extractRangeByLineNumbers(
         motionHtml,
         Math.max(maxFromLine + 1, lineRange?.from || 1),
         lineRange?.to ? maxToLine : null
@@ -1141,7 +1176,7 @@ export function extractMotionLineRange(
     highlightedLine?: number
 ): string {
     let html = ``;
-    const extracted = extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
+    const extracted = HtmlDiff.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
     html =
         extracted.outerContextStart +
         extracted.innerContextStart +

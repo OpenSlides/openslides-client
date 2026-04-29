@@ -7,10 +7,9 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 
 import { SpeechWaitingState, ViewSpeaker } from '../../../../../agenda';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
-import { ParticipantSpeakerListServiceModule } from '../participant-speaker-list-service.module';
 
 @Injectable({
-    providedIn: ParticipantSpeakerListServiceModule
+    providedIn: 'root'
 })
 export class ParticipantSpeakerListFilterService extends BaseFilterListService<ViewSpeaker> {
     /**

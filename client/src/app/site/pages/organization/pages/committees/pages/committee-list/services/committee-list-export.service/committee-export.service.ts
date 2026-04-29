@@ -4,10 +4,9 @@ import { CsvColumnsDefinition } from 'src/app/gateways/export/csv-export.service
 import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 
 import { ViewCommittee } from '../../../../view-models/view-committee';
-import { CommitteeListServiceModule } from '../committee-list-service.module';
 
 @Injectable({
-    providedIn: CommitteeListServiceModule
+    providedIn: 'root'
 })
 export class CommitteeExportService {
     public constructor(

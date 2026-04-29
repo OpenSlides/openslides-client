@@ -8,10 +8,9 @@ import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { AgendaItemControllerService } from '../../../../services';
 import { ViewAgendaItem } from '../../../../view-models';
-import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 
 @Injectable({
-    providedIn: AgendaItemListServiceModule
+    providedIn: 'root'
 })
 export class AgendaItemMultiselectService {
     private messageForSpinner = this.translate.instant(`Agenda items are in process. Please wait ...`);

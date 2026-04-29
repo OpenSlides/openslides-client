@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { TZDate, tzName } from '@date-fns/tz';
 import { DateFnsConfigurationService, FormatPipe } from 'ngx-date-fns';
 import { TimeZoneService } from 'src/app/site/services/time-zone.service';
@@ -9,13 +9,10 @@ import { TimeZoneService } from 'src/app/site/services/time-zone.service';
     standalone: false
 })
 export class LocalizedDatePipe implements PipeTransform {
+    private inputDate = inject(DateFnsConfigurationService);
+    private timeZone = inject(TimeZoneService);
+    private cd = inject(ChangeDetectorRef);
     private formatter = new FormatPipe(this.inputDate, this.cd);
-
-    public constructor(
-        private inputDate: DateFnsConfigurationService,
-        private cd: ChangeDetectorRef,
-        private timeZone: TimeZoneService
-    ) {}
 
     public transform(value: any, dateFormat = `PPp`): any {
         if (!value && value !== 0) {

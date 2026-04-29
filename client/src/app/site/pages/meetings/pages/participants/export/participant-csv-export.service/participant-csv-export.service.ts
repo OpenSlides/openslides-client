@@ -10,7 +10,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
 import { participantColumns } from '../../pages/participant-import/definitions';
-import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
 
 export interface ParticipantExport extends UserExport {
@@ -21,7 +20,7 @@ export interface ParticipantExport extends UserExport {
 }
 
 @Injectable({
-    providedIn: ParticipantExportModule
+    providedIn: 'root'
 })
 export class ParticipantCsvExportService {
     // private _csvColumnDefinitionMapsMap: Map<string, CsvColumnDefinitionMap<ViewUser>> = new Map([
