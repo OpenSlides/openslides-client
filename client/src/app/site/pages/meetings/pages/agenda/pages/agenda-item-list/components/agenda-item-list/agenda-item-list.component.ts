@@ -87,6 +87,8 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
 
     public itemListSlide: ProjectionBuildDescriptor | null = null;
 
+    public multiQueue: ProjectionBuildDescriptor | null = null;
+
     /**
      * Define extra filter properties
      */
@@ -325,6 +327,27 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             await this.repo.bulkSetAgendaType(this.selectedRows, agendaType);
         } catch (e) {
             this.raiseError(e);
+        }
+    }
+
+    public addToProjectorQueue(): ProjectionBuildDescriptor {
+        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+
+        if (agendaItems) {
+            const ids = agendaItems.map(item => item.content_object_id);
+            return {
+                content_object_id: ids,
+                type: MeetingProjectionType.AgendaItemList,
+                projectionDefault: PROJECTIONDEFAULT.agendaItemList,
+                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+            };
+        } else {
+            return {
+                content_object_id: null,
+                type: MeetingProjectionType.AgendaItemList,
+                projectionDefault: PROJECTIONDEFAULT.agendaItemList,
+                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+            };
         }
     }
 

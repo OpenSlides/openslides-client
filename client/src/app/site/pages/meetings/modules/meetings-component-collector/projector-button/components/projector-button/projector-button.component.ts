@@ -42,6 +42,12 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public menuItem = false;
 
+    @Input()
+    public projectorLabel = `Project`;
+
+    @Input()
+    public hideMainButton = false;
+
     @Output()
     public changeEvent = new EventEmitter<void>();
 
@@ -99,7 +105,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                allowReferenceProjector: this.allowReferenceProjector
+                allowReferenceProjector: this.allowReferenceProjector,
+                hideMainButton: this.hideMainButton
             });
         }
     };

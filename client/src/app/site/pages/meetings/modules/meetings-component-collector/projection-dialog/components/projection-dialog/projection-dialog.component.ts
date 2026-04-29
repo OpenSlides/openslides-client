@@ -29,6 +29,7 @@ export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
     projector?: ViewProjector;
+    hideMainButton?: boolean;
 }
 
 @Component({
@@ -65,6 +66,8 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
 
+    public hideMainButton = false;
+
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,
         @Inject(MAT_DIALOG_DATA) public data: ProjectionDialogConfig | ProjectionBuildDescriptor,
@@ -86,6 +89,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             if (projections.length === 1) {
                 this.currentProjectionOptions = projections[0].options || {};
             }
+        }
+        if (data && !isProjectionBuildDescriptor(data)) {
+            this.hideMainButton = data.hideMainButton;
         }
     }
 
@@ -180,6 +186,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public onAddToPreview(): void {
+        console.log(`keey:`);
         this.dialogRef.close({
             action: `addToPreview`,
             resultDescriptor: this.descriptor,
