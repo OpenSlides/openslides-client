@@ -165,6 +165,17 @@
     }
 }
 
+.export-wrapper {
+    .mat-mdc-chip,
+    .mat-mdc-basic-chip, 
+    .mdc-evolution-chip__text-label,
+    .mat-mdc-chip-action-label {
+        padding: 0px 0px !important;
+        min-height: var(--mat-chip-container-height) !important;
+        align-content: center;
+    }
+}
+
 .mat-mdc-chip:focus,
 .mat-mdc-basic-chip:focus {
     outline: none;
