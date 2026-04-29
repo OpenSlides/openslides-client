@@ -1,10 +1,11 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { PollContentObject } from 'src/app/domain/models/poll';
+import { PollCreatePayload } from 'src/app/gateways/vote-api.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { PollDialogData, PollDialogResult } from 'src/app/site/pages/meetings/modules/poll/definitions';
+import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
@@ -12,13 +13,11 @@ import { PollServiceModule } from '../services/poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {
-    public constructor(
-        private controller: PollControllerService,
-        private dialogService: MatDialog
-    ) {}
+    private controller = inject(PollControllerService);
+    private dialogService = inject(MatDialog);
 
     public async open(data: Partial<PollDialogData> | ViewPoll<V>): Promise<void> {
-        const dialogRef = this.dialogService.open<C, Partial<PollDialogData> | ViewPoll<V>, PollDialogResult>(
+        const dialogRef = this.dialogService.open<C, Partial<PollDialogData> | ViewPoll<V>, Partial<PollCreatePayload>>(
             this.getComponent(),
             {
                 ...mediumDialogSettings,

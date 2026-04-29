@@ -1,10 +1,9 @@
-import { Component, Inject, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
+import { PollVisibility } from 'src/app/domain/models/poll';
 import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
@@ -13,7 +12,6 @@ import { PollFormRatingApprovalComponent } from 'src/app/site/pages/meetings/mod
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 const TAB_METHOD_MAP = [`selection`, `rating_approval`, `approval`];
 
@@ -33,14 +31,9 @@ const TAB_METHOD_MAP = [`selection`, `rating_approval`, `approval`];
     ]
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
-    @ViewChild(PollFormApprovalComponent)
-    private approvalForm: PollFormApprovalComponent | null = null;
-
-    @ViewChild(PollFormSelectionComponent)
-    private selectionForm: PollFormSelectionComponent | null = null;
-
-    @ViewChild(PollFormRatingApprovalComponent)
-    private ratingApprovalForm: PollFormRatingApprovalComponent | null = null;
+    private approvalForm = viewChild(PollFormApprovalComponent);
+    private selectionForm = viewChild(PollFormSelectionComponent);
+    private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
 
     public method = `rating_approval`;
 
@@ -52,12 +45,8 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     private pollService = inject(PollService);
 
-    public constructor(@Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewAssignment>) {
-        super(pollData);
-    }
-
     public override submitPoll(): void {
-        const formValues = this.pollForm?.getValues();
+        const formValues = this.pollForm().getValues();
         const visibility: PollVisibility = formValues?.visibility;
 
         const assignment = this.pollData?.content_object as ViewAssignment;
@@ -81,22 +70,14 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         this.dialogRef.close(payload);
     }
 
-    protected getAnalogVoteFields(): VoteValue[] {
-        return [`Y`, `N`, `A`];
-    }
-
-    protected getContentObjectsForOptions(): BaseModel[] {
-        return [this.pollData.content_object];
-    }
-
     private getMethodConfig(): unknown {
         switch (TAB_METHOD_MAP[this.selectedTab()]) {
             case `approval`:
-                return { ...this.approvalForm?.approvalForm.value };
+                return { ...this.approvalForm()?.approvalForm.value };
             case `selection`:
-                return { ...this.selectionForm?.form.value };
+                return { ...this.selectionForm()?.form.value };
             case `rating_approval`:
-                return { ...this.ratingApprovalForm?.form.value };
+                return { ...this.ratingApprovalForm()?.form.value };
         }
         return {};
     }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Poll } from 'src/app/domain/models/poll';
 import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
 import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
 import { Topic } from 'src/app/domain/models/topics/topic';
+import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
@@ -34,8 +34,9 @@ export class TopicPollService extends PollService {
         this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }
 
-    public getDefaultPollData(contentObject?: Topic): Partial<Poll> {
-        const poll: Partial<Poll> = {
+    public getDefaultPollData(contentObject: Topic): Partial<PollDialogData> {
+        const poll: Partial<PollDialogData> = {
+            content_object: contentObject,
             title: this.translate.instant(`Vote`),
             // onehundred_percent_base: this.defaultPercentBase,
             // pollmethod: this.defaultPollMethod,

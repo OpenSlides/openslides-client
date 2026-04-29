@@ -1,17 +1,13 @@
-import { Component, Inject, inject, ViewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { PollVisibility, VoteValue } from 'src/app/domain/models/poll';
+import { PollVisibility } from 'src/app/domain/models/poll';
 import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-
-import { ViewTopic } from '../../../../view-models';
 
 @Component({
     selector: `os-topic-poll-dialog`,
@@ -22,8 +18,7 @@ import { ViewTopic } from '../../../../view-models';
 export class TopicPollDialogComponent extends BasePollDialogComponent {
     public majority: string;
 
-    @ViewChild(PollFormSelectionComponent)
-    private selectionPollForm: PollFormSelectionComponent | null = null;
+    private selectionPollForm = viewChild.required(PollFormSelectionComponent);
 
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
@@ -31,13 +26,9 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
     private pollService = inject(PollService);
 
-    public constructor(@Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>) {
-        super(pollData);
-    }
-
     public override submitPoll(): void {
-        const formValues = this.pollForm?.getValues();
-        const config = { ...this.selectionPollForm?.form.value };
+        const formValues = this.pollForm().getValues();
+        const config = { ...this.selectionPollForm().form.value };
         const visibility: PollVisibility = formValues?.visibility;
 
         const payload: PollUpdatePayload = {
@@ -56,13 +47,5 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         }
 
         this.dialogRef.close(payload);
-    }
-
-    protected getAnalogVoteFields(): VoteValue[] {
-        return [`Y`, `N`, `A`];
-    }
-
-    protected getContentObjectsForOptions(): BaseModel[] {
-        return [this.pollData.content_object];
     }
 }
