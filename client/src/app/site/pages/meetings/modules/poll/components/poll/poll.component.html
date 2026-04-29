@@ -124,7 +124,7 @@
     <button
         *osPerms="permission.motionCanManagePolls; and: poll && poll().canAnonymize"
         mat-menu-item
-        (click)="pseudoanonymizePoll()"
+        (click)="anonymizePoll()"
     >
         <mat-icon>warning</mat-icon>
         <span>{{ 'Anonymize votes' | translate }}</span>

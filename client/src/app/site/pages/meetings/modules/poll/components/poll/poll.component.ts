@@ -107,7 +107,7 @@ export class PollComponent extends BaseMeetingComponent {
         this.votingPrivacyDialog.open();
     }
 
-    public async pseudoanonymizePoll(): Promise<void> {
+    public async anonymizePoll(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
         if (await this.promptService.open(title)) {
             this.repo.anonymize(this.poll()).catch(this.raiseError);

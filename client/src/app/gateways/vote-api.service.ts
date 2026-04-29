@@ -4,11 +4,13 @@ import { Id } from '../domain/definitions/key-types';
 import { PollVisibility } from '../domain/models/poll';
 import { HttpService } from './http.service';
 
-export interface PollCreatePayload {
-    title: string;
-    description?: string;
+export interface PollCreatePayload extends PollUpdatePayload {
     content_object_id: string;
     meeting_id: Id;
+}
+
+export interface PollUpdatePayload {
+    title: string;
     method: string;
     method_config: unknown;
     visibility: PollVisibility;

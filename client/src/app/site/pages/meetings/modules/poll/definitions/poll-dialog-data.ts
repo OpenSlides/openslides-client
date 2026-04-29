@@ -1,4 +1,5 @@
 import { Fqid } from 'src/app/domain/definitions/key-types';
+import { HasMeetingId } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { Poll } from 'src/app/domain/models/poll/poll';
 
@@ -9,7 +10,7 @@ export interface PollDialogData {
     method: string;
     pollmethod: string;
     content_object_id?: Fqid;
-    content_object: BaseModel;
+    content_object: BaseModel & HasMeetingId;
     poll?: Poll;
 
     isPublished?: boolean;

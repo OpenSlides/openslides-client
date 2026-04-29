@@ -3,7 +3,7 @@ import { map, Observable, switchMap, takeWhile } from 'rxjs';
 import { Decimal, Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
-import { VoteApiService } from 'src/app/gateways/vote-api.service';
+import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
@@ -11,7 +11,6 @@ import { Fieldsets } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { BallotRepositoryService } from '../ballot-repository.service';
 import { PollAction } from './poll.action';
 
 interface AnalogPollVotesValues {
@@ -32,10 +31,7 @@ interface AnalogPollGlobalValues {
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     private voteApi = inject(VoteApiService);
 
-    public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService,
-        private voteRepo: BallotRepositoryService
-    ) {
+    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repoServiceCollector, Poll);
     }
 
@@ -59,34 +55,24 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         };
     }
 
-    public async create(poll: any): Promise<Identifiable> {
-        if (
-            Array.isArray(poll.options) &&
-            typeof poll.min_votes_amount === `number` &&
-            typeof poll.max_votes_per_option === `number` &&
-            poll.options?.length < poll.min_votes_amount / poll.max_votes_per_option
-        ) {
-            throw new Error(
-                `Poll creation aborted because the minimum amount of votes was set higher than the number of available options`
-            );
-        }
-        // TODO: `type` does not exist anymore
+    public async create(poll: PollCreatePayload): Promise<Identifiable> {
         if (poll.visibility === PollVisibility.Manually) {
             return this.createAnalogPoll(poll);
-        } else {
-            return this.createElectronicPoll(poll);
         }
+
+        return this.createElectronicPoll(poll);
     }
 
     public async update(update: any, viewPoll: ViewPoll, option: any[] = []): Promise<void> {
         if (update.visibility === PollVisibility.Manually) {
             return this.updateAnalogPoll(update, viewPoll, option);
-        } else {
-            return this.updateElectronicPoll(update, viewPoll);
         }
+
+        return this.updateElectronicPoll(update, viewPoll);
     }
 
-    private async createAnalogPoll(poll: any): Promise<Identifiable> {
+    private async createAnalogPoll(_poll: any): Promise<Identifiable> {
+        /*
         const payload = {
             meeting_id: this.activeMeetingId,
             title: poll.title,
@@ -101,27 +87,16 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             ...this.getAnalogPollGlobalValues(poll)
         };
         return this.sendActionToBackend(PollAction.CREATE, payload);
+        */
+        throw new Error(`not implemented`);
     }
 
-    private async createElectronicPoll(poll: any): Promise<Identifiable> {
-        const payload = {
-            meeting_id: this.activeMeetingId,
-            title: poll.title,
-            type: poll.type,
-            global_abstain: poll.global_abstain,
-            global_no: poll.global_no,
-            global_yes: poll.global_yes,
-            options: this.getElectronicOptions(poll.options),
-            content_object_id: poll.content_object_id,
-            entitled_group_ids: poll.entitled_group_ids,
-            live_voting_enabled: poll.live_voting_enabled
-        };
-
-        if (poll.visibility !== PollVisibility.Named) {
+    private async createElectronicPoll(payload: PollCreatePayload): Promise<Identifiable> {
+        if (payload.visibility !== PollVisibility.Named) {
             delete payload.live_voting_enabled;
         }
 
-        return this.sendActionToBackend(PollAction.CREATE, payload);
+        return this.voteApi.create(payload);
     }
 
     private async updateAnalogPoll(update: any, poll: ViewPoll, option: any[]): Promise<void> {
@@ -316,10 +291,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             A: update.A
         };
         return this.sendActionToBackend(PollAction.UPDATE_OPTION, payload);
-    }
-
-    public async vote(poll: Identifiable, options: any): Promise<void> {
-        return this.voteRepo.sendVote(poll.id, options);
     }
 
     public async changePollState(poll: Identifiable, targetState: PollState): Promise<void> {

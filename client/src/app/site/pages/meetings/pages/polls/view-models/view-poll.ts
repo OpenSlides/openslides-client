@@ -5,6 +5,7 @@ import { Motion } from 'src/app/domain/models/motions';
 import { PollContentObject, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
 import { Poll } from 'src/app/domain/models/poll/poll';
+import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
@@ -42,9 +43,7 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get isListPoll(): boolean {
-        // return this.options[0]?.isListOption;
-        // TODO: Decide by checking config type == `approval` and options present
-        return !!this.options.length;
+        return this.config?.collection === PollConfigApproval.COLLECTION && !!this.options.length;
     }
 
     public get isAssignmentPoll(): boolean {

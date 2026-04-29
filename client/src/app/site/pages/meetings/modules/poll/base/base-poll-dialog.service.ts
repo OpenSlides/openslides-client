@@ -25,18 +25,19 @@ export abstract class BasePollDialogService<V extends PollContentObject, C = any
                 data
             }
         );
+
         const result = await firstValueFrom(dialogRef.afterClosed());
         if (result) {
             if (data instanceof ViewPoll) {
                 this.update(result, data);
             } else {
-                this.create(result);
+                this.create(result, data);
             }
         }
     }
 
-    protected async create(payload: any): Promise<void> {
-        await this.controller.create(payload);
+    protected async create(payload: any, data: Partial<PollDialogData>): Promise<void> {
+        await this.controller.create(data.content_object, payload);
     }
 
     protected async update(payload: any, poll: ViewPoll): Promise<void> {
