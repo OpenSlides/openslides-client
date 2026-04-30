@@ -9,6 +9,7 @@ import { allAvailableTranslations, availableTranslations } from 'src/app/domain/
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ParticipantListInfoDialogService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -88,6 +89,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private userRepo: UserControllerService,
         private authService: AuthService,
         private dialog: MatDialog,
+        private ParticipantListDialog: ParticipantListInfoDialogService,
         private router: Router,
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
@@ -225,5 +227,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
         }
         return stringForUserPresent.replace(`{}`, this.user.short_name);
+    }
+
+    public async openDialogEditInfo(user: ViewUser) {
+        await this.ParticipantListDialog.open({
+            id: user.id,
+            name: user.getName(),
+            number: user.number(),
+            structure_level_ids: this.user.structure_level_ids(),
+            vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_id: this.user.vote_delegated_to_meeting_user_id()
+        });
     }
 }
