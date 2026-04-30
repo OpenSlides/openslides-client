@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PollState, PollVisibility } from 'src/app/domain/models/poll';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
@@ -17,12 +19,12 @@ import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.p
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
-import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';
 import { PollVoteComponent } from '../poll-vote/poll-vote.component';
+import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/voting-privacy-warning-dialog.component';
 
 interface PollStateAction {
     icon: string;
@@ -95,7 +97,7 @@ export class PollComponent extends BaseMeetingComponent {
     private promptService = inject(PromptService);
     private choiceService = inject(ChoiceService);
     private repo = inject(PollControllerService);
-    private votingPrivacyDialog = inject(VotingPrivacyWarningDialogService);
+    private dialog = inject(MatDialog);
 
     public user = toSignal(this.operator.userObservable);
     public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);
@@ -106,7 +108,7 @@ export class PollComponent extends BaseMeetingComponent {
     });
 
     public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
+        this.dialog.open(VotingPrivacyWarningDialogComponent, infoDialogSettings);
     }
 
     public async anonymizePoll(): Promise<void> {

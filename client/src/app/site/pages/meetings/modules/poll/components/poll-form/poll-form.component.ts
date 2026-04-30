@@ -2,12 +2,14 @@ import { KeyValuePipe } from '@angular/common';
 import { Component, inject, Input, input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import { PollPropertyVerbose, PollPropertyVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { EditableListComponent } from 'src/app/ui/modules/editable-list';
@@ -16,7 +18,7 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
-import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/voting-privacy-warning-dialog.component';
 
 @Component({
     selector: `os-poll-form`,
@@ -101,7 +103,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
-    private dialog = inject(VotingPrivacyWarningDialogService);
+    private dialog = inject(MatDialog);
 
     public constructor() {
         super();
@@ -126,7 +128,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public openVotingWarning(event: MouseEvent): void {
         event.stopPropagation();
-        this.dialog.open();
+        this.dialog.open(VotingPrivacyWarningDialogComponent, infoDialogSettings);
     }
 
     public onOptionsChange(items: string[]): void {

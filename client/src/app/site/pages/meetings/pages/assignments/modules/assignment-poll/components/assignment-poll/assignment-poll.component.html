@@ -1,19 +1,7 @@
 @if (showPoll) {
     <mat-card class="os-card">
         <mat-card-content>
-            <div class="assignment-poll-wrapper">
-                <os-poll [poll]="poll"></os-poll>
-
-                <!-- Meta-Info
-                @if (showMetaInfo || poll.isListPoll) {
-                    <os-assignment-poll-meta-info
-                        [poll]="poll"
-                        [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
-                        [showCandidates]="showCandidatesInMetaInfo"
-                        [showStats]="showMetaInfo"
-                    ></os-assignment-poll-meta-info>
-                } -->
-            </div>
+            <os-poll [poll]="poll"></os-poll>
         </mat-card-content>
     </mat-card>
 }

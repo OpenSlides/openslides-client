@@ -15,10 +15,8 @@ import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/componen
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 
-import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { ViewPoll } from '../../../../../polls';
 import { MotionPollService } from '../../services';
-import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/motion-poll-pdf.service';
 import { MotionPollDetailContentComponent } from '../motion-poll-detail-content/motion-poll-detail-content.component';
 
 @Component({
@@ -102,19 +100,9 @@ export class MotionPollComponent extends BasePollComponent {
     public constructor(
         protected override translate: TranslateService,
         private pollService: MotionPollService,
-        private pdfService: MotionPollPdfService,
-        private operator: OperatorService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+        private operator: OperatorService
     ) {
         super();
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
-    }
-
-    public downloadPdf(): void {
-        this.pdfService.printBallots(this.poll);
     }
 
     public getDetailLink(): string {
