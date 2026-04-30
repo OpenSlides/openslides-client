@@ -1,0 +1,53 @@
+<!-- Candidates -->
+@if (poll().options?.length) {
+    <small class="meta-info-left subtitle">
+        <div>
+            {{ 'Options' | translate }}:
+            <ul>
+                @for (option of poll().options; track option) {
+                    <li>{{ getOptionTitle(option) | translate }}</li>
+                    <!-- TODO: Also display subtitle if available -->
+                }
+            </ul>
+            <!-- TODO: Check if enumeration should be done -->
+            <!-- TODO: Special handling for list polls (approval + >=1 Options) -->
+        </div>
+        @if (hasGlobalOptionEnabled()) {
+            <div>
+                {{ 'Global options' | translate }}:
+                <ul>
+                    @if (generalApprovalAllowed()) {
+                        <li>{{ 'General approval' | translate }}</li>
+                    }
+                    @if (generalRejectionAllowed()) {
+                        <li>{{ 'General rejection' | translate }}</li>
+                    }
+                    @if (generalAbstainAllowed()) {
+                        <li>{{ 'General abstain' | translate }}</li>
+                    }
+                </ul>
+            </div>
+        }
+    </small>
+}
+
+<div class="meta-info-right subtitle">
+    <!-- Groups that can vote -->
+    @if (poll().entitled_groups && poll().isEVoting) {
+        <div>
+            {{ 'Entitled to vote' | translate }}:
+            @if (poll().entitled_groups.length) {
+                <os-comma-separated-listing [list]="poll().entitled_groups">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            } @else {
+                <span>-</span>
+            }
+        </div>
+    }
+
+    <!-- TODO: Voting method -->
+    <!-- TODO: Amount of Votes -->
+    <!-- TODO: Max Votes per Option -->
+    <!-- TODO: 100% base -->
+</div>

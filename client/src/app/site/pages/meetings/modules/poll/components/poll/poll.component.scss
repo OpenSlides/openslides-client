@@ -8,10 +8,20 @@
 
     .poll-title-area {
         grid-area: title;
-        margin-top: 1em;
 
         .poll-title {
             font-size: 125%;
+            font-weight: 500;
+        }
+    }
+
+    .type-and-state {
+        display: flex;
+        span {
+            display: flex;
+        }
+        .poll-type {
+            width: fit-content;
         }
     }
 

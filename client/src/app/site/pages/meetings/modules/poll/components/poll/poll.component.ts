@@ -19,6 +19,7 @@ import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from '../../services/poll-controller.service';
+import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';
 import { PollVoteComponent } from '../poll-vote/poll-vote.component';
@@ -34,6 +35,7 @@ interface PollStateAction {
         PollVoteComponent,
         PollProgressComponent,
         PollResultComponent,
+        PollMetaComponent,
         IconContainerComponent,
         ProjectorButtonModule,
         TranslatePipe,

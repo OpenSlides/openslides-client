@@ -4,7 +4,7 @@
     <div class="poll-title-area">
         <!-- Title -->
         <span class="poll-title break-word">
-            @if (isSameMeeting()) {
+            @if (isSameMeeting() && getDetailLink()) {
                 <a [routerLink]="getDetailLink()">
                     {{ poll().title | translate }}
                 </a>
@@ -12,6 +12,38 @@
                 {{ poll().title | translate }}
             }
         </span>
+
+        <!-- Subtitle -->
+        <div class="italic spacer-bottom-20">
+            <!-- Type and State -->
+            <div class="type-and-state italic spacer-bottom-20 break-word">
+                <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
+                    <os-icon-container
+                        class="poll-type break-word"
+                        color="primary"
+                        icon="info"
+                        size="large"
+                        [showIcon]="poll().isAnonymous"
+                        [swap]="true"
+                        (iconAction)="openVotingWarning()"
+                    >
+                        {{ poll().visibility | translateKey: 'poll_visibility' }}
+                    </os-icon-container>
+                    @if (poll().isAnonymous) {
+                        <span>&nbsp;</span>
+                    }
+                    &middot;&nbsp;
+                </span>
+                <!-- State -->
+                <span class="break-word">
+                    @if (poll().isEVoting && poll().canBeVotedFor()) {
+                        {{ 'Voting in progress' | translate }}
+                    } @else {
+                        {{ poll().state | translateKey: 'poll_state' }}
+                    }
+                </span>
+            </div>
+        </div>
     </div>
 
     <!-- Dot Menu -->
@@ -20,37 +52,6 @@
             <mat-icon class="icon-18">more_horiz</mat-icon>
         </button>
     </span>
-</div>
-
-<!-- Subtitle -->
-<div class="italic spacer-bottom-20">
-    <!-- Type and State -->
-    <div class="type-and-state italic spacer-bottom-20 break-word">
-        <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
-            <os-icon-container
-                class="poll-type break-word"
-                color="primary"
-                icon="info"
-                [showIcon]="poll().isAnonymous"
-                [swap]="true"
-                (iconAction)="openVotingWarning()"
-            >
-                {{ poll().visibility | translateKey: 'poll_visibility' }}
-            </os-icon-container>
-            @if (poll().isAnonymous) {
-                <span>&nbsp;</span>
-            }
-            &middot;&nbsp;
-        </span>
-        <!-- State -->
-        <span class="break-word">
-            @if (poll().isAnonymous && poll().canBeVotedFor()) {
-                {{ 'Voting in progress' | translate }}
-            } @else {
-                {{ poll().state | translateKey: 'poll_state' }}
-            }
-        </span>
-    </div>
 </div>
 
 <!-- Change state button -->
@@ -107,6 +108,10 @@
     }
 } @else if (poll().isFinished) {
     <os-poll-result [poll]="poll()" />
+}
+
+@if (!poll().isFinished) {
+    <os-poll-meta [poll]="poll()" />
 }
 
 <!-- More Menu -->
