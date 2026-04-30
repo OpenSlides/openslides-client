@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
+import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
 
 @Component({
     selector: `os-account-button`,
@@ -88,6 +89,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private userRepo = inject(UserControllerService);
     private authService = inject(AuthService);
     private theme = inject(ThemeService);
+    private ParticipantListDialog = inject(ParticipantListInfoDialogService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private dialog = inject(MatDialog);
@@ -225,5 +227,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
         return this.user.short_name + ': ' + stringForUserPresent;
+    }
+
+    public async openDialogEditInfo(user: ViewUser) {
+        await this.ParticipantListDialog.open({
+            id: user.id,
+            name: user.getName(),
+            number: user.number(),
+            structure_level_ids: this.user.structure_level_ids(),
+            vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_ids: this.user.vote_delegated_to_meeting_user_ids()
+        });
     }
 }

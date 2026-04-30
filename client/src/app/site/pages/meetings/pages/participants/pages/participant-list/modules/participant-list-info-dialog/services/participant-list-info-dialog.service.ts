@@ -1,10 +1,12 @@
-import { Service } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { inject, Service } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
+import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
 
 /**
@@ -50,9 +52,9 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
     Partial<InfoDialog>,
     InfoDialog
 > {
-    public async open(
-        data: Partial<InfoDialog> & Identifiable
-    ): Promise<MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>> {
+    private controller = inject(ParticipantControllerService);
+
+    public async open(data: Partial<InfoDialog> & Identifiable): Promise<any> {
         const module = await import(`../participant-list-info-dialog.module`).then(
             m => m.ParticipantListInfoDialogModule
         );
@@ -62,6 +64,25 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
                 dialogRef.close(data);
             }
         });
-        return dialogRef;
+        const result = await firstValueFrom(dialogRef.afterClosed());
+        console.log(data.id, result, result.id, data);
+
+        if (result) {
+            if (data instanceof ViewUser) {
+                console.log('it is');
+                this.update(result, data);
+            } else {
+                console.log('something else');
+                this.create(result);
+            }
+        }
+    }
+
+    protected async create(payload: any): Promise<void> {
+        await this.controller.create(payload);
+    }
+
+    protected async update(payload: any, user: ViewUser): Promise<void> {
+        await this.controller.update(payload, user);
     }
 }
