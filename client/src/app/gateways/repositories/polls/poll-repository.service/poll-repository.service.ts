@@ -1,10 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, switchMap, takeWhile } from 'rxjs';
-import { Decimal, Id } from 'src/app/domain/definitions/key-types';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
-import { PollCreatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
-import { toDecimal } from 'src/app/infrastructure/utils';
+import { PollCreatePayload, PollUpdatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
 import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -12,18 +11,6 @@ import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PollAction } from './poll.action';
-
-interface AnalogPollVotesValues {
-    votescast?: Decimal;
-    votesvalid?: Decimal;
-    votesinvalid?: Decimal;
-}
-
-interface AnalogPollGlobalValues {
-    amount_global_yes?: Decimal;
-    amount_global_no?: Decimal;
-    amount_global_abstain?: Decimal;
-}
 
 @Injectable({
     providedIn: `root`
@@ -63,12 +50,12 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.createElectronicPoll(poll);
     }
 
-    public async update(update: any, viewPoll: ViewPoll, option: any[] = []): Promise<void> {
-        if (update.visibility === PollVisibility.Manually) {
-            return this.updateAnalogPoll(update, viewPoll, option);
+    public async update(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
+        if (payload.visibility === PollVisibility.Manually) {
+            return this.updateAnalogPoll(poll.id, payload);
         }
 
-        return this.updateElectronicPoll(update, viewPoll);
+        return this.updateElectronicPoll(poll, payload);
     }
 
     private async createAnalogPoll(_poll: any): Promise<Identifiable> {
@@ -99,7 +86,8 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.voteApi.create(payload);
     }
 
-    private async updateAnalogPoll(update: any, poll: ViewPoll, option: any[]): Promise<void> {
+    private async updateAnalogPoll(_pollId: Id, _payload: PollUpdatePayload): Promise<void> {
+        /*
         let payload: any;
         if (poll.state === PollState.Created) {
             payload = this.getUpdateCreatedAnalogPollPayload(update, poll);
@@ -111,131 +99,20 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             { action: PollAction.UPDATE, data: [payload] },
             { action: PollAction.UPDATE_OPTION, data: optionUpdatePayload }
         ]);
+        */
+        throw new Error(`not implemented`);
     }
 
-    private async updateElectronicPoll(update: any, poll: Poll): Promise<void> {
-        /**
-         * We still want to alter the title and the 100% base after the
-         * poll was saved.
-         *
-         * TODO:
-         * This can be heavily streamlined:
-         * generically, on all "update" (not create) tasks,
-         * compare the current poll with the update and only send
-         * the stuff that is different, since in this
-         * regard the form already only allows to change
-         * title and %base
-         */
-        if (poll.state !== PollState.Created) {
-            update = {
-                title: update.title
-            };
+    private async updateElectronicPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
+        if (poll.config.METHOD_NAME === payload.method) {
+            delete payload[`method`];
         }
-        return this.updateCreatedElectronicPoll(update, poll);
+
+        return this.voteApi.update(poll.id, payload);
     }
 
     public async delete(poll: Identifiable): Promise<void> {
         return this.voteApi.deletePoll(poll.id);
-    }
-
-    private getUpdateCreatedAnalogPollPayload(update: any, poll: Poll): any {
-        const payload = {
-            id: poll.id,
-            publish_immediately: update.publish_immediately,
-            allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
-            description: update.description,
-            title: update.title,
-            ...this.getAnalogPollVotesValues(update)
-        };
-        return payload;
-    }
-
-    private updateOtherStateAnalogPoll(update: any, poll: Poll): any {
-        const payload: any = {
-            id: poll.id,
-            publish_immediately: update.publish_immediately,
-            description: update.description,
-            title: update.title,
-            ...this.getAnalogPollVotesValues(update)
-        };
-        return payload;
-    }
-
-    private async updateCreatedElectronicPoll(update: any, poll: Poll): Promise<void> {
-        const payload = {
-            id: poll.id,
-            entitled_group_ids: update.entitled_group_ids,
-            allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
-            description: update.description,
-            title: update.title,
-            backend: update.backend,
-            global_abstain: update.global_abstain,
-            global_no: update.global_no,
-            global_yes: update.global_yes,
-            live_voting_enabled: update.live_voting_enabled
-        };
-        return this.sendActionToBackend(PollAction.UPDATE, payload);
-    }
-
-    private getAnalogPollVotesValues(poll: any): AnalogPollVotesValues {
-        return {
-            votescast: toDecimal(poll.votescast, false),
-            votesinvalid: toDecimal(poll.votesinvalid, false),
-            votesvalid: toDecimal(poll.votesvalid, false)
-        };
-    }
-
-    private getAnalogPollGlobalValues(poll: any): AnalogPollGlobalValues {
-        return {
-            amount_global_abstain: toDecimal(poll.amount_global_abstain, false),
-            amount_global_no: toDecimal(poll.amount_global_no, false),
-            amount_global_yes: toDecimal(poll.amount_global_yes, false)
-        };
-    }
-
-    private getAnalogOptions(pollOptions: any[], isUpdate = false): any[] {
-        const result: any[] = [];
-        for (const option of pollOptions) {
-            if (!isUpdate) {
-                this.validateOption(option);
-            } else {
-                delete option.text;
-                delete option.content_object_id;
-                delete option.poll_candidate_user_ids;
-            }
-            result.push({
-                id: option.id,
-                content_object_id: option.content_object_id,
-                text: option.text,
-                poll_candidate_user_ids: option.poll_candidate_user_ids,
-                Y: toDecimal(option.Y, false),
-                A: toDecimal(option.A, false),
-                N: toDecimal(option.N, false)
-            });
-        }
-        return result;
-    }
-
-    private getElectronicOptions(pollOptions: any[]): any[] {
-        const result: any[] = [];
-        for (const option of pollOptions) {
-            this.validateOption(option);
-            result.push({
-                content_object_id: option.content_object_id,
-                text: option.text,
-                poll_candidate_user_ids: option.poll_candidate_user_ids
-            });
-        }
-        return result;
-    }
-
-    private validateOption(option: any): void {
-        if (
-            [option.text, option.content_object_id, option.poll_candidate_user_ids].filter(content => !!content)
-                .length !== 1
-        ) {
-            throw new Error(`Exactly one of text, content_object_id or poll_candidate_user_ids has to be given!`);
-        }
     }
 
     /**

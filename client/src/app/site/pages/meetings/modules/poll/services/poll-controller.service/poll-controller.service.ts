@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Fqid } from 'src/app/domain/definitions/key-types';
 import { HasMeetingId, Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { Poll } from 'src/app/domain/models/poll/poll';
@@ -41,15 +41,8 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
         return this.repo.create(createPayload);
     }
 
-    public update(_pollID: Id, _payload: any): Promise<void> {
-        throw new Error(`not implemented`);
-        /*
-        const optionUpdatePayload = poll.options.map((option, index) => ({
-            id: option.id,
-            ...payload.options[index]
-        }));
-        return this.repo.update(payload, poll, optionUpdatePayload);
-        */
+    public update(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
+        return this.repo.update(poll, payload);
     }
 
     public delete(poll: Identifiable): Promise<void> {

@@ -40,7 +40,7 @@ export abstract class BasePollDialogService<V extends PollContentObject, C = any
     }
 
     protected async update(payload: any, poll: ViewPoll): Promise<void> {
-        await this.controller.update(payload, poll);
+        await this.controller.update(poll, payload);
     }
 
     protected abstract getComponent(): ComponentType<C>;
