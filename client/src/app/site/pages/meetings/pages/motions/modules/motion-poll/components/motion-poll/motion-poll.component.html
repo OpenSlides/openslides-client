@@ -2,20 +2,7 @@
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
             <os-poll [poll]="poll"></os-poll>
-            <!-- Results
-            @if (poll && !poll.stateHasVotes && !poll.isAnalog) {
-                @if (poll && poll.isStarted) {
-                    <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll" />
-                }
-                @if (poll.canBeVotedFor()) {
-                    <os-motion-poll-vote [displayInAutopilot]="false" [poll]="poll" />
-                }
-                <os-motion-poll-meta-information [poll]="poll" />
-            } @else {
-                <span [ngClass]="{ 'poll-link-wrapper': isSameMeeting }">
-                    <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
-                </span>
-            } -->
+
             <!-- Detail link -->
             @if (poll.isPublished && isSameMeeting) {
                 <div class="poll-detail-button-wrapper">
@@ -27,29 +14,3 @@
         </mat-card-content>
     </mat-card>
 }
-
-<ng-template #viewTemplate>
-    @if (isSameMeeting) {
-        <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()" />
-    } @else {
-        <os-motion-poll-detail-content [poll]="poll" />
-    }
-</ng-template>
-
-<ng-template #emptyTemplate>
-    <span *osPerms="permission.motionCanManagePolls; and: poll.isAnalog">
-        <button mat-stroked-button matTooltip="{{ 'Edit' | translate }}" (click)="dialogOpened.emit()">
-            <mat-icon>edit</mat-icon>
-        </button>
-        <div>
-            {{ 'Edit to enter votes.' | translate }}
-        </div>
-    </span>
-    @if (!poll.isAnalog) {
-        <p>
-            <i *osPerms="permission.motionCanManagePolls; or: isPublished">
-                {{ 'No one has voted for this poll' | translate }}
-            </i>
-        </p>
-    }
-</ng-template>
