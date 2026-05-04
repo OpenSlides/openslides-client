@@ -19,6 +19,7 @@ import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
+import { Permission } from '@app/domain/definitions/permission';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
 import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
@@ -72,11 +73,19 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public username = ``;
     public isLoggedIn = false;
+    private _voteDelegationEnabled = false;
 
     public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
+    }
+
+    public get activeMeetingSetting(): boolean {
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
+        return this._voteDelegationEnabled;
     }
 
     private _isAllowedSelfSetPresent = false;
@@ -89,7 +98,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private userRepo = inject(UserControllerService);
     private authService = inject(AuthService);
     private theme = inject(ThemeService);
-    private ParticipantListDialog = inject(ParticipantListInfoDialogService);
+    private participantListDialog = inject(ParticipantListInfoDialogService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private dialog = inject(MatDialog);
@@ -229,8 +238,30 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this.user.short_name + ': ' + stringForUserPresent;
     }
 
-    public async openDialogEditInfo(user: ViewUser) {
-        await this.ParticipantListDialog.open({
+    public canEditOwnDelegation(user: ViewUser): boolean {
+        if (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return this.operator.operatorId === user.id;
+        } else if (
+            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public async openDialogEditInfo(user: ViewUser): Promise<void> {
+        console.log(
+            this.user,
+            this.user.vote_delegations_from_meeting_user_ids(),
+            this.user.vote_delegated_to_meeting_user_ids()
+        );
+        await this.participantListDialog.open({
             id: user.id,
             name: user.getName(),
             number: user.number(),
@@ -238,5 +269,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_ids: this.user.vote_delegated_to_meeting_user_ids()
         });
+        // *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
     }
 }
