@@ -5,6 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PollVisibility } from 'src/app/domain/models/poll';
 import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
@@ -44,6 +45,16 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public selectedTab = signal(0);
 
     private pollService = inject(PollService);
+
+    public constructor() {
+        super();
+
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            this.method = collection.replace(`poll_config_`, ``);
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
+        }
+    }
 
     public override submitPoll(): void {
         const formValues = this.pollForm().getValues();
