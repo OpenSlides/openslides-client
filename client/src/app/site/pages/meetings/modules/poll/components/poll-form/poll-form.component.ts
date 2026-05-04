@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
-import { PollPropertyVerbose, PollPropertyVerboseKey, PollVisibility } from 'src/app/domain/models/poll';
+import { PollVisibility } from 'src/app/domain/models/poll';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -42,8 +42,6 @@ import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/v
 export class PollFormComponent extends BaseComponent implements OnInit {
     public pollForm: UntypedFormGroup;
 
-    public PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = PollPropertyVerbose;
-
     public readonly visibilityOptions = PollVisibility;
 
     public showNonNominalWarning = false;
@@ -65,6 +63,8 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
             if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
             if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
+            if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
+                patch[`options`] = data.options.map(option => option.text);
             this.pollForm.patchValue(patch);
         }
     }

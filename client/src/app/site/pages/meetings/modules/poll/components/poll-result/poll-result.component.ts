@@ -15,6 +15,10 @@ export class PollResultComponent {
     public poll = input.required<ViewPoll>();
 
     public configType = computed(() => {
+        if (!this.poll().config_id) {
+            return `none`;
+        }
+
         return collectionFromFqid(this.poll().config_id);
     });
 }

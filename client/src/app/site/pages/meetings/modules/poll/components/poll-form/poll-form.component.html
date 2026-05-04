@@ -32,7 +32,7 @@
                     <!-- Groups entitled to Vote -->
                     @if (isEVotingSelected) {
                         <mat-form-field>
-                            <mat-label>{{ PollPropertyVerbose.groups | translate }}</mat-label>
+                            <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
                             <os-repo-search-selector
                                 formControlName="entitled_group_ids"
                                 [multiple]="true"
