@@ -13,6 +13,14 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
     public allow_nota!: boolean;
     public onehundred_percent_base!: SelectionOnehundredPercentBase;
 
+    public get max_vote_sum(): number {
+        return this.max_options_amount;
+    }
+
+    public get min_vote_sum(): number {
+        return this.min_options_amount;
+    }
+
     public constructor(input?: Partial<PollConfigSelection>) {
         super(PollConfigSelection.COLLECTION, input);
     }

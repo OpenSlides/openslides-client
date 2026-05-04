@@ -32,23 +32,23 @@ export class PollMetaComponent {
                 ViewPollConfigStvScottish
         >
     >(() => {
-        return this.poll().config;
+        return this.poll().config || {};
     });
 
     public hasGlobalOptionEnabled = computed<boolean>(() => {
-        return this.poll().config.allow_nota || this.poll().config.min_options_amount === 0;
+        return this.config().allow_nota || this.config().min_options_amount === 0;
     });
 
     public generalApprovalAllowed = computed<boolean>(() => {
-        return this.poll().config.allow_nota && this.poll().config.strike_out;
+        return this.config().allow_nota && this.config().strike_out;
     });
 
     public generalRejectionAllowed = computed<boolean>(() => {
-        return this.poll().config.allow_nota && !this.poll().config.strike_out;
+        return this.config().allow_nota && !this.config().strike_out;
     });
 
     public generalAbstainAllowed = computed<boolean>(() => {
-        return this.poll().config.min_options_amount === 0;
+        return this.config().min_options_amount === 0;
     });
 
     public getOptionTitle(option: ViewPollOption): string {

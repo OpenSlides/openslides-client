@@ -61,19 +61,38 @@
         </div>
     }
 
-    <!-- TODO: min_vote_sum, max_vote_sum -->
-    @if (config().min_options_amount > 1 || config().max_options_amount > 1) {
-        @if (config().min_options_amount === config().max_options_amount) {
+    @if (config().min_vote_sum > 1 || config().max_vote_sum > 1) {
+        @if (config().min_vote_sum === config().max_vote_sum) {
             {{ 'Votes' | translate }}:
+            <span>{{ config().min_vote_sum }}</span>
+        } @else {
+            @if (config().min_vote_sum > 1) {
+                {{ 'Minimum amount of votes' | translate }}:
+                <span>{{ config().min_vote_sum }}</span>
+            }
+
+            @if (config().max_vote_sum > 1) {
+                {{ 'Maximum amount of votes' | translate }}:
+                <span>{{ config().max_vote_sum }}</span>
+            }
+        }
+    }
+
+    @if (
+        config().COLLECTION !== `poll_config_selection` &&
+        (config().min_options_amount > 1 || config().max_options_amount > 1)
+    ) {
+        @if (config().min_options_amount === config().max_options_amount) {
+            {{ 'Votes on different options' | translate }}:
             <span>{{ config().min_options_amount }}</span>
         } @else {
             @if (config().min_options_amount > 1) {
-                {{ 'Minimum amount of votes' | translate }}:
+                {{ 'Minimum amount of options selected' | translate }}:
                 <span>{{ config().min_options_amount }}</span>
             }
 
             @if (config().max_options_amount > 1) {
-                {{ 'Maximum amount of votes' | translate }}:
+                {{ 'Maximum amount options selected' | translate }}:
                 <span>{{ config().max_options_amount }}</span>
             }
         }
