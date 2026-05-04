@@ -1,1 +1,41 @@
-<p>poll-result-selection works!</p>
+<div class="result-wrapper">
+    <table class="result-table">
+        <tbody>
+            <tr>
+                <th class="left-header"></th>
+                <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+            </tr>
+            @for (row of options(); track row.key) {
+                <tr [class]="row.votingOption">
+                    <!-- YNA/Valid etc -->
+                    <td class="label-column">
+                        <span>
+                            {{ row.votingOption | translate }}
+                        </span>
+                    </td>
+
+                    <!-- Percent numbers -->
+                    <td class="result-cell-definition percent-column">
+                        @if (
+                            row.showPercent ||
+                            (shouldShowEntitled() && poll().config?.onehundred_percent_base !== 'entitled')
+                        ) {
+                            <span>
+                                {{ row.amount! | pollPercentBase: poll() }}
+                            </span>
+                        }
+                    </td>
+
+                    <!-- Voices -->
+                    <td class="result-cell-definition">
+                        {{ row.amount | pollParseNumber }}
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="doughnut-chart-normal">
+    <os-chart type="doughnut" [data]="chartData()"></os-chart>
+</div>
