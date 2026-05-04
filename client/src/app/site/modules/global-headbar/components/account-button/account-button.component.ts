@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { allAvailableTranslations, availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ParticipantListInfoDialogService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
@@ -71,11 +72,19 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public username = ``;
     public isLoggedIn = false;
+    private _voteDelegationEnabled = false;
 
     public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
+    }
+
+    public get activeMeetingSetting(): boolean {
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
+        return this._voteDelegationEnabled;
     }
 
     private _isAllowedSelfSetPresent = false;
@@ -89,7 +98,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private userRepo: UserControllerService,
         private authService: AuthService,
         private dialog: MatDialog,
-        private ParticipantListDialog: ParticipantListInfoDialogService,
+        private participantListDialog: ParticipantListInfoDialogService,
         private router: Router,
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
@@ -229,8 +238,30 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return stringForUserPresent.replace(`{}`, this.user.short_name);
     }
 
-    public async openDialogEditInfo(user: ViewUser) {
-        await this.ParticipantListDialog.open({
+    public canEditOwnDelegation(user: ViewUser): boolean {
+        if (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return this.operator.operatorId === user.id;
+        } else if (
+            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public async openDialogEditInfo(user: ViewUser): Promise<void> {
+        console.log(
+            this.user,
+            this.user.vote_delegations_from_meeting_user_ids(),
+            this.user.vote_delegated_to_meeting_user_id()
+        );
+        await this.participantListDialog.open({
             id: user.id,
             name: user.getName(),
             number: user.number(),
@@ -238,5 +269,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: this.user.vote_delegated_to_meeting_user_id()
         });
+        // *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
     }
 }

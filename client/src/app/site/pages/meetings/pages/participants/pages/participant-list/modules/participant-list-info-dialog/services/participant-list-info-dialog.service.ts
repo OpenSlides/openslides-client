@@ -69,14 +69,10 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
             }
         });
         const result = await firstValueFrom(dialogRef.afterClosed());
-        console.log(data.id, result, result.id, data);
-
         if (result) {
             if (data instanceof ViewUser) {
-                console.log('it is');
                 this.update(result, data);
             } else {
-                console.log('something else');
                 this.create(result);
             }
         }

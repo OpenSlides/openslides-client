@@ -17,7 +17,7 @@
         <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
         <os-list-search-selector
             [includeNone]="true"
-            [inputListValues]="otherParticipantsObservable"
+            [inputListValues]="userList"
             [multiple]="false"
             [sortFn]="false"
             [(ngModel)]="infoDialog.vote_delegated_to_id"
