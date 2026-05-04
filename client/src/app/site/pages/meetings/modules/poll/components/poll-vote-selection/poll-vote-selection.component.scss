@@ -1,6 +1,12 @@
 @use 'src/assets/styles/poll-colors.scss';
 @use 'src/assets/styles/poll-styles-common.scss';
 
+.option-list-information-grid {
+    display: grid;
+    grid-template-columns: max-content auto max-content;
+    margin: 0 10px;
+}
+
 .option-row {
     display: grid;
     grid-template-columns: 1fr min-content;
@@ -65,6 +71,6 @@
 
 .submit-area {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 10px 10px 0;
 }

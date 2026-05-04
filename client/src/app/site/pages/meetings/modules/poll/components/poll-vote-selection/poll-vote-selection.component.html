@@ -1,3 +1,25 @@
+<div class="option-list-information-grid" role="row">
+    @if (poll().option_ids.length > 1) {
+        <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
+    } @else {
+        <div></div>
+    }
+    <div></div>
+    @if (poll().config?.max_vote_sum > 1) {
+        <div class="text-right">
+            {{ 'Available votes' | translate }}:
+            <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
+            @if (poll().config?.min_votes_amount > 1) {
+                <div>
+                    {{ 'At least' | translate }}
+                    <b>{{ poll().config?.min_vote_sum }}</b>
+                    {{ 'Votes' | translate }}
+                </div>
+            }
+        </div>
+    }
+</div>
+
 @for (option of options(); track option.id; let i = $index) {
     <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
         <div class="vote-option-title grid-name-area" role="rowheader">
@@ -34,7 +56,8 @@
             [disabled]="loading() || selectedOptionIds().size === 0"
             (click)="submitVote()"
         >
-            {{ 'Submit vote' | translate }}
+            <mat-icon>how_to_vote</mat-icon>
+            {{ 'Submit vote now' | translate }}
         </button>
     </div>
 }

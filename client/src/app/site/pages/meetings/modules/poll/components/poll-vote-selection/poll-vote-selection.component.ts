@@ -49,6 +49,12 @@ export class PollVoteSelectionComponent implements OnDestroy {
         return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
     });
 
+    public availableVotes = computed<number>(() => {
+        const config = this.poll().config;
+        const maxVotes = config?.max_options_amount ?? 1;
+        return maxVotes - this.selectedOptionIds().size;
+    });
+
     private pollRepo = inject(PollRepositoryService);
     private pollBallotSubscription: Subscription;
 
