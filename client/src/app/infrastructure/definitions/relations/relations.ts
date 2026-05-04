@@ -1016,6 +1016,12 @@ export const RELATIONS: Relation[] = [
         OField: `options`
     }),
     ...makeM2O({
+        MViewModel: ViewPollOption,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `poll_options`
+    }),
+    ...makeM2O({
         OViewModel: ViewPoll,
         MViewModel: ViewBallot,
         OField: `ballots`,

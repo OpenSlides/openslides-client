@@ -2,15 +2,29 @@
 @if (poll().options?.length) {
     <small class="meta-info-left subtitle">
         <div>
-            {{ 'Options' | translate }}:
-            <ul>
+            @if (isListPoll()) {
+                {{ 'Nomination list' | translate }}
+                ({{ poll().options?.length ?? 0 }} {{ 'Candidates' | translate }}):
+            } @else if (isPersonPoll()) {
+                {{ 'Candidates' | translate }}:
+            } @else {
+                {{ 'Options' | translate }}:
+            }
+            @if (enumerateOptions()) {
+                <ol>
+                    <ng-container *ngTemplateOutlet="optionItems" />
+                </ol>
+            } @else {
+                <ul>
+                    <ng-container *ngTemplateOutlet="optionItems" />
+                </ul>
+            }
+
+            <ng-template #optionItems>
                 @for (option of poll().options; track option) {
                     <li>{{ getOptionTitle(option) | translate }}</li>
-                    <!-- TODO: Also display subtitle if available -->
                 }
-            </ul>
-            <!-- TODO: Check if enumeration should be done -->
-            <!-- TODO: Special handling for list polls (approval + >=1 Options) -->
+            </ng-template>
         </div>
         @if (hasGlobalOptionEnabled()) {
             <div>

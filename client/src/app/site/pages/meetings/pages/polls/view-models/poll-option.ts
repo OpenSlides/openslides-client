@@ -2,6 +2,7 @@ import { OptionTitle } from 'src/app/domain/models/poll';
 import { PollOption } from 'src/app/domain/models/poll/poll-option';
 import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
 
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewPoll } from '..';
 
 export class ViewPollOption extends BaseViewModel<PollOption> {
@@ -28,5 +29,6 @@ export class ViewPollOption extends BaseViewModel<PollOption> {
 
 interface IPollConfigOptionRelations {
     poll: ViewPoll;
+    meeting_user: ViewMeetingUser;
 }
 export interface ViewPollOption extends ViewModelRelations<IPollConfigOptionRelations>, PollOption {}
