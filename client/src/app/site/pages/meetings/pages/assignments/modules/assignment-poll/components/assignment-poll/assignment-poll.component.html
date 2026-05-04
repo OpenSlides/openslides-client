@@ -1,7 +1,7 @@
 @if (showPoll) {
     <mat-card class="os-card">
         <mat-card-content>
-            <os-poll [poll]="poll" (dialogOpened)="dialogOpened.emit($event)" />
+            <os-poll [allowEdit]="true" [poll]="poll" (dialogOpened)="dialogOpened.emit($event)" />
         </mat-card-content>
     </mat-card>
 }

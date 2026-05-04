@@ -1,7 +1,7 @@
 @if (showPoll) {
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
-            <os-poll [poll]="poll" (dialogOpened)="dialogOpened.emit($event)"></os-poll>
+            <os-poll [allowEdit]="true" [poll]="poll" (dialogOpened)="dialogOpened.emit($event)"></os-poll>
 
             <!-- Detail link -->
             @if (poll.isPublished && isSameMeeting) {

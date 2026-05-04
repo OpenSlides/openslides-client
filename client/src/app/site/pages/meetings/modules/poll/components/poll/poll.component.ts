@@ -56,6 +56,8 @@ interface PollStateAction {
 export class PollComponent extends BaseMeetingComponent {
     public poll = input.required<ViewPoll>();
 
+    public allowEdit = input<boolean>(false);
+
     public dialogOpened = output<void>();
     public downloadPdf = output<void>();
 

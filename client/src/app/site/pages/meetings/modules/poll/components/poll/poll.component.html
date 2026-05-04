@@ -116,10 +116,12 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
-        <mat-icon>edit</mat-icon>
-        <span>{{ 'Edit' | translate }}</span>
-    </button>
+    @if (allowEdit()) {
+        <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+    }
     <os-projector-button
         *osPerms="permission.projectorCanManage"
         [allowReferenceProjector]="true"
