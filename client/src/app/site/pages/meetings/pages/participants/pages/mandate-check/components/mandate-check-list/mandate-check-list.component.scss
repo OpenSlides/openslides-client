@@ -77,6 +77,14 @@ mat-progress-bar * {
     width: 100%;
     min-width: 0;
     margin-right: 3em;
+    border-radius: 10px;
+    --mdc-linear-progress-active-indicator-height: 1.5em;
+    --mdc-linear-progress-track-height: 1.5em;
+
+    .mdc-linear-progress__bar-inner {
+        border-top-right-radius: 50% 10px;
+        border-bottom-right-radius: 50% 10px;
+    }
 
     @include media-queries.set-breakpoint-lower(430px) {
         max-width: 20%;
