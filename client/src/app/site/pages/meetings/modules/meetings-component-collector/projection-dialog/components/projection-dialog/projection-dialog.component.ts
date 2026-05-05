@@ -186,13 +186,38 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public onAddToPreview(): void {
-        console.log(`keey:`);
-        this.dialogRef.close({
-            action: `addToPreview`,
-            resultDescriptor: this.descriptor,
-            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
-            options: this.optionValues
-        });
+        if (typeof this.descriptor.content_object_id === `string`) {
+            this.dialogRef.close({
+                action: `addToPreview`,
+                resultDescriptor: this.descriptor,
+                projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
+                options: this.optionValues
+            });
+        } else {
+            const projectors = this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p);
+            const stable: boolean = this.descriptor.stable;
+            const stableToggle: string = this.descriptor.stableToggle;
+            const type: string = this.descriptor.type;
+            const slideOptions: SlideOptions = this.descriptor.slideOptions;
+            const projectionDefault = this.descriptor.projectionDefault;
+            const getDialogTitle = this.descriptor.getDialogTitle;
+            for (const item of this.descriptor.content_object_id) {
+                this.projectorService.addToPreview(
+                    {
+                        content_object_id: item,
+                        stable,
+                        stableToggle,
+                        type,
+                        slideOptions,
+                        projectionDefault,
+                        getDialogTitle
+                    },
+                    projectors,
+                    this.optionValues
+                );
+            }
+            this.dialogRef.close();
+        }
     }
 
     public onHide(): void {
