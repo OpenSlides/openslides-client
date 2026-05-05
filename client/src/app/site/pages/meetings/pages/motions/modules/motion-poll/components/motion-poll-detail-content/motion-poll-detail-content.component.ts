@@ -13,8 +13,6 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ViewPoll } from '../../../../../polls';
 import { MotionPollService } from '../../services';
 
-const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
-
 @Component({
     selector: `os-motion-poll-detail-content`,
     templateUrl: `./motion-poll-detail-content.component.html`,

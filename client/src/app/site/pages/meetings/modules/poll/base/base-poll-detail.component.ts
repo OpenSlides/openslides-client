@@ -317,7 +317,7 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                     filter(users => !!users.length),
                     map(users => users.filter(user => userIds.has(user.id)))
                 )
-                .subscribe(users => {
+                .subscribe(_users => {
                     const entries: EntitledUsersTableEntry[] = [];
                     /* TODO: Reenable
                     for (const user of users || []) {

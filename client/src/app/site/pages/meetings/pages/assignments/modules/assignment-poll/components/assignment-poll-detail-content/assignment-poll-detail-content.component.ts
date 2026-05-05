@@ -57,11 +57,6 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
         return this._tableData;
     }
 
-    private get method(): string | null {
-        // TODO: Replace
-        return null;
-    }
-
     private get state(): PollState | null {
         return this.poll?.state || null;
     }
@@ -93,10 +88,7 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
         return this.operator.hasPerms(Permission.assignmentCanManagePolls) || this.isPublished;
     }
 
-    public get entitledPresentUsersCount(): number {
-        // return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
-        return 0;
-    }
+    public readonly entitledPresentUsersCount = 0;
 
     public get assignmentPollService(): PollService {
         return this.pollService;
@@ -110,10 +102,7 @@ export class AssignmentPollDetailContentComponent implements AfterViewInit {
         return this.assignment?.number_poll_candidates || false;
     }
 
-    public get showEntriesAmount(): boolean {
-        // return !!this.poll.options[0]?.entries_amount;
-        return false;
-    }
+    public readonly showEntriesAmount = false;
 
     public constructor(
         private translate: TranslateService,

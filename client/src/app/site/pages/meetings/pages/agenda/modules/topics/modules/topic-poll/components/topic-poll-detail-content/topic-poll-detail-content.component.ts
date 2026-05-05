@@ -8,7 +8,6 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { TopicPollService } from '../../services/topic-poll.service';
 
-const SUBSCRIPTION_NAME = `tableData`;
 @Component({
     selector: `os-topic-poll-detail-content`,
     template: `
@@ -75,10 +74,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
         return this.operator.hasPerms(Permission.pollCanManage) || this.isPublished;
     }
 
-    public get shouldShowChart(): boolean {
-        // return this.pollService.shouldShowChart(this.poll);
-        return false;
-    }
+    public readonly shouldShowChart = false;
 
     public get chartColors(): [{ backgroundColor: string[] }] {
         return [this.generateChartColors(this.poll.options.length)];
