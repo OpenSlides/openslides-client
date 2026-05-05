@@ -87,8 +87,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
 
     public itemListSlide: ProjectionBuildDescriptor | null = null;
 
-    public multiQueue: ProjectionBuildDescriptor | null = null;
-
     /**
      * Define extra filter properties
      */
@@ -341,14 +339,12 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             }
             return {
                 content_object_id: ids,
-                type: MeetingProjectionType.AgendaItemList,
                 projectionDefault: PROJECTIONDEFAULT.topics,
                 getDialogTitle: (): string => this.translate.instant(`Agenda`)
             };
         } else {
             return {
                 content_object_id: null,
-                type: MeetingProjectionType.AgendaItemList,
                 projectionDefault: PROJECTIONDEFAULT.topics,
                 getDialogTitle: (): string => this.translate.instant(`Agenda`)
             };

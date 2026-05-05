@@ -260,6 +260,7 @@
                 <mat-divider></mat-divider>
                 <!-- Add to projector queue -->
                 <os-projector-button
+                    [disabled]="!selectedRows.length"
                     [hideMainButton]="true"
                     [menuItem]="true"
                     [object]="addToProjectorQueue()"
