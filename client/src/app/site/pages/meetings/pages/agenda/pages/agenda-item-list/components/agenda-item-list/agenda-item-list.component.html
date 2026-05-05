@@ -160,6 +160,7 @@
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
+
             <!-- Add to projector queue -->
             <os-projector-button
                 [hideMainButton]="true"
@@ -257,6 +258,13 @@
                     <span>{{ 'Set hidden' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
+                <!-- Add to projector queue -->
+                <os-projector-button
+                    [hideMainButton]="true"
+                    [menuItem]="true"
+                    [object]="addToProjectorQueue()"
+                    [projectorLabel]="'Add to queue'"
+                ></os-projector-button>
                 <!-- PDF/CSV export -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAgendaItems()">
                     <mat-icon>archive</mat-icon>

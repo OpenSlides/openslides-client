@@ -332,9 +332,13 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
 
     public addToProjectorQueue(): ProjectionBuildDescriptor {
         const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+        const originalOrderList = this.listComponent?.source.map(i => i.content_object_id);
 
         if (agendaItems) {
             const ids = agendaItems.map(item => item.content_object_id);
+            if (this.isMultiSelect) {
+                ids.sort((a, b) => originalOrderList.indexOf(a) - originalOrderList.indexOf(b));
+            }
             return {
                 content_object_id: ids,
                 type: MeetingProjectionType.AgendaItemList,
