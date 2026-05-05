@@ -31,7 +31,6 @@ export class Ballot extends BaseModel<Ballot> {
         `weight`,
         `split`,
         `value`,
-        `meeting_id`,
         `poll_id`,
         `acting_meeting_user_id`,
         `represented_meeting_user_id`
