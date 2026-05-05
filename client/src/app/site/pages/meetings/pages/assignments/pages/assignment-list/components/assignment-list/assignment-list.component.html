@@ -94,6 +94,13 @@
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
             </button>
+            <!-- Add to projector queue -->
+            <os-projector-button
+                [hideMainButton]="true"
+                [menuItem]="true"
+                [object]="addToProjectorQueue()"
+                [projectorLabel]="'Add to queue'"
+            ></os-projector-button>
             <button mat-menu-item (click)="downloadAssignmentButton()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export as PDF' | translate }}</span>
@@ -119,6 +126,14 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
+            <!-- Add to projector queue -->
+            <os-projector-button
+                [disabled]="!selectedRows.length"
+                [hideMainButton]="true"
+                [menuItem]="true"
+                [object]="addToProjectorQueue()"
+                [projectorLabel]="'Add to queue'"
+            ></os-projector-button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export selected elections' | translate }}</span>
