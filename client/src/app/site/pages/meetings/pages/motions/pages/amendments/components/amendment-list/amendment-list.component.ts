@@ -4,8 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projectable-list/components/projectable-list/projectable-list.component';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
@@ -171,5 +173,24 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
 
     public getSubmitterListWithDeletedUsers(submitters: string[]): string[] {
         return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
+    }
+
+    public addToProjectorQueue(): ProjectionBuildDescriptor {
+        const items = this.listComponent?.source;
+
+        if (items) {
+            const ids = items.map(item => `motion/` + item.id);
+            return {
+                content_object_id: ids,
+                projectionDefault: PROJECTIONDEFAULT.motion,
+                getDialogTitle: (): string => this.translate.instant(`Motions`)
+            };
+        } else {
+            return {
+                content_object_id: null,
+                projectionDefault: PROJECTIONDEFAULT.motion,
+                getDialogTitle: (): string => this.translate.instant(`Motions`)
+            };
+        }
     }
 }

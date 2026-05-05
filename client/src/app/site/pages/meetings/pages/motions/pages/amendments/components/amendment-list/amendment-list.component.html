@@ -149,6 +149,15 @@
                     <span>{{ 'Multiselect' | translate }}</span>
                 </button>
             </div>
+            <div *osPerms="permission.agendaItemCanManage">
+                <!-- Add to projector queue -->
+                <os-projector-button
+                    [hideMainButton]="true"
+                    [menuItem]="true"
+                    [object]="addToProjectorQueue()"
+                    [projectorLabel]="'Add to queue'"
+                ></os-projector-button>
+            </div>
             <button mat-menu-item (click)="openExportDialog()">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export' | translate }}</span>
