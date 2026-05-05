@@ -1,5 +1,12 @@
 @if (option().meeting_user_id) {
-    {{ option().meeting_user_id }}
+    @if (option().meeting_user && option().meeting_user.user) {
+        <span class="name">{{ option().meeting_user.user.getName() }}</span>
+        @if (option().meeting_user.structure_levels?.length) {
+            <div class="user-subtitle">{{ option().meeting_user.structureLevels() }}</div>
+        }
+    } @else {
+        {{ 'Unknown user' | translate }}
+    }
 } @else {
     {{ option().text }}
 }
