@@ -98,7 +98,7 @@ export class PollResultApprovalComponent {
 
         return Object.keys(results).map(key => {
             return {
-                data: [+results[key]],
+                data: [+results[key] || 0],
                 label: key,
                 backgroundColor: this.themeService.getPollColor(key),
                 hoverBackgroundColor: this.themeService.getPollColor(key),

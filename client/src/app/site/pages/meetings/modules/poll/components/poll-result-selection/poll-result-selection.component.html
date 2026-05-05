@@ -6,12 +6,12 @@
                 <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
             </tr>
             @for (row of options(); track row.key) {
-                <tr [class]="row.votingOption">
+                <tr [style.color]="row.color">
                     <!-- YNA/Valid etc -->
                     <td class="label-column">
-                        <span>
+                        <os-icon-container icon="circle" size="large">
                             {{ row.votingOption | translate }}
-                        </span>
+                        </os-icon-container>
                     </td>
 
                     <!-- Percent numbers -->
