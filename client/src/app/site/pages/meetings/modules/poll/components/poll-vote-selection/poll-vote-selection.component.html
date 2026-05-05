@@ -5,8 +5,8 @@
         <div></div>
     }
     <div></div>
-    @if (poll().config?.max_vote_sum > 1) {
-        <div class="text-right">
+    <div class="text-right">
+        @if (poll().config?.max_vote_sum > 1) {
             {{ 'Available votes' | translate }}:
             <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
             @if (poll().config?.min_votes_amount > 1) {
@@ -16,9 +16,32 @@
                     {{ 'Votes' | translate }}
                 </div>
             }
-        </div>
-    }
+        } @else {
+            <b class="poll-option-title">
+                @if (poll().config?.strike_out) {
+                    {{ 'No' | translate }}
+                } @else {
+                    {{ 'Yes' | translate }}
+                }
+            </b>
+        }
+    </div>
 </div>
+
+@if (poll().config?.max_vote_sum > 1) {
+    <div class="option-list-information-grid" role="row">
+        <div></div>
+        <div class="vote-button-area" role="gridcell">
+            <b class="poll-option-title">
+                @if (poll().config?.strike_out) {
+                    {{ 'No' | translate }}
+                } @else {
+                    {{ 'Yes' | translate }}
+                }
+            </b>
+        </div>
+    </div>
+}
 
 @for (option of options(); track option.id; let i = $index) {
     <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
