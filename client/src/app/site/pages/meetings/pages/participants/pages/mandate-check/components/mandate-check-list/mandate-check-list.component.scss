@@ -1,5 +1,6 @@
 @use 'src/assets/styles/tables.scss';
 @use '@angular/material' as mat;
+@use 'src/assets/styles/media-queries.scss';
 
 .bar-height {
     @include mat.progress-bar-overrides(
@@ -23,16 +24,25 @@
     align-items: start;
 }
 
+.align-right {
+    align-items: end;
+}
+
 .groups-grid {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+
+    mat-form-field {
+        min-width: 25%;
+    }
 }
 
 .border-grid {
     display: grid;
     grid-template-columns: 15% 70% 15%;
+
     @media (max-width: 700px) {
         grid-template-columns: 0px 100% 0px;
         border-width: 0px;
@@ -41,29 +51,130 @@
 
 .header-grid {
     display: grid;
-    grid-template-columns: 95% 5%;
+    grid-template-columns: 92% 8%;
+    max-width: inherit;
+    margin-top: 50px;
+
+    & h2 {
+        margin-top: 0;
+        margin-bottom: 0;
+        align-self: center;
+    }
+
+    @include media-queries.set-breakpoint-lower(xs) {
+        grid-template-columns: 84% 8%;
+    }
 }
 
-.card-grid {
-    display: grid;
-    grid-template-columns: 1fr 70px 1fr 55px 1fr;
-    grid-column-gap: 10px;
-    @media (max-width: 700px) {
-        grid-template-columns: 1fr 70px 1fr 55px 1fr;
-        grid-column-gap: 5px;
+mat-card {
+    max-width: 100vw;
+    display: inline-flex;
+    scrollbar-width: none;
+}
+
+mat-progress-bar,
+mat-progress-bar * {
+    width: 100%;
+    min-width: 0;
+    margin-right: 3em;
+    border-radius: 10px;
+    --mdc-linear-progress-active-indicator-height: 1.5em;
+    --mdc-linear-progress-track-height: 1.5em;
+
+    .mdc-linear-progress__bar-inner {
+        border-top-right-radius: 50% 10px;
+        border-bottom-right-radius: 50% 10px;
     }
-    @media (min-width: 1500px) {
-        grid-template-columns: 1fr 70px 200px 55px 1fr;
-        grid-column-gap: 10px;
+
+    @include media-queries.set-breakpoint-lower(430px) {
+        max-width: 20%;
+        min-width: 0;
+        padding: 0;
+    }
+}
+
+.map-grid {
+    max-width: inherit;
+    display: grid;
+
+    .row,
+    .row-mandate {
+        max-width: inherit;
+        display: grid;
+        white-space: nowrap;
+        grid-template-columns: 8fr 5fr 50fr 5fr 8fr;
+
+        & div {
+            width: 100%;
+        }
+
+        .central-element {
+            max-width: 90%;
+            align-self: center;
+        }
+    }
+
+    .row {
+        padding: 1em 0em 1em 0em;
+    }
+
+    .cell-width {
+        width: fit-content;
+        text-align: end;
+    }
+
+    .row:nth-child(odd) {
+        background-color: #fafafa;
     }
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-gap: 20px;
+    max-width: inherit;
+    width: inherit;
+    grid-template-columns: 8fr 60fr 8fr;
+    gap: 0em;
+
+    .participants-cell {
+        width: inherit;
+        display: grid;
+        grid-template-columns: 50% 25%;
+        gap: 20%;
+
+        div {
+            width: inherit;
+            overflow-wrap: break-word;
+            min-width: 0;
+        }
+
+        .present {
+            margin-left: 8%;
+        }
+
+        .absent {
+            width: calc(100% + 10px);
+            margin-right: -4%;
+        }
+    }
+
     @media (max-width: 700px) {
-        grid-template-columns: repeat(auto-fit, 250px);
+        .participants-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0%;
+
+            div {
+                overflow-wrap: anywhere;
+            }
+
+            .present {
+                margin-left: 0px;
+            }
+
+            .absent {
+                margin-left: 0px;
+            }
+        }
     }
 }
 
@@ -90,17 +201,22 @@
 
 .margin-left-large {
     margin-left: 140px;
+
     @media (max-width: 700px) {
         margin-left: 70px;
     }
 }
 
 .margin-left-medium {
-    margin-left: 70px;
+    margin-left: 115px;
 }
 
 .margin-bottom-20 {
     margin-bottom: 20px;
+}
+
+.margin-auto {
+    margin: auto;
 }
 
 button {
@@ -127,4 +243,24 @@ button {
 
 .text-medium {
     font-size: 14px;
+}
+
+.min-width-98 {
+    min-width: 98px;
+}
+
+.min-width-50 {
+    min-width: 50px;
+}
+
+.padding-right {
+    padding-right: 1em;
+}
+
+.stroke {
+    border-top: 1px solid #bbb8b8;
+}
+
+.fit-content {
+    width: fit-content;
 }
