@@ -8,9 +8,7 @@ import { PollDialogData, PollDialogResult } from 'src/app/site/pages/meetings/mo
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
-import { PollServiceModule } from '../services/poll-service.module';
-
-@Injectable({ providedIn: PollServiceModule })
+@Injectable({ providedIn: 'root' })
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {
     public constructor(
         private controller: PollControllerService,

@@ -10,7 +10,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { UserDeleteDialogComponent } from '../components';
-import { UserComponentsModule } from '../user-components.module';
 
 interface UserDeleteDialogOpenConfig {
     toRemove: ViewUser[];
@@ -19,7 +18,7 @@ interface UserDeleteDialogOpenConfig {
 }
 
 @Injectable({
-    providedIn: UserComponentsModule
+    providedIn: 'root'
 })
 export class UserDeleteDialogService extends BaseDialogService<
     UserDeleteDialogComponent,

@@ -16,6 +16,9 @@ export default defineConfig({
     sourcemap: true
   },
   plugins: [dts()],
+  define: {
+    __PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version)
+  },
   test: {
     typecheck: {
       enabled: true,

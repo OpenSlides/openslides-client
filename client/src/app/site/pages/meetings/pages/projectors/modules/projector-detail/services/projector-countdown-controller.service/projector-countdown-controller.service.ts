@@ -6,9 +6,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
-
-@Injectable({ providedIn: ProjectorDetailServiceModule })
+@Injectable({ providedIn: 'root' })
 export class ProjectorCountdownControllerService extends BaseMeetingControllerService<
     ViewProjectorCountdown,
     ProjectorCountdown

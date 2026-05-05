@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { PollService } from '../poll.service/poll.service';
-import { PollServiceModule } from '../poll-service.module';
 
-@Injectable({ providedIn: PollServiceModule })
+@Injectable({ providedIn: 'root' })
 export class PollServiceMapperService {
     private _registry: Record<string, PollService> = {};
 

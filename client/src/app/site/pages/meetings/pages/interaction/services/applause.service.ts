@@ -6,15 +6,13 @@ import { BaseICCGatewayService } from 'src/app/gateways/base-icc-gateway.service
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { InteractionServiceModule } from './interaction-service.module';
-
 export interface Applause {
     level: number;
     present_users: number;
 }
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class ApplauseService extends BaseICCGatewayService<Applause> {
     public get showParticles(): Observable<boolean> {

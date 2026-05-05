@@ -7,9 +7,8 @@ import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/pr
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { ProjectorEditDialogComponent } from '../components/projector-edit-dialog/projector-edit-dialog.component';
-import { ProjectorEditDialogModule } from '../projector-edit-dialog.module';
 
-@Injectable({ providedIn: ProjectorEditDialogModule })
+@Injectable({ providedIn: 'root' })
 export class ProjectorEditDialogService extends BaseDialogService<
     ProjectorEditDialogComponent,
     ViewProjector,

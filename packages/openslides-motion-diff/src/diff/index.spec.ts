@@ -3,7 +3,7 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines, useCustomHtmlDiff, useCustomLineNumbering } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
@@ -202,6 +202,8 @@ describe(`MotionDiffService`, () => {
         ` Line 4</li></ol>`;
 
     beforeEach(() => {
+        useCustomHtmlDiff(HtmlDiff);
+        useCustomLineNumbering(LineNumbering);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
         insertInternalLineMarkers(baseHtmlDom1);
@@ -817,6 +819,48 @@ describe(`MotionDiffService`, () => {
                     `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
                     `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`;
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(expected);
+        });
+
+        it.skip(`handles inserted text within nested lists`, () => {
+            const before =
+                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
+                    `</li><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
+                    `</li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2a` +
+                    `</li><li>Ebene 3` +
+                    `</li></ul></li></ul>`,
+                expected =
+                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>` +
+                    `Ebene 2<ins>a</ins>` +
+                    `</li><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `Ebene 3` +
+                    `</li></ul></li></ul>`;
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(expected);
+        });
+
+        it.skip(`handles changed text within nested lists (part 2)`, () => {
+            const before = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1` +
+                    `</li><li>Ebene 2.2` +
+                    `</li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1 a</li>` +
+                    `<li>Ebene 2.2</li>` +
+                    `</ul></li></ul>`,
+                expected = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1<del></del><ins> a</ins></li>` +
+                    `<li>Ebene 2.2` +
+                    `</li></ul></li></ul>`
 
             const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
@@ -1732,6 +1776,24 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toThrow();
+        });
+
+        it(`test with leading line breaks`, () => {
+            const inHtml = `<p>${noMarkup(1)}<br>${noMarkup(2)}first</p><p>${noMarkup(3)}<br>${noMarkup(4)}secoond</p>`;
+
+            expect(
+                getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p class="os-split-before">first as</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<P class="os-split-before merge-before">${noMarkup(2)}first<ins> as</ins></p>`
+            );
         });
     });
 
