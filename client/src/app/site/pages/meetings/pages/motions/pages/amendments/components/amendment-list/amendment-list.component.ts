@@ -183,13 +183,13 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
 
             return {
                 content_object_id: ids,
-                projectionDefault: PROJECTIONDEFAULT.motion,
+                projectionDefault: PROJECTIONDEFAULT.amendment,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };
         } else {
             return {
                 content_object_id: null,
-                projectionDefault: PROJECTIONDEFAULT.motion,
+                projectionDefault: PROJECTIONDEFAULT.amendment,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };
         }
