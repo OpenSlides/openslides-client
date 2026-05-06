@@ -12,8 +12,11 @@
             [sortFn]="false"
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
         />
+        @if (setting?.helpText) {
+            <mat-hint>{{ setting.helpText | translate }}</mat-hint>
+        }
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="margin">
         <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
         <os-repo-search-selector
             [includeNone]="true"
@@ -21,6 +24,7 @@
             [pipeFn]="excludeCurrentUserFn"
             [repo]="userRepo"
             [sortFn]="false"
+            [subscriptionConfig]="participantSubscriptionConfig"
             [(ngModel)]="infoDialog.vote_delegated_to_id"
         />
     </mat-form-field>
