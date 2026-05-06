@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -12,6 +13,8 @@ import { MotionBlockControllerService } from '../../../../modules/motion-blocks/
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 
 @Component({
     selector: `os-motion-multiselect-actions`,
@@ -61,6 +64,7 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
 
     public constructor(
         public multiselectService: MotionMultiselectService,
+        protected translate: TranslateService,
         private categoryRepo: MotionCategoryControllerService,
         private motionBlockRepo: MotionBlockControllerService,
         private tagRepo: TagControllerService,
@@ -97,5 +101,29 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
             relativeTo: this.route,
             queryParams: { motions: motions_ids }
         });
+    }
+
+    public addToProjectorQueue(): ProjectionBuildDescriptor {
+        const items: ViewMotion[] = this.selectedMotions;
+        const results = [];
+        this.sortService.getSortedViewModelListObservable().subscribe(item => results.push(item));
+        const originalOrder = results[0].map((motion: ViewMotion) => `motion/` + motion.id);
+
+        if (items) {
+            const ids = items.map(item => `motion/` + item.id);
+            ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
+
+            return {
+                content_object_id: ids,
+                projectionDefault: PROJECTIONDEFAULT.motion,
+                getDialogTitle: (): string => this.translate.instant(`Motions`)
+            };
+        } else {
+            return {
+                content_object_id: null,
+                projectionDefault: PROJECTIONDEFAULT.motion,
+                getDialogTitle: (): string => this.translate.instant(`Motions`)
+            };
+        }
     }
 }

@@ -7,6 +7,8 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 
+import { ProjectableListModule } from '../../../../modules/meetings-component-collector/projectable-list/projectable-list.module';
+import { ProjectorButtonModule } from '../../../../modules/meetings-component-collector/projector-button/projector-button.module';
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { MotionMultiselectActionsComponent } from './components/motion-multiselect-actions/motion-multiselect-actions.component';
 import { MotionMultiselectServiceModule } from './services/motion-multiselect-service.module';
@@ -24,6 +26,8 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         MatMenuModule,
         ChoiceDialogComponent,
         DirectivesModule,
+        ProjectableListModule,
+        ProjectorButtonModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule
     ]
