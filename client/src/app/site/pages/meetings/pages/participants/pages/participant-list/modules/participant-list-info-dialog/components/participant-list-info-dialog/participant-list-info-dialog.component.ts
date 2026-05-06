@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { filter, map } from 'rxjs';
+import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 
-import { getParticipantListSubscriptionConfig } from '../../../../../../participants.subscription';
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
@@ -56,9 +57,10 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
-    private participantSubscriptionConfig: SubscribeToConfig;
     public userList = this.participantRepo.getViewModelListObservable();
-    private modelRequest = inject(ModelRequestService);
+
+    @Input()
+    protected setting: SettingsInput;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
@@ -67,7 +69,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         private groupRepo: GroupControllerService,
         private structureLevelRepo: StructureLevelControllerService,
         private meetingSettings: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private operator: OperatorService,
         protected userRepo: UserRepositoryService = inject(UserRepositoryService)
     ) {
@@ -76,33 +77,22 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
 
     public ngOnInit(): void {
         this.userSortService.initSorting();
-        this.participantSubscriptionConfig = getParticipantListSubscriptionConfig(
-            this.activeMeetingIdService.meetingId
-        );
-        this.modelRequest.subscribeTo({
-            ...this.participantSubscriptionConfig,
-            subscriptionName: 'participant_minimal_delegation_dialog:subscription'
-        });
-        console.log(this.userRepo);
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
-        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
         this.subscriptions.push(
-            this.userList.subscribe(participants =>
-                this._otherParticipantsSubject.next(
-                    participants
-                        .filter(participant => participant.id !== this._currentUser.id)
-                        .map(participant => participant.getMeetingUser())
-                )
-            ),
+            this.userRepo
+                .getGeneralViewModelObservable()
+                .pipe(filter((participant: ViewUser) => participant.id !== this._currentUser.id))
+                .subscribe((participant: ViewUser) => participant.getMeetingUser()),
             this.meetingSettings
                 .get(`users_enable_vote_delegations`)
                 .subscribe(enabled => (this._voteDelegationEnabled = enabled))
         );
+
+        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
     }
 
     public override ngOnDestroy(): void {
         this.userSortService.exitSortService();
-        this.modelRequest.closeSubscription('participant_minimal_delegation_dialog:subscription');
         super.ngOnDestroy();
     }
 
@@ -115,4 +105,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
             return _ => false;
         }
     }
+
+    public excludeCurrentUserFn: any = observable$ =>
+        observable$.pipe(map((users: ViewUser[]) => users.filter(user => user.id !== this._currentUser?.id)));
 }
