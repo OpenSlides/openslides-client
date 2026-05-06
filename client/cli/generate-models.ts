@@ -3,7 +3,8 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE = path.resolve(path.join(__dirname, '../../meta/models.yml'));
+const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/collection-meta.yml`));
+const SOURCE_COLLECTIONS = path.resolve(path.join(__dirname, `../../meta/collections/`));
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
 function findModelFile(startPath: string, name: string): string | null {
@@ -12,12 +13,12 @@ function findModelFile(startPath: string, name: string): string | null {
         return null;
     }
 
-    let files = fs.readdirSync(startPath);
-    for (let i = 0; i < files.length; i++) {
-        let filename = path.join(startPath, files[i]);
-        let stat = fs.lstatSync(filename);
+    const files = fs.readdirSync(startPath);
+    for (const file of files) {
+        const filename = path.join(startPath, file);
+        const stat = fs.lstatSync(filename);
         if (stat.isDirectory()) {
-            const found = findModelFile(filename, name); //recurse
+            const found = findModelFile(filename, name); // recurse
             if (found) {
                 return found;
             }
@@ -29,16 +30,35 @@ function findModelFile(startPath: string, name: string): string | null {
     return null;
 }
 
-function snakeToPascal(input: string) {
+function getCollectionsYaml(): string {
+    if (!fs.existsSync(SOURCE_COLLECTIONS)) {
+        console.log(`no dir `, SOURCE_COLLECTIONS);
+        return null;
+    }
+
+    let content = fs.readFileSync(SOURCE_META).toString();
+    content += `\nmodels:`;
+    const files = fs.readdirSync(SOURCE_COLLECTIONS);
+    for (const file of files) {
+        const filename = path.join(SOURCE_COLLECTIONS, file);
+        if (filename.endsWith(`.yml`)) {
+            const collection = fs.readFileSync(filename).toString().replace(/^(.)/gm, `    $1`);
+            content += `\n  ${file.substring(0, file.length - 4)}:\n${collection}`;
+        }
+    }
+
+    return content;
+}
+
+function snakeToPascal(input: string): string {
     return input
         .split(`_`)
         .map(substr => substr.charAt(0).toUpperCase() + substr.slice(1))
         .join(``);
 }
 
-(async () => {
-    const buffer = fs.readFileSync(SOURCE);
-    const models: any = yaml.load(buffer.toString());
+(async (): Promise<void> => {
+    const models: any = yaml.load(getCollectionsYaml())[`models`];
     const project = new Project({});
     project.addSourceFilesAtPaths(`${DESTINATION}/**/*.ts`);
     for (const modelName of Object.keys(models)) {
@@ -50,7 +70,7 @@ function snakeToPascal(input: string) {
         }
 
         const tsFile = project.getSourceFileOrThrow(file);
-        let classNode = tsFile.getClass(snakeToPascal(modelName));
+        const classNode = tsFile.getClass(snakeToPascal(modelName));
         if (!classNode) {
             console.warn(`Class ${snakeToPascal(modelName)} not found in ${file}`);
             continue;
@@ -62,9 +82,9 @@ function snakeToPascal(input: string) {
             .concat(...classNode.getBaseTypes().map(t => t.getProperties().map(p => p.getName())));
 
         const fieldset = [];
-        for (const modelProp of Object.keys(models[modelName])) {
+        for (const modelProp of Object.keys(models[modelName][`fields`])) {
             if (!existingProps.includes(modelProp)) {
-                if (models[modelName][modelProp]?.restriction_mode !== `G`) {
+                if (models[modelName][`fields`][modelProp]?.restriction_mode !== `G`) {
                     console.warn(`${classNode.getName()}: ${modelProp} missing`);
                 }
             } else {

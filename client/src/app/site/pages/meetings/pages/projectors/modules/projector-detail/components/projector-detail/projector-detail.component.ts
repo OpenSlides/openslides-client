@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import * as pdfjs from 'pdfjs-dist';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -79,16 +78,9 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return !!this.projector.nonStableCurrentProjections;
     }
 
-    // TODO: Implement
-    public readonly isPdfProjection = false;
-
     public get projectorScroll(): number {
-        return this.isPdfProjection ? Math.floor(this.projector.scroll / 100) : this.projector.scroll;
+        return this.projector.scroll;
     }
-
-    public pdfStep: number;
-    private pdfPage: number;
-    private loadedPdf = false;
 
     public get currentProjectionIsLoS(): boolean {
         for (const projection of this.projector.nonStableCurrentProjections) {
@@ -112,10 +104,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public get projectorHeight(): number {
         return Math.floor(this.projector.height / 100);
     }
-
-    /** stores the decimal places that could not be scrolled
-     *  at once for the projector height */
-    private summedOverflowSteps: number;
 
     private _hasEnoughWiFiData: boolean;
 
@@ -168,7 +156,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.projectorObservable = this._projectorIdSubject.pipe(
             switchMap(projectorId => this.repo.getViewModelObservable(projectorId))
         );
-        this.summedOverflowSteps = 0;
     }
 
     public onIdFound(id: Id | null): void {
@@ -231,20 +218,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      * @param step (optional) The amount of steps to make.
      */
     public scroll(direction: ScrollScaleDirection, step = 1): void {
-        if (direction === ScrollScaleDirection.Reset) {
-            this.pdfPage = 0;
-        }
-        if (this.isPdfProjection) {
-            this.repo.scroll(this.projector, direction, step * 100);
-        } else {
-            this.repo.scroll(this.projector, direction, step);
-        }
-    }
-
-    public scrollPdf(direction: ScrollScaleDirection): void {
-        this.pdfPage += direction === ScrollScaleDirection.Up ? 1 : -1;
-        const totalSteps = this.calcPdfStep(this.pdfPage);
-        this.repo.scroll(this.projector, direction, Math.abs(totalSteps - this.projector.scroll));
+        this.repo.scroll(this.projector, direction, step);
     }
 
     /**
@@ -386,31 +360,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 this.messageRepo.create(message);
             }
         });
-    }
-
-    public calcPdfStep(pageAmount: number): number {
-        return Math.round(this.pdfStep * pageAmount);
-    }
-
-    public loadPDFSizes(): void {
-        if (this.isPdfProjection && !this.loadedPdf) {
-            for (const projection of this.projector.nonStableCurrentProjections) {
-                pdfjs
-                    .getDocument(projection.content_object.getDetailStateUrl())
-                    .promise.then(pdf => pdf.getPage(1))
-                    .then(page => {
-                        const pageWidth = page.view[2];
-                        const pageHeight = page.view[3];
-                        const scale_factor = this.projector.width / pageWidth;
-                        this.pdfStep = pageHeight * scale_factor + 10;
-                        this.pdfPage =
-                            this.projector.scroll === 0
-                                ? 0
-                                : (this.pdfPage = Math.round(this.projector.scroll / Math.round(this.pdfStep)));
-                        this.loadedPdf = true;
-                    });
-            }
-        }
     }
 
     private setupSubscription(): void {

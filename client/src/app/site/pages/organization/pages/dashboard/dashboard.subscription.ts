@@ -17,7 +17,8 @@ export const meetingFields: (keyof Meeting)[] = [
     `description`,
     `location`,
     `organization_tag_ids`,
-    `locked_from_inside`
+    `locked_from_inside`,
+    `time_zone`
 ];
 
 export const getDashboardMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({

@@ -1,8 +1,9 @@
 @use '@angular/material' as mat;
+@use "sass:map";
 
 @use '../color-palettes/os-dynamic-palette' as colors;
-@import '../color-palettes/os-background';
-@import './typography.scss';
+@use '../color-palettes/os-background' as background;
+@use './typography.scss';
 
 $openslides-primary: mat.m2-define-palette(colors.$dynamic-theme-primary);
 $openslides-accent: mat.m2-define-palette(colors.$dynamic-theme-accent);
@@ -15,7 +16,7 @@ $openslides-dark-theme: mat.m2-define-dark-theme(
             accent: $openslides-accent,
             warn: $openslides-warn
         ),
-        typography: $default-typography
+        typography: typography.$default-typography
     )
 );
 
@@ -23,18 +24,18 @@ $openslides-dark-theme: mat.m2-define-dark-theme(
  *  In the first step the color must be merged, in order to have to a map.
  *  The components will get a value from this map.
  */
-$background-dark: map-get($openslides-dark-theme, background);
-$background-dark: map-merge(
+$background-dark: map.get($openslides-dark-theme, background);
+$background-dark: map.merge(
     $background-dark,
     (
-        background: $os-background
+        background: background.$os-background
     )
 );
 
 /**
  *  Merge the theme with the custom-background.
  */
-$openslides-dark-theme: map-merge(
+$openslides-dark-theme: map.merge(
     $openslides-dark-theme,
     (
         background: $background-dark

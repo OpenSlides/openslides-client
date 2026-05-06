@@ -285,8 +285,7 @@ export abstract class BaseSearchSelectorComponent
 
     public onChipRemove(itemId: Id): void {
         this.addOrRemoveId(itemId);
-
-        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // To ensure that the checkbox is updated in the view
+        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // Ensure that checkbox is updated
     }
 
     private addOrRemoveId(id: Id): void {
@@ -336,18 +335,33 @@ export abstract class BaseSearchSelectorComponent
         }
     }
 
-    public onContainerClick(): void {
+    public onContainerClick(e: MouseEvent): void {
         if (!this.matSelect) {
             console.warn(`Warning: No #matSelect was defined.`);
             return;
         }
+
+        if ((e.target as HTMLElement).classList?.contains(`cdk-overlay-backdrop`)) {
+            return;
+        }
+
         this.matSelect.open();
     }
 
     public onSearchKeydown(event: any): void {
-        // Only propagate enter, up, down
-        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
-            event.stopPropagation();
+        const key = event.key;
+        switch (key) {
+            case `ArrowUp`:
+                return;
+            case `ArrowDown`:
+                return;
+            case `Enter`:
+                return;
+            case `Escape`:
+                return;
+            default:
+                event.stopPropagation();
+                return;
         }
     }
 

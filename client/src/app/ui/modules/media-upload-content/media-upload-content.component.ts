@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +28,6 @@ export interface UploadSuccessEvent {
     templateUrl: `./media-upload-content.component.html`,
     styleUrls: [`./media-upload-content.component.scss`],
     imports: [
-        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatIconModule,

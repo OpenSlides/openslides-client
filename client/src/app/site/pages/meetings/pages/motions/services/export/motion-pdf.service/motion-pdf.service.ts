@@ -533,7 +533,7 @@ export class MotionPdfService {
                         );
                     } else if (change.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
                         const amendment = change as ViewMotionAmendedParagraph;
-                        let summaryText = `(${this.translate.instant(`Amendment`)} ${amendment.getNumber()}) -`;
+                        let summaryText = `(${this.translate.instant(`Amendment`)} ${amendment.getIdentifier()}) -`;
                         if (showAllChanges || amendment.isAccepted()) {
                             summaryText += ` ${this.translate.instant(amendment.stateName)}`;
                             // only append line and change, if the merge of the state of the amendment is accepted.
@@ -719,6 +719,7 @@ export class MotionPdfService {
 
     private createWarningIcon(text: string): string {
         return text.replace(
+            // eslint-disable-next-line
             /<mat-icon class="margin-[right|left]+-[\d]*">warning<\/mat-icon><span class="amendment-nr">([\s\S]*?)<\/span>/gi,
             (_match: string, ammName: string): string => {
                 return (

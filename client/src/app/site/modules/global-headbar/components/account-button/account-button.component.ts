@@ -44,14 +44,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private _langTriggerSubscription: Subscription;
 
+    public get isinMeeting(): boolean {
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous;
+    }
+
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
-            ? this.user.isPresentInMeeting()
-            : false;
+        return this.isinMeeting && this.user.isPresentInMeeting();
     }
 
     public get isAllowedSelfSetPresent(): boolean {
-        return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
+        return this.isinMeeting && this._isAllowedSelfSetPresent;
     }
 
     public get hasActiveMeeting(): boolean {
@@ -207,7 +209,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public getAriaLabel(): string {
         let stringForUserPresent: string;
-        if (!this.hasActiveMeeting) {
+        if (this.operator.isAnonymous) {
+            stringForUserPresent = this.translate.instant(`Account is public`);
+        } else if (!this.hasActiveMeeting) {
             stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
         } else if (this.user.isPresentInMeeting()) {
             stringForUserPresent = this.translate.instant(

@@ -10,7 +10,6 @@ import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { ViewMotion } from '../../../../motions';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './view-point-of-order-category';
 
@@ -123,15 +122,6 @@ export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
             this.state === SpeakerState.WAITING ||
             (this.state === SpeakerState.INTERPOSED_QUESTION && !this.speaker.begin_time)
         );
-    }
-
-    public get numbering(): string {
-        if (this.list_of_speakers?.content_object.collection === `motion`) {
-            return (this.list_of_speakers?.content_object as ViewMotion).number;
-        } else if (this.list_of_speakers?.content_object.collection === `topic`) {
-            return this.list_of_speakers?.content_object.agenda_item.item_number;
-        }
-        return null;
     }
 
     public get name(): string {

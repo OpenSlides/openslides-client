@@ -4,6 +4,7 @@
 /** angular material theming */
 @use 'sass:meta';
 @use 'assets/styles/theme-styles.scss';
+@use 'assets/styles/reason.scss';
 
 /** Useful default classes */
 @use 'assets/styles/default-classes.scss';
@@ -11,9 +12,6 @@
 /** fonts */
 @use 'assets/styles/fonts.scss';
 @import 'material-design-icons-iconfont/dist/material-design-icons.css';
-
-/** Load projector specific SCSS values */
-@include meta.load-css('assets/styles/projector.scss');
 
 /** Load global scss variables and device mixing */
 @include meta.load-css('assets/styles/variables.scss');

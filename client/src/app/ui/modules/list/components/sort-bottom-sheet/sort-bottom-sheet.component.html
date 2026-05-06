@@ -1,4 +1,10 @@
 <mat-nav-list class="main-nav">
+    <mat-list-item>
+        <button mat-menu-item (click)="this.dismiss()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+            <span>&nbsp;</span>
+        </button>
+    </mat-list-item>
     @for (option of this.data.sortOptions; track option) {
         <mat-list-item (click)="clickedOption(option.property)">
             <button mat-menu-item>
