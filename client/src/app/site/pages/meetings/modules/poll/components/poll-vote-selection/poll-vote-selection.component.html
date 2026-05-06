@@ -1,75 +1,89 @@
-<div class="option-list-information-grid" role="row">
-    @if (poll().option_ids.length > 1) {
-        <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
-    } @else {
-        <div></div>
-    }
-    <div></div>
-    <div class="text-right">
-        @if (poll().config?.max_vote_sum > 1) {
-            {{ 'Available votes' | translate }}:
-            <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
-            @if (poll().config?.min_votes_amount > 1) {
+<div class="option-list">
+    <div
+        role="row"
+        [class.option-list-caption]="poll().config?.max_vote_sum > 1"
+        [class.option-list-information-grid]="poll().config?.max_vote_sum <= 1"
+    >
+        <ng-template #optionAmount>
+            @if (poll().option_ids.length > 1) {
                 <div>
-                    {{ 'At least' | translate }}
-                    <b>{{ poll().config?.min_vote_sum }}</b>
-                    {{ 'Votes' | translate }}
+                    <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
                 </div>
+            } @else {
+                <div></div>
             }
-        } @else {
-            <b class="poll-option-title">
-                @if (poll().config?.strike_out) {
-                    {{ 'No' | translate }}
-                } @else {
-                    {{ 'Yes' | translate }}
-                }
-            </b>
+        </ng-template>
+        @if (poll().config?.max_vote_sum <= 1) {
+            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
         }
-    </div>
-</div>
 
-@if (poll().config?.max_vote_sum > 1) {
-    <div class="option-list-information-grid" role="row">
-        <div></div>
-        <div class="vote-button-area" role="gridcell">
-            <b class="poll-option-title">
-                @if (poll().config?.strike_out) {
-                    {{ 'No' | translate }}
-                } @else {
-                    {{ 'Yes' | translate }}
-                }
-            </b>
-        </div>
-    </div>
-}
-
-@for (option of options(); track option.id; let i = $index) {
-    <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
-        <div class="vote-option-title grid-name-area" role="rowheader">
-            <os-poll-vote-option [option]="option" />
-        </div>
-        <div class="vote-button-area" role="gridcell">
-            <button
-                class="vote-button"
-                mat-raised-button
-                role="radio"
-                [ariaLabel]="option.text"
-                [attr.aria-checked]="isSelected(option.id) ? 'true' : 'false'"
-                [disabled]="loading()"
-                (click)="toggleOption(option.id)"
-            >
-                <div class="vote-button-content" [class.button-content-opaque]="!isSelected(option.id)">
-                    <os-custom-icon
-                        class="vote-button-cross"
-                        [class.voted-yes]="isSelected(option.id)"
-                        [customIcon]="drawnCross"
-                    ></os-custom-icon>
-                    <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+        <div>
+            @if (poll().config?.max_vote_sum > 1) {
+                <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+                <div class="available-votes">
+                    {{ 'Available votes' | translate }}:
+                    <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
+                    @if (poll().config?.min_votes_amount > 1) {
+                        <div>
+                            {{ 'At least' | translate }}
+                            <b>{{ poll().config?.min_vote_sum }}</b>
+                            {{ 'Votes' | translate }}
+                        </div>
+                    }
                 </div>
-            </button>
+            } @else {
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            }
         </div>
     </div>
-}
+
+    @if (poll().config?.max_vote_sum > 1) {
+        <div class="option-list-information-grid" role="row">
+            <div></div>
+            <div class="vote-button-area" role="gridcell">
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            </div>
+        </div>
+    }
+
+    <ng-template #optionTitle>
+        <b class="poll-option-title">
+            @if (poll().config?.strike_out) {
+                {{ 'No' | translate }}
+            } @else {
+                {{ 'Yes' | translate }}
+            }
+        </b>
+    </ng-template>
+
+    @for (option of options(); track option.id; let i = $index) {
+        <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+            <div class="vote-option-title grid-name-area" role="rowheader">
+                <os-poll-vote-option [option]="option" />
+            </div>
+            <div class="vote-button-area" role="gridcell">
+                <button
+                    class="vote-button"
+                    mat-raised-button
+                    role="radio"
+                    [ariaLabel]="option.text"
+                    [attr.aria-checked]="isSelected(option.id) ? 'true' : 'false'"
+                    [disabled]="loading()"
+                    (click)="toggleOption(option.id)"
+                >
+                    <div class="vote-button-content" [class.button-content-opaque]="!isSelected(option.id)">
+                        <os-custom-icon
+                            class="vote-button-cross"
+                            [class.voted-yes]="isSelected(option.id)"
+                            [customIcon]="drawnCross"
+                        ></os-custom-icon>
+                        <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                    </div>
+                </button>
+            </div>
+        </div>
+    }
+</div>
 
 @if (options().length > 0) {
     <div class="submit-area">

@@ -1,22 +1,50 @@
 @use 'src/assets/styles/poll-colors.scss';
 @use 'src/assets/styles/poll-styles-common.scss';
 
+:host {
+    display: block;
+    padding: 0 10px;
+}
+
+.option-list {
+    display: table;
+    width: 100%;
+}
+
+.option-list-caption {
+    display: table-caption;
+    padding: 10px;
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
 .option-list-information-grid {
-    display: grid;
-    grid-template-columns: max-content auto max-content;
-    margin: 0 10px;
+    display: table-row;
+    > :first-child {
+        width: 100%;
+    }
+    > :last-child {
+        text-align: center;
+    }
+    > * {
+        display: table-cell;
+    }
 }
 
 .option-row {
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    grid-gap: 10px;
-    padding: 10px;
-    margin: 0 10px;
+    display: table-row;
     align-items: center;
 
     &.accentuated-background {
         background: rgba(0, 0, 0, 0.04);
+    }
+
+    > * {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 10px;
     }
 }
 
