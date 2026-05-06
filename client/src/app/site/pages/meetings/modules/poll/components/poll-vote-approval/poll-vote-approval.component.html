@@ -8,7 +8,7 @@
                 [ariaLabel]="action.label | translate"
                 [attr.aria-checked]="isOptionSelected(action.vote) ? 'true' : 'false'"
                 [disabled]="loading()"
-                (click)="voted.emit(action.vote)"
+                (click)="submitVote(action.vote)"
             >
                 <div class="vote-button-content" [class.button-content-opaque]="!isOptionSelected(action.vote)">
                     <os-custom-icon

@@ -11,11 +11,12 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { _, TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewBallot, ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
@@ -35,6 +36,9 @@ export class PollVoteApprovalComponent implements OnDestroy {
     public loading = input<boolean>(false);
 
     public voted = output<unknown>();
+
+    private translate = inject(TranslateService);
+    private promptService = inject(PromptService);
 
     public ballots = signal<ViewBallot[]>([]);
     // TODO: use balllots for this user/poll
@@ -90,5 +94,17 @@ export class PollVoteApprovalComponent implements OnDestroy {
         if (this.pollBallotSubscription) {
             this.pollBallotSubscription.unsubscribe();
         }
+    }
+
+    public async submitVote(value: string): Promise<void> {
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
+
+        const confirmed = await this.promptService.open(title, content);
+        if (!confirmed) {
+            return;
+        }
+
+        this.voted.emit(value);
     }
 }
