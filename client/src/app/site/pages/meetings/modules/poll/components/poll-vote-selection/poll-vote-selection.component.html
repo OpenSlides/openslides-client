@@ -85,6 +85,74 @@
     }
 </div>
 
+@if (poll().config?.min_vote_sum === 0 || poll().config?.allow_nota) {
+    <div class="or-divider">
+        <div class="hr-wrapper"><hr /></div>
+        <div>{{ 'OR' | translate }}</div>
+        <div class="hr-wrapper"><hr /></div>
+    </div>
+
+    <div class="option-list">
+        @if (poll().config.allow_nota) {
+            <div class="option-row" role="row">
+                @let optionName =
+                    poll().config.strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ optionName | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <button
+                        class="vote-button"
+                        mat-raised-button
+                        role="radio"
+                        [ariaLabel]="optionName"
+                        [attr.aria-checked]="isSelected(-1) ? 'true' : 'false'"
+                        [disabled]="loading()"
+                        (click)="toggleOption(-1)"
+                    >
+                        <div class="vote-button-content" [class.button-content-opaque]="!isSelected(-1)">
+                            <os-custom-icon
+                                class="vote-button-cross"
+                                [class.voted-yes]="isSelected(-1)"
+                                [customIcon]="drawnCross"
+                            ></os-custom-icon>
+                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        }
+
+        @if (poll().config.min_vote_sum === 0) {
+            <div class="option-row" role="row">
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ 'General abstain' | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <button
+                        class="vote-button"
+                        mat-raised-button
+                        role="radio"
+                        [ariaLabel]="'General abstain' | translate"
+                        [attr.aria-checked]="isSelected(0) ? 'true' : 'false'"
+                        [disabled]="loading()"
+                        (click)="toggleOption(0)"
+                    >
+                        <div class="vote-button-content" [class.button-content-opaque]="!isSelected(0)">
+                            <os-custom-icon
+                                class="vote-button-cross"
+                                [class.voted-yes]="isSelected(0)"
+                                [customIcon]="drawnCross"
+                            ></os-custom-icon>
+                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
 @if (options().length > 0) {
     <div class="submit-area">
         <button

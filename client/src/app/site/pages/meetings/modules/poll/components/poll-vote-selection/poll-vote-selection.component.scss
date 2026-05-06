@@ -41,6 +41,9 @@
         background: rgba(0, 0, 0, 0.04);
     }
 
+    > :first-child {
+        width: 100%;
+    }
     > * {
         display: table-cell;
         vertical-align: middle;

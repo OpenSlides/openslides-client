@@ -93,7 +93,13 @@ export class PollVoteSelectionComponent implements OnDestroy {
         const selected = new Set(this.selectedOptionIds());
         if (selected.has(optionId)) {
             selected.delete(optionId);
+        } else if (optionId < 1) {
+            selected.clear();
+            selected.add(optionId);
         } else {
+            selected.delete(0);
+            selected.delete(-1);
+
             if (this.isSingleSelect()) {
                 selected.clear();
             } else {
@@ -112,6 +118,13 @@ export class PollVoteSelectionComponent implements OnDestroy {
         if (selected.size === 0) {
             return;
         }
-        this.voted.emit([...selected]);
+
+        if (selected.has(0)) {
+            this.voted.emit([]);
+        } else if (selected.has(-1)) {
+            this.voted.emit(`nota`);
+        } else {
+            this.voted.emit([...selected]);
+        }
     }
 }
