@@ -256,12 +256,8 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async openDialogEditInfo(user: ViewUser): Promise<void> {
-        console.log(
-            this.user,
-            this.user.vote_delegations_from_meeting_user_ids(),
-            this.user.vote_delegated_to_meeting_user_id()
-        );
         await this.participantListDialog.open({
+            user,
             id: user.id,
             name: user.getName(),
             number: user.number(),
@@ -269,6 +265,5 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: this.user.vote_delegated_to_meeting_user_id()
         });
-        // *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(user)"
     }
 }

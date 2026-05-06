@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
@@ -58,7 +57,7 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
         super();
     }
 
-    public async open(data: Partial<InfoDialog> & Identifiable): Promise<any> {
+    public async open(data: Partial<InfoDialog> & { user: ViewUser }): Promise<any> {
         const module = await import(`../participant-list-info-dialog.module`).then(
             m => m.ParticipantListInfoDialogModule
         );
@@ -69,20 +68,11 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
             }
         });
         const result = await firstValueFrom(dialogRef.afterClosed());
-        if (result) {
-            if (data instanceof ViewUser) {
-                this.update(result, data);
-            } else {
-                this.create(result);
-            }
-        }
+        result.vote_delegated_to_id = result.vote_delegated_to_id === 0 ? null : result.vote_delegated_to_id;
+        this.update(result, data.user);
     }
 
-    protected async create(payload: any): Promise<void> {
-        await this.controller.create(payload);
-    }
-
-    protected async update(payload: any, user: ViewUser): Promise<void> {
-        await this.controller.update(payload, user);
+    protected async update(payload: any, user: ViewUser | undefined): Promise<void> {
+        await this.controller.update(payload, user).resolve();
     }
 }
