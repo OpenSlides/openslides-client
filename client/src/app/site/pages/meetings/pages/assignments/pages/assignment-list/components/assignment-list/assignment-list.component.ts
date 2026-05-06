@@ -119,13 +119,13 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
     }
 
     public addToProjectorQueue(): ProjectionBuildDescriptor {
-        const agendaItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
-        const originalOrderList = this.listComponent?.source.map(i => `assignment/` + i.assignment.id);
+        const toBeProjectedItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+        const originalOrder = this.listComponent?.source.map(i => `assignment/` + i.assignment.id);
 
-        if (agendaItems) {
-            const ids = agendaItems.map(item => `assignment/` + item.assignment.id);
+        if (toBeProjectedItems) {
+            const ids = toBeProjectedItems.map(item => `assignment/` + item.assignment.id);
             if (this.isMultiSelect) {
-                ids.sort((a, b) => originalOrderList.indexOf(a) - originalOrderList.indexOf(b));
+                ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
             }
             return {
                 content_object_id: ids,

@@ -22,7 +22,6 @@ export class ProjectionDialogService {
      * the projectors will be updated.
      */
     public async openProjectDialogFor(descriptor: ProjectionBuildDescriptor | ProjectionDialogConfig): Promise<void> {
-        console.log(descriptor);
         const module = await import(`../projection-dialog.module`).then(m => m.ProjectionDialogModule);
         const dialogRef = this.dialog.open<
             ProjectionDialogComponent,

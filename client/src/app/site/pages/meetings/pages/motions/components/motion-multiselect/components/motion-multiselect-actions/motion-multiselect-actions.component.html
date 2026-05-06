@@ -96,13 +96,14 @@
 
 <ng-content />
 <ng-container *osPerms="permission.agendaItemCanManage">
-            <!-- Add to projector queue -->
-            <os-projector-button
-                [hideMainButton]="true"
-                [menuItem]="true"[disabled]="!selectedMotions.length"
-                [object]="addToProjectorQueue()"
-                [projectorLabel]="'Add to queue'"
-            ></os-projector-button>
+    <!-- Add to projector queue -->
+    <os-projector-button
+        [disabled]="!selectedMotions.length"
+        [hideMainButton]="true"
+        [menuItem]="true"
+        [object]="addToProjectorQueue()"
+        [projectorLabel]="'Add to queue'"
+    ></os-projector-button>
 </ng-container>
 <ng-container *osPerms="permission.motionCanManage">
     <button mat-menu-item [disabled]="!selectedMotions.length" (click)="openExportDialog()">

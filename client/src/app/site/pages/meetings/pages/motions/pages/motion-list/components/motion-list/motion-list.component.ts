@@ -417,10 +417,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     }
 
     public addToProjectorQueue(): ProjectionBuildDescriptor {
-        const items = this.listComponent?.source;
+        const toBeProjectedItems = this.listComponent?.source;
 
-        if (items) {
-            const ids = items.map(item => `motion/` + item.id);
+        if (toBeProjectedItems) {
+            const ids = toBeProjectedItems.map(item => `motion/` + item.id);
             return {
                 content_object_id: ids,
                 projectionDefault: PROJECTIONDEFAULT.motion,
