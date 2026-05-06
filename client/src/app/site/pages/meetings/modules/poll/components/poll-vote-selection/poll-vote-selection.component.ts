@@ -12,11 +12,12 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewBallot, ViewPoll, ViewPollOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
@@ -63,7 +64,10 @@ export class PollVoteSelectionComponent implements OnDestroy {
         return maxVotes - this.selectedOptionIds().size;
     });
 
+    private translate = inject(TranslateService);
     private pollRepo = inject(PollRepositoryService);
+    private promptService = inject(PromptService);
+
     private pollBallotSubscription: Subscription;
 
     public constructor() {
@@ -90,10 +94,11 @@ export class PollVoteSelectionComponent implements OnDestroy {
     }
 
     public toggleOption(optionId: number): void {
+        const isGeneralOption = optionId < 1;
         const selected = new Set(this.selectedOptionIds());
         if (selected.has(optionId)) {
             selected.delete(optionId);
-        } else if (optionId < 1) {
+        } else if (isGeneralOption) {
             selected.clear();
             selected.add(optionId);
         } else {
@@ -111,11 +116,23 @@ export class PollVoteSelectionComponent implements OnDestroy {
             selected.add(optionId);
         }
         this.selectedOptionIds.set(selected);
+
+        if (this.availableVotes() === 0 || isGeneralOption) {
+            this.submitVote();
+        }
     }
 
-    public submitVote(): void {
+    public async submitVote(): Promise<void> {
         const selected = this.selectedOptionIds();
         if (selected.size === 0) {
+            return;
+        }
+
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
+
+        const confirmed = await this.promptService.open(title, content);
+        if (!confirmed) {
             return;
         }
 
