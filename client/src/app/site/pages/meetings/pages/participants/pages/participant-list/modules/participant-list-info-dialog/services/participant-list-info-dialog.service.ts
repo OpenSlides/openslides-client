@@ -69,7 +69,7 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
         this.update(result, data.user);
     }
 
-    protected async update(payload: any, user: ViewUser | undefined): Promise<void> {
+    protected async update(payload: any, user: ViewUser): Promise<void> {
         await this.controller.update(payload, user).resolve();
     }
 }

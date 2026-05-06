@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { filter, map } from 'rxjs';
 import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 
+import { getParticipantListSubscriptionConfig } from '../../../../../../participants.subscription';
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
@@ -17,10 +18,10 @@ import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
-import { SubscribeToConfig, ModelRequestService } from '@app/site/services/model-request.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
 
 @Component({
     selector: `os-participant-list-info-dialog`,
@@ -58,9 +59,9 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
     public userList = this.participantRepo.getViewModelListObservable();
+    protected participantSubscriptionConfig: SubscriptionConfig<any>;
 
-    @Input()
-    protected setting: SettingsInput;
+    protected setting: SettingsInput = {} as SettingsInput;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
@@ -68,6 +69,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         private userSortService: ParticipantListSortService,
         private groupRepo: GroupControllerService,
         private structureLevelRepo: StructureLevelControllerService,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private meetingSettings: MeetingSettingsService,
         private operator: OperatorService,
         protected userRepo: UserRepositoryService = inject(UserRepositoryService)
@@ -77,6 +79,10 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
 
     public ngOnInit(): void {
         this.userSortService.initSorting();
+        this.participantSubscriptionConfig = getParticipantListSubscriptionConfig(
+            this.activeMeetingIdService.meetingId
+        );
+        this.setting.helpText = 'You can only delete delegations you have received';
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
         this.subscriptions.push(
             this.userRepo
