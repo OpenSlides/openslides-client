@@ -1,0 +1,22 @@
+<form [formGroup]="approvalForm">
+    <div class="margin-bottom-15 info-grid">
+        <mat-form-field>
+            <mat-label>{{ 'Election method' | translate }}</mat-label>
+            <mat-select formControlName="allow_abstain">
+                <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
+                <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field>
+        <mat-label>{{ '100% base' | translate }}</mat-label>
+        <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+            @for (option of validPercentBases | keyvalue; track option) {
+                <mat-option [value]="option.key">
+                    {{ option.value | translate }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</form>

@@ -1,0 +1,69 @@
+@use 'src/assets/styles/poll-colors.scss';
+@use 'src/assets/styles/poll-styles-common.scss';
+
+:host {
+    display: block;
+    padding: 0 10px;
+}
+
+.option-list {
+    display: table;
+    width: 100%;
+}
+
+.option-list-caption {
+    display: table-caption;
+    padding: 10px;
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.option-list-information-grid {
+    display: table-row;
+    > :first-child {
+        width: 100%;
+    }
+    > :last-child {
+        text-align: center;
+    }
+    > * {
+        display: table-cell;
+    }
+}
+
+.option-row {
+    display: table-row;
+    align-items: center;
+
+    &.accentuated-background {
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    > :first-child {
+        width: 100%;
+    }
+    > * {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 10px;
+    }
+}
+
+.vote-option-title {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.vote-button-area {
+    display: inline-grid;
+    justify-content: center;
+}
+
+.submit-area {
+    display: flex;
+    justify-content: center;
+    padding: 10px 10px 0;
+}

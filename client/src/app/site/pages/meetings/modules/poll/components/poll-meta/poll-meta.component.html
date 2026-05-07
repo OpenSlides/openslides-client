@@ -1,0 +1,126 @@
+<!-- Candidates -->
+@if (poll().options?.length) {
+    <small class="meta-info-left subtitle">
+        <div>
+            @if (isListPoll()) {
+                {{ 'Nomination list' | translate }}
+                ({{ poll().options?.length ?? 0 }} {{ 'Candidates' | translate }}):
+            } @else if (isPersonPoll()) {
+                {{ 'Candidates' | translate }}:
+            } @else {
+                {{ 'Options' | translate }}:
+            }
+            @if (enumerateOptions()) {
+                <ol>
+                    <ng-container *ngTemplateOutlet="optionItems" />
+                </ol>
+            } @else {
+                <ul>
+                    <ng-container *ngTemplateOutlet="optionItems" />
+                </ul>
+            }
+
+            <ng-template #optionItems>
+                @for (option of poll().options; track option) {
+                    <li>{{ getOptionTitle(option) | translate }}</li>
+                }
+            </ng-template>
+        </div>
+        @if (hasGlobalOptionEnabled()) {
+            <div>
+                {{ 'Global options' | translate }}:
+                <ul>
+                    @if (generalApprovalAllowed()) {
+                        <li>{{ 'General approval' | translate }}</li>
+                    }
+                    @if (generalRejectionAllowed()) {
+                        <li>{{ 'General rejection' | translate }}</li>
+                    }
+                    @if (generalAbstainAllowed()) {
+                        <li>{{ 'General abstain' | translate }}</li>
+                    }
+                </ul>
+            </div>
+        }
+    </small>
+}
+
+<div class="meta-info-right subtitle">
+    <!-- Groups that can vote -->
+    @if (poll().entitled_groups && poll().isEVoting) {
+        <div>
+            {{ 'Entitled to vote' | translate }}:
+            @if (poll().entitled_groups.length) {
+                <os-comma-separated-listing [list]="poll().entitled_groups">
+                    <ng-template let-group>{{ group.getTitle() }}</ng-template>
+                </os-comma-separated-listing>
+            } @else {
+                <span>-</span>
+            }
+        </div>
+    }
+
+    @if (config().strike_out !== undefined || config().allow_abstain !== undefined) {
+        <div>
+            {{ 'Voting method' | translate }}:
+            @if (config().strike_out === true) {
+                <span>{{ 'Disapproval voting' | translate }}</span>
+            } @else if (config().strike_out === false) {
+                <span>{{ 'Approval voting' | translate }}</span>
+            } @else if (config().allow_abstain === true) {
+                <span>{{ 'Yes/No/Abstain' | translate }}</span>
+            } @else if (config().allow_abstain === false) {
+                <span>{{ 'Yes/No' | translate }}</span>
+            }
+        </div>
+    }
+
+    @if (config().min_vote_sum > 1 || config().max_vote_sum > 1) {
+        @if (config().min_vote_sum === config().max_vote_sum) {
+            {{ 'Votes' | translate }}:
+            <span>{{ config().min_vote_sum }}</span>
+        } @else {
+            @if (config().min_vote_sum > 1) {
+                {{ 'Minimum amount of votes' | translate }}:
+                <span>{{ config().min_vote_sum }}</span>
+            }
+
+            @if (config().max_vote_sum > 1) {
+                {{ 'Maximum amount of votes' | translate }}:
+                <span>{{ config().max_vote_sum }}</span>
+            }
+        }
+    }
+
+    @if (
+        config().COLLECTION !== `poll_config_selection` &&
+        (config().min_options_amount > 1 || config().max_options_amount > 1)
+    ) {
+        @if (config().min_options_amount === config().max_options_amount) {
+            {{ 'Votes on different options' | translate }}:
+            <span>{{ config().min_options_amount }}</span>
+        } @else {
+            @if (config().min_options_amount > 1) {
+                {{ 'Minimum amount of options selected' | translate }}:
+                <span>{{ config().min_options_amount }}</span>
+            }
+
+            @if (config().max_options_amount > 1) {
+                {{ 'Maximum amount options selected' | translate }}:
+                <span>{{ config().max_options_amount }}</span>
+            }
+        }
+    }
+
+    @if (config().max_votes_per_option > 1) {
+        {{ 'Maximum amount of votes per option' | translate }}:
+        <span>{{ config().max_votes_per_option }}</span>
+    }
+
+    @if (config().onehundred_percent_base !== undefined) {
+        <div>
+            {{ '100% base' | translate }}:
+            <span>{{ config().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
+        </div>
+    }
+</div>

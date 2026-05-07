@@ -17,7 +17,9 @@ export interface ExtendedVoteData extends BaseVoteData {
 
 @Component({
     selector: `os-motion-poll-detail`,
-    templateUrl: `./motion-poll-detail.component.html`,
+    template: `
+        TODO
+    `,
     styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -50,15 +52,18 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     }
 
     protected createVotesData(): ExtendedVoteData[] {
+        /*
         const voteData = this.poll?.options[0]?.votes;
         const extendedVoteData: ExtendedVoteData[] = this.poll?.options[0]?.votes;
         if (extendedVoteData) {
             extendedVoteData.map(
                 (element, index) =>
-                    (element.vote_verbose_translated = this.translate.instant(voteData[index].vote.valueVerbose))
+                    (element.vote_verbose_translated = this.translate.instant(voteData[index].ballot.valueVerbose))
             );
         }
         return extendedVoteData;
+        */
+        return [];
     }
 
     public openDialog(): void {

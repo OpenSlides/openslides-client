@@ -1,0 +1,132 @@
+<div class="option-list">
+    @let multiVotes = !!(poll().config?.max_vote_sum > 1);
+    <div role="row" [class.option-list-caption]="multiVotes" [class.option-list-information-grid]="!multiVotes">
+        <ng-template #optionAmount>
+            @if (poll().option_ids.length > 1) {
+                <div>
+                    <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
+                </div>
+            } @else {
+                <div></div>
+            }
+        </ng-template>
+        @if (!multiVotes) {
+            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+        }
+
+        <div>
+            @if (multiVotes) {
+                <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+                <div class="available-votes">
+                    {{ 'Available votes' | translate }}:
+                    <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
+                    @if (poll().config?.min_votes_amount > 1) {
+                        <div>
+                            {{ 'At least' | translate }}
+                            <b>{{ poll().config?.min_vote_sum }}</b>
+                            {{ 'Votes' | translate }}
+                        </div>
+                    }
+                </div>
+            } @else {
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            }
+        </div>
+    </div>
+
+    @if (multiVotes) {
+        <div class="option-list-information-grid" role="row">
+            <div></div>
+            <div class="vote-button-area" role="gridcell">
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            </div>
+        </div>
+    }
+
+    <ng-template #optionTitle>
+        <b class="poll-option-title">
+            @if (poll().config?.strike_out) {
+                {{ 'No' | translate }}
+            } @else {
+                {{ 'Yes' | translate }}
+            }
+        </b>
+    </ng-template>
+
+    @for (option of options(); track option.id; let i = $index) {
+        <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+            <div class="vote-option-title grid-name-area" role="rowheader">
+                <os-poll-vote-option [option]="option" />
+            </div>
+            <div class="vote-button-area" role="gridcell">
+                <os-poll-vote-button
+                    [isSelected]="isSelected(option.id)"
+                    [loading]="loading()"
+                    [optionTitle]="option.text || option.meeting_user?.user?.getName()"
+                    [optionType]="poll().config.strike_out ? 'no' : 'yes'"
+                    (toggleOption)="toggleOption(option.id)"
+                />
+            </div>
+        </div>
+    }
+</div>
+
+@if (poll().config?.min_vote_sum === 0 || poll().config?.allow_nota) {
+    <div class="or-divider">
+        <div class="hr-wrapper"><hr /></div>
+        <div>{{ 'OR' | translate }}</div>
+        <div class="hr-wrapper"><hr /></div>
+    </div>
+
+    <div class="option-list">
+        @if (poll().config.allow_nota) {
+            <div class="option-row" role="row">
+                @let optionName =
+                    poll().config.strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ optionName | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <os-poll-vote-button
+                        [isSelected]="isSelected(-1)"
+                        [loading]="loading()"
+                        [optionTitle]="optionName"
+                        [optionType]="poll().config.strike_out ? 'yes' : 'no'"
+                        (toggleOption)="toggleOption(-1)"
+                    />
+                </div>
+            </div>
+        }
+
+        @if (poll().config.min_vote_sum === 0) {
+            <div class="option-row" role="row">
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ 'General abstain' | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <os-poll-vote-button
+                        optionType="abstain"
+                        [isSelected]="isSelected(0)"
+                        [loading]="loading()"
+                        [optionTitle]="'General abstain' | translate"
+                        (toggleOption)="toggleOption(0)"
+                    />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (options().length > 0) {
+    <div class="submit-area">
+        <button
+            color="accent"
+            mat-raised-button
+            [disabled]="loading() || selectedOptionIds().size === 0"
+            (click)="submitVote()"
+        >
+            <mat-icon>how_to_vote</mat-icon>
+            {{ 'Submit vote now' | translate }}
+        </button>
+    </div>
+}

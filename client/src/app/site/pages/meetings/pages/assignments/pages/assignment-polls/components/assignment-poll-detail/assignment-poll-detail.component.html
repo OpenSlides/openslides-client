@@ -27,12 +27,12 @@
             <h1>{{ poll.title }}</h1>
             <div>
                 <!-- Voting type -->
-                @if (poll.type !== 'analog') {
+                @if (!poll.isAnalog) {
                     <span>{{ poll.typeVerbose | translate }} &middot;</span>
                 }
                 <!-- State -->
                 <span>
-                    {{ poll.stateVerbose | translate }}
+                    {{ poll.state | translateKey: 'poll_state' }}
                 </span>
             </div>
             @if (poll) {
@@ -40,7 +40,7 @@
                     <!-- Result -->
                     <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
                     @if (poll.isStarted) {
-                        <os-poll-progress [canManagePoll]="canManagePoll" [poll]="poll"></os-poll-progress>
+                        <os-poll-progress [poll]="poll"></os-poll-progress>
                         <div *osPerms="permission.pollCanManage" class="poll-content">
                             <div class="user-subtitle">
                                 {{ 'Present entitled users' | translate }}:
@@ -96,8 +96,7 @@
         </div>
     }
 
-    <!-- Meta Infos -->
-    <os-assignment-poll-meta-info [poll]="poll" />
+    <!-- TODO: Meta Infos -->
 </ng-template>
 
 <!-- More Menu -->
@@ -108,10 +107,7 @@
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
-        *osPerms="
-            permission.assignmentCanManagePolls;
-            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
-        "
+        *osPerms="permission.assignmentCanManagePolls; and: poll && poll.canAnonymize"
         mat-menu-item
         (click)="pseudoanonymizePoll()"
     >

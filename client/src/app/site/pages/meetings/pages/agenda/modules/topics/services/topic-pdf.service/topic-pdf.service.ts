@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
-import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
+import { PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
-import { ViewPoll } from '../../../../../polls';
+import { ViewPoll, ViewPollConfigSelection } from '../../../../../polls';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
 import { ViewTopic } from '../../view-models';
 
@@ -154,9 +154,9 @@ export class TopicPdfService {
     private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === PollMethod.Y) {
+                if (poll.config instanceof ViewPollConfigSelection) {
                     return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (poll.pollmethod === PollMethod.YN) {
+                } else if (!poll.config?.allow_abstain) {
                     return singleResult.vote !== `abstain`;
                 } else {
                     return true;

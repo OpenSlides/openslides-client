@@ -35,14 +35,14 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
      */
     protected getFilterDefinitions(): OsFilter<ViewPoll>[] {
         return [
+            // TODO: Add filter for published
             {
                 property: `state`,
                 label: this.translate.instant(`State`),
                 options: [
                     { condition: PollState.Created, label: this.translate.instant(`created`) },
                     { condition: PollState.Started, label: this.translate.instant(`started`) },
-                    { condition: PollState.Finished, label: this.translate.instant(`finished (unpublished)`) },
-                    { condition: PollState.Published, label: this.translate.instant(`published`) }
+                    { condition: PollState.Finished, label: this.translate.instant(`finished`) }
                 ]
             },
             {

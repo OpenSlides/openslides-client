@@ -1,0 +1,41 @@
+<div class="result-wrapper">
+    <table class="result-table">
+        <tbody>
+            <tr>
+                <th class="left-header"></th>
+                <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+            </tr>
+            @for (row of options(); track row.key) {
+                <tr [style.color]="row.color">
+                    <!-- YNA/Valid etc -->
+                    <td class="label-column">
+                        <os-icon-container icon="circle" size="large">
+                            {{ row.votingOption | translate }}
+                        </os-icon-container>
+                    </td>
+
+                    <!-- Percent numbers -->
+                    <td class="result-cell-definition percent-column">
+                        @if (
+                            row.showPercent ||
+                            (shouldShowEntitled() && poll().config?.onehundred_percent_base !== 'entitled')
+                        ) {
+                            <span>
+                                {{ row.amount! | pollPercentBase: poll() }}
+                            </span>
+                        }
+                    </td>
+
+                    <!-- Voices -->
+                    <td class="result-cell-definition">
+                        {{ row.amount | pollParseNumber }}
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="doughnut-chart-normal">
+    <os-chart type="doughnut" [data]="chartData()"></os-chart>
+</div>

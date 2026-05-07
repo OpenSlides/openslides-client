@@ -1,74 +1,46 @@
 import { Injectable } from '@angular/core';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import {
-    ABSTAIN_KEY,
-    CalculablePollKey,
-    NO_KEY,
-    OptionData,
-    Poll,
-    PollBackendDurationType,
-    PollData,
-    PollMethod,
-    PollPercentBase,
-    PollTableData,
-    PollType,
-    VotingResult,
-    YES_KEY
-} from 'src/app/domain/models/poll';
+import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
+import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
 import { Topic } from 'src/app/domain/models/topics/topic';
-import { compareNumber } from 'src/app/infrastructure/utils';
-import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewTopic } from '../../../view-models';
-
-interface TopicPollTableEntry {
-    label: string;
-    data: number | undefined;
-}
 
 @Injectable({
     providedIn: 'root'
 })
 export class TopicPollService extends PollService {
-    public defaultPollMethod: PollMethod;
-    public defaultPercentBase: PollPercentBase;
+    public defaultPercentBase: BaseOnehundredPercentBase | SelectionOnehundredPercentBase;
     public defaultGroupIds: number[];
 
     public constructor(
         pollServiceMapper: PollServiceMapperService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private pollRepo: PollControllerService
     ) {
         super();
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`poll_default_onehundred_percent_base`)
-            .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
+            .subscribe(base => (this.defaultPercentBase = base ?? `valid`));
 
         this.meetingSettingsService
             .get(`topic_poll_default_group_ids`)
             .subscribe(ids => (this.defaultGroupIds = ids ?? []));
 
-        this.meetingSettingsService
-            .get(`poll_default_method`)
-            .subscribe(method => (this.defaultPollMethod = method ?? PollMethod.Y));
-
         this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }
 
-    public getDefaultPollData(contentObject?: Topic): Partial<Poll> {
-        const poll: Partial<Poll> = {
+    public getDefaultPollData(contentObject: Topic): Partial<PollDialogData> {
+        const poll: Partial<PollDialogData> = {
+            content_object: contentObject,
             title: this.translate.instant(`Vote`),
-            onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            pollmethod: this.defaultPollMethod,
-            type: PollType.Pseudoanonymous,
-            backend: PollBackendDurationType.FAST
+            // onehundred_percent_base: this.defaultPercentBase,
+            // pollmethod: this.defaultPollMethod,
+            // type: PollType.Pseudoanonymous,
+            entitled_group_ids: Object.values(this.defaultGroupIds ?? [])
         };
 
         if (contentObject) {
@@ -79,118 +51,5 @@ export class TopicPollService extends PollService {
         }
 
         return poll;
-    }
-
-    public generateTableDataAsObservable(poll: PollData): Observable<PollTableData[]> {
-        // The "of(...)"-observable is used to fire the current state the first time.
-        return merge(of(poll.options), poll.options$).pipe(map(options => this.createTableData(poll, options)));
-    }
-
-    private createTableData(poll: PollData, options: OptionData[]): PollTableData[] {
-        let tableData: PollTableData[] = options.flatMap(option =>
-            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option))
-        );
-        tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
-
-        tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
-        return tableData;
-    }
-
-    private createTableDataEntry(poll: PollData, result: VotingResult, option?: OptionData): PollTableData {
-        return {
-            votingOption: result.vote,
-            votingOptionSubtitle: option ? option.getOptionTitle().title : ``,
-            value: [
-                {
-                    amount: option ? option[result.vote] : poll[result.vote],
-                    hide: result.hide,
-                    icon: result.icon,
-                    showPercent: result.showPercent
-                }
-            ]
-        };
-    }
-
-    public shouldShowChart(poll: PollData): boolean {
-        return (
-            poll &&
-            poll.options &&
-            poll.options.some(option => option.yes >= 0 && option.no >= 0 && option.abstain >= 0)
-        );
-    }
-
-    public getSortedTableData(poll: PollData): TopicPollTableEntry[] {
-        const data = this.getResultFromPoll(poll, YES_KEY);
-        const labels = poll.options.map(option => option.getOptionTitle().title);
-        let labelsAndData: TopicPollTableEntry[] = [];
-        labels.forEach((value, index) => labelsAndData.push({ data: data[index], label: labels[index] }));
-        labelsAndData = labelsAndData.sort((a: { data: number; label: string }, b: { data: number; label: string }) =>
-            compareNumber(a.data, b.data)
-        );
-        return labelsAndData;
-    }
-
-    public override generateChartData(poll: PollData): ChartDate[] {
-        const fields = this.getPollDataFields(poll);
-
-        const data: ChartDate[] = fields.map(
-            key =>
-                ({
-                    data: this.getResultFromPoll(poll, key).sort((a, b) => compareNumber(a, b)),
-                    label: key.toUpperCase(),
-                    backgroundColor: this.themeService.getPollColor(key),
-                    hoverBackgroundColor: this.themeService.getPollColor(key),
-                    barThickness: 20,
-                    maxBarThickness: 20
-                }) as ChartDate
-        );
-
-        return data;
-    }
-
-    /**
-     * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
-     */
-    protected override getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
-        return [...poll.options].map(option => (option ? option[key] : undefined));
-    }
-
-    protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        const keys = [];
-        switch (poll.pollmethod) {
-            case PollMethod.YNA: {
-                keys.push(...[YES_KEY, NO_KEY, ABSTAIN_KEY]);
-                break;
-            }
-            case PollMethod.YN: {
-                keys.push(...[YES_KEY, NO_KEY]);
-                break;
-            }
-            case PollMethod.N: {
-                keys.push(NO_KEY);
-                break;
-            }
-            default: {
-                keys.push(YES_KEY);
-            }
-        }
-        return keys;
-    }
-
-    protected override getPercentBase(poll: PollData, row?: OptionData): number {
-        const base = poll.onehundred_percent_base as PollPercentBase;
-        switch (base) {
-            case PollPercentBase.Y:
-                return this.getSumOptionsY(poll);
-            default:
-                return super.getPercentBase(poll, row);
-        }
-    }
-
-    private getSumOptionsY(poll: PollData): number {
-        if (!poll.options?.length) {
-            return 0;
-        }
-        return poll.votesvalid;
     }
 }

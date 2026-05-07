@@ -1,10 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { PollContentObject } from 'src/app/domain/models/poll';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -12,6 +13,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
 
@@ -19,7 +21,7 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
-    standalone: false
+    imports: [MatCardModule, NgTemplateOutlet, PollComponent]
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];
@@ -128,11 +130,11 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
      * @param poll
      */
     public canManagePoll(poll: ViewPoll): boolean {
-        if (poll.pollClassType === PollClassType.Motion) {
+        if (poll.isMotionPoll) {
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Assignment) {
+        } else if (poll.isAssignmentPoll) {
             return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Topic) {
+        } else if (poll.isTopicPoll) {
             return this.operator.hasPerms(this.permission.pollCanManage);
         }
         return false;

@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -15,88 +18,88 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
     selector: `os-poll-progress`,
     templateUrl: `./poll-progress.component.html`,
     styleUrls: [`./poll-progress.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatProgressBarModule, TranslateModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollProgressComponent extends BaseUiComponent implements OnInit {
-    @Input()
-    public poll!: ViewPoll;
+export class PollProgressComponent extends BaseUiComponent {
+    public poll = input.required<ViewPoll>();
 
-    @Input()
-    public canManagePoll = false;
+    public canManagePoll = computed(() => {
+        if (this.poll().isMotionPoll) {
+            return this.operator.hasPerms(Permission.motionCanManagePolls);
+        } else if (this.poll().isAssignmentPoll) {
+            return this.operator.hasPerms(Permission.assignmentCanManagePolls);
+        } else if (this.poll().isTopicPoll) {
+            return this.operator.hasPerms(Permission.pollCanManage);
+        }
+        return false;
+    });
 
-    public max = 1;
+    public votescast = computed(() => {
+        return Object.keys(this.poll().ballot_ids ?? {}).length;
+    });
 
-    public get votescast(): number {
-        return Object.keys(this.poll?.live_votes ?? {}).length;
-    }
-
-    public get canSeeProgressBar(): boolean {
+    public canSeeProgressBar = computed(() => {
         if (!this.canSeeNames) {
             return false;
         }
-        return this.canManageSpeakers || this.canManagePoll;
-    }
+        return this.canManageSpeakers || this.canManagePoll();
+    });
 
-    private get canSeeNames(): boolean {
-        return this.operator.hasPerms(Permission.userCanSee);
-    }
+    public valueInPercent = computed(() => {
+        return (this.votescast() / this.max()) * 100;
+    });
 
-    private get canManageSpeakers(): boolean {
-        return this.operator.hasPerms(Permission.listOfSpeakersCanManage);
-    }
+    private canSeeNames = signal(false);
+    private canManageSpeakers = signal(false);
 
-    public constructor(
-        private autoupdate: AutoupdateService,
-        private userRepo: UserControllerService,
-        private operator: OperatorService,
-        private activeMeeting: ActiveMeetingService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private cd: ChangeDetectorRef
-    ) {
-        super();
-    }
+    private autoupdate = inject(AutoupdateService);
+    private userRepo = inject(UserControllerService);
+    private operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
 
-    public ngOnInit(): void {
-        if (this.poll) {
-            this.subscriptions.push(
-                this.userRepo
-                    .getViewModelListObservable()
-                    .pipe(
-                        map(users => {
-                            /**
-                             * Filter the users who would be able to vote:
-                             * They are present and don't have their vote right delegated
-                             * or the have their vote delegated to a user who is present.
-                             * They are in one of the voting groups
-                             */
-                            return users.filter(user => {
-                                const countable = user.isVoteCountable;
-                                const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
+    public maxResource = rxResource({
+        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
 
-                                return countable && inVoteGroup;
-                            });
-                        })
-                    )
-                    .subscribe(users => {
-                        this.max = users.length;
-                        this.cd.markForCheck();
-                    }),
-                this.operator.userObservable.subscribe(() => {
-                    this.cd.markForCheck();
+        stream: ({ params }) =>
+            this.userRepo.getViewModelListObservable().pipe(
+                map(users => {
+                    /**
+                     * Filter the users who would be able to vote:
+                     * They are present and don't have their vote right delegated
+                     * or the have their vote delegated to a user who is present.
+                     * They are in one of the voting groups
+                     */
+                    return users.filter(user => {
+                        const countable = user.isVoteCountable;
+                        const inVoteGroup = params.entitledGroupIds.intersect(user.group_ids()).length;
+
+                        return countable && inVoteGroup;
+                    }).length;
                 })
-            );
+            )
+    });
 
-            if (this.canSeeProgressBar) {
+    public max = computed(() => {
+        return this.maxResource.hasValue() ? this.maxResource.value() : 1;
+    });
+
+    public constructor() {
+        super();
+
+        effect(() => {
+            if (this.canSeeProgressBar()) {
                 const subscriptionConfig = getParticipantVoteInfoSubscriptionConfig(this.activeMeeting.meetingId);
                 this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(modelRequest => {
                     this.autoupdate.subscribe(modelRequest, subscriptionConfig.subscriptionName);
                 });
             }
-        }
-    }
+        });
 
-    public get valueInPercent(): number {
-        return (this.votescast / this.max) * 100;
+        this.operator.userObservable.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.canSeeNames.set(this.operator.hasPerms(Permission.userCanSee));
+            this.canManageSpeakers.set(this.operator.hasPerms(Permission.listOfSpeakersCanManage));
+        });
     }
 }

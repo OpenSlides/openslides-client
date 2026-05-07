@@ -1,0 +1,35 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+
+.poll-title-wrapper {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-areas: 'title actions';
+    grid-template-columns: auto min-content;
+
+    .poll-title-area {
+        grid-area: title;
+
+        .poll-title {
+            font-size: 125%;
+            font-weight: 500;
+        }
+    }
+
+    .type-and-state {
+        display: flex;
+        span {
+            display: flex;
+        }
+        .poll-type {
+            width: fit-content;
+        }
+    }
+
+    .poll-actions {
+        grid-area: actions;
+    }
+}
+
+.poll-vote-delegation {
+    margin-top: 1em;
+}

@@ -1,24 +1,7 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
-import {
-    PollMethod,
-    PollPercentBase,
-    PollState,
-    PollTableData,
-    VotingResult
-} from 'src/app/domain/models/poll/poll-constants';
+import { PollState, PollTableData, VotingResult } from 'src/app/domain/models/poll/poll-constants';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
@@ -31,12 +14,14 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
     selector: `os-assignment-poll-detail-content`,
-    templateUrl: `./assignment-poll-detail-content.component.html`,
+    template: `
+        TODO
+    `,
     styleUrls: [`./assignment-poll-detail-content.component.scss`],
     standalone: false
 })
-export class AssignmentPollDetailContentComponent implements OnInit, AfterViewInit {
-    private _poll: PollData;
+export class AssignmentPollDetailContentComponent implements AfterViewInit {
+    private _poll: ViewPoll;
 
     public readonly hasLoaded = new Deferred<boolean>();
 
@@ -45,13 +30,13 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     public reformedTableData: PollTableData[];
 
     @Input()
-    public set poll(pollData: PollData) {
+    public set poll(pollData: ViewPoll) {
         this._poll = pollData;
-        this.setupTableData();
+        // this.setupTableData();
         this.cd.markForCheck();
     }
 
-    public get poll(): PollData {
+    public get poll(): ViewPoll {
         return this._poll;
     }
 
@@ -72,45 +57,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         return this._tableData;
     }
 
-    private get method(): string | null {
-        return this.poll?.pollmethod || null;
-    }
-
     private get state(): PollState | null {
         return this.poll?.state || null;
-    }
-
-    public get showYHeader(): boolean {
-        return this.isMethodY || this.isMethodYN || this.isMethodYNA;
-    }
-
-    public get showNHeader(): boolean {
-        return this.isMethodN || this.isMethodYN || this.isMethodYNA;
-    }
-
-    public get isMethodY(): boolean {
-        return this.method === PollMethod.Y;
-    }
-
-    public get isMethodN(): boolean {
-        return this.method === PollMethod.N;
-    }
-
-    public get isMethodYN(): boolean {
-        return this.method === PollMethod.YN;
-    }
-
-    public get isMethodYNA(): boolean {
-        return this.method === PollMethod.YNA;
-    }
-
-    public get classOptionAmount(): string {
-        if (this.isMethodY || this.isMethodN) {
-            return `row-1`;
-        } else if (this.isMethodYN) {
-            return `row-2`;
-        }
-        return `row-3`;
     }
 
     public get isStarted(): boolean {
@@ -122,13 +70,13 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
     }
 
     public get isPublished(): boolean {
-        return this.state === PollState.Published;
+        return this.isFinished && this.poll?.published;
     }
 
     public get shouldShowChart(): boolean {
-        const validOptions = this.poll.options.some(
+        const validOptions = false; /* this.poll.options.some(
             option => option.yes! >= 0 && option.no! >= 0 && option.abstain! >= 0
-        );
+        ); */
         return this.poll.options.length === 1 && this.chartData.length > 0 && validOptions;
     }
 
@@ -140,17 +88,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         return this.operator.hasPerms(Permission.assignmentCanManagePolls) || this.isPublished;
     }
 
-    public get isPercentBaseEntitled(): boolean {
-        return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
-    }
-
-    public get isPercentBaseEntitledPresent(): boolean {
-        return this.poll?.onehundred_percent_base === PollPercentBase.EntitledPresent;
-    }
-
-    public get entitledPresentUsersCount(): number {
-        return this.poll?.entitled_users_at_stop.filter(x => x.present).length || 0;
-    }
+    public readonly entitledPresentUsersCount = 0;
 
     public get assignmentPollService(): PollService {
         return this.pollService;
@@ -164,9 +102,7 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         return this.assignment?.number_poll_candidates || false;
     }
 
-    public get showEntriesAmount(): boolean {
-        return !!this.poll.options[0]?.entries_amount;
-    }
+    public readonly showEntriesAmount = false;
 
     public constructor(
         private translate: TranslateService,
@@ -176,7 +112,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         private themeService: ThemeService
     ) {}
 
-    public ngOnInit(): void {
+    public _ngOnInit(): void {
+        /*
         combineLatest([
             this.poll.options$,
             iif(
@@ -196,56 +133,15 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
             ).pipe(startWith(null)),
             this.themeService.currentGeneralColorsSubject
         ]).subscribe(() => this.setupTableData());
+        */
     }
 
     public ngAfterViewInit(): void {
         setTimeout(() => this.hasLoaded.resolve(true));
     }
 
-    private setupTableData(): void {
-        this._tableData = this.pollService.generateTableData(this.poll);
-        this.updateReformedTableData();
-        this.setChartData();
-        this.cd.markForCheck();
-    }
-
-    private updateReformedTableData(): void {
-        this.reformedTableData = [];
-        this.tableData.forEach(tableDate => {
-            if ([`user`, `list`].includes(tableDate.class)) {
-                tableDate.value.forEach(value => {
-                    if (this.voteFitsMethod(value)) {
-                        this.reformedTableData.push({
-                            class: tableDate.class,
-                            votingOption: value.vote,
-                            value: [value]
-                        });
-                    }
-                });
-            } else {
-                this.reformedTableData.push(tableDate);
-            }
-        });
-    }
-
-    private setChartData(): void {
-        this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
-    }
-
-    public getVoteClass(votingResult: VotingResult): string {
-        const votingClass = votingResult.vote as string;
-        if (this.isMethodN && votingClass === `no`) {
-            return `yes`;
-        } else {
-            return votingClass;
-        }
-    }
-
-    public filterRelevantResults(votingResult: VotingResult[]): VotingResult[] {
-        return votingResult.filter(result => result && this.voteFitsMethod(result));
-    }
-
-    public getVoteAmount(vote: VotingResult, row: PollTableData): number {
+    public getVoteAmount(_vote: VotingResult, _row: PollTableData): number {
+        /*
         vote.amount = vote.amount ?? 0;
         if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (vote.amount < 0) {
@@ -257,21 +153,8 @@ export class AssignmentPollDetailContentComponent implements OnInit, AfterViewIn
         } else {
             return vote.amount;
         }
-    }
-
-    public voteFitsMethod(result: VotingResult): boolean {
-        if (!result.vote) {
-            return true;
-        }
-        if (this.isMethodY) {
-            return result.vote === `yes`;
-        } else if (this.isMethodN) {
-            return result.vote === `no`;
-        } else if (this.isMethodYN) {
-            return result.vote !== `abstain`;
-        } else {
-            return true;
-        }
+        */
+        return 0;
     }
 
     public ariaLabel(str: string): string {

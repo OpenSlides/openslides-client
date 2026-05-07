@@ -1,22 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
+import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
-
-import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 @Component({
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
-    standalone: false
+    imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
-export class AssignmentPollComponent extends BasePollComponent implements OnInit {
+export class AssignmentPollComponent extends BasePollComponent {
+    // TODO: Use signals
     @Input()
     public set pollId(id: Id) {
         this.initializePoll(id);
@@ -24,20 +25,6 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
 
     @Output()
     public readonly dialogOpened = new EventEmitter<void>();
-
-    public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm!: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get dirtyDescription(): boolean {
-        return this.descriptionForm.get(`description`)?.value !== this.poll.description;
-    }
 
     public get showPoll(): boolean {
         if (this.poll) {
@@ -52,55 +39,9 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
         return false;
     }
 
-    public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.assignmentCanManagePolls);
-    }
+    private operator = inject(OperatorService);
 
-    public get showCandidatesInMetaInfo(): boolean {
-        return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
-    }
-
-    public get canManagePoll(): boolean {
-        return this.operator.hasPerms(Permission.assignmentCanManagePolls);
-    }
-
-    public get isAnonymous(): boolean {
-        return this.operator.isAnonymousLoggedIn;
-    }
-
-    public constructor(
-        protected override translate: TranslateService,
-        private formBuilder: UntypedFormBuilder,
-        private pdfService: AssignmentPollPdfService,
-        private operator: OperatorService,
-        private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
-    ) {
-        super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
-    }
-
-    /**
-     * Print the PDF of this poll with the corresponding options and numbers
-     */
-    public printBallot(): void {
-        try {
-            this.pdfService.printBallots(this.poll);
-        } catch (e: any) {
-            console.error(e);
-            this.raiseError(e);
-        }
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
-    }
-
+    // TODO: Maybe remove
     public getDetailLink(): string {
         return `/${this.poll.meeting_id}/assignments/polls/${this.poll.sequential_number}`;
     }
