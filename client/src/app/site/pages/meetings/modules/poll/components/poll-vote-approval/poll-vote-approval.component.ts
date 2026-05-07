@@ -14,18 +14,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewBallot, ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
+import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 
 @Component({
     selector: 'os-poll-vote-approval',
     templateUrl: './poll-vote-approval.component.html',
     styleUrl: './poll-vote-approval.component.scss',
-    imports: [CustomIconComponent, TranslatePipe, MatIconModule, MatButtonModule],
+    imports: [PollVoteButtonComponent, TranslatePipe, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollVoteApprovalComponent implements OnDestroy {
@@ -40,6 +40,7 @@ export class PollVoteApprovalComponent implements OnDestroy {
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
 
+    public selected = signal<string>(null);
     public ballots = signal<ViewBallot[]>([]);
     // TODO: use balllots for this user/poll
 
@@ -49,12 +50,10 @@ export class PollVoteApprovalComponent implements OnDestroy {
         const actions: any[] = [
             {
                 vote: `yes`,
-                css: `voted-yes`,
                 label: _(`Yes`)
             },
             {
                 vote: `no`,
-                css: `voted-no`,
                 label: _(`No`)
             }
         ];
@@ -62,7 +61,6 @@ export class PollVoteApprovalComponent implements OnDestroy {
         if (this.poll().config.allow_abstain) {
             actions.push({
                 vote: `abstain`,
-                css: `voted-abstain`,
                 label: _(`Abstain`)
             });
         }
@@ -70,8 +68,8 @@ export class PollVoteApprovalComponent implements OnDestroy {
         return actions;
     });
 
-    public isOptionSelected(_key: string): boolean {
-        return false;
+    public isOptionSelected(key: string): boolean {
+        return this.selected() === key;
     }
 
     private pollBallotSubscription: Subscription;
@@ -97,11 +95,13 @@ export class PollVoteApprovalComponent implements OnDestroy {
     }
 
     public async submitVote(value: string): Promise<void> {
+        this.selected.set(value);
         const title = this.translate.instant(`Submit selection now?`);
         const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
 
         const confirmed = await this.promptService.open(title, content);
         if (!confirmed) {
+            this.selected.set(null);
             return;
         }
 

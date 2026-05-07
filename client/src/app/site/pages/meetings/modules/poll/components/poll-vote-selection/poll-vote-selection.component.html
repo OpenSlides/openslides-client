@@ -1,10 +1,6 @@
 <div class="option-list">
     @let multiVotes = !!(poll().config?.max_vote_sum > 1);
-    <div
-        role="row"
-        [class.option-list-caption]="multiVotes"
-        [class.option-list-information-grid]="!multiVotes"
-    >
+    <div role="row" [class.option-list-caption]="multiVotes" [class.option-list-information-grid]="!multiVotes">
         <ng-template #optionAmount>
             @if (poll().option_ids.length > 1) {
                 <div>
@@ -63,24 +59,13 @@
                 <os-poll-vote-option [option]="option" />
             </div>
             <div class="vote-button-area" role="gridcell">
-                <button
-                    class="vote-button"
-                    mat-raised-button
-                    role="radio"
-                    [ariaLabel]="option.text"
-                    [attr.aria-checked]="isSelected(option.id) ? 'true' : 'false'"
-                    [disabled]="loading()"
-                    (click)="toggleOption(option.id)"
-                >
-                    <div class="vote-button-content" [class.button-content-opaque]="!isSelected(option.id)">
-                        <os-custom-icon
-                            class="vote-button-cross"
-                            [class.voted-yes]="isSelected(option.id)"
-                            [customIcon]="drawnCross"
-                        ></os-custom-icon>
-                        <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
-                    </div>
-                </button>
+                <os-poll-vote-button
+                    [isSelected]="isSelected(option.id)"
+                    [loading]="loading()"
+                    [optionTitle]="option.text || option.meeting_user?.user?.getName()"
+                    [optionType]="poll().config.strike_out ? 'no' : 'yes'"
+                    (toggleOption)="toggleOption(option.id)"
+                />
             </div>
         </div>
     }
@@ -102,24 +87,13 @@
                     {{ optionName | translate }}
                 </div>
                 <div class="vote-button-area" role="gridcell">
-                    <button
-                        class="vote-button"
-                        mat-raised-button
-                        role="radio"
-                        [ariaLabel]="optionName"
-                        [attr.aria-checked]="isSelected(-1) ? 'true' : 'false'"
-                        [disabled]="loading()"
-                        (click)="toggleOption(-1)"
-                    >
-                        <div class="vote-button-content" [class.button-content-opaque]="!isSelected(-1)">
-                            <os-custom-icon
-                                class="vote-button-cross"
-                                [class.voted-yes]="isSelected(-1)"
-                                [customIcon]="drawnCross"
-                            ></os-custom-icon>
-                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
-                        </div>
-                    </button>
+                    <os-poll-vote-button
+                        [isSelected]="isSelected(-1)"
+                        [loading]="loading()"
+                        [optionTitle]="optionName"
+                        [optionType]="poll().config.strike_out ? 'yes' : 'no'"
+                        (toggleOption)="toggleOption(-1)"
+                    />
                 </div>
             </div>
         }
@@ -130,24 +104,13 @@
                     {{ 'General abstain' | translate }}
                 </div>
                 <div class="vote-button-area" role="gridcell">
-                    <button
-                        class="vote-button"
-                        mat-raised-button
-                        role="radio"
-                        [ariaLabel]="'General abstain' | translate"
-                        [attr.aria-checked]="isSelected(0) ? 'true' : 'false'"
-                        [disabled]="loading()"
-                        (click)="toggleOption(0)"
-                    >
-                        <div class="vote-button-content" [class.button-content-opaque]="!isSelected(0)">
-                            <os-custom-icon
-                                class="vote-button-cross"
-                                [class.voted-yes]="isSelected(0)"
-                                [customIcon]="drawnCross"
-                            ></os-custom-icon>
-                            <mat-icon class="vote-button-circle">radio_button_unchecked</mat-icon>
-                        </div>
-                    </button>
+                    <os-poll-vote-button
+                        optionType="abstain"
+                        [isSelected]="isSelected(0)"
+                        [loading]="loading()"
+                        [optionTitle]="'General abstain' | translate"
+                        (toggleOption)="toggleOption(0)"
+                    />
                 </div>
             </div>
         }

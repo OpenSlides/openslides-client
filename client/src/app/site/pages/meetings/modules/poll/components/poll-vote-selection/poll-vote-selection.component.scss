@@ -62,44 +62,6 @@
     justify-content: center;
 }
 
-.vote-button:hover {
-    .button-content-opaque {
-        opacity: 1;
-    }
-}
-
-.vote-button {
-    min-width: 50px;
-    height: 50px;
-    margin: auto;
-
-    .vote-button-content {
-        margin: auto;
-        display: grid;
-
-        .vote-button-circle,
-        .vote-button-cross {
-            grid-column: 1;
-            grid-row: 1;
-        }
-
-        .vote-button-circle {
-            z-index: 0;
-        }
-
-        .vote-button-cross {
-            z-index: 1;
-            height: 24px;
-            width: 24px;
-            opacity: 0;
-        }
-    }
-
-    .button-content-opaque {
-        opacity: 0.5;
-    }
-}
-
 .submit-area {
     display: flex;
     justify-content: center;

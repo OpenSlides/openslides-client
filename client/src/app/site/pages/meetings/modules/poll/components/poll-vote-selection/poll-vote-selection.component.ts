@@ -15,18 +15,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
-import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewBallot, ViewPoll, ViewPollOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
+import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
 @Component({
     selector: 'os-poll-vote-selection',
     imports: [
-        CustomIconComponent,
+        PollVoteButtonComponent,
         PollVoteOptionComponent,
         NgTemplateOutlet,
         MatIconModule,
@@ -38,8 +37,6 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollVoteSelectionComponent implements OnDestroy {
-    public readonly drawnCross = CustomIcon.DRAWN_CROSS;
-
     public poll = input.required<ViewPoll>();
     public user = input.required<ViewUser>();
     public loading = input<boolean>(false);
