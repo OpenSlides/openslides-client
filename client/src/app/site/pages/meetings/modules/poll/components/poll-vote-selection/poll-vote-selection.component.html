@@ -1,8 +1,9 @@
 <div class="option-list">
+    @let multiVotes = !!(poll().config?.max_vote_sum > 1);
     <div
         role="row"
-        [class.option-list-caption]="poll().config?.max_vote_sum > 1"
-        [class.option-list-information-grid]="poll().config?.max_vote_sum <= 1"
+        [class.option-list-caption]="multiVotes"
+        [class.option-list-information-grid]="!multiVotes"
     >
         <ng-template #optionAmount>
             @if (poll().option_ids.length > 1) {
@@ -13,12 +14,12 @@
                 <div></div>
             }
         </ng-template>
-        @if (poll().config?.max_vote_sum <= 1) {
+        @if (!multiVotes) {
             <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
         }
 
         <div>
-            @if (poll().config?.max_vote_sum > 1) {
+            @if (multiVotes) {
                 <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
                 <div class="available-votes">
                     {{ 'Available votes' | translate }}:
@@ -37,7 +38,7 @@
         </div>
     </div>
 
-    @if (poll().config?.max_vote_sum > 1) {
+    @if (multiVotes) {
         <div class="option-list-information-grid" role="row">
             <div></div>
             <div class="vote-button-area" role="gridcell">
