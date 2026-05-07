@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
+import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
 
 /**
@@ -52,9 +53,11 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
     Partial<InfoDialog>,
     InfoDialog
 > {
-    public async open(
-        data: Partial<InfoDialog> & Identifiable
-    ): Promise<MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>> {
+    public constructor(private controller: ParticipantControllerService) {
+        super();
+    }
+
+    public async open(data: Partial<InfoDialog> & { user: ViewUser }): Promise<any> {
         const module = await import(`../participant-list-info-dialog.module`).then(
             m => m.ParticipantListInfoDialogModule
         );
@@ -64,6 +67,12 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
                 dialogRef.close(data);
             }
         });
-        return dialogRef;
+        const result = await firstValueFrom(dialogRef.afterClosed());
+        result.vote_delegated_to_id = result.vote_delegated_to_id === 0 ? null : result.vote_delegated_to_id;
+        this.update(result, data.user);
+    }
+
+    protected async update(payload: any, user: ViewUser): Promise<void> {
+        await this.controller.update(payload, user).resolve();
     }
 }
