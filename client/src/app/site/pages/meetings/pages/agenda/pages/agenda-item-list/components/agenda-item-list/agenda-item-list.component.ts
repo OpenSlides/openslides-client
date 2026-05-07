@@ -343,13 +343,13 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             return {
                 content_object_ids: ids,
                 projectionDefault: PROJECTIONDEFAULT.topics,
-                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+                getDialogTitle: (): string => this.translate.instant(`Topics`)
             };
         } else {
             return {
                 content_object_ids: null,
                 projectionDefault: PROJECTIONDEFAULT.topics,
-                getDialogTitle: (): string => this.translate.instant(`Agenda`)
+                getDialogTitle: (): string => this.translate.instant(`Topics`)
             };
         }
     }
