@@ -3,10 +3,9 @@ import { BasePollDialogService } from 'src/app/site/pages/meetings/modules/poll/
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionPollDialogComponent } from '../../components/motion-poll-dialog/motion-poll-dialog.component';
-import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 @Injectable({
-    providedIn: MotionPollServiceModule
+    providedIn: 'root'
 })
 export class MotionPollDialogService extends BasePollDialogService<ViewMotion> {
     protected getComponent(): typeof MotionPollDialogComponent {

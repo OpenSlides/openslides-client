@@ -10,10 +10,9 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../assignment-poll.service';
-import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 
 @Injectable({
-    providedIn: AssignmentPollServiceModule
+    providedIn: 'root'
 })
 export class AssignmentPollPdfService extends BasePollPdfService {
     public constructor(

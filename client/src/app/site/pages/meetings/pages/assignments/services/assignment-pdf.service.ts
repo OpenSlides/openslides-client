@@ -9,12 +9,11 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models';
-import { AssignmentExportServiceModule } from './assignment-export-service.module';
 
 /**
  * Creates a PDF document from a single assignment
  */
-@Injectable({ providedIn: AssignmentExportServiceModule })
+@Injectable({ providedIn: 'root' })
 export class AssignmentPdfService {
     public constructor(
         private translate: TranslateService,

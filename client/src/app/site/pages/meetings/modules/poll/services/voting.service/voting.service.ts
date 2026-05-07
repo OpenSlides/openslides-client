@@ -10,7 +10,6 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { PollServiceModule } from '../poll-service.module';
 
 export enum VotingProhibition {
     POLL_WRONG_STATE = 1, // 1 so we can check with negation
@@ -36,7 +35,7 @@ const VotingProhibitionVerbose = {
 };
 
 @Injectable({
-    providedIn: PollServiceModule
+    providedIn: 'root'
 })
 export class VotingService {
     private _currentUser: ViewUser | null = null;

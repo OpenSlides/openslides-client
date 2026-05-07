@@ -9,9 +9,8 @@ import {
     ProjectionDialogConfig
 } from '../components/projection-dialog/projection-dialog.component';
 import { ProjectionDialogReturnType } from '../definitions';
-import { ProjectionDialogModule } from '../projection-dialog.module';
 
-@Injectable({ providedIn: ProjectionDialogModule })
+@Injectable({ providedIn: 'root' })
 export class ProjectionDialogService {
     public constructor(
         private dialog: MatDialog,

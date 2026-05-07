@@ -4,6 +4,7 @@
 /** angular material theming */
 @use 'sass:meta';
 @use 'assets/styles/theme-styles.scss';
+@use 'assets/styles/reason.scss';
 
 /** Useful default classes */
 @use 'assets/styles/default-classes.scss';
@@ -161,6 +162,17 @@
             text-overflow: ellipsis;
             overflow: hidden;
         }
+    }
+}
+
+.export-wrapper {
+    .mat-mdc-chip,
+    .mat-mdc-basic-chip, 
+    .mdc-evolution-chip__text-label,
+    .mat-mdc-chip-action-label {
+        padding: 0px 0px !important;
+        min-height: var(--mat-chip-container-height) !important;
+        align-content: center;
     }
 }
 

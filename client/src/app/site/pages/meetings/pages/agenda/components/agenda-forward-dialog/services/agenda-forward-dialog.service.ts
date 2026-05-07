@@ -18,7 +18,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { AgendaItemControllerService } from '../../../services';
-import { AgendaItemCommonServiceModule } from '../../../services/agenda-item-common-service.module';
 import { ViewAgendaItem } from '../../../view-models';
 import {
     AgendaForwardDialogComponent,
@@ -32,7 +31,7 @@ export interface AgendaForwardDialogPayload {
 }
 
 @Injectable({
-    providedIn: AgendaItemCommonServiceModule
+    providedIn: 'root'
 })
 export class AgendaForwardDialogService
     extends BaseDialogService<AgendaForwardDialogComponent, AgendaForwardDialogPayload, AgendaForwardDialogReturnData>

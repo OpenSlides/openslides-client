@@ -3,9 +3,8 @@ import { Observable } from 'rxjs';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
 
 import { ViewGroup } from '../../../../../participants';
-import { MediafileListServiceModule } from '../mediafile-list-service.module';
 
-@Injectable({ providedIn: MediafileListServiceModule })
+@Injectable({ providedIn: 'root' })
 export class MediafileListGroupService {
     public constructor(private groupRepo: GroupRepositoryService) {}
 

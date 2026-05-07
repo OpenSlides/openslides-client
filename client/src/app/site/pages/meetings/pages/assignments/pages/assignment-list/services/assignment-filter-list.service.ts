@@ -4,13 +4,12 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 
 import { AssignmentPhases } from '../../../definitions';
 import { ViewAssignment } from '../../../view-models';
-import { AssignmentListServiceModule } from './assignment-list-service.module';
 
 /**
  * Filter service for the assignment list
  */
 @Injectable({
-    providedIn: AssignmentListServiceModule
+    providedIn: 'root'
 })
 export class AssignmentFilterListService extends BaseFilterListService<ViewAssignment> {
     /**

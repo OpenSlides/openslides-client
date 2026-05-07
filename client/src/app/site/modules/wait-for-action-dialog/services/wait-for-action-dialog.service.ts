@@ -11,10 +11,9 @@ import { BannerService } from '../../site-wrapper/services/banner.service';
 import { StoppedWaitingForActionDialogComponent } from '../components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';
 import { WaitForActionBannerComponent } from '../components/wait-for-action-banner/wait-for-action-banner.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
-import { WaitForActionDialogModule } from '../wait-for-action-dialog.module';
 
 @Injectable({
-    providedIn: WaitForActionDialogModule
+    providedIn: 'root'
 })
 export class WaitForActionDialogService {
     public get currentReasonObservable(): Observable<WaitForActionReason> {

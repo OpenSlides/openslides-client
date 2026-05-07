@@ -8,10 +8,9 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 
 import { ViewTopic } from '../../../view-models';
-import { TopicPollServiceModule } from './topic-poll-service.module';
 
 @Injectable({
-    providedIn: TopicPollServiceModule
+    providedIn: 'root'
 })
 export class TopicPollService extends PollService {
     public defaultPercentBase: BaseOnehundredPercentBase | SelectionOnehundredPercentBase;

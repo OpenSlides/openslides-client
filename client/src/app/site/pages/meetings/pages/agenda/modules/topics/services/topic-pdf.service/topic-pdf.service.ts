@@ -8,12 +8,11 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { ViewPoll, ViewPollConfigSelection } from '../../../../../polls';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
 import { ViewTopic } from '../../view-models';
-import { TopicCommonServiceModule } from '../topic-common-service.module';
 
 /**
  * Creates a PDF document from a single tpoic
  */
-@Injectable({ providedIn: TopicCommonServiceModule })
+@Injectable({ providedIn: 'root' })
 export class TopicPdfService {
     public constructor(
         private translate: TranslateService,

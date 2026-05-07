@@ -8,10 +8,9 @@ import { OrganizationControllerService } from 'src/app/site/pages/organization/s
 import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 
 import { ViewTheme } from '../view-models';
-import { ThemeCommonServiceModule } from './theme-common-service.module';
 
 @Injectable({
-    providedIn: ThemeCommonServiceModule
+    providedIn: 'root'
 })
 export class ThemeControllerService extends BaseController<ViewTheme, Theme> {
     public constructor(
