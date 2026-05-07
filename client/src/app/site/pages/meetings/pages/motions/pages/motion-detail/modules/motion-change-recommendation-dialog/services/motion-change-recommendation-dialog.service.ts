@@ -10,10 +10,9 @@ import {
     MotionTitleChangeRecommendationDialogComponent,
     MotionTitleChangeRecommendationDialogComponentData
 } from '../components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
-import { MotionChangeRecommendationDialogModule } from '../motion-change-recommendation-dialog.module';
 
 @Injectable({
-    providedIn: MotionChangeRecommendationDialogModule
+    providedIn: 'root'
 })
 export class MotionChangeRecommendationDialogService {
     public constructor(private dialog: MatDialog) {}

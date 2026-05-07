@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -12,7 +13,7 @@ import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/mee
 import { LineRange } from '../../../../definitions';
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
-import { LineNumberingService } from '../line-numbering.service';
+import { DiffServiceFactory } from '../diff-factory.service';
 import { MotionDiffService } from '../motion-diff.service';
 
 @Injectable({
@@ -25,8 +26,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionChangeRecommendationRepositoryService,
-        private lineNumberingService: LineNumberingService,
-        private diffService: MotionDiffService
+        private diffServiceFactory: DiffServiceFactory
     ) {
         super(controllerServiceCollector, MotionChangeRecommendation, repo);
     }
@@ -93,8 +93,8 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
             otherReco => !(line_from > otherReco.line_to || line_to < otherReco.line_from)
         );
         if (reco?.motion?.text) {
-            const lineRange = this.lineNumberingService.getLineNumberRange(
-                this.lineNumberingService.insertLineNumbers({
+            const lineRange = reco.motion.services().ln.getLineNumberRange(
+                reco.motion.services().ln.insertLineNumbers({
                     html: reco.motion.text,
                     lineLength: this.meetingSettingsService.instant(`motions_line_length`),
                     firstLine: reco.motion.firstLine
@@ -152,7 +152,10 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
 
     public getTitleChangesAsDiff = (originalTitle: string, change: ViewUnifiedChange): string => {
         if (change) {
-            return this.diffService.diff(originalTitle, change.getChangeNewText());
+            // TODO: Currently not using the appropriate diff version because of projector
+            return this.diffServiceFactory
+                .createService(MotionDiffService, CURRENT_DIFF_VERSION)
+                .diff(originalTitle, change.getChangeNewText());
         } else {
             return ``;
         }
@@ -167,7 +170,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
      * @param {number} lineLength
      */
     public createMotionChangeRecommendationTemplate(motion: ViewMotion, lineRange: LineRange, lineLength: number): any {
-        const motionText = this.lineNumberingService.insertLineNumbers({
+        const motionText = motion.services().ln.insertLineNumbers({
             html: motion.text,
             lineLength,
             firstLine: motion.firstLine
@@ -177,7 +180,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
-        changeReco.text = this.diffService.extractMotionLineRange(motionText, lineRange, false, lineLength);
+        changeReco.text = motion.services().diff.extractMotionLineRange(motionText, lineRange, false, lineLength);
         changeReco.rejected = false;
         changeReco.motion_id = motion.id;
 
@@ -200,7 +203,9 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     ): any {
         const consolidatedText = lineNumberedParagraphs.join(`\n`);
 
-        const extracted = this.diffService.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
+        const extracted = amendment
+            .services()
+            .diff.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
         const extractedHtml =
             extracted.outerContextStart +
             extracted.innerContextStart +

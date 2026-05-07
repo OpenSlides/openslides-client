@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
-import { TopicImportServiceModule } from '../topic-import-service.module';
 
 interface TopicExport {
     title?: string;
@@ -14,7 +13,7 @@ interface TopicExport {
 }
 
 @Injectable({
-    providedIn: TopicImportServiceModule
+    providedIn: 'root'
 })
 export class TopicExportService {
     public constructor(

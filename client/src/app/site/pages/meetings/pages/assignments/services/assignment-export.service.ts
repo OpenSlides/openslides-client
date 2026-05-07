@@ -6,13 +6,12 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewAssignment } from '../view-models';
-import { AssignmentExportServiceModule } from './assignment-export-service.module';
 import { AssignmentPdfService } from './assignment-pdf.service';
 
 /**
  * Controls PDF export for assignments
  */
-@Injectable({ providedIn: AssignmentExportServiceModule })
+@Injectable({ providedIn: 'root' })
 export class AssignmentExportService {
     public constructor(
         private translate: TranslateService,

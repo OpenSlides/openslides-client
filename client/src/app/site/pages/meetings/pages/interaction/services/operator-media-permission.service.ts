@@ -3,14 +3,12 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 
-import { InteractionServiceModule } from './interaction-service.module';
-
 const givePermsMessage = _(`Please allow OpenSlides to access your microphone and/or camera`);
 const accessDeniedMessage = _(`Media access is denied`);
 const noMicMessage = _(`Your device has no microphone`);
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class OperatorMediaPermissionService {
     private hasAudioDevice = false;

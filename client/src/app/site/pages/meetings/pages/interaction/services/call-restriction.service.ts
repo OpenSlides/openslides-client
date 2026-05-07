@@ -7,11 +7,10 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SpeakerStateOnList } from '../../agenda';
 import { CurrentListOfSpeakersService } from '../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
-import { InteractionServiceModule } from './interaction-service.module';
 import { RTC_LOGGED_STORAGE_KEY } from './rtc.service';
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class CallRestrictionService {
     public isAccessRestricted: Observable<boolean> = this.settingService.get(`conference_los_restriction`);

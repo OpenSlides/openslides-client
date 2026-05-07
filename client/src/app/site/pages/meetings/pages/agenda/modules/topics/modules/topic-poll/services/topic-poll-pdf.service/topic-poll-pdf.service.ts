@@ -9,10 +9,9 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
 import { ViewTopic } from '../../../../view-models';
 import { TopicPollService } from '../topic-poll.service';
-import { TopicPollServiceModule } from '../topic-poll-service.module';
 
 @Injectable({
-    providedIn: TopicPollServiceModule
+    providedIn: 'root'
 })
 export class TopicPollPdfService extends BasePollPdfService {
     public constructor(

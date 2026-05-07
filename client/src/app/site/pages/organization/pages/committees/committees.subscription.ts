@@ -86,7 +86,8 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
                     `organization_tag_ids`,
                     `start_time`,
                     `user_ids`,
-                    `template_for_organization_id`
+                    `template_for_organization_id`,
+                    `time_zone`
                 ]
             }
         ]
@@ -105,7 +106,8 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
             `jitsi_room_name`,
             `jitsi_room_password`,
             `language`,
-            `external_id`
+            `external_id`,
+            `time_zone`
         ],
         follow: [
             {

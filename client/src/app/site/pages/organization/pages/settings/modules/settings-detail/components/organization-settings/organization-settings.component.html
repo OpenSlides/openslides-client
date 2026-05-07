@@ -38,6 +38,14 @@
                             }
                         </mat-select>
                     </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>{{ 'Time zone' | translate }}</mat-label>
+                        <os-list-search-selector
+                            formControlName="time_zone"
+                            [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
+                            [inputListValues]="time_zones"
+                        ></os-list-search-selector>
+                    </mat-form-field>
                     <section>
                         <mat-checkbox formControlName="require_duplicate_from">
                             {{ 'Public template required for creating new meeting' | translate }}

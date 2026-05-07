@@ -7,10 +7,9 @@ import { ImportServiceCollectorService } from 'src/app/site/services/import-serv
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
-import { ParticipantImportServiceModule } from '../participant-import-service.module';
 
 @Injectable({
-    providedIn: ParticipantImportServiceModule
+    providedIn: 'root'
 })
 export class ParticipantImportService extends BaseBackendImportService {
     /**

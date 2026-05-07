@@ -25,7 +25,6 @@ import { MotionWorkflowControllerService } from '../../../modules/workflows/serv
 import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
 import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
 import { ForwardingStatus, ViewMotion } from '../../../view-models';
-import { MotionsListServiceModule } from '../motions-list-service.module';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -44,7 +43,7 @@ interface WorkflowConfiguration {
  * Filter the motion list
  */
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: 'root'
 })
 export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     /**

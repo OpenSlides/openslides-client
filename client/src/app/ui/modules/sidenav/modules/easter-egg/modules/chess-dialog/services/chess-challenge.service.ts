@@ -9,7 +9,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ChessDialogModule } from '../chess-dialog.module';
 
 @Injectable({
-    providedIn: ChessDialogModule
+    providedIn: 'root'
 })
 export class ChessChallengeService {
     public constructor(

@@ -5,10 +5,9 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 import { GroupControllerService } from '../../../pages/participants';
 import { StructureLevelControllerService } from '../../../pages/participants/pages/structure-levels/services/structure-level-controller.service';
 import { ViewVote } from '../../../pages/polls';
-import { PollServiceModule } from '../services/poll-service.module';
 
 @Injectable({
-    providedIn: PollServiceModule
+    providedIn: 'root'
 })
 export class VotesFilterService extends BaseFilterListService<any> {
     protected storageKey = `VotesEntry`;
