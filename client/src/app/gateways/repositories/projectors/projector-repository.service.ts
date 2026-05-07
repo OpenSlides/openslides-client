@@ -181,6 +181,19 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         return await this.sendActionToBackend(ProjectorAction.ADD_TO_PREVIEW, payload);
     }
 
+    public async bulkAddToPreview(
+        descriptor: ProjectionBuildDescriptor[],
+        projectors: ViewProjector[],
+        options: object | null
+    ): Promise<void> {
+        const payloads = [];
+        for (const descr of descriptor) {
+            const data = [this.createProjectPayload(descr, projectors, options)];
+            payloads.push({ action: ProjectorAction.ADD_TO_PREVIEW, data });
+        }
+        return await this.sendActionsToBackend([...payloads], true);
+    }
+
     public async projectPreview(projection: Identifiable): Promise<void> {
         const payload = { id: projection.id };
         return await this.sendActionToBackend(ProjectorAction.PROJECT_PREVIEW, payload);

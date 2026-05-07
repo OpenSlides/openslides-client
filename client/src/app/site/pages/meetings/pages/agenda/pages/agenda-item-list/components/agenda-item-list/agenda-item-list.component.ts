@@ -16,7 +16,10 @@ import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import {
+    MultiProjectionBuildDescriptor,
+    ProjectionBuildDescriptor
+} from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -325,6 +328,29 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
             await this.repo.bulkSetAgendaType(this.selectedRows, agendaType);
         } catch (e) {
             this.raiseError(e);
+        }
+    }
+
+    public addToProjectorQueue(): MultiProjectionBuildDescriptor {
+        const toBeProjectedItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+        const originalOrder = this.listComponent?.source.map(i => i.content_object_id);
+
+        if (toBeProjectedItems) {
+            const ids = toBeProjectedItems.map(item => item.content_object_id);
+            if (this.isMultiSelect) {
+                ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
+            }
+            return {
+                content_object_ids: ids,
+                projectionDefault: PROJECTIONDEFAULT.topics,
+                getDialogTitle: (): string => this.translate.instant(`Topics`)
+            };
+        } else {
+            return {
+                content_object_ids: null,
+                projectionDefault: PROJECTIONDEFAULT.topics,
+                getDialogTitle: (): string => this.translate.instant(`Topics`)
+            };
         }
     }
 

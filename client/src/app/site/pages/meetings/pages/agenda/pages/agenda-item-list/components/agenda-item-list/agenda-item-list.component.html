@@ -249,6 +249,13 @@
                     <span>{{ 'Set hidden' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
+                <!-- Add to projector queue -->
+                <os-projector-button
+                    [disabled]="!selectedRows.length"
+                    [hideMainButton]="true"
+                    [menuItem]="true"
+                    [object]="addToProjectorQueue()"
+                ></os-projector-button>
                 <!-- PDF/CSV export -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAgendaItems()">
                     <mat-icon>archive</mat-icon>

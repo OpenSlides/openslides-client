@@ -5,8 +5,10 @@ import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/mee
 import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import {
+    isMultiProjectionBuildDescriptor,
     isProjectable,
     isProjectionBuildDescriptor,
+    MultiProjectionBuildDescriptor,
     Projectable,
     ProjectionBuildDescriptor
 } from 'src/app/site/pages/meetings/view-models';
@@ -23,24 +25,32 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      * The object to project.
      */
 
-    private _object: ProjectionBuildDescriptor | Projectable | null = null;
+    private _object: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable | null = null;
 
-    public get object(): ProjectionBuildDescriptor | Projectable {
+    public get object(): ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable {
         return this._object!;
     }
 
     @Input()
-    public set object(obj: ProjectionBuildDescriptor | Projectable | null) {
-        if (isProjectable(obj) || isProjectionBuildDescriptor(obj)) {
+    public set object(obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable | null) {
+        if (isProjectable(obj) || isProjectionBuildDescriptor(obj) || isMultiProjectionBuildDescriptor(obj)) {
             this._object = obj;
         } else {
             this._object = null;
         }
-        this.updateIsProjected();
+        if (!isMultiProjectionBuildDescriptor(obj)) {
+            this.updateIsProjected();
+        }
+        this.isSingleProjection = !isMultiProjectionBuildDescriptor(obj);
     }
 
     @Input()
     public menuItem = false;
+
+    public isSingleProjection = true;
+
+    @Input()
+    public hideMainButton = false;
 
     @Output()
     public changeEvent = new EventEmitter<void>();
@@ -99,7 +109,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor({
                 descriptor,
-                allowReferenceProjector: this.allowReferenceProjector
+                allowReferenceProjector: this.allowReferenceProjector,
+                hideMainButton: this.hideMainButton
             });
         }
     };
@@ -162,6 +173,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      */
     public updateIsProjected(): void {
         if (!this.object) {
+            this._isProjected = false;
+        }
+        if (isMultiProjectionBuildDescriptor(this.object)) {
             this._isProjected = false;
         }
 
