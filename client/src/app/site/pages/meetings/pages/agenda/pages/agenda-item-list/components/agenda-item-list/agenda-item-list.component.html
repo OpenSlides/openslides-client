@@ -160,12 +160,6 @@
                 <span>{{ 'Tags' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
-            <!-- Add to projector queue -->
-            <os-projector-button
-                [hideMainButton]="true"
-                [menuItem]="true"
-                [object]="addToProjectorQueue()"
-            ></os-projector-button>
             <!-- PDF/CSV export -->
             <button mat-menu-item (click)="exportAgendaItems()">
                 <mat-icon>archive</mat-icon>

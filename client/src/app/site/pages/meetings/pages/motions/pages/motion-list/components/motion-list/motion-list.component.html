@@ -515,14 +515,6 @@
                     <mat-divider></mat-divider>
                 </div>
             }
-            <div *osPerms="permission.agendaItemCanManage">
-                <!-- Add to projector queue -->
-                <os-projector-button
-                    [hideMainButton]="true"
-                    [menuItem]="true"
-                    [object]="addToProjectorQueue()"
-                ></os-projector-button>
-            </div>
             <!-- Export -->
             @if (selectedView === 'list') {
                 <button mat-menu-item (click)="exportAllMotions()">
