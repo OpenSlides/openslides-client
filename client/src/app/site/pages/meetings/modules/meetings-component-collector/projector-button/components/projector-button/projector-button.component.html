@@ -4,9 +4,11 @@
             <mat-icon>videocam</mat-icon>
             <span #ref><ng-content></ng-content></span>
             @if (!ref.innerHTML.trim()) {
-                <span>
-                    {{ projectorLabel | translate }}
-                </span>
+                @if (isSingleProjection) {
+                    {{ `Project` | translate }}
+                } @else {
+                    {{ `Add to queue` | translate }}
+                }
             }
         </button>
     } @else if (!blendIn) {

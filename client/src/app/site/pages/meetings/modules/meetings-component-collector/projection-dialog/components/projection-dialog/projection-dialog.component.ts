@@ -189,21 +189,12 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public onAddToPreview(): void {
-        if (isProjectionBuildDescriptor(this.descriptor)) {
-            this.dialogRef.close({
-                action: `addToPreview`,
-                resultDescriptor: this.descriptor,
-                projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
-                options: this.optionValues
-            });
-        } else {
-            this.dialogRef.close({
-                action: `bulkAddToPreview`,
-                resultDescriptor: this.descriptor,
-                projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
-                options: this.optionValues
-            });
-        }
+        this.dialogRef.close({
+            action: isProjectionBuildDescriptor(this.descriptor) ? `addToPreview` : `bulkAddToPreview`,
+            resultDescriptor: this.descriptor,
+            projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
+            options: this.optionValues
+        });
     }
 
     public onHide(): void {

@@ -165,7 +165,6 @@
                 [hideMainButton]="true"
                 [menuItem]="true"
                 [object]="addToProjectorQueue()"
-                [projectorLabel]="'Add to queue'"
             ></os-projector-button>
             <!-- PDF/CSV export -->
             <button mat-menu-item (click)="exportAgendaItems()">
@@ -262,7 +261,6 @@
                     [hideMainButton]="true"
                     [menuItem]="true"
                     [object]="addToProjectorQueue()"
-                    [projectorLabel]="'Add to queue'"
                 ></os-projector-button>
                 <!-- PDF/CSV export -->
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="exportAgendaItems()">

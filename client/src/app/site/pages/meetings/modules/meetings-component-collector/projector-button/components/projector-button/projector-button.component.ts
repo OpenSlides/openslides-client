@@ -41,13 +41,13 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (!isMultiProjectionBuildDescriptor(obj)) {
             this.updateIsProjected();
         }
+        this.isSingleProjection = !isMultiProjectionBuildDescriptor(obj);
     }
 
     @Input()
     public menuItem = false;
 
-    @Input()
-    public projectorLabel = `Project`;
+    public isSingleProjection = true;
 
     @Input()
     public hideMainButton = false;
