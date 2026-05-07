@@ -5,7 +5,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { MultiProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SortListService } from 'src/app/ui/modules/list';
@@ -103,7 +103,7 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
         });
     }
 
-    public addToProjectorQueue(): ProjectionBuildDescriptor {
+    public addToProjectorQueue(): MultiProjectionBuildDescriptor {
         const toBeProjectedItems: ViewMotion[] = this.selectedMotions;
         const results = [];
         this.sortService.getSortedViewModelListObservable().subscribe(item => results.push(item));
@@ -114,13 +114,13 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
             ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
 
             return {
-                content_object_id: ids,
+                content_object_ids: ids,
                 projectionDefault: PROJECTIONDEFAULT.motion,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };
         } else {
             return {
-                content_object_id: null,
+                content_object_ids: null,
                 projectionDefault: PROJECTIONDEFAULT.motion,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };

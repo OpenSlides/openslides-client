@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { MultiProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -118,7 +118,7 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         }
     }
 
-    public addToProjectorQueue(): ProjectionBuildDescriptor {
+    public addToProjectorQueue(): MultiProjectionBuildDescriptor {
         const toBeProjectedItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
         const originalOrder = this.listComponent?.source.map(i => `assignment/` + i.assignment.id);
 
@@ -128,13 +128,13 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
                 ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
             }
             return {
-                content_object_id: ids,
+                content_object_ids: ids,
                 projectionDefault: PROJECTIONDEFAULT.assignment,
                 getDialogTitle: (): string => this.translate.instant(`Elections`)
             };
         } else {
             return {
-                content_object_id: null,
+                content_object_ids: null,
                 projectionDefault: PROJECTIONDEFAULT.assignment,
                 getDialogTitle: (): string => this.translate.instant(`Elections`)
             };

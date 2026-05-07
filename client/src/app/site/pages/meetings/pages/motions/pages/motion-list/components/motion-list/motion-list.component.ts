@@ -6,7 +6,7 @@ import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-de
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { MultiProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';
@@ -416,19 +416,19 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return submitters.map(sub => sub ?? this.translate.instant(`Deleted user`));
     }
 
-    public addToProjectorQueue(): ProjectionBuildDescriptor {
+    public addToProjectorQueue(): MultiProjectionBuildDescriptor {
         const toBeProjectedItems = this.listComponent?.source;
 
         if (toBeProjectedItems) {
             const ids = toBeProjectedItems.map(item => `motion/` + item.id);
             return {
-                content_object_id: ids,
+                content_object_ids: ids,
                 projectionDefault: PROJECTIONDEFAULT.motion,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };
         } else {
             return {
-                content_object_id: null,
+                content_object_ids: null,
                 projectionDefault: PROJECTIONDEFAULT.motion,
                 getDialogTitle: (): string => this.translate.instant(`Motions`)
             };

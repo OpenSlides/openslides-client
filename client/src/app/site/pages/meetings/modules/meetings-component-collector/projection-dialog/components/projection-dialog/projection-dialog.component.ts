@@ -11,6 +11,7 @@ import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/pr
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import {
     isProjectionBuildDescriptor,
+    MultiProjectionBuildDescriptor,
     ProjectionBuildDescriptor
 } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
@@ -44,7 +45,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public optionValues: any = {};
     public options!: SlideOptions;
     private _descriptor: ProjectionBuildDescriptor;
-    public get descriptor(): ProjectionBuildDescriptor {
+    public get descriptor(): ProjectionBuildDescriptor | MultiProjectionBuildDescriptor {
         if (this._descriptor.stableToggle && this.optionValues) {
             return Object.assign({}, this._descriptor, {
                 stable: this.optionValues[this._descriptor.stableToggle]
@@ -133,13 +134,15 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                 }
             }
 
-            // Set option defaults
-            this.descriptor?.slideOptions?.forEach(option => {
-                this.optionValues[option.key] = this.currentProjectionOptions[option.key] || option.default;
-            });
+            if (isProjectionBuildDescriptor(this.descriptor)) {
+                // Set option defaults
+                this.descriptor?.slideOptions?.forEach(option => {
+                    this.optionValues[option.key] = this.currentProjectionOptions[option.key] || option.default;
+                });
 
-            if (this.descriptor) {
-                this.options = this.descriptor.slideOptions!;
+                if (this.descriptor) {
+                    this.options = this.descriptor.slideOptions!;
+                }
             }
 
             this._subscriptions.push(
@@ -186,7 +189,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     }
 
     public onAddToPreview(): void {
-        if (typeof this.descriptor.content_object_id === `string`) {
+        if (isProjectionBuildDescriptor(this.descriptor)) {
             this.dialogRef.close({
                 action: `addToPreview`,
                 resultDescriptor: this.descriptor,
@@ -194,29 +197,12 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                 options: this.optionValues
             });
         } else {
-            const projectors = this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p);
-            const stable: boolean = this.descriptor.stable;
-            const stableToggle: string = this.descriptor.stableToggle;
-            const type: string = this.descriptor.type;
-            const slideOptions: SlideOptions = this.descriptor.slideOptions;
-            const projectionDefault = this.descriptor.projectionDefault;
-            const getDialogTitle = this.descriptor.getDialogTitle;
-            for (const item of this.descriptor.content_object_id) {
-                this.projectorService.addToPreview(
-                    {
-                        content_object_id: item,
-                        stable,
-                        stableToggle,
-                        type,
-                        slideOptions,
-                        projectionDefault,
-                        getDialogTitle
-                    },
-                    projectors,
-                    this.optionValues
-                );
-            }
-            this.dialogRef.close();
+            this.dialogRef.close({
+                action: `bulkAddToPreview`,
+                resultDescriptor: this.descriptor,
+                projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
+                options: this.optionValues
+            });
         }
     }
 
