@@ -24,6 +24,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
+import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.subscription';
 import { AssignmentPhases } from '../../../../definitions';
 import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
@@ -72,6 +73,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public candidateUserIds: number[] = [];
 
+    public currentSort: 'first_name' | 'last_name' = 'first_name';
+    public sortAscending = true;
+
     /**
      * Used for the search value selector
      */
@@ -117,6 +121,29 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         return this.assignment.candidates.find(candidate => candidate.user_id === this.operator.operatorId)
             ? true
             : false;
+    }
+
+    /**
+     * Sorts the assignment candidates by the given property. If the same property
+     * is already active, toggles the sort direction. Otherwise, sorts ascending.
+     *
+     * @param property The user name field to sort by
+     */
+    public async sortCandidates(property: 'first_name' | 'last_name'): Promise<void> {
+        if (this.currentSort === property) {
+            this.sortAscending = !this.sortAscending;
+        } else {
+            this.currentSort = property;
+            this.sortAscending = true;
+        }
+        const sorted = [...this.assignmentCandidates].sort((a, b) => {
+            const nameA = property === 'first_name' ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
+            const nameB = property === 'first_name' ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
+            const comparison = nameA.localeCompare(nameB);
+            return this.sortAscending ? comparison : -comparison;
+        });
+        this._assignmentCandidates = sorted;
+        await this.onSortingChange(sorted);
     }
 
     /**
@@ -215,6 +242,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 }
             })
         );
+        this.modelRequestService.subscribeTo(getAssignmentDetailSubscriptionConfig(assignmentId));
     }
 
     /**
