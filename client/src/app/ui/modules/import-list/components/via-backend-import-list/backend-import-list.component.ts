@@ -242,6 +242,11 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
+    public hideOldCard = true;
+
+    //REMOVE. WHEN BUTTON IS CLICKED MUST BE REDIRECTED TO FILEPREVIEW
+    protected filePreview: boolean = false; 
+
     public constructor(
         private dialog: MatDialog,
         private translate: TranslateService
@@ -520,5 +525,34 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         } else {
             return [];
         }
+    }
+
+    public onDragOver(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    public onDropSuccess(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) {
+            return;
+        }
+        const droppedFile = {
+            target: {
+                files: files
+            }
+        };
+        this._importer.onSelectFile(droppedFile);
+    }
+
+    public onChange(event: Event): void {
+        this._importer.onSelectFile(event);
+    }
+
+    protected showPreview(): void {
+        this.filePreview = !this.filePreview
+        
     }
 }
