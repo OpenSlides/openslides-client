@@ -824,6 +824,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
+        // TODO: https://github.com/OpenSlides/openslides-client/issues/5856
         it.skip(`handles inserted text within nested lists`, () => {
             const before =
                     `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
@@ -847,6 +848,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
+        // TODO: https://github.com/OpenSlides/openslides-client/issues/5863
         it.skip(`handles changed text within nested lists (part 2)`, () => {
             const before = `<ul><li>Ebene 1` +
                     `<ul><li>Ebene 2.1` +
