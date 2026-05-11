@@ -9,7 +9,7 @@ import { ViewMeeting } from '../../../../../view-models/view-meeting';
 import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
 import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
 import { ViewMotionCommentSection } from '../../../../motions/modules/comments/view-models/view-motion-comment-section';
-import { ViewPoll } from '../../../../polls/view-models/view-poll';
+import { ViewPoll } from '../../../../polls/view-models/poll';
 
 export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
     public static COLLECTION = Group.COLLECTION;

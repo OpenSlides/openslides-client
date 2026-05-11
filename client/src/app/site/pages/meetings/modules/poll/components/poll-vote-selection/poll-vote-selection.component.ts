@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewBallot, ViewPoll, ViewPollOption } from '../../../../pages/polls';
+import { ViewPoll, ViewPollBallot, ViewPollOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
@@ -43,7 +43,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
 
     public voted = output<unknown>();
 
-    public ballots = signal<ViewBallot[]>([]);
+    public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionIds = signal<Set<number>>(new Set());
 
     public isSingleSelect = computed(() => {

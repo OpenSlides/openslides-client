@@ -3,8 +3,8 @@ import { HasMeetingId } from '../../interfaces';
 import { BaseModel } from '../base/base-model';
 import { VoteValue, VoteValueVerbose } from './vote-constants';
 
-export class Ballot extends BaseModel<Ballot> {
-    public static COLLECTION = `ballot`;
+export class PollBallot extends BaseModel<PollBallot> {
+    public static COLLECTION = `poll_ballot`;
 
     public weight: number;
     public split: boolean;
@@ -18,15 +18,15 @@ export class Ballot extends BaseModel<Ballot> {
         return VoteValueVerbose[this.value];
     }
 
-    public constructor(input?: Partial<Ballot>) {
-        super(Ballot.COLLECTION, input);
+    public constructor(input?: Partial<PollBallot>) {
+        super(PollBallot.COLLECTION, input);
     }
 
     protected getDecimalFields(): string[] {
         return [`weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Ballot)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PollBallot)[] = [
         `id`,
         `weight`,
         `split`,
@@ -37,4 +37,4 @@ export class Ballot extends BaseModel<Ballot> {
     ];
 }
 
-export interface Ballot extends HasMeetingId {}
+export interface PollBallot extends HasMeetingId {}

@@ -6,7 +6,7 @@ import {
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { isSortedList, SortedList } from '../../../../../polls/view-models/sorted-list';
@@ -143,7 +143,7 @@ export class AssignmentPollDetailComponent
         }
     }
 
-    private getMethodYVoteLabel(vote: ViewBallot, optionContent: ViewUser | SortedList): string {
+    private getMethodYVoteLabel(vote: ViewPollBallot, optionContent: ViewUser | SortedList): string {
         if (this.poll.config?.max_votes_per_option > 1) {
             // Show how often the option was selected
             return Math.floor(vote.weight).toString() + `x ` + this.getFullTitle(optionContent);

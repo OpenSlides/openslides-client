@@ -1,27 +1,27 @@
 import { inject, Injectable } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Ballot } from 'src/app/domain/models/poll/ballot';
-import { BallotRepositoryService } from 'src/app/gateways/repositories/polls/ballot-repository.service';
+import { PollBallot } from 'src/app/domain/models/poll/poll-ballot';
+import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { ViewBallot, ViewPoll } from '../../../../pages/polls';
+import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
 
 @Injectable({
     providedIn: `root`
 })
-export class BallotControllerService extends BaseMeetingControllerService<ViewBallot, Ballot> {
+export class PollBallotControllerService extends BaseMeetingControllerService<ViewPollBallot, PollBallot> {
     private pollRepo = inject(PollRepositoryService);
 
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: BallotRepositoryService,
+        protected override repo: PollBallotRepositoryService,
         private operator: OperatorService
     ) {
-        super(controllerServiceCollector, Ballot, repo);
+        super(controllerServiceCollector, PollBallot, repo);
     }
 
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<Record<Id, boolean>> {

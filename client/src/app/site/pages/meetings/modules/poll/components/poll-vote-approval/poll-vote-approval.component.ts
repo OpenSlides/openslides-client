@@ -17,7 +17,7 @@ import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-
 import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewBallot, ViewPoll } from '../../../../pages/polls';
+import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 
@@ -41,7 +41,7 @@ export class PollVoteApprovalComponent implements OnDestroy {
     private promptService = inject(PromptService);
 
     public selected = signal<string>(null);
-    public ballots = signal<ViewBallot[]>([]);
+    public ballots = signal<ViewPollBallot[]>([]);
     // TODO: use balllots for this user/poll
 
     private pollRepo = inject(PollRepositoryService);

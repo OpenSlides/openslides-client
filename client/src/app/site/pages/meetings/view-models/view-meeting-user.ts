@@ -11,7 +11,7 @@ import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-mo
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewBallot, ViewPoll, ViewPollOption } from '../pages/polls';
+import { ViewPoll, ViewPollBallot, ViewPollOption } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
@@ -45,7 +45,7 @@ interface IMeetingUserRelations {
     poll_voted: ViewPoll;
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
-    vote_delegated_votes: ViewBallot[];
+    vote_delegated_votes: ViewPollBallot[];
     structure_levels: ViewStructureLevel[];
     poll_options: ViewPollOption[];
 }
