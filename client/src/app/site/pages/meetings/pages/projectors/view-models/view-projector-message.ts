@@ -39,6 +39,4 @@ export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMess
         }
     }
 }
-interface IProjectorMessageRelations {}
-export interface ViewProjectorMessage
-    extends ProjectorMessage, ViewModelRelations<IProjectorMessageRelations>, HasMeeting {}
+export interface ViewProjectorMessage extends ProjectorMessage, ViewModelRelations, HasMeeting {}
