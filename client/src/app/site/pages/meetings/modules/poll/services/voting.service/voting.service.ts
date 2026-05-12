@@ -3,7 +3,7 @@ import { _ } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -85,7 +85,7 @@ export class VotingService {
     private getVotingProhibitionReason(
         poll: ViewPoll,
         user: ViewUser,
-        ballots: ViewBallot[]
+        ballots: ViewPollBallot[]
     ): VotingProhibition | null {
         if (this.operator.isAnonymous) {
             return VotingProhibition.USER_IS_ANONYMOUS;

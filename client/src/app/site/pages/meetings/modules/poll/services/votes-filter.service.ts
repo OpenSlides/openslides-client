@@ -4,7 +4,7 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 
 import { GroupControllerService } from '../../../pages/participants';
 import { StructureLevelControllerService } from '../../../pages/participants/pages/structure-levels/services/structure-level-controller.service';
-import { ViewBallot } from '../../../pages/polls';
+import { ViewPollBallot } from '../../../pages/polls';
 import { PollServiceModule } from '../services/poll-service.module';
 
 @Injectable({
@@ -13,13 +13,13 @@ import { PollServiceModule } from '../services/poll-service.module';
 export class VotesFilterService extends BaseFilterListService<any> {
     protected storageKey = `VotesEntry`;
 
-    private groupFilterOptions: OsFilter<ViewBallot> = {
+    private groupFilterOptions: OsFilter<ViewPollBallot> = {
         property: `groupIds`,
         label: `Groups`,
         options: []
     };
 
-    private structureLevelFilterOptions: OsFilter<ViewBallot> = {
+    private structureLevelFilterOptions: OsFilter<ViewPollBallot> = {
         property: `structureLevelIds`,
         label: `Structure level`,
         options: []

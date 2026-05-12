@@ -10,7 +10,7 @@ import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ViewBallot, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPollBallot, ViewPollOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
@@ -128,7 +128,7 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     content_object?: C;
     config: D;
     voted: ViewMeetingUser[];
-    ballots: ViewBallot[];
+    ballots: ViewPollBallot[];
     entitled_groups: ViewGroup[];
     options: ViewPollOption[];
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Ballot } from 'src/app/domain/models/poll/ballot';
-import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { PollBallot } from 'src/app/domain/models/poll/poll-ballot';
+import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -21,9 +21,9 @@ export interface VotePayload {
 @Injectable({
     providedIn: `root`
 })
-export class BallotRepositoryService extends BaseMeetingRelatedRepository<ViewBallot, Ballot> {
+export class PollBallotRepositoryService extends BaseMeetingRelatedRepository<ViewPollBallot, PollBallot> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Ballot);
+        super(repositoryServiceCollector, PollBallot);
     }
 
     public getTitle = (): string => `Vote`;

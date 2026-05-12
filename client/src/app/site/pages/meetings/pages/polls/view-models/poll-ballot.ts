@@ -1,17 +1,17 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 
-import { Ballot } from '../../../../../../domain/models/poll/ballot';
+import { PollBallot } from '../../../../../../domain/models/poll/poll-ballot';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { ViewPoll } from '..';
 
-export class ViewBallot extends BaseViewModel<Ballot> {
-    public static COLLECTION = Ballot.COLLECTION;
-    protected _collection = Ballot.COLLECTION;
+export class ViewPollBallot extends BaseViewModel<PollBallot> {
+    public static COLLECTION = PollBallot.COLLECTION;
+    protected _collection = PollBallot.COLLECTION;
 
-    public get ballot(): Ballot {
+    public get ballot(): PollBallot {
         return this._model;
     }
 
@@ -24,10 +24,10 @@ export class ViewBallot extends BaseViewModel<Ballot> {
     }
 }
 
-interface IViewBallotRelations {
+interface IViewPollBallotRelations {
     poll: ViewPoll;
     user?: ViewUser;
     delegated_user?: ViewMeetingUser;
 }
 
-export interface ViewBallot extends HasMeeting, ViewModelRelations<IViewBallotRelations>, Ballot {}
+export interface ViewPollBallot extends HasMeeting, ViewModelRelations<IViewPollBallotRelations>, PollBallot {}

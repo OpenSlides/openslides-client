@@ -4,7 +4,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
 import { PollCreatePayload, PollUpdatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
-import { ViewBallot, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
@@ -122,7 +122,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
      * @param poll The poll that should be subscribed
      * @return the ViewPoll
      */
-    public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewBallot[]> {
+    public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallot[]> {
         return this.getViewModelObservable(pollId).pipe(
             takeWhile(poll => poll.state === PollState.Started),
             switchMap(poll => poll.ballots$),

@@ -55,8 +55,8 @@ import {
 import { ViewGroup } from '../../../site/pages/meetings/pages/participants';
 import {
     HasPoll,
-    ViewBallot,
     ViewPoll,
+    ViewPollBallot,
     ViewPollConfigApproval,
     ViewPollConfigRatingApproval,
     ViewPollConfigRatingScore,
@@ -203,13 +203,13 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewUser,
-        MViewModel: ViewBallot,
+        MViewModel: ViewPollBallot,
         OField: `votes`,
         MField: `user`
     }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
-        MViewModel: ViewBallot,
+        MViewModel: ViewPollBallot,
         OField: `vote_delegated_votes`,
         MField: `delegated_user`
     }),
@@ -615,7 +615,7 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewBallot,
+        MViewModel: ViewPollBallot,
         OField: `votes`,
         MField: `meeting`,
         isFullList: true
@@ -1023,7 +1023,7 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewPoll,
-        MViewModel: ViewBallot,
+        MViewModel: ViewPollBallot,
         OField: `ballots`,
         MField: `poll`
     }),

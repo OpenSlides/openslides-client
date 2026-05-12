@@ -1,12 +1,12 @@
-import { Ballot } from 'src/app/domain/models/poll/ballot';
 import { Poll } from 'src/app/domain/models/poll/poll';
+import { PollBallot } from 'src/app/domain/models/poll/poll-ballot';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
 import { PollOption } from 'src/app/domain/models/poll/poll-option';
-import { BallotRepositoryService } from 'src/app/gateways/repositories/polls/ballot-repository.service';
+import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
 import { PollConfigApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-approval-repository.service';
 import { PollConfigRatingApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
 import { PollConfigRatingScoreRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-score-repository.service';
@@ -17,8 +17,8 @@ import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
 import {
-    ViewBallot,
     ViewPoll,
+    ViewPollBallot,
     ViewPollConfigApproval,
     ViewPollConfigRatingApproval,
     ViewPollConfigRatingScore,
@@ -71,9 +71,9 @@ export const PollsAppConfig: AppConfig = {
             repository: PollOptionRepositoryService
         },
         {
-            model: Ballot,
-            viewModel: ViewBallot,
-            repository: BallotRepositoryService
+            model: PollBallot,
+            viewModel: ViewPollBallot,
+            repository: PollBallotRepositoryService
         }
     ]
 };

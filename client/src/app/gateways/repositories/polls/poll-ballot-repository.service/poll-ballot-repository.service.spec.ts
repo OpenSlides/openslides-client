@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BallotRepositoryService } from './ballot-repository.service';
+import { PollBallotRepositoryService } from './poll-ballot-repository.service';
 
 xdescribe(`BallotRepositoryService`, () => {
-    let service: BallotRepositoryService;
+    let service: PollBallotRepositoryService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(BallotRepositoryService);
+        service = TestBed.inject(PollBallotRepositoryService);
     });
 
     it(`should be created`, () => {

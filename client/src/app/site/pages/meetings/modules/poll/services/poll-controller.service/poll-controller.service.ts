@@ -5,7 +5,7 @@ import { HasMeetingId, Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { BallotRepositoryService } from 'src/app/gateways/repositories/polls/ballot-repository.service';
+import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PollCreatePayload, PollUpdatePayload } from 'src/app/gateways/vote-api.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
@@ -18,7 +18,7 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: PollRepositoryService,
-        protected voteRepo: BallotRepositoryService
+        protected voteRepo: PollBallotRepositoryService
     ) {
         super(controllerServiceCollector, Poll, repo);
     }

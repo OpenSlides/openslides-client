@@ -13,7 +13,7 @@ import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
 import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
-import { ViewPoll } from '../../polls/view-models/view-poll';
+import { ViewPoll } from '../../polls/view-models/poll';
 import { AssignmentPhases } from '../definitions';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
 
