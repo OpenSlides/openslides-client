@@ -157,12 +157,24 @@
                     <input
                         #fileInput
                         accept="text"
+                        aria-label="{{ 'Import csv template' | translate }}"
                         class="hidden-input"
                         id="user-import-file-input"
+                        tabindex="0"
                         type="file"
                         (change)="onSelectFile($event)"
+                        (keydown.enter)="fileInput.click()"
+                        (keydown.space)="fileInput.click(); $event.preventDefault()"
                     />
-                    <button matButton outlined class="outlined-border" (click)="fileInput.click()">
+                    <button
+                        aria-label="{{ 'Information' | translate }}"
+                        class="outlined-border"
+                        matButton
+                        outlined
+                        (click)="fileInput.click()"
+                        (keydown.enter)="fileInput.click()"
+                        (keydown.space)="fileInput.click(); $event.preventDefault()"
+                    >
                         <mat-icon>download</mat-icon>
                         <mat-label>CSV</mat-label>
                     </button>
@@ -171,7 +183,7 @@
             <div style="display: flex; flex-direction: column">
                 <h3 class="instructions" translate>{{ 'Required column names' | translate }}</h3>
                 <div>
-                    <button matButton outlined class="outlined-border" (click)="openDialog(fieldsInfoDialog)" translate>
+                    <button class="outlined-border" matButton outlined translate (click)="openDialog(fieldsInfoDialog)">
                         <mat-icon color="accent">info</mat-icon>
                         <mat-label>{{ 'INFO' | translate }}</mat-label>
                     </button>
@@ -186,16 +198,27 @@
 </mat-card>
 <mat-card class="os-card import-table spacer-bottom-60">
     <mat-card-content>
-        <!-- DROPZONE -->
-        <div class="dropdiv" (dragover)="onDragOver($event)" (drop)="onDropSuccess($event)" (click)="fileInput.click()">
-            <mat-label for="fileInput" class="dropdiv-label" translate>
+        <!-- DROPZONE START -->
+        <div
+            aria-label="Drag files to this area or click here to select files"
+            class="dropdiv"
+            role="button"
+            tabindex="0"
+            (click)="fileInput.click()"
+            (dragover)="onDragOver($event)"
+            (drop)="onDropSuccess($event)"
+            (keydown.enter)="fileInput.click()"
+            (keydown.space)="fileInput.click(); $event.preventDefault()"
+        >
+            <mat-label class="dropdiv-label" for="fileInput" translate>
                 {{ 'Drag files to this area OR click here to select files' | translate }}
             </mat-label>
         </div>
+        <!-- DROPZONE END -->
         @if (!finishedSuccessfully && (rawFileObservable | async); as file) {
             <div class="import-file-handle">
                 {{ file.name }}
-                <button mat-icon-button (click)="removeSelectedFile()" translate>
+                <button mat-icon-button translate (click)="removeSelectedFile()">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -204,8 +227,11 @@
             class="mdc-button mat-mdc-button-base mat-mdc-button mat-accent"
             matButton
             outlined
-            (click)="showPreview()"
+            routerLink="/participants/import/preview"
+            routerLinkActive="active"
             translate
+            [disabled]="uploadButton"
+            (click)="showPreview()"
         >
             {{ 'Upload' | translate }}
         </button>
@@ -213,9 +239,7 @@
 </mat-card>
 
 <!---------------------------------------------------------------------------------------------------------------------------------------->
-
-<!-- preview table -->
-@if ((dataSource | async) && filePreview) {
+@if (dataSource | async) {
     <mat-card class="os-card spacer-bottom-60">
         <mat-card-content>
             <div class="action-title">

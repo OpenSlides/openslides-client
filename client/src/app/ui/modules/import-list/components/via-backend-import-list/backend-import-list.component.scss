@@ -10,7 +10,7 @@
     }
 }
 
-.instructions{
+.instructions {
     color: var(--theme-accent-400);
     margin-bottom: 12px;
 }
@@ -100,15 +100,15 @@ pbl-ngrid-cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    &:hover{
+
+    &:hover {
         background-color: #ccc;
     }
     &:not(:hover) {
         background-color: none;
     }
     .dropdiv-label {
-        color: var(--theme-accent-400)
+        color: var(--theme-accent-400);
     }
 }
 

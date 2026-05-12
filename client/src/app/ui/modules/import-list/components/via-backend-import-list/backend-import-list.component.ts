@@ -16,6 +16,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -243,13 +244,12 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
     public hideOldCard = true;
-
-    //REMOVE. WHEN BUTTON IS CLICKED MUST BE REDIRECTED TO FILEPREVIEW
-    protected filePreview: boolean = false; 
+    protected uploadButton: boolean;
 
     public constructor(
         private dialog: MatDialog,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private router: Router
     ) {}
 
     /**
@@ -257,6 +257,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      */
     public ngOnInit(): void {
         this._importer.clearAll();
+        this.uploadButton = true;
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
             if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
@@ -300,6 +301,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      * triggers the importer's onSelectFile after a file has been chosen
      */
     public onSelectFile(event: any): void {
+        this.uploadButton = false;
         this._importer.onSelectFile(event);
     }
 
@@ -309,6 +311,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public removeSelectedFile(clearImporter = true): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
+            this.uploadButton = true;
         }
         if (clearImporter) {
             this._importer.clearFile();
@@ -552,7 +555,6 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     }
 
     protected showPreview(): void {
-        this.filePreview = !this.filePreview
-        
+        this.router.navigateByUrl(this.router.url.concat('/preview'));
     }
 }
