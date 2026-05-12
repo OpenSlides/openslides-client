@@ -1,5 +1,3 @@
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-
 import {
     PROJECTIONDEFAULT,
     ProjectiondefaultValue
@@ -39,4 +37,4 @@ export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMess
         }
     }
 }
-export interface ViewProjectorMessage extends ProjectorMessage, ViewModelRelations, HasMeeting {}
+export interface ViewProjectorMessage extends ProjectorMessage, HasMeeting {}

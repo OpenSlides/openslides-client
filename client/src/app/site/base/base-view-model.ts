@@ -8,7 +8,7 @@ import { HasCollection } from '../../domain/interfaces/has-collection';
 import { Identifiable } from '../../domain/interfaces/identifiable';
 import { BaseModel } from '../../domain/models/base/base-model';
 
-export type ViewModelRelations<T = object> = {
+export type ViewModelRelations<T> = {
     [R in keyof T]: T[R];
 } & {
     [R in keyof T as `${string & R}$`]: Observable<T[R]>;
