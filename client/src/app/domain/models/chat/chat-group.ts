@@ -27,5 +27,3 @@ export class ChatGroup extends BaseModel<ChatGroup> implements HasMeetingId {
         `meeting_id`
     ];
 }
-
-export interface ChatGroup {}
