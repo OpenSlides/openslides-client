@@ -1,5 +1,5 @@
 <div class="option-list">
-    @let multiVotes = !!(poll().config?.max_vote_sum > 1);
+    @let multiVotes = !!(config()?.max_vote_sum > 1);
     <div role="row" [class.option-list-caption]="multiVotes" [class.option-list-information-grid]="!multiVotes">
         <ng-template #optionAmount>
             @if (poll().option_ids.length > 1) {
@@ -19,11 +19,11 @@
                 <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
                 <div class="available-votes">
                     {{ 'Available votes' | translate }}:
-                    <b>{{ availableVotes() }}/{{ poll().config?.max_vote_sum }}</b>
-                    @if (poll().config?.min_votes_amount > 1) {
+                    <b>{{ availableVotes() }}/{{ config()?.max_vote_sum }}</b>
+                    @if (config()?.min_vote_sum > 1) {
                         <div>
                             {{ 'At least' | translate }}
-                            <b>{{ poll().config?.min_vote_sum }}</b>
+                            <b>{{ config()?.min_vote_sum }}</b>
                             {{ 'Votes' | translate }}
                         </div>
                     }
@@ -45,7 +45,7 @@
 
     <ng-template #optionTitle>
         <b class="poll-option-title">
-            @if (poll().config?.strike_out) {
+            @if (config()?.strike_out) {
                 {{ 'No' | translate }}
             } @else {
                 {{ 'Yes' | translate }}
@@ -63,7 +63,7 @@
                     [isSelected]="isSelected(option.id)"
                     [loading]="loading()"
                     [optionTitle]="option.text || option.meeting_user?.user?.getName()"
-                    [optionType]="poll().config.strike_out ? 'no' : 'yes'"
+                    [optionType]="config().strike_out ? 'no' : 'yes'"
                     (toggleOption)="toggleOption(option.id)"
                 />
             </div>
@@ -71,7 +71,7 @@
     }
 </div>
 
-@if (poll().config?.min_vote_sum === 0 || poll().config?.allow_nota) {
+@if (config()?.min_vote_sum === 0 || config()?.allow_nota) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>
@@ -79,10 +79,10 @@
     </div>
 
     <div class="option-list">
-        @if (poll().config.allow_nota) {
+        @if (config().allow_nota) {
             <div class="option-row" role="row">
                 @let optionName =
-                    poll().config.strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                    config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
                 <div class="vote-option-title grid-name-area" role="rowheader">
                     {{ optionName | translate }}
                 </div>
@@ -91,14 +91,14 @@
                         [isSelected]="isSelected(-1)"
                         [loading]="loading()"
                         [optionTitle]="optionName"
-                        [optionType]="poll().config.strike_out ? 'yes' : 'no'"
+                        [optionType]="config().strike_out ? 'yes' : 'no'"
                         (toggleOption)="toggleOption(-1)"
                     />
                 </div>
             </div>
         }
 
-        @if (poll().config.min_vote_sum === 0) {
+        @if (config().min_vote_sum === 0) {
             <div class="option-row" role="row">
                 <div class="vote-option-title grid-name-area" role="rowheader">
                     {{ 'General abstain' | translate }}

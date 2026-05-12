@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollBallot, ViewPollOption } from '../../../../pages/polls';
+import { ViewPoll, ViewPollBallot, ViewPollConfigSelection, ViewPollOption } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
@@ -47,8 +47,11 @@ export class PollVoteSelectionComponent implements OnDestroy {
     public selectedOptionIds = signal<Set<number>>(new Set());
 
     public isSingleSelect = computed(() => {
-        const config = this.poll().config;
-        return (config?.max_options_amount ?? 1) === 1;
+        return (this.config()?.max_options_amount ?? 1) === 1;
+    });
+
+    public config = computed<ViewPollConfigSelection | undefined>(() => {
+        return this.poll().config;
     });
 
     public options = computed<ViewPollOption[]>(() => {
@@ -56,8 +59,11 @@ export class PollVoteSelectionComponent implements OnDestroy {
     });
 
     public availableVotes = computed<number>(() => {
-        const config = this.poll().config;
-        const maxVotes = config?.max_options_amount ?? 1;
+        if (this.selectedOptionIds().has(0) || this.selectedOptionIds().has(-1)) {
+            return 0;
+        }
+
+        const maxVotes = this.config()?.max_options_amount ?? 1;
         return maxVotes - this.selectedOptionIds().size;
     });
 
@@ -105,7 +111,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
             if (this.isSingleSelect()) {
                 selected.clear();
             } else {
-                const maxAmount = this.poll().config?.max_options_amount ?? 1;
+                const maxAmount = this.config()?.max_options_amount ?? 1;
                 if (selected.size >= maxAmount) {
                     return;
                 }
@@ -114,7 +120,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
         }
         this.selectedOptionIds.set(selected);
 
-        if (this.availableVotes() === 0 || isGeneralOption) {
+        if (this.availableVotes() === 0) {
             this.submitVote();
         }
     }
