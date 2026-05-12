@@ -6,10 +6,8 @@ import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.s
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-import { MeetingListServiceModule } from './meeting-list-service.module';
-
 @Injectable({
-    providedIn: MeetingListServiceModule
+    providedIn: `root`
 })
 export class MeetingCsvExportService {
     private meetingHeadersAndVerboseNames = {

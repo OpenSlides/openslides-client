@@ -7,7 +7,6 @@ import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { SpeakerUserSelectDialogComponent } from '../components/speaker-user-select-dialog/speaker-user-select-dialog.component';
-import { SpeakerUserSelectDialogModule } from '../speaker-user-select-dialog.module';
 
 interface SpeakerUserSelectResult {
     meeting_user_id: Id;
@@ -15,7 +14,7 @@ interface SpeakerUserSelectResult {
 }
 
 @Injectable({
-    providedIn: SpeakerUserSelectDialogModule
+    providedIn: `root`
 })
 export class SpeakerUserSelectDialogService extends BaseDialogService<
     SpeakerUserSelectDialogComponent,
