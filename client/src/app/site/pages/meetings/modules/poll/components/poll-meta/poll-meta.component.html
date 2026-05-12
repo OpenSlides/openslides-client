@@ -3,8 +3,13 @@
     <small class="meta-info-left subtitle">
         <div>
             @if (isListPoll()) {
-                {{ 'Nomination list' | translate }}
-                ({{ poll().options?.length ?? 0 }} {{ 'Candidates' | translate }}):
+                @let numOptions = poll().options?.length ?? 0;
+                @if (numOptions === 1) {
+                    {{ 'Nominate' | translate }}
+                } @else {
+                    {{ 'Nomination list' | translate }}
+                    ({{ numOptions }} {{ 'Candidates' | translate }}):
+                }
             } @else if (isPersonPoll()) {
                 {{ 'Candidates' | translate }}:
             } @else {

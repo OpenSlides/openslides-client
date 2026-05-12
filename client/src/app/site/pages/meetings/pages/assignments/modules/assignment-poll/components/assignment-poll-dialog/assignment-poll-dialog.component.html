@@ -1,22 +1,26 @@
 <mat-dialog-content>
     <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
-        <mat-tab-group [(selectedIndex)]="selectedTab">
-            <mat-tab label="Selection">
-                <div class="tab-content">
-                    <os-poll-form-selection optionType="meeting_user" [data]="pollData" />
-                </div>
-            </mat-tab>
-            <mat-tab label="Approval per candidate">
-                <div class="tab-content">
-                    <os-poll-form-rating-approval optionType="meeting_user" [data]="pollData" />
-                </div>
-            </mat-tab>
-            <mat-tab label="List">
-                <div class="tab-content">
-                    <os-poll-form-approval [data]="pollData" />
-                </div>
-            </mat-tab>
-        </mat-tab-group>
+        @if (hasMultipleOptions) {
+            <mat-tab-group [(selectedIndex)]="selectedTab">
+                <mat-tab label="Selection">
+                    <div class="tab-content">
+                        <os-poll-form-selection optionType="meeting_user" [data]="pollData" />
+                    </div>
+                </mat-tab>
+                <mat-tab label="Approval per candidate">
+                    <div class="tab-content">
+                        <os-poll-form-rating-approval optionType="meeting_user" [data]="pollData" />
+                    </div>
+                </mat-tab>
+                <mat-tab label="List">
+                    <div class="tab-content">
+                        <os-poll-form-approval [data]="pollData" />
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        } @else {
+            <os-poll-form-approval [data]="pollData" />
+        }
     </os-poll-form>
 </mat-dialog-content>
 

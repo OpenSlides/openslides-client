@@ -42,6 +42,11 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
+    public get hasMultipleOptions(): boolean {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        return assignment.candidates.length > 1;
+    }
+
     public selectedTab = signal(0);
 
     private pollService = inject(PollService);
@@ -65,7 +70,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
         const payload: PollUpdatePayload = {
             title: formValues?.title,
-            method: TAB_METHOD_MAP[this.selectedTab()],
+            method: this.getSelectedMethod(),
             method_config: this.getMethodConfig(),
             option_type: `meeting_user`,
             options,
@@ -81,8 +86,16 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         this.dialogRef.close(payload);
     }
 
+    private getSelectedMethod(): string {
+        if (!this.hasMultipleOptions) {
+            return `approval`;
+        }
+
+        return TAB_METHOD_MAP[this.selectedTab()];
+    }
+
     private getMethodConfig(): unknown {
-        switch (TAB_METHOD_MAP[this.selectedTab()]) {
+        switch (this.getSelectedMethod()) {
             case `approval`:
                 return { ...this.approvalForm()?.approvalForm.value };
             case `selection`:
