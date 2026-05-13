@@ -1,6 +1,5 @@
 import { Extension } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
-import tinycolor from 'tinycolor2';
 
 export const ClearTextcolorPaste = Extension.create({
     name: `clear-textcolor-paste`,
@@ -20,17 +19,8 @@ const ClearTextcolorPastePlugin = new Plugin({
                 if (!el.style) {
                     continue;
                 }
-
-                const textColor = !el.style.color || tinycolor(el.style.color).toHex();
-                const bgColor = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex();
-
-                if (
-                    (textColor === `000000` && bgColor === `ffffff`) ||
-                    (textColor === `ffffff` && bgColor === `424242`)
-                ) {
-                    el.style.color = ``;
-                    el.style.backgroundColor = ``;
-                }
+                el.style.color = ``;
+                el.style.backgroundColor = ``;
             }
 
             return doc.documentElement.outerHTML;
