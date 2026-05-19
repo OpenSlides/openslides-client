@@ -180,8 +180,8 @@ export class MotionDiffService {
      * @param {string} html
      * @returns {string}
      */
-    public diffHtmlToFinalText(html: string): string {
-        return this.htmlDiff.diffHtmlToFinalText(html);
+    public diffHtmlToFinalText(html: string, keepLineNumbers = false): string {
+        return this.htmlDiff.diffHtmlToFinalText(html, keepLineNumbers);
     }
 
     /**

@@ -206,7 +206,7 @@ export class MotionLineNumberingService {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
                 const diff = motion.services().diff.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
-                paragraph = motion.services().diff.diffHtmlToFinalText(diff);
+                paragraph = motion.services().diff.diffHtmlToFinalText(diff, true);
                 paragraphHasChanges = true;
             }
 
@@ -221,7 +221,7 @@ export class MotionLineNumberingService {
 
                     // Reapply relative line numbers
                     const diff = motion.services().diff.diff(baseParagraphs[paraNo], paragraph);
-                    paragraph = motion.services().diff.diffHtmlToFinalText(diff);
+                    paragraph = motion.services().diff.diffHtmlToFinalText(diff, true);
 
                     paragraphHasChanges = true;
                 }
@@ -418,7 +418,7 @@ export class MotionLineNumberingService {
                     .diff.formatDiff(
                         motion.services().diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
                     );
-                const affectedConsolidated = motion.services().diff.diffHtmlToFinalText(affectedDiff);
+                const affectedConsolidated = motion.services().diff.diffHtmlToFinalText(affectedDiff, true);
 
                 return new ViewMotionAmendedParagraph(amendment, paragraphNumber, affectedConsolidated, affectedLines);
             })
@@ -461,7 +461,7 @@ export class MotionLineNumberingService {
             if (withDiff) {
                 return diff;
             } else {
-                return motion.services().diff.diffHtmlToFinalText(diff);
+                return motion.services().diff.diffHtmlToFinalText(diff, true);
             }
         });
     }
