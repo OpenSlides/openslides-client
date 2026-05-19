@@ -210,20 +210,20 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public getAriaLabel(): string {
         let stringForUserPresent: string;
         if (this.operator.isAnonymous) {
-            stringForUserPresent = this.translate.instant(`Account is public`);
+            stringForUserPresent = this.translate.instant(`Account is public.`);
         } else if (!this.hasActiveMeeting) {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
+            stringForUserPresent = this.translate.instant(`Your account is not in meeting.`);
         } else if (this.user.isPresentInMeeting()) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is present. If status just changed focus this element again to get accurate present status.`
+                `Your account is present. If status just changed focus this element again to get accurate present status.`
             );
         } else if (this.user.isInActiveMeeting) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is not present. If status just changed focus this element again to get accurate present status.`
+                `Your account of is not present. If status just changed focus this element again to get accurate present status.`
             );
         } else {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
+            stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
-        return stringForUserPresent.replace(`{}`, this.user.short_name);
+        return this.user.short_name + ": " + stringForUserPresent;
     }
 }

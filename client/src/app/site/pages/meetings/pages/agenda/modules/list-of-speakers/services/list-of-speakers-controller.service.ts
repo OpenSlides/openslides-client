@@ -101,7 +101,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
             mapForAggregation.set(structureLevelId, {
                 finishedSpeakers: [speaker],
                 speakingTime: this.getSpeakingTimeAsNumber(speaker),
-                name: structureLevelId === -1 ? _(`without structure level`) : structureLevel.name
+                name: structureLevelId === -1 ? this.translate.instant(`without structure level`) : structureLevel.name
             });
         }
     }

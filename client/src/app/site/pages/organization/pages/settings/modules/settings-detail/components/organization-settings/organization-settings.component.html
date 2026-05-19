@@ -46,22 +46,27 @@
                             [inputListValues]="time_zones"
                         ></os-list-search-selector>
                     </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+         <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <div class="orga-settings-form">
+                    <h2>{{ 'Committees' | translate }}</h2>
                     <section>
                         <mat-checkbox formControlName="require_duplicate_from">
                             {{ 'Public template required for creating new meeting' | translate }}
                             <mat-hint>{{ 'Only for committee admins' | translate }}</mat-hint>
                         </mat-checkbox>
                     </section>
-                    <section>
-                        <mat-checkbox formControlName="disable_forward_with_attachments">
-                            {{ 'Attachments to motions cannot be forwarded' | translate }}
-                        </mat-checkbox>
-                    </section>
+                    <br>
                     <section>
                         <mat-checkbox formControlName="restrict_editing_same_level_committee_admins">
-                            {{ 'Committee admins may only edit the managers of their sub-committees' | translate }}
+                            {{ 'Committee admins may only set the committee admins of their subcommittees' | translate }}
+                            <mat-hint>{{ 'Changing admins on same level is not possible' | translate }}</mat-hint>
                         </mat-checkbox>
                     </section>
+                    <br>
                     <section>
                         <mat-checkbox formControlName="restrict_edit_forward_committees">
                             {{ 'Restrict definition of motion forwarding to organization admins' | translate }}
@@ -70,10 +75,22 @@
                 </div>
             </mat-card-content>
         </mat-card>
+         <mat-card class="os-card spacer-bottom-60">
+            <mat-card-content>
+                <div class="orga-settings-form">
+                    <h2>{{ 'Meetings' | translate }}</h2>
+                    <section>
+                        <mat-checkbox formControlName="disable_forward_with_attachments">
+                            {{ 'Attachments to motions cannot be forwarded' | translate }}
+                        </mat-checkbox>
+                    </section>
+                </div>
+            </mat-card-content>
+        </mat-card>
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 <div class="orga-settings-form">
-                    <h2>{{ 'Email settings' | translate }}</h2>
+                    <h2>{{ 'Email' | translate }}</h2>
                     <mat-form-field>
                         <mat-label>{{ 'Sender name' | translate }}</mat-label>
                         <input formControlName="users_email_sender" matInput />

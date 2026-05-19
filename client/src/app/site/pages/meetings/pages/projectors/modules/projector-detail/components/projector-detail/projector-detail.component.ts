@@ -291,7 +291,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             content_object_id: `meeting/${this.activeMeetingId}`,
             type: MeetingProjectionType.Home,
             projectionDefault: null,
-            getDialogTitle: () => this.translate.instant(`Meeting home`)
+            getDialogTitle: () => this.translate.instant(`Home`)
         };
     }
 
