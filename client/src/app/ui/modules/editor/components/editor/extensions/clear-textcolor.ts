@@ -1,6 +1,5 @@
 import { Extension } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
-import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
 import tinycolor from 'tinycolor2';
 
 export const ClearTextcolorPaste = Extension.create({
@@ -31,13 +30,6 @@ const ClearTextcolorPastePlugin = new Plugin({
                 ) {
                     el.style.color = ``;
                     el.style.backgroundColor = ``;
-                }
-
-                const styleAttribute = el.attributes.getNamedItem('style');
-                if (!styleAttribute || styleAttribute.value === ``) {
-                    if (el.parentNode.nodeName && !el.parentNode.nodeName.startsWith(`#document`)) {
-                        unwrapNode(el);
-                    }
                 }
             }
 

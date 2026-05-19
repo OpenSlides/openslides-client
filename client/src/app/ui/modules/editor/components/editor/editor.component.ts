@@ -203,6 +203,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         return [
             OfficePaste,
             ClearTextcolorPaste,
+
             // Nodes
             Document,
             Blockquote,
@@ -474,7 +475,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             const spanElements = dom.querySelectorAll(`span`);
             for (const item of spanElements) {
                 item.style.removeProperty(`color`);
-                if (item.getAttribute(`style`) === ``) {
+                if (!item.getAttribute(`style`)) {
                     unwrapNode(item);
                 }
             }

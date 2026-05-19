@@ -13,7 +13,6 @@ import { UndoRedo } from '@tiptap/extensions';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ClearTextcolorPaste } from 'src/app/ui/modules/editor/components/editor/extensions/clear-textcolor';
 
 import { EditorComponent } from '../../../../../../../ui/modules/editor/components/editor/editor.component';
 import {
@@ -55,7 +54,6 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
         if ((this.canManage && this.managerSetting) || (!this.canManage && this.nonManagerSetting)) {
             return [
                 OfficePaste,
-                ClearTextcolorPaste,
 
                 // Nodes
                 Document,
