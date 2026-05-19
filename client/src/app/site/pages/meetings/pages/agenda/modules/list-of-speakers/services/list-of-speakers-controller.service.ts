@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { _ } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
