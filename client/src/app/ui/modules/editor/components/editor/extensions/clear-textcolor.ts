@@ -35,7 +35,9 @@ const ClearTextcolorPastePlugin = new Plugin({
 
                 const styleAttribute = el.attributes.getNamedItem('style');
                 if (!styleAttribute || styleAttribute.value === ``) {
-                    unwrapNode(el);
+                    if (el.parentNode.nodeName && !el.parentNode.nodeName.startsWith(`#document`)) {
+                        unwrapNode(el);
+                    }
                 }
             }
 
