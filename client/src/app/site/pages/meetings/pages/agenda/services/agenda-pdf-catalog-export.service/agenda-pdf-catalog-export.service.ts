@@ -576,9 +576,6 @@ export class AgendaPdfCatalogExportService {
     }
 
     private getStyle(name: string): any {
-        const errorStr = this.translate
-            .instant(`An undefined class was called. Please add the class: {}`)
-            .replace(`{}`, name);
         switch (name) {
             case `title-style`:
                 return { bold: true, fontSize: 24 };
@@ -608,7 +605,7 @@ export class AgendaPdfCatalogExportService {
             case `main-margin`:
                 return [0, 0, 0, 7];
             default:
-                throw new Error(errorStr);
+                throw new Error(`An undefined class was called. Please add the class: ${name}`);
         }
     }
 }
