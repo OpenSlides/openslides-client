@@ -99,16 +99,17 @@ export function extractRangeByLineNumbers(
     */
 
     let toLineNumber: number;
+    const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+    const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
+    const lastMarkerNumber = parseInt(lastMarker.getAttribute(`data-line-number`)!, 10);
     if (toLine === null) {
-        const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
-        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
-        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`)!, 10);
+        toLineNumber = lastMarkerNumber;
     } else {
         toLineNumber = toLine + 1;
     }
 
     const fromLineNumberSearch = getLineNumberGreaterEqualNode(fragment, fromLine);
-    if (fromLineNumberSearch === null || fromLineNumberSearch[1] > toLineNumber) {
+    if (fromLineNumberSearch === null || fromLineNumberSearch[1] === lastMarkerNumber || fromLineNumberSearch[1] > (toLine ? toLine : toLineNumber)) {
         // TODO: Fill previous/following html
         return out;
     }
