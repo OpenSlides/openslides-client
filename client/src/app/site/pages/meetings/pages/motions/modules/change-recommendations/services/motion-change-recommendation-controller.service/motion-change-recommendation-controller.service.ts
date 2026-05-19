@@ -201,31 +201,25 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         lineNumberedParagraphs: string[],
         lineRange: LineRange
     ): any {
+        const consolidatedText = lineNumberedParagraphs.join(`\n`);
+
+        const extracted = amendment
+            .services()
+            .diff.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
+        const extractedHtml =
+            extracted.outerContextStart +
+            extracted.innerContextStart +
+            extracted.html +
+            extracted.innerContextEnd +
+            extracted.outerContextEnd;
+
         const changeReco: any = {};
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
         changeReco.rejected = false;
         changeReco.motion_id = amendment.id;
-
-        const consolidatedText = lineNumberedParagraphs.join(`\n`);
-        const lnRange = amendment.services().ln.getLineNumberRange(consolidatedText);
-
-        if (lnRange.from <= lineRange.to && lineRange.from <= lnRange.to) {
-            const extracted = amendment
-                .services()
-                .diff.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
-            const extractedHtml =
-                extracted.outerContextStart +
-                extracted.innerContextStart +
-                extracted.html +
-                extracted.innerContextEnd +
-                extracted.outerContextEnd;
-
-            changeReco.text = extractedHtml;
-        } else {
-            changeReco.text = ``;
-        }
+        changeReco.text = extractedHtml;
 
         return changeReco;
     }

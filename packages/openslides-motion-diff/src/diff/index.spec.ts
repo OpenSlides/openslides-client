@@ -1913,7 +1913,7 @@ describe(`MotionDiffService`, () => {
 
     describe(`extractMotionLineRange`, () => {
         it(`test with no line numbers in result`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
 
             expect(
                 extractMotionLineRange(
@@ -1929,7 +1929,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`test with line numbers in result`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
 
             expect(
                 extractMotionLineRange(
@@ -1942,7 +1942,79 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2</p><p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`
+            );
+        });
+
+        it(`test with start line number out of scope`, () => {
+            const inHtml = `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p>${noMarkup(3)}Test 3</p>`
+            );
+        });
+
+        it(`test with end line number out of scope`, () => {
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 4,
+                        to: 5
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p>${noMarkup(4)}Test 4</p>`
+            );
+        });
+
+        it(`test with full range out of scope`, () => {
+            const inHtml = `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 5,
+                        to: 7
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                ``
+            );
+        });
+
+        it(`test with missing line numbers`, () => {
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                ``
             );
         });
     });

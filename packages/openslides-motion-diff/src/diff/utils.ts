@@ -15,6 +15,59 @@ export function getLineNumberNode(fragment: DocumentFragment, lineNumber: number
 }
 
 /**
+  * Searches for the line breaking node within the given Document that is equal or bigger than the given lineNumber.
+  * The closest result is used.
+  * This is performed by using a querySelector.
+  *
+  * @param {DocumentFragment} fragment
+  * @param {number} lineNumber
+  * @returns {Element}
+  */
+export function getLineNumberGreaterEqualNode(fragment: DocumentFragment, lineNumber: number): [Element, number] | null {
+    const exactNode = getLineNumberNode(fragment, lineNumber);
+    if (exactNode) {
+        return [exactNode, lineNumber];
+    }
+
+    const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+    for (const marker of internalLineMarkers) {
+        const ln = parseInt(marker.getAttribute(`data-line-number`)!, 10);
+        if (ln >= lineNumber) {
+            return [marker, ln];
+        }
+    }
+
+    return null;
+}
+
+/**
+  * Searches for the line breaking node within the given Document that is equal or bigger than the given lineNumber.
+  * The closest result is used.
+  * This is performed by using a querySelector.
+  *
+  * @param {DocumentFragment} fragment
+  * @param {number} lineNumber
+  * @returns {Element}
+  */
+export function getLineNumberLessEqualNode(fragment: DocumentFragment, lineNumber: number): [Element, number] | null {
+    const exactNode = getLineNumberNode(fragment, lineNumber);
+    if (exactNode) {
+        return [exactNode, lineNumber];
+    }
+
+    const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+    for (let i = internalLineMarkers.length - 1; i >= 0; i--) {
+        const marker = internalLineMarkers[i];
+        const ln = parseInt(marker.getAttribute(`data-line-number`)!, 10);
+        if (ln <= lineNumber) {
+            return [marker, ln];
+        }
+    }
+
+    return null;
+}
+
+/**
   * This returns the first line breaking node within the given node.
   * If none is found, `null` is returned.
   *
