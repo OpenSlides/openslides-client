@@ -6,6 +6,7 @@ import { Bold } from '@tiptap/extension-bold';
 import { Document } from '@tiptap/extension-document';
 import { HardBreak } from '@tiptap/extension-hard-break';
 import { Heading } from '@tiptap/extension-heading';
+import { Italic } from '@tiptap/extension-italic';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { UndoRedo } from '@tiptap/extensions';
@@ -65,6 +66,7 @@ export class MotionEditorComponent extends EditorComponent implements AfterViewI
 
                 // Marks
                 Bold,
+                Italic,
                 TextStyle,
 
                 // Extensions
