@@ -16,7 +16,9 @@ import { GlobalSearchComponent } from '../global-search/global-search.component'
 export class GlobalHeadbarComponent {
     public isSearchEnabled = true;
 
-    public committeeLink = ``;
+    public get committeeLink(): string {
+        return `/committees/` + this.activeMeeting?.meeting?.committee_id;
+    }
 
     public get displayName(): string {
         if (this.activeMeeting.meeting) {
@@ -44,9 +46,7 @@ export class GlobalHeadbarComponent {
         private operatorService: OperatorService,
         private dialog: MatDialog,
         public headbarService: GlobalHeadbarService
-    ) {
-        this.committeeLink = `/committees/` + this.activeMeeting?.meeting?.committee_id;
-    }
+    ) {}
 
     public openSearch(): void {
         this.dialog.open(GlobalSearchComponent, {
