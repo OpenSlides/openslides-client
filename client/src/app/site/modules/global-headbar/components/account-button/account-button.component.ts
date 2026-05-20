@@ -219,7 +219,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             );
         } else if (this.user.isInActiveMeeting) {
             stringForUserPresent = this.translate.instant(
-                `Your account of is not present. If status just changed focus this element again to get accurate present status.`
+                `Your account is not present. If status just changed focus this element again to get accurate present status.`
             );
         } else {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
