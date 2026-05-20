@@ -41,13 +41,10 @@ export class GlobalHeadbarComponent {
     }
 
     private operatorService = inject(OperatorService);
-
-    public constructor(
-        private activeMeeting: ActiveMeetingService,
-        private orgaService: OrganizationService,
-        private dialog: MatDialog,
-        public headbarService: GlobalHeadbarService
-    ) {}
+    private activeMeeting = inject(ActiveMeetingService);
+    private orgaService = inject(OrganizationService);
+    private dialog = inject(MatDialog);
+    public headbarService = inject(GlobalHeadbarService);
 
     public openSearch(): void {
         this.dialog.open(GlobalSearchComponent, {
