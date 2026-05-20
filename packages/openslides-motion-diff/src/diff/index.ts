@@ -72,32 +72,6 @@ export function extractRangeByLineNumbers(
     const fragment = htmlToFragment(html);
     insertInternalLineMarkers(fragment);
 
-    /*
-    const lnRange = getRange(html);
-    if (lnRange.to === null || lnRange.from === null) {
-        out.ancestor = fragment;
-        return out;
-    } 
-
-    if (fromLine > lnRange.to) {
-        out.previousHtml = html;
-        out.ancestor = fragment;
-        return out;
-    } else if (toLine !== null && (toLine < lnRange.from)) {
-        out.followingHtml = html;
-        out.ancestor = fragment;
-        return out;
-    }
-
-    if (fromLine < lnRange.from) {
-        fromLine = lnRange.from;
-    }
-
-    if (toLine !== null && toLine > lnRange.to) {
-        toLine = lnRange.to;
-    }
-    */
-
     let toLineNumber: number;
     const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
     const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
@@ -109,20 +83,13 @@ export function extractRangeByLineNumbers(
     }
 
     const fromLineNumberSearch = getLineNumberGreaterEqualNode(fragment, fromLine);
-    if (fromLineNumberSearch === null || fromLineNumberSearch[1] === lastMarkerNumber || fromLineNumberSearch[1] > (toLine ? toLine : toLineNumber)) {
-        // TODO: Fill previous/following html
-        return out;
-    }
-    const fromLineNumberNode = fromLineNumberSearch[0];
-    fromLine = fromLineNumberSearch[1];
-
     const toLineNumberSearch = getLineNumberLessEqualNode(fragment, toLineNumber);
-    if (toLineNumberSearch === null || toLineNumberSearch[1] < fromLine) {
-        // TODO: Fill previous/following html
-        return out;
-    }
-    const toLineNumberNode = toLineNumberSearch[0];
-    toLineNumber = toLineNumberSearch[1];
+
+    const fromLineNumberNode = fromLineNumberSearch ? fromLineNumberSearch[0] : null;
+    fromLine = fromLineNumberSearch ? fromLineNumberSearch[1] : fromLine;
+
+    const toLineNumberNode = toLineNumberSearch ? toLineNumberSearch[0] : null;
+    toLineNumber = toLineNumberSearch ? toLineNumberSearch[1] : toLineNumber;
 
     const ancestorData = getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
@@ -137,6 +104,16 @@ export function extractRangeByLineNumbers(
 
     toChildTraceAbs.shift();
     out.followingHtml = serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+
+    if (
+        fromLineNumberSearch === null ||
+        fromLineNumberSearch[1] === lastMarkerNumber ||
+        fromLineNumberSearch[1] > (toLine ? toLine : toLineNumber) ||
+        toLineNumberSearch === null ||
+        toLineNumberSearch[1] < fromLine
+    ) {
+        return out;
+    }
 
     let currNode: Node = fromLineNumberNode!;
     let isSplit = false;
