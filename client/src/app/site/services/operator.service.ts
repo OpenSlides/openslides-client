@@ -411,7 +411,7 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds.includes(meetingId);
+        return (meeting?.enable_anonymous && this.isAnonymous) || this.user?.ensuredMeetingIds.includes(meetingId);
     }
 
     public hasCommitteeManagementRights(committee_id: number): boolean {
