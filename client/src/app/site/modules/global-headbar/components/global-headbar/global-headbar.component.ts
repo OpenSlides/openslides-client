@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
@@ -40,10 +40,11 @@ export class GlobalHeadbarComponent {
         return false;
     }
 
+    private operatorService = inject(OperatorService);
+
     public constructor(
         private activeMeeting: ActiveMeetingService,
         private orgaService: OrganizationService,
-        private operatorService: OperatorService,
         private dialog: MatDialog,
         public headbarService: GlobalHeadbarService
     ) {}
