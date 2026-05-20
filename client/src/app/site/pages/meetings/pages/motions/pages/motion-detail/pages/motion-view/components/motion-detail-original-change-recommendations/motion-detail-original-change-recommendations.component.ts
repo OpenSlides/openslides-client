@@ -369,17 +369,28 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         if (this.selectedFrom === null) {
             this.selectedFrom = lineNumber;
         } else {
-            if (lineNumber > this.selectedFrom) {
-                this.createChangeRecommendation.emit({
-                    from: this.selectedFrom,
-                    to: lineNumber
-                });
-            } else {
-                this.createChangeRecommendation.emit({
-                    from: lineNumber,
-                    to: this.selectedFrom
-                });
+            const lineRange: LineRange = {
+                from: this.selectedFrom,
+                to: lineNumber
+            };
+            if (lineRange.from > lineRange.to) {
+                lineRange.from = lineRange.to;
+                lineRange.to = this.selectedFrom;
             }
+
+            const toLnElement = this.element.querySelector(`.os-line-number.line-number-${lineRange.to}`);
+            if (toLnElement.parentElement.classList.contains(`delete`)) {
+                console.log(`full delete`);
+                const newLnRange = this.motionRepo
+                    .getViewModel(this.motionId)
+                    .services()
+                    .ln.getLineNumberRange(toLnElement.parentElement.outerHTML);
+
+                lineRange.from = newLnRange.from < lineRange.from ? newLnRange.from : lineRange.from;
+                lineRange.to = newLnRange.to > lineRange.to ? newLnRange.to : lineRange.to;
+            }
+
+            this.createChangeRecommendation.emit(lineRange);
             this.selectedFrom = null;
             this.startCreating();
         }
@@ -395,7 +406,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         if (this.selectedFrom === null) {
             return;
         }
-        Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumber: Element) => {
+
+        this.element.querySelectorAll(`.os-line-number`).forEach((lineNumber: Element) => {
             const line = parseInt(lineNumber.getAttribute(`data-line-number`)!, 10);
             if (
                 (line >= this.selectedFrom! && line <= lineNumberHovered) ||
