@@ -386,8 +386,23 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
                     .services()
                     .ln.getLineNumberRange(toLnElement.parentElement.outerHTML);
 
-                lineRange.from = newLnRange.from < lineRange.from ? newLnRange.from : lineRange.from;
-                lineRange.to = newLnRange.to > lineRange.to ? newLnRange.to : lineRange.to;
+                lineRange.from = Math.min(newLnRange.from, lineRange.from);
+                lineRange.to = Math.max(newLnRange.to, lineRange.to);
+            } else {
+                while (this.element.querySelector(`br.os-line-break + .line-number-${lineRange.from}`)) {
+                    lineRange.from--;
+                    if (!this.element.querySelector(`.line-number-${lineRange.from - 1} + del + br.os-line-break`)) {
+                        break;
+                    }
+                }
+
+                while (this.element.querySelector(`.line-number-${lineRange.to} + del + br.os-line-break`)) {
+                    if (this.element.querySelector(`.line-number-${lineRange.to + 1} + del`)) {
+                        lineRange.to++;
+                    } else {
+                        break;
+                    }
+                }
             }
 
             this.createChangeRecommendation.emit(lineRange);
