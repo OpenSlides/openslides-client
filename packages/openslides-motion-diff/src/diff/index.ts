@@ -1213,14 +1213,14 @@ export function getTextRemainderAfterLastChange(
   * @param {LineNumberedString} motionText
   * @param {LineRange} lineRange
   * @param {boolean} lineNumbers - weather to add line numbers to the returned HTML string
-  * @param {number} lineLength
+  * @param {number|null} lineLength
   * @param {number|null} highlightedLine
   */
 export function extractMotionLineRange(
     motionText: LineNumberedString,
     lineRange: LineRange,
     lineNumbers: boolean,
-    lineLength: number,
+    lineLength?: number,
     highlightedLine?: number
 ): string {
     let html = ``;
@@ -1231,7 +1231,7 @@ export function extractMotionLineRange(
         extracted.html +
         extracted.innerContextEnd +
         extracted.outerContextEnd;
-    if (lineNumbers) {
+    if (lineNumbers && lineLength) {
         html = LineNumbering.insert({
             html,
             lineLength,

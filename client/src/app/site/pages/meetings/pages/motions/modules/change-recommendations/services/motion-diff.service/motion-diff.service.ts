@@ -468,7 +468,7 @@ export class MotionDiffService {
         motionText: LineNumberedString,
         lineRange: LineRange,
         lineNumbers: boolean,
-        lineLength: number,
+        lineLength?: number,
         highlightedLine?: number
     ): string {
         return this.htmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
