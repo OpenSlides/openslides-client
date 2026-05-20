@@ -44,7 +44,6 @@ export class MotionPdfCatalogService {
         let doc = [];
         const motionDocList = [];
         const printToc = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.Toc);
-        const hasContinuousDirectory = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinousDirectory);
         const hasContinuousText = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinuousText);
         // Do not enforce page breaks when continuous text is selected.
         const enforcePageBreaks = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.AddBreaks) && !hasContinuousText;
@@ -88,7 +87,7 @@ export class MotionPdfCatalogService {
             doc.push(
                 this.pdfService.createTitle(this.meetingSettingsService.instant(`motions_export_title`)!),
                 this.pdfService.createPreamble(this.meetingSettingsService.instant(`motions_export_preamble`)),
-                this.createToc(motions, hasContinuousDirectory)
+                this.createToc(motions)
             );
         }
 
@@ -104,7 +103,7 @@ export class MotionPdfCatalogService {
      * @param motions The motions to add in the TOC
      * @returns the table of contents as document definition
      */
-    private createToc(motions: ViewMotion[], continuousDirectory: boolean): Content {
+    private createToc(motions: ViewMotion[]): Content {
         const toc = [];
         const categories = this.categoryRepo.getViewModelList();
 
@@ -129,11 +128,6 @@ export class MotionPdfCatalogService {
                 const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
                 if (motionToCurrentCat && motionToCurrentCat.length) {
-                    // if this is not the first page, start with a pagebreak
-                    if (catTocBody.length && !continuousDirectory) {
-                        catTocBody.push(this.pdfService.getPageBreak());
-                    }
-
                     catTocBody.push({
                         table: {
                             body: [
