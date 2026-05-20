@@ -19,8 +19,8 @@ interface ResultRow {
 
 interface ResultsRaw {
     [key: number]: string;
-    abstain: string;
-    invalid: number;
+    abstain?: string;
+    invalid?: number;
 }
 
 /**

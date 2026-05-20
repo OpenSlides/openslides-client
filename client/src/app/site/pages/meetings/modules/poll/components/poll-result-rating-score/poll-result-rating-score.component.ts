@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { ViewPoll } from '../../../../pages/polls';
+
+interface ResultsRaw {
+    [key: number]: string;
+    abstain?: string;
+    invalid?: number;
+}
 
 @Component({
     selector: 'os-poll-result-rating-score',
@@ -11,4 +17,12 @@ import { ViewPoll } from '../../../../pages/polls';
 })
 export class PollResultRatingScoreComponent {
     public poll = input.required<ViewPoll>();
+
+    public results = computed<ResultsRaw>(() => {
+        if (!this.poll().result) {
+            return [];
+        }
+
+        return JSON.parse(this.poll().result) || [];
+    });
 }
