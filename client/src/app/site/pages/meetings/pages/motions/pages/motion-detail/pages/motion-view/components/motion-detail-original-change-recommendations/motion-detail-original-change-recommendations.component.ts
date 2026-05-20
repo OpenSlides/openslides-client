@@ -207,13 +207,13 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             `.os-line-number.line-number-` + reco.getLineFrom().toString(10)
         ) as HTMLElement;
         const to = this.element.querySelector(
-            `.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10)
+            `.os-line-number.line-number-` + reco.getLineTo().toString(10)
         ) as HTMLElement;
+
         if (to) {
-            return (to.offsetTop - from.offsetTop).toString() + `px`;
+            return (to.offsetHeight + to.offsetTop - from.offsetTop).toString() + `px`;
         } else {
-            // Last line - lets assume a realistic value
-            return `20px`;
+            return from.offsetHeight.toString() + `px`;
         }
     }
 
