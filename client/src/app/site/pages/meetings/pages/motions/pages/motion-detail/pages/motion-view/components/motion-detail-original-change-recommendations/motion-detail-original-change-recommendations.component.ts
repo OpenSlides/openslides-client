@@ -380,7 +380,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
             const toLnElement = this.element.querySelector(`.os-line-number.line-number-${lineRange.to}`);
             if (toLnElement.parentElement.classList.contains(`delete`)) {
-                console.log(`full delete`);
+                // If full paragraph is deleted expand selection to full paragraph
                 const newLnRange = this.motionRepo
                     .getViewModel(this.motionId)
                     .services()
@@ -389,6 +389,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
                 lineRange.from = Math.min(newLnRange.from, lineRange.from);
                 lineRange.to = Math.max(newLnRange.to, lineRange.to);
             } else {
+                // Expand selected line to deleted conten prior and after the selection
                 while (this.element.querySelector(`br.os-line-break + .line-number-${lineRange.from}`)) {
                     lineRange.from--;
                     if (!this.element.querySelector(`.line-number-${lineRange.from - 1} + del + br.os-line-break`)) {
