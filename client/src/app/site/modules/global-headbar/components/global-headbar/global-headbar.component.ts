@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GlobalHeadbarService } from '../../global-headbar.service';
 import { GlobalSearchComponent } from '../global-search/global-search.component';
@@ -15,6 +16,8 @@ import { GlobalSearchComponent } from '../global-search/global-search.component'
 export class GlobalHeadbarComponent {
     public isSearchEnabled = true;
 
+    public committeeLink = ``;
+
     public get displayName(): string {
         if (this.activeMeeting.meeting) {
             return this.activeMeeting.meeting.name;
@@ -25,12 +28,25 @@ export class GlobalHeadbarComponent {
         return ``;
     }
 
+    public get showCommitteeLink(): boolean {
+        if (
+            this.activeMeeting.meeting &&
+            (this.operatorService.canSkipPermissionCheck || this.operatorService.knowsMultipleMeetings)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     public constructor(
         private activeMeeting: ActiveMeetingService,
         private orgaService: OrganizationService,
+        private operatorService: OperatorService,
         private dialog: MatDialog,
         public headbarService: GlobalHeadbarService
-    ) {}
+    ) {
+        this.committeeLink = `/committees/` + this.activeMeeting?.meeting?.committee_id;
+    }
 
     public openSearch(): void {
         this.dialog.open(GlobalSearchComponent, {
