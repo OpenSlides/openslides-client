@@ -110,7 +110,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         const title = this.translate.instant(
             `Are you sure you want to overwrite the state of all motions with recommendations?`
         );
-        const content = this.translate.instant(`Motions which have a final state will not be changed.`);
+        const content = this.translate.instant(`Motions in final state will not be changed.`);
         if (await this.promptService.open(title, content)) {
             this.repo.followRecommendation(this.block);
         }
