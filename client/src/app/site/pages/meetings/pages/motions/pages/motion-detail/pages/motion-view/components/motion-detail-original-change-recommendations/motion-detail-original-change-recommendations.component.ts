@@ -334,7 +334,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             if (change.isTitleChange()) {
                 return;
             }
-            for (let j = change.getLineFrom(); j < change.getLineTo(); j++) {
+            for (let j = change.getLineFrom(); j <= change.getLineTo(); j++) {
                 affectedLines.push(j);
             }
         });
