@@ -1219,7 +1219,7 @@ export function getTextRemainderAfterLastChange(
 export function extractMotionLineRange(
     motionText: LineNumberedString,
     lineRange: LineRange,
-    lineNumbers: boolean,
+    lineNumbers: boolean = false,
     lineLength?: number,
     highlightedLine?: number
 ): string {
@@ -1232,11 +1232,12 @@ export function extractMotionLineRange(
         extracted.innerContextEnd +
         extracted.outerContextEnd;
     if (lineNumbers && lineLength) {
+        const actualLnFrom = getRange(motionText).from || lineRange.from;
         html = LineNumbering.insert({
             html,
             lineLength,
             highlight: highlightedLine,
-            firstLine: lineRange.from
+            firstLine: Math.max(lineRange.from, actualLnFrom)
         });
     }
     return html;
