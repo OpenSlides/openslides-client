@@ -1,4 +1,9 @@
 <mat-toolbar class="global-headbar background-headbar">
+    @if (showCommitteeLink) {
+        <a aria-label="Committee" mat-icon-button role="button" [routerLink]="committeeLink">
+            <mat-icon>layers</mat-icon>
+        </a>
+    }
     <div class="one-line display-name">
         {{ displayName }}
     </div>
