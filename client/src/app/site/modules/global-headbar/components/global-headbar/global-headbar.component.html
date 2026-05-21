@@ -1,6 +1,6 @@
 <mat-toolbar class="global-headbar background-headbar">
     @if (showCommitteeLink) {
-        <a aria-label="Committee" mat-icon-button role="button" [routerLink]="committeeLink">
+        <a aria-label="Committee" class="adjust-icon" mat-icon-button role="button" [routerLink]="committeeLink">
             <mat-icon>layers</mat-icon>
         </a>
     }
@@ -19,7 +19,7 @@
         <os-account-button></os-account-button>
         @if (showLongpollingIcon) {
             <div class="fake-fab-button flex-center">
-                <div class="longpolling-adjust-icon">
+                <div class="adjust-icon">
                     <mat-icon color="white" matTooltip="Fallback Mode">sync_problem</mat-icon>
                 </div>
             </div>
