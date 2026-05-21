@@ -10,6 +10,7 @@ import {
     output,
     signal
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -32,7 +33,8 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
         MatInputModule,
         MatIconModule,
         MatButtonModule,
-        TranslatePipe
+        TranslatePipe,
+        FormsModule
     ],
     templateUrl: './poll-vote-rating-score.component.html',
     styleUrl: './poll-vote-rating-score.component.scss',
@@ -48,10 +50,6 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionValues = signal<Map<number, string>>(new Map());
 
-    public isSingleSelect = computed(() => {
-        return (this.config()?.max_options_amount ?? 1) === 1;
-    });
-
     public config = computed<ViewPollConfigRatingScore | undefined>(() => {
         return this.poll().config;
     });
@@ -65,8 +63,15 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
             return 0;
         }
 
-        const maxVotes = this.config()?.max_options_amount ?? 1;
-        return maxVotes - this.selectedOptionValues().size;
+        let totalVotes = 0;
+
+        const voteValues = this.selectedOptionValues().values();
+        for (const val of voteValues) {
+            totalVotes += +val;
+        }
+
+        const maxVotes = this.config()?.max_vote_sum ?? Infinity;
+        return maxVotes - totalVotes;
     });
 
     private translate = inject(TranslateService);
@@ -94,6 +99,19 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
         }
     }
 
+    public getOptionMax(optionId: number): string {
+        const maxPerOption = this.config().max_votes_per_option.toString();
+        if (
+            !this.selectedOptionValues().has(optionId) &&
+            this.config().max_options_amount &&
+            this.selectedOptionValues().size > this.config().max_options_amount
+        ) {
+            return `0`;
+        }
+
+        return maxPerOption || '';
+    }
+
     public getOptionVote(optionId: number): string {
         return this.selectedOptionValues().get(optionId) || '0';
     }
@@ -109,16 +127,13 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
         } else {
             selected.delete(0);
 
-            if (this.isSingleSelect()) {
-                selected.clear();
-            } else {
-                const maxAmount = this.config()?.max_options_amount ?? 1;
-                if (selected.size >= maxAmount) {
-                    return;
-                }
+            const current = +selected.get(optionId) || 0;
+            if (+amount - current > this.availableVotes()) {
+                return;
             }
             selected.set(optionId, amount);
         }
+        console.log(selected);
         this.selectedOptionValues.set(selected);
     }
 
@@ -137,7 +152,7 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
         }
 
         if (selected.has(0)) {
-            this.voted.emit([]);
+            this.voted.emit({});
         } else if (selected.has(-1)) {
             this.voted.emit(`nota`);
         } else {

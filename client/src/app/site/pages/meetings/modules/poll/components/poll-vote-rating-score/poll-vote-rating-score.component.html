@@ -58,9 +58,9 @@
                 <mat-form-field appearance="outline" class="vote-input">
                     <input
                         matInput
-                        min="0"
                         type="number"
-                        [max]="config().max_votes_per_option || ''"
+                        min="0"
+                        [max]="getOptionMax(option.id)"
                         [value]="getOptionVote(option.id)"
                         (change)="setOptionVote(option.id, $event.target.value)"
                     />
@@ -86,7 +86,7 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
-                        [isSelected]="+getOptionVote(0) > 0"
+                        [isSelected]="(+getOptionVote(0)) > 0"
                         [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
                         (toggleOption)="setOptionVote(0, '1')"
