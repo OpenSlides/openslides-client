@@ -54,7 +54,18 @@
             <div class="vote-option-title grid-name-area" role="rowheader">
                 <os-poll-vote-option [option]="option" />
             </div>
-            <div class="vote-button-area" role="gridcell">TODO</div>
+            <div class="vote-input-area" role="gridcell">
+                <mat-form-field appearance="outline" class="vote-input">
+                    <input
+                        matInput
+                        min="0"
+                        type="number"
+                        [max]="config().max_votes_per_option || ''"
+                        [value]="getOptionVote(option.id)"
+                        (change)="setOptionVote(option.id, $event.target.value)"
+                    />
+                </mat-form-field>
+            </div>
         </div>
     }
 </div>
@@ -75,10 +86,10 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
-                        [isSelected]="isSelected(0)"
+                        [isSelected]="+getOptionVote(0) > 0"
                         [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
-                        (toggleOption)="toggleOption(0)"
+                        (toggleOption)="setOptionVote(0, '1')"
                     />
                 </div>
             </div>
@@ -91,7 +102,7 @@
         <button
             color="accent"
             mat-raised-button
-            [disabled]="loading() || selectedOptionIds().size === 0"
+            [disabled]="loading() || selectedOptionValues().size === 0"
             (click)="submitVote()"
         >
             <mat-icon>how_to_vote</mat-icon>

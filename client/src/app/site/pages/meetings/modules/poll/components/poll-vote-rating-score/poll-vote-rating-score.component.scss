@@ -57,9 +57,13 @@
     font-weight: 500;
 }
 
-.vote-button-area {
+.vote-input-area {
     display: inline-grid;
     justify-content: center;
+}
+
+.vote-input {
+    width: 120px;
 }
 
 .submit-area {

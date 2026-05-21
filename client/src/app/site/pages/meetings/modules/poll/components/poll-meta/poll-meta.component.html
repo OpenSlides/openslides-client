@@ -82,17 +82,23 @@
 
     @if (config().min_vote_sum > 1 || config().max_vote_sum > 1) {
         @if (config().min_vote_sum === config().max_vote_sum) {
-            {{ 'Votes' | translate }}:
-            <span>{{ config().min_vote_sum }}</span>
+            <div>
+                {{ 'Votes' | translate }}:
+                <span>{{ config().min_vote_sum }}</span>
+            </div>
         } @else {
             @if (config().min_vote_sum > 1) {
-                {{ 'Minimum amount of votes' | translate }}:
-                <span>{{ config().min_vote_sum }}</span>
+                <div>
+                    {{ 'Minimum amount of votes' | translate }}:
+                    <span>{{ config().min_vote_sum }}</span>
+                </div>
             }
 
             @if (config().max_vote_sum > 1) {
-                {{ 'Maximum amount of votes' | translate }}:
-                <span>{{ config().max_vote_sum }}</span>
+                <div>
+                    {{ 'Maximum amount of votes' | translate }}:
+                    <span>{{ config().max_vote_sum }}</span>
+                </div>
             }
         }
     }
@@ -102,24 +108,32 @@
         (config().min_options_amount > 1 || config().max_options_amount > 1)
     ) {
         @if (config().min_options_amount === config().max_options_amount) {
-            {{ 'Votes on different options' | translate }}:
-            <span>{{ config().min_options_amount }}</span>
+            <div>
+                {{ 'Votes on different options' | translate }}:
+                <span>{{ config().min_options_amount }}</span>
+            </div>
         } @else {
             @if (config().min_options_amount > 1) {
-                {{ 'Minimum amount of options selected' | translate }}:
-                <span>{{ config().min_options_amount }}</span>
+                <div>
+                    {{ 'Minimum amount of options selected' | translate }}:
+                    <span>{{ config().min_options_amount }}</span>
+                </div>
             }
 
             @if (config().max_options_amount > 1) {
-                {{ 'Maximum amount options selected' | translate }}:
-                <span>{{ config().max_options_amount }}</span>
+                <div>
+                    {{ 'Maximum amount options selected' | translate }}:
+                    <span>{{ config().max_options_amount }}</span>
+                </div>
             }
         }
     }
 
     @if (config().max_votes_per_option > 1) {
-        {{ 'Maximum amount of votes per option' | translate }}:
-        <span>{{ config().max_votes_per_option }}</span>
+        <div>
+            {{ 'Maximum amount of votes per option' | translate }}:
+            <span>{{ config().max_votes_per_option }}</span>
+        </div>
     }
 
     @if (config().onehundred_percent_base !== undefined) {
