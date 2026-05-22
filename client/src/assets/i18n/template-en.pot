@@ -1,4 +1,3 @@
-#: app/src/app/site/pages/meetings/pages/motions/pages/motion-detail/pages/motion-view/components/motion-extension-field/motion-extension-field.component.html
 msgid ""
 msgstr ""
 "mime-version: 1.0\n"
@@ -98,6 +97,10 @@ msgid "Account admin"
 msgstr ""
 
 msgid "Account created"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.ts
+msgid "Account is public."
 msgstr ""
 
 msgid "Account successfully added."
@@ -410,6 +413,10 @@ msgstr ""
 msgid "An error occurred while voting."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts
+msgid "An undefined class was called. Please add the class: {}"
+msgstr ""
+
 msgid "An unknown error occurred."
 msgstr ""
 
@@ -614,9 +621,10 @@ msgstr ""
 msgid "Are you sure you want to number all agenda items?"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-blocks/components/motion-block-detail/motion-block-detail.component.ts
 msgid ""
-"Are you sure you want to override the state of all motions of this motion "
-"block?"
+"Are you sure you want to overwrite the state of all motions with "
+"recommendations?"
 msgstr ""
 
 msgid "Are you sure you want to remove all selected items from the agenda?"
@@ -1190,10 +1198,34 @@ msgstr ""
 msgid "Candidate added"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll-detail-content/assignment-poll-detail-content.component.ts
+msgid "Candidate name"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/components/assignment-poll-detail-content/assignment-poll-detail-content.component.ts
+msgid "Candidate placement"
+msgstr ""
+
 msgid "Candidate removed"
 msgstr ""
 
 msgid "Candidates"
+msgstr ""
+
+#: app/src/app/gateways/error-mapping/error-map-utils.ts
+msgid "Cannot archive meeting with active polls."
+msgstr ""
+
+#: app/src/app/gateways/error-mapping/error-map-utils.ts
+msgid ""
+"Cannot archive meeting with active speakers and polls. Check who is "
+"speaking in > [Participants] > [Contributions]."
+msgstr ""
+
+#: app/src/app/gateways/error-mapping/error-map-utils.ts
+msgid ""
+"Cannot archive meeting with active speakers. Check who is speaking in > "
+"[Participants] > [Contributions]."
 msgstr ""
 
 msgid "Cannot create meeting without administrator."
@@ -1274,13 +1306,14 @@ msgstr ""
 msgid "Changes of all settings group will be lost!"
 msgstr ""
 
+#: app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Changing admins on same level is not possible"
+msgstr ""
+
 msgid "Chat"
 msgstr ""
 
 msgid "Chat groups"
-msgstr ""
-
-msgid "Check datastore"
 msgstr ""
 
 msgid "Check in or check out participants based on their participant numbers:"
@@ -1429,10 +1462,11 @@ msgstr ""
 msgid "Committee admin"
 msgstr ""
 
-msgid "Committee management"
+#: app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Committee admins may only set the committee admins of their subcommittees"
 msgstr ""
 
-msgid "Committee managers"
+msgid "Committee management"
 msgstr ""
 
 #: app/src/app/site/pages/meetings/pages/motions/components/motion-forward-dialog/components/motion-forward-dialog/motion-forward-dialog.component.html
@@ -1612,12 +1646,6 @@ msgid "Dark mode"
 msgstr ""
 
 msgid "Dashboard"
-msgstr ""
-
-msgid "Datastore is corrupt! See the console for errors."
-msgstr ""
-
-msgid "Datastore is ok!"
 msgstr ""
 
 msgid "Decision"
@@ -1966,9 +1994,6 @@ msgstr ""
 msgid "Email sent"
 msgstr ""
 
-msgid "Email settings"
-msgstr ""
-
 msgid "Email subject"
 msgstr ""
 
@@ -2276,9 +2301,6 @@ msgid ""
 "                        2. Adjust workflow (define state in which motions "
 "can be supported)<br>\n"
 "                        3. Enter minimum number (see next field)"
-msgstr ""
-
-msgid "For large instances this may block the server to the point of unusability"
 msgstr ""
 
 msgid "Foreground color"
@@ -3221,6 +3243,10 @@ msgstr ""
 msgid "Motions are in process. Please wait ..."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-blocks/components/motion-block-detail/motion-block-detail.component.ts
+msgid "Motions in final state will not be changed."
+msgstr ""
+
 msgid "Move"
 msgstr ""
 
@@ -3391,9 +3417,6 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-msgid "Next page"
-msgstr ""
-
 msgid "Next states"
 msgstr ""
 
@@ -3501,6 +3524,10 @@ msgid "Not found"
 msgstr ""
 
 msgid "Not locked out"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
+msgid "Not part of meeting"
 msgstr ""
 
 #: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.html
@@ -3693,6 +3720,10 @@ msgid "Open meeting"
 msgstr ""
 
 msgid "Open projection dialog"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/projectors/modules/projector-list/components/projector-list-entry/projector-list-entry.component.html
+msgid "Open projector"
 msgstr ""
 
 msgid "OpenSlides URL"
@@ -4000,9 +4031,6 @@ msgstr ""
 msgid "Please update your browser or contact your system administration."
 msgstr ""
 
-msgid "Please vote now!"
-msgstr ""
-
 msgid "Point of order"
 msgstr ""
 
@@ -4051,9 +4079,6 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-msgid "Previous page"
-msgstr ""
-
 msgid "Previous slides"
 msgstr ""
 
@@ -4088,9 +4113,6 @@ msgstr ""
 msgid "Project all structure levels"
 msgstr ""
 
-msgid "Project selection?"
-msgstr ""
-
 msgid "Projection"
 msgstr ""
 
@@ -4113,6 +4135,10 @@ msgid "Projector header image"
 msgstr ""
 
 msgid "Projector logo"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/components/projection-dialog/projection-dialog.component.html
+msgid "Projector selection"
 msgstr ""
 
 msgid "Projectors"
@@ -4332,6 +4358,10 @@ msgid "Resolution and size"
 msgstr ""
 
 msgid "Restart livestream"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/settings/modules/settings-detail/components/organization-settings/organization-settings.component.html
+msgid "Restrict definition of motion forwarding to organization admins"
 msgstr ""
 
 msgid ""
@@ -4890,9 +4920,6 @@ msgstr ""
 msgid "Superadmin"
 msgstr ""
 
-msgid "Superadmin actions"
-msgstr ""
-
 msgid "Superadmin settings"
 msgstr ""
 
@@ -5027,6 +5054,10 @@ msgid "The process may have stopped running."
 msgstr ""
 
 msgid "The process will be started. Please wait!"
+msgstr ""
+
+#: app/src/app/site/pages/meetings/pages/autopilot/components/autopilot/autopilot.component.ts
+msgid "The projected title is"
 msgstr ""
 
 msgid "The request could not be sent. Check your connection."
@@ -5214,9 +5245,6 @@ msgstr ""
 msgid "This will set the workflow for all selected motions:"
 msgstr ""
 
-msgid "Thoroughly check datastore (unsafe)"
-msgstr ""
-
 msgid "Threefold repetition! It's a draw!"
 msgstr ""
 
@@ -5226,7 +5254,15 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/projectors/components/projector-countdown-dialog/components/projector-countdown-dialog/projector-countdown-dialog.component.html
+msgid "Time (mm:ss)"
+msgstr ""
+
 msgid "Time and traffic light"
+msgstr ""
+
+#: app/src/app/site/pages/organization/pages/committees/pages/committee-import/definitions/index.ts
+msgid "Time zone"
 msgstr ""
 
 msgid "Timer"
@@ -5331,9 +5367,6 @@ msgid "Undone"
 msgstr ""
 
 msgid "Unique speakers"
-msgstr ""
-
-msgid "Unknown user"
 msgstr ""
 
 msgid "Unpublish"
@@ -5595,9 +5628,6 @@ msgstr ""
 msgid "Wifi access data"
 msgstr ""
 
-msgid "Wifi name"
-msgstr ""
-
 msgid ""
 "Will be displayed as label before selected recommendation. Use an empty "
 "value to disable the recommendation system."
@@ -5668,6 +5698,10 @@ msgstr ""
 msgid "You are not allowed to see the livestream"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component.html
+msgid "You are not part of this meeting."
+msgstr ""
+
 msgid "You are not supposed to be here..."
 msgstr ""
 
@@ -5726,6 +5760,10 @@ msgstr ""
 msgid "You have to be logged in to be able to vote."
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/chat/pages/chat-group-list/components/chat-group-detail-message-form/chat-group-detail-message-form.component.html
+msgid "You have to be part of this meeting to write messages."
+msgstr ""
+
 msgid "You have to be present to add yourself."
 msgstr ""
 
@@ -5760,6 +5798,26 @@ msgid ""
 msgstr ""
 
 msgid "You won!"
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.ts
+msgid "Your account is not in meeting."
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.ts
+msgid "Your account is not in this meeting."
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.ts
+msgid ""
+"Your account is not present. If status just changed focus this element "
+"again to get accurate present status."
+msgstr ""
+
+#: app/src/app/site/modules/global-headbar/components/account-button/account-button.component.ts
+msgid ""
+"Your account is present. If status just changed focus this element again to "
+"get accurate present status."
 msgstr ""
 
 msgid "Your browser"
@@ -5973,6 +6031,10 @@ msgstr ""
 msgid "is now"
 msgstr ""
 
+#: app/src/app/site/pages/meetings/pages/motions/pages/motion-list/components/motion-list/motion-list.component.ts
+msgid "is personal favorite"
+msgstr ""
+
 msgid "is required"
 msgstr ""
 
@@ -6046,11 +6108,6 @@ msgid "not specified"
 msgstr ""
 
 msgid "of"
-msgstr ""
-
-#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
-#: app/src/app/site/pages/meetings/pages/participants/pages/mandate-check/components/mandate-check-list/mandate-check-list.component.html
-msgid "of this"
 msgstr ""
 
 msgid "of which"
