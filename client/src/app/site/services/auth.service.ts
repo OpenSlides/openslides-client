@@ -112,6 +112,7 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
             this._logoutEvent.emit();
             await this.DS.clear();
+            this.router.navigate([`/login`]);
             this.lifecycleService.bootup();
         }
     }
