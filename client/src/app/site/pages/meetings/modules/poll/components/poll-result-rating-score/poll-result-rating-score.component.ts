@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPollConfigRatingScore } from '../../../../pages/polls';
+import { PollResultBaseComponent } from '../poll-result-base.component';
+import { PollResultSelectionComponent } from '../poll-result-selection/poll-result-selection.component';
 
 interface ResultsRaw {
     [key: number]: string;
@@ -10,19 +12,9 @@ interface ResultsRaw {
 
 @Component({
     selector: 'os-poll-result-rating-score',
-    imports: [],
+    imports: [PollResultSelectionComponent],
     templateUrl: './poll-result-rating-score.component.html',
     styleUrl: './poll-result-rating-score.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollResultRatingScoreComponent {
-    public poll = input.required<ViewPoll>();
-
-    public results = computed<ResultsRaw>(() => {
-        if (!this.poll().result) {
-            return [];
-        }
-
-        return JSON.parse(this.poll().result) || [];
-    });
-}
+export class PollResultRatingScoreComponent extends PollResultBaseComponent<ViewPollConfigRatingScore, ResultsRaw> {}

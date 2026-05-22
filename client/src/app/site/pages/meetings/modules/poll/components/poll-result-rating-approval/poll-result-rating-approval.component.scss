@@ -1,0 +1,11 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+
+.result-table {
+    width: 100%;
+}
+
+.yes,
+.no,
+.abstain {
+    text-align: right;
+}

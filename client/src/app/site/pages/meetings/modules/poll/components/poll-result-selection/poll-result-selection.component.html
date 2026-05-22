@@ -5,7 +5,7 @@
                 <th class="left-header"></th>
                 <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
             </tr>
-            @for (row of options(); track row.key) {
+            @for (row of resultOptions(); track row.key) {
                 <tr [style.color]="row.color">
                     <!-- YNA/Valid etc -->
                     <td class="label-column">

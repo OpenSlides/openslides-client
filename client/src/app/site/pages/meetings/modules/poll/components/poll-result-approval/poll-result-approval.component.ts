@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPollConfigApproval } from '../../../../pages/polls';
 import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
+import { PollResultBaseComponent } from '../poll-result-base.component';
 
 const PollChartBarThickness = 20;
 // const PERCENT_DECIMAL_PLACES = 3;
@@ -39,22 +40,12 @@ interface ResultsRaw {
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollResultApprovalComponent {
-    public poll = input.required<ViewPoll>();
-
+export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPollConfigApproval, ResultsRaw> {
     private themeService = inject(ThemeService);
 
     public shouldShowEntitled = signal<boolean>(false);
 
-    public results = computed<ResultsRaw>(() => {
-        if (!this.poll().result) {
-            return [];
-        }
-
-        return JSON.parse(this.poll().result);
-    });
-
-    public options = computed<Results>(() => {
+    public resultOptions = computed<Results>(() => {
         const results = this.results();
         if (!results) {
             return [];
@@ -77,7 +68,7 @@ export class PollResultApprovalComponent {
             }
         ];
 
-        if (this.poll().config.allow_abstain) {
+        if (this.config().allow_abstain) {
             rows.push({
                 key: `A`,
                 votingOption: `abstain`,

@@ -1,1 +1,22 @@
-<p>poll-result-rating-approval works!</p>
+<table class="result-table">
+    <tr>
+        <th colspan="2"></th>
+        <th class="yes">{{ 'Yes' | translate }}</th>
+        <th class="no">{{ 'No' | translate }}</th>
+        @if (config().allow_abstain) {
+            <th class="abstain">{{ 'Abstain' | translate }}</th>
+        }
+    </tr>
+
+    @for (option of options(); track option.id; let i = $index) {
+        <tr>
+            <td>{{ i + 1 }}.</td>
+            <td><os-poll-vote-option [option]="option" /></td>
+            <td class="yes">{{ results()[option.id]?.yes || 0 }}</td>
+            <td class="no">{{ results()[option.id]?.no || 0 }}</td>
+            @if (config().allow_abstain) {
+                <td class="abstain">{{ results()[option.id]?.abstain || 0 }}</td>
+            }
+        </tr>
+    }
+</table>

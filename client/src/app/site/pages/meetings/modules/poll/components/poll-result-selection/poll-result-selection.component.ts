@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPollConfigSelection } from '../../../../pages/polls';
 import { PollParseNumberPipe, PollPercentBasePipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
+import { PollResultBaseComponent } from '../poll-result-base.component';
 
 type Results = ResultRow[];
 interface ResultRow {
@@ -49,28 +50,18 @@ const PollChartBarThickness = 20;
     styleUrl: './poll-result-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollResultSelectionComponent {
-    public poll = input.required<ViewPoll>();
-
+export class PollResultSelectionComponent extends PollResultBaseComponent<ViewPollConfigSelection, ResultsRaw> {
     public shouldShowEntitled = signal<boolean>(false);
 
     public themeService = inject(ThemeService);
     public translate = inject(TranslateService);
 
-    public results = computed<ResultsRaw>(() => {
-        if (!this.poll().result) {
-            return [];
-        }
-
-        return JSON.parse(this.poll().result) || [];
-    });
-
-    public options = computed<Results>(() => {
+    public resultOptions = computed<Results>(() => {
         const results = this.results();
         const rows: Results = [];
-        const colors = this.generateChartColors(this.poll().options?.length ?? 0);
-        for (const i in this.poll().options ?? []) {
-            const option = this.poll().options[i];
+        const colors = this.generateChartColors(this.options()?.length ?? 0);
+        for (const i in this.options()) {
+            const option = this.options()[i];
             const optionText = option.text
                 ? option.text
                 : (option.meeting_user?.user?.getName() ?? this.translate.instant(UnknownUserLabel));
@@ -88,7 +79,7 @@ export class PollResultSelectionComponent {
 
     public chartData = computed<ChartData>(() => {
         const results = this.results();
-        const colors = this.generateChartColors(this.poll().options?.length ?? 0);
+        const colors = this.generateChartColors(this.options()?.length ?? 0);
         return this.poll()
             .options.map((option, i) => {
                 const optionText = option.text
