@@ -30,7 +30,7 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
 })
 export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPollConfigRatingScore> {
     public ballots = signal<ViewPollBallot[]>([]);
-    public selectedOptionValues = signal<Map<number, string>>(new Map());
+    public selectedOptionValues = signal<Map<number, number>>(new Map());
 
     public availableVotes = computed<number>(() => {
         if (this.selectedOptionValues().has(0) || this.selectedOptionValues().has(-1)) {
@@ -70,8 +70,8 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
         return maxPerOption || '';
     }
 
-    public getOptionVote(optionId: number): string {
-        return this.selectedOptionValues().get(optionId) || '0';
+    public getOptionVote(optionId: number): number {
+        return this.selectedOptionValues().get(optionId) || 0;
     }
 
     public setOptionVote(optionId: number, amount: string, el?: HTMLInputElement): void {
@@ -79,7 +79,7 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
         const selected = new Map(this.selectedOptionValues());
         if (isGeneralOption) {
             selected.clear();
-            selected.set(optionId, '1');
+            selected.set(optionId, 1);
         } else if (selected.has(optionId) && +amount === 0) {
             selected.delete(optionId);
         } else {
@@ -93,12 +93,12 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
                     selected.size >= this.config().max_options_amount)
             ) {
                 if (el) {
-                    el.value = selected.get(optionId) || `0`;
+                    el.value = `${selected.get(optionId) || 0}`;
                 }
 
                 return;
             }
-            selected.set(optionId, amount);
+            selected.set(optionId, +amount);
         }
         this.selectedOptionValues.set(selected);
     }
