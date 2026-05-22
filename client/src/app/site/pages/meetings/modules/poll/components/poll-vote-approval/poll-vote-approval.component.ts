@@ -1,24 +1,11 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    OnDestroy,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
-import { ViewUser } from '../../../../view-models/view-user';
+import { ViewPollConfigApproval } from '../../../../pages/polls';
+import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 
 @Component({
@@ -28,23 +15,11 @@ import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.co
     imports: [PollVoteButtonComponent, TranslatePipe, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollVoteApprovalComponent implements OnDestroy {
-    public readonly drawnCross = CustomIcon.DRAWN_CROSS;
-
-    public poll = input.required<ViewPoll>();
-    public user = input.required<ViewUser>();
-    public loading = input<boolean>(false);
-
-    public voted = output<unknown>();
-
+export class PollVoteApprovalComponent extends PollVoteBaseComponent<ViewPollConfigApproval> {
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
 
     public selected = signal<string>(null);
-    public ballots = signal<ViewPollBallot[]>([]);
-    // TODO: use balllots for this user/poll
-
-    private pollRepo = inject(PollRepositoryService);
 
     public voteActions = computed(() => {
         const actions: any[] = [
@@ -70,28 +45,6 @@ export class PollVoteApprovalComponent implements OnDestroy {
 
     public isOptionSelected(key: string): boolean {
         return this.selected() === key;
-    }
-
-    private pollBallotSubscription: Subscription;
-
-    public constructor() {
-        effect(() => {
-            if (this.pollBallotSubscription) {
-                this.pollBallotSubscription.unsubscribe();
-            }
-
-            this.pollBallotSubscription = this.pollRepo
-                .pollBallotsByUser(this.poll().id, this.user().getMeetingUser().id)
-                .subscribe(ballots => {
-                    this.ballots.set(ballots);
-                });
-        });
-    }
-
-    public ngOnDestroy(): void {
-        if (this.pollBallotSubscription) {
-            this.pollBallotSubscription.unsubscribe();
-        }
     }
 
     public async submitVote(value: string): Promise<void> {

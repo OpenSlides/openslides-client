@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollConfigRatingApproval, ViewPollOption } from '../../../../pages/polls';
-import { ViewUser } from '../../../../view-models/view-user';
+import { ViewPollConfigRatingApproval } from '../../../../pages/polls';
+import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
@@ -24,25 +24,11 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
     styleUrl: './poll-vote-rating-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollVoteRatingApprovalComponent {
-    public poll = input.required<ViewPoll>();
-    public user = input.required<ViewUser>();
-    public loading = input<boolean>(false);
-
-    public voted = output<unknown>();
-
+export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewPollConfigRatingApproval> {
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
 
     public selectedOptions = signal<Map<number, string>>(new Map());
-
-    public config = computed<ViewPollConfigRatingApproval>(() => {
-        return this.poll().config;
-    });
-
-    public options = computed<ViewPollOption[]>(() => {
-        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
-    });
 
     public availableVotes = computed<number>(() => {
         if (this.selectedOptions().has(0)) {

@@ -1,24 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    OnDestroy,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollBallot, ViewPollConfigSelection, ViewPollOption } from '../../../../pages/polls';
-import { ViewUser } from '../../../../view-models/view-user';
+import { ViewPollBallot, ViewPollConfigSelection } from '../../../../pages/polls';
+import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
@@ -36,26 +24,12 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
     styleUrl: './poll-vote-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollVoteSelectionComponent implements OnDestroy {
-    public poll = input.required<ViewPoll>();
-    public user = input.required<ViewUser>();
-    public loading = input<boolean>(false);
-
-    public voted = output<unknown>();
-
+export class PollVoteSelectionComponent extends PollVoteBaseComponent<ViewPollConfigSelection> {
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionIds = signal<Set<number>>(new Set());
 
     public isSingleSelect = computed(() => {
         return (this.config()?.max_options_amount ?? 1) === 1;
-    });
-
-    public config = computed<ViewPollConfigSelection | undefined>(() => {
-        return this.poll().config;
-    });
-
-    public options = computed<ViewPollOption[]>(() => {
-        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
     });
 
     public availableVotes = computed<number>(() => {
@@ -68,29 +42,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
     });
 
     private translate = inject(TranslateService);
-    private pollRepo = inject(PollRepositoryService);
     private promptService = inject(PromptService);
-
-    private pollBallotSubscription: Subscription;
-
-    public constructor() {
-        effect(() => {
-            if (this.pollBallotSubscription) {
-                this.pollBallotSubscription.unsubscribe();
-            }
-            this.pollBallotSubscription = this.pollRepo
-                .pollBallotsByUser(this.poll().id, this.user().getMeetingUser().id)
-                .subscribe(ballots => {
-                    this.ballots.set(ballots);
-                });
-        });
-    }
-
-    public ngOnDestroy(): void {
-        if (this.pollBallotSubscription) {
-            this.pollBallotSubscription.unsubscribe();
-        }
-    }
 
     public isSelected(optionId: number): boolean {
         return this.selectedOptionIds().has(optionId);

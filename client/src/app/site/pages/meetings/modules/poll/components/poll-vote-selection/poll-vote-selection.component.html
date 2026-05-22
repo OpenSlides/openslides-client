@@ -4,7 +4,14 @@
         <ng-template #optionAmount>
             @if (poll().option_ids.length > 1) {
                 <div>
-                    <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
+                    <b>
+                        {{ poll().option_ids.length }}
+                        @if (hasTextOptions()) {
+                            {{ 'Options' | translate }}
+                        } @else {
+                            {{ 'Candidates' | translate }}
+                        }
+                    </b>
                 </div>
             } @else {
                 <div></div>

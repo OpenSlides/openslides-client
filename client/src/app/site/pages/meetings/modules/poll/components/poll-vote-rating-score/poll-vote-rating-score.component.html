@@ -4,7 +4,14 @@
         <ng-template #optionAmount>
             @if (poll().option_ids.length > 1) {
                 <div>
-                    <b>{{ poll().option_ids.length }} {{ 'Options' | translate }}</b>
+                    <b>
+                        {{ poll().option_ids.length }}
+                        @if (hasTextOptions()) {
+                            {{ 'Options' | translate }}
+                        } @else {
+                            {{ 'Candidates' | translate }}
+                        }
+                    </b>
                 </div>
             } @else {
                 <div></div>
@@ -58,11 +65,11 @@
                 <mat-form-field appearance="outline" class="vote-input">
                     <input
                         matInput
-                        type="number"
                         min="0"
+                        type="number"
                         [max]="getOptionMax(option.id)"
                         [value]="getOptionVote(option.id)"
-                        (change)="setOptionVote(option.id, $event.target.value)"
+                        (change)="setOptionVote(option.id, $event.target.value, $event.target)"
                     />
                 </mat-form-field>
             </div>
@@ -86,7 +93,7 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
-                        [isSelected]="(+getOptionVote(0)) > 0"
+                        [isSelected]="+getOptionVote(0) > 0"
                         [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
                         (toggleOption)="setOptionVote(0, '1')"

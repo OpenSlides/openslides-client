@@ -1,26 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    OnDestroy,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollBallot, ViewPollConfigRatingScore, ViewPollOption } from '../../../../pages/polls';
-import { ViewUser } from '../../../../view-models/view-user';
+import { ViewPollBallot, ViewPollConfigRatingScore } from '../../../../pages/polls';
+import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
@@ -40,23 +28,9 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
     styleUrl: './poll-vote-rating-score.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollVoteRatingScoreComponent implements OnDestroy {
-    public poll = input.required<ViewPoll>();
-    public user = input.required<ViewUser>();
-    public loading = input<boolean>(false);
-
-    public voted = output<unknown>();
-
+export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPollConfigRatingScore> {
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionValues = signal<Map<number, string>>(new Map());
-
-    public config = computed<ViewPollConfigRatingScore | undefined>(() => {
-        return this.poll().config;
-    });
-
-    public options = computed<ViewPollOption[]>(() => {
-        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
-    });
 
     public availableVotes = computed<number>(() => {
         if (this.selectedOptionValues().has(0) || this.selectedOptionValues().has(-1)) {
@@ -75,29 +49,7 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
     });
 
     private translate = inject(TranslateService);
-    private pollRepo = inject(PollRepositoryService);
     private promptService = inject(PromptService);
-
-    private pollBallotSubscription: Subscription;
-
-    public constructor() {
-        effect(() => {
-            if (this.pollBallotSubscription) {
-                this.pollBallotSubscription.unsubscribe();
-            }
-            this.pollBallotSubscription = this.pollRepo
-                .pollBallotsByUser(this.poll().id, this.user().getMeetingUser().id)
-                .subscribe(ballots => {
-                    this.ballots.set(ballots);
-                });
-        });
-    }
-
-    public ngOnDestroy(): void {
-        if (this.pollBallotSubscription) {
-            this.pollBallotSubscription.unsubscribe();
-        }
-    }
 
     public getOptionMax(optionId: number): string {
         const maxPerOption = this.config().max_votes_per_option.toString();
@@ -116,7 +68,7 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
         return this.selectedOptionValues().get(optionId) || '0';
     }
 
-    public setOptionVote(optionId: number, amount: string): void {
+    public setOptionVote(optionId: number, amount: string, el?: HTMLInputElement): void {
         const isGeneralOption = optionId < 1;
         const selected = new Map(this.selectedOptionValues());
         if (isGeneralOption) {
@@ -129,11 +81,14 @@ export class PollVoteRatingScoreComponent implements OnDestroy {
 
             const current = +selected.get(optionId) || 0;
             if (+amount - current > this.availableVotes()) {
+                if (el) {
+                    el.value = selected.get(optionId) || `0`;
+                }
+
                 return;
             }
             selected.set(optionId, amount);
         }
-        console.log(selected);
         this.selectedOptionValues.set(selected);
     }
 
