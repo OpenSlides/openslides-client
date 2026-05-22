@@ -90,7 +90,7 @@ export class SpeakingTimesComponent implements OnDestroy {
                 this.speakingTimesRepo
                     .getViewModelObservable(speakingTimeId)
                     .pipe(
-                        filter(st => !!st?.structure_level),
+                        filter(st => !!st?.structure_level && !!st?.speaker_ids),
                         tap(st => this.updateSpeakingTime(st)),
                         mergeMap(st =>
                             merge(
