@@ -25,16 +25,23 @@
             @if (multiVotes) {
                 <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
                 <div class="available-votes">
-                    <div>
-                        {{ 'Available votes' | translate }}: {{ availableVotes() }}/{{ config()?.max_vote_sum }}
-                        @if (config()?.min_vote_sum > 1) {
-                            <div>
-                                {{ 'At least' | translate }}
-                                <b>{{ config()?.min_vote_sum }}</b>
-                                {{ 'Votes' | translate }}
-                            </div>
-                        }
-                    </div>
+                    <div>{{ 'Available votes' | translate }}: {{ availableVotes() }}/{{ config()?.max_vote_sum }}</div>
+
+                    @if (config()?.min_vote_sum > 1) {
+                        <div>{{ 'At least {{num}} Votes' | translate:{num: config()?.min_vote_sum} }}</div>
+                    }
+
+                    @if (config()?.max_options_amount > 0) {
+                        <div>
+                            {{ 'Available options to select' | translate }}: {{ availableOptions() }}/{{
+                                config()?.max_options_amount
+                            }}
+                        </div>
+                    }
+
+                    @if (config()?.min_options_amount > 1) {
+                        <div>{{ 'At least {{num}} Options' | translate:{num: config()?.min_options_amount} }}</div>
+                    }
 
                     @if (config()?.max_votes_per_option > 0) {
                         <div>

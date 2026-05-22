@@ -48,6 +48,12 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
         return maxVotes - totalVotes;
     });
 
+    public availableOptions = computed<number>(() => {
+        const maxOptionVotes = this.config()?.max_options_amount ?? Infinity;
+
+        return maxOptionVotes - this.selectedOptionValues().size;
+    });
+
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
 
@@ -80,7 +86,12 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
             selected.delete(0);
 
             const current = +selected.get(optionId) || 0;
-            if (+amount - current > this.availableVotes()) {
+            if (
+                +amount - current > this.availableVotes() ||
+                (!selected.has(optionId) &&
+                    this.config().max_options_amount &&
+                    selected.size >= this.config().max_options_amount)
+            ) {
                 if (el) {
                     el.value = selected.get(optionId) || `0`;
                 }
