@@ -1,0 +1,25 @@
+import { Component, computed, input } from '@angular/core';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+
+import { ViewPoll, ViewPollOption } from '../../../pages/polls';
+
+@Component({ template: `` })
+export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
+    public poll = input.required<ViewPoll>();
+
+    public results = computed<U>(() => {
+        if (!this.poll().result) {
+            return [];
+        }
+
+        return JSON.parse(this.poll().result) || {};
+    });
+
+    public config = computed<T | undefined>(() => {
+        return this.poll().config;
+    });
+
+    public options = computed<ViewPollOption[]>(() => {
+        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
+    });
+}

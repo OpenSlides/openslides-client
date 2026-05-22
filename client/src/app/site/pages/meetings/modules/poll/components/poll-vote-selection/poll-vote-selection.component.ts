@@ -1,24 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    OnDestroy,
-    output,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { ViewPoll, ViewPollBallot, ViewPollOption } from '../../../../pages/polls';
-import { ViewUser } from '../../../../view-models/view-user';
+import { ViewPollBallot, ViewPollConfigSelection } from '../../../../pages/polls';
+import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
@@ -36,55 +24,25 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
     styleUrl: './poll-vote-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollVoteSelectionComponent implements OnDestroy {
-    public poll = input.required<ViewPoll>();
-    public user = input.required<ViewUser>();
-    public loading = input<boolean>(false);
-
-    public voted = output<unknown>();
-
+export class PollVoteSelectionComponent extends PollVoteBaseComponent<ViewPollConfigSelection> {
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionIds = signal<Set<number>>(new Set());
 
     public isSingleSelect = computed(() => {
-        const config = this.poll().config;
-        return (config?.max_options_amount ?? 1) === 1;
-    });
-
-    public options = computed<ViewPollOption[]>(() => {
-        return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
+        return (this.config()?.max_options_amount ?? 1) === 1;
     });
 
     public availableVotes = computed<number>(() => {
-        const config = this.poll().config;
-        const maxVotes = config?.max_options_amount ?? 1;
+        if (this.selectedOptionIds().has(0) || this.selectedOptionIds().has(-1)) {
+            return 0;
+        }
+
+        const maxVotes = this.config()?.max_options_amount ?? 1;
         return maxVotes - this.selectedOptionIds().size;
     });
 
     private translate = inject(TranslateService);
-    private pollRepo = inject(PollRepositoryService);
     private promptService = inject(PromptService);
-
-    private pollBallotSubscription: Subscription;
-
-    public constructor() {
-        effect(() => {
-            if (this.pollBallotSubscription) {
-                this.pollBallotSubscription.unsubscribe();
-            }
-            this.pollBallotSubscription = this.pollRepo
-                .pollBallotsByUser(this.poll().id, this.user().getMeetingUser().id)
-                .subscribe(ballots => {
-                    this.ballots.set(ballots);
-                });
-        });
-    }
-
-    public ngOnDestroy(): void {
-        if (this.pollBallotSubscription) {
-            this.pollBallotSubscription.unsubscribe();
-        }
-    }
 
     public isSelected(optionId: number): boolean {
         return this.selectedOptionIds().has(optionId);
@@ -105,7 +63,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
             if (this.isSingleSelect()) {
                 selected.clear();
             } else {
-                const maxAmount = this.poll().config?.max_options_amount ?? 1;
+                const maxAmount = this.config()?.max_options_amount ?? 1;
                 if (selected.size >= maxAmount) {
                     return;
                 }
@@ -114,7 +72,7 @@ export class PollVoteSelectionComponent implements OnDestroy {
         }
         this.selectedOptionIds.set(selected);
 
-        if (this.availableVotes() === 0 || isGeneralOption) {
+        if (this.availableVotes() === 0) {
             this.submitVote();
         }
     }

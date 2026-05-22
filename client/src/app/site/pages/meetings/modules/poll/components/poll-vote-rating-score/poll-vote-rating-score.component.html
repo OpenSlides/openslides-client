@@ -25,13 +25,28 @@
             @if (multiVotes) {
                 <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
                 <div class="available-votes">
-                    {{ 'Available votes' | translate }}:
-                    <b>{{ availableVotes() }}/{{ config()?.max_vote_sum }}</b>
+                    <div>{{ 'Available votes' | translate }}: {{ availableVotes() }}/{{ config()?.max_vote_sum }}</div>
+
                     @if (config()?.min_vote_sum > 1) {
+                        <div>{{ 'At least {{num}} Votes' | translate:{num: config()?.min_vote_sum} }}</div>
+                    }
+
+                    @if (config()?.max_options_amount > 0) {
                         <div>
-                            {{ 'At least' | translate }}
-                            <b>{{ config()?.min_vote_sum }}</b>
-                            {{ 'Votes' | translate }}
+                            {{ 'Available options to select' | translate }}: {{ availableOptions() }}/{{
+                                config()?.max_options_amount
+                            }}
+                        </div>
+                    }
+
+                    @if (config()?.min_options_amount > 1) {
+                        <div>{{ 'At least {{num}} Options' | translate:{num: config()?.min_options_amount} }}</div>
+                    }
+
+                    @if (config()?.max_votes_per_option > 0) {
+                        <div>
+                            {{ 'At most {{numVotes}} votes per candidate ' | translate:{numVotes:
+                            config()?.max_votes_per_option} }}
                         </div>
                     }
                 </div>
@@ -52,11 +67,7 @@
 
     <ng-template #optionTitle>
         <b class="poll-option-title">
-            @if (config()?.strike_out) {
-                {{ 'No' | translate }}
-            } @else {
-                {{ 'Yes' | translate }}
-            }
+            {{ 'Yes' | translate }}
         </b>
     </ng-template>
 
@@ -65,20 +76,23 @@
             <div class="vote-option-title grid-name-area" role="rowheader">
                 <os-poll-vote-option [option]="option" />
             </div>
-            <div class="vote-button-area" role="gridcell">
-                <os-poll-vote-button
-                    [isSelected]="isSelected(option.id)"
-                    [loading]="loading()"
-                    [optionTitle]="option.text || option.meeting_user?.user?.getName()"
-                    [optionType]="config().strike_out ? 'no' : 'yes'"
-                    (toggleOption)="toggleOption(option.id)"
-                />
+            <div class="vote-input-area" role="gridcell">
+                <mat-form-field appearance="outline" class="vote-input">
+                    <input
+                        matInput
+                        min="0"
+                        type="number"
+                        [max]="getOptionMax(option.id)"
+                        [value]="getOptionVote(option.id)"
+                        (change)="setOptionVote(option.id, $event.target.value, $event.target)"
+                    />
+                </mat-form-field>
             </div>
         </div>
     }
 </div>
 
-@if (config()?.min_vote_sum === 0 || config()?.allow_nota) {
+@if (config()?.min_vote_sum === 0) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>
@@ -86,25 +100,6 @@
     </div>
 
     <div class="option-list">
-        @if (config().allow_nota) {
-            <div class="option-row" role="row">
-                @let optionName =
-                    config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
-                <div class="vote-option-title grid-name-area" role="rowheader">
-                    {{ optionName | translate }}
-                </div>
-                <div class="vote-button-area" role="gridcell">
-                    <os-poll-vote-button
-                        [isSelected]="isSelected(-1)"
-                        [loading]="loading()"
-                        [optionTitle]="optionName"
-                        [optionType]="config().strike_out ? 'yes' : 'no'"
-                        (toggleOption)="toggleOption(-1)"
-                    />
-                </div>
-            </div>
-        }
-
         @if (config().min_vote_sum === 0) {
             <div class="option-row" role="row">
                 <div class="vote-option-title grid-name-area" role="rowheader">
@@ -113,10 +108,10 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
-                        [isSelected]="isSelected(0)"
+                        [isSelected]="+getOptionVote(0) > 0"
                         [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
-                        (toggleOption)="toggleOption(0)"
+                        (toggleOption)="setOptionVote(0, '1')"
                     />
                 </div>
             </div>
@@ -129,7 +124,7 @@
         <button
             color="accent"
             mat-raised-button
-            [disabled]="loading() || selectedOptionIds().size === 0"
+            [disabled]="loading() || selectedOptionValues().size === 0"
             (click)="submitVote()"
         >
             <mat-icon>how_to_vote</mat-icon>

@@ -10,7 +10,6 @@ import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { AssignmentPollServiceModule } from './assignment-poll-service.module';
 
 export const UnknownUserLabel = _(`Deleted user`);
 
@@ -19,7 +18,7 @@ export const UnknownUserLabel = _(`Deleted user`);
  * perfectly fits on assignments. Motion polls are now the special case; assignment polls should
  * be the default case.
  */
-@Injectable({ providedIn: AssignmentPollServiceModule })
+@Injectable({ providedIn: `root` })
 export class AssignmentPollService extends PollService {
     public defaultPercentBase: BaseOnehundredPercentBase | undefined;
     public defaultPollType: PollVisibility | undefined;

@@ -11,6 +11,7 @@ import { VotingService } from '../../services/voting.service';
 import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollVoteApprovalComponent } from '../poll-vote-approval/poll-vote-approval.component';
 import { PollVoteRatingApprovalComponent } from '../poll-vote-rating-approval/poll-vote-rating-approval.component';
+import { PollVoteRatingScoreComponent } from '../poll-vote-rating-score/poll-vote-rating-score.component';
 import { PollVoteSelectionComponent } from '../poll-vote-selection/poll-vote-selection.component';
 
 @Component({
@@ -18,6 +19,7 @@ import { PollVoteSelectionComponent } from '../poll-vote-selection/poll-vote-sel
     imports: [
         PollVoteApprovalComponent,
         PollVoteRatingApprovalComponent,
+        PollVoteRatingScoreComponent,
         PollVoteSelectionComponent,
         PollCannotVoteMessageComponent,
         TranslatePipe

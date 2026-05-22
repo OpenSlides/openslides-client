@@ -6,6 +6,11 @@
     padding: 0 10px;
 }
 
+.available-votes {
+    text-align: right;
+    font-weight: 500;
+}
+
 .option-list {
     display: table;
     width: 100%;
@@ -22,12 +27,14 @@
 
 .option-list-information-grid {
     display: table-row;
-    > * {
-        display: table-cell;
-        text-align: center;
-    }
     > :first-child {
         width: 100%;
+    }
+    > :last-child {
+        text-align: center;
+    }
+    > * {
+        display: table-cell;
     }
 }
 
@@ -55,9 +62,13 @@
     font-weight: 500;
 }
 
-.vote-button-area {
+.vote-input-area {
     display: inline-grid;
     justify-content: center;
+}
+
+.vote-input {
+    width: 120px;
 }
 
 .submit-area {

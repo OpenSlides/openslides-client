@@ -10,11 +10,12 @@ import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/pol
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormRatingApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormRatingScoreComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-rating-score/poll-form-rating-score.component';
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
-const TAB_METHOD_MAP = [`selection`, `rating_approval`, `approval`];
+const TAB_METHOD_MAP = [`selection`, `rating_approval`, `rating_score`, `approval`];
 
 @Component({
     selector: `os-assignment-poll-dialog`,
@@ -25,6 +26,7 @@ const TAB_METHOD_MAP = [`selection`, `rating_approval`, `approval`];
         PollFormApprovalComponent,
         PollFormSelectionComponent,
         PollFormRatingApprovalComponent,
+        PollFormRatingScoreComponent,
         MatDialogModule,
         MatButtonModule,
         MatTabsModule,
@@ -35,11 +37,17 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private approvalForm = viewChild(PollFormApprovalComponent);
     private selectionForm = viewChild(PollFormSelectionComponent);
     private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
+    private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
 
     public method = `rating_approval`;
 
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
+    }
+
+    public get hasMultipleOptions(): boolean {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        return assignment.candidates.length > 1;
     }
 
     public selectedTab = signal(0);
@@ -65,7 +73,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
         const payload: PollUpdatePayload = {
             title: formValues?.title,
-            method: TAB_METHOD_MAP[this.selectedTab()],
+            method: this.getSelectedMethod(),
             method_config: this.getMethodConfig(),
             option_type: `meeting_user`,
             options,
@@ -81,14 +89,24 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         this.dialogRef.close(payload);
     }
 
+    private getSelectedMethod(): string {
+        if (!this.hasMultipleOptions) {
+            return `approval`;
+        }
+
+        return TAB_METHOD_MAP[this.selectedTab()];
+    }
+
     private getMethodConfig(): unknown {
-        switch (TAB_METHOD_MAP[this.selectedTab()]) {
+        switch (this.getSelectedMethod()) {
             case `approval`:
                 return { ...this.approvalForm()?.approvalForm.value };
             case `selection`:
                 return { ...this.selectionForm()?.form.value };
             case `rating_approval`:
                 return { ...this.ratingApprovalForm()?.form.value };
+            case `rating_score`:
+                return { ...this.ratingScoreForm()?.form.value };
         }
         return {};
     }

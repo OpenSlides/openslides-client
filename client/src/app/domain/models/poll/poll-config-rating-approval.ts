@@ -12,6 +12,14 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
     public allow_abstain!: boolean;
     public onehundred_percent_base!: RatingApprovalOnehundredPercentBase;
 
+    public get max_vote_sum(): number {
+        return this.max_options_amount;
+    }
+
+    public get min_vote_sum(): number {
+        return this.min_options_amount;
+    }
+
     public constructor(input?: Partial<PollConfigRatingApproval>) {
         super(PollConfigRatingApproval.COLLECTION, input);
     }

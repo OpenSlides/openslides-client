@@ -4,11 +4,17 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
+import {
+    provideMissingTranslationHandler,
+    provideTranslateService,
+    TranslateLoader,
+    TranslateParser
+} from '@ngx-translate/core';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { environment } from 'src/environments/environment';
 
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
+import { CustomMissingTranslationHandler } from '../site/modules/translations/missing-translation-handler';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
 import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
@@ -66,6 +72,7 @@ if (isFirefox && `serviceWorker` in navigator) {
                 useClass: PruningTranslationLoader,
                 deps: [HttpClient]
             },
+            missingTranslationHandler: provideMissingTranslationHandler(CustomMissingTranslationHandler),
             parser: {
                 provide: TranslateParser,
                 useClass: CustomTranslationParser,
