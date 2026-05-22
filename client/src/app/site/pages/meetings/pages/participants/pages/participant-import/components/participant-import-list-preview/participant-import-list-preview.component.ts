@@ -1,71 +1,70 @@
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
+    ChangeDetectorRef,
     Component,
-    Input,
     ContentChild,
     ContentChildren,
-    ElementRef,
     EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
     Output,
     QueryList,
-    TemplateRef,
-    ViewChild,
-    inject,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef
+    TemplateRef
 } from '@angular/core';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { FilterListService, ListModule } from 'src/app/ui/modules/list';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDialog, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatDialog, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import {
+    BackendImportEntryObject,
+    BackendImportHeader,
+    BackendImportIdentifiedRow,
+    BackendImportPreview,
+    BackendImportState,
+    BackendImportSummary
+} from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
+import { FilterListService, ListModule } from 'src/app/ui/modules/list';
+import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import {
     END_POSITION,
     START_POSITION
 } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
-import { MatSelectChange, MatFormField, MatLabel, MatSelect, MatOption } from '@angular/material/select';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatTooltip } from '@angular/material/tooltip';
+
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
-import { MatCheckbox } from '@angular/material/checkbox';
-import {
-    BackendImportHeader,
-    BackendImportSummary,
-    BackendImportIdentifiedRow,
-    BackendImportEntryObject,
-    BackendImportState,
-    BackendImportPreview
-} from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 @Component({
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
     imports: [
-    HeadBarModule,
-    ListModule,
-    MatIcon,
-    AsyncPipe,
-    TranslatePipe,
-    NgTemplateOutlet,
-    MatTooltip,
-    MatCheckbox,
-    MatDialogContent,
-    MatDialogActions
-]
+        HeadBarModule,
+        ListModule,
+        MatIcon,
+        AsyncPipe,
+        TranslatePipe,
+        NgTemplateOutlet,
+        MatTooltip,
+        MatCheckbox,
+        MatDialogContent,
+        MatDialogActions
+    ]
 })
-export class ParticipantImportListPreviewComponent {
+export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -104,6 +103,7 @@ export class ParticipantImportListPreviewComponent {
             `username`
         ];
     }
+
     @Input()
     public filterService: FilterListService<any> | undefined;
 
@@ -258,7 +258,7 @@ export class ParticipantImportListPreviewComponent {
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
 
-    //REMOVE THIS AND HTML CODE AFTER DEVELOPMENT
+    // REMOVE THIS AND HTML CODE AFTER DEVELOPMENT
     public hideOldCard = true;
 
     public constructor(

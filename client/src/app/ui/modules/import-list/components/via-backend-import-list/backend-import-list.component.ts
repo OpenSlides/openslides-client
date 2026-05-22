@@ -5,7 +5,6 @@ import {
     ElementRef,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     QueryList,
@@ -27,7 +26,14 @@ import { BackendImportService } from 'src/app/ui/base/import-service';
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
-import { BackendImportHeader, BackendImportSummary, BackendImportIdentifiedRow, BackendImportEntryObject, BackendImportState, BackendImportPreview } from '../../definitions/backend-import-preview';
+import {
+    BackendImportEntryObject,
+    BackendImportHeader,
+    BackendImportIdentifiedRow,
+    BackendImportPreview,
+    BackendImportState,
+    BackendImportSummary
+} from '../../definitions/backend-import-preview';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
@@ -243,7 +249,7 @@ export class BackendImportListComponent implements OnInit {
         private dialog: MatDialog,
         private translate: TranslateService,
         private router: Router
-    ) { }
+    ) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
