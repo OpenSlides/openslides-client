@@ -1,8 +1,519 @@
-import { Component } from '@angular/core';
+import {
+    Component,
+    Input,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef
+} from '@angular/core';
+import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { FilterListService, ListModule } from 'src/app/ui/modules/list';
+import { MatIcon } from '@angular/material/icon';
+import { MatDialog, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { _, TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
+import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
+import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
+import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
+import {
+    END_POSITION,
+    START_POSITION
+} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
+import { MatSelectChange, MatFormField, MatLabel, MatSelect, MatOption } from '@angular/material/select';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import {
+    BackendImportHeader,
+    BackendImportSummary,
+    BackendImportIdentifiedRow,
+    BackendImportEntryObject,
+    BackendImportState,
+    BackendImportPreview
+} from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 @Component({
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
-    styleUrls: [`./participant-import-list-preview.component.scss`]
+    styleUrls: [`./participant-import-list-preview.component.scss`],
+    imports: [
+    HeadBarModule,
+    ListModule,
+    MatIcon,
+    AsyncPipe,
+    TranslatePipe,
+    NgTemplateOutlet,
+    MatTooltip,
+    MatCheckbox,
+    MatDialogContent,
+    MatDialogActions
+]
 })
-export class ParticipantImportListPreviewComponent {}
+export class ParticipantImportListPreviewComponent {
+    public readonly END_POSITION = END_POSITION;
+    public readonly START_POSITION = START_POSITION;
+
+    @ContentChildren(ImportListFirstTabDirective)
+    public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
+
+    @ContentChildren(ImportListLastTabDirective)
+    public importListLastTabs!: QueryList<ImportListLastTabDirective>;
+
+    @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
+    public importListStateTemplate: TemplateRef<any>;
+
+    @Input()
+    public rowHeight = 50;
+
+    public modelName = `Participant`;
+
+    @Input()
+    public additionalInfo = ``;
+
+    @Input()
+    public importer = inject(ParticipantImportService);
+
+    /**
+     * Define extra filter properties
+     */
+    protected get filterProps(): string[] {
+        return [
+            `full_name`,
+            `groups`,
+            `number`,
+            `delegationName`,
+            `structure_levels`,
+            `member_number`,
+            `email`,
+            `username`
+        ];
+    }
+    @Input()
+    public filterService: FilterListService<any> | undefined;
+
+    /**
+     * Defines all necessary and optional fields, that a .csv-file can contain.
+     */
+    @Input()
+    public possibleFields: string[] = [];
+
+    @Output()
+    public selectedTabChanged = new EventEmitter<number>();
+
+    public readonly Phase = BackendImportPhase;
+
+    /**
+     * Observable that allows one to monitor the currenty selected file.
+     */
+    public get rawFileObservable(): Observable<File | null> {
+        return this.importer?.rawFileObservable || of(null);
+    }
+
+    /**
+     * Client-side definition of required/accepted columns.
+     * Ensures that the client can display information about how the import works.
+     */
+    @Input()
+    public set defaultColumns(cols: ImportListHeaderDefinition[]) {
+        this._defaultColumns = cols;
+        this.setHeaders({ default: cols });
+    }
+
+    public get defaultColumns(): ImportListHeaderDefinition[] {
+        return this._defaultColumns;
+    }
+
+    /**
+     * The actual headers of the preview, as they were delivered by the backend.
+     */
+    public get previewColumns(): BackendImportHeader[] {
+        return this._previewColumns;
+    }
+
+    /**
+     * The summary of the preview, as it was delivered by the backend.
+     */
+    public get summary(): BackendImportSummary[] {
+        return this._summary;
+    }
+
+    /**
+     * The rows of the preview, which were delivered by the backend.
+     * Affixed with fake ids for the purpose of displaying them correctly.
+     */
+    public get rows(): BackendImportIdentifiedRow[] {
+        return this._rows;
+    }
+
+    /**
+     * True if, after the first json-upload, the view is waiting for the user to confirm the import.
+     */
+    public get awaitingConfirm(): boolean {
+        return this._state === BackendImportPhase.AWAITING_CONFIRM;
+    }
+
+    /**
+     * True if the import has successfully finished.
+     */
+    public get finishedSuccessfully(): boolean {
+        return this._state === BackendImportPhase.FINISHED;
+    }
+
+    /**
+     * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
+     */
+    public get finishedWithWarning(): boolean {
+        return this._state === BackendImportPhase.FINISHED_WITH_WARNING;
+    }
+
+    /**
+     * True while an import is in progress.
+     */
+    public get isImporting(): boolean {
+        return this._state === BackendImportPhase.IMPORTING;
+    }
+
+    /**
+     * True if the preview can not be imported.
+     */
+    public get hasErrors(): boolean {
+        return this._state === BackendImportPhase.ERROR;
+    }
+
+    /**
+     * Currently selected encoding. Is set and changed by the config's available
+     * encodings and user mat-select input
+     */
+    public selectedEncoding = `utf-8`;
+
+    /**
+     * @returns the encodings available and their labels
+     */
+    public get encodings(): ValueLabelCombination[] {
+        return this.importer.encodings;
+    }
+
+    /**
+     * @returns the available column separators and their labels
+     */
+    public get columnSeparators(): ValueLabelCombination[] {
+        return this.importer.columnSeparators;
+    }
+
+    /**
+     * @eturns the available text separators and their labels
+     */
+    public get textSeparators(): ValueLabelCombination[] {
+        return this.importer.textSeparators;
+    }
+
+    /**
+     * If false there is something wrong with the data.
+     */
+    public get hasRowErrors(): boolean {
+        return this.importer.previewHasRowErrors;
+    }
+
+    /**
+     * Client side information on the required fields of this import.
+     * Generated from the information in the defaultColumns.
+     */
+    public get requiredFields(): string[] {
+        return this._requiredFields;
+    }
+
+    /**
+     * The Observable from which the views table will be calculated
+     */
+    public get dataSource(): Observable<BackendImportIdentifiedRow[]> {
+        return this._dataSource;
+    }
+
+    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
+
+    private _summary: BackendImportSummary[];
+    private _rows: BackendImportIdentifiedRow[];
+    private _previewColumns: BackendImportHeader[];
+
+    private _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
+    private _requiredFields: string[] = [];
+    private _defaultColumns: ImportListHeaderDefinition[] = [];
+
+    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
+    protected uploadButton: boolean;
+
+    //REMOVE THIS AND HTML CODE AFTER DEVELOPMENT
+    public hideOldCard = true;
+
+    public constructor(
+        private dialog: MatDialog,
+        protected translate: TranslateService,
+        private cd: ChangeDetectorRef
+    ) {}
+
+    /**
+     * Starts with a clean preview (removing any previously existing import previews)
+     */
+    public ngOnInit(): void {
+        this._requiredFields = this.createRequiredFields();
+        this.importer.currentImportPhaseObservable.subscribe(phase => {
+            this._state = phase;
+        });
+        this.importer.previewsObservable.subscribe(previews => {
+            this.fillPreviewData(previews);
+        });
+        this._dataSource = this.importer.previewsObservable.pipe(
+            map(previews => this.calculateRows(previews)),
+            delay(50)
+        );
+    }
+
+    /**
+     * Resets the importer when leaving the view
+     */
+    public ngOnDestroy(): void {
+        this.importer.clearAll();
+        this.importer.clearFile();
+    }
+
+    /**
+     * Triggers a change in the tab group: Clearing the preview selection
+     */
+    public onTabChange({ index }: MatTabChangeEvent): void {
+        this.importer.clearAll();
+        this.selectedTabChanged.emit(index);
+    }
+
+    /**
+     * True if there are custom tabs.
+     */
+    public hasSeveralTabs(): boolean {
+        return this.importListFirstTabs.length + this.importListLastTabs.length > 0;
+    }
+
+    /**
+     * triggers the importer's onSelectFile after a file has been chosen
+     */
+    public onSelectFile(event: any): void {
+        this.uploadButton = false;
+        this.importer.onSelectFile(event);
+    }
+
+    /**
+     * Gets the relevant backend header information for a property.
+     */
+    public getHeader(propertyName: string): BackendImportHeader {
+        return this._headers[propertyName]?.preview;
+    }
+
+    /**
+     * Gets the style of the column for the given property.
+     */
+    public getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
+        const defaultHeader = this._headers[propertyName]?.default;
+        const colWidth = defaultHeader?.width ?? 50;
+        const def: ScrollingTableCellDefConfig = { minWidth: Math.max(150, colWidth) };
+        if (!defaultHeader?.flexible) {
+            def.width = colWidth;
+        }
+        return def;
+    }
+
+    /**
+     * Gets the label of the column for the given property.
+     */
+    public getColumnLabel(propertyName: string): string {
+        return this._headers[propertyName]?.default?.label ?? propertyName;
+    }
+
+    /**
+     * Get the icon for the the item
+     * @param item a row or an entry with a current state
+     * @eturn the icon for the item
+     */
+    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+        switch (item[`state`] ?? item[`info`]) {
+            case BackendImportState.Error: // no import possible
+                return `block`;
+            case BackendImportState.Warning:
+                return `warning`;
+            case BackendImportState.New:
+                return `add`;
+            case BackendImportState.Done: // item will be updated / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
+            case BackendImportState.Generated:
+                return `autorenew`;
+            case BackendImportState.Remove:
+                return `remove`;
+            default:
+                return `block`; // fallback: Error
+        }
+    }
+
+    public getEntryIcon(item: BackendImportEntryObject): string {
+        if (item.info === BackendImportState.Done || !item) {
+            return undefined;
+        }
+        return this.getActionIcon(item);
+    }
+
+    /**
+     * Get the correct tooltip for the item
+     * @param entry a row with a current state
+     * @eturn the tooltip for the item
+     */
+    public getRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            case BackendImportState.Warning:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
+            case BackendImportState.New:
+                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
+            case BackendImportState.Done: // item will be updated / has been imported
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be updated`)
+                        : this.translate.instant(`has been imported`))
+                );
+            default:
+                return undefined;
+        }
+    }
+
+    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            default:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
+        }
+    }
+
+    /**
+     * A function to trigger the csv example download.
+     */
+    public downloadCsvExample(): void {
+        this.importer.downloadCsvExample();
+    }
+
+    /**
+     * Trigger for the column separator selection.
+     */
+    public selectColSep(event: MatSelectChange): void {
+        this.importer.columnSeparator = event.value;
+        this.importer.refreshFile();
+    }
+
+    /**
+     * Trigger for the column separator selection
+     */
+    public selectTextSep(event: MatSelectChange): void {
+        this.importer.textSeparator = event.value;
+        this.importer.refreshFile();
+    }
+
+    /**
+     * Trigger for the encoding selection.
+     */
+    public selectEncoding(event: MatSelectChange): void {
+        this.importer.encoding = event.value;
+        this.importer.refreshFile();
+    }
+
+    /**
+     * Opens an info dialog with the given template as content.
+     */
+    public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
+        await firstValueFrom(ref.afterClosed());
+    }
+
+    /**
+     * Returns the verbose title for a given summary title.
+     */
+    public getSummaryPointTitle(title: string): string {
+        return this.importer.getVerboseSummaryPointTitle(title);
+    }
+
+    public getShortenedDecimal(decimalString: string): string {
+        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
+            decimalString = decimalString.substring(0, decimalString.length - 1);
+        }
+        return decimalString;
+    }
+
+    public isString(value: any): value is string {
+        return typeof value === `string`;
+    }
+
+    private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
+        for (const key of Object.keys(data)) {
+            for (const header of data[key] ?? []) {
+                if (!this._headers[header.property]) {
+                    this._headers[header.property] = { [key]: header };
+                } else {
+                    this._headers[header.property][key] = header;
+                }
+            }
+        }
+    }
+
+    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
+        return entry.messages?.map(error => this.translate.instant(this.importer.verbose(error))).join(`\n `);
+    }
+
+    private fillPreviewData(previews: BackendImportPreview[]): void {
+        if (!previews || !previews.length) {
+            this._previewColumns = undefined;
+            this._summary = undefined;
+            this._rows = undefined;
+        } else {
+            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
+            this._summary = previews.some(preview => preview.statistics)
+                ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
+                : [];
+            this._rows = this.calculateRows(previews);
+            this.setHeaders({ preview: this._previewColumns });
+        }
+    }
+
+    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
+        return previews?.flatMap(preview => preview.rows);
+    }
+
+    private createRequiredFields(): string[] {
+        const definitions = this.defaultColumns;
+        if (Array.isArray(definitions) && definitions.length > 0) {
+            return definitions
+                .filter(definition => definition.isRequired as boolean)
+                .map(definition => definition.property as string);
+        } else {
+            return [];
+        }
+    }
+}

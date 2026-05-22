@@ -27,14 +27,7 @@ import { BackendImportService } from 'src/app/ui/base/import-service';
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
-import {
-    BackendImportEntryObject,
-    BackendImportHeader,
-    BackendImportIdentifiedRow,
-    BackendImportPreview,
-    BackendImportState,
-    BackendImportSummary
-} from '../../definitions/backend-import-preview';
+import { BackendImportHeader, BackendImportSummary, BackendImportIdentifiedRow, BackendImportEntryObject, BackendImportState, BackendImportPreview } from '../../definitions/backend-import-preview';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
@@ -55,7 +48,7 @@ export enum BackendImportPhase {
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
-export class BackendImportListComponent implements OnInit, OnDestroy {
+export class BackendImportListComponent implements OnInit {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -250,7 +243,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private translate: TranslateService,
         private router: Router
-    ) {}
+    ) { }
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
@@ -272,13 +265,6 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
             map(previews => this.calculateRows(previews)),
             delay(50)
         );
-    }
-
-    /**
-     * Resets the importer when leaving the view
-     */
-    public ngOnDestroy(): void {
-        this._importer.clearFile();
     }
 
     /**

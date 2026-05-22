@@ -3,14 +3,6 @@
     <div class="title-slot">
         <h1 class="mock-h2" translate>Import participants</h1>
     </div>
-
-    <ng-container class="menu-slot">
-        @if (canImport) {
-            <button mat-button (click)="doImport()">
-                <span class="upper">{{ 'Import' | translate }}</span>
-            </button>
-        }
-    </ng-container>
 </os-head-bar>
 
 <os-backend-import-list

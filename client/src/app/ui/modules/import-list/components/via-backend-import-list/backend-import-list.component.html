@@ -1,31 +1,31 @@
-@if (!hideOldCard) {
+<!-- @if (!hideOldCard) {
     <mat-card class="os-card import-table spacer-bottom-60">
         <mat-card-content>
             @if (hasSeveralTabs()) {
-                <mat-tab-group (selectedTabChange)="onTabChange($event)">
-                    <!-- Tabs before CSV import tab -->
-                    @for (tab of importListFirstTabs; track tab) {
+                <mat-tab-group (selectedTabChange)="onTabChange($event)"> -->
+<!-- Tabs before CSV import tab -->
+<!-- @for (tab of importListFirstTabs; track tab) {
                         <mat-tab>
                             <ng-template matTabLabel>{{ tab.label }}</ng-template>
                             <ng-container *ngTemplateOutlet="tab.templateRef" />
                         </mat-tab>
-                    }
-                    <!-- CSV import tab -->
-                    <mat-tab label="{{ 'CSV import' | translate }}">
+                    } -->
+<!-- CSV import tab -->
+<!--  <mat-tab label="{{ 'CSV import' | translate }}">
                         <ng-template matTabContent>
                             <ng-container *ngTemplateOutlet="defaultTabContent" />
                         </ng-template>
-                    </mat-tab>
-                    <!-- Tabs after CSV import tab -->
-                    @for (tab of importListLastTabs; track tab) {
+                    </mat-tab> -->
+<!-- Tabs after CSV import tab -->
+<!-- @for (tab of importListLastTabs; track tab) {
                         <mat-tab>
                             <ng-template matTabLabel>{{ tab.label }}</ng-template>
                             <ng-container *ngTemplateOutlet="tab.templateRef" />
                         </mat-tab>
                     }
                 </mat-tab-group>
-            }
-            @if (!hasSeveralTabs()) {
+            } -->
+<!-- @if (!hasSeveralTabs()) {
                 <br />
                 <span>
                     {{
@@ -144,7 +144,7 @@
             }
         </mat-card-content>
     </mat-card>
-}
+} -->
 
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
