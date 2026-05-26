@@ -1,6 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -38,13 +37,14 @@ import {
 import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
-import { FilterListService, ListModule } from 'src/app/ui/modules/list';
+import { FilterListService, ListModule, SearchService } from 'src/app/ui/modules/list';
 import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import {
     END_POSITION,
     START_POSITION
 } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
+import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 
 @Component({
@@ -78,7 +78,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public importListStateTemplate: TemplateRef<any>;
 
     @Input()
-    public rowHeight = 50;
+    public rowHeight = 20;
 
     public modelName = `Participant`;
 
@@ -104,8 +104,41 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         ];
     }
 
+    /** Optional number to overwrite the display of the filtered data count, if any additional filters
+     * (e.g. the angular search bar) are applied on top of these filters
+     */
     @Input()
-    public filterService: FilterListService<any> | undefined;
+    public filterCount = 0;
+
+    @Input()
+    public filterService: FilterListService<any>;
+
+    @Input()
+    public searchService: SearchService<any>;
+
+    @Input()
+    public searchFieldInput = ``;
+
+    @Output()
+    public searchFilterUpdated = new EventEmitter<string>();
+
+    @Input()
+    public addBottomSpacer = false;
+
+    /**
+     * Will show fake filter buttons with the string keys as content in bar.
+     * Closing them will cause the callback function to be called.
+     */
+    @Input()
+    public fakeFilters: Observable<Record<string, () => void>> = null;
+
+    protected _totalCountObservable: Observable<number> = null;
+
+    /**
+     * Wether or not to show the filter bar
+     */
+    @Input()
+    public showFilterBar = true;
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
@@ -258,13 +291,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
 
-    // REMOVE THIS AND HTML CODE AFTER DEVELOPMENT
+    // REMOVE THIS AND HTML CODE AFTER DEVELOPMENT #CLEANUP
     public hideOldCard = true;
 
     public constructor(
         private dialog: MatDialog,
         protected translate: TranslateService,
-        private cd: ChangeDetectorRef
+        protected readonly controller: ParticipantControllerService
     ) {}
 
     /**
@@ -282,6 +315,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             map(previews => this.calculateRows(previews)),
             delay(50)
         );
+        this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
     }
 
     /**
