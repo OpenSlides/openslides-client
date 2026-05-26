@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import Big from 'big.js';
 import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-approval';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { ViewPollConfigApproval } from '../../../../pages/polls';
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from '../../pipes';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 
@@ -18,7 +19,7 @@ interface ResultRow {
     votingOption: string;
     icon: string;
     amount: number;
-    showPercent: boolean;
+    percent: number | null;
 }
 
 interface ResultsRaw {
@@ -30,14 +31,7 @@ interface ResultsRaw {
 
 @Component({
     selector: 'os-poll-result-approval',
-    imports: [
-        IconContainerComponent,
-        ChartComponent,
-        TranslatePipe,
-        PollKeyVerbosePipe,
-        PollParseNumberPipe,
-        PollPercentBasePipe
-    ],
+    imports: [IconContainerComponent, ChartComponent, TranslatePipe, PollKeyVerbosePipe, PollParseNumberPipe],
     templateUrl: './poll-result-approval.component.html',
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -65,14 +59,14 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
-                showPercent
+                percent: showPercent ?  +results.yes / this.totalVoteSum() * 100 : null
             },
             {
                 key: `N`,
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
-                showPercent
+                percent: showPercent ? (+results.no / this.totalVoteSum() * 100) : null
             }
         ];
 
@@ -82,7 +76,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 votingOption: `abstain`,
                 icon: `circle`,
                 amount: +results.abstain || 0,
-                showPercent: this.onehundredPercentBase() === `yes_no_abstain`
+                percent: this.onehundredPercentBase() === `yes_no_abstain` ? this.totalVoteSum() / +results.abstain * 100 : null
             });
         }
 
@@ -107,6 +101,10 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                     maxBarThickness: PollChartBarThickness
                 };
             });
+    });
+
+    public totalVoteSum = computed<number | null>(() => {
+        return Big(this.results().yes).plus(Big(this.results().no)).plus(Big(this.results().abstain || 0)).toNumber();
     });
 
     public validBallots = computed<number | null>(() => {
