@@ -8,10 +8,9 @@ import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ViewPollConfigApproval } from '../../../../pages/polls';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
-import { PollResultBaseComponent } from '../poll-result-base.component';
+import { PERCENT_DECIMAL_PLACES, PollResultBaseComponent } from '../poll-result-base.component';
 
 const PollChartBarThickness = 20;
-// const PERCENT_DECIMAL_PLACES = 3;
 
 type Results = ResultRow[];
 interface ResultRow {
@@ -19,7 +18,7 @@ interface ResultRow {
     votingOption: string;
     icon: string;
     amount: number;
-    percent: number | null;
+    percent: string | null;
 }
 
 interface ResultsRaw {
@@ -41,7 +40,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
 
     public shouldShowEntitled = signal<boolean>(false);
 
-    private onehundredPercentBase = computed<ApprovalOnehundredPercentBase>(() => {
+    public onehundredPercentBase = computed<ApprovalOnehundredPercentBase>(() => {
         return this.config().onehundred_percent_base;
     });
 
@@ -59,14 +58,18 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
-                percent: showPercent ?  +results.yes / this.totalVoteSum() * 100 : null
+                percent: showPercent
+                    ? Big(results.yes).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
+                    : null
             },
             {
                 key: `N`,
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
-                percent: showPercent ? (+results.no / this.totalVoteSum() * 100) : null
+                percent: showPercent
+                    ? Big(results.no).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
+                    : null
             }
         ];
 
@@ -76,7 +79,10 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 votingOption: `abstain`,
                 icon: `circle`,
                 amount: +results.abstain || 0,
-                percent: this.onehundredPercentBase() === `yes_no_abstain` ? this.totalVoteSum() / +results.abstain * 100 : null
+                percent:
+                    this.onehundredPercentBase() === `yes_no_abstain`
+                        ? Big(results.abstain).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
+                        : null
             });
         }
 
@@ -103,8 +109,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             });
     });
 
-    public totalVoteSum = computed<number | null>(() => {
-        return Big(this.results().yes).plus(Big(this.results().no)).plus(Big(this.results().abstain || 0)).toNumber();
+    public totalVoteSum = computed<number>(() => {
+        return Big(this.results().yes)
+            .plus(Big(this.results().no))
+            .plus(Big(this.results().abstain || 0))
+            .toNumber();
     });
 
     public validBallots = computed<number | null>(() => {
@@ -121,30 +130,83 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         }
 
         if (!this.config().allow_abstain && this.onehundredPercentBase() === 'yes_no') {
-            return `100%`;
+            if (!this.poll().ballot_ids.length) {
+                return null;
+            }
+
+            return this.formatResultDecimal((this.validBallots() / this.poll().ballot_ids.length) * 100);
         }
 
         switch (this.onehundredPercentBase()) {
             case 'yes_no_abstain':
             case 'valid':
-                return `100%`;
+                if (!this.poll().ballot_ids.length) {
+                    return null;
+                }
+
+                return this.formatResultDecimal((this.validBallots() / this.poll().ballot_ids.length) * 100);
             case 'entitled':
+                if (!this.entitledUsers()) {
+                    return null;
+                }
+
+                return this.formatResultDecimal((this.validBallots() / this.entitledUsers()) * 100);
             case 'entitled_present':
-            // TODO: Implement when available
+                if (!this.presentEntitledUsers()) {
+                    return null;
+                }
+
+                return this.formatResultDecimal((this.validBallots() / this.presentEntitledUsers()) * 100);
+        }
+
+        return null;
+    });
+
+    public invalidBallots = computed<number | null>(() => {
+        if (this.onehundredPercentBase() === `cast`) {
+            return null;
+        }
+
+        return this.results().invalid ?? null;
+    });
+
+    public invalidBallotsPercent = computed<string | null>(() => {
+        if (this.validBallotsPercent() === null) {
+            return null;
+        }
+
+        if (!this.config().allow_abstain && this.onehundredPercentBase() === 'yes_no') {
+            return (100 - +this.validBallotsPercent()).toString();
+        }
+
+        switch (this.onehundredPercentBase()) {
+            case 'yes_no_abstain':
+            case 'valid':
+                return (100 - +this.validBallotsPercent()).toString();
+            case 'entitled':
+                return this.formatResultDecimal((this.invalidBallots() / this.entitledUsers()) * 100);
+            case 'entitled_present':
+                return this.formatResultDecimal((this.invalidBallots() / this.presentEntitledUsers()) * 100);
         }
 
         return null;
     });
 
     public castedBallots = computed<number | null>(() => {
+        if (this.onehundredPercentBase() !== `cast`) {
+            return null;
+        }
+
         return this.poll().ballot_ids.length;
     });
 
     public entitledUsers = computed<number | null>(() => {
+        // TODO: Implement if available
         return null;
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
+        // TODO: Implement if available
         return null;
     });
 }

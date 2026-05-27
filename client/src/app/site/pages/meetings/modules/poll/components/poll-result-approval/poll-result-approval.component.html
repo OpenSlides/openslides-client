@@ -22,16 +22,88 @@
 
                     <!-- Percent numbers -->
                     <td class="result-cell-definition percent-column">
-                        @if (row.percent) {
-                            <span>
-                                {{ row.percent! }}%
-                            </span>
+                        @if (row.percent !== null) {
+                            <span>({{ row.percent! }}%)</span>
                         }
                     </td>
 
                     <!-- Voices -->
                     <td class="result-cell-definition">
                         {{ row.amount | pollParseNumber }}
+                    </td>
+                </tr>
+            }
+
+            @if (validBallots() !== null) {
+                <tr class="votesvalid">
+                    <td class="label-column">
+                        <span>{{ 'Valid votes' | translate }}</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        @if (validBallotsPercent() !== null) {
+                            <span>({{ validBallotsPercent() }}%)</span>
+                        }
+                    </td>
+                    <td class="result-cell-definition">
+                        {{ validBallots() }}
+                    </td>
+                </tr>
+            }
+
+            @if (castedBallots() !== null) {
+                <tr class="votesvalid">
+                    <td class="label-column">
+                        <span>{{ 'Casted ballots' | translate }}</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        <span>(100%)</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        {{ castedBallots() }}
+                    </td>
+                </tr>
+            }
+
+            @if (entitledUsers() !== null) {
+                <tr>
+                    <td class="label-column">
+                        <span>{{ 'Entitled users' | translate }}</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        <span>(100%)</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        {{ entitledUsers() }}
+                    </td>
+                </tr>
+            }
+
+            @if (presentEntitledUsers() !== null) {
+                <tr>
+                    <td class="label-column">
+                        <span>{{ 'Present entitled users' | translate }}</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        <span>(100%)</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        {{ entitledUsers() }}
+                    </td>
+                </tr>
+            }
+
+            @if (invalidBallots() !== null) {
+                <tr>
+                    <td class="label-column">
+                        <span>{{ 'Invalid votes' | translate }}</span>
+                    </td>
+                    <td class="result-cell-definition">
+                        @if (invalidBallots() !== null) {
+                            <span>({{ invalidBallots() }}%)</span>
+                        }
+                    </td>
+                    <td class="result-cell-definition">
+                        {{ invalidBallots() }}
                     </td>
                 </tr>
             }
