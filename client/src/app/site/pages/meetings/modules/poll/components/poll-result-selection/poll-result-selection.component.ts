@@ -105,4 +105,58 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         }
         return colors;
     }
+
+    public totalVoteSum = computed<number>(() => {
+        return this.config().totalVotes!;
+    });
+
+    public validBallots = computed<number | null>(() => {
+        if (this.config().onehundred_percent_base === `cast`) {
+            return null;
+        }
+
+        return this.config().validBallots;
+    });
+
+    public validBallotsPercent = computed<string | null>(() => {
+        if (!this.config().onehundredPercentBaseNum) {
+            return null;
+        }
+
+        return this.formatResultDecimal((this.validBallots() / this.config().onehundredPercentBaseNum) * 100);
+    });
+
+    public invalidBallots = computed<number | null>(() => {
+        if (this.config().onehundred_percent_base === `cast`) {
+            return null;
+        }
+
+        return this.config().invalidBallots;
+    });
+
+    public invalidBallotsPercent = computed<string | null>(() => {
+        if (!this.config().onehundredPercentBaseNum) {
+            return null;
+        }
+
+        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
+    });
+
+    public castedBallots = computed<number | null>(() => {
+        if (this.config().onehundred_percent_base !== `cast`) {
+            return null;
+        }
+
+        return this.poll().ballot_ids.length;
+    });
+
+    public entitledUsers = computed<number | null>(() => {
+        // TODO: Implement if available
+        return null;
+    });
+
+    public presentEntitledUsers = computed<number | null>(() => {
+        // TODO: Implement if available
+        return null;
+    });
 }

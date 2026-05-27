@@ -119,7 +119,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.validBallots() / this.config().onehundredPercentBaseNum) * 100);
     });
 
     public invalidBallots = computed<number | null>(() => {
