@@ -37,6 +37,7 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
         if (poll.state === PollState.Finished) {
             return false;
         }
-        return poll.canBeVotedFor() && !poll.hasVoted;
+
+        return poll.canBeVotedFor();
     }
 }

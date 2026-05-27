@@ -22,8 +22,6 @@ export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
     implements DetailNavigable
 {
-    private _hasVoted: boolean | undefined;
-
     public get poll(): Poll {
         return this._model;
     }
@@ -83,18 +81,6 @@ export class ViewPoll<C extends PollContentObject = any>
             case PollState.Finished:
                 return `published`;
         }
-    }
-
-    public set hasVoted(value: boolean | undefined) {
-        this._hasVoted = value;
-    }
-
-    /**
-     * @return boolean if a hasVoted state available undefined
-     *         if the state is not set yet
-     */
-    public get hasVoted(): boolean | undefined {
-        return this._hasVoted;
     }
 
     public get isListPoll(): boolean {
