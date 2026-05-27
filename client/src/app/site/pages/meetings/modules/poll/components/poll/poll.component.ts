@@ -75,11 +75,6 @@ export class PollComponent extends BaseMeetingComponent {
         return this.poll().isPublished || (this.poll().isCreated && this.poll().visibility === PollVisibility.Manually);
     });
 
-    public getDetailLink(): string {
-        // TODO: Implement
-        return ``;
-    }
-
     private pollStateActions: Record<PollState, PollStateAction> = {
         [PollState.Created]: {
             icon: `play_arrow`,
