@@ -72,8 +72,7 @@ mat-card {
     scrollbar-width: none;
 }
 
-mat-progress-bar,
-mat-progress-bar * {
+mat-progress-bar {
     width: 100%;
     min-width: 0;
     margin-right: 3em;
