@@ -16,6 +16,18 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
     }
 
     public static COLLECTION = PollConfigSelection.COLLECTION;
+
+    public get invalidBallots(): number | null {
+        return this.parsedResult()?.invalid ?? null;
+    }
+
+    public get onehundredPercentBaseNum(): number | null {
+        throw Error('not implemented');
+    }
+
+    public get totalVotes(): number | null {
+        throw Error('not implemented');
+    }
 }
 
 interface IPollConfigSelectionRelations {

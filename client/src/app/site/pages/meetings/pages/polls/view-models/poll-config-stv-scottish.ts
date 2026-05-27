@@ -10,6 +10,10 @@ export class ViewPollConfigStvScottish extends BasePollConfigViewModel<PollConfi
     }
 
     public static COLLECTION = PollConfigStvScottish.COLLECTION;
+
+    public readonly invalidBallots = null;
+    public readonly onehundredPercentBaseNum = null;
+    public readonly totalVotes = null;
 }
 
 interface IPollConfigStvScottishRelations {

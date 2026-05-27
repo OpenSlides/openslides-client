@@ -16,6 +16,18 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
     }
 
     public static COLLECTION = PollConfigRatingScore.COLLECTION;
+
+    public get invalidBallots(): number | null {
+        return this.parsedResult()?.invalid ?? null;
+    }
+
+    public get onehundredPercentBaseNum(): number | null {
+        throw Error('not implemented');
+    }
+
+    public get totalVotes(): number | null {
+        throw Error('not implemented');
+    }
 }
 
 interface IPollConfigRatingScoreRelations {

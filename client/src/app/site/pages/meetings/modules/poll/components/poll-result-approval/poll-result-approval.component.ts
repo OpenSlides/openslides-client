@@ -103,10 +103,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public totalVoteSum = computed<number>(() => {
-        return Big(this.results().yes)
-            .plus(Big(this.results().no))
-            .plus(Big(this.results().abstain || 0))
-            .toNumber();
+        return this.config().totalVotes!;
     });
 
     public validBallots = computed<number | null>(() => {
@@ -114,45 +111,15 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.poll().ballot_ids.length - (this.results().invalid ?? 0);
+        return this.config().validBallots;
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (this.validBallots() === null) {
+        if (!this.config().onehundredPercentBaseNum) {
             return null;
         }
 
-        if (!this.config().allow_abstain && this.onehundredPercentBase() === 'yes_no') {
-            if (!this.poll().ballot_ids.length) {
-                return null;
-            }
-
-            return this.formatResultDecimal((this.validBallots() / this.poll().ballot_ids.length) * 100);
-        }
-
-        switch (this.onehundredPercentBase()) {
-            case 'yes_no_abstain':
-            case 'valid':
-                if (!this.poll().ballot_ids.length) {
-                    return null;
-                }
-
-                return this.formatResultDecimal((this.validBallots() / this.poll().ballot_ids.length) * 100);
-            case 'entitled':
-                if (!this.entitledUsers()) {
-                    return null;
-                }
-
-                return this.formatResultDecimal((this.validBallots() / this.entitledUsers()) * 100);
-            case 'entitled_present':
-                if (!this.presentEntitledUsers()) {
-                    return null;
-                }
-
-                return this.formatResultDecimal((this.validBallots() / this.presentEntitledUsers()) * 100);
-        }
-
-        return null;
+        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
     });
 
     public invalidBallots = computed<number | null>(() => {
@@ -160,29 +127,15 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.results().invalid ?? null;
+        return this.config().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (this.validBallotsPercent() === null) {
+        if (!this.config().onehundredPercentBaseNum) {
             return null;
         }
 
-        if (!this.config().allow_abstain && this.onehundredPercentBase() === 'yes_no') {
-            return (100 - +this.validBallotsPercent()).toString();
-        }
-
-        switch (this.onehundredPercentBase()) {
-            case 'yes_no_abstain':
-            case 'valid':
-                return (100 - +this.validBallotsPercent()).toString();
-            case 'entitled':
-                return this.formatResultDecimal((this.invalidBallots() / this.entitledUsers()) * 100);
-            case 'entitled_present':
-                return this.formatResultDecimal((this.invalidBallots() / this.presentEntitledUsers()) * 100);
-        }
-
-        return null;
+        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
     });
 
     public castedBallots = computed<number | null>(() => {

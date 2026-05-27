@@ -23,6 +23,18 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public static COLLECTION = PollConfigRatingApproval.COLLECTION;
+
+    public get invalidBallots(): number | null {
+        return this.parsedResult()?.invalid ?? null;
+    }
+
+    public get onehundredPercentBaseNum(): number | null {
+        throw Error('not implemented');
+    }
+
+    public get totalVotes(): number | null {
+        throw Error('not implemented');
+    }
 }
 
 interface IPollConfigRatingApprovalRelations {
