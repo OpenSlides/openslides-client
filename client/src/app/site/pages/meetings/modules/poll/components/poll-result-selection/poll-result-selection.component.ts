@@ -4,7 +4,7 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { ViewPollConfigSelection } from '../../../../pages/polls';
+import { SelectionPollResult, ViewPollConfigSelection } from '../../../../pages/polls';
 import { PollParseNumberPipe, PollPercentBasePipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
@@ -16,12 +16,6 @@ interface ResultRow {
     color: string;
     amount: number;
     showPercent: boolean;
-}
-
-interface ResultsRaw {
-    [key: number]: string;
-    abstain?: string;
-    invalid?: number;
 }
 
 /**
@@ -50,7 +44,10 @@ const PollChartBarThickness = 20;
     styleUrl: './poll-result-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollResultSelectionComponent extends PollResultBaseComponent<ViewPollConfigSelection, ResultsRaw> {
+export class PollResultSelectionComponent extends PollResultBaseComponent<
+    ViewPollConfigSelection,
+    SelectionPollResult
+> {
     public shouldShowEntitled = signal<boolean>(false);
 
     public themeService = inject(ThemeService);

@@ -1,9 +1,16 @@
 import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, ViewPollOption } from '..';
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
-export class ViewPollConfigRatingScore extends BaseViewModel<PollConfigRatingScore> {
+export interface RatingScorePollResult {
+    [key: number]: string;
+    abstain?: string;
+    invalid?: number;
+}
+
+export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfigRatingScore, RatingScorePollResult> {
     public get poll_config_rating_score(): PollConfigRatingScore {
         return this._model;
     }

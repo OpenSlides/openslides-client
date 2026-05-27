@@ -1,9 +1,23 @@
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, ViewPollOption } from '..';
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
-export class ViewPollConfigRatingApproval extends BaseViewModel<PollConfigRatingApproval> {
+export interface RatingApprovalPollResult {
+    [key: number]: {
+        yes?: string;
+        no?: string;
+        abstain?: string;
+    };
+    abstain?: string;
+    invalid?: number;
+}
+
+export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
+    PollConfigRatingApproval,
+    RatingApprovalPollResult
+> {
     public get poll_config_rating_approval(): PollConfigRatingApproval {
         return this._model;
     }

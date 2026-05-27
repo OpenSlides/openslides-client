@@ -1,19 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPollConfigRatingApproval } from '../../../../pages/polls';
+import { RatingApprovalPollResult, ViewPollConfigRatingApproval } from '../../../../pages/polls';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
-
-interface ResultsRaw {
-    [key: number]: {
-        yes?: string;
-        no?: string;
-        abstain?: string;
-    };
-    abstain?: string;
-    invalid?: number;
-}
 
 @Component({
     selector: 'os-poll-result-rating-approval',
@@ -24,5 +14,5 @@ interface ResultsRaw {
 })
 export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
     ViewPollConfigRatingApproval,
-    ResultsRaw
+    RatingApprovalPollResult
 > {}

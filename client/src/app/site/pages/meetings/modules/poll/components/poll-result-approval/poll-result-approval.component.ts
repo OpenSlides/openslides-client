@@ -5,7 +5,7 @@ import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-c
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
-import { ViewPollConfigApproval } from '../../../../pages/polls';
+import { ApprovalPollResult, ViewPollConfigApproval } from '../../../../pages/polls';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PERCENT_DECIMAL_PLACES, PollResultBaseComponent } from '../poll-result-base.component';
@@ -21,13 +21,6 @@ interface ResultRow {
     percent: string | null;
 }
 
-interface ResultsRaw {
-    yes: string;
-    no: string;
-    abstain?: string;
-    invalid?: number;
-}
-
 @Component({
     selector: 'os-poll-result-approval',
     imports: [IconContainerComponent, ChartComponent, TranslatePipe, PollKeyVerbosePipe, PollParseNumberPipe],
@@ -35,7 +28,7 @@ interface ResultsRaw {
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPollConfigApproval, ResultsRaw> {
+export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPollConfigApproval, ApprovalPollResult> {
     private themeService = inject(ThemeService);
 
     public shouldShowEntitled = signal<boolean>(false);

@@ -2,8 +2,7 @@ import { _ } from '@ngx-translate/core';
 import { DetailNavigable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { Motion } from 'src/app/domain/models/motions';
-import { PollContentObject, PollState, PollVisibility, VOTE_MAJORITY } from 'src/app/domain/models/poll';
-import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
+import { PollContentObject, PollState, PollVisibility } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
@@ -17,6 +16,7 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
@@ -134,12 +134,7 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get hasVotes(): boolean {
-        // TODO: Check results property
-        return (
-            this.results
-                // .flatMap(option => option.votes)
-                .some(vote => vote.weight > 0 || +vote.weight === VOTE_MAJORITY)
-        );
+        return !!this.config.parsedResult();
     }
 
     public getContentObject(): C | undefined {
@@ -172,14 +167,9 @@ export class ViewPoll<C extends PollContentObject = any>
             slideOptions
         };
     }
-
-    private get results(): ViewPollOption[] {
-        // TODO: Concat gloabl option
-        return (this.options || []).filter(option => !!option);
-    }
 }
 
-interface IPollRelations<C extends PollContentObject = any, D extends BasePollConfigModel = any> {
+interface IPollRelations<C extends PollContentObject = any, D extends BasePollConfigViewModel = any> {
     content_object?: C;
     config: D;
     voted: ViewMeetingUser[];
@@ -187,5 +177,5 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     entitled_groups: ViewGroup[];
     options: ViewPollOption[];
 }
-export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigModel = any>
+export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigViewModel = any>
     extends HasMeeting, ViewModelRelations<IPollRelations<C, D>>, Poll {}

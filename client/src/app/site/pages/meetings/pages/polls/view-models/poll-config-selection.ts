@@ -1,9 +1,16 @@
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, ViewPollOption } from '..';
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
-export class ViewPollConfigSelection extends BaseViewModel<PollConfigSelection> {
+export interface SelectionPollResult {
+    [key: number]: string;
+    abstain?: string;
+    invalid?: number;
+}
+
+export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigSelection, SelectionPollResult> {
     public get poll_config_selection(): PollConfigSelection {
         return this._model;
     }
