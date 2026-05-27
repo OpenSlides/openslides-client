@@ -154,12 +154,12 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.isNamed || this.isOpen
+            (this.isNamed || this.isOpen) && this.live_voting_enabled
                 ? [
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: !!this.published, // TODO: Check if poll is live vote enabled
+                          default: !!this.published && this.live_voting_enabled,
                           choices
                       }
                   ]

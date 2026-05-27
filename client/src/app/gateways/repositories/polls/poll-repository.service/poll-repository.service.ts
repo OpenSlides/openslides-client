@@ -79,7 +79,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private async createElectronicPoll(payload: PollCreatePayload): Promise<Identifiable> {
-        if (payload.visibility !== PollVisibility.Named) {
+        if (payload.visibility !== PollVisibility.Named && payload.visibility !== PollVisibility.Open) {
             delete payload.live_voting_enabled;
         }
 
