@@ -18,4 +18,3 @@ export class Gender extends BaseModel<Gender> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Gender)[] = [`id`, `name`, `organization_id`, `user_ids`];
 }
-export interface Gender {}
