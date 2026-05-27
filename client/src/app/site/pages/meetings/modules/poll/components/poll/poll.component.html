@@ -38,6 +38,8 @@
                 <span class="break-word">
                     @if (poll().isEVoting && poll().canBeVotedFor()) {
                         {{ 'Voting in progress' | translate }}
+                    } @else if (poll().isFinished && poll().published) {
+                        {{ 'published' | translate }}
                     } @else {
                         {{ poll().state | translateKey: 'poll_state' }}
                     }
