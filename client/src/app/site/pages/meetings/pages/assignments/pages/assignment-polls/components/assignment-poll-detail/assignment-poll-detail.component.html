@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     }
-                    @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+                    @if (showResults && poll.isFinished && poll.isEVoting) {
                         <mat-tab-group (selectedTabChange)="onTabChange()">
                             <mat-tab label="{{ 'Single votes' | translate }}">
                                 <!-- Single Votes Table -->

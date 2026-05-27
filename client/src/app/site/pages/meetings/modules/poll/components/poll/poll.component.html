@@ -75,7 +75,7 @@
     }
 </div>
 
-@if (!poll().stateHasVotes && poll().visibility !== 'manually') {
+@if (!poll().isFinished && poll().visibility !== 'manually') {
     @if (poll().isStarted) {
         <os-poll-progress [poll]="poll()" />
     }

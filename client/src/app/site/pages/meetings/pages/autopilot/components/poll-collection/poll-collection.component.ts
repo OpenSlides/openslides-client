@@ -178,7 +178,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     private getLastFinishedOrPublishedPoll(viewModel: Partial<HasPolls<C>>): ViewPoll | null {
         if (isHavingViewPolls(viewModel)) {
             let currPolls: ViewPoll[] = viewModel.polls;
-            currPolls = currPolls.filter((p: ViewPoll) => p.stateHasVotes).reverse();
+            currPolls = currPolls.filter((p: ViewPoll) => p.isFinished).reverse();
             return currPolls.length ? currPolls[0] : null;
         }
         return null;

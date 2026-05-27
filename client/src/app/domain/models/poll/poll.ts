@@ -17,6 +17,7 @@ export class Poll extends BaseModel<Poll> {
     public visibility!: PollVisibility;
     public state!: PollState;
     public result!: string;
+    public anonymized!: boolean;
     public published!: boolean;
     public allow_invalid!: boolean;
     public allow_vote_split!: boolean;
@@ -24,8 +25,6 @@ export class Poll extends BaseModel<Poll> {
     public ballot_ids!: Id[];
     public voted_ids!: Id[];
     public entitled_group_ids!: Id[];
-
-    // TODO: Currently missing in backend
     public live_voting_enabled!: boolean;
 
     public get isCreated(): boolean {
@@ -41,8 +40,7 @@ export class Poll extends BaseModel<Poll> {
     }
 
     public get isAnonymized(): boolean {
-        // TODO: Implement if field is available to decide this
-        return !this.isNamed && !this.isAnalog && false;
+        return this.anonymized;
     }
 
     public get canAnonymize(): boolean {
@@ -73,13 +71,6 @@ export class Poll extends BaseModel<Poll> {
         return this.isNamed || this.isOpen || this.isAnonymous;
     }
 
-    /**
-     * Determine if the state is finished or published
-     */
-    public get stateHasVotes(): boolean {
-        return this.isFinished || this.isPublished;
-    }
-
     public get nextState(): PollState | `published` {
         switch (this.state) {
             case PollState.Created:
@@ -104,8 +95,10 @@ export class Poll extends BaseModel<Poll> {
         `state`,
         `result`,
         `published`,
+        `anonymized`,
         `allow_invalid`,
         `allow_vote_split`,
+        `live_voting_enabled`,
         `sequential_number`,
         `content_object_id`,
         `ballot_ids`,
