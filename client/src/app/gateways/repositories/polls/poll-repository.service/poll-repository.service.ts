@@ -158,7 +158,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async updateOptionForPoll(poll: Poll, update: any): Promise<void> {
-        if (!poll.isAnalog) {
+        if (poll.visibility !== PollVisibility.Manually) {
             throw new Error(`Cannot update an option for an electronic poll!`);
         }
         const payload = {

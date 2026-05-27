@@ -27,61 +27,6 @@ export class Poll extends BaseModel<Poll> {
     public entitled_group_ids!: Id[];
     public live_voting_enabled!: boolean;
 
-    public get isCreated(): boolean {
-        return this.state === PollState.Created;
-    }
-
-    public get isStarted(): boolean {
-        return this.state === PollState.Started;
-    }
-
-    public get isFinished(): boolean {
-        return this.state === PollState.Finished;
-    }
-
-    public get isAnonymized(): boolean {
-        return this.anonymized;
-    }
-
-    public get canAnonymize(): boolean {
-        return !this.isAnonymized && !this.isAnalog && !this.isNamed && (this.isFinished || this.isPublished);
-    }
-
-    public get isPublished(): boolean {
-        return this.state === PollState.Finished && this.published;
-    }
-
-    public get isAnalog(): boolean {
-        return this.visibility === PollVisibility.Manually;
-    }
-
-    public get isNamed(): boolean {
-        return this.visibility === PollVisibility.Named;
-    }
-
-    public get isOpen(): boolean {
-        return this.visibility === PollVisibility.Open;
-    }
-
-    public get isAnonymous(): boolean {
-        return this.visibility === PollVisibility.Secret;
-    }
-
-    public get isEVoting(): boolean {
-        return this.isNamed || this.isOpen || this.isAnonymous;
-    }
-
-    public get nextState(): PollState | `published` {
-        switch (this.state) {
-            case PollState.Created:
-                return PollState.Started;
-            case PollState.Started:
-                return PollState.Finished;
-            case PollState.Finished:
-                return `published`;
-        }
-    }
-
     public constructor(input?: any) {
         super(Poll.COLLECTION, input);
     }
