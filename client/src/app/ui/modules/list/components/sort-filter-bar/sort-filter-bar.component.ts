@@ -212,6 +212,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
                 this.searchEdit = false;
             }
         });
+        console.log('FILTERS: ', this.hasFilters, 'SEARCH BAR: ', this.showSearchIconOnly, this.searchService);
     }
 
     public ngOnDestroy(): void {

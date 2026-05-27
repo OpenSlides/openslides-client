@@ -21,313 +21,120 @@
     [totalCount]="_totalCountObservable | async"
     (searchFilterUpdated)="searchFilterUpdated.emit($event)"
 >
-    <!-- here sort-filter-bar -->
     @if (dataSource | async) {
-        <!-- @if (!finishedSuccessfully) {
-                <table>
-                    @for (point of summary; track point) {
-                        <tr>
-                            <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
-                            <td>&nbsp;{{ point.value }}</td>
-                        </tr>
-                    }
-                </table>
-            } -->
-        <!-- @if (rows?.length) {
-                <div class="margin-top-12 margin-bottom-12">
-                    @if (finishedWithWarning) {
-                        <span>
-                            {{
-                                'The import returned warnings. This does not mean that it failed, but some data may have been imported differently. Usually the warnings will be the same as during the preview, but as there is a possibility that new ones have arisen, the relevant rows will be displayed below.'
-                                    | translate
-                            }}
-                        </span>
-                    }
-                    @if (awaitingConfirm) {
-                        <span>
-                            {{ 'After verifying the preview click on "import" please (see top right).' | translate }}
-                        </span>
-                    }
-                    @if (isImporting) {
-                        <span>{{ 'The import is in progress, please wait ...' | translate }}</span>
-                    }
-                    @if (hasErrors) {
-                        <span class="warn">
-                            {{
-                                'The import can not proceed. There is likely a problem with the import data, please check the preview for details.'
-                                    | translate
-                            }}
-                        </span>
-                    }
-                    @if (finishedSuccessfully) {
-                        <span class="green-text">
-                            {{ 'The import was successful.' | translate }}
-                        </span>
-                    }
-                </div>
-            }-->
-        <!-- @if (!finishedSuccessfully) { -->
-        <!-- <h2>
-                {{ finishedWithWarning ? ('Rows with warnings' | translate) : ('Preview' | translate) }}
-            </h2> -->
-        <div>
-            <ng-container *ngTemplateOutlet="previewList"></ng-container>
-        </div>
-        <!-- } -->
-    }
-
-    <!-- <ng-template #defaultTabContent>
-            <br />
-            <span>
-                {{
-                    'Required comma or semicolon separated values with these column header names in the first row:'
-                        | translate
-                }}
-            </span>
-            <br />
-            <div class="code possible-fields-list">
-                @for (entry of possibleFields; track entry; let last = $last) {
-                    <span class="foreground-warn">
-                        {{ entry }}
-                        @if (!last) {
-                            <span>,&nbsp;</span>
-                        }
-                    </span>
-                }
-                <mat-icon class="pointer-icon" color="primary" inline (click)="openDialog(fieldsInfoDialog)">
-                    info
-                </mat-icon>
-            </div>
-            @if (requiredFields.length) {
-                <ul>
-                    <li>
-                        @for (field of requiredFields; track field; let last = $last) {
-                            <span>
-                                {{ field }}
-                                @if (!last) {
-                                    <span>,&nbsp;</span>
-                                }
-                            </span>
-                        }
-                        @if (requiredFields.length === 1) {
-                            <span>{{ 'is required' | translate }}.</span>
-                        }
-                        @if (requiredFields.length > 1) {
-                            <span>{{ 'are required' | translate }}.</span>
-                        }
-                        {{ 'All other fields are optional and may be empty.' | translate }}
-                    </li>
-                    <li>
-                        {{
-                            'Additional columns after the required ones may be present and will not affect the import.'
-                                | translate
-                        }}
-                    </li>
-                </ul>
-            }
-            @if (additionalInfo) {
-                <p>
-                    <span [innerHTML]="additionalInfo"></span>
-                </p>
-            }
-            <button color="accent" mat-button (click)="downloadCsvExample()">
-                {{ 'Download CSV example file' | translate }}
-            </button>
-            <div class="wrapper import-list-wrapper">
-                <mat-form-field>
-                    <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
-                    <mat-select
-                        class="selection"
-                        [value]="encodings[0].value"
-                        (selectionChange)="selectEncoding($event)"
-                    >
-                        @for (option of encodings; track option) {
-                            <mat-option [value]="option.value">
-                                {{ option.label | translate }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Column separator' | translate }}</mat-label>
-                    <mat-select class="selection" value="" (selectionChange)="selectColSep($event)">
-                        @for (option of columnSeparators; track option) {
-                            <mat-option [value]="option.value">
-                                {{ option.label | translate }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Text separator' | translate }}</mat-label>
-                    <mat-select class="selection" value='"' (selectionChange)="selectTextSep($event)">
-                        @for (option of textSeparators; track option) {
-                            <mat-option [value]="option.value">
-                                {{ option.label | translate }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="bottom-offset">
+        <ng-template #entryTemplate let-def="def" let-entry="entry" let-row="row" let-type="type">
+            @if (entry && (entry[def] || type === 'boolean')) {
                 <div class="flex-vertical-center">
-                    <input
-                        #fileInput
-                        accept="text"
-                        class="hidden-input"
-                        id="user-import-file-input"
-                        type="file"
-                        (change)="onSelectFile($event)"
-                    />
-                    <button color="accent" mat-button (click)="fileInput.click()">
-                        <span>{{ 'Select file' | translate }}</span>
-                    </button>
+                    @if (getHeader(def).is_list && entry[def]) {
+                        <div>
+                            @for (item of entry[def]; track item) {
+                                <ng-container
+                                    [ngTemplateOutlet]="entryContentTemplate"
+                                    [ngTemplateOutletContext]="{ entry: item, def: def }"
+                                ></ng-container>
+                            }
+                        </div>
+                    }
+                    @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                        <ng-container
+                            [ngTemplateOutlet]="entryContentTemplate"
+                            [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
+                        ></ng-container>
+                    }
                 </div>
-            </div>
-        </ng-template> -->
+            }
+        </ng-template>
 
-    <ng-template #entryTemplate let-def="def" let-entry="entry" let-row="row" let-type="type">
-        @if (entry && (entry[def] || type === 'boolean')) {
-            <div class="flex-vertical-center">
-                @if (getHeader(def).is_list && entry[def]) {
-                    <div>
-                        @for (item of entry[def]; track item) {
-                            <ng-container
-                                [ngTemplateOutlet]="entryContentTemplate"
-                                [ngTemplateOutletContext]="{ entry: item, def: def }"
-                            ></ng-container>
-                        }
-                    </div>
-                }
-                @if (!getHeader(def).is_list && entry[def] !== undefined) {
+        <ng-template #entryContentTemplate let-def="def" let-entry="entry">
+            @if (getHeader(def).is_object) {
+                <div class="list-field-entry">
                     <ng-container
-                        [ngTemplateOutlet]="entryContentTemplate"
-                        [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
+                        [ngTemplateOutlet]="nonObjectEntryTemplate"
+                        [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
                     ></ng-container>
-                }
-            </div>
-        }
-    </ng-template>
-
-    <ng-template #entryContentTemplate let-def="def" let-entry="entry">
-        @if (getHeader(def).is_object) {
-            <div class="list-field-entry">
+                    @if (getActionIcon(entry)) {
+                        <mat-icon color="accent" inline>
+                            {{ getEntryIcon(entry) }}
+                        </mat-icon>
+                    }
+                </div>
+            }
+            @if (!getHeader(def).is_object) {
                 <ng-container
                     [ngTemplateOutlet]="nonObjectEntryTemplate"
                     [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-                ></ng-container>
-                @if (getActionIcon(entry)) {
-                    <mat-icon color="accent" inline>
-                        {{ getEntryIcon(entry) }}
-                    </mat-icon>
-                }
-            </div>
-        }
-        @if (!getHeader(def).is_object) {
-            <ng-container
-                [ngTemplateOutlet]="nonObjectEntryTemplate"
-                [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-            />
-        }
-    </ng-template>
+                />
+            }
+        </ng-template>
 
-    <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
-        @if (type === 'string') {
-            {{ entry }}
-        }
-        @if (type === 'number' || type === 'integer') {
-            {{ entry }}
-        }
-        @if (type === 'decimal') {
-            {{ getShortenedDecimal(entry) }}
-        }
-        @if (type === 'date') {
-            {{ entry }}
-        }
-        @if (type === 'boolean') {
-            <mat-checkbox disabled [checked]="entry" />
-        }
-        &nbsp;
-    </ng-template>
+        <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
+            @if (type === 'string') {
+                {{ entry }}
+            }
+            @if (type === 'number' || type === 'integer') {
+                {{ entry }}
+            }
+            @if (type === 'decimal') {
+                {{ getShortenedDecimal(entry) }}
+            }
+            @if (type === 'date') {
+                {{ entry }}
+            }
+            @if (type === 'boolean') {
+                <mat-checkbox disabled [checked]="entry" />
+            }
+            &nbsp;
+        </ng-template>
 
-    <ng-template #previewList>
-        @if (rows?.length && (dataSource | async)) {
-            <os-scrolling-table
-                class="import-list-preview-table"
-                rowClass="import-list-preview-row"
-                tableHeight="500px"
-                [dataSource]="dataSource"
-                [rowHeight]="50"
-                [showHeader]="true"
+        <div
+            *osScrollingTableCell="'errors | status'; row as row; config: { width: 25, position: START_POSITION }"
+            class="flex-vertical-center"
+        >
+            @if (row.state === 'error') {
+                <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                    {{ getActionIcon(row) }}
+                </mat-icon>
+            }
+            @if (row.state !== 'error' && row.messages.length) {
+                <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                    warning
+                </mat-icon>
+            }
+        </div>
+        <div
+            *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
+            class="flex-vertical-center"
+        >
+            @if (row.state !== 'error') {
+                <mat-icon matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right" [color]="getColorIcon(row)">
+                    {{ getActionIcon(row) }}
+                </mat-icon>
+            }
+        </div>
+        <div *osScrollingTableCell="'id'; value as value; config: { width: 25, position: START_POSITION }">
+            <div *osScrollingTableCellLabel>#</div>
+            {{ value }}
+        </div>
+        @for (column of previewColumns; track column) {
+            <div
+                *osScrollingTableCell="
+                    column.property;
+                    row as row;
+                    definition as def;
+                    isDefault: true;
+                    config: getColumnConfig(column.property)
+                "
             >
-                <div
-                    *osScrollingTableCell="'errors'; row as row; config: { width: 25, position: START_POSITION }"
-                    class="flex-vertical-center"
-                >
-                    @if (row.state === 'error') {
-                        <mat-icon
-                            class="red-warning-text"
-                            matTooltip="{{ getRowTooltip(row) }}"
-                            matTooltipPosition="right"
-                        >
-                            {{ getActionIcon(row) }}
-                        </mat-icon>
-                    }
-                    @if (row.state !== 'error' && row.messages.length) {
-                        <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
-                            warning
-                        </mat-icon>
-                    }
-                </div>
-                <div
-                    *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
-                    class="flex-vertical-center"
-                >
-                    @if (row.state !== 'error') {
-                        <mat-icon matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
-                            {{ getActionIcon(row) }}
-                        </mat-icon>
-                    }
-                </div>
-                <div *osScrollingTableCell="'id'; value as value; config: { width: 25, position: START_POSITION }">
-                    <div *osScrollingTableCellLabel>#</div>
-                    {{ value }}
-                </div>
-                @for (column of previewColumns; track column) {
-                    <div
-                        *osScrollingTableCell="
-                            column.property;
-                            row as row;
-                            definition as def;
-                            isDefault: true;
-                            config: getColumnConfig(column.property)
-                        "
-                    >
-                        <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
-                        <ng-container
-                            *ngTemplateOutlet="
-                                entryTemplate;
-                                context: { entry: row.data, def: def, row: row, type: column.type }
-                            "
-                        ></ng-container>
-                    </div>
-                }
-            </os-scrolling-table>
-        }
-    </ng-template>
-
-    <!-- <ng-template #fullscreenDialog>
-            <div class="action-title" mat-dialog-title>
-                <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
-                <button mat-icon-button matTooltip="{{ 'Exit fullscreen' | translate }}">
-                    <mat-icon>close</mat-icon>
-                </button>
+                <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
+                <ng-container
+                    *ngTemplateOutlet="
+                        entryTemplate;
+                        context: { entry: row.data, def: def, row: row, type: column.type }
+                    "
+                ></ng-container>
             </div>
-            <mat-dialog-content>
-                <ng-container *ngTemplateOutlet="previewList" />
-            </mat-dialog-content>
-        </ng-template> -->
-
+        }
+    }
     <ng-template #fieldsInfoDialog>
         <div class="action-title" mat-dialog-title>
             <h1 class="dialog-title" translate>The fields are defined as follows</h1>

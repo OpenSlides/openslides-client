@@ -102,7 +102,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      * Fix value for the height of the rows in the virtual-scroll-list.
      */
     @Input()
-    public vScrollFixed = 110;
+    public vScrollFixed = 50;
 
     /**
      * Determines whether the table should have a fixed 100vh height or not.

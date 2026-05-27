@@ -20,7 +20,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
+import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -37,7 +37,7 @@ import {
 import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
-import { FilterListService, ListModule, SearchService } from 'src/app/ui/modules/list';
+import { ListModule, SearchService } from 'src/app/ui/modules/list';
 import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import {
     END_POSITION,
@@ -46,6 +46,7 @@ import {
 
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
+import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -104,14 +105,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         ];
     }
 
-    /** Optional number to overwrite the display of the filtered data count, if any additional filters
-     * (e.g. the angular search bar) are applied on top of these filters
-     */
-    @Input()
-    public filterCount = 0;
-
-    @Input()
-    public filterService: FilterListService<any>;
+    public filterService = inject(ParticipantImportFilterService);
 
     @Input()
     public searchService: SearchService<any>;
@@ -122,22 +116,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     @Output()
     public searchFilterUpdated = new EventEmitter<string>();
 
-    @Input()
-    public addBottomSpacer = false;
-
-    /**
-     * Will show fake filter buttons with the string keys as content in bar.
-     * Closing them will cause the callback function to be called.
-     */
-    @Input()
-    public fakeFilters: Observable<Record<string, () => void>> = null;
-
     protected _totalCountObservable: Observable<number> = null;
 
     /**
      * Wether or not to show the filter bar
      */
-    @Input()
     public showFilterBar = true;
 
     /**
@@ -291,9 +274,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
 
-    // REMOVE THIS AND HTML CODE AFTER DEVELOPMENT #CLEANUP
-    public hideOldCard = true;
-
     public constructor(
         private dialog: MatDialog,
         protected translate: TranslateService,
@@ -311,10 +291,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.importer.previewsObservable.subscribe(previews => {
             this.fillPreviewData(previews);
         });
-        this._dataSource = this.importer.previewsObservable.pipe(
-            map(previews => this.calculateRows(previews)),
-            delay(50)
-        );
+        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
     }
 
@@ -379,18 +356,39 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Get the icon for the the item
      * @param item a row or an entry with a current state
-     * @eturn the icon for the item
+     * @return the icon for the item
      */
     public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
-                return `block`;
+                return `error_outline`;
             case BackendImportState.Warning:
                 return `warning`;
             case BackendImportState.New:
-                return `add`;
+                return `add_circle_outline`;
             case BackendImportState.Done: // item will be updated / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
+            case BackendImportState.Generated:
+                return `autorenew`;
+            case BackendImportState.Remove:
+                return `remove`;
+            default:
+                return `block`; // fallback: Error
+        }
+    }
+
+    public getColorIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+        switch (item[`state`] ?? item[`info`]) {
+            case BackendImportState.Error: // no import possible
+                console.log('1');
+                return `red-warning-text`;
+            case BackendImportState.Warning:
+                console.log('2');
+                return 'warning'; /*  `rgb(241, 227, 32)`; */
+            case BackendImportState.New:
+                return `rgb(96, 235, 41)`;
+            case BackendImportState.Done: // item will be updated / has been imported
+                return `accent`;
             case BackendImportState.Generated:
                 return `autorenew`;
             case BackendImportState.Remove:
