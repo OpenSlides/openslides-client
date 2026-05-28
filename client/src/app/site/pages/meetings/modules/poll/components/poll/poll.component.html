@@ -5,15 +5,9 @@
         <!-- Title -->
         <span class="poll-title break-word">
             @if (isSameMeeting() && (permission.motionCanManagePolls || permission.pollCanManage)) {
-                @if (poll().isTopicPoll) {
-                    <a [routerLink]="['../../../polls', poll().id]">
-                        {{ poll().title | translate }}
-                    </a>
-                } @else {
-                    <a [routerLink]="['../../polls', poll().id]">
-                        {{ poll().title | translate }}
-                    </a>
-                }
+                <a [routerLink]="['/', poll().meeting_id, 'polls', poll().id]">
+                    {{ poll().title | translate }}
+                </a>
             } @else {
                 {{ poll().title | translate }}
             }
