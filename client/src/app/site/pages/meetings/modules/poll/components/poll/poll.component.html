@@ -4,8 +4,8 @@
     <div class="poll-title-area">
         <!-- Title -->
         <span class="poll-title break-word">
-            @if (isSameMeeting() && (permission.motionCanManagePolls || permission.pollCanManage)) {
-                <a [routerLink]="['/', poll().meeting_id, 'polls', poll().id]">
+            @if (isSameMeeting() && getDetailLink()) {
+                <a [routerLink]="getDetailLink()">
                     {{ poll().title | translate }}
                 </a>
             } @else {

@@ -67,6 +67,15 @@ export class PollComponent extends BaseMeetingComponent {
         return this.poll().meeting_id === this.currentMeetingId();
     });
 
+    public getDetailLink = computed(() => {
+        // TODO new permissions
+        if (this.operator.hasPerms(this.permission.pollCanManage)) {
+            return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
+        }
+
+        return null;
+    });
+
     public pollStateAction: Signal<PollStateAction | null> = computed(() => {
         return this.pollStateActions[this.poll().state] ?? null;
     });
