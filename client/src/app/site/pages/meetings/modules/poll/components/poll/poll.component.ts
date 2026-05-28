@@ -68,7 +68,7 @@ export class PollComponent extends BaseMeetingComponent {
     });
 
     public getDetailLink = computed(() => {
-        // TODO new permissions
+        // TODO: new permissions
         if (this.operator.hasPerms(this.permission.pollCanManage)) {
             return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
         }

@@ -12,6 +12,10 @@ const routes: Routes = [
                 path: ``,
                 pathMatch: `full`,
                 loadChildren: () => import(`./modules/poll-list/poll-list.module`).then(m => m.PollListModule)
+            },
+            {
+                path: `:id`,
+                loadChildren: () => import(`./components/poll-detail/poll-detail.module`).then(m => m.PollDetailModule)
             }
         ]
     }
