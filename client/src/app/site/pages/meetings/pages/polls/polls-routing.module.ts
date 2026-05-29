@@ -15,7 +15,8 @@ const routes: Routes = [
             },
             {
                 path: `:id`,
-                loadChildren: () => import(`./components/poll-detail/poll-detail.module`).then(m => m.PollDetailModule)
+                loadChildren: () =>
+                    import(`../../modules/poll/components/poll-detail.module`).then(m => m.PollDetailModule)
             }
         ]
     }
