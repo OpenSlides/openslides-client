@@ -1,5 +1,6 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -37,7 +38,8 @@ import {
 import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
-import { ListModule, SearchService } from 'src/app/ui/modules/list';
+import { ListModule } from 'src/app/ui/modules/list';
+import { ListSearchService } from 'src/app/ui/modules/list/services/list-search.service';
 import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import {
     END_POSITION,
@@ -47,6 +49,7 @@ import {
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
+import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -62,7 +65,8 @@ import { ParticipantImportFilterService } from '../../services/participant-impor
         MatTooltip,
         MatCheckbox,
         MatDialogContent,
-        MatDialogActions
+        MatDialogActions,
+        NgClass
     ]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
@@ -106,9 +110,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     public filterService = inject(ParticipantImportFilterService);
-
-    @Input()
-    public searchService: SearchService<any>;
+    public alsoFilterByProperties: string[] = [`id`];
+    public searchService = inject(ParticipantImportPreviewSearchService);
 
     @Input()
     public searchFieldInput = ``;
@@ -122,6 +125,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Wether or not to show the filter bar
      */
     public showFilterBar = true;
+
+    /**
+     * Wether or not to show the header
+     */
+    public showHeader = true;
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
@@ -273,6 +281,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
+    protected cd = inject(ChangeDetectorRef);
 
     public constructor(
         private dialog: MatDialog,
@@ -293,6 +302,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         });
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
+        this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
+        this.cd.detectChanges();
     }
 
     /**
@@ -367,7 +378,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return `add_circle_outline`;
             case BackendImportState.Done: // item will be updated / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
+                return this._state !== BackendImportPhase.FINISHED ? `autorenew` : `done`;
             case BackendImportState.Generated:
                 return `autorenew`;
             case BackendImportState.Remove:
@@ -380,19 +391,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public getColorIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
-                console.log('1');
                 return `red-warning-text`;
             case BackendImportState.Warning:
-                console.log('2');
-                return 'warning'; /*  `rgb(241, 227, 32)`; */
+                return 'warning';
             case BackendImportState.New:
-                return `rgb(96, 235, 41)`;
+                return 'os-green';
             case BackendImportState.Done: // item will be updated / has been imported
-                return `accent`;
-            case BackendImportState.Generated:
-                return `autorenew`;
-            case BackendImportState.Remove:
-                return `remove`;
+                return this._state !== BackendImportPhase.FINISHED ? `os-yellow` : `accent`;
             default:
                 return `block`; // fallback: Error
         }

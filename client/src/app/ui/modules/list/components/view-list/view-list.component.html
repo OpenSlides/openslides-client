@@ -26,6 +26,7 @@
             [hiddenColumns]="hiddenColumns"
             [rowHeight]="vScrollFixed"
             [selectionMode]="multiSelect"
+            [showHeader]="showHeader"
             [tableHeight]="fullScreen ? undefined : '50vh'"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >

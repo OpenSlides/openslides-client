@@ -98,11 +98,17 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public showMenu = true;
 
+    /*
+     * To Optionally show the scrolling-table's header bar
+     */
+    @Input()
+    public showHeader: boolean;
+
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.
      */
     @Input()
-    public vScrollFixed = 50;
+    public vScrollFixed = 110;
 
     /**
      * Determines whether the table should have a fixed 100vh height or not.
