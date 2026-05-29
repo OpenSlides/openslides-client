@@ -11,15 +11,15 @@
                     #resultRow
                     let-amount="amount"
                     let-color="color"
+                    let-firstSummary="firstSummary"
                     let-percent="percent"
                     let-votingOption="votingOption"
-                    let-firstSummary="firstSummary"
                 >
                     <tr class="result-row" [class.votesvalid]="firstSummary" [style.color]="color">
                         <!-- YNA/Valid etc -->
                         <td class="label-column">
                             @if (color) {
-                                <os-icon-container size="large" icon="circle">
+                                <os-icon-container icon="circle" size="large">
                                     {{ votingOption }}
                                 </os-icon-container>
                             } @else {
