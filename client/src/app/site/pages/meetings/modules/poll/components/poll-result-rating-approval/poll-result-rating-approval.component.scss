@@ -1,11 +1,37 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 
-.result-table {
-    width: 100%;
+.result-table-wrapper {
+    overflow-x: auto;
 }
 
-.yes,
-.no,
-.abstain {
+.result-table {
+    width: 100%;
+    min-width: 450px;
+    border-collapse: collapse;
+
+    tr:not(:last-of-type) {
+        border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    tr {
+        th, td {
+            padding: 3px 0;
+        }
+    }
+}
+
+.result-col-header,
+.result-col,
+.result-col-percent {
     text-align: right;
 }
+
+
+.result-col-header {
+    min-width: 110px;
+}
+
+.result-col {
+    font-weight: 700;
+}
+

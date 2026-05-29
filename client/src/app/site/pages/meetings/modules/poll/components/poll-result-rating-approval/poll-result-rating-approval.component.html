@@ -1,22 +1,33 @@
-<table class="result-table">
-    <tr>
-        <th colspan="2"></th>
-        <th class="yes">{{ 'Yes' | translate }}</th>
-        <th class="no">{{ 'No' | translate }}</th>
+<div class="result-table-wrapper">
+    <table class="result-table">
+        <col><col>
+        <col width="1"><col width="1">
+        <col width="1"><col width="1">
         @if (config().allow_abstain) {
-            <th class="abstain">{{ 'Abstain' | translate }}</th>
+            <col width="1"><col width="1">
         }
-    </tr>
-
-    @for (option of options(); track option.id; let i = $index) {
         <tr>
-            <td>{{ i + 1 }}.</td>
-            <td><os-poll-vote-option [option]="option" /></td>
-            <td class="yes">{{ results()[option.id]?.yes || 0 }}</td>
-            <td class="no">{{ results()[option.id]?.no || 0 }}</td>
+            <th colspan="2"></th>
+            <th colspan="2" class="yes result-col-header" width="1">{{ 'Yes' | translate }}</th>
+            <th colspan="2" class="no result-col-header" width="1">{{ 'No' | translate }}</th>
             @if (config().allow_abstain) {
-                <td class="abstain">{{ results()[option.id]?.abstain || 0 }}</td>
+                <th colspan="2" class="abstain result-col-header" width="1">{{ 'Abstain' | translate }}</th>
             }
         </tr>
-    }
-</table>
+
+        @for (option of options(); track option.id; let i = $index) {
+            <tr>
+                <td>{{ i + 1 }}.</td>
+                <td><os-poll-vote-option [option]="option" /></td>
+                <td class="yes result-col-percent"></td>
+                <td class="yes result-col">{{ results()[option.id]?.yes || 0 }}</td>
+                <td class="no result-col-percent"></td>
+                <td class="no result-col">{{ results()[option.id]?.no || 0 }}</td>
+                @if (config().allow_abstain) {
+                    <td class="abstain result-col-percent"></td>
+                    <td class="abstain result-col">{{ results()[option.id]?.abstain || 0 }}</td>
+                }
+            </tr>
+        }
+    </table>
+</div>
