@@ -124,7 +124,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
      */
     public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallot[]> {
         return this.getViewModelObservable(pollId).pipe(
-            takeWhile(poll => poll.state === PollState.Started),
+            takeWhile(poll => poll?.state === PollState.Started),
             switchMap(poll => poll.ballots$),
             map(ballots => ballots.filter(b => b.represented_meeting_user_id === meetingUserId))
         );

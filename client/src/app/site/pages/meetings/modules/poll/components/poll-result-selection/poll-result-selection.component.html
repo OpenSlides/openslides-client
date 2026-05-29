@@ -115,6 +115,30 @@
                         }"
                     />
                 }
+
+                @if (nota() !== null) {
+                    @let notaOption =
+                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: nota(),
+                            percent: notaPercent(),
+                            votingOption: notaOption
+                        }"
+                    />
+                }
+
+                @if (generalAbstain() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: generalAbstain(),
+                            percent: generalAbstainPercent(),
+                            votingOption: 'General abstain' | translate
+                        }"
+                    />
+                }
             </tbody>
         </table>
 

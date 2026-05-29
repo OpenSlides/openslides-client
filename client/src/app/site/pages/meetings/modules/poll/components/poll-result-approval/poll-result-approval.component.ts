@@ -52,21 +52,26 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         }
 
         const showPercent =
-            this.onehundredPercentBase() === `yes_no` || this.onehundredPercentBase() === `yes_no_abstain`;
+            this.config().onehundredPercentBaseNum &&
+            (this.onehundredPercentBase() === `yes_no` || this.onehundredPercentBase() === `yes_no_abstain`);
         const rows = [
             {
                 key: `Y`,
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
-                percent: showPercent ? Big(results.yes).div(this.totalVoteSum()).mul(100).toNumber() : null
+                percent: showPercent
+                    ? Big(results.yes).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
+                    : null
             },
             {
                 key: `N`,
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
-                percent: showPercent ? Big(results.no).div(this.totalVoteSum()).mul(100).toNumber() : null
+                percent: showPercent
+                    ? Big(results.no).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
+                    : null
             }
         ];
 
@@ -78,7 +83,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 amount: +results.abstain || 0,
                 percent:
                     this.onehundredPercentBase() === `yes_no_abstain`
-                        ? Big(results.abstain).div(this.totalVoteSum()).mul(100).toNumber()
+                        ? Big(results.abstain).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
                         : null
             });
         }

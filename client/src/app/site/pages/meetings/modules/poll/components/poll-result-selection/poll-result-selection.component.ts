@@ -56,7 +56,8 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public translate = inject(TranslateService);
 
     public resultOptions = computed<Results>(() => {
-        const showPercent = this.config().onehundred_percent_base !== `disabled`;
+        const showPercent =
+            this.config().onehundred_percent_base !== `disabled` && this.config().onehundredPercentBaseNum;
         const colors = this.generateChartColors(this.options()?.length ?? 0);
 
         const rows: Results = [];
@@ -73,7 +74,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 amount: +results[option.id] || 0,
                 percent: showPercent
                     ? Big(results[option.id] || 0)
-                          .div(this.totalVoteSum())
+                          .div(this.config().onehundredPercentBaseNum)
                           .mul(100)
                           .toNumber()
                     : null
@@ -128,7 +129,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base === 'no_general') {
             return null;
         }
 
@@ -144,7 +145,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base === 'no_general') {
             return null;
         }
 
@@ -167,5 +168,45 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public presentEntitledUsers = computed<number | null>(() => {
         // TODO: Implement if available
         return null;
+    });
+
+    public generalAbstain = computed<number | null>(() => {
+        if (this.config().min_options_amount !== 0) {
+            return null;
+        }
+
+        return +this.config().parsedResult()?.abstain || 0;
+    });
+
+    public generalAbstainPercent = computed<string | null>(() => {
+        if (
+            !this.config().onehundredPercentBaseNum ||
+            !this.generalAbstain() ||
+            this.config().onehundred_percent_base === 'no_general'
+        ) {
+            return null;
+        }
+
+        return this.formatResultDecimal((this.generalAbstain() / this.config().onehundredPercentBaseNum) * 100);
+    });
+
+    public nota = computed<number | null>(() => {
+        if (!this.config().allow_nota) {
+            return null;
+        }
+
+        return +this.config().parsedResult()?.nota || 0;
+    });
+
+    public notaPercent = computed<string | null>(() => {
+        if (
+            !this.config().onehundredPercentBaseNum ||
+            !this.nota() ||
+            this.config().onehundred_percent_base === 'no_general'
+        ) {
+            return null;
+        }
+
+        return this.formatResultDecimal((this.nota() / this.config().onehundredPercentBaseNum) * 100);
     });
 }
