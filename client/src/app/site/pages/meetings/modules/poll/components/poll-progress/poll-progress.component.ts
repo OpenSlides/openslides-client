@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { AutoupdateService, ModelSubscription } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -21,7 +21,7 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
     imports: [MatProgressBarModule, TranslateModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollProgressComponent extends BaseUiComponent {
+export class PollProgressComponent extends BaseUiComponent implements OnDestroy {
     public poll = input.required<ViewPoll>();
 
     public canManagePoll = computed(() => {
@@ -85,14 +85,23 @@ export class PollProgressComponent extends BaseUiComponent {
         return this.maxResource.hasValue() ? this.maxResource.value() : 1;
     });
 
+    private voteInfoSubscription: ModelSubscription;
+
     public constructor() {
         super();
 
         effect(() => {
             if (this.canSeeProgressBar()) {
+                if (this.voteInfoSubscription) {
+                    this.voteInfoSubscription.close();
+                }
+
                 const subscriptionConfig = getParticipantVoteInfoSubscriptionConfig(this.activeMeeting.meetingId);
-                this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(modelRequest => {
-                    this.autoupdate.subscribe(modelRequest, subscriptionConfig.subscriptionName);
+                this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(async modelRequest => {
+                    this.voteInfoSubscription = await this.autoupdate.subscribe(
+                        modelRequest,
+                        subscriptionConfig.subscriptionName
+                    );
                 });
             }
         });
@@ -101,5 +110,16 @@ export class PollProgressComponent extends BaseUiComponent {
             this.canSeeNames.set(this.operator.hasPerms(Permission.userCanSee));
             this.canManageSpeakers.set(this.operator.hasPerms(Permission.listOfSpeakersCanManage));
         });
+    }
+
+    /**
+     * automatically clears subscriptions if the component is destroyed.
+     */
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        if (this.voteInfoSubscription) {
+            this.voteInfoSubscription.close();
+        }
     }
 }
