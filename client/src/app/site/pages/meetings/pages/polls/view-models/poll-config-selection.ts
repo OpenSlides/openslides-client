@@ -44,9 +44,13 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         let total = Big(0);
         const result = this.parsedResult();
         for (const key of Object.keys(result)) {
-            if (key !== `invalid`) {
-                total = total.plus(result[key]);
+            if (key === `invalid`) {
+                continue;
+            } else if ((key === `abstain` || key === `nota`) && this.onehundred_percent_base === 'no_general') {
+                continue;
             }
+
+            total = total.plus(result[key]);
         }
 
         return total.toNumber();

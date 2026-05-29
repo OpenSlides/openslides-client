@@ -34,7 +34,7 @@
                         <!-- Percent numbers -->
                         <td class="result-cell-definition percent-column">
                             @if (percent !== null) {
-                                <span>{{ percent }}%</span>
+                                <span>{{ percent | pollParseNumber }}%</span>
                             }
                         </td>
 
@@ -51,7 +51,7 @@
                     <tr class="result-percent-small" [class]="votingOption">
                         <td class="result-cell-definition percent-column" colspan="3">
                             @if (percent !== null) {
-                                <span>{{ percent }}%</span>
+                                <span>{{ percent | pollParseNumber }}%</span>
                             }
                         </td>
                     </tr>

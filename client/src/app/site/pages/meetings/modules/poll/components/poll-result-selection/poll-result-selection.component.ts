@@ -1,11 +1,13 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import Big from 'big.js';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { SelectionPollResult, ViewPollConfigSelection } from '../../../../pages/polls';
-import { PollParseNumberPipe, PollPercentBasePipe } from '../../pipes';
+import { PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 
@@ -15,7 +17,7 @@ interface ResultRow {
     votingOption: string;
     color: string;
     amount: number;
-    showPercent: boolean;
+    percent: number | null;
 }
 
 /**
@@ -39,7 +41,7 @@ const PollChartBarThickness = 20;
 
 @Component({
     selector: 'os-poll-result-selection',
-    imports: [IconContainerComponent, PollPercentBasePipe, PollParseNumberPipe, ChartComponent, TranslatePipe],
+    imports: [IconContainerComponent, PollParseNumberPipe, ChartComponent, TranslatePipe, NgTemplateOutlet],
     templateUrl: './poll-result-selection.component.html',
     styleUrl: './poll-result-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,9 +56,11 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public translate = inject(TranslateService);
 
     public resultOptions = computed<Results>(() => {
-        const results = this.results();
-        const rows: Results = [];
+        const showPercent = this.config().onehundred_percent_base !== `disabled`;
         const colors = this.generateChartColors(this.options()?.length ?? 0);
+
+        const rows: Results = [];
+        const results = this.results();
         for (const i in this.options()) {
             const option = this.options()[i];
             const optionText = option.text
@@ -67,7 +71,12 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 votingOption: optionText,
                 color: colors[i],
                 amount: +results[option.id] || 0,
-                showPercent: false
+                percent: showPercent
+                    ? Big(results[option.id] || 0)
+                          .div(this.totalVoteSum())
+                          .mul(100)
+                          .toNumber()
+                    : null
             });
         }
 
@@ -89,7 +98,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                     hoverBackgroundColor: colors[i],
                     barThickness: PollChartBarThickness,
                     maxBarThickness: PollChartBarThickness,
-                    showPercent: false
+                    percent: null
                 };
             })
             .filter(option => option.data[0]);

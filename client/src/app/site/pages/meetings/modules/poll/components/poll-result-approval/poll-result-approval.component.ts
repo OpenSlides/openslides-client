@@ -9,7 +9,7 @@ import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ApprovalPollResult, ViewPollConfigApproval } from '../../../../pages/polls';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
-import { PERCENT_DECIMAL_PLACES, PollResultBaseComponent } from '../poll-result-base.component';
+import { PollResultBaseComponent } from '../poll-result-base.component';
 
 const PollChartBarThickness = 20;
 
@@ -19,7 +19,7 @@ interface ResultRow {
     votingOption: string;
     icon: string;
     amount: number;
-    percent: string | null;
+    percent: number | null;
 }
 
 @Component({
@@ -59,18 +59,14 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
-                percent: showPercent
-                    ? Big(results.yes).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
-                    : null
+                percent: showPercent ? Big(results.yes).div(this.totalVoteSum()).mul(100).toNumber() : null
             },
             {
                 key: `N`,
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
-                percent: showPercent
-                    ? Big(results.no).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
-                    : null
+                percent: showPercent ? Big(results.no).div(this.totalVoteSum()).mul(100).toNumber() : null
             }
         ];
 
@@ -82,7 +78,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 amount: +results.abstain || 0,
                 percent:
                     this.onehundredPercentBase() === `yes_no_abstain`
-                        ? Big(results.abstain).div(this.totalVoteSum()).mul(100).toFixed(PERCENT_DECIMAL_PLACES)
+                        ? Big(results.abstain).div(this.totalVoteSum()).mul(100).toNumber()
                         : null
             });
         }
