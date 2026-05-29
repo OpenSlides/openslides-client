@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
@@ -23,7 +24,14 @@ interface ResultRow {
 
 @Component({
     selector: 'os-poll-result-approval',
-    imports: [IconContainerComponent, ChartComponent, TranslatePipe, PollKeyVerbosePipe, PollParseNumberPipe],
+    imports: [
+        IconContainerComponent,
+        ChartComponent,
+        TranslatePipe,
+        PollKeyVerbosePipe,
+        PollParseNumberPipe,
+        NgTemplateOutlet
+    ],
     templateUrl: './poll-result-approval.component.html',
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -16,8 +16,6 @@
     display: grid;
     justify-items: center;
     align-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 0 2em;
     font-size: 16px;
     margin: 2em 25px;
 
@@ -55,29 +53,82 @@
             }
         }
 
-        .percent-column {
-            tr {
-                :nth-child(2):not(th) {
-                    min-width: 100px;
-                }
+        .result-row {
+            .amount-column,
+            .amount-column-small {
+                font-weight: 700;
             }
+
+            .amount-column {
+                display: none;
+            }
+
+            .percent-column {
+                display: none;
+            }
+
+            td {
+                padding-bottom: 0px;
+            }
+        }
+
+        .result-percent-small td {
+            padding-top: 0px;
+            font-size: 14px;
         }
 
         .votesvalid {
             border-top: 2px solid rgba(128, 128, 128, 0.2);
         }
+
+        .votesvalid + .votesvalid {
+            border-top: none;
+        }
     }
 
     .doughnut-chart-normal {
-        width: 200px;
-        margin-top: -35px;
+        margin-top: 35px;
+        width: 90%;
         align-self: start;
     }
+}
 
-    .doughnut-chart-slide {
-        width: 260px;
-        margin-top: 0px;
-        justify-self: right;
-        margin-right: 50px;
+.result-container {
+    container: result / inline-size;
+}
+
+@container result (width > 500px) {
+    .result-wrapper {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 0 2em;
+
+        .result-table {
+            .result-row {
+                .percent-column {
+                    display: table-cell;
+                }
+
+                .amount-column {
+                    display: table-cell;
+                }
+            }
+
+            .amount-column-small {
+                display: none;
+            }
+
+            .result-percent-small {
+                display: none;
+            }
+
+            .result-row td {
+                padding-bottom: 7px;
+            }
+        }
+
+        .doughnut-chart-normal {
+            margin-top: -35px;
+            width: 200px;
+        }
     }
 }
