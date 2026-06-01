@@ -1,11 +1,10 @@
-import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe } from '@ngx-translate/core';
 import { RatingApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-rating-approval';
 
 import { ViewPoll } from '../../../../pages/polls';
@@ -18,8 +17,7 @@ import { ViewPoll } from '../../../../pages/polls';
         MatSelectModule,
         MatCheckboxModule,
         MatInputModule,
-        TranslatePipe,
-        KeyValuePipe
+        TranslatePipe
     ],
     templateUrl: './poll-form-rating-approval.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`],
@@ -28,14 +26,15 @@ import { ViewPoll } from '../../../../pages/polls';
 export class PollFormRatingApprovalComponent {
     public form: UntypedFormGroup;
 
-    public validPercentBases: Record<RatingApprovalOnehundredPercentBase, string> = {
-        yes_no: 'Valid (Yes/No)',
-        valid: 'Valid',
-        cast: 'Cast',
-        entitled: 'Entitled',
-        entitled_present: 'Entitled present',
-        disabled: 'Disabled'
-    };
+    public validPercentBases: [RatingApprovalOnehundredPercentBase, string][] = [
+        [`yes_no`, _('Yes/No per candidate')],
+        [`yes_no_abstain`, _('Yes/No/Abstain per candidate')],
+        [`valid`, _('All valid ballots')],
+        [`cast`, _('All casted ballots')],
+        // [`entitled`, _('All entitled users')],
+        // [`entitled_present`, _('Present entitled users')],
+        [`disabled`, _('Disabled (no percents)')]
+    ];
 
     public data = input<Partial<ViewPoll>>();
 

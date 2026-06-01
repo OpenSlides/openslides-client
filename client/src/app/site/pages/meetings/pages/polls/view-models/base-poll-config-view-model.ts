@@ -19,7 +19,7 @@ export abstract class BasePollConfigViewModel<M extends BaseModel = any, R = unk
 
     public get validBallots(): number | null {
         // TODO: Change this to use the amount from result if available
-        return this.poll.ballot_ids.length - (this.invalidBallots || 0);
+        return (this.poll.ballot_ids?.length || 0) - (this.invalidBallots || 0);
     }
 
     public abstract get invalidBallots(): number | null;
