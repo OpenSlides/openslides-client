@@ -119,6 +119,13 @@
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
+            <!-- Add to projector queue -->
+            <os-projector-button
+                [disabled]="!selectedRows.length"
+                [hideMainButton]="true"
+                [menuItem]="true"
+                [object]="addToProjectorQueue()"
+            ></os-projector-button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
                 <mat-icon>archive</mat-icon>
                 <span>{{ 'Export selected elections' | translate }}</span>

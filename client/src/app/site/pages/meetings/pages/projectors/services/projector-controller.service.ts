@@ -11,7 +11,12 @@ import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projec
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from '../../../services/meeting-controller-service-collector.service';
-import { isProjectable, Projectable, ProjectionBuildDescriptor } from '../../../view-models';
+import {
+    isProjectable,
+    MultiProjectionBuildDescriptor,
+    Projectable,
+    ProjectionBuildDescriptor
+} from '../../../view-models';
 import { ViewProjection, ViewProjector } from '../view-models';
 
 @Injectable({
@@ -96,6 +101,14 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.addToPreview(descriptor, projectors, options);
     }
 
+    public bulkAddToPreview(
+        descriptor: ProjectionBuildDescriptor[],
+        projectors: ViewProjector[],
+        options: any = null
+    ): Promise<void> {
+        return this.repo.bulkAddToPreview(descriptor, projectors, options);
+    }
+
     public toggle(
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
@@ -116,7 +129,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.getReferenceProjector();
     }
 
-    public ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
+    public ensureDescriptor(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable
+    ): ProjectionBuildDescriptor {
         return (
             isProjectable(obj) ? obj.getProjectionBuildDescriptor(this.meetingSettingsService) : obj
         ) as ProjectionBuildDescriptor;
@@ -127,7 +142,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
      *
      * @returns true, if the descriptor is projected on one projector.
      */
-    public isProjected(obj: ProjectionBuildDescriptor | Projectable): boolean {
+    public isProjected(obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable): boolean {
         const descriptor = this.ensureDescriptor(obj);
         const projectors = this.activeMeetingService.meeting?.projectors || [];
         return projectors.some(projector => this.isProjectedOn(descriptor, projector));
@@ -138,7 +153,10 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
      *
      * @returns true, if the object is projected on the projector.
      */
-    public isProjectedOn(obj: ProjectionBuildDescriptor | Projectable | null, projector: ViewProjector): boolean {
+    public isProjectedOn(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable | null,
+        projector: ViewProjector
+    ): boolean {
         if (!obj) {
             return false;
         }
@@ -147,14 +165,16 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
     }
 
     public getMatchingProjectionsFromProjector(
-        obj: ProjectionBuildDescriptor | Projectable,
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable,
         projector: ViewProjector
     ): ViewProjection[] {
         const descriptor = this.ensureDescriptor(obj);
         return projector.current_projections.filter(projection => projection.isEqualToDescriptor(descriptor));
     }
 
-    public getProjectorsWhichAreProjecting(obj: ProjectionBuildDescriptor | Projectable): ViewProjector[] {
+    public getProjectorsWhichAreProjecting(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable
+    ): ViewProjector[] {
         const descriptor = this.ensureDescriptor(obj);
         return (
             this.activeMeetingService.meeting?.projectors.filter(projector => {

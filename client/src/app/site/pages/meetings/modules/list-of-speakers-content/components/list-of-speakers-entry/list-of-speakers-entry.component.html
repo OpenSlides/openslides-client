@@ -84,10 +84,10 @@
                     {{ speaker.getLOSStructureLevels(!structureLevelCountdownEnabled) }}
                 </span>
             }
-            @if (speaker.user_number) {
+            @if (canManage && speaker.user_number) {
                 <span>{{ 'No.' | translate }} {{ speaker.user_number }}</span>
             }
-            @if (speaker.gender) {
+            @if (canManage && speaker.gender) {
                 <span>{{ speaker.gender | translate }}</span>
             }
         </div>

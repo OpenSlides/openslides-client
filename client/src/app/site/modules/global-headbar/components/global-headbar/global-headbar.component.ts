@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GlobalHeadbarService } from '../../global-headbar.service';
 import { GlobalSearchComponent } from '../global-search/global-search.component';
@@ -15,6 +16,10 @@ import { GlobalSearchComponent } from '../global-search/global-search.component'
 export class GlobalHeadbarComponent {
     public isSearchEnabled = true;
 
+    public get committeeLink(): string {
+        return `/committees/` + this.activeMeeting?.meeting?.committee_id;
+    }
+
     public get displayName(): string {
         if (this.activeMeeting.meeting) {
             return this.activeMeeting.meeting.name;
@@ -25,12 +30,21 @@ export class GlobalHeadbarComponent {
         return ``;
     }
 
-    public constructor(
-        private activeMeeting: ActiveMeetingService,
-        private orgaService: OrganizationService,
-        private dialog: MatDialog,
-        public headbarService: GlobalHeadbarService
-    ) {}
+    public get showCommitteeLink(): boolean {
+        if (
+            this.activeMeeting.meeting &&
+            (this.operatorService.canSkipPermissionCheck || this.operatorService.knowsMultipleMeetings)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private operatorService = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private orgaService = inject(OrganizationService);
+    private dialog = inject(MatDialog);
+    public headbarService = inject(GlobalHeadbarService);
 
     public openSearch(): void {
         this.dialog.open(GlobalSearchComponent, {

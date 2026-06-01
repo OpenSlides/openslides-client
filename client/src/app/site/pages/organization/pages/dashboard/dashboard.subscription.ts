@@ -25,6 +25,7 @@ export const getDashboardMeetingListSubscriptionConfig: SubscriptionConfigGenera
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
+        fieldset: [`id`],
         follow: [
             {
                 idField: `active_meeting_ids`,

@@ -100,7 +100,9 @@ export default tseslint.config({
         "no-useless-escape": ["error"],
         "no-case-declarations": ["error"],
 
-        "@typescript-eslint/no-empty-object-type": ["warn"],
+        "@typescript-eslint/no-empty-object-type": ["error" ,{
+            allowInterfaces: 'with-single-extends'
+        }],
         "no-async-promise-executor": ["warn"],
         // TODO: Disable - empty catch should contain at least an description comment
         "no-empty": ["error", { "allowEmptyCatch": true }],
