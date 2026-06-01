@@ -1,3 +1,5 @@
+import Big from 'big.js';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
@@ -29,11 +31,50 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public get onehundredPercentBaseNum(): number | null {
-        throw Error('not implemented');
+        switch (this.onehundred_percent_base) {
+            case 'yes_no_abstain':
+            case 'yes_no':
+                return null;
+            case 'valid':
+                return this.validBallots;
+            case 'cast':
+                return this.totalVotes;
+            case 'entitled':
+                return null;
+            case 'entitled_present':
+                return null;
+        }
+
+        return null;
     }
 
     public get totalVotes(): number | null {
-        throw Error('not implemented');
+        return this.poll.ballot_ids?.length || 0;
+    }
+
+    public getOptionOnehundredPercentBaseNum(option: Identifiable): number | null {
+        const result = this.parsedResult();
+        switch (this.onehundred_percent_base) {
+            case 'yes_no_abstain':
+                return Big(result[option.id]?.yes || 0)
+                    .plus(result[option.id]?.no || 0)
+                    .plus(result[option.id]?.abstain || 0)
+                    .toNumber();
+            case 'yes_no':
+                return Big(result[option.id]?.yes || 0)
+                    .plus(result[option.id]?.no || 0)
+                    .toNumber();
+            case 'valid':
+                return this.validBallots;
+            case 'cast':
+                return this.poll.ballot_ids?.length || 0;
+            case 'entitled':
+                return null;
+            case 'entitled_present':
+                return null;
+        }
+
+        return null;
     }
 }
 

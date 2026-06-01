@@ -21,6 +21,9 @@ export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
         return this.poll().config;
     });
 
+    /**
+     * Contains the poll options sorted by weight
+     */
     public options = computed<ViewPollOption[]>(() => {
         return (this.poll().options ?? []).sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
     });

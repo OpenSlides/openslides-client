@@ -1,31 +1,74 @@
 <div class="result-table-wrapper">
     <table class="result-table">
-        <col><col>
-        <col width="1"><col width="1">
-        <col width="1"><col width="1">
+        <col />
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
         @if (config().allow_abstain) {
-            <col width="1"><col width="1">
+            <col width="1" />
+            <col width="1" />
         }
         <tr>
             <th colspan="2"></th>
-            <th colspan="2" class="yes result-col-header" width="1">{{ 'Yes' | translate }}</th>
-            <th colspan="2" class="no result-col-header" width="1">{{ 'No' | translate }}</th>
+            <th class="yes result-col-header" colspan="2" width="1">{{ 'Yes' | translate }}</th>
+            <th class="no result-col-header" colspan="2" width="1">{{ 'No' | translate }}</th>
             @if (config().allow_abstain) {
-                <th colspan="2" class="abstain result-col-header" width="1">{{ 'Abstain' | translate }}</th>
+                <th class="abstain result-col-header" colspan="2" width="1">{{ 'Abstain' | translate }}</th>
             }
         </tr>
 
-        @for (option of options(); track option.id; let i = $index) {
+        <ng-template #resultCol let-amount="amount" let-percent="percent" let-voteOption="voteOption">
+            <td class="result-col-percent" [class]="voteOption">
+                @if (percent !== null) {
+                    {{ percent | pollParseNumber }}%
+                }
+            </td>
+            <td class="result-col" [class]="voteOption">
+                {{ amount || 0 }}
+            </td>
+
+            <td colspan="2" class="result-col-small" [class]="voteOption">
+                <span class="amount">{{ amount || 0 }}</span>
+
+                <div class="result-percent-small">
+                    @if (percent !== null) {
+                        {{ percent | pollParseNumber }}%
+                    }
+                </div>
+            </td>
+        </ng-template>
+
+        @for (row of resultOptions(); track row.option.id; let i = $index) {
             <tr>
                 <td>{{ i + 1 }}.</td>
-                <td><os-poll-vote-option [option]="option" /></td>
-                <td class="yes result-col-percent"></td>
-                <td class="yes result-col">{{ results()[option.id]?.yes || 0 }}</td>
-                <td class="no result-col-percent"></td>
-                <td class="no result-col">{{ results()[option.id]?.no || 0 }}</td>
+                <td><os-poll-vote-option [option]="row.option" /></td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        voteOption: 'yes',
+                        amount: row.yes || 0,
+                        percent: row.yes_percent
+                    }"
+                />
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        voteOption: 'no',
+                        amount: row.no || 0,
+                        percent: row.no_percent
+                    }"
+                />
                 @if (config().allow_abstain) {
-                    <td class="abstain result-col-percent"></td>
-                    <td class="abstain result-col">{{ results()[option.id]?.abstain || 0 }}</td>
+                    <ng-container
+                        [ngTemplateOutlet]="resultCol"
+                        [ngTemplateOutletContext]="{
+                            voteOption: 'abstain',
+                            amount: row.abstain || 0,
+                            percent: row.abstain_percent
+                        }"
+                    />
                 }
             </tr>
         }
