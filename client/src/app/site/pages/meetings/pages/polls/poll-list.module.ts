@@ -7,17 +7,17 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
-import { PollListComponent } from '../../../../modules/poll/components/poll-list/poll-list.component';
+import { PollListComponent } from '../../modules/poll/components/poll-list/poll-list.component';
 import { PollListRoutingModule } from './poll-list-routing.module';
 import { PollListServiceModule } from './services/poll-list-service.module';
 
 @NgModule({
-    declarations: [PollListComponent],
     imports: [
         CommonModule,
         PollListRoutingModule,
         PollListServiceModule,
         MeetingsComponentCollectorModule,
+        PollListComponent,
         HeadBarModule,
         MatIconModule,
         MatTooltipModule,

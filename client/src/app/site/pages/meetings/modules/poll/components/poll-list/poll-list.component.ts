@@ -6,15 +6,14 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 
 import { ViewPoll } from '../../../../pages/polls';
-import { PollListFilterService } from '../../../../pages/polls/modules/poll-list/services/poll-list-filter.service/poll-list-filter.service';
+import { PollListFilterService } from '../../../../pages/polls/services/poll-list-filter.service/poll-list-filter.service';
 
 const POLL_LIST_STORAGE_INDEX = `polls`;
 
 @Component({
     selector: `os-poll-list`,
     templateUrl: `./poll-list.component.html`,
-    styleUrls: [`./poll-list.component.scss`],
-    standalone: false
+    styleUrls: [`./poll-list.component.scss`]
 })
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
     public filterProps = [`title`, `state`];
