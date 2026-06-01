@@ -5,8 +5,8 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 
-import { ViewPoll } from '../../../../view-models';
-import { PollListFilterService } from '../../services/poll-list-filter.service/poll-list-filter.service';
+import { ViewPoll } from '../../../../pages/polls';
+import { PollListFilterService } from '../../../../pages/polls/modules/poll-list/services/poll-list-filter.service/poll-list-filter.service';
 
 const POLL_LIST_STORAGE_INDEX = `polls`;
 
