@@ -79,7 +79,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private async createElectronicPoll(payload: PollCreatePayload): Promise<Identifiable> {
-        if (payload.visibility !== PollVisibility.Named) {
+        if (payload.visibility !== PollVisibility.Named && payload.visibility !== PollVisibility.Open) {
             delete payload.live_voting_enabled;
         }
 
@@ -124,7 +124,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
      */
     public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallot[]> {
         return this.getViewModelObservable(pollId).pipe(
-            takeWhile(poll => poll.state === PollState.Started),
+            takeWhile(poll => poll?.state === PollState.Started),
             switchMap(poll => poll.ballots$),
             map(ballots => ballots.filter(b => b.represented_meeting_user_id === meetingUserId))
         );
@@ -158,7 +158,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async updateOptionForPoll(poll: Poll, update: any): Promise<void> {
-        if (!poll.isAnalog) {
+        if (poll.visibility !== PollVisibility.Manually) {
             throw new Error(`Cannot update an option for an electronic poll!`);
         }
         const payload = {

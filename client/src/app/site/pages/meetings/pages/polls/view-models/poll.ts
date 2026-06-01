@@ -2,8 +2,7 @@ import { _ } from '@ngx-translate/core';
 import { DetailNavigable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { Motion } from 'src/app/domain/models/motions';
-import { PollContentObject, VOTE_MAJORITY } from 'src/app/domain/models/poll';
-import { BasePollConfigModel } from 'src/app/domain/models/poll/base-poll-config';
+import { PollContentObject, PollState, PollVisibility } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
@@ -17,29 +16,71 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
     implements DetailNavigable
 {
-    private _hasVoted: boolean | undefined;
-
     public get poll(): Poll {
         return this._model;
     }
 
     public static COLLECTION = Poll.COLLECTION;
 
-    public set hasVoted(value: boolean | undefined) {
-        this._hasVoted = value;
+    public get isCreated(): boolean {
+        return this.state === PollState.Created;
     }
 
-    /**
-     * @return boolean if a hasVoted state available undefined
-     *         if the state is not set yet
-     */
-    public get hasVoted(): boolean | undefined {
-        return this._hasVoted;
+    public get isStarted(): boolean {
+        return this.state === PollState.Started;
+    }
+
+    public get isFinished(): boolean {
+        return this.state === PollState.Finished;
+    }
+
+    public get isAnonymized(): boolean {
+        return this.anonymized;
+    }
+
+    public get canAnonymize(): boolean {
+        return !this.isAnonymized && !this.isAnalog && !this.isNamed && (this.isFinished || this.isPublished);
+    }
+
+    public get isPublished(): boolean {
+        return this.state === PollState.Finished && this.published;
+    }
+
+    public get isAnalog(): boolean {
+        return this.visibility === PollVisibility.Manually;
+    }
+
+    public get isNamed(): boolean {
+        return this.visibility === PollVisibility.Named;
+    }
+
+    public get isOpen(): boolean {
+        return this.visibility === PollVisibility.Open;
+    }
+
+    public get isAnonymous(): boolean {
+        return this.visibility === PollVisibility.Secret;
+    }
+
+    public get isEVoting(): boolean {
+        return this.isNamed || this.isOpen || this.isAnonymous;
+    }
+
+    public get nextState(): PollState | `published` {
+        switch (this.state) {
+            case PollState.Created:
+                return PollState.Started;
+            case PollState.Started:
+                return PollState.Finished;
+            case PollState.Finished:
+                return `published`;
+        }
     }
 
     public get isListPoll(): boolean {
@@ -79,12 +120,7 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get hasVotes(): boolean {
-        // TODO: Check results property
-        return (
-            this.results
-                // .flatMap(option => option.votes)
-                .some(vote => vote.weight > 0 || +vote.weight === VOTE_MAJORITY)
-        );
+        return !!this.config.parsedResult();
     }
 
     public getContentObject(): C | undefined {
@@ -99,12 +135,12 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.isNamed || this.isOpen
+            (this.isNamed || this.isOpen) && this.live_voting_enabled
                 ? [
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: !!this.published, // TODO: Check if poll is live vote enabled
+                          default: !!this.published && this.live_voting_enabled,
                           choices
                       }
                   ]
@@ -117,14 +153,9 @@ export class ViewPoll<C extends PollContentObject = any>
             slideOptions
         };
     }
-
-    private get results(): ViewPollOption[] {
-        // TODO: Concat gloabl option
-        return (this.options || []).filter(option => !!option);
-    }
 }
 
-interface IPollRelations<C extends PollContentObject = any, D extends BasePollConfigModel = any> {
+interface IPollRelations<C extends PollContentObject = any, D extends BasePollConfigViewModel = any> {
     content_object?: C;
     config: D;
     voted: ViewMeetingUser[];
@@ -132,5 +163,5 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     entitled_groups: ViewGroup[];
     options: ViewPollOption[];
 }
-export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigModel = any>
+export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigViewModel = any>
     extends HasMeeting, ViewModelRelations<IPollRelations<C, D>>, Poll {}

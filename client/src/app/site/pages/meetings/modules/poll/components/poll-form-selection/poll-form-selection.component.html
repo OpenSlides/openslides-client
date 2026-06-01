@@ -34,10 +34,16 @@
             <mat-form-field>
                 <mat-label>{{ '100% base' | translate }}</mat-label>
                 <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
-                    @for (option of validPercentBases | keyvalue; track option) {
-                        <mat-option [value]="option.key">
-                            {{ option.value | translate }}
-                        </mat-option>
+                    @for (option of validPercentBases; track option[0]) {
+                        @if (
+                            option[0] !== 'no_general' ||
+                            form.get('allow_nota').getRawValue() ||
+                            form.get('min_options_amount').getRawValue() === 0
+                        ) {
+                            <mat-option [value]="option[0]">
+                                {{ option[1] | translate }}
+                            </mat-option>
+                        }
                     }
                 </mat-select>
             </mat-form-field>

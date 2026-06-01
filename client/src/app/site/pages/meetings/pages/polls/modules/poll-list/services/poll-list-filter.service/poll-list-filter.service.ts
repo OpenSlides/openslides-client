@@ -36,6 +36,7 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
     protected getFilterDefinitions(): OsFilter<ViewPoll>[] {
         return [
             // TODO: Add filter for published
+            // TODO: Add filter for has voted
             {
                 property: `state`,
                 label: this.translate.instant(`State`),
@@ -44,7 +45,7 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
                     { condition: PollState.Started, label: this.translate.instant(`started`) },
                     { condition: PollState.Finished, label: this.translate.instant(`finished`) }
                 ]
-            },
+            } /* ,
             {
                 property: `hasVoted`,
                 label: this.translate.instant(`Votings`),
@@ -52,7 +53,7 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
                     { condition: false, label: this.translate.instant(`Voting is currently in progress.`) },
                     { condition: true, label: this.translate.instant(`You have already voted.`) }
                 ]
-            }
+            } */
         ];
     }
 }

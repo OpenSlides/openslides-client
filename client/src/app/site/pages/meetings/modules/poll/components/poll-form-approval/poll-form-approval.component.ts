@@ -1,17 +1,16 @@
-import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe } from '@ngx-translate/core';
 import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-approval';
 
 import { ViewPoll } from '../../../../pages/polls';
 
 @Component({
     selector: 'os-poll-form-approval',
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatCheckboxModule, TranslatePipe, KeyValuePipe],
+    imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatCheckboxModule, TranslatePipe],
     templateUrl: './poll-form-approval.component.html',
     styleUrl: './poll-form-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,14 +20,15 @@ export class PollFormApprovalComponent {
 
     private _data: Partial<ViewPoll>;
 
-    public validPercentBases: Record<ApprovalOnehundredPercentBase, string> = {
-        yes_no: 'Valid (Yes/No)',
-        valid: 'Valid',
-        cast: 'Cast',
-        entitled: 'Entitled',
-        entitled_present: 'Entitled present',
-        disabled: 'Disabled'
-    };
+    public validPercentBases: [ApprovalOnehundredPercentBase, string][] = [
+        [`yes_no`, _('Yes/No')],
+        [`yes_no_abstain`, _('Yes/No/Abstain')],
+        [`valid`, _('All valid ballots')],
+        [`cast`, _('All casted ballots')],
+        // [`entitled`, _('All entitled users')], // Entitled users is currently not implemented in vote service
+        // [`entitled_present`, _('Present entitled users')],
+        [`disabled`, _('Disabled (no percents)')]
+    ];
 
     @Input()
     public set data(data: Partial<ViewPoll>) {

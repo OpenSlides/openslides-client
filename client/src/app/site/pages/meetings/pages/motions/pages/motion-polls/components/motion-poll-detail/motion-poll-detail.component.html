@@ -51,11 +51,11 @@
             </div>
         }
         <!-- Named table: only show if votes are present -->
-        @if (showResults && poll.stateHasVotes && poll.isEVoting && poll.isNamed) {
+        @if (showResults && poll.isFinished && poll.isEVoting && poll.isNamed) {
             <os-poll-filted-votes-chart [poll]="poll" />
         }
 
-        @if (showResults && poll.stateHasVotes && poll.isEVoting) {
+        @if (showResults && poll.isFinished && poll.isEVoting) {
             <mat-tab-group (selectedTabChange)="onTabChange()">
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <div class="named-result-table">

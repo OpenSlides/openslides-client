@@ -1,22 +1,146 @@
-<table class="result-table">
-    <tr>
-        <th colspan="2"></th>
-        <th class="yes">{{ 'Yes' | translate }}</th>
-        <th class="no">{{ 'No' | translate }}</th>
+<div class="result-table-wrapper">
+    <table class="result-table">
+        <col />
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
         @if (config().allow_abstain) {
-            <th class="abstain">{{ 'Abstain' | translate }}</th>
+            <col width="1" />
+            <col width="1" />
         }
-    </tr>
-
-    @for (option of options(); track option.id; let i = $index) {
         <tr>
-            <td>{{ i + 1 }}.</td>
-            <td><os-poll-vote-option [option]="option" /></td>
-            <td class="yes">{{ results()[option.id]?.yes || 0 }}</td>
-            <td class="no">{{ results()[option.id]?.no || 0 }}</td>
+            <th colspan="2"></th>
+            <th class="yes result-col-header" colspan="2" width="1">{{ 'Yes' | translate }}</th>
+            <th class="no result-col-header" colspan="2" width="1">{{ 'No' | translate }}</th>
             @if (config().allow_abstain) {
-                <td class="abstain">{{ results()[option.id]?.abstain || 0 }}</td>
+                <th class="abstain result-col-header" colspan="2" width="1">{{ 'Abstain' | translate }}</th>
             }
         </tr>
-    }
-</table>
+
+        <ng-template #resultCol let-amount="amount" let-percent="percent" let-voteOption="voteOption">
+            <td class="result-col-percent" [class]="voteOption">
+                @if (percent !== null) {
+                    {{ percent | pollParseNumber }}%
+                }
+            </td>
+            <td class="result-col" [class]="voteOption">
+                {{ amount || 0 }}
+            </td>
+
+            <td class="result-col-small" colspan="2" [class]="voteOption">
+                <span class="amount">{{ amount || 0 }}</span>
+
+                <div class="result-percent-small">
+                    @if (percent !== null) {
+                        {{ percent | pollParseNumber }}%
+                    }
+                </div>
+            </td>
+        </ng-template>
+
+        @for (row of resultOptions(); track row.option.id; let i = $index) {
+            <tr>
+                <td>{{ i + 1 }}.</td>
+                <td><os-poll-vote-option [option]="row.option" /></td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        voteOption: 'yes',
+                        amount: row.yes || 0,
+                        percent: row.yes_percent
+                    }"
+                />
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        voteOption: 'no',
+                        amount: row.no || 0,
+                        percent: row.no_percent
+                    }"
+                />
+                @if (config().allow_abstain) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultCol"
+                        [ngTemplateOutletContext]="{
+                            voteOption: 'abstain',
+                            amount: row.abstain || 0,
+                            percent: row.abstain_percent
+                        }"
+                    />
+                }
+            </tr>
+        }
+
+        @if (validBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Valid votes' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: validBallots(),
+                        percent: validBallotsPercent()
+                    }"
+                />
+            </tr>
+        }
+
+        @if (castedBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Casted ballots' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: castedBallots(),
+                        percent: '100'
+                    }"
+                />
+            </tr>
+        }
+
+        @if (entitledUsers() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Entitled users' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: entitledUsers(),
+                        percent: '100'
+                    }"
+                />
+            </tr>
+        }
+
+        @if (presentEntitledUsers() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Present entitled users' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: presentEntitledUsers(),
+                        percent: '100'
+                    }"
+                />
+            </tr>
+        }
+
+        @if (invalidBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Invalid votes' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: invalidBallots(),
+                        percent: invalidBallotsPercent()
+                    }"
+                />
+            </tr>
+        }
+    </table>
+</div>
