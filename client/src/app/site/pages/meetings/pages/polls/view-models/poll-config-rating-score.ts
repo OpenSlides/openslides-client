@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
@@ -22,11 +23,38 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
     }
 
     public get onehundredPercentBaseNum(): number | null {
-        throw Error('not implemented');
+        switch (this.onehundred_percent_base) {
+            case 'yes_no':
+                return this.totalVotes;
+            case 'valid':
+                return this.validBallots;
+            case 'cast':
+                return this.poll.ballot_ids.length;
+            case 'entitled':
+                return null;
+            case 'entitled_present':
+                return null;
+        }
+
+        return null;
     }
 
     public get totalVotes(): number | null {
-        throw Error('not implemented');
+        let total = Big(0);
+        const result = this.parsedResult();
+        if (!result) {
+            return null;
+        }
+
+        for (const key of Object.keys(result)) {
+            if (key === `invalid`) {
+                continue;
+            }
+
+            total = total.plus(result[key]);
+        }
+
+        return total.toNumber();
     }
 }
 

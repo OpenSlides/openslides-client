@@ -29,7 +29,7 @@
                 {{ amount || 0 }}
             </td>
 
-            <td colspan="2" class="result-col-small" [class]="voteOption">
+            <td class="result-col-small" colspan="2" [class]="voteOption">
                 <span class="amount">{{ amount || 0 }}</span>
 
                 <div class="result-percent-small">
@@ -81,7 +81,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: validBallots(),
-                        percent: validBallotsPercent(),
+                        percent: validBallotsPercent()
                     }"
                 />
             </tr>
@@ -95,7 +95,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: castedBallots(),
-                        percent: '100',
+                        percent: '100'
                     }"
                 />
             </tr>
@@ -109,7 +109,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: entitledUsers(),
-                        percent: '100',
+                        percent: '100'
                     }"
                 />
             </tr>
@@ -123,7 +123,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: presentEntitledUsers(),
-                        percent: '100',
+                        percent: '100'
                     }"
                 />
             </tr>
@@ -137,7 +137,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: invalidBallots(),
-                        percent: invalidBallotsPercent(),
+                        percent: invalidBallotsPercent()
                     }"
                 />
             </tr>
