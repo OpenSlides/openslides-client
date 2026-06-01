@@ -72,5 +72,75 @@
                 }
             </tr>
         }
+
+        @if (validBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Valid votes' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: validBallots(),
+                        percent: validBallotsPercent(),
+                    }"
+                />
+            </tr>
+        }
+
+        @if (castedBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Casted ballots' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: castedBallots(),
+                        percent: '100',
+                    }"
+                />
+            </tr>
+        }
+
+        @if (entitledUsers() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Entitled users' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: entitledUsers(),
+                        percent: '100',
+                    }"
+                />
+            </tr>
+        }
+
+        @if (presentEntitledUsers() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Present entitled users' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: presentEntitledUsers(),
+                        percent: '100',
+                    }"
+                />
+            </tr>
+        }
+
+        @if (invalidBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Invalid votes' | translate }}</td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: invalidBallots(),
+                        percent: invalidBallotsPercent(),
+                    }"
+                />
+            </tr>
+        }
     </table>
 </div>
