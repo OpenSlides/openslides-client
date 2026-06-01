@@ -6,10 +6,11 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { SelectionPollResult, ViewPollConfigSelection } from '../../../../pages/polls';
+import { SelectionPollResult, ViewPollConfigSelection, ViewPollOption } from '../../../../pages/polls';
 import { PollParseNumberPipe } from '../../pipes';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
+import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
 type Results = ResultRow[];
 interface ResultRow {
@@ -18,6 +19,7 @@ interface ResultRow {
     color: string;
     amount: number;
     percent: number | null;
+    option?: ViewPollOption;
 }
 
 /**
@@ -41,7 +43,14 @@ const PollChartBarThickness = 20;
 
 @Component({
     selector: 'os-poll-result-selection',
-    imports: [IconContainerComponent, PollParseNumberPipe, ChartComponent, TranslatePipe, NgTemplateOutlet],
+    imports: [
+        IconContainerComponent,
+        PollVoteOptionComponent,
+        PollParseNumberPipe,
+        ChartComponent,
+        TranslatePipe,
+        NgTemplateOutlet
+    ],
     templateUrl: './poll-result-selection.component.html',
     styleUrl: './poll-result-selection.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -69,6 +78,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 : (option.meeting_user?.user?.getName() ?? this.translate.instant(UnknownUserLabel));
             rows.push({
                 key: option.fqid,
+                option: option,
                 votingOption: optionText,
                 color: colors[i],
                 amount: +results[option.id] || 0,

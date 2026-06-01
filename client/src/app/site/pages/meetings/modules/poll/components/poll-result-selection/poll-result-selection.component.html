@@ -12,6 +12,7 @@
                     let-amount="amount"
                     let-color="color"
                     let-firstSummary="firstSummary"
+                    let-option="option"
                     let-percent="percent"
                     let-votingOption="votingOption"
                 >
@@ -20,7 +21,11 @@
                         <td class="label-column">
                             @if (color) {
                                 <os-icon-container icon="circle" size="large">
-                                    {{ votingOption }}
+                                    @if (option) {
+                                        <os-poll-vote-option [option]="option" />
+                                    } @else {
+                                        {{ votingOption }}
+                                    }
                                 </os-icon-container>
                             } @else {
                                 <span>
