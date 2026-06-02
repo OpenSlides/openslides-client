@@ -1,6 +1,7 @@
 import { PollContentObject } from 'src/app/domain/models/poll';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
+import { BasePollConfigViewModel } from './base-poll-config-view-model';
 import { ViewPoll } from './poll';
 
 export type HasPoll<C extends PollContentObject = any> = ViewModelRelations<{
@@ -12,8 +13,8 @@ export type VotingTextContext<C extends PollContentObject = any> = ViewModelRela
     translateFn: (text: string) => string;
 };
 
-export type HasPolls<C extends PollContentObject = any> = ViewModelRelations<{
-    polls: ViewPoll<C>[];
+export type HasPolls<C extends PollContentObject = any, D extends BasePollConfigViewModel = any> = ViewModelRelations<{
+    polls: ViewPoll<C, D>[];
 }> & {
     getVotingText: (context: VotingTextContext<C>) => string;
 };
