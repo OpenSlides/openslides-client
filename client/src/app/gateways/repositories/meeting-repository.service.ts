@@ -126,7 +126,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 title = this.translate.instant(`Agenda`);
                 break;
             case MeetingProjectionType.Home:
-                title = this.translate.instant(`Meeting home`);
+                title = this.translate.instant(`Home`);
                 break;
             case MeetingProjectionType.WiFiAccess:
                 title = this.translate.instant(`Wifi access data`);

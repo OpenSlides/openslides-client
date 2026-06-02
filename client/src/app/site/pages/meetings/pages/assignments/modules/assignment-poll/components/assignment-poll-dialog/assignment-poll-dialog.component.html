@@ -2,22 +2,22 @@
     <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
         @if (hasMultipleOptions) {
             <mat-tab-group [(selectedIndex)]="selectedTab">
-                <mat-tab label="Selection">
+                <mat-tab [label]="'Selection' | translate">
                     <div class="tab-content">
                         <os-poll-form-selection optionType="meeting_user" [data]="pollData" />
                     </div>
                 </mat-tab>
-                <mat-tab label="Approval per candidate">
+                <mat-tab [label]="'Approval per candidate' | translate">
                     <div class="tab-content">
                         <os-poll-form-rating-approval optionType="meeting_user" [data]="pollData" />
                     </div>
                 </mat-tab>
-                <mat-tab label="Score">
+                <mat-tab [label]="'Score' | translate">
                     <div class="tab-content">
                         <os-poll-form-rating-score optionType="meeting_user" [data]="pollData" />
                     </div>
                 </mat-tab>
-                <mat-tab label="List">
+                <mat-tab [label]="'List' | translate">
                     <div class="tab-content">
                         <os-poll-form-approval [data]="pollData" />
                     </div>

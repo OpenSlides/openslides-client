@@ -1,41 +1,154 @@
-<div class="result-wrapper">
-    <table class="result-table">
-        <tbody>
-            <tr>
-                <th class="left-header"></th>
-                <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
-            </tr>
-            @for (row of resultOptions(); track row.key) {
-                <tr [style.color]="row.color">
-                    <!-- YNA/Valid etc -->
-                    <td class="label-column">
-                        <os-icon-container icon="circle" size="large">
-                            {{ row.votingOption | translate }}
-                        </os-icon-container>
-                    </td>
-
-                    <!-- Percent numbers -->
-                    <td class="result-cell-definition percent-column">
-                        @if (
-                            row.showPercent ||
-                            (shouldShowEntitled() && poll().config?.onehundred_percent_base !== 'entitled')
-                        ) {
-                            <span>
-                                {{ row.amount! | pollPercentBase: poll() }}
-                            </span>
-                        }
-                    </td>
-
-                    <!-- Voices -->
-                    <td class="result-cell-definition">
-                        {{ row.amount | pollParseNumber }}
-                    </td>
+<div class="result-container">
+    <div class="result-wrapper">
+        <table class="result-table">
+            <tbody>
+                <tr>
+                    <th class="left-header"></th>
+                    <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
 
-<div class="doughnut-chart-normal">
-    <os-chart type="doughnut" [data]="chartData()"></os-chart>
+                <ng-template
+                    #resultRow
+                    let-amount="amount"
+                    let-color="color"
+                    let-firstSummary="firstSummary"
+                    let-option="option"
+                    let-percent="percent"
+                    let-votingOption="votingOption"
+                >
+                    <tr class="result-row" [class.votesvalid]="firstSummary" [style.color]="color">
+                        <!-- YNA/Valid etc -->
+                        <td class="label-column">
+                            @if (color) {
+                                <os-icon-container icon="circle" size="large">
+                                    @if (option) {
+                                        <os-poll-vote-option [option]="option" />
+                                    } @else {
+                                        {{ votingOption }}
+                                    }
+                                </os-icon-container>
+                            } @else {
+                                <span>
+                                    {{ votingOption }}
+                                </span>
+                            }
+                        </td>
+
+                        <!-- Percent numbers -->
+                        <td class="result-cell-definition percent-column">
+                            @if (percent !== null) {
+                                <span>{{ percent | pollParseNumber }}%</span>
+                            }
+                        </td>
+
+                        <!-- Votes -->
+                        <td class="result-cell-definition amount-column">
+                            {{ amount | pollParseNumber }}
+                        </td>
+
+                        <td class="result-cell-definition amount-column-small" colspan="2">
+                            {{ amount | pollParseNumber }}
+                        </td>
+                    </tr>
+
+                    <tr class="result-percent-small" [style.color]="color">
+                        <td class="result-cell-definition percent-column" colspan="3">
+                            @if (percent !== null) {
+                                <span>{{ percent | pollParseNumber }}%</span>
+                            }
+                        </td>
+                    </tr>
+                </ng-template>
+
+                @for (row of resultOptions(); track row.key) {
+                    <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="row" />
+                }
+
+                @if (validBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: validBallots(),
+                            percent: validBallotsPercent(),
+                            votingOption: 'Valid votes' | translate,
+                            firstSummary: true
+                        }"
+                    />
+                }
+
+                @if (castedBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: castedBallots(),
+                            percent: '100',
+                            votingOption: 'Casted ballots' | translate,
+                            firstSummary: true
+                        }"
+                    />
+                }
+
+                @if (entitledUsers() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: entitledUsers(),
+                            percent: '100',
+                            votingOption: 'Entitled users' | translate
+                        }"
+                    />
+                }
+
+                @if (presentEntitledUsers() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: presentEntitledUsers(),
+                            percent: '100',
+                            votingOption: 'Present entitled users' | translate
+                        }"
+                    />
+                }
+
+                @if (invalidBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: invalidBallots(),
+                            percent: invalidBallotsPercent(),
+                            votingOption: 'Invalid votes' | translate
+                        }"
+                    />
+                }
+
+                @if (nota() !== null) {
+                    @let notaOption =
+                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: nota(),
+                            percent: notaPercent(),
+                            votingOption: notaOption
+                        }"
+                    />
+                }
+
+                @if (generalAbstain() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: generalAbstain(),
+                            percent: generalAbstainPercent(),
+                            votingOption: 'General abstain' | translate
+                        }"
+                    />
+                }
+            </tbody>
+        </table>
+
+        <div class="doughnut-chart-normal">
+            <os-chart type="doughnut" [data]="chartData()"></os-chart>
+        </div>
+    </div>
 </div>

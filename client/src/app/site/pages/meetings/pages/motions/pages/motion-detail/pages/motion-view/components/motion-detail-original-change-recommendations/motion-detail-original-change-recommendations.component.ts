@@ -207,13 +207,13 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             `.os-line-number.line-number-` + reco.getLineFrom().toString(10)
         ) as HTMLElement;
         const to = this.element.querySelector(
-            `.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10)
+            `.os-line-number.line-number-` + reco.getLineTo().toString(10)
         ) as HTMLElement;
+
         if (to) {
-            return (to.offsetTop - from.offsetTop).toString() + `px`;
+            return (to.offsetHeight + to.offsetTop - from.offsetTop).toString() + `px`;
         } else {
-            // Last line - lets assume a realistic value
-            return `20px`;
+            return from.offsetHeight.toString() + `px`;
         }
     }
 
@@ -334,7 +334,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             if (change.isTitleChange()) {
                 return;
             }
-            for (let j = change.getLineFrom(); j < change.getLineTo(); j++) {
+            for (let j = change.getLineFrom(); j <= change.getLineTo(); j++) {
                 affectedLines.push(j);
             }
         });
@@ -369,17 +369,44 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         if (this.selectedFrom === null) {
             this.selectedFrom = lineNumber;
         } else {
-            if (lineNumber > this.selectedFrom) {
-                this.createChangeRecommendation.emit({
-                    from: this.selectedFrom,
-                    to: lineNumber
-                });
-            } else {
-                this.createChangeRecommendation.emit({
-                    from: lineNumber,
-                    to: this.selectedFrom
-                });
+            const lineRange: LineRange = {
+                from: this.selectedFrom,
+                to: lineNumber
+            };
+            if (lineRange.from > lineRange.to) {
+                lineRange.from = lineRange.to;
+                lineRange.to = this.selectedFrom;
             }
+
+            const toLnElement = this.element.querySelector(`.os-line-number.line-number-${lineRange.to}`);
+            if (toLnElement.parentElement.classList.contains(`delete`)) {
+                // If full paragraph is deleted expand selection to full paragraph
+                const newLnRange = this.motionRepo
+                    .getViewModel(this.motionId)
+                    .services()
+                    .ln.getLineNumberRange(toLnElement.parentElement.outerHTML);
+
+                lineRange.from = Math.min(newLnRange.from, lineRange.from);
+                lineRange.to = Math.max(newLnRange.to, lineRange.to);
+            } else {
+                // Expand selected line to deleted content prior and after the selection
+                while (this.element.querySelector(`br.os-line-break + .line-number-${lineRange.from}`)) {
+                    lineRange.from--;
+                    if (!this.element.querySelector(`.line-number-${lineRange.from - 1} + del + br.os-line-break`)) {
+                        break;
+                    }
+                }
+
+                while (this.element.querySelector(`.line-number-${lineRange.to} + del + br.os-line-break`)) {
+                    if (this.element.querySelector(`.line-number-${lineRange.to + 1} + del`)) {
+                        lineRange.to++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            this.createChangeRecommendation.emit(lineRange);
             this.selectedFrom = null;
             this.startCreating();
         }
@@ -395,7 +422,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         if (this.selectedFrom === null) {
             return;
         }
-        Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumber: Element) => {
+
+        this.element.querySelectorAll(`.os-line-number`).forEach((lineNumber: Element) => {
             const line = parseInt(lineNumber.getAttribute(`data-line-number`)!, 10);
             if (
                 (line >= this.selectedFrom! && line <= lineNumberHovered) ||

@@ -36,6 +36,12 @@ export class LocalizedDateRangePipe implements PipeTransform {
         const fn = this.getDateIntervalAbbreviationFunctionForLocale(this.inputDate?.locale(), dateFormat);
         const result = fn(data.startString, data.startArray, data.endString, data.endArray);
         if (new Intl.DateTimeFormat().resolvedOptions()?.timeZone != timezone) {
+            if (typeof value.start === `string`) {
+                return (
+                    result +
+                    ` ${tzName(timezone, this.timeZone.transformFromTS(new Date(value.start).getTime(), timezone), 'short')}`
+                );
+            }
             return result + ` ${tzName(timezone, this.timeZone.transformFromTS(value.start, timezone), 'short')}`;
         }
         return result;

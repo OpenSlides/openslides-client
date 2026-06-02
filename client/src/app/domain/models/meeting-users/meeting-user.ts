@@ -59,4 +59,3 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `structure_level_ids`
     ];
 }
-export interface MeetingUser {}

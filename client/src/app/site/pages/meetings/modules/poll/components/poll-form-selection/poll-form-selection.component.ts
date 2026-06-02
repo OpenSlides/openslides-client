@@ -1,17 +1,16 @@
-import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
 
 import { ViewPoll } from '../../../../pages/polls';
 
 @Component({
     selector: 'os-poll-form-selection',
-    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe, KeyValuePipe],
+    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe],
     templateUrl: './poll-form-selection.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,14 +18,14 @@ import { ViewPoll } from '../../../../pages/polls';
 export class PollFormSelectionComponent {
     public form: UntypedFormGroup;
 
-    public validPercentBases: Record<SelectionOnehundredPercentBase, string> = {
-        no_general: 'Valid no general',
-        valid: 'Valid',
-        cast: 'Cast',
-        entitled: 'Entitled',
-        entitled_present: 'Entitled present',
-        disabled: 'Disabled'
-    };
+    public validPercentBases: [SelectionOnehundredPercentBase, string][] = [
+        [`no_general`, _('Sum of votes without general options')],
+        [`valid`, _('All valid ballots')],
+        [`cast`, _('All casted ballots')],
+        // [`entitled`, _('All entitled users')],
+        // [`entitled_present`, _('Present entitled users')],
+        [`disabled`, _('Disabled (no percents)')]
+    ];
 
     public data = input.required<Partial<ViewPoll>>();
 

@@ -144,9 +144,6 @@ export class VotingService {
             if (user?.isVoteRightDelegated && this._voteDelegationEnabled && this._forbidDelegationToVote) {
                 return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
             }
-            if (poll.hasVoted) {
-                return VotingProhibition.USER_HAS_VOTED;
-            }
         }
         // TODO: Check if voted for delegation && poll.hasVotedForDelegations(user?.id)
         if (this._currentUser?.id !== user?.id) {

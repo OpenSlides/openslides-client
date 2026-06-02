@@ -1,11 +1,75 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 
-.result-table {
-    width: 100%;
+.result-table-wrapper {
+    overflow-x: auto;
 }
 
-.yes,
-.no,
-.abstain {
-    text-align: right;
+.result-table {
+    width: 100%;
+    min-width: 330px;
+    border-collapse: collapse;
+
+    tr:not(:last-of-type) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    tr {
+        th,
+        td {
+            padding: 3px 0;
+        }
+
+        td {
+            height: 45px;
+        }
+
+        .result-col-header,
+        .result-col-small,
+        .result-col,
+        .result-col-percent {
+            text-align: right;
+        }
+
+        .result-col,
+        .result-col-percent {
+            display: none;
+            padding-left: 6px;
+        }
+
+        .result-col-header {
+            min-width: 70px;
+        }
+
+        .result-col-small .amount,
+        .result-col {
+            font-weight: 700;
+        }
+
+        .result-percent-small {
+            font-size: 14px;
+        }
+    }
+}
+
+.result-table-wrapper {
+    container: result / inline-size;
+}
+
+@container result (width > 690px) {
+    .result-table {
+        tr {
+            .result-col,
+            .result-col-percent {
+                display: table-cell;
+            }
+
+            .result-col-header {
+                min-width: 110px;
+            }
+
+            .result-col-small {
+                display: none;
+            }
+        }
+    }
 }

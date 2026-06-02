@@ -98,4 +98,3 @@ export class User extends BaseDecimalModel<User> {
         `organization_id`
     ];
 }
-export interface User {}
