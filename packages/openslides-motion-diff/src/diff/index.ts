@@ -1,12 +1,23 @@
-import { LineNumbering } from "../index";
+import { HtmlDiff as HtmlDiffOrig, LineNumbering as LineNumberingOrig } from "../index";
+import { getRange } from "../line-numbering";
 import { LineNumberedString, LineNumberRange } from "../line-numbering/definitions";
 import { addClassToHtmlTag, addCSSClass, addCSSClassToFirstTag, fragmentToHtml, getAllNextSiblings, getAllPrevSiblingsReversed, getCommonAncestor, getNodeContextTrace, getNthOfListItem, htmlToFragment, isFirstNonemptyChild, isValidInlineHtml, removeCSSClass, replaceHtmlEntities } from "../utils/dom-helpers";
 import { DiffLinesInParagraph, ExtractedContent, LineRange, UnifiedChangeType } from "./definitions";
 import type { UnifiedChange } from "./definitions";
-import { formatDiffWithLineNumbers, insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
+import { insertDanglingSpace, insertInternalLineMarkers, insertLines, recAddOsSplit, removeLines, replaceLinesMergeNodeArrays, serializeDom, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
 import { diffString } from "./internal-diff";
 import { diffDetectBrokenDiffHtml, diffParagraphs, fixWrongChangeDetection } from "./internal-diff-transform";
-import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberNode, serializeTagDiff } from "./utils";
+import { getFirstLineNumberNode, getLastLineNumberNode, getLineNumberGreaterEqualNode, getLineNumberLessEqualNode, getLineNumberNode, serializeTagDiff } from "./utils";
+
+let LineNumbering = LineNumberingOrig;
+export function useCustomLineNumbering(newLn: typeof LineNumbering) {
+    LineNumbering = newLn;
+}
+
+let HtmlDiff = HtmlDiffOrig;
+export function useCustomHtmlDiff(newDiff: typeof HtmlDiff) {
+    HtmlDiff = newDiff;
+}
 
 /**
   * Returns the HTML snippet between two given line numbers.
@@ -45,40 +56,64 @@ export function extractRangeByLineNumbers(
         throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
     }
 
+    const out: any = {
+        html: ``,
+        ancestor: null,
+        previousHtml: ``,
+        followingHtml: ``,
+        outerContextStart: ``,
+        outerContextEnd: ``,
+        innerContextStart: ``,
+        innerContextEnd: ``,
+        previousHtmlEndSnippet: ``,
+        followingHtmlStartSnippet: ``,
+    };
+
     const fragment = htmlToFragment(html);
     insertInternalLineMarkers(fragment);
 
     let toLineNumber: number;
+    const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
+    const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
+    const lastMarkerNumber = parseInt(lastMarker.getAttribute(`data-line-number`)!, 10);
     if (toLine === null) {
-        const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
-        const lastMarker = internalLineMarkers[internalLineMarkers.length - 1];
-        toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`)!, 10);
+        toLineNumber = lastMarkerNumber;
     } else {
         toLineNumber = toLine + 1;
     }
 
-    const fromLineNumberNode = getLineNumberNode(fragment, fromLine);
-    const toLineNumberNode = toLineNumber ? getLineNumberNode(fragment, toLineNumber) : null;
+    const fromLineNumberSearch = getLineNumberGreaterEqualNode(fragment, fromLine);
+    const toLineNumberSearch = getLineNumberLessEqualNode(fragment, toLineNumber);
+
+    const fromLineNumberNode = fromLineNumberSearch ? fromLineNumberSearch[0] : null;
+    fromLine = fromLineNumberSearch ? fromLineNumberSearch[1] : fromLine;
+
+    const toLineNumberNode = toLineNumberSearch ? toLineNumberSearch[0] : null;
+    toLineNumber = toLineNumberSearch ? toLineNumberSearch[1] : toLineNumber;
+
     const ancestorData = getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
     const fromChildTraceRel = ancestorData.trace1;
     const fromChildTraceAbs = getNodeContextTrace(fromLineNumberNode as Element);
     const toChildTraceRel = ancestorData.trace2;
     const toChildTraceAbs = getNodeContextTrace(toLineNumberNode as Element);
-    const ancestor = ancestorData.commonAncestor;
-    let htmlOut = ``;
-    let outerContextStart = ``;
-    let outerContextEnd = ``;
-    let innerContextStart = ``;
-    let innerContextEnd = ``;
-    let previousHtmlEndSnippet = ``;
-    let followingHtmlStartSnippet = ``;
+    out.ancestor = ancestorData.commonAncestor;
 
     fromChildTraceAbs.shift();
-    const previousHtml = serializePartialDomToChild(fragment, fromChildTraceAbs, false);
+    out.previousHtml = serializePartialDomToChild(fragment, fromChildTraceAbs, false);
 
     toChildTraceAbs.shift();
-    const followingHtml = serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+    out.followingHtml = serializePartialDomFromChild(fragment, toChildTraceAbs, false);
+
+    if (
+        fromLineNumberSearch === null ||
+        fromLineNumberSearch[1] === lastMarkerNumber ||
+        fromLineNumberSearch[1] > (toLine ? toLine : toLineNumber) ||
+        toLineNumberSearch === null ||
+        toLineNumberSearch[1] < fromLine
+    ) {
+        return out;
+    }
 
     let currNode: Node = fromLineNumberNode!;
     let isSplit = false;
@@ -90,7 +125,7 @@ export function extractRangeByLineNumbers(
             addCSSClass(currNode.parentNode, `os-split-before`);
         }
         if (currNode.nodeName !== `OS-LINEBREAK`) {
-            previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
+            out.previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
         }
         currNode = currNode.parentNode;
     }
@@ -116,9 +151,9 @@ export function extractRangeByLineNumbers(
                     (getNthOfListItem(parentElement, toLineNumberNode as Element) as number) + offset
                 ).toString()
             );
-            followingHtmlStartSnippet = serializeTagDiff(fakeOl) + followingHtmlStartSnippet;
+            out.followingHtmlStartSnippet = serializeTagDiff(fakeOl) + out.followingHtmlStartSnippet;
         } else {
-            followingHtmlStartSnippet = serializeTagDiff(currNode.parentNode) + followingHtmlStartSnippet;
+            out.followingHtmlStartSnippet = serializeTagDiff(currNode.parentNode) + out.followingHtmlStartSnippet;
         }
         currNode = currNode.parentNode;
     }
@@ -143,12 +178,12 @@ export function extractRangeByLineNumbers(
                         offset + (getNthOfListItem(element, fromLineNumberNode as Element) as number)
                     ).toString()
                 );
-                innerContextStart += serializeTagDiff(fakeOl);
+                out.innerContextStart += serializeTagDiff(fakeOl);
             } else {
                 if (i < fromChildTraceRel.length - 1 && isSplit) {
                     addCSSClass(fromChildTraceRel[i], `os-split-before`);
                 }
-                innerContextStart += serializeTagDiff(fromChildTraceRel[i]);
+                out.innerContextStart += serializeTagDiff(fromChildTraceRel[i]);
             }
         }
     }
@@ -156,25 +191,25 @@ export function extractRangeByLineNumbers(
         if (toChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
             found = true;
         } else {
-            innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
+            out.innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + out.innerContextEnd;
         }
     }
 
-    for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
-        if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
+    for (let i = 0, found = false; i < out.ancestor.childNodes.length; i++) {
+        if (out.ancestor.childNodes[i] === fromChildTraceRel[0]) {
             found = true;
             fromChildTraceRel.shift();
-            htmlOut += serializePartialDomFromChild(ancestor.childNodes[i], fromChildTraceRel, true);
-        } else if (ancestor.childNodes[i] === toChildTraceRel[0]) {
+            out.html += serializePartialDomFromChild(out.ancestor.childNodes[i], fromChildTraceRel, true);
+        } else if (out.ancestor.childNodes[i] === toChildTraceRel[0]) {
             found = false;
             toChildTraceRel.shift();
-            htmlOut += serializePartialDomToChild(ancestor.childNodes[i], toChildTraceRel, true);
+            out.html += serializePartialDomToChild(out.ancestor.childNodes[i], toChildTraceRel, true);
         } else if (found === true) {
-            htmlOut += serializeDom(ancestor.childNodes[i], true);
+            out.html += serializeDom(out.ancestor.childNodes[i], true);
         }
     }
 
-    currNode = ancestor;
+    currNode = out.ancestor;
     while (currNode.parentNode) {
         if (currNode.nodeName === `OL`) {
             const currElement = currNode as Element;
@@ -186,26 +221,15 @@ export function extractRangeByLineNumbers(
                 `start`,
                 ((getNthOfListItem(currElement, fromLineNumberNode as Element) as any) + offset).toString()
             );
-            outerContextStart = serializeTagDiff(fakeOl) + outerContextStart;
+            out.outerContextStart = serializeTagDiff(fakeOl) + out.outerContextStart;
         } else {
-            outerContextStart = serializeTagDiff(currNode) + outerContextStart;
+            out.outerContextStart = serializeTagDiff(currNode) + out.outerContextStart;
         }
-        outerContextEnd += `</` + currNode.nodeName + `>`;
+        out.outerContextEnd += `</` + currNode.nodeName + `>`;
         currNode = currNode.parentNode;
     }
 
-    return {
-        html: htmlOut,
-        ancestor,
-        outerContextStart,
-        outerContextEnd,
-        innerContextStart,
-        innerContextEnd,
-        previousHtml,
-        previousHtmlEndSnippet,
-        followingHtml,
-        followingHtmlStartSnippet
-    };
+    return out;
 }
 
 /**
@@ -218,6 +242,20 @@ export function formatDiff(diff: ExtractedContent): string {
     return (
         diff.outerContextStart + diff.innerContextStart + diff.html + diff.innerContextEnd + diff.outerContextEnd
     );
+}
+
+/**
+ * Convenience method that takes the html-attribute from an extractRangeByLineNumbers()-method,
+ * wraps it with the context and adds line numbers.
+ *
+ * @param {ExtractedContent} diff
+ * @param {number} lineLength
+ * @param {number} firstLine
+ */
+export function formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
+    let text = HtmlDiff.formatDiff(diff);
+    text = LineNumbering.insert({ html: text, lineLength, firstLine });
+    return text;
 }
 
 /**
@@ -275,12 +313,23 @@ export function detectAffectedLineRange(diffHtml: string): LineRange | null {
   * @param {string} html
   * @returns {string}
   */
-export function diffHtmlToFinalText(html: string): string {
+export function diffHtmlToFinalText(html: string, keepLineNumbers: boolean = false): string {
     const fragment = htmlToFragment(html);
 
     const delNodes = fragment.querySelectorAll(`.delete, del`);
     for (const del of delNodes) {
-        del.parentNode!.removeChild(del);
+        if (keepLineNumbers && del.querySelectorAll(`.os-line-number`).length) {
+            const onlyLineNumbers = document.createElement(`P`);
+            const lineNumbers = del.querySelectorAll(`.os-line-number`);
+            for (const ln of lineNumbers) {
+                onlyLineNumbers.appendChild(ln);
+                onlyLineNumbers.appendChild(document.createElement(`br`));
+            }
+            onlyLineNumbers.lastChild?.remove();
+            del.parentNode!.replaceChild(onlyLineNumbers, del);
+        } else {
+            del.parentNode!.removeChild(del);
+        }
     }
 
     const insNodes = fragment.querySelectorAll(`ins`);
@@ -315,7 +364,7 @@ export function diffHtmlToFinalText(html: string): string {
   * @param {number} toLine
   */
 export function replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-    const data = extractRangeByLineNumbers(oldHtml, fromLine, toLine);
+    const data = HtmlDiff.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
     const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
     const previousFragment = htmlToFragment(previousHtml);
     const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
@@ -792,7 +841,18 @@ export function diff(
 
     let diff: string;
     if (diffDetectBrokenDiffHtml(diffUnnormalized)) {
-        diff = diffParagraphs(htmlOld, htmlNew, lineLength!, firstLineNumber!);
+        let lineNumberedOld = htmlOld;
+        let lineNumberedNew = htmlNew;
+        if (lineLength !== null) {
+            lineNumberedOld = LineNumbering.insert({
+                html: htmlOld,
+                lineLength,
+                firstLine: firstLineNumber!
+            });
+            lineNumberedNew = LineNumbering.insertLineBreaks(htmlNew, lineLength);
+        }
+
+        diff = diffParagraphs(lineNumberedOld, lineNumberedNew);
     } else {
         let node: Element = document.createElement(`div`);
         node.innerHTML = diffUnnormalized;
@@ -808,10 +868,10 @@ export function diff(
     }
 
     if (isSplitAfter) {
-        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
+        diff = HtmlDiff.readdOsSplit(diff, [origHtmlOld, origHtmlNew]);
     }
     if (isSplitBefore) {
-        diff = readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
+        diff = HtmlDiff.readdOsSplit(diff, [origHtmlOld, origHtmlNew], true);
     }
 
     return diff;
@@ -891,7 +951,7 @@ export function getTextWithChanges(
 
     changes = changes.filter(change => !change.isTitleChange);
     // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-    changes = sortChangeRequests(changes).reverse();
+    changes = HtmlDiff.sortChangeRequests(changes).reverse();
 
     if (showAllCollisions) {
         let lastReplacedLine: number | null = null;
@@ -899,7 +959,7 @@ export function getTextWithChanges(
         changes.forEach(change => {
             html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
 
-            if (changeHasCollissions(change, changes)) {
+            if (HtmlDiff.changeHasCollissions(change, changes)) {
                 // In case of colliding amendments, we remove the original text first before inserting the amendments one by one.
                 // Note: if amendment 1 affects line 3-5, we remove 3-5. If amendment 2 affects line 2-4, we only need to remove
                 // line 2, as 3-5 is already removed. If Amendment 3 affects 2-4 too, we don't have to remove anything anymore.
@@ -924,20 +984,20 @@ export function getTextWithChanges(
                 const lineFrom = ` data-line-from="` + change.lineFrom.toString(10) + `"`;
                 const lineTo = ` data-line-to="` + change.lineTo.toString(10) + `"`;
                 const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
-                const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
+                const opTag = `<div data-change-is-colliding` + opAttrs + `>`;
                 const insertingHtml = opTag + change.changeNewText + `</div>`;
 
                 html = insertLines(html, change.lineFrom, insertingHtml);
 
                 lastReplacedLine = change.lineFrom;
             } else {
-                html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
+                html = HtmlDiff.replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
             }
         });
     } else {
         changes.forEach((change: UnifiedChange) => {
             html = LineNumbering.insert({ html, lineLength, firstLine: firstLine });
-            html = replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
+            html = HtmlDiff.replaceLines(html, change.changeNewText, change.lineFrom, change.lineTo);
         });
     }
 
@@ -970,8 +1030,8 @@ export function getAmendmentParagraphsLines(
     changeRecos?: UnifiedChange[]
 ): DiffLinesInParagraph | null {
     const paragraph_line_range: LineNumberRange = LineNumbering.getRange(origText);
-    let diffText = diff(origText, newText);
-    const affected_lines = detectAffectedLineRange(diffText) as LineRange;
+    let diffText = HtmlDiff.diff(origText, newText);
+    const affected_lines = HtmlDiff.detectAffectedLineRange(diffText) as LineRange;
 
     /**
         * If the affect line has change recos, overwirte the diff with the change reco
@@ -990,21 +1050,21 @@ export function getAmendmentParagraphsLines(
     let textPre = ``;
     let textPost = ``;
     if (affected_lines.from > paragraph_line_range.from!) {
-        textPre = formatDiffWithLineNumbers(
-            extractRangeByLineNumbers(diffText, paragraph_line_range.from!, affected_lines.from - 1),
+        textPre = HtmlDiff.formatDiffWithLineNumbers(
+            HtmlDiff.extractRangeByLineNumbers(diffText, paragraph_line_range.from!, affected_lines.from - 1),
             lineLength,
             paragraph_line_range.from!
         );
     }
     if (paragraph_line_range.to! > affected_lines.to) {
-        textPost = formatDiffWithLineNumbers(
-            extractRangeByLineNumbers(diffText, affected_lines.to + 1, paragraph_line_range.to!),
+        textPost = HtmlDiff.formatDiffWithLineNumbers(
+            HtmlDiff.extractRangeByLineNumbers(diffText, affected_lines.to + 1, paragraph_line_range.to!),
             lineLength,
             affected_lines.to + 1
         );
     }
-    const text = formatDiffWithLineNumbers(
-        extractRangeByLineNumbers(diffText, affected_lines.from, affected_lines.to),
+    const text = HtmlDiff.formatDiffWithLineNumbers(
+        HtmlDiff.extractRangeByLineNumbers(diffText, affected_lines.from, affected_lines.to),
         lineLength,
         affected_lines.from
     );
@@ -1040,7 +1100,7 @@ export function getChangeDiff(
     if ((LineNumbering.getRange(html).to || 0) < change.lineTo) {
         throw new Error(`Invalid call - The change is outside of the motion`);
     }
-    const data: ExtractedContent = extractRangeByLineNumbers(html, change.lineFrom, change.lineTo);
+    const data: ExtractedContent = HtmlDiff.extractRangeByLineNumbers(html, change.lineFrom, change.lineTo);
     let oldText =
         data.outerContextStart +
         data.innerContextStart +
@@ -1105,7 +1165,7 @@ export function getTextRemainderAfterLastChange(
         return ``;
     }
 
-    const data: ExtractedContent = extractRangeByLineNumbers(
+    const data: ExtractedContent = HtmlDiff.extractRangeByLineNumbers(
         motionHtml,
         Math.max(maxFromLine + 1, lineRange?.from || 1),
         lineRange?.to ? maxToLine : null
@@ -1130,30 +1190,31 @@ export function getTextRemainderAfterLastChange(
   * @param {LineNumberedString} motionText
   * @param {LineRange} lineRange
   * @param {boolean} lineNumbers - weather to add line numbers to the returned HTML string
-  * @param {number} lineLength
+  * @param {number|null} lineLength
   * @param {number|null} highlightedLine
   */
 export function extractMotionLineRange(
     motionText: LineNumberedString,
     lineRange: LineRange,
-    lineNumbers: boolean,
-    lineLength: number,
+    lineNumbers: boolean = false,
+    lineLength?: number,
     highlightedLine?: number
 ): string {
     let html = ``;
-    const extracted = extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
+    const extracted = HtmlDiff.extractRangeByLineNumbers(motionText, lineRange.from, lineRange.to);
     html =
         extracted.outerContextStart +
         extracted.innerContextStart +
         extracted.html +
         extracted.innerContextEnd +
         extracted.outerContextEnd;
-    if (lineNumbers) {
+    if (lineNumbers && lineLength) {
+        const actualLnFrom = getRange(motionText).from || lineRange.from;
         html = LineNumbering.insert({
             html,
             lineLength,
             highlight: highlightedLine,
-            firstLine: lineRange.from
+            firstLine: Math.max(lineRange.from, actualLnFrom)
         });
     }
     return html;

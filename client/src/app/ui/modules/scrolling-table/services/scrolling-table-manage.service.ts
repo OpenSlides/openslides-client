@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ScrollingTableComponent } from '../components/scrolling-table/scrolling-table.component';
 import { ScrollingTableCellDefinition } from '../directives/scrolling-table-cell-definition';
 import { ScrollingTableCellPosition } from '../directives/scrolling-table-cell-position';
-import { ScrollingTableServiceModule } from './scrolling-table-service.module';
 
 class ScrollingTableCellHandler implements Iterable<ScrollingTableCellDefinition> {
     private _registeredDefinitions: ScrollingTableCellDefinition[] = [];
@@ -45,7 +44,7 @@ class ScrollingTableCellHandler implements Iterable<ScrollingTableCellDefinition
 }
 
 @Injectable({
-    providedIn: ScrollingTableServiceModule
+    providedIn: 'root'
 })
 export class ScrollingTableManageService {
     public currentScrollingTableComponent: ScrollingTableComponent<any> | null = null;

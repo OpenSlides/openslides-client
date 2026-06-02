@@ -196,6 +196,14 @@ export class HtmlToPdfService {
                 newParagraph = this.createFormattedParagraph(createPayload);
                 break;
             }
+            case `sup`:
+                newParagraph = this.createDefaultParagraph(createPayload);
+                newParagraph.sup = true;
+                break;
+            case `sub`:
+                newParagraph = this.createDefaultParagraph(createPayload);
+                newParagraph.sub = true;
+                break;
             case `mark`:
             case `span`: {
                 newParagraph = this.createSpanParagraph(createPayload);
@@ -305,12 +313,20 @@ export class HtmlToPdfService {
      */
     protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
         const children = this.parseChildren(data.element, data.styles);
+
         const newParagraph = {
             ...this.create(`text`),
             ...this.computeStyle(data.styles)
         };
 
-        newParagraph.text = children;
+        if (data.classes?.includes(`spacer`)) {
+            const lines = +data.element.getAttribute(`data-lines`) || 0;
+            if (lines - 1 > 0) {
+                newParagraph.text = `\n`.repeat(lines - 1);
+            }
+        } else {
+            newParagraph.text = children;
+        }
         return newParagraph;
     }
 

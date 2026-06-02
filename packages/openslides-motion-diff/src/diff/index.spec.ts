@@ -3,7 +3,7 @@ import { brMarkup, noMarkup } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
-import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines } from ".";
+import { detectAffectedLineRange, extractMotionLineRange, extractRangeByLineNumbers, getAmendmentParagraphsLines, getChangeDiff, getTextRemainderAfterLastChange, getTextWithChanges, replaceLines, useCustomHtmlDiff, useCustomLineNumbering } from ".";
 import { UnifiedChange, UnifiedChangeType } from "./definitions";
 import { getLineNumberNode } from "./utils";
 
@@ -202,6 +202,8 @@ describe(`MotionDiffService`, () => {
         ` Line 4</li></ol>`;
 
     beforeEach(() => {
+        useCustomHtmlDiff(HtmlDiff);
+        useCustomLineNumbering(LineNumbering);
         baseHtmlDom1 = htmlToFragment(baseHtml1);
         baseHtmlDom2 = htmlToFragment(baseHtml2);
         insertInternalLineMarkers(baseHtmlDom1);
@@ -817,6 +819,48 @@ describe(`MotionDiffService`, () => {
                     `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
                     `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`;
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(expected);
+        });
+
+        it.skip(`handles inserted text within nested lists`, () => {
+            const before =
+                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
+                    `</li><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
+                    `</li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2a` +
+                    `</li><li>Ebene 3` +
+                    `</li></ul></li></ul>`,
+                expected =
+                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>` +
+                    `Ebene 2<ins>a</ins>` +
+                    `</li><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `Ebene 3` +
+                    `</li></ul></li></ul>`;
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(expected);
+        });
+
+        it.skip(`handles changed text within nested lists (part 2)`, () => {
+            const before = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1` +
+                    `</li><li>Ebene 2.2` +
+                    `</li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1 a</li>` +
+                    `<li>Ebene 2.2</li>` +
+                    `</ul></li></ul>`,
+                expected = `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2.1<del></del><ins> a</ins></li>` +
+                    `<li>Ebene 2.2` +
+                    `</li></ul></li></ul>`
 
             const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
@@ -1523,6 +1567,24 @@ describe(`MotionDiffService`, () => {
         });
     });
 
+    describe(`stripping ins/del-styles/tags while keeping line numbers in place`, () => {
+        it(`keeps line numbers with del tags`, () => {
+            const inHtml = `<p>` +
+                noMarkup(4) +
+                `<del><strong>Additional context</strong></del><br>` + 
+                noMarkup(5) +
+                `<del>This issue is part of the META issue <a href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</a></del></p>`;
+            const stripped = normalizeHtmlForDiff(HtmlDiff.diffHtmlToFinalText(inHtml, true));
+            expect(stripped).toBe(`<P>${normalizeHtmlForDiff(noMarkup(4))}<BR>${normalizeHtmlForDiff(noMarkup(5))}</P>`);
+        });
+
+        it(`replaces full paragraph with empty line numbered paragraph`, () => {
+            const inHtml = `<P class="delete"><SPAN class="line-number-4 os-line-number" contenteditable="false" data-line-number="4"> </SPAN><STRONG>Additional context</STRONG><BR><SPAN class="line-number-5 os-line-number" contenteditable="false" data-line-number="5"> </SPAN>This issue is part of the META issue <A target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</A></P>`;
+            const stripped = normalizeHtmlForDiff(HtmlDiff.diffHtmlToFinalText(inHtml, true));
+            expect(stripped).toBe(`<P>${normalizeHtmlForDiff(noMarkup(4))}<BR>${normalizeHtmlForDiff(noMarkup(5))}</P>`);
+        });
+    });
+
     describe(`apply unified changes to text: getTextWithChanges`, () => {
         it(`test with no changes`, () => {
                 const inHtml = `<p>Test 1</p><p>Test 2</p>`;
@@ -1626,9 +1688,9 @@ describe(`MotionDiffService`, () => {
             );
 
             expect(out).toBe(
-                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
+                `<div data-change-is-colliding="" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
                 `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
-                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
+                `<div data-change-is-colliding="" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
                 `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
                 `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 2x</p>` +
                 `<p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 3</p>`
@@ -1732,6 +1794,24 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toThrow();
+        });
+
+        it(`test with leading line breaks`, () => {
+            const inHtml = `<p>${noMarkup(1)}<br>${noMarkup(2)}first</p><p>${noMarkup(3)}<br>${noMarkup(4)}secoond</p>`;
+
+            expect(
+                getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p class="os-split-before">first as</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<P class="os-split-before merge-before">${noMarkup(2)}first<ins> as</ins></p>`
+            );
         });
     });
 
@@ -1851,7 +1931,7 @@ describe(`MotionDiffService`, () => {
 
     describe(`extractMotionLineRange`, () => {
         it(`test with no line numbers in result`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
 
             expect(
                 extractMotionLineRange(
@@ -1867,7 +1947,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`test with line numbers in result`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
 
             expect(
                 extractMotionLineRange(
@@ -1880,7 +1960,79 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2</p><p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`
+            );
+        });
+
+        it(`test with start line number out of scope`, () => {
+            const inHtml = `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p>${noMarkup(3)}Test 3</p>`
+            );
+        });
+
+        it(`test with end line number out of scope`, () => {
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 4,
+                        to: 5
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p>${noMarkup(4)}Test 4</p>`
+            );
+        });
+
+        it(`test with full range out of scope`, () => {
+            const inHtml = `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 5,
+                        to: 7
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                ``
+            );
+        });
+
+        it(`test with missing line numbers`, () => {
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(4)}Test 4</p>`;
+
+            expect(
+                extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                ``
             );
         });
     });

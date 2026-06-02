@@ -8,9 +8,7 @@ import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/pr
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 
-import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
-
-@Injectable({ providedIn: ProjectorDetailServiceModule })
+@Injectable({ providedIn: 'root' })
 export class CurrentSpeakerChyronSlideService {
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,

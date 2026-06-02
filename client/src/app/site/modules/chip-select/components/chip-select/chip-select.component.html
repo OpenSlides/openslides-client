@@ -7,7 +7,9 @@
                 [class]="chipClass || 'grey'"
                 [ngClass]="{ 'menu-handle': canOpen }"
             >
-                <ng-content *ngTemplateOutlet="chip.template" />
+                <span class="wrap">
+                    <ng-content *ngTemplateOutlet="chip.template" />
+                </span>
             </mat-basic-chip>
         }
     </mat-chip-listbox>
@@ -18,7 +20,9 @@
         [matMenuTriggerFor]="canOpen ? menu : null"
         [ngClass]="{ 'menu-handle': canOpen }"
     >
-        <ng-content />
+        <span class="wrap">
+            <ng-content />
+        </span>
     </mat-basic-chip>
 }
 

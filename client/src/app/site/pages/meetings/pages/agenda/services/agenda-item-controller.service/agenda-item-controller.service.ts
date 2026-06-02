@@ -11,10 +11,9 @@ import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewAgendaItem } from '../../view-models';
-import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
 @Injectable({
-    providedIn: AgendaItemCommonServiceModule
+    providedIn: 'root'
 })
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
     public constructor(

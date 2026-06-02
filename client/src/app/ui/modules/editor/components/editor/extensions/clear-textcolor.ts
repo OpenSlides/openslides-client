@@ -17,8 +17,19 @@ const ClearTextcolorPastePlugin = new Plugin({
             const elements = doc.getElementsByTagName(`*`);
             for (let i = 0; i < elements.length; i++) {
                 const el = elements.item(i) as HTMLElement;
-                if (el.style && el.style.color && tinycolor(el.style.color).toHex() === `000000`) {
+                if (!el.style) {
+                    continue;
+                }
+
+                const textColor = !el.style.color || tinycolor(el.style.color).toHex();
+                const bgColor = !el.style.backgroundColor || tinycolor(el.style.backgroundColor).toHex();
+
+                if (
+                    (textColor === `000000` && bgColor === `ffffff`) ||
+                    (textColor === `ffffff` && bgColor === `424242`)
+                ) {
                     el.style.color = ``;
+                    el.style.backgroundColor = ``;
                 }
             }
 

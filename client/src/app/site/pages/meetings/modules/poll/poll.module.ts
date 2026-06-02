@@ -11,7 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
@@ -35,7 +34,6 @@ const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, 
 const COMPONENTS = [
     PollProgressComponent,
     PollFilteredVotesChartComponent,
-    ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
     SingleOptionChartTableComponent,
@@ -47,7 +45,7 @@ const COMPONENTS = [
     declarations: [...COMPONENTS],
     imports: [
         CommonModule,
-        BaseChartDirective,
+        ChartComponent,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -68,7 +66,7 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS],
-    providers: [...PIPES, provideCharts(withDefaultRegisterables())]
+    exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
+    providers: [...PIPES]
 })
 export class PollModule {}

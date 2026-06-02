@@ -84,9 +84,7 @@
                 <p class="supporters">
                     <os-comma-separated-listing [list]="supportersObservable | async">
                         <ng-template let-supporter>
-                            <span [class.warn]="canManage && !checkValidSupporter(supporter)">
-                                {{ supporter.full_name }}
-                            </span>
+                            <span [class.warn]="warn(supporter)">{{ supporter.full_name }}</span>
                         </ng-template>
                     </os-comma-separated-listing>
                 </p>

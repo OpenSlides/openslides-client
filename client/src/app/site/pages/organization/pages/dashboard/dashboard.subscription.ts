@@ -17,13 +17,15 @@ export const meetingFields: (keyof Meeting)[] = [
     `description`,
     `location`,
     `organization_tag_ids`,
-    `locked_from_inside`
+    `locked_from_inside`,
+    `time_zone`
 ];
 
 export const getDashboardMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
+        fieldset: [`id`],
         follow: [
             {
                 idField: `active_meeting_ids`,

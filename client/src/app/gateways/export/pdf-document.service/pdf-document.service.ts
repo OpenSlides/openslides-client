@@ -481,14 +481,14 @@ export class PdfDocumentService {
      * @returns A line for the toc
      */
     public createTocLine(
-        { identifier, title, pageReference, style = StyleType.DEFAULT, fillColor = `` }: TocLineDefinition,
+        { identifier, title, pageReference, fillColor = `` }: TocLineDefinition,
         ...subTitle: Content[]
     ): Content[] {
         return [
             {
                 text: identifier,
-                fillColor,
-                style
+                style: `tocEntry`,
+                fillColor
             },
             {
                 text: [title, ...subTitle],

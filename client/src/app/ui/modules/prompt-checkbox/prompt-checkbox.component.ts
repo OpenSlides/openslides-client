@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -11,7 +10,7 @@ import { PromptService } from '../prompt-dialog';
     providers: [
         { provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: `noop` } as MatCheckboxDefaultOptions }
     ],
-    imports: [CommonModule, MatCheckboxModule]
+    imports: [MatCheckboxModule]
 })
 export class PromptCheckboxComponent {
     /**

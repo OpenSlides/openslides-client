@@ -9,10 +9,9 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ViewMotion } from '../../../../view-models';
 import { MotionPollService } from '../motion-poll.service';
-import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 @Injectable({
-    providedIn: MotionPollServiceModule
+    providedIn: 'root'
 })
 export class MotionPollPdfService extends BasePollPdfService {
     public constructor(

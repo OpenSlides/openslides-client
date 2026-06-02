@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { CHAT_MESSAGE_MAX_LENGTH } from 'src/app/gateways/repositories/chat/chat-message-repository.service';
 import { KeyCode } from 'src/app/infrastructure/utils/key-code';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-chat-group-detail-message-form`,
@@ -37,7 +41,13 @@ export class ChatGroupDetailMessageFormComponent {
 
     private _currentMessage: ViewChatMessage | null = null;
 
-    public constructor(fb: UntypedFormBuilder) {
+    public constructor(
+        fb: UntypedFormBuilder,
+        private operator: OperatorService,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private translate: TranslateService,
+        private snackBar: MatSnackBar
+    ) {
         this.messageForm = fb.control(``, [Validators.maxLength(CHAT_MESSAGE_MAX_LENGTH)]);
     }
 
@@ -49,9 +59,14 @@ export class ChatGroupDetailMessageFormComponent {
     }
 
     public sendChatMessage(): void {
-        const content = this.messageForm.value?.trim() as string;
-        this.messageSent.emit(content);
-        this.resetMessageForm();
+        if (!this.isPartOfMeeting()) {
+            const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
+            this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
+        } else {
+            const content = this.messageForm.value?.trim() as string;
+            this.messageSent.emit(content);
+            this.resetMessageForm();
+        }
     }
 
     public cancelEditingChatMessage(): void {
@@ -62,5 +77,9 @@ export class ChatGroupDetailMessageFormComponent {
     private resetMessageForm(): void {
         this.currentMessage = null;
         this.messageForm.markAsPristine();
+    }
+
+    public isPartOfMeeting(): boolean {
+        return this.operator.isInMeeting(this.activeMeetingIdService.meetingId);
     }
 }

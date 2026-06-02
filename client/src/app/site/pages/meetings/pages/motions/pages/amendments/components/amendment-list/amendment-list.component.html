@@ -56,13 +56,14 @@
                         </span>
                     }
                     <span>{{ motion.number }}</span>
-                    @if (getChangedLinesFromAmendment(motion)) {
+                    @let changedLines = getChangedLinesFromAmendment(motion);
+                    @if (changedLines) {
                         <span>
                             @if (motion.number) {
                                 <span>&nbsp;&middot;&nbsp;</span>
                             }
                             <span>{{ 'Line' | translate }}</span>
-                            <span>&nbsp;{{ getChangedLinesFromAmendment(motion) }}</span>
+                            <span>&nbsp;{{ changedLines }}</span>
                         </span>
                     }
                 </div>
@@ -108,13 +109,10 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="innerTable">
-                @if (getAmendmentSummary(motion)) {
-                    <div
-                        class="motion-text underlined-links"
-                        [innerHtml]="getAmendmentSummary(motion) | trust: 'html'"
-                    ></div>
-                }
-                @if (!getAmendmentSummary(motion)) {
+                @let summary = getAmendmentSummary(motion);
+                @if (summary) {
+                    <div class="motion-text underlined-links" [innerHtml]="summary | trust: 'html'"></div>
+                } @else {
                     <i>{{ 'No changes at the text.' | translate }}</i>
                 }
             </div>

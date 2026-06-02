@@ -25,7 +25,6 @@ import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/po
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewTopic } from '../../../view-models';
-import { TopicPollServiceModule } from './topic-poll-service.module';
 
 interface TopicPollTableEntry {
     label: string;
@@ -33,7 +32,7 @@ interface TopicPollTableEntry {
 }
 
 @Injectable({
-    providedIn: TopicPollServiceModule
+    providedIn: 'root'
 })
 export class TopicPollService extends PollService {
     public defaultPollMethod: PollMethod;

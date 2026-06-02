@@ -21,6 +21,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
+import { ArrowNavigationDirective } from 'src/app/ui/modules/editor/directives/tab-navigation.directive';
 import { ExpandableContentWrapperComponent } from 'src/app/ui/modules/expandable-content-wrapper';
 import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -47,6 +48,7 @@ const COMPONENTS = [
     declarations: [...COMPONENTS, AssignmentPollDialogComponent, AssignmentPollFormComponent],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
+        ArrowNavigationDirective,
         CustomIconComponent,
         CommonModule,
         CommaSeparatedListingComponent,

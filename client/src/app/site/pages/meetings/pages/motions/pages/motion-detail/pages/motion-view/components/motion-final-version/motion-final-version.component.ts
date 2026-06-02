@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 
-import { MotionDiffService } from '../../../../../../modules/change-recommendations/services';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service';
 
@@ -37,7 +36,6 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     public constructor(
         protected override translate: TranslateService,
-        private diffService: MotionDiffService,
         private fb: UntypedFormBuilder
     ) {
         super();
@@ -100,10 +98,12 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
         }
 
         this.contentForm.patchValue({
-            modified_final_version: this.diffService.formatOsCollidingChanges(
-                this.motion.modified_final_version,
-                this.diffService.formatOsCollidingChanges_wysiwyg_cb
-            )
+            modified_final_version: this.motion
+                .services()
+                .diff.formatOsCollidingChanges(
+                    this.motion.modified_final_version,
+                    this.motion.services().diff.formatOsCollidingChanges_wysiwyg_cb
+                )
         });
     }
 }

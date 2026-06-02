@@ -5,6 +5,7 @@ import {
     PollClassTypeVerbose,
     PollContentObject,
     PollData,
+    PollMethod,
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
@@ -137,7 +138,14 @@ export class ViewPoll<C extends PollContentObject = any>
             { value: true, displayName: `Single votes` }
         ];
         const slideOptions: SlideOptions =
-            this.type === `named` && !this.is_pseudoanonymized && this.isMotionPoll
+            this.type === `named` &&
+            !this.is_pseudoanonymized &&
+            (this.isMotionPoll ||
+                (this.isAssignmentPoll &&
+                    ((!this.global_yes && this.pollmethod === PollMethod.Y && this.max_votes_amount === 1) ||
+                        this.isListPoll ||
+                        ((this.pollmethod === PollMethod.YNA || this.pollmethod === PollMethod.YN) &&
+                            this.option_ids?.length === 1))))
                 ? [
                       {
                           key: `single_votes`,

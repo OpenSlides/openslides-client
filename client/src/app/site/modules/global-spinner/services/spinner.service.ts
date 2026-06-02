@@ -8,10 +8,9 @@ import { OverlayInstance, OverlayService } from 'src/app/ui/modules/openslides-o
 
 import { GlobalSpinnerComponent } from '../components/global-spinner/global-spinner.component';
 import { SpinnerConfig } from '../definitions';
-import { GlobalSpinnerModule } from '../global-spinner.module';
 
 @Injectable({
-    providedIn: GlobalSpinnerModule
+    providedIn: 'root'
 })
 export class SpinnerService {
     private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;

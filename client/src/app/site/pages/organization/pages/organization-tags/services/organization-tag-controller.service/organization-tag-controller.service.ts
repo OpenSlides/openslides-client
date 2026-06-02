@@ -6,10 +6,9 @@ import { BaseController } from 'src/app/site/base/base-controller';
 import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 
 import { ViewOrganizationTag } from '../../view-models';
-import { OrganizationTagCommonServiceModule } from '../organization-tag-common-service.module';
 
 @Injectable({
-    providedIn: OrganizationTagCommonServiceModule
+    providedIn: 'root'
 })
 export class OrganizationTagControllerService extends BaseController<ViewOrganizationTag, OrganizationTag> {
     public constructor(

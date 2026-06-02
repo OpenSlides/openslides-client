@@ -10,7 +10,6 @@ import { ViewUser } from '../../../view-models/view-user';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';
 import { InteractionReceiveService } from './interaction-receive.service';
-import { InteractionServiceModule } from './interaction-service.module';
 import { RtcService } from './rtc.service';
 import { StreamService } from './stream.service';
 
@@ -33,7 +32,7 @@ export const InviteMessage = `invitationToCall`;
 export const KickMessage = `kickFromCall`;
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class InteractionService {
     public conferenceStateObservable = this.interactionReceive.conferenceStateObservable;

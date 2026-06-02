@@ -101,6 +101,10 @@ export class ProjectorListEntryComponent {
         }
     }
 
+    public getFullScreenLink(): string {
+        return `/${this.activeMeetingId}/projectors/${this.projector.sequential_number}`;
+    }
+
     /**
      * Delete the projector.
      */

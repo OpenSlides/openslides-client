@@ -87,6 +87,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             parent_id: partialMediafile.parent_id || null,
             ...variables
         };
+        if (payload.title === ``) {
+            payload.title = null;
+        }
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
@@ -102,6 +105,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             parent_id: partialMediafile.parent_id,
             ...variables
         };
+        if (payload.title === ``) {
+            payload.title = null;
+        }
         return this.sendActionToBackend(MediafileAction.CREATE_DIRECTORY, payload);
     }
 
@@ -116,6 +122,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             meeting_id: this.activeMeetingId ?? undefined,
             ...variables
         };
+        if (payload.title === ``) {
+            payload.title = null;
+        }
         return this.sendActionToBackend(MediafileAction.UPDATE, payload);
     }
 

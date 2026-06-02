@@ -5,12 +5,11 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
-import { InteractionServiceModule } from './interaction-service.module';
 
 const STREAM_RUNNING_STORAGE_KEY = `streamIsRunning`;
 
 @Injectable({
-    providedIn: InteractionServiceModule
+    providedIn: 'root'
 })
 export class StreamService {
     public liveStreamUrlObservable: Observable<string> = this.settingService.get(`conference_stream_url`);

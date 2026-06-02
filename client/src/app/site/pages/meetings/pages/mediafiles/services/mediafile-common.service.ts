@@ -10,10 +10,9 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ActiveMeetingIdService } from '../../../services/active-meeting-id.service';
 import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
 import { ViewMediafile } from '../view-models';
-import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 import { MediafileControllerService } from './mediafile-controller.service';
 
-@Injectable({ providedIn: MediafileCommonServiceModule })
+@Injectable({ providedIn: 'root' })
 export class MediafileCommonService {
     private get activeMeetingId(): number {
         return this.meetingIdService.meetingId!;

@@ -46,4 +46,8 @@ export class SortBottomSheetComponent<V> implements OnInit {
     public clickedOption(item: string | number | symbol | OsSortProperty<V>): void {
         this.sheetRef.dismiss(item);
     }
+
+    public dismiss(): void {
+        this.sheetRef.dismiss();
+    }
 }

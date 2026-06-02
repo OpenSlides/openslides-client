@@ -6,10 +6,9 @@ import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { MotionListInfoDialogComponent } from '../components/motion-list-info-dialog/motion-list-info-dialog.component';
 import { MotionListInfoDialogConfig } from '../definitions';
-import { MotionListInfoDialogModule } from '../motion-list-info-dialog.module';
 
 @Injectable({
-    providedIn: MotionListInfoDialogModule
+    providedIn: 'root'
 })
 export class MotionListInfoDialogService extends BaseDialogService<
     MotionListInfoDialogComponent,

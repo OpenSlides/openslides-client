@@ -47,7 +47,7 @@ export interface ChoicesFunctionDefinition<V> {
 }
 
 export interface SettingsInput<V = any> {
-    key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
+    key: keyof Settings | (keyof Settings)[]; // Can be used with multi value fields (like the type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
     // if true, the default value will not be translated
@@ -63,8 +63,11 @@ export interface SettingsInput<V = any> {
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
-    keyTransformationConfig?: ObjectReplaceKeysConfig; // May be set if the value is expected to be an object. If it is, all keys will be transformed according to the lines before they are passed to the forms, and back before the form is saved.
-    pickKeys?: string[]; // If the value is an object, this will throw away all properties, except the given keys, this is done before the keyTransformation
+    // May be set if the value is expected to be an object.
+    // If it is, all keys will be transformed according to the lines before they are passed to the forms, and back before the form is saved.
+    keyTransformationConfig?: ObjectReplaceKeysConfig;
+    // If the value is an object, this will throw away all properties, except the given keys, this is done before the keyTransformation
+    pickKeys?: string[];
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *

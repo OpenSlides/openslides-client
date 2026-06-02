@@ -1,4 +1,3 @@
-import { splitStringKeepSeperator } from "../utils/utils";
 import { normalizeHtmlForDiff } from "./internal";
 
 /**
@@ -143,6 +142,17 @@ function diffArrays(oldArr: any, newArr: any): any {
     return { o: oldArr, n: newArr };
 }
 
+const TOKENIZE_REGEXES = {
+    prependLt: /(?=<)/g,
+    appendGt: /(.*?>)/g,
+    space: /( )/g,
+    dot: /(\.)/g,
+    comma: /(,)/g,
+    exclaim: /(!)/g,
+    dash: /(-)/g,
+    appendNewline: /(.*?\n)/g,
+};
+
 /**
  * This method splits a string into an array of strings, such as that it can be used by the diff method.
  * Mainly it tries to split it into single words, but prevents HTML tags from being split into different elements.
@@ -151,17 +161,19 @@ function diffArrays(oldArr: any, newArr: any): any {
  * @returns {string[]}
  */
 function tokenizeHtml(str: string): string[] {
+    const splitConfigs = [
+        { by: `<`, regex: TOKENIZE_REGEXES.prependLt, append: false },
+        { by: `>`, regex: TOKENIZE_REGEXES.appendGt, append: true },
+        { by: ` `, regex: TOKENIZE_REGEXES.space, append: false },
+        { by: `.`, regex: TOKENIZE_REGEXES.dot, append: false },
+        { by: `,`, regex: TOKENIZE_REGEXES.comma, append: false },
+        { by: `!`, regex: TOKENIZE_REGEXES.exclaim, append: false },
+        { by: `-`, regex: TOKENIZE_REGEXES.dash, append: false },
+        { by: `\n`, regex: TOKENIZE_REGEXES.appendNewline, append: true },
+    ];
+
     let res = [str];
-    for (const splitConf of [
-        { by: `<`, type: `prepend` },
-        { by: `>`, type: `append` },
-        { by: ` ` },
-        { by: `.` },
-        { by: `,` },
-        { by: `!` },
-        { by: `-` },
-        { by: `\n`, type: `append` }
-    ]) {
+    for (const splitConf of splitConfigs) {
         const newArr = [];
         for (const str of res) {
             // Don't split HTML tags
@@ -170,10 +182,13 @@ function tokenizeHtml(str: string): string[] {
                 continue;
             }
 
-            newArr.push(...splitStringKeepSeperator(str, splitConf.by, splitConf.type));
+            const parts = str.split(splitConf.regex);
+            newArr.push(
+                ...(splitConf.append ? parts.filter((el) => el !== ``) : parts),
+            );
         }
         res = newArr;
     }
 
-    return res.filter(el => el !== ``);
+    return res.filter((el) => el !== ``);
 }

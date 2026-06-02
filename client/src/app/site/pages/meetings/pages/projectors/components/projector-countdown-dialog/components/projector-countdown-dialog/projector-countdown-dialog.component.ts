@@ -31,14 +31,14 @@ export class ProjectorCountdownDialogComponent implements OnInit {
         private durationService: DurationService,
         @Inject(MAT_DIALOG_DATA) public data: CountdownDialogData
     ) {
-        this.defaultTime = meetingSettingsService.instant(`projector_countdown_warning_time`)!;
+        this.defaultTime = meetingSettingsService.instant(`projector_countdown_default_time`)!;
     }
 
     /**
      * Init. Creates the form
      */
     public ngOnInit(): void {
-        const time = this.data.duration || this.durationService.durationToString(this.defaultTime, `m`);
+        const time = this.data.duration || this.durationService.durationToString(this.defaultTime, ``);
         const title = this.data.title || `${this.translate.instant(`Timer`)} ${this.data.count || 0 + 1}`;
 
         this.countdownForm = this.formBuilder.group({

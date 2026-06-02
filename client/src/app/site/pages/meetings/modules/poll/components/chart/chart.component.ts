@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 
 export type ChartData = ChartDate[];
@@ -23,7 +24,7 @@ type Label = SingleLineLabel | MultiLineLabel;
     selector: `os-chart`,
     templateUrl: `./chart.component.html`,
     styleUrls: [`./chart.component.scss`],
-    standalone: false
+    imports: [ChartjsComponent]
 })
 export class ChartComponent {
     /**
@@ -87,6 +88,7 @@ export class ChartComponent {
                         enabled: false
                     },
                     legend: {
+                        display: this.legend,
                         position: `left`
                     }
                 }
@@ -119,6 +121,9 @@ export class ChartComponent {
                 plugins: {
                     tooltip: {
                         enabled: false
+                    },
+                    legend: {
+                        display: this.legend
                     }
                 }
             };

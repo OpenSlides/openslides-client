@@ -175,7 +175,7 @@ export class ThemeService {
         this.currentGeneralColorsSubject.next(data);
         document.documentElement.style.setProperty(
             `--theme-headbar-contrast`,
-            this.colorService.isLightFromHex(data.headbar) ? `rgba(black, 0.87)` : `white`
+            this.colorService.isLightFromHex(data.headbar) ? `rgba(0, 0, 0, 0.87)` : `white`
         );
     }
 

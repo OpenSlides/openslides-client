@@ -446,7 +446,7 @@ export interface ListUpdateData<T extends Identifiable> {
  * To this end:
  *  - All newValues objects without ids are interpreted as new and sorted into toCreate
  *  - All ids that were present in originals, but not in newValues are put in toDelete
- *  - All newValues objects with ids are interpreted as updated, if either there is no corresponding original, or the corresponding original has different values
+ *  - All newValues objects with ids are interpreted as updated, if there is no corresponding original, or the corresponding original has different values
  */
 export function partitionModelsForUpdate<T extends Identifiable>(
     newValues: (T | Omit<T, `id`>)[],
@@ -499,7 +499,8 @@ export function replaceObjectKeys(
  * @param array An array sorted in ascending order according to compareFn
  * @param toFind The item to search for
  * @param compareFn A compare function the type of which would be used in array.sort
- * @returns -1 if no index is found, else the index of the item in the array. If the item is in the array multiple times, it will be the first index of the item.
+ * @returns -1 if no index is found, else the index of the item in the array.
+ * (If the item is in the array multiple times, it will be the first index of the item)
  */
 export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: T, b: T) => number): number {
     let startId = 0;

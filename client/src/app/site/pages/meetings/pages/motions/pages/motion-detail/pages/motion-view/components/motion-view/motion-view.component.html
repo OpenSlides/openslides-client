@@ -137,6 +137,7 @@
             <div class="title">
                 <os-motion-manage-title
                     [changeRecoMode]="changeRecoMode"
+                    [isnotPartOfMeeting]="!operator.isInMeeting(this.activeMeetingId)"
                     [motion]="motion"
                     [publicAccess]="operator.isAnonymous"
                     (updateCrMode)="changeRecoMode = $event"

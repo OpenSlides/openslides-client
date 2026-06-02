@@ -63,7 +63,8 @@ export class ActionService {
     }
 
     /**
-     * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
+     * @deprecated it's better to use `createFromArray` instead.
+     * this does not offer the handle_separately route option, which is vital for certain types of bulk requests,
      */
     public create<T>(...requests: ActionRequest[]): Action<T> {
         return new Action<T>((r, c) => this.sendRequests<T>(r, false, c), requests);

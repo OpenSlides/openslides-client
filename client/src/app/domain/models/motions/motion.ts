@@ -13,6 +13,7 @@ export interface MotionFormattingRepresentation {
     text: string;
     modified_final_version: string;
     start_line_number: number;
+    diff_version: string;
 }
 
 export interface HasReferencedMotionInExtensionIds {
@@ -36,6 +37,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public sequential_number!: number;
     public title!: string;
     public text!: string;
+    public diff_version!: string;
     public modified_final_version!: string;
     public reason!: string;
     public category_weight!: number;
@@ -106,6 +108,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `number`,
         `sequential_number`,
         `title`,
+        `diff_version`,
         `text`,
         `amendment_paragraphs`,
         `modified_final_version`,

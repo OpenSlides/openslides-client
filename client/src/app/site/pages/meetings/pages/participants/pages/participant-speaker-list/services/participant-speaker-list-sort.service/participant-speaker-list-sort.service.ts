@@ -25,7 +25,7 @@ export class ParticipantSpeakerListSortService extends BaseSortListService<ViewS
         { property: `begin_time`, label: _(`Speech start time`) },
         { property: `name`, label: _(`Speaker`) },
         {
-            property: `numbering`,
+            property: `topic`,
             label: _(`Numbering`),
             foreignBaseKeys: { agenda_item: [`item_number`], motion: [`number`] }
         }

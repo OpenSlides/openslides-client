@@ -8,10 +8,9 @@ import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definiti
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
 import { committeeHeadersAndVerboseNames } from '../../definitions';
-import { CommitteeImportServiceModule } from '../committee-import-service.module';
 
 @Injectable({
-    providedIn: CommitteeImportServiceModule
+    providedIn: 'root'
 })
 export class CommitteeImportService extends BaseBackendImportService {
     public override errorList = {

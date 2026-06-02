@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -14,7 +13,7 @@ interface MediafileDeleteDialogData {
     selector: `os-mediafile-delete-dialog`,
     templateUrl: `./mediafile-delete-dialog.component.html`,
     styleUrls: [`./mediafile-delete-dialog.component.scss`],
-    imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
+    imports: [MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class MediafileDeleteDialogComponent {
     public get usedInMeetings(): string {

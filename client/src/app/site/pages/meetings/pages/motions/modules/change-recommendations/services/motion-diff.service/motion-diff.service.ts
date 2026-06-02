@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { HtmlDiff } from '@openslides/motion-diff';
+import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
+import { DIFF_VERSION } from '../diff-factory.service';
 import { LineNumberedString } from '../line-numbering.service';
 
 /**
@@ -77,8 +78,18 @@ import { LineNumberedString } from '../line-numbering.service';
 })
 export class MotionDiffService {
     private diffCache = new DiffCache();
+    private htmlDiff: typeof HtmlDiff;
 
-    public constructor(private translate: TranslateService) {}
+    public constructor(
+        @Inject(DIFF_VERSION) diffVersion: string,
+        private translate: TranslateService
+    ) {
+        if (diffVersion === VERSION) {
+            this.htmlDiff = HtmlDiff;
+        } else {
+            this.htmlDiff = DiffCompat.getForVersion(diffVersion || `0.0.0`)[1];
+        }
+    }
 
     /**
      * Returns the HTML snippet between two given line numbers.
@@ -124,7 +135,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const extractedRange = HtmlDiff.extractRangeByLineNumbers(html, fromLine, toLine);
+        const extractedRange = this.htmlDiff.extractRangeByLineNumbers(html, fromLine, toLine);
         this.diffCache.put(cacheKey, extractedRange);
 
         return extractedRange;
@@ -137,7 +148,7 @@ export class MotionDiffService {
      * @param {ExtractedContent} diff
      */
     public formatDiff(diff: ExtractedContent): string {
-        return HtmlDiff.formatDiff(diff);
+        return this.htmlDiff.formatDiff(diff);
     }
 
     /**
@@ -157,7 +168,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const range = HtmlDiff.detectAffectedLineRange(diffHtml);
+        const range = this.htmlDiff.detectAffectedLineRange(diffHtml);
         this.diffCache.put(cacheKey, range);
         return range;
     }
@@ -169,8 +180,8 @@ export class MotionDiffService {
      * @param {string} html
      * @returns {string}
      */
-    public diffHtmlToFinalText(html: string): string {
-        return HtmlDiff.diffHtmlToFinalText(html);
+    public diffHtmlToFinalText(html: string, keepLineNumbers = false): string {
+        return this.htmlDiff.diffHtmlToFinalText(html, keepLineNumbers);
     }
 
     /**
@@ -187,7 +198,7 @@ export class MotionDiffService {
      * @param {number} toLine
      */
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-        return HtmlDiff.replaceLines(oldHtml, newHTML, fromLine, toLine);
+        return this.htmlDiff.replaceLines(oldHtml, newHTML, fromLine, toLine);
     }
 
     /**
@@ -212,30 +223,21 @@ export class MotionDiffService {
             return cached;
         }
 
-        const diff = HtmlDiff.diff(htmlOld, htmlNew, lineLength, firstLineNumber);
+        const diff = this.htmlDiff.diff(htmlOld, htmlNew, lineLength, firstLineNumber);
         this.diffCache.put(cacheKey, diff);
 
         return diff;
     }
 
     public readdOsSplit(diff: string, versions: string[], before = false): string {
-        return HtmlDiff.readdOsSplit(diff, versions, before);
+        return this.htmlDiff.readdOsSplit(diff, versions, before);
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return HtmlDiff.changeHasCollissions(
+        return this.htmlDiff.changeHasCollissions(
             this.convertViewUnifiedChange(change),
             this.convertViewUnifiedChanges(changes)
         );
-    }
-
-    public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return changes.sort((change1, change2): number => {
-            if (change1.getIdentifier() === change2.getIdentifier()) {
-                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
-            }
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
     }
 
     /**
@@ -256,7 +258,7 @@ export class MotionDiffService {
         highlightLine?: number,
         firstLine = 1
     ): string {
-        return HtmlDiff.getTextWithChanges(
+        return this.htmlDiff.getTextWithChanges(
             motionHtml,
             this.convertViewUnifiedChanges(changes),
             lineLength,
@@ -270,20 +272,20 @@ export class MotionDiffService {
         html: string,
         formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
     ): string {
-        const frag = HtmlDiff.htmlToFragment(html);
+        const frag = this.htmlDiff.htmlToFragment(html);
 
-        frag.querySelectorAll(`.os-colliding-change`).forEach((el: HTMLElement): void => {
+        frag.querySelectorAll(`[data-change-is-colliding]`).forEach((el: HTMLElement): void => {
             formatter.bind(this)(el as HTMLDivElement);
         });
 
-        return HtmlDiff.fragmentToHtml(frag);
+        return this.htmlDiff.fragmentToHtml(frag);
     }
 
     public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {
         // This callback will only do anything the first time it's called on a generated document.
-        // After that, the document should stay as it is. Hence, we remove the ol-colliding-change class
+        // After that, the document should stay as it is. Hence, we remove the data-change-is-colliding attribute
         // from the holder element to the comment.
-        if (el.classList.contains(`os-colliding-change-comment`)) {
+        if (el.hasAttribute(`data-comment-change-is-colliding`)) {
             return;
         }
         const type = el.getAttribute(`data-change-type`) ?? ``;
@@ -291,12 +293,12 @@ export class MotionDiffService {
         const lineFrom = el.getAttribute(`data-line-from`) ?? ``;
         const lineTo = el.getAttribute(`data-line-to`) ?? ``;
 
-        // true if either it's a DIV with the class, or a P with a child-SPAN with the class
+        // true if either it's a DIV with the attribute, or a P with a child-SPAN with the attribute
         const nodeIsColliding = (node: ChildNode): boolean => {
             if (!node || !node.nodeName) {
                 return false;
             }
-            if (node.nodeName === `DIV` && (node as HTMLDivElement).classList.contains(`os-colliding-change-holder`)) {
+            if (node.nodeName === `DIV` && (node as HTMLDivElement).hasAttribute(`data-colliding-change-holder`)) {
                 return true;
             }
             if (node.nodeName === `P`) {
@@ -305,7 +307,7 @@ export class MotionDiffService {
                     if (
                         child &&
                         child.nodeName === `SPAN` &&
-                        (child as HTMLSpanElement).classList.contains(`os-colliding-change-holder`)
+                        (child as HTMLSpanElement).hasAttribute(`data-colliding-change-holder`)
                     ) {
                         return true;
                     }
@@ -317,10 +319,10 @@ export class MotionDiffService {
         const prevIsColliding = nodeIsColliding(el.previousSibling);
         const nextIsColliding = nodeIsColliding(el.nextSibling);
 
-        // Once we start editing, the holder element should not hold the class deciding if to show a warning anymore.
+        // Once we start editing, the holder attribute "data-change-is-collidiing" should not hold the element deciding if to show a warning anymore.
         // The reason is that it might be hard to get rid of it while editing, yet we still want to be able to get rid
         // of the collision warning sign if the collision has been resolved
-        el.classList.remove(`os-colliding-change`);
+        el.removeAttribute(`data-change-is-colliding`);
 
         // In a P, we want to have the collision markers inserted within the P's margins
         let toInsertElement: HTMLElement, commentsInInlineElement: boolean;
@@ -346,8 +348,8 @@ export class MotionDiffService {
         }
 
         const comment = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
-        comment.classList.add(`os-colliding-change`);
-        comment.classList.add(`os-colliding-change-comment`);
+        comment.setAttribute(`data-change-is-colliding`, '');
+        comment.setAttribute(`data-comment-change-is-colliding`, '');
         comment.innerHTML = `&lt;` + replaceHtmlEntities(`!-- ### ` + strTitle + ` ### --`) + `&gt;`;
         if (commentsInInlineElement) {
             comment.innerHTML = comment.innerHTML + `<br>`;
@@ -387,7 +389,25 @@ export class MotionDiffService {
         changeRecos?: ViewUnifiedChange[]
     ): DiffLinesInParagraph | null {
         const changes = this.convertViewUnifiedChanges(changeRecos || []);
-        return HtmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changes);
+        return this.htmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changes);
+    }
+
+    /**
+     * Returns the index of the first difference between two texts
+     *
+     * @param {string} origText The original text
+     * @param {string} newText The changed text
+     * @return {number | null} Token index of first change, or null if no changes
+     */
+    public getFirstChangedTokenIndex(origText: string, newText: string): number | null {
+        if (origText === newText) return null;
+
+        const minLen = Math.min(origText.length, newText.length);
+        for (let i = 0; i < minLen; i += 1) {
+            if (origText[i] !== newText[i]) return i;
+        }
+
+        return minLen;
     }
 
     /**
@@ -406,7 +426,7 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        return HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
+        return this.htmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
     }
 
     /**
@@ -426,7 +446,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        return HtmlDiff.getTextRemainderAfterLastChange(
+        return this.htmlDiff.getTextRemainderAfterLastChange(
             motionHtml,
             this.convertViewUnifiedChanges(changes),
             lineLength,
@@ -448,10 +468,10 @@ export class MotionDiffService {
         motionText: LineNumberedString,
         lineRange: LineRange,
         lineNumbers: boolean,
-        lineLength: number,
+        lineLength?: number,
         highlightedLine?: number
     ): string {
-        return HtmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
+        return this.htmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
     }
 
     private convertViewUnifiedChanges(changes: ViewUnifiedChange[]): HtmlDiff.UnifiedChange[] {

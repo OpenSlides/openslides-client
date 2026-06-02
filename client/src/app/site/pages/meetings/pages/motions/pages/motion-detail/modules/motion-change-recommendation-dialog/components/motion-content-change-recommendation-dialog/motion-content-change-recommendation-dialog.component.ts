@@ -93,7 +93,7 @@ export class MotionContentChangeRecommendationDialogComponent extends BaseChange
     protected createForm(): void {
         this.contentForm = this.formBuilder.group(
             {
-                text: [this.changeReco?.text, Validators.required],
+                text: [this.changeReco?.text],
                 type: [this.changeReco?.type, Validators.required],
                 public: [!this.changeReco?.internal],
                 line_to: [this.changeReco?.line_to, [Validators.required, Validators.pattern(`[0-9]*`)]],

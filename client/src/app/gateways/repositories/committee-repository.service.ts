@@ -128,7 +128,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
      * https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
      */
     private getPartialCommitteePayload(committee: any): any {
-        return {
+        const payload = {
             description: committee.description,
             organization_tag_ids: committee.organization_tag_ids === null ? [] : committee.organization_tag_ids,
             manager_ids: committee.manager_ids,
@@ -144,5 +144,9 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             all_parent_ids: committee.all_parent_ids,
             all_child_ids: committee.all_child_ids
         };
+        if (payload.external_id === ``) {
+            payload.external_id = null;
+        }
+        return payload;
     }
 }

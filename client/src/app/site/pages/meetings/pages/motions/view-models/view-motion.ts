@@ -24,6 +24,7 @@ import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
+import { LineNumberingService, MotionDiffService } from '../modules/change-recommendations/services';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
 import { ViewMotionEditor } from '../modules/editors';
@@ -102,6 +103,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get speakerAmount(): number {
         return this.list_of_speakers?.waitingSpeakerAmount ?? 0;
+    }
+
+    public get diffVersion(): string {
+        return this.lead_motion?.diff_version || this.diff_version;
     }
 
     /**
@@ -217,14 +222,20 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     /**
-     * Get the number of the first diff line, in case a motion is an amendment
+     * Get the index of the first diff change, in case a motion is an amendment
      */
-    public get parentAndLineNumber(): string | null {
-        if (this.isParagraphBasedAmendment() && this.lead_motion && this.changedAmendmentLines?.length) {
-            return `${this.lead_motion.number} ${this.changedAmendmentLines[0].diffLineFrom}`;
-        } else {
-            return null;
+    public get parentAndChangeIndex(): string | null {
+        if (this.isParagraphBasedAmendment() && this.lead_motion) {
+            if (this._firstChangeIndex === undefined) {
+                this._firstChangeIndex = this.getAmendmentFirstChangeIndex(ChangeRecoMode.Changed);
+            }
+
+            if (this._firstChangeIndex !== null) {
+                return `${this.lead_motion.number} ${this._firstChangeIndex}`;
+            }
         }
+
+        return null;
     }
 
     public get forwardingStatus(): ForwardingStatus {
@@ -249,6 +260,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
+    private _firstChangeIndex: number | null | undefined = undefined;
 
     public getVotingText(context: VotingTextContext<ViewMotion>): string {
         const motionTranslation = context.translateFn(`Motion`);
@@ -264,11 +276,17 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         includeUnchanged?: boolean
     ) => DiffLinesInParagraph[] = () => [];
 
+    public getAmendmentFirstChangeIndex: (recoMode: ChangeRecoMode) => number | null = () => null;
+
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
     public getExtendedStateLabel!: () => string;
     public getExtendedRecommendationLabel!: () => string;
+    public services!: () => {
+        diff: MotionDiffService;
+        ln: LineNumberingService;
+    };
 
     public getPersonalNote(): ViewPersonalNote | null {
         if (this.personal_notes?.length) {

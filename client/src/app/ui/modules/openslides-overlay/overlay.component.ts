@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     EmbeddedViewRef,
@@ -17,8 +16,7 @@ import { OverlayPosition } from './definitions';
 @Component({
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
-    styleUrls: [`./overlay.component.scss`],
-    imports: [CommonModule]
+    styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent {
     @ViewChild(`viewContainer`, { read: ViewContainerRef, static: true })

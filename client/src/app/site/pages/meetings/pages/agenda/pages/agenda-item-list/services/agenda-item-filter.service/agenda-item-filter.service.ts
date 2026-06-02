@@ -11,10 +11,9 @@ import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-mo
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
-import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 
 @Injectable({
-    providedIn: AgendaItemListServiceModule
+    providedIn: 'root'
 })
 export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
     /**

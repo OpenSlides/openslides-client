@@ -12,9 +12,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewMediafile } from '../view-models';
-import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 
-@Injectable({ providedIn: MediafileCommonServiceModule })
+@Injectable({ providedIn: 'root' })
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
     public constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,

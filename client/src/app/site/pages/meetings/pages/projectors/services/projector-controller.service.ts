@@ -4,13 +4,19 @@ import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
+import { Action } from 'src/app/gateways/actions';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from '../../../services/meeting-controller-service-collector.service';
-import { isProjectable, Projectable, ProjectionBuildDescriptor } from '../../../view-models';
+import {
+    isProjectable,
+    MultiProjectionBuildDescriptor,
+    Projectable,
+    ProjectionBuildDescriptor
+} from '../../../view-models';
 import { ViewProjection, ViewProjector } from '../view-models';
 
 @Injectable({
@@ -29,14 +35,17 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.create(payload);
     }
 
-    public update(payload: any, projector: Identifiable): Promise<void> | Promise<[void, void]> {
+    public update(payload: any, projector: Identifiable): Promise<void | void[]> {
         if (payload.projectiondefault_ids) {
-            const defaultsPromise = this.updateProjectordefaults(payload.projectiondefault_ids);
+            const defaultsAction = this.updateProjectordefaults(payload.projectiondefault_ids);
             delete payload[`projectiondefault_ids`];
-            const updatePromise = this.repo.update(payload, projector);
-            return Promise.all([updatePromise, defaultsPromise]);
+            let updateAction = this.repo.update(payload, projector);
+            if (defaultsAction) {
+                updateAction = updateAction.concat(defaultsAction);
+            }
+            return updateAction.resolve();
         } else {
-            return this.repo.update(payload, projector);
+            return this.repo.update(payload, projector).resolve();
         }
     }
 
@@ -92,6 +101,14 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.addToPreview(descriptor, projectors, options);
     }
 
+    public bulkAddToPreview(
+        descriptor: ProjectionBuildDescriptor[],
+        projectors: ViewProjector[],
+        options: any = null
+    ): Promise<void> {
+        return this.repo.bulkAddToPreview(descriptor, projectors, options);
+    }
+
     public toggle(
         descriptor: ProjectionBuildDescriptor,
         projectors: ViewProjector[],
@@ -112,7 +129,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.getReferenceProjector();
     }
 
-    public ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
+    public ensureDescriptor(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable
+    ): ProjectionBuildDescriptor {
         return (
             isProjectable(obj) ? obj.getProjectionBuildDescriptor(this.meetingSettingsService) : obj
         ) as ProjectionBuildDescriptor;
@@ -123,7 +142,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
      *
      * @returns true, if the descriptor is projected on one projector.
      */
-    public isProjected(obj: ProjectionBuildDescriptor | Projectable): boolean {
+    public isProjected(obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable): boolean {
         const descriptor = this.ensureDescriptor(obj);
         const projectors = this.activeMeetingService.meeting?.projectors || [];
         return projectors.some(projector => this.isProjectedOn(descriptor, projector));
@@ -134,7 +153,10 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
      *
      * @returns true, if the object is projected on the projector.
      */
-    public isProjectedOn(obj: ProjectionBuildDescriptor | Projectable | null, projector: ViewProjector): boolean {
+    public isProjectedOn(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable | null,
+        projector: ViewProjector
+    ): boolean {
         if (!obj) {
             return false;
         }
@@ -143,14 +165,16 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
     }
 
     public getMatchingProjectionsFromProjector(
-        obj: ProjectionBuildDescriptor | Projectable,
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable,
         projector: ViewProjector
     ): ViewProjection[] {
         const descriptor = this.ensureDescriptor(obj);
         return projector.current_projections.filter(projection => projection.isEqualToDescriptor(descriptor));
     }
 
-    public getProjectorsWhichAreProjecting(obj: ProjectionBuildDescriptor | Projectable): ViewProjector[] {
+    public getProjectorsWhichAreProjecting(
+        obj: ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | Projectable
+    ): ViewProjector[] {
         const descriptor = this.ensureDescriptor(obj);
         return (
             this.activeMeetingService.meeting?.projectors.filter(projector => {
@@ -162,13 +186,11 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         );
     }
 
-    private async updateProjectordefaults(defaultKeys: Record<string, number[]>): Promise<void> {
+    private updateProjectordefaults(defaultKeys: Record<string, number[]>): Action<void> | null {
         if (Object.keys(defaultKeys).length) {
-            await this.meetingRepo
-                .update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) })
-                .resolve();
+            return this.meetingRepo.update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) });
         }
-        return;
+        return null;
     }
 
     private formatDefaultProjectors(defaultKeys: Record<string, number[]>): Record<string, number[]> {

@@ -23,6 +23,7 @@ export enum MeetingProjectionType {
     CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
     CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
+    Home = `home`,
     WiFiAccess = `wifi_access_data`
 }
 
@@ -74,14 +75,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `group_ids`,
             `language`,
             `locked_from_inside`,
-            `enable_anonymous`
+            `enable_anonymous`,
+            `time_zone`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
             `jitsi_room_password`,
-            `language`
+            `language`,
+            `time_zone`
         ];
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
@@ -121,6 +124,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
+                break;
+            case MeetingProjectionType.Home:
+                title = this.translate.instant(`Home`);
                 break;
             case MeetingProjectionType.WiFiAccess:
                 title = this.translate.instant(`Wifi access data`);
@@ -164,6 +170,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         }
         if (!update.id && !meeting) {
             throw new Error(`Either a meeting or an update.id has to be given`);
+        }
+        if (update.external_id === ``) {
+            update.external_id = null;
         }
         const actions: any[] = [
             {
@@ -263,11 +272,15 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     }
 
     private getPartialPayload(meeting: Partial<Meeting>): any {
-        return {
+        const payload = {
             ...meeting,
             start_time: this.anyDateToUnix(meeting.start_time),
             end_time: this.anyDateToUnix(meeting.end_time)
         };
+        if (payload.external_id === ``) {
+            payload.external_id = null;
+        }
+        return payload;
     }
 
     /**

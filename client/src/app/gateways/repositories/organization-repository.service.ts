@@ -48,7 +48,8 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `enable_anonymous`,
             `disable_forward_with_attachments`,
             `restrict_editing_same_level_committee_admins`,
-            `restrict_edit_forward_committees`
+            `restrict_edit_forward_committees`,
+            `time_zone`
         );
         return {
             ...super.getFieldsets(),

@@ -20,7 +20,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 
-import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
+import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
 
 @Component({
     selector: `os-account-button`,
@@ -44,14 +44,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private _langTriggerSubscription: Subscription;
 
+    public get isinMeeting(): boolean {
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous;
+    }
+
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId) && !this.operator.isAnonymous
-            ? this.user.isPresentInMeeting()
-            : false;
+        return this.isinMeeting && this.user.isPresentInMeeting();
     }
 
     public get isAllowedSelfSetPresent(): boolean {
-        return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
+        return this.isinMeeting && this._isAllowedSelfSetPresent;
     }
 
     public get hasActiveMeeting(): boolean {
@@ -135,7 +137,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public openAccountDialog(): void {
-        this.dialog.open(AccountDialogComponent, {
+        this.dialog.open(AccountDialogMainComponent, {
             ...largeDialogSettings,
             height: `530px`
         });
@@ -207,19 +209,21 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public getAriaLabel(): string {
         let stringForUserPresent: string;
-        if (!this.hasActiveMeeting) {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
+        if (this.operator.isAnonymous) {
+            stringForUserPresent = this.translate.instant(`Account is public.`);
+        } else if (!this.hasActiveMeeting) {
+            stringForUserPresent = this.translate.instant(`Your account is not in meeting.`);
         } else if (this.user.isPresentInMeeting()) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is present. If status just changed focus this element again to get accurate present status.`
+                `Your account is present. If status just changed focus this element again to get accurate present status.`
             );
         } else if (this.user.isInActiveMeeting) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is not present. If status just changed focus this element again to get accurate present status.`
+                `Your account is not present. If status just changed focus this element again to get accurate present status.`
             );
         } else {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
+            stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
-        return stringForUserPresent.replace(`{}`, this.user.short_name);
+        return this.user.short_name + ': ' + stringForUserPresent;
     }
 }

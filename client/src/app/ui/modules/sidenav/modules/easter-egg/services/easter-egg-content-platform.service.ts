@@ -4,10 +4,9 @@ import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settin
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { EasterEggContentPlatformDialogComponent } from '../components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
-import { EasterEggModule } from '../easter-egg.module';
 
 @Injectable({
-    providedIn: EasterEggModule
+    providedIn: 'root'
 })
 export class EasterEggContentPlatformService extends BaseDialogService<
     EasterEggContentPlatformDialogComponent,

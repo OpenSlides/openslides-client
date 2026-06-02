@@ -1,52 +1,52 @@
-@import 'src/assets/styles/poll-colors.scss';
+@use 'src/assets/styles/poll-colors.scss';
 
 .yes {
-    color: $votes-yes-color;
+    color: poll-colors.$votes-yes-color;
 }
 
 .no {
-    color: $votes-no-color;
+    color: poll-colors.$votes-no-color;
 }
 
 .abstain {
-    color: $votes-abstain-color;
+    color: poll-colors.$votes-abstain-color;
 }
 
 .bg-yes {
-    background-color: $votes-yes-color;
+    background-color: poll-colors.$votes-yes-color;
 }
 
 .bg-no {
-    background-color: $votes-no-color;
+    background-color: poll-colors.$votes-no-color;
 }
 
 .bg-abstain {
-    background-color: $votes-abstain-color;
+    background-color: poll-colors.$votes-abstain-color;
 }
 
 .voted-yes {
-    color: $votes-yes-color;
+    color: poll-colors.$votes-yes-color;
     opacity: 1 !important;
 }
 
 .voted-no {
-    color: $votes-no-color;
+    color: poll-colors.$votes-no-color;
     opacity: 1 !important;
 }
 
 .voted-abstain {
-    color: $votes-abstain-color;
+    color: poll-colors.$votes-abstain-color;
     opacity: 1 !important;
 }
 
 .start-poll-button {
-    color: $poll-start-color;
+    color: poll-colors.$poll-start-color;
 }
 
 .stop-poll-button {
-    color: $poll-stop-color;
+    color: poll-colors.$poll-stop-color;
 }
 
 .publish-poll-button {
-    color: $poll-publish-color;
+    color: poll-colors.$poll-publish-color;
 }

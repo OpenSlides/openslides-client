@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-    <span>{{ 'Project selection?' | translate }}</span>
+    <span>{{ 'Projector selection' | translate }}</span>
 </h2>
 
 @if (projectors && projectors.length) {
@@ -62,7 +62,9 @@
 }
 
 <mat-dialog-actions>
-    <button color="accent" mat-button osAutofocus (click)="onProject()">{{ 'Project' | translate }}</button>
+    @if (!hideMainButton) {
+        <button color="accent" mat-button osAutofocus (click)="onProject()">{{ 'Project' | translate }}</button>
+    }
     @if (projectorSelectable) {
         <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
     }

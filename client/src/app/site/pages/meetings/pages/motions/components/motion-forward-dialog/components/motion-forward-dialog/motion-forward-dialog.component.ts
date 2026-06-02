@@ -82,12 +82,14 @@ export class MotionForwardDialogComponent implements OnInit {
 
     private getMeetingsSorted(committee: GetForwardingMeetingsPresenter): GetForwardingMeetingsPresenterMeeting[] {
         return committee.meetings.sort((a, b) => {
-            const end_time = b.end_time - a.end_time;
+            const a_end_time = Date.parse(a.end_time);
+            const b_end_time = Date.parse(b.end_time);
+            const end_time = b_end_time - a_end_time;
             if (Number.isNaN(end_time)) {
-                if (b.end_time) {
-                    return b.end_time;
-                } else if (a.end_time) {
-                    return -a.end_time;
+                if (b_end_time) {
+                    return b_end_time;
+                } else if (a_end_time) {
+                    return -a_end_time;
                 }
                 return a.name.localeCompare(b.name);
             } else if (end_time === 0) {

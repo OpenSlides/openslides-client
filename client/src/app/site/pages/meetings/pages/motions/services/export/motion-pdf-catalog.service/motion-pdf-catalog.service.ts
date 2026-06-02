@@ -128,11 +128,6 @@ export class MotionPdfCatalogService {
                 const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
                 if (motionToCurrentCat && motionToCurrentCat.length) {
-                    // if this is not the first page, start with a pagebreak
-                    if (catTocBody.length) {
-                        catTocBody.push(this.pdfService.getPageBreak());
-                    }
-
                     catTocBody.push({
                         table: {
                             body: [

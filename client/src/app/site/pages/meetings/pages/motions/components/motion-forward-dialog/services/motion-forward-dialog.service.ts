@@ -28,10 +28,9 @@ import {
     MotionForwardDialogComponent,
     MotionForwardDialogReturnData
 } from '../components/motion-forward-dialog/motion-forward-dialog.component';
-import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 
 @Injectable({
-    providedIn: MotionForwardDialogModule
+    providedIn: 'root'
 })
 export class MotionForwardDialogService extends BaseDialogService<
     MotionForwardDialogComponent,
@@ -188,7 +187,7 @@ export class MotionForwardDialogService extends BaseDialogService<
         return (
             +meetingData.id !== this.activeMeeting.meetingId &&
             meetingData.end_time &&
-            new Date() <= endOfDay(fromUnixTime(meetingData.end_time))
+            new Date() <= endOfDay(fromUnixTime(Date.parse(meetingData.end_time)))
         );
     }
 
