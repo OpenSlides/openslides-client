@@ -21,6 +21,7 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { compareNumber } from 'src/app/infrastructure/utils';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
@@ -65,7 +66,7 @@ export abstract class PollService {
             .sort((a, b) => {
                 if (this.sortByVote) {
                     let compareValue;
-                    if (poll.pollmethod === PollMethod.N) {
+                    if (poll.config?.strike_out) {
                         // least no on top:
                         compareValue = compareNumber(b.no, a.no);
                     } else {
@@ -264,17 +265,6 @@ export abstract class PollService {
         return totalByBase;
                 */
         return 1;
-    }
-
-    private sumOptionsYN(option: OptionData): number {
-        const yes = option?.yes ?? 0;
-        const no = option?.no ?? 0;
-        return (yes >= 0 ? yes : 0) + (no >= 0 ? no : 0);
-    }
-
-    private sumOptionsYNA(option: OptionData): number {
-        const abstain = option?.abstain ?? 0;
-        return this.sumOptionsYN(option) + (abstain >= 0 ? abstain : 0);
     }
 
     public getVoteValueInPercent(
