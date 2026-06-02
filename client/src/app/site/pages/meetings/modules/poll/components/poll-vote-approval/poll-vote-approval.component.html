@@ -1,0 +1,16 @@
+<div class="vote-container">
+    @for (action of voteActions(); track action.vote) {
+        <div class="vote-button-area" role="gridcell">
+            <os-poll-vote-button
+                [isSelected]="isOptionSelected(action.vote)"
+                [loading]="loading()"
+                [optionTitle]="action.label | translate"
+                [optionType]="action.vote"
+                (toggleOption)="submitVote(action.vote)"
+            />
+            <span aria-hidden="true" class="vote-label">
+                {{ action.label | translate }}
+            </span>
+        </div>
+    }
+</div>

@@ -11,6 +11,7 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
+import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
 import { MotionPollModule } from '../../modules/motion-poll';
@@ -32,6 +33,7 @@ import { MotionPollsRoutingModule } from './motion-polls-routing.module';
         MotionPollModule,
         ParticipantCommonServiceModule,
         DirectivesModule,
+        TranslateKeyPipe,
         HeadBarModule,
         ListModule,
         MeetingsComponentCollectorModule,

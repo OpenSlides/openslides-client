@@ -35,7 +35,7 @@
         @if (!isMultiSelect) {
             <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
         }
-        <span>{{ poll.stateVerbose | translate }}</span>
+        <span>{{ poll.state | translateKey: 'poll_state' }}</span>
     </div>
 
     <!-- Voted Indicator -->

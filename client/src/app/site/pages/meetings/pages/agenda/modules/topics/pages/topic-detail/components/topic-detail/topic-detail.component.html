@@ -164,8 +164,8 @@
     @if (!editTopic) {
         <div class="spacer-bottom-60">
             @if (topic && topic.poll_ids?.length) {
-                @for (poll of topic.poll_ids | reverse; track trackById($index, poll)) {
-                    <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
+                @for (poll of topic.polls | reverse; track trackById($index, poll)) {
+                    <os-topic-poll [pollId]="poll.id" (dialogOpened)="openDialog(poll.id)"></os-topic-poll>
                 }
             }
             @if (topic && isEVotingEnabled) {

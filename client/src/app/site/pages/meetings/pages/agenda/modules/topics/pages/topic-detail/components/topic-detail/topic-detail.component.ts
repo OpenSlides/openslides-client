@@ -412,11 +412,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         if (pollId) {
             return this.pollController.getViewModel(pollId)!;
         } else {
-            return {
-                collection: ViewPoll.COLLECTION,
-                content_object_id: this.topic.fqid,
-                ...this.topicPollService.getDefaultPollData(this.topic)
-            } as Partial<PollDialogData>;
+            return this.topicPollService.getDefaultPollData(this.topic);
         }
     }
 }

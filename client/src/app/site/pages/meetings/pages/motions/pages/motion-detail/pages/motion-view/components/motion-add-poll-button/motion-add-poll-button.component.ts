@@ -34,7 +34,8 @@ export class MotionAddPollButtonComponent {
         const dialogData: Partial<PollDialogData> = {
             content_object_id: this.motion.fqid,
             content_object: this.motion,
-            ...defaultPollData
+            ...defaultPollData,
+            live_voting_enabled: this.motionPollService.defaultPollLiveVotingEnabled
         };
 
         this.pollDialog.open(dialogData);

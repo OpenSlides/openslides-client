@@ -1,9 +1,7 @@
 @if (poll) {
     <div
-        [ngClass]="{
-            'result-wrapper-wrapper': iconSize !== 'medium' && !inSlide,
-            'result-wrapper-wrapper-in-slide': inSlide
-        }"
+        [class.result-wrapper-wrapper]="iconSize !== 'medium' && !inSlide"
+        [class.result-wrapper-wrapper-in-slide]="inSlide"
     >
         <ng-content></ng-content>
         <div class="result-wrapper">

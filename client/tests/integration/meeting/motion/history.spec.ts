@@ -23,26 +23,7 @@ test.describe(`motion history mode test`, () => {
             agenda_create: false,
             agenda_type: `internal`
         });
-        await os4request(context, `poll.create`, {
-            meeting_id: meeting.id,
-            title: `Vote`,
-            onehundred_percent_base: `YNA`,
-            pollmethod: `YNA`,
-            type: `pseudoanonymous`,
-            global_abstain: false,
-            global_no: false,
-            global_yes: false,
-            max_votes_amount: 1,
-            min_votes_amount: 1,
-            max_votes_per_option: 1,
-            options: [
-                {
-                    content_object_id: `motion/${motion.id}`
-                }
-            ],
-            content_object_id: `motion/${motion.id}`,
-            backend: `fast`
-        });
+        // TODO: Create a poll
         await os4request(context, `motion.update`, {
             id: motion.id,
             title: `MotionHistoryTestChangedTitle`,

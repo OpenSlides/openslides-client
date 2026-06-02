@@ -1,0 +1,134 @@
+<div class="option-list">
+    @let multiVotes = !!(config()?.max_vote_sum > 1);
+    <div role="row" [class.option-list-caption]="multiVotes" [class.option-list-information-grid]="!multiVotes">
+        <ng-template #optionAmount>
+            @if (poll().option_ids.length > 1) {
+                <div>
+                    <b>
+                        {{ poll().option_ids.length }}
+                        @if (hasTextOptions()) {
+                            {{ 'Options' | translate }}
+                        } @else {
+                            {{ 'Candidates' | translate }}
+                        }
+                    </b>
+                </div>
+            } @else {
+                <div></div>
+            }
+        </ng-template>
+        @if (!multiVotes) {
+            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+        }
+
+        <div>
+            @if (multiVotes) {
+                <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+                <div class="available-votes">
+                    <div>{{ 'Available votes' | translate }}: {{ availableVotes() }}/{{ config()?.max_vote_sum }}</div>
+
+                    @if (config()?.min_vote_sum > 1) {
+                        <div>{{ 'At least {{num}} Votes' | translate:{num: config()?.min_vote_sum} }}</div>
+                    }
+
+                    @if (config()?.max_options_amount > 0) {
+                        <div>
+                            {{ 'Available options to select' | translate }}: {{ availableOptions() }}/{{
+                                config()?.max_options_amount
+                            }}
+                        </div>
+                    }
+
+                    @if (config()?.min_options_amount > 1) {
+                        <div>{{ 'At least {{num}} Options' | translate:{num: config()?.min_options_amount} }}</div>
+                    }
+
+                    @if (config()?.max_votes_per_option > 0) {
+                        <div>
+                            {{ 'At most {{numVotes}} votes per candidate ' | translate:{numVotes:
+                            config()?.max_votes_per_option} }}
+                        </div>
+                    }
+                </div>
+            } @else {
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            }
+        </div>
+    </div>
+
+    @if (multiVotes) {
+        <div class="option-list-information-grid" role="row">
+            <div></div>
+            <div class="vote-button-area" role="gridcell">
+                <ng-container *ngTemplateOutlet="optionTitle"></ng-container>
+            </div>
+        </div>
+    }
+
+    <ng-template #optionTitle>
+        <b class="poll-option-title">
+            {{ 'Yes' | translate }}
+        </b>
+    </ng-template>
+
+    @for (option of options(); track option.id; let i = $index) {
+        <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+            <div class="vote-option-title grid-name-area" role="rowheader">
+                <os-poll-vote-option [option]="option" />
+            </div>
+            <div class="vote-input-area" role="gridcell">
+                <mat-form-field appearance="outline" class="vote-input">
+                    <input
+                        matInput
+                        min="0"
+                        type="number"
+                        [max]="getOptionMax(option.id)"
+                        [value]="getOptionVote(option.id)"
+                        (change)="setOptionVote(option.id, $event.target.value, $event.target)"
+                    />
+                </mat-form-field>
+            </div>
+        </div>
+    }
+</div>
+
+@if (config()?.min_vote_sum === 0) {
+    <div class="or-divider">
+        <div class="hr-wrapper"><hr /></div>
+        <div>{{ 'OR' | translate }}</div>
+        <div class="hr-wrapper"><hr /></div>
+    </div>
+
+    <div class="option-list">
+        @if (config().min_vote_sum === 0) {
+            <div class="option-row" role="row">
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ 'General abstain' | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <os-poll-vote-button
+                        optionType="abstain"
+                        [isSelected]="+getOptionVote(0) > 0"
+                        [loading]="loading()"
+                        [optionTitle]="'General abstain' | translate"
+                        (toggleOption)="setOptionVote(0, '1')"
+                    />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (options().length > 0) {
+    <div class="submit-area">
+        <button
+            color="accent"
+            mat-raised-button
+            [disabled]="loading() || selectedOptionValues().size === 0"
+            (click)="submitVote()"
+        >
+            <mat-icon>how_to_vote</mat-icon>
+            {{ 'Submit vote now' | translate }}
+        </button>
+    </div>
+}

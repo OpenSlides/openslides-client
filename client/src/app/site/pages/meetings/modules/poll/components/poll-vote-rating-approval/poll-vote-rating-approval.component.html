@@ -1,0 +1,134 @@
+<div class="option-list">
+    <div class="option-list-caption" role="row">
+        <ng-template #optionAmount>
+            @if (poll().option_ids.length > 1) {
+                <div>
+                    <b>
+                        {{ poll().option_ids.length }}
+                        @if (hasTextOptions()) {
+                            {{ 'Options' | translate }}
+                        } @else {
+                            {{ 'Candidates' | translate }}
+                        }
+                    </b>
+                </div>
+            } @else {
+                <div></div>
+            }
+        </ng-template>
+
+        <div>
+            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
+            <div class="available-votes">
+                {{ 'Available votes' | translate }}:
+                <b>{{ availableVotes() }}/{{ config()?.max_vote_sum }}</b>
+                @if (config()?.min_vote_sum > 1) {
+                    <div>
+                        {{ 'At least' | translate }}
+                        <b>{{ config()?.min_vote_sum }}</b>
+                        {{ 'Votes' | translate }}
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="option-list-information-grid" role="row">
+        <div></div>
+        <div class="vote-button-area" role="gridcell">
+            <b class="poll-option-title">
+                {{ 'Yes' | translate }}
+            </b>
+        </div>
+        <div class="vote-button-area" role="gridcell">
+            <b class="poll-option-title">
+                {{ 'No' | translate }}
+            </b>
+        </div>
+        @if (config()?.allow_abstain) {
+            <div class="vote-button-area" role="gridcell">
+                <b class="poll-option-title">
+                    {{ 'Abstain' | translate }}
+                </b>
+            </div>
+        }
+    </div>
+
+    @for (option of options(); track option.id; let i = $index) {
+        <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+            <div class="vote-option-title grid-name-area" role="rowheader">
+                <os-poll-vote-option [option]="option" />
+            </div>
+            <div class="vote-button-area" role="gridcell">
+                <os-poll-vote-button
+                    optionType="yes"
+                    [isSelected]="isSelected(option.id, 'yes')"
+                    [loading]="loading()"
+                    [optionTitle]="'Yes' | translate"
+                    (toggleOption)="toggleOption(option.id, 'yes')"
+                />
+            </div>
+            <div class="vote-button-area" role="gridcell">
+                <os-poll-vote-button
+                    optionType="no"
+                    [isSelected]="isSelected(option.id, 'no')"
+                    [loading]="loading()"
+                    [optionTitle]="'No' | translate"
+                    (toggleOption)="toggleOption(option.id, 'no')"
+                />
+            </div>
+            @if (config()?.allow_abstain) {
+                <div class="vote-button-area" role="gridcell">
+                    <os-poll-vote-button
+                        optionType="abstain"
+                        [isSelected]="isSelected(option.id, 'abstain')"
+                        [loading]="loading()"
+                        [optionTitle]="'Abstain' | translate"
+                        (toggleOption)="toggleOption(option.id, 'abstain')"
+                    />
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (config()?.min_vote_sum === 0) {
+    <div class="or-divider">
+        <div class="hr-wrapper"><hr /></div>
+        <div>{{ 'OR' | translate }}</div>
+        <div class="hr-wrapper"><hr /></div>
+    </div>
+
+    <div class="option-list">
+        @if (config().min_vote_sum === 0) {
+            <div class="option-row" role="row">
+                <div class="vote-option-title grid-name-area" role="rowheader">
+                    {{ 'General abstain' | translate }}
+                </div>
+                <div class="vote-button-area" role="gridcell">
+                    <os-poll-vote-button
+                        optionType="abstain"
+                        [isSelected]="isSelected(0)"
+                        [loading]="loading()"
+                        [optionTitle]="'General abstain' | translate"
+                        (toggleOption)="toggleOption(0)"
+                    />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (options().length > 0) {
+    <div class="submit-area">
+        <button
+            color="accent"
+            mat-raised-button
+            [disabled]="loading() || selectedOptions().size === 0"
+            (click)="submitVote()"
+        >
+            <mat-icon>how_to_vote</mat-icon>
+            {{ 'Submit vote now' | translate }}
+        </button>
+    </div>
+}

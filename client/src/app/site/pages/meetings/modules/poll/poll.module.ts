@@ -25,20 +25,16 @@ import { PollFilteredVotesChartComponent } from './components/poll-filtered-vote
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
-import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
 import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
 import { PollServiceModule } from './services/poll-service.module';
 
-const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
+const MODULES = [PollServiceModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
-    PollProgressComponent,
     PollFilteredVotesChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
-    SingleOptionChartTableComponent,
-    VotesTableComponent,
-    PollCannotVoteMessageComponent
+    VotesTableComponent
 ];
 
 @NgModule({
@@ -46,6 +42,9 @@ const COMPONENTS = [
     imports: [
         CommonModule,
         ChartComponent,
+        PollCannotVoteMessageComponent,
+        PollProgressComponent,
+        SingleOptionChartTableComponent,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -58,7 +57,6 @@ const COMPONENTS = [
         MatTooltipModule,
         IconContainerComponent,
         FormsModule,
-        VotingPrivacyDialogModule,
         ListModule,
         DirectivesModule,
         SearchSelectorModule,
@@ -66,7 +64,15 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
+    exports: [
+        ...PIPES,
+        ...MODULES,
+        ...COMPONENTS,
+        SingleOptionChartTableComponent,
+        ChartComponent,
+        PollCannotVoteMessageComponent,
+        PollProgressComponent
+    ],
     providers: [...PIPES]
 })
 export class PollModule {}

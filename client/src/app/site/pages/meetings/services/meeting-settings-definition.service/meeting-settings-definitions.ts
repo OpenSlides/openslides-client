@@ -3,17 +3,10 @@ import { _ } from '@ngx-translate/core';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import {
-    PollBackendDurationChoices,
-    PollPercentBaseVerbose,
-    PollTypeVerbose
-} from 'src/app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
-import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
-import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
@@ -33,7 +26,7 @@ export type SettingsType =
     | `groups`
     | `daterange`;
 
-export type ChoicesMap = Record<string, string | number>;
+export type ChoicesMap = Record<string, string | number> | string[];
 
 /**
  * Need for settings that depend on models. The collection is resolved via the
@@ -800,7 +793,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `motion_poll_default_type`,
                         label: _(`Default voting type`),
                         type: `choice`,
-                        choices: PollTypeVerbose,
+                        choices: ['poll_visibility.manually', 'poll_visibility.open', 'poll_visibility.secret'],
                         restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
@@ -821,25 +814,17 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `groups`
                     },
                     {
-                        key: `motion_poll_default_method`,
-                        label: _(`Default voting method`),
-                        type: `choice`,
-                        choices: MotionPollMethodVerbose
-                    },
-                    {
                         key: `motion_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base`),
                         type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `motion_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
+                        choices: [
+                            'poll_percent_base.yes_no',
+                            'poll_percent_base.valid',
+                            'poll_percent_base.cast',
+                            'poll_percent_base.entitled',
+                            'poll_percent_base.entitled_present',
+                            'poll_percent_base.disabled'
+                        ]
                     },
                     {
                         key: `motion_poll_projection_name_order_first`,
@@ -911,7 +896,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `assignment_poll_default_type`,
                         label: _(`Default voting type`),
                         type: `choice`,
-                        choices: PollTypeVerbose,
+                        choices: ['poll_visibility.manually', 'poll_visibility.open', 'poll_visibility.secret'],
                         restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
@@ -926,25 +911,17 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `groups`
                     },
                     {
-                        key: `assignment_poll_default_method`,
-                        label: _(`Default election method`),
-                        type: `choice`,
-                        choices: AssignmentPollMethodVerbose
-                    },
-                    {
                         key: `assignment_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base`),
                         type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `assignment_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
+                        choices: [
+                            'poll_percent_base.yes_no',
+                            'poll_percent_base.valid',
+                            'poll_percent_base.cast',
+                            'poll_percent_base.entitled',
+                            'poll_percent_base.entitled_present',
+                            'poll_percent_base.disabled'
+                        ]
                     },
                     {
                         key: `assignment_poll_enable_max_votes_per_option`,

@@ -1,0 +1,14 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+@use 'src/assets/styles/poll-styles-result-chart.scss';
+
+:host {
+    outline: none;
+}
+
+.result-wrapper-additional {
+    .result-table {
+        tr {
+            height: 40px;
+        }
+    }
+}
