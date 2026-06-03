@@ -76,6 +76,10 @@ export class PollComponent extends BaseMeetingComponent {
         return null;
     });
 
+    public isDetailLink = computed(() => {
+        return window.location.pathname === this.getDetailLink();
+    });
+
     public pollStateAction: Signal<PollStateAction | null> = computed(() => {
         return this.pollStateActions[this.poll().state] ?? null;
     });
