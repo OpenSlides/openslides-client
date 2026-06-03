@@ -13,10 +13,7 @@
 >
     <!-- Poll Title -->
     <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">
-        @if (!isMultiSelect) {
-            <os-detail-view-navigator [model]="poll"></os-detail-view-navigator>
-        }
-        <span>{{ poll.title }}</span>
+        <a class="detail-link" [routerLink]="poll.id">{{ poll.title }}</a>
     </div>
 
     <!-- Motion Or Assigmnent Title Title -->
