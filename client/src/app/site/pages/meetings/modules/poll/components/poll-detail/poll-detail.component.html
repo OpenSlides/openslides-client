@@ -7,8 +7,11 @@
 
 <mat-card class="os-card">
     <mat-card-content>
-        <a [matTooltip]="'Direct link to module of poll' | translate" [matTooltipPosition]="'left'"
-            [routerLink]="getDetailLink()">
+        <a
+            [matTooltip]="'Direct link to module of poll' | translate"
+            [matTooltipPosition]="'left'"
+            [routerLink]="getDetailLink()"
+        >
             <h1>{{ poll()?.title }}</h1>
         </a>
     </mat-card-content>
