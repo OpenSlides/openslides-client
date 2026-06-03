@@ -1,4 +1,3 @@
-<!-- TODO to be implemented -->
 <os-head-bar>
     <div class="title-slot">
         <h1 class="mock-h2">{{ poll()?.title }}</h1>
@@ -7,15 +6,14 @@
 
 <mat-card class="os-card">
     <mat-card-content>
-        <a
-            [matTooltip]="'Direct link to module of poll' | translate"
-            [matTooltipPosition]="'left'"
-            [routerLink]="getDetailLink()"
-        >
+        <a [aria-label]="'Direct link to module of poll' | translate" [routerLink]="getDetailLink()">
             <h1>{{ poll()?.title }}</h1>
         </a>
     </mat-card-content>
 </mat-card>
 <mat-card class="os-card">
     <mat-card-content><os-poll [poll]="poll()"></os-poll></mat-card-content>
+</mat-card>
+<mat-card class="os-card">
+    <mat-card-content>Result Details</mat-card-content>
 </mat-card>
