@@ -581,8 +581,8 @@ export class MotionPdfService {
                 }
 
                 const labels: any[] = [this.translate.instant(`Yes`), this.translate.instant(`No`)];
-                const relativeAmounts: any[] = [];
-                const amounts: any[] = [result.yes || `0`, result.no || `0`];
+                const relativeAmounts: number[] = [];
+                const amounts: number[] = [+result.yes || 0, +result.no || 0];
                 if (poll.config.onehundred_percent_base.startsWith(`yes_no`)) {
                     relativeAmounts.push(Big(result.yes).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
                     relativeAmounts.push(Big(result.no).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
@@ -590,7 +590,7 @@ export class MotionPdfService {
 
                 if (poll.config.allow_abstain) {
                     labels.push(this.translate.instant(`Abstain`));
-                    amounts.push(result.abstain || `0`);
+                    amounts.push(+result.abstain || 0);
                     if (poll.config.onehundred_percent_base === `yes_no_abstain`) {
                         relativeAmounts.push(
                             Big(result.abstain).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber()
@@ -609,12 +609,14 @@ export class MotionPdfService {
                                 width: `auto`
                             },
                             {
-                                text: relativeAmounts.join(`\n`),
+                                text: relativeAmounts
+                                    .map(a => `(${this.motionPollService.parseNumber(a)}%)`)
+                                    .join(`\n`),
                                 width: `auto`,
                                 alignment: `right`
                             },
                             {
-                                text: amounts.join(`\n`),
+                                text: amounts.map(n => this.motionPollService.parseNumber(n)).join(`\n`),
                                 width: `auto`,
                                 alignment: `right`
                             }
