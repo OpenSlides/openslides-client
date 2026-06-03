@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -24,17 +25,24 @@ import { PollComponent } from '../poll/poll.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         PollComponent,
+        TranslatePipe,
         HeadBarModule,
         MatInputModule,
         MatFormFieldModule,
         MatCheckboxModule,
         MatSelectModule,
         MatCardModule,
+        MatTooltipModule,
+        RouterLink,
         PipesModule
     ]
 })
 export class PollDetailComponent extends BaseComponent {
     public poll: Signal<ViewPoll>;
+
+    public getDetailLink = computed(() => {
+        return `/${this.poll().getDetailStateUrl()}`;
+    });
 
     public override translate = inject(TranslateService);
     public pollRepo = inject(PollControllerService);
