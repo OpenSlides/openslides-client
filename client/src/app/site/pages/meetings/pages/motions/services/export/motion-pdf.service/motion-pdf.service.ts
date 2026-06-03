@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import Big from 'big.js';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 import {
     ChangeRecoMode,
@@ -8,7 +9,6 @@ import {
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
 } from 'src/app/domain/models/motions/motions.constants';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
@@ -581,13 +581,21 @@ export class MotionPdfService {
                 }
 
                 const labels: any[] = [this.translate.instant(`Yes`), this.translate.instant(`No`)];
-                const relativeAmounts: any[] = [`()`, `()`];
+                const relativeAmounts: any[] = [];
                 const amounts: any[] = [result.yes || `0`, result.no || `0`];
+                if (poll.config.onehundred_percent_base.startsWith(`yes_no`)) {
+                    relativeAmounts.push(Big(result.yes).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
+                    relativeAmounts.push(Big(result.no).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
+                }
 
                 if (poll.config.allow_abstain) {
                     labels.push(this.translate.instant(`Abstain`));
-                    relativeAmounts.push(`()`);
                     amounts.push(result.abstain || `0`);
+                    if (poll.config.onehundred_percent_base === `yes_no_abstain`) {
+                        relativeAmounts.push(
+                            Big(result.abstain).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber()
+                        );
+                    }
                 }
                 metaTableBody.push([
                     {

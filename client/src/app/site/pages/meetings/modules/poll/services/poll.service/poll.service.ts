@@ -21,7 +21,6 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { compareNumber } from 'src/app/infrastructure/utils';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
