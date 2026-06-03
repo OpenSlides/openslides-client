@@ -90,7 +90,8 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
                 +amount - current > this.availableVotes() ||
                 (!selected.has(optionId) &&
                     this.config().max_options_amount &&
-                    selected.size >= this.config().max_options_amount)
+                    selected.size >= this.config().max_options_amount) ||
+                +amount > this.config().max_votes_per_option
             ) {
                 if (el) {
                     el.value = `${selected.get(optionId) || 0}`;
