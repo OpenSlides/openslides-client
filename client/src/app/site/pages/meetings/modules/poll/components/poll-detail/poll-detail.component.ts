@@ -11,6 +11,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ViewPoll } from '../../../../pages/polls';
@@ -21,10 +22,11 @@ import { PollComponent } from '../poll/poll.component';
 @Component({
     selector: `os-poll-detail`,
     templateUrl: `./poll-detail.component.html`,
-    styleUrls: [`./poll-detail.component.scss`],
+    styleUrls: [`../poll/poll.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         PollComponent,
+        IconContainerComponent,
         TranslatePipe,
         HeadBarModule,
         MatInputModule,
