@@ -52,7 +52,7 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
     }
 
     protected getResultFromString(result: string): RatingScorePollResult {
-        return new RatingScorePollResult(JSON.parse(result));
+        return new RatingScorePollResult(this, JSON.parse(result));
     }
 }
 

@@ -68,7 +68,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     protected getResultFromString(result: string): RatingApprovalPollResult {
-        return new RatingApprovalPollResult(JSON.parse(result));
+        return new RatingApprovalPollResult(this, JSON.parse(result));
     }
 }
 

@@ -68,7 +68,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
     }
 
     protected getResultFromString(result: string): SelectionPollResult {
-        return new SelectionPollResult(JSON.parse(result));
+        return new SelectionPollResult(this, JSON.parse(result));
     }
 }
 
