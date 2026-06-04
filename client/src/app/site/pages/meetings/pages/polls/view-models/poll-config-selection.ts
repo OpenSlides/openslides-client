@@ -2,15 +2,8 @@ import Big from 'big.js';
 import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { HasPoll, ViewPollOption } from '..';
+import { HasPoll, SelectionPollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
-
-export interface SelectionPollResult {
-    [key: number]: string;
-    nota?: string;
-    abstain?: string;
-    invalid?: number;
-}
 
 export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigSelection, SelectionPollResult> {
     public get poll_config_selection(): PollConfigSelection {
@@ -72,6 +65,10 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         return total.toNumber();
+    }
+
+    protected getResultFromString(result: string): SelectionPollResult {
+        return new SelectionPollResult(JSON.parse(result));
     }
 }
 
