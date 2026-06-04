@@ -7,3 +7,7 @@ export * from './poll-config-rating-score';
 export * from './poll-config-selection';
 export * from './poll-config-stv-scottish';
 export * from './poll-option';
+export * from './poll-result-approval';
+export * from './poll-result-rating-approval';
+export * from './poll-result-rating-score';
+export * from './poll-result-selection';
