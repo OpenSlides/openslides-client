@@ -48,7 +48,7 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     }
 
     protected getResultFromString(result: string): ApprovalPollResult {
-        return new ApprovalPollResult(JSON.parse(result));
+        return new ApprovalPollResult(this, JSON.parse(result));
     }
 }
 
