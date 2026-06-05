@@ -39,7 +39,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public get totalVotes(): number | null {
-        return this.poll.ballot_ids?.length || 0;
+        return this.parsedResult().total_ballots;
     }
 
     public getOptionOnehundredPercentBaseNum(option: Identifiable): number | null {
