@@ -23,6 +23,14 @@ export class AuthService {
         return this._authTokenSubject.getValue();
     }
 
+    public get userIdObservable(): Observable<number | null> {
+        return this._userIdSubject;
+    }
+
+    public get userId(): number | null {
+        return this._userIdSubject.getValue();
+    }
+
     /**
      * "Pings" every time when a user logs out.
      */
@@ -44,6 +52,8 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
 
+    private readonly _userIdSubject = new BehaviorSubject<number | null>(null);
+
     public constructor(
         private lifecycleService: LifecycleService,
         private router: Router,
@@ -53,18 +63,15 @@ export class AuthService {
         private cookie: CookieService,
         private DS: DataStoreService
     ) {
-        this.authTokenService.accessTokenObservable.subscribe(token => {
-            this._authTokenSubject.next(token);
+        this.authTokenService.userIdObservable.subscribe(userId => {
+            this._userIdSubject.next(userId);
         });
 
         this.sharedWorker.listenTo(`auth`).subscribe(msg => {
             switch (msg?.action) {
                 case `new-user`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
+                    this.authTokenService.setUserId(msg.content?.user);
                     this.updateUser(msg.content?.user);
-                    break;
-                case `new-token`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
                     break;
             }
         });
@@ -109,7 +116,7 @@ export class AuthService {
             this.router.navigate([`/`]);
         } else {
             this.lifecycleService.shutdown();
-            this.authTokenService.setRawAccessToken(null);
+            this.authTokenService.setUserId(null);
             this._logoutEvent.emit();
             await this.DS.clear();
             this.lifecycleService.bootup();
@@ -121,7 +128,7 @@ export class AuthService {
             const response = await callback();
             if (response?.success) {
                 this.lifecycleService.shutdown();
-                this.authTokenService.setRawAccessToken(null);
+                this.authTokenService.setUserId(null);
                 this._logoutEvent.emit();
                 this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.DS.deleteCollections(...this.DS.getCollections());
@@ -135,22 +142,7 @@ export class AuthService {
     }
 
     public async logout(): Promise<void> {
-        this.lifecycleService.shutdown();
-        const response = await this.authAdapter.logout();
-        if (response?.success) {
-            this.authTokenService.setRawAccessToken(null);
-        }
-        this._logoutEvent.emit();
-        this.sharedWorker.sendMessage(`auth`, { action: `update` });
-        this.DS.deleteCollections(...this.DS.getCollections());
-        await this.DS.clear();
-        this.lifecycleService.bootup();
-        // In case SAML is enabled, we need to redirect the user to the IDP
-        // to complete the logout-flow. Maybe there is a better way to check
-        // for activated SAML than checking if the response is a URL.
-        if (response?.message && URL.parse(response.message)) {
-            location.replace(response.message);
-        }
+        location.replace(`/system/logout`);
     }
 
     public async logoutAnonymous(): Promise<void> {
@@ -158,7 +150,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
+        return !!this.authTokenService.userId || this.cookie.check(`anonymous-auth`);
     }
 
     /**
@@ -179,7 +171,7 @@ export class AuthService {
                 online = false;
             }
         }
-        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
+        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.userId);
         return online;
     }
 }
