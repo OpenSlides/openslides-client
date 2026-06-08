@@ -68,6 +68,7 @@ export class PollSingleVotesComponent extends BaseComponent {
 
         effect(() => {
             if (this.poll().state === PollState.Finished) {
+                // TODO: This needs filling
                 this.votesDataSubject.next([]);
             } else {
                 this.votesDataSubject.next([]);
@@ -80,11 +81,8 @@ export class PollSingleVotesComponent extends BaseComponent {
     public printShit(): void {
         console.log(this.poll());
         console.log(this.poll().getContentObject());
-        console.log(this.poll().getContentObject().collection);
         console.log(this.poll().getDetailStateUrl());
         console.log(this.poll().poll);
         console.log(this.poll().result);
-        console.log(this.poll().options);
-        console.log(this.poll().state);
     }
 }

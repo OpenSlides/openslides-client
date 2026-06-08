@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -27,7 +26,6 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
         DetailViewModule,
         ProjectableListModule,
         TranslateKeyPipe,
-        RouterLink,
         TranslatePipe,
         MatIconModule,
         MatTooltipModule

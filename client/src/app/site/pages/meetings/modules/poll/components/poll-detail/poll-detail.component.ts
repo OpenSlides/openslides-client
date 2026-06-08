@@ -9,12 +9,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { map } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { DetailViewModule } from '../../../meetings-component-collector/detail-view/detail-view.module';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { VotingService } from '../../services/voting.service';
 import { PollComponent } from '../poll/poll.component';
@@ -28,6 +29,7 @@ import { PollSingleVotesComponent } from '../poll-single-votes/poll-single-votes
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         PollComponent,
+        DetailViewModule,
         PollEntitledUserComponent,
         PollSingleVotesComponent,
         TranslatePipe,
@@ -47,7 +49,7 @@ export class PollDetailComponent extends BaseComponent {
     public poll: Signal<ViewPoll>;
 
     public getDetailLink = computed(() => {
-        return `/${this.poll().getDetailStateUrl()}`;
+        return `/${this.poll().getContentObject()!.getDetailStateUrl()}`;
     });
 
     public filterProps = [`user.getFullName`];
@@ -63,7 +65,10 @@ export class PollDetailComponent extends BaseComponent {
         super();
         super.setTitle(`Singular poll`);
         this.poll = toSignal(
-            this.pollRepo.getViewModelObservable(toSignal(this.activatedRoute.params.pipe(map(p => p['id'])))())
+            this.activatedRoute.params.pipe(
+                map(params => params['id']),
+                switchMap(id => this.pollRepo.getViewModelObservable(id))
+            )
         );
     }
 }
