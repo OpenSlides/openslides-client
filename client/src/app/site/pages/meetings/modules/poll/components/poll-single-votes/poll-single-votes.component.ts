@@ -9,6 +9,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { PollState } from 'src/app/domain/models/poll';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
+import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
+import { PollOptionRepositoryService } from 'src/app/gateways/repositories/polls/poll-option-repository.service';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -60,6 +64,10 @@ export class PollSingleVotesComponent extends BaseComponent {
     public pollRepo = inject(PollControllerService);
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
+    private options = inject(PollOptionRepositoryService);
+    private ballot = inject(PollBallotRepositoryService);
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
+    private userRepo = inject(UserRepositoryService);
 
     public constructor() {
         super();
@@ -69,7 +77,13 @@ export class PollSingleVotesComponent extends BaseComponent {
         effect(() => {
             if (this.poll().state === PollState.Finished) {
                 // TODO: This needs filling
-                this.votesDataSubject.next([]);
+                const user_user_ids = this.poll().ballots.map(user => {
+                    return {
+                        user: this.userRepo.getViewModel(user.represented_meeting_user_id),
+                        id: user.represented_meeting_user_id
+                    };
+                });
+                this.votesDataSubject.next(user_user_ids);
             } else {
                 this.votesDataSubject.next([]);
             }
@@ -79,10 +93,27 @@ export class PollSingleVotesComponent extends BaseComponent {
     }
 
     public printShit(): void {
-        console.log(this.poll());
-        console.log(this.poll().getContentObject());
-        console.log(this.poll().getDetailStateUrl());
-        console.log(this.poll().poll);
-        console.log(this.poll().result);
+        // console.log(`poll()`, this.poll());
+        // console.log(`getContentObject`, this.poll().getContentObject());
+        const bal = this.poll()?.ballots;
+        if (bal) {
+            // console.log(`poll`, bal);
+            // console.log(`getModel`, bal.getModel());
+            // console.log(`id`, bal.id);
+            // console.log(`represented meeting user`, bal.represented_meeting_user_id);
+            // console.log(bal.map(b => b.represented_meeting_user_id));
+            //  console.log(`user`, bal.user);
+            // console.log(`structure level`, bal?.structureLevelIds);
+            //  console.log(`acting_meeting_user_id`, bal.acting_meeting_user_id);
+        }
+        // console.log(`resul`, this.poll().result);
+
+        // const opption = this.options.getViewModel(this.poll()?.option_ids[0]);
+        // console.log(`Options`, opption);
+        // console.log(`Options`, opption.id);
+        // console.log(`Options`, opption.getTitle());
+        // console.log(`Options`, opption.getOptionTitle());
+        // console.log(`Options`, opption.meeting_user);
+        // console.log(`Options`, opption.meeting_user.user.short_name);
     }
 }
