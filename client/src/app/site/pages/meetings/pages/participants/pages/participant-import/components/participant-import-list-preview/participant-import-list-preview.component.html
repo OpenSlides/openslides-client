@@ -3,11 +3,9 @@
         <h1 class="mock-h2" translate>Import participants</h1>
     </div>
     <ng-container class="menu-slot">
-        @if (awaitingConfirm) {
-            <button mat-button>
-                <span class="upper">Import</span>
-            </button>
-        }
+        <button mat-button>
+            <span class="upper">Import</span>
+        </button>
     </ng-container>
 </os-head-bar>
 
@@ -25,152 +23,121 @@
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
     >
         @if (dataSource | async) {
-            <div>
-                @for (column of previewColumns; track column) {
-                    <div
-                        *osScrollingTableCell="
-                            column.property;
-                            row as row;
-                            definition as def;
-                            isDefault: true;
-                            config: getColumnConfig(column.property)
-                        "
-                    >
-                        <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property).toUpperCase() }}</div>
-                        <ng-container
-                            *ngTemplateOutlet="
-                                entryTemplate;
-                                context: { entry: row.data, def: def, row: row, type: column.type }
-                            "
-                        ></ng-container>
-                    </div>
-                }
+            @for (column of previewColumns; track column; let i = $index) {
                 <div
-                    *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
-                    class="flex-vertical-center icon-container"
+                    *osScrollingTableCell="
+                        column.property;
+                        row as row;
+                        definition as def;
+                        isDefault: true;
+                        config: getColumnConfig(column.property)
+                    "
+                    class="fixed-cols"
                 >
-                    <div *osScrollingTableCellLabel style="text-align: center; width: 100%">&nbsp;#</div>
-                    @if (row.state === 'error') {
-                        <mat-icon
-                            class="red-warning-text"
-                            matTooltip="{{ getRowTooltip(row) }}"
-                            matTooltipPosition="right"
-                        >
-                            {{ getActionIcon(row) }}
-                        </mat-icon>
-                    }
-                    @if (row.state !== 'error' && row.messages.length) {
-                        <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
-                            warning
-                        </mat-icon>
-                    }
-                    @if (row.state !== 'error') {
-                        <mat-icon
-                            matTooltip="{{ getRowTooltip(row) }}"
-                            matTooltipPosition="right"
-                            [ngClass]="getColorIcon(row)"
-                        >
-                            {{ getActionIcon(row) }}
-                        </mat-icon>
-                    }
-                </div>
-            </div>
+                    @let entry = row.data;
+                    @let type = column.type;
+                    <div>
+                        <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) }}</div>
+                        @if (entry && (entry[def] || type === 'boolean')) {
+                            <div class="flex-vertical-center">
+                                @if (getHeader(def).is_list && entry[def]) {
+                                    <div>
+                                        @for (item of entry[def]; track item) {
+                                            @if (getHeader(def).is_object) {
+                                                <div class="list-field-entry">
+                                                    @if (getHeader(def).type === 'string') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'number') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'date') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'boolean') {
+                                                        <mat-checkbox disabled [checked]="item.value" />
+                                                    }
+                                                    &nbsp;
 
-            <ng-template #entryTemplate let-def="def" let-entry="entry" let-row="row" let-type="type">
-                @if (entry && (entry[def] || type === 'boolean')) {
-                    <div class="flex-vertical-center">
-                        @if (getHeader(def).is_list && entry[def]) {
-                            <div>
-                                @for (item of entry[def]; track item) {
-                                    <ng-container
-                                        [ngTemplateOutlet]="entryContentTemplate"
-                                        [ngTemplateOutletContext]="{ entry: item, def: def }"
-                                    ></ng-container>
+                                                    @if (getActionIcon(item)) {
+                                                        <mat-icon color="accent" inline>
+                                                            {{ getEntryIcon(item.value) }}
+                                                        </mat-icon>
+                                                    }
+                                                </div>
+                                            } @else {
+                                                @if (getHeader(def).type === 'string') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'number') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'date') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'boolean') {
+                                                    <mat-checkbox disabled [checked]="item.value" />
+                                                }
+                                                &nbsp;
+                                            }
+                                        }
+                                    </div>
+                                }
+                                @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                                    @if (getHeader(def).is_object) {
+                                        <div class="list-field-entry">
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entry[def].value" />
+                                            }
+                                            &nbsp;
+
+                                            @if (getActionIcon(entry[def])) {
+                                                <mat-icon color="accent" inline>
+                                                    {{ getEntryIcon(entry[def]) }}
+                                                </mat-icon>
+                                            }
+                                        </div>
+                                    }
                                 }
                             </div>
                         }
-                        @if (!getHeader(def).is_list && entry[def] !== undefined) {
-                            <ng-container
-                                [ngTemplateOutlet]="entryContentTemplate"
-                                [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
-                            ></ng-container>
-                        }
                     </div>
+                </div>
+            }
+            <div
+                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
+                class="flex-vertical-center icon-container"
+            >
+                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">&nbsp;#</div>
+                @if (row.state === 'error') {
+                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
                 }
-            </ng-template>
-
-            <ng-template #entryContentTemplate let-def="def" let-entry="entry">
-                @if (getHeader(def).is_object) {
-                    <div class="list-field-entry">
-                        <ng-container
-                            [ngTemplateOutlet]="nonObjectEntryTemplate"
-                            [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-                        ></ng-container>
-                        @if (getActionIcon(entry)) {
-                            <mat-icon color="accent" inline>
-                                {{ getEntryIcon(entry) }}
-                            </mat-icon>
-                        }
-                    </div>
+                @if (row.state !== 'error' && row.messages.length) {
+                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                        warning
+                    </mat-icon>
                 }
-                @if (!getHeader(def).is_object) {
-                    <ng-container
-                        [ngTemplateOutlet]="nonObjectEntryTemplate"
-                        [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
-                    />
+                @if (row.state !== 'error') {
+                    <mat-icon
+                        matTooltip="{{ getRowTooltip(row) }}"
+                        matTooltipPosition="right"
+                        [ngClass]="getColorIcon(row)"
+                    >
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
                 }
-            </ng-template>
-
-            <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
-                @if (type === 'string') {
-                    {{ entry }}
-                }
-                @if (type === 'number' || type === 'integer') {
-                    {{ entry }}
-                }
-                @if (type === 'decimal') {
-                    {{ getShortenedDecimal(entry) }}
-                }
-                @if (type === 'date') {
-                    {{ entry }}
-                }
-                @if (type === 'boolean') {
-                    <mat-checkbox disabled [checked]="entry" />
-                }
-                &nbsp;
-            </ng-template>
-        }
-
-        <ng-template #fieldsInfoDialog>
-            <div class="action-title" mat-dialog-title>
-                <h1 class="dialog-title" translate>The fields are defined as follows</h1>
             </div>
-            <mat-dialog-content>
-                <table>
-                    @for (column of defaultColumns; track column) {
-                        <tr>
-                            <td class="table-title-column">{{ column.property }}:</td>
-                            <td>
-                                &nbsp;{{ column.label | translate }}
-                                @if (column.customInfo) {
-                                    <br />
-                                    @if (isString(column.customInfo)) {
-                                        {{ column.customInfo | translate }}
-                                    }
-                                    @if (!isString(column.customInfo)) {
-                                        {{ column.customInfo | async }}
-                                    }
-                                }
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </mat-dialog-content>
-            <mat-dialog-actions>
-                <button mat-button mat-dialog-close>
-                    {{ 'Close' | translate }}
-                </button>
-            </mat-dialog-actions>
-        </ng-template>
+        }
     </os-view-list>
 </div>

@@ -1,23 +1,38 @@
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
+
+import { ViewImportedParticipant } from '../view-models/view-participant-import';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ParticipantImportFilterService extends BaseFilterListService<any> {
-    protected storageKey = `VotesEntry`;
-
+    protected storageKey = `participantImportPreview`;
     public constructor(store: ActiveFiltersService) {
         super(store);
     }
 
-    protected getFilterDefinitions(): OsFilter<any>[] {
-        const staticFilterOptions: OsFilter<ViewUser>[] = [
+    protected getFilterDefinitions(): OsFilter<ViewImportedParticipant>[] {
+        const staticFilterOptions: OsFilter<ViewImportedParticipant>[] = [
             {
-                property: `isPresentInMeeting`,
+                property: `is_active`,
+                label: _(`Active`),
+                options: [
+                    { condition: true, label: _(`Is active`) },
+                    { condition: [false, null], label: _(`Is not active`) }
+                ]
+            },
+            {
+                property: `is_physical_person`,
+                label: _(`Committee`),
+                options: [
+                    { condition: true, label: _(`Is not a committee`) },
+                    { condition: [false, null], label: _(`Is a committee`) }
+                ]
+            } /* ,{
+                property: `is_present`,
                 label: _(`Presence`),
                 options: [
                     { condition: true, label: _(`Is present`) },
@@ -38,22 +53,6 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 options: [
                     { condition: true, label: `Is locked out` },
                     { condition: [false, null], label: `Is not locked out` }
-                ]
-            },
-            {
-                property: `is_active`,
-                label: _(`Active`),
-                options: [
-                    { condition: true, label: _(`Is active`) },
-                    { condition: [false, null], label: _(`Is not active`) }
-                ]
-            },
-            {
-                property: `is_physical_person`,
-                label: _(`Committee`),
-                options: [
-                    { condition: true, label: _(`Is not a committee`) },
-                    { condition: [false, null], label: _(`Is a committee`) }
                 ]
             },
             {
@@ -95,7 +94,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                     { condition: true, label: _(`Has SSO identification`) },
                     { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
-            }
+            } */
 
             /* first_name	last_name	email	member_number	structure_level	groups	number	vote_weight	gender	pronoun	username	default_password	
             is_active	is_physical_person	is_present	locked_out	saml_id	home_committee	external	comment */

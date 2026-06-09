@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -14,13 +14,12 @@ import {
     TemplateRef
 } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatDialog, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
-import { _, TranslatePipe } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
@@ -50,24 +49,13 @@ import { ParticipantControllerService } from '../../../../services/common/partic
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
+import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 
 @Component({
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
-    imports: [
-        HeadBarModule,
-        ListModule,
-        MatIcon,
-        AsyncPipe,
-        TranslatePipe,
-        NgTemplateOutlet,
-        MatTooltip,
-        MatCheckbox,
-        MatDialogContent,
-        MatDialogActions,
-        NgClass
-    ]
+    imports: [HeadBarModule, ListModule, MatIcon, AsyncPipe, MatTooltip, MatCheckbox, NgClass]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
@@ -97,16 +85,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Define extra filter properties
      */
     protected get filterProps(): string[] {
-        return [
-            `full_name`,
-            `groups`,
-            `number`,
-            `delegationName`,
-            `structure_levels`,
-            `member_number`,
-            `email`,
-            `username`
-        ];
+        return ViewImportedParticipant.REQUESTABLE_FIELDS;
     }
 
     public filterService = inject(ParticipantImportFilterService);
@@ -283,6 +262,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected uploadButton: boolean;
     protected cd = inject(ChangeDetectorRef);
 
+    public importedParticipants;
+
     public constructor(
         private dialog: MatDialog,
         protected translate: TranslateService,
@@ -304,6 +285,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
         this.cd.detectChanges();
+        this.importedParticipants = this._rows.map(row => {
+            return new ViewImportedParticipant(row.id, row);
+        });
+        console.log(this.importedParticipants);
     }
 
     /**
@@ -380,7 +365,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Done: // item will be updated / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `autorenew` : `done`;
             case BackendImportState.Generated:
-                return `autorenew`;
+                return `merge`;
             case BackendImportState.Remove:
                 return `remove`;
             default:
@@ -398,6 +383,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 return 'os-green';
             case BackendImportState.Done: // item will be updated / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `os-yellow` : `accent`;
+            case BackendImportState.Generated:
+                return `accent`;
             default:
                 return `block`; // fallback: Error
         }

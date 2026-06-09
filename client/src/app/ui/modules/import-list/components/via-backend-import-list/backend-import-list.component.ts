@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { ViewImportedParticipant } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 import { BackendImportService } from 'src/app/ui/base/import-service';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
@@ -507,7 +508,7 @@ export class BackendImportListComponent implements OnInit {
         }
     }
 
-    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
+    private calculateRows(previews: BackendImportPreview[] | ViewImportedParticipant[]): BackendImportIdentifiedRow[] {
         return previews?.flatMap(preview => preview.rows);
     }
 
