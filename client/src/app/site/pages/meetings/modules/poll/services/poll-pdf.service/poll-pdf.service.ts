@@ -117,6 +117,11 @@ export class PollPdfService extends BasePollPdfService {
 
     private selectionBallotForm(config: ViewPollConfigSelection): Content {
         const content = [];
+        const poll = config.poll;
+        for (const option of poll.options) {
+            content.push(this.createBallotOption(option.text || option.meeting_user?.getTitle()));
+        }
+
         content.push(this.getMeta(config.poll));
         return content;
     }
@@ -125,8 +130,16 @@ export class PollPdfService extends BasePollPdfService {
         return [];
     }
 
-    private ratingScoreBallotForm(_config: ViewPollConfigRatingScore): Content {
-        return [];
+    private ratingScoreBallotForm(config: ViewPollConfigRatingScore): Content {
+        const content = [];
+        const poll = config.poll;
+        for (const option of poll.options) {
+            // TODO: Maybe use rectangles to make it easier to write numbers
+            content.push(this.createBallotOption(option.text || option.meeting_user?.getTitle()));
+        }
+
+        content.push(this.getMeta(config.poll));
+        return content;
     }
 
     private getHeader(poll: ViewPoll): Content {
@@ -158,6 +171,7 @@ export class PollPdfService extends BasePollPdfService {
     }
 
     private getMeta(_poll: ViewPoll): Content {
+        // TODO: Display relevant meta data of poll config
         return {
             text: 'Es sind mindestens 2 maximal 4 anzukreuzen',
             style: ['meta_info']
