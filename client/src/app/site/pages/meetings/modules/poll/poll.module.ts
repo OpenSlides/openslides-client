@@ -26,9 +26,7 @@ import { PollProgressComponent } from './components/poll-progress/poll-progress.
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
-import { PollServiceModule } from './services/poll-service.module';
 
-const MODULES = [PollServiceModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
 const COMPONENTS = [
     PollFilteredVotesChartComponent,
@@ -66,7 +64,6 @@ const COMPONENTS = [
     ],
     exports: [
         ...PIPES,
-        ...MODULES,
         ...COMPONENTS,
         SingleOptionChartTableComponent,
         ChartComponent,
