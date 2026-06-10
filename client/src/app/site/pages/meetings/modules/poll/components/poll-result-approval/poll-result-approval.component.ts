@@ -97,7 +97,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return [];
         }
 
-        return Object.keys(results)
+        return [`yes`, `no`, `abstain`]
             .filter(k => k !== `abstain` || this.config().onehundred_percent_base !== `yes_no`)
             .map(key => {
                 return {
