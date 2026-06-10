@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
+import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
@@ -31,7 +32,8 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                     { condition: true, label: _(`Is not a committee`) },
                     { condition: [false, null], label: _(`Is a committee`) }
                 ]
-            } /* ,{
+            },
+            {
                 property: `is_present`,
                 label: _(`Presence`),
                 options: [
@@ -40,7 +42,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `isVoteWeightOne`,
+                property: `vote_weight`,
                 label: _(`Vote weight`),
                 options: [
                     { condition: [false, null], label: _(`Has changed vote weight`) },
@@ -48,7 +50,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `isLockedOutOfMeeting`,
+                property: `is_locked_out`,
                 label: `Locked out`,
                 options: [
                     { condition: true, label: `Is locked out` },
@@ -56,7 +58,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `hasMemberNumber`,
+                property: `member_number`,
                 label: _(`Membership number`),
                 options: [
                     { condition: true, label: _(`Has a membership number`) },
@@ -64,23 +66,34 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `isLastLogin`,
-                label: _(`Last login`),
+                property: `title`,
+                label: _(`Title`),
                 options: [
-                    { condition: true, label: _(`Has logged in`) },
-                    { condition: [false, null], label: _(`Has not logged in yet`) }
+                    { condition: true, label: _(`Has a title`) },
+                    { condition: [false, null], label: _(`Has no title`) }
                 ]
             },
             {
-                property: `isLastEmailSent`,
-                label: _(`Last email sent`),
+                property: `saml_id`,
+                label: _(`SSO`),
                 options: [
-                    { condition: true, label: _(`Got an email`) },
-                    { condition: [false, null], label: _(`Didn't get an email`) }
+                    { condition: true, label: _(`Has SSO identification`) },
+                    { condition: [false, null], label: _(`Has no SSO identification`) }
                 ]
             },
             {
-                property: `hasEmail`,
+                property: `gender`,
+                label: _(`Gender`),
+                options: [
+                    { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
+                    { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
+                    { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
+                    { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
+                    { condition: null, label: _(`not specified`) }
+                ]
+            },
+            {
+                property: `email`,
                 label: _(`Email address`),
                 options: [
                     { condition: true, label: _(`Has an email address`) },
@@ -88,16 +101,37 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `hasSamlId`,
-                label: _(`SSO`),
+                property: `pronoun`,
+                label: _(`Pronoun`),
                 options: [
-                    { condition: true, label: _(`Has SSO identification`) },
-                    { condition: [false, null], label: _(`Has no SSO identification`) }
+                    { condition: true, label: _(`Has pronoun`) },
+                    { condition: [false, null], label: _(`Has no pronoun`) }
                 ]
-            } */
-
-            /* first_name	last_name	email	member_number	structure_level	groups	number	vote_weight	gender	pronoun	username	default_password	
-            is_active	is_physical_person	is_present	locked_out	saml_id	home_committee	external	comment */
+            },
+            {
+                property: `username`,
+                label: _(`Username`),
+                options: [
+                    { condition: true, label: _(`Has username`) },
+                    { condition: [false, null], label: _(`Has no username`) }
+                ]
+            },
+            {
+                property: `home_committee`,
+                label: _(`Home committee`),
+                options: [
+                    { condition: true, label: _(`Has home committee`) },
+                    { condition: [false, null], label: _(`Has no home committee`) }
+                ]
+            },
+            {
+                property: `groups`,
+                label: _(`Username`),
+                options: [
+                    { condition: true, label: _(`Has groups`) },
+                    { condition: [false, null], label: _(`Has no groups`) }
+                ]
+            }
         ];
         return staticFilterOptions;
     }

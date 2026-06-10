@@ -43,7 +43,7 @@
 
 .scrolling-table-header {
     @include scrolling-table-style();
-    overflow-x: scroll;
+
     .scrolling-table-cell {
         font-weight: 500;
     }

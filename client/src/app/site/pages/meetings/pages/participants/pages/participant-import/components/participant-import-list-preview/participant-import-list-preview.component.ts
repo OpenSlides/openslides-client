@@ -1,6 +1,5 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -260,9 +259,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
-    protected cd = inject(ChangeDetectorRef);
 
-    public importedParticipants;
+    public importedParticipants: Observable<ViewImportedParticipant[]>;
 
     public constructor(
         private dialog: MatDialog,
@@ -284,11 +282,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
-        this.cd.detectChanges();
-        this.importedParticipants = this._rows.map(row => {
-            return new ViewImportedParticipant(row.id, row);
-        });
-        console.log(this.importedParticipants);
     }
 
     /**
@@ -354,7 +347,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param item a row or an entry with a current state
      * @return the icon for the item
      */
-    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+    public getActionIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `error_outline`;
@@ -373,7 +366,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    public getColorIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+    public getColorIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `red-warning-text`;
@@ -402,7 +395,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    public getRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -426,7 +419,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getWarningRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -507,7 +500,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
+    private getErrorDescription(entry: ViewImportedParticipant): string {
         return entry.messages?.map(error => this.translate.instant(this.importer.verbose(error))).join(`\n `);
     }
 
@@ -526,8 +519,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
-        return previews?.flatMap(preview => preview.rows);
+    private calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
+        return previews?.flatMap(preview => preview.rows.map(row => new ViewImportedParticipant(row.id, row)));
     }
 
     private createRequiredFields(): string[] {
