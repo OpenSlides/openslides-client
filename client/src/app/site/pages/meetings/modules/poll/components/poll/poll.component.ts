@@ -20,6 +20,7 @@ import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
 import { PollControllerService } from '../../services/poll-controller.service';
+import { PollPdfService } from '../../services/poll-pdf.service/poll-pdf.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';
@@ -59,7 +60,6 @@ export class PollComponent extends BaseMeetingComponent {
     public allowEdit = input<boolean>(false);
 
     public dialogOpened = output<void>();
-    public downloadPdf = output<void>();
 
     public stateChangePending = signal(false);
 
@@ -106,6 +106,7 @@ export class PollComponent extends BaseMeetingComponent {
     private choiceService = inject(ChoiceService);
     private repo = inject(PollControllerService);
     private dialog = inject(MatDialog);
+    private pollPdf = inject(PollPdfService);
 
     public user = toSignal(this.operator.userObservable);
     public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);
@@ -117,6 +118,10 @@ export class PollComponent extends BaseMeetingComponent {
 
     public openVotingWarning(): void {
         this.dialog.open(VotingPrivacyWarningDialogComponent, infoDialogSettings);
+    }
+
+    public async downloadPdf(): Promise<void> {
+        this.pollPdf.downloadBallotPaper(this.poll());
     }
 
     public async anonymizePoll(): Promise<void> {
