@@ -24,6 +24,7 @@ import { BaseVoteData } from '../../base/base-poll-detail.component';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 import { VotingService } from '../../services/voting.service';
+import { StructureLevel } from 'src/app/domain/models/structure-levels';
 
 @Component({
     selector: `os-poll-single-votes`,
@@ -65,7 +66,6 @@ export class PollSingleVotesComponent extends BaseComponent {
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
     private options = inject(PollOptionRepositoryService);
-    private ballot = inject(PollBallotRepositoryService);
     private meetingUserRepo = inject(MeetingUserRepositoryService);
     private userRepo = inject(UserRepositoryService);
 
@@ -77,13 +77,22 @@ export class PollSingleVotesComponent extends BaseComponent {
         effect(() => {
             if (this.poll().state === PollState.Finished) {
                 // TODO: This needs filling
-                const user_user_ids = this.poll().ballots.map(user => {
+                const user_ids = this.poll().ballots.map(ballot => {
+                    const user = this.userRepo.getViewModel(ballot.represented_meeting_user_id);
+                    console.log(user);
+                    console.log(ballot.ballot)
+                    const result = this.options.getViewModel(ballot.id)
+                    console.log(result)
                     return {
-                        user: this.userRepo.getViewModel(user.represented_meeting_user_id),
-                        id: user.represented_meeting_user_id
+                        groupIds: user?.group_ids() ?? [],
+                        structureLevelIds: user?.structure_level_ids() ?? [],
+                        user: user,
+                        id: user?.id ?? ballot.id,
+                        votes: [`b (Test structure level b)`]
                     };
                 });
-                this.votesDataSubject.next(user_user_ids);
+                console.log(user_ids)
+                this.votesDataSubject.next(user_ids);
             } else {
                 this.votesDataSubject.next([]);
             }
