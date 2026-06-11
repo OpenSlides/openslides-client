@@ -14,6 +14,31 @@ import { AbstractPollData, BasePollPdfService } from './base-poll-pdf.service';
     providedIn: `root`
 })
 export class PollPdfService extends BasePollPdfService {
+    public downloadBallotPaper(poll: ViewPoll): void {
+        const content = [this.getHeader(poll)];
+
+        if (poll.config instanceof ViewPollConfigApproval) {
+            content.push(this.approvalBallotForm(poll.config));
+        } else if (poll.config instanceof ViewPollConfigSelection) {
+            content.push(this.selectionBallotForm(poll.config));
+        } else if (poll.config instanceof ViewPollConfigRatingApproval) {
+            content.push(this.ratingApprovalBallotForm(poll.config));
+        } else if (poll.config instanceof ViewPollConfigRatingScore) {
+            content.push(this.ratingScoreBallotForm(poll.config));
+        }
+
+        /*
+         * TODO: Choose filename based on content object
+         *
+        const motion = this.motionRepo.getViewModel(poll.content_object)!;
+        const fileName = `${this.translate.instant(`Motion`)} - ${poll.content_object.number} - ${this.translate.instant(
+            `ballot-paper`
+        )}`;
+
+        */
+        this.downloadWithBallotPaper(content, `filename`);
+    }
+
     protected override createBallot(data: AbstractPollData): object {
         return {
             stack: [
@@ -43,9 +68,16 @@ export class PollPdfService extends BasePollPdfService {
                 bold: true,
                 margin: [0, 50]
             },
-            poll_option: {
+            poll_options: {
                 fontSize: 14,
                 bold: true
+            },
+            poll_option: {
+                margin: [0, 5]
+            },
+            poll_option_score: {
+                fontSize: 12,
+                margin: [0, 5]
             },
             meta_info: {
                 marginTop: 20,
@@ -53,33 +85,6 @@ export class PollPdfService extends BasePollPdfService {
                 bold: true
             }
         };
-    }
-
-    public downloadBallotPaper(poll: ViewPoll): void {
-        const content = [this.getHeader(poll)];
-
-        if (poll.config instanceof ViewPollConfigApproval) {
-            content.push(this.approvalBallotForm(poll.config));
-        } else if (poll.config instanceof ViewPollConfigSelection) {
-            content.push(this.selectionBallotForm(poll.config));
-        } else if (poll.config instanceof ViewPollConfigRatingApproval) {
-            content.push(this.ratingApprovalBallotForm(poll.config));
-        } else if (poll.config instanceof ViewPollConfigRatingScore) {
-            content.push(this.ratingScoreBallotForm(poll.config));
-        }
-
-        console.log(content);
-
-        /*
-         * TODO: Choose filename based on content object
-         *
-        const motion = this.motionRepo.getViewModel(poll.content_object)!;
-        const fileName = `${this.translate.instant(`Motion`)} - ${poll.content_object.number} - ${this.translate.instant(
-            `ballot-paper`
-        )}`;
-
-        */
-        this.downloadWithBallotPaper(content, `filename`);
     }
 
     private approvalBallotForm(config: ViewPollConfigApproval): Content {
@@ -94,17 +99,24 @@ export class PollPdfService extends BasePollPdfService {
         }
 
         if (poll.options.length) {
-            // TODO: List poll - list all options of that list
             return [
                 {
                     columns: [
                         {
                             width: '*',
-                            text: options
+                            stack: [
+                                {
+                                    ol: poll.options.map(o => ({
+                                        style: 'poll_option',
+                                        text: o.getTitle()
+                                    }))
+                                }
+                            ],
+                            style: 'poll_options'
                         },
                         {
                             width: '*',
-                            text: options
+                            stack: options
                         }
                     ],
                     columnGap: 20
@@ -134,8 +146,32 @@ export class PollPdfService extends BasePollPdfService {
         const content = [];
         const poll = config.poll;
         for (const option of poll.options) {
-            // TODO: Maybe use rectangles to make it easier to write numbers
-            content.push(this.createBallotOption(option.text || option.meeting_user?.getTitle()));
+            const BoxDimensions = { yDistance: 0, size: 22 };
+            content.push({
+                margin: [0, 10, 0, 0],
+                columns: [
+                    {
+                        width: `70%`,
+                        text: option.text || option.meeting_user?.getTitle(),
+                        style: `poll_option_score`
+                    },
+                    {
+                        width: BoxDimensions.size * 2 + 20,
+                        canvas: [
+                            {
+                                type: `rect`,
+                                x: 0,
+                                y: BoxDimensions.yDistance,
+                                lineColor: `black`,
+                                w: BoxDimensions.size * 2,
+                                h: BoxDimensions.size
+                            }
+                        ]
+                    }
+                ],
+                style: `poll_options`,
+                columnGap: 20
+            });
         }
 
         content.push(this.getMeta(config.poll));
@@ -183,7 +219,7 @@ export class PollPdfService extends BasePollPdfService {
      *
      * @returns pdfMake definitions
      */
-    private createBallotOption(decision: string): Content {
+    private createBallotOption(decision?: string): Content {
         const BallotCircleDimensions = { yDistance: 6, size: 8 };
         return {
             margin: [BallotCircleDimensions.size, 10, 0, 0],
@@ -194,7 +230,7 @@ export class PollPdfService extends BasePollPdfService {
                 },
                 {
                     width: `auto`,
-                    text: decision
+                    text: decision || ``
                 }
             ]
         };
