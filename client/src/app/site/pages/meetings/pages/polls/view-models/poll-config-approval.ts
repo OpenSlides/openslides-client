@@ -4,13 +4,7 @@ import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
-
-export interface ApprovalPollResult {
-    yes: string;
-    no: string;
-    abstain?: string;
-    invalid?: number;
-}
+import { ApprovalPollResult } from './poll-result-approval';
 
 export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigApproval, ApprovalPollResult> {
     public get poll_config_approval(): PollConfigApproval {
@@ -51,6 +45,10 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
                 .toNumber();
         }
         return this._totalVotes;
+    }
+
+    protected getResultFromString(result: string): ApprovalPollResult {
+        return new ApprovalPollResult(this, JSON.parse(result));
     }
 }
 

@@ -3,18 +3,8 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { HasPoll, ViewPollOption } from '..';
+import { HasPoll, RatingApprovalPollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
-
-export interface RatingApprovalPollResult {
-    [key: number]: {
-        yes?: string;
-        no?: string;
-        abstain?: string;
-    };
-    abstain?: string;
-    invalid?: number;
-}
 
 export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     PollConfigRatingApproval,
@@ -49,7 +39,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public get totalVotes(): number | null {
-        return this.poll.ballot_ids?.length || 0;
+        return this.parsedResult().total_ballots;
     }
 
     public getOptionOnehundredPercentBaseNum(option: Identifiable): number | null {
@@ -75,6 +65,10 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
         }
 
         return null;
+    }
+
+    protected getResultFromString(result: string): RatingApprovalPollResult {
+        return new RatingApprovalPollResult(this, JSON.parse(result));
     }
 }
 

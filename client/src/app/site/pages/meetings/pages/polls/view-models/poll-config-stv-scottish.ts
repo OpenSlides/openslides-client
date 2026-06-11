@@ -4,7 +4,7 @@ import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 import { HasPoll, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
-export class ViewPollConfigStvScottish extends BasePollConfigViewModel<PollConfigStvScottish, unknown> {
+export class ViewPollConfigStvScottish extends BasePollConfigViewModel<PollConfigStvScottish, any> {
     public get poll_config_stv_scottish(): PollConfigStvScottish {
         return this._model;
     }
@@ -14,6 +14,10 @@ export class ViewPollConfigStvScottish extends BasePollConfigViewModel<PollConfi
     public readonly invalidBallots = null;
     public readonly onehundredPercentBaseNum = null;
     public readonly totalVotes = null;
+
+    protected getResultFromString(_result: string): any {
+        throw new Error('not implementd');
+    }
 }
 
 interface IPollConfigStvScottishRelations {

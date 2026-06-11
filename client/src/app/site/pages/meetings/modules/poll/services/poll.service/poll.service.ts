@@ -65,7 +65,7 @@ export abstract class PollService {
             .sort((a, b) => {
                 if (this.sortByVote) {
                     let compareValue;
-                    if (poll.pollmethod === PollMethod.N) {
+                    if (poll.config?.strike_out) {
                         // least no on top:
                         compareValue = compareNumber(b.no, a.no);
                     } else {
@@ -152,7 +152,7 @@ export abstract class PollService {
         return PollValues[value] || value;
     }
 
-    public parseNumber(value?: number, maximumFractionDigits = 6): string {
+    public parseNumber(value?: number, maximumFractionDigits = 3): string {
         let lang = this.translate.getCurrentLang();
         if (this.activeMeeting.meeting) {
             lang = this.activeMeeting.meeting.language;
@@ -264,17 +264,6 @@ export abstract class PollService {
         return totalByBase;
                 */
         return 1;
-    }
-
-    private sumOptionsYN(option: OptionData): number {
-        const yes = option?.yes ?? 0;
-        const no = option?.no ?? 0;
-        return (yes >= 0 ? yes : 0) + (no >= 0 ? no : 0);
-    }
-
-    private sumOptionsYNA(option: OptionData): number {
-        const abstain = option?.abstain ?? 0;
-        return this.sumOptionsYN(option) + (abstain >= 0 ? abstain : 0);
     }
 
     public getVoteValueInPercent(
