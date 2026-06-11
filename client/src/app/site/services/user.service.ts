@@ -6,8 +6,6 @@ import { GetUserEditablePresenterService, GetUserScopePresenterService } from 's
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
-
 export enum UserScope {
     MEETING = `meeting`,
     COMMITTEE = `committee`,
@@ -22,7 +20,6 @@ export class UserService {
         private activeMeetingService: ActiveMeetingService,
         private presenter: GetUserScopePresenterService,
         private operator: OperatorService,
-        private meetingRepo: MeetingControllerService,
         private getUserEditablePresenter: GetUserEditablePresenterService
     ) {}
 

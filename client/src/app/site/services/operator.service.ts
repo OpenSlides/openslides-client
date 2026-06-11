@@ -44,7 +44,7 @@ const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null
 })
 export class OperatorService {
     public get operatorId(): number | null {
-        return this.isAnonymous || !this.authService.authToken ? null : this.authService.authToken.userId;
+        return this.isAnonymous || !this.authService.userId ? null : this.authService.userId;
     }
 
     public get isAnonymousLoggedIn(): boolean {
@@ -52,7 +52,7 @@ export class OperatorService {
     }
 
     public get isAnonymous(): boolean {
-        return !this.authService.authToken;
+        return !this.authService.userId;
     }
 
     public get isAuthenticated(): boolean {
@@ -282,18 +282,18 @@ export class OperatorService {
     ) {
         this.setNotReady();
         // General environment in which the operator moves
-        this.authService.authTokenObservable.subscribe(token => {
-            if (token === undefined) {
+        this.authService.userIdObservable.subscribe(id => {
+            if (id === undefined) {
                 return;
             }
-            const id = token ? token.userId : null;
+
             if (id !== this._lastUserId) {
                 console.debug(`operator: user changed from `, this._lastUserId, `to`, id);
                 this._lastUserId = id;
                 this.resetOperatorData();
                 this.operatorStateChange(true);
             }
-            if (token) {
+            if (id) {
                 this.checkReadyState();
             }
         });
