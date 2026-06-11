@@ -27,6 +27,8 @@ export class PollPdfService extends BasePollPdfService {
             content.push(this.ratingScoreBallotForm(poll.config));
         }
 
+        console.log(content);
+
         /*
          * TODO: Choose filename based on content object
          *
@@ -138,8 +140,62 @@ export class PollPdfService extends BasePollPdfService {
         return content;
     }
 
-    private ratingApprovalBallotForm(_config: ViewPollConfigRatingApproval): Content {
-        return [];
+    private ratingApprovalBallotForm(config: ViewPollConfigRatingApproval): Content {
+        const content = [];
+        const poll = config.poll;
+        // TODO: Only display abstain if enabled
+        // TODO: Option header alignment needs improvement
+        content.push({
+            columns: [
+                {
+                    width: `70%`,
+                    text: ``
+                },
+                {
+                    width: 40,
+                    text: this.translate.instant(`Yes`)
+                },
+                {
+                    width: 40,
+                    text: this.translate.instant(`No`)
+                },
+                {
+                    width: 40,
+                    text: this.translate.instant(`Abstain`)
+                }
+            ],
+            columnGap: 20
+        });
+        for (const option of poll.options) {
+            const BallotCircleDimensions = { yDistance: 6, size: 8 };
+            content.push({
+                margin: [0, 10, 0, 0],
+                columns: [
+                    {
+                        width: `70%`,
+                        text: option.text || option.meeting_user?.getTitle(),
+                        style: `poll_option_score`
+                    },
+                    {
+                        width: 40,
+                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
+                    },
+                    {
+                        width: 40,
+                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
+                    },
+                    {
+                        width: 40,
+                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
+                    }
+                ],
+                style: `poll_options`,
+                columnGap: 20
+            });
+        }
+
+        content.push(this.getMeta(config.poll));
+        return content;
     }
 
     private ratingScoreBallotForm(config: ViewPollConfigRatingScore): Content {
