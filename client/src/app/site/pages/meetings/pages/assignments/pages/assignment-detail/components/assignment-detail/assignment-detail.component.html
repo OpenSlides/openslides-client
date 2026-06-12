@@ -223,9 +223,9 @@
                                     <div>
                                         @if (!isSelfCandidate) {
                                             <button
-                                                aria-label="{{ 'Add me' | translate }}"
                                                 color="accent"
                                                 mat-button
+                                                [attr.aria-label]="'Add me' | translate"
                                                 (click)="addSelf()"
                                             >
                                                 <mat-icon>add</mat-icon>
@@ -234,9 +234,9 @@
                                         }
                                         @if (isSelfCandidate) {
                                             <button
-                                                aria-label="{{ 'Remove me' | translate }}"
                                                 color="accent"
                                                 mat-button
+                                                [attr.aria-label]="'Remove me' | translate"
                                                 (click)="removeSelf()"
                                             >
                                                 <mat-icon>remove</mat-icon>

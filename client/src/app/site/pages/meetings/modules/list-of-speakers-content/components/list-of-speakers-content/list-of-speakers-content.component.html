@@ -143,8 +143,8 @@
             <!-- Add me and remove me if OP has correct permission -->
             @if (addSelf && !isOpInWaitlist()) {
                 <button
-                    aria-label="{{ 'Add me' | translate }}"
                     mat-stroked-button
+                    [attr.aria-label]="'Add me' | translate"
                     [disabled]="closed || !canAddDueToPresence"
                     (click)="addMyself()"
                 >
@@ -153,7 +153,7 @@
                 </button>
             }
             @if (isOpInWaitlist()) {
-                <button aria-label="{{ 'Remove me' | translate }}" mat-stroked-button (click)="removeSpeaker()">
+                <button mat-stroked-button [attr.aria-label]="'Remove me' | translate" (click)="removeSpeaker()">
                     <mat-icon>remove</mat-icon>
                     <span>{{ 'Remove me' | translate }}</span>
                 </button>
@@ -161,9 +161,9 @@
             <!-- Point Of order -->
             @if (addSelf && showPointOfOrders && !isOpInWaitlist(true)) {
                 <button
-                    aria-label="{{ 'Point of order' | translate }}"
                     color="warn"
                     mat-stroked-button
+                    [attr.aria-label]="'Point of order' | translate"
                     [disabled]="restrictPointOfOrderActions && closed"
                     (click)="addPointOfOrder()"
                 >
@@ -176,9 +176,9 @@
             }
             @if (showPointOfOrders && isOpInWaitlist(true)) {
                 <button
-                    aria-label="{{ 'Withdraw point of order' | translate }}"
                     color="warn"
                     mat-stroked-button
+                    [attr.aria-label]="'Withdraw point of order' | translate"
                     (click)="removePointOfOrder()"
                 >
                     <mat-icon>remove</mat-icon>
@@ -189,8 +189,8 @@
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
                     <button
-                        aria-label="{{ 'Interposed question' | translate }}"
                         mat-stroked-button
+                        [attr.aria-label]="'Interposed question' | translate"
                         [disabled]="closed || !activeSpeaker"
                         (click)="addInterposedQuestion()"
                     >
@@ -206,8 +206,8 @@
                 <!-- Intervention -->
                 <button
                     *osPerms="permission.listOfSpeakersCanManage"
-                    aria-label="{{ 'Intervention' | translate }}"
                     mat-stroked-button
+                    [attr.aria-label]="'Intervention' | translate"
                     [disabled]="closed"
                     (click)="addIntervention()"
                 >
