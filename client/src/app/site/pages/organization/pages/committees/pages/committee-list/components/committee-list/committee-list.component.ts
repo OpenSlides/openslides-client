@@ -33,6 +33,17 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         return this.translate.instant(`Agenda items are in process. Please wait ...`);
     }
 
+    private _selectedView = `list`;
+
+    public get selectedView(): string {
+        return this._selectedView;
+    }
+
+    public set selectedView(value) {
+        this._selectedView = value;
+        this.filterService.hierarchyFilterActive = value === 'hierarchy';
+    }
+
     public constructor(
         protected override translate: TranslateService,
         public committeeController: CommitteeControllerService,
@@ -50,6 +61,15 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
         this.listStorageIndex = COMMITTEE_LIST_STORAGE_INDEX;
+        this.subscriptions.push(
+            this.sortService.hierarchySort.subscribe(active => {
+                this.selectedView = active ? `hierarchy` : `list`;
+            })
+        );
+    }
+
+    public onChangeView(type: string): void {
+        this.sortService.hierarchySort = type === `hierarchy`;
     }
 
     public editSingle(committee: ViewCommittee): void {
