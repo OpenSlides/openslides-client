@@ -19,7 +19,7 @@ export class VotesTableComponent {
     private _isViewingThis = true;
 
     @Input()
-    public set votesDataObservable(observable: Observable<BaseVoteData[]>) {
+    public set votesDataObservabl(observable: Observable<BaseVoteData[]>) {
         this._votesDataObservable = observable.pipe(
             map(entries =>
                 entries.sort((entryA, entryB) => entryA.user?.getName().localeCompare(entryB.user?.getName()))

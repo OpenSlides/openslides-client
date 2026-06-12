@@ -113,7 +113,7 @@ export class ViewPoll<C extends PollContentObject = any>
 
     public override getDetailStateUrl(): string {
         if (this.getContentObject()) {
-            return this.getContentObject()!.getDetailStateUrl();
+            return String(this.id);
         } else {
             return ``;
         }
