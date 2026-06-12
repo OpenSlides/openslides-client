@@ -222,13 +222,23 @@
                                 <div>
                                     <div>
                                         @if (!isSelfCandidate) {
-                                            <button color="accent" mat-button (click)="addSelf()">
+                                            <button
+                                                aria-label="{{ 'Add me' | translate }}"
+                                                color="accent"
+                                                mat-button
+                                                (click)="addSelf()"
+                                            >
                                                 <mat-icon>add</mat-icon>
                                                 <span>{{ 'Add me' | translate }}</span>
                                             </button>
                                         }
                                         @if (isSelfCandidate) {
-                                            <button color="accent" mat-button (click)="removeSelf()">
+                                            <button
+                                                aria-label="{{ 'Remove me' | translate }}"
+                                                color="accent"
+                                                mat-button
+                                                (click)="removeSelf()"
+                                            >
                                                 <mat-icon>remove</mat-icon>
                                                 <span>{{ 'Remove me' | translate }}</span>
                                             </button>
