@@ -122,7 +122,7 @@ export class OperatorService {
     }
 
     public get onlyMeeting(): Id {
-        return this.user.onlyMeeting;
+        return this.user?.onlyMeeting;
     }
 
     public get canChangeOwnPassword(): boolean {
@@ -411,7 +411,7 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         const meeting = this.meetingRepo.getViewModel(meetingId);
-        return (meeting?.enable_anonymous && this.isAnonymous) || this.user.ensuredMeetingIds.includes(meetingId);
+        return (meeting?.enable_anonymous && this.isAnonymous) || this.user?.ensuredMeetingIds.includes(meetingId);
     }
 
     public hasCommitteeManagementRights(committee_id: number): boolean {
@@ -643,7 +643,7 @@ export class OperatorService {
         ) {
             return true;
         }
-        const groups = this.user.groups(meetingId);
+        const groups = this.user?.groups(meetingId);
         if (!groups || !groups.length) {
             return false;
         } else if (
@@ -657,7 +657,7 @@ export class OperatorService {
 
     public isAllowedWithDelegation(...appliedSettings: DelegationSetting[]): boolean {
         return (
-            !this.user.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
+            !this.user?.getMeetingUser(this.activeMeetingId)?.vote_delegated_to_id ||
             !appliedSettings.some(appliedSetting => this.meetingSettings.instant(appliedSetting as keyof Settings))
         );
     }

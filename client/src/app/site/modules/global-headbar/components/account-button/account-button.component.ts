@@ -224,6 +224,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         } else {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
-        return this.user.short_name + ': ' + stringForUserPresent;
+        return this.user?.short_name + ': ' + stringForUserPresent;
     }
 }
