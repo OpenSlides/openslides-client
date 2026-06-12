@@ -19,7 +19,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         },
         {
             idField: `ballot_ids`,
-            fieldset: [`represented_meeting_user_id`, `poll_id`]
+            fieldset: [`represented_meeting_user_id`, `poll_id`, `value`]
         },
         {
             idField: `option_ids`,

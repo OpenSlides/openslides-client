@@ -1,72 +1,47 @@
 <div *osPerms="permission.userCanSee">
-    <!-- @if (isViewingThis) {} -->
-    <div>
-        <os-list
-            [filterProps]="filterProps"
-            [filterService]="poll().isNamed ? filter : null"
-            [fullScreen]="false"
-            [listObservable]="votesDataObservable"
-            [totalCount]="totalCount"
-        >
-            <!-- Content -->
-            <div *osScrollingTableCell="'user'; row as vote">
-                <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
-                @if (vote.user) {
-                    <div>
-                        {{ vote.user.getShortName() }}
-                        <div class="user-subtitle">
-                            <!-- Level and number -->
-                            @if (vote.user.getLevelAndNumber()) {
-                                <div>
-                                    {{ vote.user.getLevelAndNumber() }}
-                                </div>
-                            }
-                            <!-- Vote weight -->
-                            @if (voteWeightEnabled()) {
-                                <div>{{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}</div>
-                            }
-                            <!-- Delegation -->
-                            @if (delegationEnabled() && vote.user.vote_delegated_to()) {
-                                <div>
-                                    <span>({{ 'represented by' | translate }}</span>
-                                    &nbsp;
-                                    <span>{{ vote.user.vote_delegated_to().getShortName().trim() }})</span>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-                @if (!vote.user) {
-                    <div>
-                        <i>{{ 'Anonymous' | translate }}</i>
-                    </div>
-                }
-            </div>
-            <!-- TODO: make value work-->
-            @if (pollContentCollection === 'assignment') {
-                <div *osScrollingTableCell="'votes'; row as vote">
-                    <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
-                    <!-- Needs Candidate-->
-                    @for (candidate of vote.user.getShortName(); track candidate) {
-                        <div class="single-vote-result">
-                            {{ candidate }}
-                        </div>
-                    }
-                </div>
-            } @else {
+    <os-list
+        [filterProps]="filterProps"
+        [filterService]="poll().isNamed ? filter : null"
+        [fullScreen]="false"
+        [listObservable]="votesDataObservable"
+        [totalCount]="totalCount"
+    >
+        <!-- Content -->
+        <div *osScrollingTableCell="'user'; row as vote">
+            <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
+            @if (vote.user) {
                 <div>
-                    <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
-                        <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
-
-                        <div class="vote-cell-icon-container" [ngClass]="voteCSS">
-                            <mat-icon>{{ voteIcon }}</mat-icon>
-                        </div>
-                        <div>{{ vote.valueVerbose | translate }}</div>
+                    {{ vote.user.getShortName() }}
+                    <div class="user-subtitle">
+                        <!-- Level and number -->
+                        @if (vote.user.getLevelAndNumber()) {
+                            <div>
+                                {{ vote.user.getLevelAndNumber() }}
+                            </div>
+                        }
+                        <!-- Vote weight -->
+                        @if (voteWeightEnabled()) {
+                            <div>{{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}</div>
+                        }
+                        <!-- Delegation -->
+                        @if (delegationEnabled() && vote.user.vote_delegated_to()) {
+                            <div>
+                                <span>({{ 'represented by' | translate }}</span>
+                                &nbsp;
+                                <span>{{ vote.user.vote_delegated_to().getShortName().trim() }})</span>
+                            </div>
+                        }
                     </div>
                 </div>
             }
-        </os-list>
-    </div>
+            @if (!vote.user) {
+                <div>
+                    <i>{{ 'Anonymous' | translate }}</i>
+                </div>
+            }
+        </div>
+        <!-- TODO: show value -->
+    </os-list>
 </div>
 <div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
