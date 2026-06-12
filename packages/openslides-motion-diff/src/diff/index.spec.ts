@@ -824,6 +824,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
+        // TODO: https://github.com/OpenSlides/openslides-client/issues/5856
         it.skip(`handles inserted text within nested lists`, () => {
             const before =
                     `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
@@ -847,6 +848,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         });
 
+        // TODO: https://github.com/OpenSlides/openslides-client/issues/5863
         it.skip(`handles changed text within nested lists (part 2)`, () => {
             const before = `<ul><li>Ebene 1` +
                     `<ul><li>Ebene 2.1` +
@@ -1811,6 +1813,25 @@ describe(`MotionDiffService`, () => {
                 )
             ).toBe(
                 `<P class="os-split-before merge-before">${noMarkup(2)}first<ins> as</ins></p>`
+            );
+        });
+
+        // TODO: https://github.com/OpenSlides/openslides-client/issues/5912
+        it.skip(`test change within text formatting`, () => {
+            const inHtml = `<p>${noMarkup(1)}Test <strong>foo, test<br class="os-line-break">${noMarkup(2)}Test</strong></p>`;
+
+            expect(
+                getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 1,
+                        line_to: 1,
+                        text: `<p>Test <strong>foo</strong></p>`
+                    }),
+                    85
+                )
+            ).toBe(
+                `<p>${noMarkup(1)}Test <strong>foo<del>, test</del><br class="os-line-break">${noMarkup(2)}Test</strong></p>`
             );
         });
     });
