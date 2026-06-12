@@ -343,7 +343,7 @@ export class BackendImportListComponent implements OnInit {
      * @param item a row or an entry with a current state
      * @eturn the icon for the item
      */
-    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+    public getActionIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `block`;
@@ -374,7 +374,7 @@ export class BackendImportListComponent implements OnInit {
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    public getRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -398,7 +398,7 @@ export class BackendImportListComponent implements OnInit {
         }
     }
 
-    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getWarningRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -489,7 +489,7 @@ export class BackendImportListComponent implements OnInit {
         }
     }
 
-    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
+    private getErrorDescription(entry: ViewImportedParticipant): string {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 

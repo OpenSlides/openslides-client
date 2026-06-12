@@ -77,6 +77,37 @@
             }
         }
 
+        <!-- CSV-Encoding Button -->
+        @if (csvReload) {
+            <button
+                mat-button
+                style="width: max-content"
+                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+            >
+                <mat-icon>autorenew</mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span class="upper">
+                        {{ 'CSV-Reload' | translate }}
+                    </span>
+                }
+            </button>
+        }
+
+        <!-- CSV-Encoding Button -->
+        @if (csvConfiguration) {
+            <button
+                mat-button
+                style="width: max-content"
+                (click)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open()"
+            >
+                <mat-icon>settings</mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span class="upper">
+                        {{ 'CSV-Configuration' | translate }}
+                    </span>
+                }
+            </button>
+        }
         <!-- Filter button -->
         @if (hasFilters) {
             <button
@@ -166,3 +197,46 @@
         }
     }
 </mat-menu>
+
+<mat-drawer #csvConfigMenu autoFocus="false" mode="push" position="end">
+    <div class="custom-table-header filter-menu-head" role="none" (click)="this.csvConfigMenu.toggle()">
+        <span tabindex="0" (keyup.enter)="this.csvConfigMenu.toggle()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </span>
+    </div>
+    <div style="margin-left: 10px; display: flex; flex-direction: column">
+        <div style="display: flex; flex-direction: column">
+            <h2 style="margin-left: 20px; margin-bottom: 0; margin-right: 30px">Encoding der Datei</h2>
+
+            <mat-radio-group style="display: flex; flex-direction: column">
+                <mat-radio-button color="accent">ah</mat-radio-button>
+                <mat-radio-button color="accent">eh</mat-radio-button>
+                <mat-radio-button color="accent">ih</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <mat-divider style="margin-right: 20px"></mat-divider>
+
+        <div style="display: flex; flex-direction: column; margin-left: 10px">
+            <h2 style="margin-left: 20px; margin-bottom: 0; margin-right: 30px">Spaltentrenner</h2>
+
+            <mat-radio-group style="display: flex; flex-direction: column">
+                <mat-radio-button color="accent">ah</mat-radio-button>
+                <mat-radio-button color="accent">eh</mat-radio-button>
+                <mat-radio-button color="accent">ih</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <mat-divider style="margin-right: 20px"></mat-divider>
+
+        <div style="display: flex; flex-direction: column; margin-left: 10px">
+            <h2 style="margin-left: 20px; margin-bottom: 0; margin-right: 30px">Texttrenner</h2>
+
+            <mat-radio-group style="display: flex; flex-direction: column">
+                <mat-radio-button color="accent">ah</mat-radio-button>
+                <mat-radio-button color="accent">eh</mat-radio-button>
+                <mat-radio-button color="accent">ih</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+</mat-drawer>

@@ -100,14 +100,24 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected _totalCountObservable: Observable<number> = null;
 
     /**
-     * Wether or not to show the filter bar
+     * Whether or not to show the filter bar
      */
     public showFilterBar = true;
 
     /**
-     * Wether or not to show the header
+     * Whether or not to show the header
      */
     public showHeader = true;
+
+    /**
+     * Whether or not to show the CSV-Encoding button
+     */
+    protected csvConfiguration = true;
+
+    /**
+     * Whether or not to show the CSV-
+     */
+    protected csvReload = true; // Reload CSV file
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.

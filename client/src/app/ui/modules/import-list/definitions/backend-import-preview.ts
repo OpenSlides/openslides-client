@@ -52,7 +52,7 @@ export interface BackendImportPreview {
     id: number; // id of action_worker to import
     state: BackendImportState; // May be `error`, `warning` or `done`
     headers: BackendImportHeader[];
-    rows: ViewImportedParticipant[];
+    rows: BackendImportIdentifiedRow[] | ViewImportedParticipant[];
     statistics: BackendImportSummary[];
 }
 

@@ -61,6 +61,12 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public searchService: SearchService<V> | undefined;
 
+    @Input()
+    public csvConfiguration: boolean;
+
+    @Input()
+    public csvReload: boolean;
+
     /**
      * Current state of the multi select mode.
      */

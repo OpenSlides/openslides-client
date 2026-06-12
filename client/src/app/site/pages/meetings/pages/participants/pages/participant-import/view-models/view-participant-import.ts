@@ -114,4 +114,42 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     public getBooleanValue(value: string | number | boolean | undefined): boolean {
         return !!value;
     }
+
+    public get changedVoteWeight(): boolean {
+        return this.vote_weight < 1 || this.vote_weight > 1 || !this.vote_weight ? true : false;
+    }
+
+    public get hasMemberNumber(): boolean {
+        console.log(this.member_number);
+        return this.member_number ? true : false;
+    }
+
+    public get hasTitle(): boolean {
+        return this.title?.length > 0 ? true : false;
+    }
+
+    public get hasSamlId(): boolean {
+        return this.saml_id ? true : false;
+    }
+
+    public get hasEmail(): boolean {
+        return this.email?.length > 0 ? true : false;
+    }
+
+    public get hasUsername(): boolean {
+        console.log(this.username);
+        return this.username ? true : false;
+    }
+
+    public get hasPronoun(): boolean {
+        return this.pronoun ? true : false;
+    }
+
+    public get hasHomeCommittee(): boolean {
+        return this.home_committee?.length > 0 ? true : false;
+    }
+
+    public get hasGroups(): boolean {
+        return this.groups?.length > 0 ? true : false;
+    }
 }

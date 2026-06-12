@@ -42,7 +42,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `vote_weight`,
+                property: `changedVoteWeight`,
                 label: _(`Vote weight`),
                 options: [
                     { condition: [false, null], label: _(`Has changed vote weight`) },
@@ -58,7 +58,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `member_number`,
+                property: `hasMemberNumber`,
                 label: _(`Membership number`),
                 options: [
                     { condition: true, label: _(`Has a membership number`) },
@@ -66,7 +66,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `title`,
+                property: `hasTitle`,
                 label: _(`Title`),
                 options: [
                     { condition: true, label: _(`Has a title`) },
@@ -74,7 +74,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `saml_id`,
+                property: `hasSamlId`,
                 label: _(`SSO`),
                 options: [
                     { condition: true, label: _(`Has SSO identification`) },
@@ -93,7 +93,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `email`,
+                property: `hasEmail`,
                 label: _(`Email address`),
                 options: [
                     { condition: true, label: _(`Has an email address`) },
@@ -101,7 +101,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `pronoun`,
+                property: `hasPronoun`,
                 label: _(`Pronoun`),
                 options: [
                     { condition: true, label: _(`Has pronoun`) },
@@ -109,7 +109,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `username`,
+                property: `hasUsername`,
                 label: _(`Username`),
                 options: [
                     { condition: true, label: _(`Has username`) },
@@ -117,7 +117,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `home_committee`,
+                property: `hasHomeCommittee`,
                 label: _(`Home committee`),
                 options: [
                     { condition: true, label: _(`Has home committee`) },
@@ -125,8 +125,8 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `groups`,
-                label: _(`Username`),
+                property: `hasGroups`,
+                label: _(`Groups`),
                 options: [
                     { condition: true, label: _(`Has groups`) },
                     { condition: [false, null], label: _(`Has no groups`) }

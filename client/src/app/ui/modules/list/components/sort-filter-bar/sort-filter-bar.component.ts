@@ -67,6 +67,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     @Input()
     public searchService: SearchService<V> | undefined;
 
+    @Input()
+    public csvConfiguration: boolean;
+
+    @Input()
+    public csvReload: boolean;
+
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,
      * if no filter service is given.
@@ -126,6 +132,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
      */
     @ViewChild(MatDrawer, { static: true })
     public filterMenu: MatDrawer;
+
+    /**
+     * The filter side drawer
+     */
+    @ViewChild(MatDrawer, { static: true })
+    public csvConfigMenu: MatDrawer;
 
     /**
      * The bottom sheet used to alter sorting in mobile view

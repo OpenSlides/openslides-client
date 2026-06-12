@@ -67,3 +67,19 @@ os-sort-filter-bar {
         font-weight: 400;
     }
 }
+
+.section {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    margin-left: 10px;
+}

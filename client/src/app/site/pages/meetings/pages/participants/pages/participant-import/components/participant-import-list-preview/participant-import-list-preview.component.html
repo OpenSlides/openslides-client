@@ -11,6 +11,8 @@
 
 <div>
     <os-view-list
+        [csvConfiguration]="csvConfiguration"
+        [csvReload]="csvReload"
         [filterProps]="filterProps"
         [filterService]="filterService"
         [listObservable]="dataSource"
@@ -32,7 +34,6 @@
                         isDefault: true;
                         config: getColumnConfig(column.property)
                     "
-                    class="fixed-cols"
                 >
                     @let entry = row.data;
                     @let type = column.type;

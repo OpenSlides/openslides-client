@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterOutlet } from '@angular/router';
 import { EditorModule } from 'src/app/ui/modules/editor/editor.module';
 import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
@@ -46,8 +45,7 @@ const DECLARATIONS = [
         FormsModule,
         PortalModule,
         ScrollingTableModule,
-        OpenSlidesTranslationModule.forChild(),
-        RouterOutlet
+        OpenSlidesTranslationModule.forChild()
     ]
 })
 export class ImportListModule {}
