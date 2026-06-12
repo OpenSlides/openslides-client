@@ -1,5 +1,6 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, Signal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +20,7 @@ import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { BaseVoteData } from '../../base/base-poll-detail.component';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
@@ -43,7 +45,6 @@ import { VotingService } from '../../services/voting.service';
         MatIconModule,
         MatTabsModule,
         NgClass,
-        AsyncPipe,
         PipesModule
     ]
 })
@@ -62,6 +63,9 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public votesDataObservable: Observable<BaseVoteData[]>;
 
+    public voteWeightEnabled: Signal<boolean>;
+    public delegationEnabled: Signal<boolean>;
+
     public pollContentCollection = ``;
     public totalCount = 0;
     public voteCSS = ``;
@@ -72,6 +76,7 @@ export class PollSingleVotesComponent extends BaseComponent {
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
     private userRepo = inject(UserRepositoryService);
+    public meetingSettingsService = inject(MeetingSettingsService);
 
     public constructor() {
         super();
@@ -107,5 +112,8 @@ export class PollSingleVotesComponent extends BaseComponent {
             }
         });
         this.votesDataObservable = this.votesDataSubject;
+
+        this.voteWeightEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_weight`));
+        this.delegationEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_delegations`));
     }
 }
