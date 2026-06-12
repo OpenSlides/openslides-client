@@ -1,0 +1,171 @@
+<os-head-bar [goBack]="false" [nav]="false">
+    <div class="title-slot">
+        <h1 class="mock-h2" translate>Import participants</h1>
+    </div>
+    <ng-container class="menu-slot">
+        <button mat-button>
+            <span class="upper">Import</span>
+        </button>
+    </ng-container>
+</os-head-bar>
+
+<div>
+    <os-view-list
+        [csvConfiguration]="csvConfiguration"
+        [csvReload]="csvReload"
+        [filterProps]="filterProps"
+        [filterService]="filterService"
+        [listObservable]="dataSource"
+        [searchFieldInput]="searchFieldInput"
+        [searchService]="searchService"
+        [showFilterBar]="showFilterBar"
+        [showHeader]="showHeader"
+        [totalCount]="_totalCountObservable | async"
+        [vScrollFixed]="50"
+        (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+    >
+        @if (dataSource | async) {
+            @for (column of previewColumns; track column; let i = $index) {
+                <div
+                    *osScrollingTableCell="
+                        column.property;
+                        row as row;
+                        definition as def;
+                        isDefault: true;
+                        config: getColumnConfig(column.property)
+                    "
+                >
+                    @let entry = row.data;
+                    @let type = column.type;
+                    <div>
+                        <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) }}</div>
+                        @if (entry && (entry[def] || type === 'boolean')) {
+                            <div class="flex-vertical-center">
+                                @if (getHeader(def).is_list && entry[def]) {
+                                    <div>
+                                        @for (item of entry[def]; track item) {
+                                            @if (getHeader(def).is_object) {
+                                                <div class="list-field-entry">
+                                                    @if (getHeader(def).type === 'string') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'number') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'date') {
+                                                        {{ item.value }}
+                                                    }
+                                                    @if (getHeader(def).type === 'boolean') {
+                                                        <mat-checkbox disabled [checked]="item.value" />
+                                                    }
+                                                    &nbsp;
+
+                                                    @if (getActionIcon(item)) {
+                                                        <mat-icon color="accent" inline>
+                                                            {{ getEntryIcon(item.value) }}
+                                                        </mat-icon>
+                                                    }
+                                                </div>
+                                            } @else {
+                                                @if (getHeader(def).type === 'string') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'number') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'date') {
+                                                    {{ item.value }}
+                                                }
+                                                @if (getHeader(def).type === 'boolean') {
+                                                    <mat-checkbox disabled [checked]="item.value" />
+                                                }
+                                                &nbsp;
+                                            }
+                                        }
+                                    </div>
+                                }
+                                @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                                    @if (getHeader(def).is_object) {
+                                        <div class="list-field-entry">
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entry[def].value" />
+                                            }
+                                            &nbsp;
+
+                                            @if (getActionIcon(entry[def])) {
+                                                <mat-icon color="accent" inline>
+                                                    {{ getEntryIcon(entry[def]) }}
+                                                </mat-icon>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div
+                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
+                class="flex-vertical-center icon-container"
+            >
+                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">&nbsp;#</div>
+                @if (row.state === 'error') {
+                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
+                }
+                @if (row.state !== 'error' && row.messages.length) {
+                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                        warning
+                    </mat-icon>
+                }
+                @if (row.state !== 'error') {
+                    <mat-icon
+                        matTooltip="{{ getRowTooltip(row) }}"
+                        matTooltipPosition="right"
+                        [ngClass]="getColorIcon(row)"
+                    >
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
+                }
+            </div>
+        }
+    </os-view-list>
+    <!-- fix this -->
+    <footer
+        style="
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: white;
+            z-index: 1;
+            border-top: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        "
+    >
+        <!-- @let entry = row.data; -->
+        @for (col of summary; track col) {
+            <div>
+                <mat-icon color="accent" inline>
+                    <!-- {{ getEntryIcon(item.value) }} -->
+                </mat-icon>
+                {{ col.value }}&nbsp;{{ col.name }}&nbsp;
+            </div>
+            <br />
+        }
+    </footer>
+</div>

@@ -1,0 +1,17 @@
+$os-green: rgb(76, 175, 80);
+$os-yellow: rgb(255, 193, 7);
+
+.os-green {
+    color: $os-green;
+}
+.os-yellow {
+    color: $os-yellow;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}

@@ -61,6 +61,12 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public searchService: SearchService<V> | undefined;
 
+    @Input()
+    public csvConfiguration: boolean;
+
+    @Input()
+    public csvReload: boolean;
+
     /**
      * Current state of the multi select mode.
      */
@@ -97,6 +103,12 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     @Input()
     public showMenu = true;
+
+    /*
+     * To Optionally show the scrolling-table's header bar
+     */
+    @Input()
+    public showHeader: boolean;
 
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.

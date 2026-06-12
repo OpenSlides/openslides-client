@@ -2,6 +2,13 @@
 @use 'src/assets/styles/h-scroller.scss';
 
 os-sort-filter-bar {
+    .selected-option {
+        border-bottom: 2px solid var(--theme-primary-500);
+    }
+    .not-selected-option {
+        color: gray !important;
+    }
+
     .filter-menu-head {
         padding-left: 5px;
 
@@ -66,4 +73,50 @@ os-sort-filter-bar {
     .upper {
         font-weight: 400;
     }
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    padding-right: 8em;
+
+    & h2 {
+        font-weight: 800;
+        margin-bottom: 5px;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1em;
+        margin-right: 1em;
+
+        mat-radio-button:last-child {
+            margin-bottom: 1em;
+        }
+    }
+
+    .divider {
+        width: 200%;
+        margin-left: -20px;
+        overflow: hidden;
+    }
+}
+
+// REMOVE THE * IN BOTH BUTTON CLASSES
+.selected-button * {
+    color: var(--theme-primary-500) !important;
+}
+.not-selected-button * {
+    color: gray !important;
+}
+mat-drawer {
+    margin-top: 2.5%;
+}
+
+.container {
+    display: flex;
+    margin-left: 10px;
 }
