@@ -70,6 +70,10 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     @Input()
     public csvConfiguration: boolean;
 
+    protected selectedEncoding = '1';
+    protected selectedColumnSeparator = '1';
+    protected selectedTextSeparator = '1';
+
     @Input()
     public csvReload: boolean;
 

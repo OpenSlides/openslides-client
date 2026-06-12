@@ -141,4 +141,31 @@
             </div>
         }
     </os-view-list>
+    <!-- fix this -->
+    <footer
+        style="
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: white;
+            z-index: 1;
+            border-top: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        "
+    >
+        <!-- @let entry = row.data; -->
+        @for (col of summary; track col) {
+            <div>
+                <mat-icon color="accent" inline>
+                    <!-- {{ getEntryIcon(item.value) }} -->
+                </mat-icon>
+                {{ col.value }}&nbsp;{{ col.name }}&nbsp;
+            </div>
+            <br />
+        }
+    </footer>
 </div>
