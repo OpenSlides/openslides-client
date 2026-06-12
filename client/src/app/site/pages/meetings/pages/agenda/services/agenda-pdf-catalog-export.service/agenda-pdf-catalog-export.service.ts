@@ -131,11 +131,6 @@ export class AgendaPdfCatalogExportService {
         // Initialize the header and the layout for border-style.
         const header = this.getTocHeaderDefinition();
         const layout = BorderType.LIGHT_HORIZONTAL_LINES;
-        // Create the toc title
-        const tocTitle = {
-            text: this.translate.instant(`Table of contents`),
-            style: `heading2`
-        };
 
         // all agenda in the same table
         const tocBody = [];
@@ -147,6 +142,7 @@ export class AgendaPdfCatalogExportService {
                         identifier: `${topic.item_number ? topic.item_number : ``}`,
                         title: topic.content_object?.title,
                         pageReference: `${topic.id}`,
+                        level: topic.level,
                         style: StyleType.DEFAULT,
                         fillColor: (i + 1) % 2 ? TABLEROW_GREY : undefined
                     })
@@ -161,7 +157,7 @@ export class AgendaPdfCatalogExportService {
             )
         );
 
-        return [tocTitle, toc, this.pdfService.getPageBreak()];
+        return [toc, this.pdfService.getPageBreak()];
     }
 
     /**
