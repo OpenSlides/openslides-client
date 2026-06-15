@@ -115,9 +115,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected csvConfiguration = true;
 
     /**
-     * Whether or not to show the CSV-
+     * Whether or not to show the CSV-Reload button
      */
-    protected csvReload = true; // Reload CSV file
+    protected csvReloadButton = true; // Reload CSV file
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
@@ -270,8 +270,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
 
-    public importedParticipants: Observable<ViewImportedParticipant[]>;
-
     public constructor(
         private dialog: MatDialog,
         protected translate: TranslateService,
@@ -391,6 +389,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             default:
                 return `block`; // fallback: Error
         }
+    }
+
+    public getSummaryInformation(item: string): string[] {
+        return (
+            {
+                error: ['error_outline', 'red-warning-text'],
+                warning: ['warning', 'warn'],
+                created: ['add_circle_outline', 'os-green'],
+                updated: ['autorenew', 'os-yellow']
+            }[item] ?? ['group', 'accent']
+        );
     }
 
     public getEntryIcon(item: BackendImportEntryObject): string {
@@ -520,12 +529,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
+            this._previewColumns = (previews[0]?.headers ?? this._previewColumns).filter(
+                header => !header[`is_hidden`]
+            );
             this._summary = previews.some(preview => preview.statistics)
                 ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
                 : [];
-            this._rows = this.calculateRows(previews);
             this.setHeaders({ preview: this._previewColumns });
+            this._rows = this.calculateRows(previews);
         }
     }
 
@@ -542,5 +553,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         } else {
             return [];
         }
+    }
+
+    protected shortenSummary(summary: BackendImportSummary[]): BackendImportSummary[] {
+        return summary?.filter(col => col.name !== 'structure levels created' && col.name !== 'groups created');
     }
 }

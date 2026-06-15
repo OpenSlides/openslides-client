@@ -83,6 +83,7 @@
                 mat-button
                 style="width: max-content"
                 [class.not-selected-option]="(filterMenu.opened || csvConfigMenu.opened) === true"
+                (click)="csvReload.refreshFile()"
             >
                 <mat-icon>autorenew</mat-icon>
                 @if ((vp.isMobileSubject | async) === false) {

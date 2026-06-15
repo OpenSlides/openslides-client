@@ -1,9 +1,18 @@
+import { _ } from '@ngx-translate/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import {
     BackendImportEntry,
     BackendImportRow,
     BackendImportState
 } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+
+export const STATES = [
+    _(`New participant`),
+    _(`Updated participant`),
+    _('Referenced participant'),
+    _(`Faulty participant`)
+];
+export const STATE_FITERABLE = [`new`, `done`, `generated`, `error`];
 
 export class ViewImportedParticipant implements Identifiable, BackendImportRow /* implements Searchable */ {
     // This class replaces BackendImportIdentifiedRow
@@ -120,7 +129,6 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     }
 
     public get hasMemberNumber(): boolean {
-        console.log(this.member_number);
         return this.member_number ? true : false;
     }
 
@@ -137,7 +145,6 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     }
 
     public get hasUsername(): boolean {
-        console.log(this.username);
         return this.username ? true : false;
     }
 

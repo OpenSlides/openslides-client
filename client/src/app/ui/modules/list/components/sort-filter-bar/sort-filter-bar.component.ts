@@ -17,6 +17,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { ParticipantImportService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/services';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
@@ -75,7 +76,10 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     protected selectedTextSeparator = '1';
 
     @Input()
-    public csvReload: boolean;
+    public csvReload: ParticipantImportService;
+
+    @Input()
+    public csvReloadButton: boolean;
 
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,

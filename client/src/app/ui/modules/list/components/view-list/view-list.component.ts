@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { ParticipantImportService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/services';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
@@ -65,7 +66,10 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public csvConfiguration: boolean;
 
     @Input()
-    public csvReload: boolean;
+    public csvReloadButton: boolean;
+
+    @Input()
+    public csvReload: ParticipantImportService;
 
     /**
      * Current state of the multi select mode.

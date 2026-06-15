@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
-import { GENDER_FITLERABLE, GENDERS } from 'src/app/domain/models/users/user';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
-import { ViewImportedParticipant } from '../view-models/view-participant-import';
+import { STATE_FITERABLE, STATES, ViewImportedParticipant } from '../view-models/view-participant-import';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +15,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
     }
 
     protected getFilterDefinitions(): OsFilter<ViewImportedParticipant>[] {
-        const staticFilterOptions: OsFilter<ViewImportedParticipant>[] = [
+        /* return [
             {
                 property: `is_active`,
                 label: _(`Active`),
@@ -130,6 +129,19 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 options: [
                     { condition: true, label: _(`Has groups`) },
                     { condition: [false, null], label: _(`Has no groups`) }
+                ]
+            }];
+         */
+
+        const staticFilterOptions: OsFilter<ViewImportedParticipant>[] = [
+            {
+                property: 'state',
+                label: _('New participant'),
+                options: [
+                    { condition: STATE_FITERABLE[0], label: STATES[0] },
+                    { condition: STATE_FITERABLE[1], label: STATES[1] },
+                    { condition: STATE_FITERABLE[2], label: STATES[2] },
+                    { condition: STATE_FITERABLE[3], label: STATES[3] }
                 ]
             }
         ];
