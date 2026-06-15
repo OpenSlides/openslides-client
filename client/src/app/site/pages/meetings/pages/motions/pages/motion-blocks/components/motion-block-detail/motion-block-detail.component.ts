@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -14,6 +13,7 @@ import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { ProjectorControllerService } from '../../../../../projectors/services/projector-controller.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionBlockDetailFilterListService } from '../../services/motion-block-detail-filter-list.service';
@@ -49,6 +49,10 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         }
     ];
 
+    public isProjected(): boolean {
+        return this.projectorService.isProjected(this.block);
+    }
+
     /**
      * Value of the config variable `motions_show_sequential_numbers`
      */
@@ -66,22 +70,15 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     private _blockId = 0;
     private _dialogRef: MatDialogRef<MotionBlockEditDialogComponent, MotionBlock> | null = null;
 
-    /**
-     * Constructor for motion block details
-     */
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        protected repo: MotionBlockControllerService,
-        public motionRepo: MotionControllerService,
-        private promptService: PromptService,
-        private dialog: MotionBlockEditDialogService,
-        private itemRepo: AgendaItemControllerService,
-        public filterService: MotionBlockDetailFilterListService,
-        public vp: ViewPortService
-    ) {
-        super();
-    }
+    public motionRepo = inject(MotionControllerService);
+    public filterService = inject(MotionBlockDetailFilterListService);
+    public vp = inject(ViewPortService);
+    protected repo = inject(MotionBlockControllerService);
+    private route = inject(ActivatedRoute);
+    private promptService = inject(PromptService);
+    private dialog = inject(MotionBlockEditDialogService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private projectorService = inject(ProjectorControllerService);
 
     /**
      * Init function.
