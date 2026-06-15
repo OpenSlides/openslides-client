@@ -122,7 +122,7 @@ export class OperatorService {
     }
 
     public get onlyMeeting(): Id {
-        return this.user?.onlyMeeting;
+        return this.user.onlyMeeting;
     }
 
     public get canChangeOwnPassword(): boolean {
