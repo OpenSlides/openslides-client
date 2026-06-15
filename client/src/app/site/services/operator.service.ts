@@ -643,7 +643,7 @@ export class OperatorService {
         ) {
             return true;
         }
-        const groups = this.user?.groups(meetingId);
+        const groups = this.user.groups(meetingId);
         if (!groups || !groups.length) {
             return false;
         } else if (
