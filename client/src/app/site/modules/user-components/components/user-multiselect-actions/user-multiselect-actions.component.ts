@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    inject,
+    input,
+    output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -14,50 +23,43 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     standalone: false
 })
 export class UserMultiselectActionsComponent extends BaseComponent {
+    public repo = inject(UserControllerService);
+    private operator = inject(OperatorService);
+    private promptService = inject(PromptService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+
     @ViewChild(TemplateRef, { static: true })
     public implicitContent: TemplateRef<any>;
 
-    @Input()
-    public canManage = true;
+    public canManage = input<boolean>(true);
 
-    @Input()
-    public canUpdate = true;
+    public canUpdate = input<boolean>(true);
 
-    @Input()
-    public set selectedUsers(users: ViewUser[]) {
-        if (users.length !== this._selectedUsers.length) {
-            this.calculateMetaData(users);
-        }
-        this._selectedUsers = users;
-    }
+    public selectedUsers = input<ViewUser[]>([]);
 
-    public get selectedUsers(): ViewUser[] {
-        return this._selectedUsers;
-    }
+    public deleting = output<void>();
 
-    @Output()
-    public deleting = new EventEmitter<void>();
+    public deselectAll = output<void>();
 
-    @Output()
-    public deselectAll = new EventEmitter<void>();
+    public selectAll = output<void>();
 
-    @Output()
-    public selectAll = new EventEmitter<void>();
-
-    @Output()
-    public selectedUsersChange = new EventEmitter<ViewUser[]>();
+    public selectedUsersChange = output<ViewUser[]>();
 
     public hasSelectedNonSamlUsers = false;
 
     private _selectedUsers: ViewUser[] = [];
 
-    public constructor(
-        private operator: OperatorService,
-        private promptService: PromptService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        public repo: UserControllerService
-    ) {
+    public constructor() {
         super();
+
+        effect(() => {
+            const users = this.selectedUsers();
+
+            if (users.length !== this._selectedUsers.length) {
+                this.calculateMetaData(users);
+            }
+            this._selectedUsers = users;
+        });
     }
 
     /**
@@ -69,7 +71,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             return;
         }
 
-        if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
+        if (this.selectedUsers().find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     `Note: Your own password was not changed. Please use the password change dialog instead.`
@@ -77,7 +79,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             );
         }
         this.repo
-            .resetPasswordToDefault(...this.selectedUsers.filter(row => row.user.id !== this.operator.operatorId))
+            .resetPasswordToDefault(...this.selectedUsers().filter(row => row.user.id !== this.operator.operatorId))
             .catch(this.raiseError);
     }
 
@@ -95,14 +97,14 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             return;
         }
 
-        if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
+        if (this.selectedUsers().find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     `Note: Your own password was not changed. Please use the password change dialog instead.`
                 )
             );
         }
-        const rows = this.selectedUsers.filter(row => row.user.id !== this.operator.operatorId);
+        const rows = this.selectedUsers().filter(row => row.user.id !== this.operator.operatorId);
         this.repo.generateNewPasswords(rows);
     }
 
@@ -111,7 +113,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
         const content = this.selectedUsers.length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {
             this.repo
-                .sendInvitationEmails(this.selectedUsers, this.activeMeetingIdService.meetingId)
+                .sendInvitationEmails(this.selectedUsers(), this.activeMeetingIdService.meetingId)
                 .then(this.raiseError, this.raiseError);
         }
     }
