@@ -3,13 +3,12 @@ import { BasePollDialogService } from 'src/app/site/pages/meetings/modules/poll/
 
 import { ViewTopic } from '../../../view-models';
 import { TopicPollDialogComponent } from '../components/topic-poll-dialog/topic-poll-dialog.component';
-import { TopicPollModule } from '../topic-poll.module';
 
 /**
  * Subclassed to provide the right `PollService` and `DialogComponent`
  */
 @Injectable({
-    providedIn: TopicPollModule
+    providedIn: 'root'
 })
 export class TopicPollDialogService extends BasePollDialogService<ViewTopic> {
     protected getComponent(): typeof TopicPollDialogComponent {

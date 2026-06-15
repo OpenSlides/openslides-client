@@ -5,8 +5,6 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
-import { ParticipantExportModule } from '../participant-export.module';
-
 /**
  * Creates a pdf for a user, containing greetings and initial login information
  * Provides the public methods `userAccessToDocDef(user: ViewUser)` and
@@ -18,7 +16,7 @@ import { ParticipantExportModule } from '../participant-export.module';
  * ```
  */
 @Injectable({
-    providedIn: ParticipantExportModule
+    providedIn: 'root'
 })
 export class ParticipantPdfService {
     /**

@@ -6,10 +6,9 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionListFilterService } from '../motion-list-filter.service';
-import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: 'root'
 })
 export class AmendmentListFilterService extends MotionListFilterService {
     /**

@@ -6,10 +6,9 @@ import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definiti
 
 import { AccountExportService } from '../../../../services/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
-import { AccountImportServiceModule } from '../account-import-service.module';
 
 @Injectable({
-    providedIn: AccountImportServiceModule
+    providedIn: 'root'
 })
 export class AccountImportService extends BaseBackendImportService {
     /**

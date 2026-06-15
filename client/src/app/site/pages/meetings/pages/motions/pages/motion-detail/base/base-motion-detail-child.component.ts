@@ -6,6 +6,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
 import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
@@ -47,6 +48,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     protected tagRepo = inject(TagControllerService);
     protected changeRecoRepo = inject(MotionChangeRecommendationControllerService);
     protected motionLineNumbering = inject(MotionLineNumberingService);
+    protected diffFactory = inject(DiffServiceFactory);
     protected motionFormatService = inject(MotionFormatService);
     protected viewService = inject(MotionDetailViewService);
 
@@ -96,6 +98,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     private init(): void {
+        this.motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, this._motion.diffVersion);
         this.subscriptions.push(...this.getSubscriptions());
         this.onAfterInit();
     }

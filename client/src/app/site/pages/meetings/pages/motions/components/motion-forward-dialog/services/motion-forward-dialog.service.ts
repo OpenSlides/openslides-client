@@ -28,10 +28,9 @@ import {
     MotionForwardDialogComponent,
     MotionForwardDialogReturnData
 } from '../components/motion-forward-dialog/motion-forward-dialog.component';
-import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 
 @Injectable({
-    providedIn: MotionForwardDialogModule
+    providedIn: 'root'
 })
 export class MotionForwardDialogService extends BaseDialogService<
     MotionForwardDialogComponent,

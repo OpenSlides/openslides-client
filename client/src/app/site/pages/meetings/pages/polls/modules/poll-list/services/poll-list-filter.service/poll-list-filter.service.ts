@@ -5,10 +5,9 @@ import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.s
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewPoll } from '../../../../view-models';
-import { PollListServiceModule } from '../poll-list-service.module';
 
 @Injectable({
-    providedIn: PollListServiceModule
+    providedIn: 'root'
 })
 export class PollListFilterService extends BaseFilterListService<ViewPoll> {
     /**

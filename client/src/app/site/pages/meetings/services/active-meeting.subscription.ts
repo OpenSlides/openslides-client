@@ -24,6 +24,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `description`,
                 `location`,
                 `language`,
+                `time_zone`,
                 `organization_tag_ids`,
                 `welcome_title`,
                 `welcome_text`,

@@ -9,10 +9,9 @@ import { CommitteeRepositoryService } from '../../../../../../gateways/repositor
 import { BaseController } from '../../../../../base/base-controller';
 import { ControllerServiceCollectorService } from '../../../../../services/controller-service-collector.service';
 import { ViewCommittee } from '../view-models';
-import { CommitteeCommonServiceModule } from './committee-common-service.module';
 
 @Injectable({
-    providedIn: CommitteeCommonServiceModule
+    providedIn: 'root'
 })
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
     public constructor(

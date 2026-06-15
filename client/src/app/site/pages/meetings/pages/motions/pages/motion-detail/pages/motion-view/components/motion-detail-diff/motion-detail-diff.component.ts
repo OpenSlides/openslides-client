@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     Output,
     ViewChild,
@@ -24,6 +25,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
+import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
 import {
     LineNumberedString,
     LineNumberingService
@@ -78,16 +80,19 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @ViewChild(MatMenuTrigger)
     private changeRecommendationMenu: MatMenuTrigger;
 
-    private _motion: ViewMotion;
-
-    @Input()
-    public set motion(motion: ViewMotion) {
-        this._motion = motion;
-        this.setLastNumber();
-    }
+    private _motion!: ViewMotion;
 
     public get motion(): ViewMotion {
         return this._motion;
+    }
+
+    @Input()
+    public set motion(value: ViewMotion) {
+        this.diff = this.diffServiceFactory.createService(MotionDiffService, value.diffVersion);
+        this.lineNumberingService = this.diffServiceFactory.createService(LineNumberingService, value.diffVersion);
+
+        this._motion = value;
+        this.setLastNumber();
     }
 
     private _changes: ViewUnifiedChange[] = [];
@@ -171,13 +176,16 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return this.el.nativeElement;
     }
 
+    private diff: MotionDiffService;
+    private lineNumberingService: LineNumberingService;
+
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private diffServiceFactory = inject(DiffServiceFactory);
+
     public constructor(
         protected override translate: TranslateService,
-        private diff: MotionDiffService,
-        private lineNumberingService: LineNumberingService,
         private recoRepo: MotionChangeRecommendationControllerService,
         private motionRepo: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
         private el: ElementRef,
         private promptService: PromptService,
         private dialog: MotionChangeRecommendationDialogService

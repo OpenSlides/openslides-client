@@ -4,10 +4,9 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
-import { MotionBlockServiceModule } from '../motion-block-service.module';
 
 @Injectable({
-    providedIn: MotionBlockServiceModule
+    providedIn: 'root'
 })
 export class MotionBlockDetailFilterListService extends MotionListFilterService {
     protected override storageKey = `MotionBlock`;

@@ -4,10 +4,8 @@ import { FileExportService } from 'src/app/gateways/export/file-export.service/f
 import { HttpService } from 'src/app/gateways/http.service';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 
-import { MediafileListServiceModule } from '../mediafile-list-service.module';
-
 @Injectable({
-    providedIn: MediafileListServiceModule
+    providedIn: 'root'
 })
 export class MediafileListExportService {
     public constructor(

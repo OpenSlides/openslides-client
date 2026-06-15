@@ -12,7 +12,6 @@ import { DurationService } from 'src/app/site/services/duration.service';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
 import { ViewSpeaker } from '../../../agenda';
-import { ParticipantExportModule } from '../participant-export.module';
 
 export const speakerHeadersAndVerboseNames = {
     user_title: _(`Title`),
@@ -27,7 +26,7 @@ export const speakerHeadersAndVerboseNames = {
 };
 
 @Injectable({
-    providedIn: ParticipantExportModule
+    providedIn: 'root'
 })
 export class SpeakerCsvExportService {
     public constructor(

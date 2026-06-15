@@ -39,8 +39,6 @@ import { UserService } from 'src/app/site/services/user.service';
 import { CreateUserNameInformation, UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
-import { ParticipantCommonServiceModule } from '../participant-common-service.module';
-
 export const MEETING_RELATED_FORM_CONTROLS = [
     `structure_level_ids`,
     `number`,
@@ -55,7 +53,7 @@ export const MEETING_RELATED_FORM_CONTROLS = [
 ];
 
 @Injectable({
-    providedIn: ParticipantCommonServiceModule
+    providedIn: 'root'
 })
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);

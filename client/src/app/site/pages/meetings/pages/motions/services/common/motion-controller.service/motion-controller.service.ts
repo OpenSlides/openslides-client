@@ -15,6 +15,8 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { DiffLinesInParagraph } from '../../../definitions';
+import { LineNumberingService, MotionDiffService } from '../../../modules/change-recommendations/services';
+import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
@@ -27,6 +29,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
+        private diffFactroy: DiffServiceFactory,
         private userRepo: UserRepositoryService
     ) {
         super(controllerServiceCollector, Motion, repo);
@@ -226,6 +229,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     private onCreateViewModel(viewModel: ViewMotion): void {
+        viewModel.services = (): {
+            diff: MotionDiffService;
+            ln: LineNumberingService;
+        } => ({
+            diff: this.diffFactroy.createService(MotionDiffService, viewModel.diffVersion),
+            ln: this.diffFactroy.createService(LineNumberingService, viewModel.diffVersion)
+        });
+
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph): string =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
         if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {

@@ -50,7 +50,7 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
                 const newValue = value.start !== null ? value.start : value.end;
                 this.updateForm({ start: newValue, end: newValue });
             } else if (value.start && value.end && value.start > value.end) {
-                const newValue = this.currentValue.start !== value.start ? value.start : value.end;
+                const newValue = this.currentValue?.start !== value.start ? value.start : value.end;
                 this.updateForm({ start: newValue, end: newValue });
             }
             this.currentValue = this.contentForm.value;

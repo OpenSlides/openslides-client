@@ -11,10 +11,9 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
-import { ParticipantListServiceModule } from '../participant-list-service.module';
 
 @Injectable({
-    providedIn: ParticipantListServiceModule
+    providedIn: 'root'
 })
 export class ParticipantListFilterService extends BaseFilterListService<ViewUser> {
     /**

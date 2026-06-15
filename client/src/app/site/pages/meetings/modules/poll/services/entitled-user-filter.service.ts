@@ -3,10 +3,8 @@ import { _ } from '@ngx-translate/core';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
-import { PollServiceModule } from '../services/poll-service.module';
-
 @Injectable({
-    providedIn: PollServiceModule
+    providedIn: 'root'
 })
 export class EntitledUsersListFilterService extends BaseFilterListService<any> {
     protected storageKey = `EntitledUsersEntry`;

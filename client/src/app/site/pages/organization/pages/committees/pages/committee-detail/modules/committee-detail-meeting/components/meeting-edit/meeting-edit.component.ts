@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -20,6 +20,7 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
 
@@ -42,6 +43,7 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
+    public time_zones = new BehaviorSubject([]);
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -122,11 +124,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
         private orga: OrganizationService,
-        private routingState: RoutingStateService
+        private routingState: RoutingStateService,
+        private timeZone: TimeZoneService
     ) {
         super();
         this.checkCreateView();
         this.createForm();
+        this.initTimezones();
         this.init();
 
         if (this.isCreateView) {
@@ -165,6 +169,14 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
+    private async initTimezones(): Promise<void> {
+        this.timeZone.getTZForSearchSelector().then(values => this.time_zones.next(values));
+    }
+
+    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
+        return [item.getTitle()];
+    }
+
     public getSaveAction(): () => Promise<void> {
         return () => this.onSubmit();
     }
@@ -194,7 +206,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public onUpdateDuplicateFrom(id: Id | null): void {
         this.theDuplicateFromId = id;
         if (id) {
-            this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+            const meeting = this.meetingRepo.getViewModel(id);
+            this.meetingForm.get(`language`)?.setValue(meeting.language);
             this.meetingForm.get(`language`)?.disable();
         } else {
             this.meetingForm.get(`language`)?.enable();
@@ -265,6 +278,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
+        rawForm[`time_zone`] = [this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone())];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
@@ -307,6 +321,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const {
             start_time: start,
             end_time: end,
+            time_zone,
             ...patchMeeting
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
@@ -318,6 +333,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             end
         };
         this.meetingForm.patchValue(patchMeeting);
+        this.meetingForm.get(`time_zone`).patchValue(this.timeZone.getTimezoneIdByName(time_zone));
         this.daterangeControl?.patchValue(patchDaterange);
         this.onAfterCreateForm();
     }
@@ -366,11 +382,21 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private getPayload(): any {
-        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
+        const {
+            daterange: { start: start_time, end: end_time } = { start: null, end: null },
+            time_zone,
+            ...rawPayload
+        } = {
             ...this.meetingForm.value
         };
+        const time_zone_string = this.timeZone.getTimezoneNameById(time_zone);
         if (!this.meetingForm.get(`daterange`).disabled) {
-            return { start_time, end_time, ...rawPayload };
+            return {
+                start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
+                end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
+                time_zone: time_zone_string,
+                ...rawPayload
+            };
         }
         return { ...rawPayload };
     }

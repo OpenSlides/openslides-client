@@ -6,7 +6,6 @@ import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 import { MeetingCsvExportService } from 'src/app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { LineNumberingService } from '../../../modules/change-recommendations/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
@@ -61,7 +60,6 @@ export class MotionCsvExportService {
         private csvExport: MeetingCsvExportService,
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
-        private lineNumberingService: LineNumberingService,
         private motionService: MotionControllerService,
         private motionFormatService: MotionFormatService,
         private commentRepo: MotionCommentSectionControllerService
@@ -79,7 +77,7 @@ export class MotionCsvExportService {
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`) as number;
         const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
         const text = this.motionFormatService.formatMotion({ targetMotion: motion, crMode, changes, lineLength });
-        const strippedLines = this.lineNumberingService.stripLineNumbers(text);
+        const strippedLines = motion.services().ln.stripLineNumbers(text);
         return strippedLines;
     }
 

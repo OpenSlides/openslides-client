@@ -6,10 +6,9 @@ import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
-import { MotionWorkflowServiceModule } from '../motion-workflow-service.module';
 
 @Injectable({
-    providedIn: MotionWorkflowServiceModule
+    providedIn: 'root'
 })
 export class WorkflowExportService {
     public constructor(

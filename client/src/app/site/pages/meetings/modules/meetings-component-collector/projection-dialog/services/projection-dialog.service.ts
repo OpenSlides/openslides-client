@@ -2,16 +2,20 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import {
+    isMultiProjectionBuildDescriptor,
+    isProjectionBuildDescriptor,
+    MultiProjectionBuildDescriptor,
+    ProjectionBuildDescriptor
+} from 'src/app/site/pages/meetings/view-models';
 
 import {
     ProjectionDialogComponent,
     ProjectionDialogConfig
 } from '../components/projection-dialog/projection-dialog.component';
 import { ProjectionDialogReturnType } from '../definitions';
-import { ProjectionDialogModule } from '../projection-dialog.module';
 
-@Injectable({ providedIn: ProjectionDialogModule })
+@Injectable({ providedIn: 'root' })
 export class ProjectionDialogService {
     public constructor(
         private dialog: MatDialog,
@@ -26,7 +30,7 @@ export class ProjectionDialogService {
         const module = await import(`../projection-dialog.module`).then(m => m.ProjectionDialogModule);
         const dialogRef = this.dialog.open<
             ProjectionDialogComponent,
-            ProjectionBuildDescriptor | ProjectionDialogConfig,
+            ProjectionBuildDescriptor | MultiProjectionBuildDescriptor | ProjectionDialogConfig,
             ProjectionDialogReturnType
         >(module.getComponent(), {
             maxHeight: `90vh`,
@@ -38,11 +42,17 @@ export class ProjectionDialogService {
         if (response) {
             const { action, resultDescriptor, projectors, options, keepActiveProjections }: ProjectionDialogReturnType =
                 response;
-            if (action === `project`) {
+            if (action === `project` && isProjectionBuildDescriptor(resultDescriptor)) {
                 await this.projectorRepo.project(resultDescriptor, projectors, options, keepActiveProjections);
-            } else if (action === `addToPreview`) {
+            } else if (action === `addToPreview` && isProjectionBuildDescriptor(resultDescriptor)) {
                 await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
-            } else if (action === `hide`) {
+            } else if (action === `bulkAddToPreview` && isMultiProjectionBuildDescriptor(resultDescriptor)) {
+                await this.projectorRepo.bulkAddToPreview(
+                    this.createBulkActions(resultDescriptor),
+                    projectors,
+                    options
+                );
+            } else if (action === `hide` && isProjectionBuildDescriptor(resultDescriptor)) {
                 if (this.projectorRepo.isProjectedOn(resultDescriptor, projectors[0])) {
                     await this.projectorRepo.toggle(resultDescriptor, projectors, options);
                 }
@@ -50,5 +60,19 @@ export class ProjectionDialogService {
                 throw new Error(`Unknown projector action ` + action);
             }
         }
+    }
+
+    private createBulkActions(descriptor: MultiProjectionBuildDescriptor): ProjectionBuildDescriptor[] {
+        const projectionDefault = descriptor.projectionDefault;
+        const getDialogTitle = descriptor.getDialogTitle;
+        const descriptors: ProjectionBuildDescriptor[] = [];
+        for (const item of descriptor.content_object_ids) {
+            descriptors.push({
+                content_object_id: item,
+                projectionDefault,
+                getDialogTitle
+            });
+        }
+        return descriptors;
     }
 }

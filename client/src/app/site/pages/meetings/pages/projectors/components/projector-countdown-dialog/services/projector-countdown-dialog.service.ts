@@ -5,9 +5,8 @@ import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { ProjectorCountdownDialogComponent } from '../components/projector-countdown-dialog/projector-countdown-dialog.component';
 import { CountdownDialogData } from '../definitions';
-import { ProjectorCountdownDialogModule } from '../projector-countdown-dialog.module';
 
-@Injectable({ providedIn: ProjectorCountdownDialogModule })
+@Injectable({ providedIn: 'root' })
 export class ProjectorCountdownDialogService extends BaseDialogService<
     ProjectorCountdownDialogComponent,
     Partial<CountdownDialogData>,

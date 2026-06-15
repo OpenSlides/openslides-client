@@ -18,7 +18,6 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { getRecommendationTypeName } from '../../../definitions';
 import { ViewUnifiedChangeType } from '../../../modules';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
-import { LineNumberingService } from '../../../modules/change-recommendations/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { MotionPollService } from '../../../modules/motion-poll/services';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
@@ -83,7 +82,6 @@ export class MotionPdfService {
         private meetingSettingsService: MeetingSettingsService,
         private pdfDocumentService: MeetingPdfExportService,
         private htmlToPdfService: MotionHtmlToPdfService,
-        private lineNumberingService: LineNumberingService,
         private commentRepo: MotionCommentSectionControllerService,
         private organizationSettingsService: OrganizationSettingsService,
         private motionPollService: MotionPollService,
@@ -676,18 +674,19 @@ export class MotionPdfService {
             // lead motion or normal amendments
 
             const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-            const baseText = this.lineNumberingService.insertLineNumbers({
+            const baseText = motion.services().ln.insertLineNumbers({
                 html: motion!.text,
                 lineLength: lineLength,
                 firstLine: motion.firstLine
             });
-            const hasChangedTitle = changes.filter(change => change.isTitleChange()).length;
-            const lastLineNr = this.lineNumberingService.getLineNumberRange(baseText).to;
+
+            const hasChangedTitle = changes.some(change => change.isTitleChange());
+            const lastLineNr = motion.services().ln.getLineNumberRange(baseText).to;
             const workingTextChanges = changes.filter(
                 change =>
                     !change.isTitleChange() && change.getLineFrom() <= lastLineNr && change.getLineTo() <= lastLineNr
             );
-            const brokenTextChangesAmount = changes.length - workingTextChanges.length - hasChangedTitle;
+            const brokenTextChangesAmount = changes.length - workingTextChanges.length - +hasChangedTitle;
 
             const titleChange = changes.find(change => change.isTitleChange());
 
@@ -711,7 +710,7 @@ export class MotionPdfService {
             });
             formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF
-            htmlText += this.lineNumberingService.splitInlineElementsAtLineBreaks(formattedText);
+            htmlText += motion.services().ln.splitInlineElementsAtLineBreaks(formattedText);
         }
 
         return this.htmlToPdfService.convertHtml({ htmlText, lnMode, lineHeight });
@@ -749,10 +748,12 @@ export class MotionPdfService {
             });
 
             // handling too long hyperlinks by forcing the text to break
-            let reasonHtml = this.lineNumberingService.insertLineBreaksWithoutNumbers(
-                motion.reason,
-                this.meetingSettingsService.instant(`motions_line_length`) as number
-            );
+            let reasonHtml = motion
+                .services()
+                .ln.insertLineBreaksWithoutNumbers(
+                    motion.reason,
+                    this.meetingSettingsService.instant(`motions_line_length`) as number
+                );
             reasonHtml = reasonHtml.replace(
                 /(<a[^>]*>)(.*?)<\/a>/g,
                 (_whole: string, link: string, innerText: string): string =>

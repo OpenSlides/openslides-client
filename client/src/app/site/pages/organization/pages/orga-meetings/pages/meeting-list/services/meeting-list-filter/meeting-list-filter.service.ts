@@ -7,10 +7,9 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
-import { MeetingListServiceModule } from '../meeting-list-service.module';
 
 @Injectable({
-    providedIn: MeetingListServiceModule
+    providedIn: 'root'
 })
 export class MeetingListFilterService extends BaseFilterListService<ViewMeeting> {
     protected storageKey = `MeetingList`;

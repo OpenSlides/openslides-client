@@ -30,12 +30,11 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
-import { PollServiceModule } from '../poll-service.module';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
 
-@Injectable({ providedIn: PollServiceModule })
+@Injectable({ providedIn: 'root' })
 export abstract class PollService {
     protected sortByVote = false;
     protected enableMaxVotesPerOption = false;

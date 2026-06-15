@@ -8,9 +8,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { AssignmentDetailServiceModule } from './assignment-detail-service.module';
-
-@Injectable({ providedIn: AssignmentDetailServiceModule })
+@Injectable({ providedIn: 'root' })
 export class AssignmentCandidateControllerService extends BaseMeetingControllerService<
     ViewAssignmentCandidate,
     AssignmentCandidate

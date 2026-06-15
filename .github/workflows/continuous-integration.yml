@@ -48,8 +48,9 @@ jobs:
 
       - name: Build openslides binary
         run: |
-          make -C openslides-manage-service openslides
-          mv -f openslides-manage-service/openslides dev/localprod/openslides
+          make -C openslides-cli osmanage
+          mv -f openslides-cli/osmanage dev/localprod/osmanage
+          cp -f openslides-cli/contrib/docker-compose.yml.tmpl dev/localprod/docker-compose.yml.tmpl
 
       - name: Start setup
         working-directory: "./dev/localprod"
@@ -83,15 +84,12 @@ jobs:
         with:
           dest: './logs'
 
-      - if: failure()
-        run: tar cvzf ./logs.tgz ./logs
-
       - name: Upload docker logs
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: logs.tgz
-          path: ./logs.tgz
+          name: docker-logs
+          path: ./logs
           retention-days: 7
 
       - name: Shut down setup

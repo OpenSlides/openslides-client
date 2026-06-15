@@ -25,6 +25,7 @@ import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
+import { AccountDialogMainComponent } from './components/account-dialog-main/account-dialog-main.component';
 import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
 import { GlobalSearchComponent } from './components/global-search/global-search.component';
 
@@ -49,7 +50,13 @@ const DECLARATIONS = [GlobalHeadbarComponent];
 
 @NgModule({
     exports: DECLARATIONS,
-    declarations: [...DECLARATIONS, AccountButtonComponent, AccountDialogComponent, GlobalSearchComponent],
+    declarations: [
+        ...DECLARATIONS,
+        AccountButtonComponent,
+        AccountDialogComponent,
+        AccountDialogMainComponent,
+        GlobalSearchComponent
+    ],
     imports: [
         CommonModule,
         CommaSeparatedListingComponent,
