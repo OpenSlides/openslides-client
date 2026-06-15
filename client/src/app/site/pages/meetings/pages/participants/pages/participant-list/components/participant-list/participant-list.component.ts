@@ -350,8 +350,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     /**
      * This function opens the dialog,
-     * where the user can quick change the groups,
-     * the gender and the participant number.
+     * where the user can quick change the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -364,13 +363,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         }
         ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
-            id: user.id,
-            name: user.short_name,
-            group_ids: user.group_ids(),
-            number: user.number(),
-            structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
+            user
         });
 
         dialogRef.afterClosed().subscribe(async result => {

@@ -1,53 +1,32 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Edit details for' | translate }} {{ infoDialog.name }}</span>
+    <span>{{ 'Edit your own delegation' | translate }}</span>
 </h1>
 <mat-dialog-content class="os-form-card-mobile">
     <mat-form-field>
-        <mat-label>{{ 'Groups' | translate }}</mat-label>
-        <mat-select multiple [disabled]="canOnlyEditOwnDelegation" [(ngModel)]="infoDialog.group_ids">
-            @for (group of groupsObservable | async; track group) {
-                <mat-option [value]="group.id">
-                    {{ group.getTitle() }}
-                </mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
-    @if (showVoteDelegations) {
-        <mat-form-field>
-            <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
-            <os-list-search-selector
-                [disableOptionWhenFn]="getDisableOptionFn(infoDialog.vote_delegations_from_ids)"
-                [inputListValues]="otherParticipantsObservable"
-                [multiple]="true"
-                [sortFn]="false"
-                [(ngModel)]="infoDialog.vote_delegations_from_ids"
-            />
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
-            <os-list-search-selector
-                [includeNone]="true"
-                [inputListValues]="otherParticipantsObservable"
-                [multiple]="false"
-                [sortFn]="false"
-                [(ngModel)]="infoDialog.vote_delegated_to_id"
-            />
-        </mat-form-field>
-    }
-    <mat-form-field>
-        <mat-label>{{ 'Structure level' | translate }}</mat-label>
-        <os-list-search-selector
-            [disabled]="canOnlyEditOwnDelegation"
-            [includeNone]="true"
-            [inputListValues]="structureLevelObservable"
+        <mat-label>{{ 'Voting right received from (principals)' | translate }}</mat-label>
+        <os-repo-search-selector
+            [disableOptionWhenFn]="getDisableOptionFn(infoDialog.vote_delegations_from_ids)"
             [multiple]="true"
-            [(ngModel)]="infoDialog.structure_level_ids"
+            [pipeFn]="excludeCurrentUserFn"
+            [repo]="userRepo"
+            [sortFn]="false"
+            [(ngModel)]="infoDialog.vote_delegations_from_ids"
         />
+        @if (setting?.helpText) {
+            <mat-hint>{{ setting.helpText | translate }}</mat-hint>
+        }
     </mat-form-field>
-    <mat-form-field>
-        <mat-label>{{ 'Participant number' | translate }}</mat-label>
-        <input matInput type="text" [disabled]="canOnlyEditOwnDelegation" [(ngModel)]="infoDialog.number" />
+    <mat-form-field class="margin">
+        <mat-label>{{ 'Voting right delegated to (proxy)' | translate }}</mat-label>
+        <os-repo-search-selector
+            [includeNone]="true"
+            [multiple]="false"
+            [pipeFn]="excludeCurrentUserFn"
+            [repo]="userRepo"
+            [sortFn]="false"
+            [subscriptionConfig]="participantSubscriptionConfig"
+            [(ngModel)]="infoDialog.vote_delegated_to_id"
+        />
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
