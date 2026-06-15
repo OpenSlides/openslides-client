@@ -6,7 +6,7 @@ import {
     input,
     output,
     TemplateRef,
-    ViewChild
+    viewChild
 } from '@angular/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -28,21 +28,15 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     private promptService = inject(PromptService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
 
-    @ViewChild(TemplateRef, { static: true })
-    public implicitContent: TemplateRef<any>;
+    public implicitContent = viewChild.required(TemplateRef<any>);
 
     public canManage = input<boolean>(true);
-
     public canUpdate = input<boolean>(true);
-
     public selectedUsers = input<ViewUser[]>([]);
 
     public deleting = output<void>();
-
     public deselectAll = output<void>();
-
     public selectAll = output<void>();
-
     public selectedUsersChange = output<ViewUser[]>();
 
     public hasSelectedNonSamlUsers = false;
@@ -53,12 +47,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
         super();
 
         effect(() => {
-            const users = this.selectedUsers();
-
-            if (users.length !== this._selectedUsers.length) {
-                this.calculateMetaData(users);
-            }
-            this._selectedUsers = users;
+            this.updateSelectedUsers();
         });
     }
 
@@ -118,14 +107,23 @@ export class UserMultiselectActionsComponent extends BaseComponent {
         }
     }
 
+    private updateSelectedUsers(): void {
+        const users = this.selectedUsers();
+
+        if (users.length !== this._selectedUsers.length) {
+            this.calculateMetaData(users);
+        }
+        this._selectedUsers = users;
+    }
+
+    private calculateMetaData(users: ViewUser[]): void {
+        this.hasSelectedNonSamlUsers = users.some(user => !user.saml_id);
+    }
+
     /**
      * Bulk deletes users. Needs multiSelect mode to fill selectedRows
      */
     public deleteSelected(): void {
         this.deleting.emit();
-    }
-
-    private calculateMetaData(users: ViewUser[]): void {
-        this.hasSelectedNonSamlUsers = users.some(user => !user.saml_id);
     }
 }
