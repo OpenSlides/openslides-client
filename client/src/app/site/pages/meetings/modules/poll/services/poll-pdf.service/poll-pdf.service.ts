@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Content, StyleDictionary } from 'pdfmake/interfaces';
+import { inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Content, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import {
     ViewPoll,
@@ -8,12 +9,15 @@ import {
     ViewPollConfigRatingScore,
     ViewPollConfigSelection
 } from '../../../../pages/polls';
-import { AbstractPollData, BasePollPdfService } from './base-poll-pdf.service';
+import { MeetingPdfExportService } from '../../../../services/export';
 
 @Injectable({
     providedIn: `root`
 })
-export class PollPdfService extends BasePollPdfService {
+export class PollPdfService {
+    private translate = inject(TranslateService);
+    protected pdfExport = inject(MeetingPdfExportService);
+
     public downloadBallotPaper(poll: ViewPoll): void {
         const content = [this.getHeader(poll)];
 
@@ -27,34 +31,44 @@ export class PollPdfService extends BasePollPdfService {
             content.push(this.ratingScoreBallotForm(poll.config));
         }
 
-        console.log(content);
-
-        /*
-         * TODO: Choose filename based on content object
-         *
-        const motion = this.motionRepo.getViewModel(poll.content_object)!;
-        const fileName = `${this.translate.instant(`Motion`)} - ${poll.content_object.number} - ${this.translate.instant(
+        const fileName = `${this.translate.instant(poll.content_object.getVerboseName())} - ${poll.content_object.getTitle()} - ${this.translate.instant(
             `ballot-paper`
         )}`;
 
-        */
-        this.downloadWithBallotPaper(content, `filename`);
+        this.downloadWithBallotPaper(content, fileName);
     }
 
-    protected override createBallot(data: AbstractPollData): object {
+    /**
+     * Downloads a pdf with the ballot papet page definitions.
+     *
+     * @param docDefinition the structure of the PDF document
+     * @param filename the name of the file to use
+     */
+    private downloadWithBallotPaper(docDefinition: Content, filename: string): void {
+        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
+    }
+
+    /**
+     * Overall document definition and styles for blank PDF documents
+     * (e.g. ballots)
+     *
+     * @param documentContent the content of the pdf as object
+     * @returns the pdf document definition ready to export
+     */
+    private async getBallotPaper(documentContent: Content): Promise<TDocumentDefinitions> {
         return {
-            stack: [
-                this.getTitle(data.title),
-                this.getSubtitle(data.subtitle)
-                // this.createBallotOption(this.translate.instant(`Yes`)),
-                // this.createBallotOption(this.translate.instant(`No`)),
-                // this.createBallotOption(this.translate.instant(`Abstain`))
-            ]
-            // margin: [0, 0, 0, data.sheetend]
+            pageSize: `A4`,
+            // pageMargins: [0, 0, 0, 0],
+            defaultStyle: {
+                font: `PdfFont`,
+                fontSize: 10
+            },
+            content: documentContent,
+            styles: this.getBlankPaperStyles()
         };
     }
 
-    protected override getBlankPaperStyles(): StyleDictionary {
+    protected getBlankPaperStyles(): StyleDictionary {
         return {
             committee_name: {
                 fontSize: 16,
@@ -143,8 +157,6 @@ export class PollPdfService extends BasePollPdfService {
     private ratingApprovalBallotForm(config: ViewPollConfigRatingApproval): Content {
         const content = [];
         const poll = config.poll;
-        // TODO: Only display abstain if enabled
-        // TODO: Option header alignment needs improvement
         content.push({
             columns: [
                 {
@@ -153,16 +165,21 @@ export class PollPdfService extends BasePollPdfService {
                 },
                 {
                     width: 40,
-                    text: this.translate.instant(`Yes`)
+                    text: this.translate.instant(`Yes`),
+                    alignment: `center`
                 },
                 {
                     width: 40,
-                    text: this.translate.instant(`No`)
+                    text: this.translate.instant(`No`),
+                    alignment: `center`
                 },
-                {
-                    width: 40,
-                    text: this.translate.instant(`Abstain`)
-                }
+                config.allow_abstain
+                    ? {
+                          width: 40,
+                          text: this.translate.instant(`Abstain`),
+                          alignment: `center`
+                      }
+                    : []
             ],
             columnGap: 20
         });
@@ -178,16 +195,21 @@ export class PollPdfService extends BasePollPdfService {
                     },
                     {
                         width: 40,
-                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
+                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size),
+                        alignment: `center`
                     },
                     {
                         width: 40,
-                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
+                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size),
+                        alignment: `center`
                     },
-                    {
-                        width: 40,
-                        canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
-                    }
+                    config.allow_abstain
+                        ? {
+                              width: 40,
+                              canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size),
+                              alignment: `center`
+                          }
+                        : []
                 ],
                 style: `poll_options`,
                 columnGap: 20
@@ -235,17 +257,6 @@ export class PollPdfService extends BasePollPdfService {
     }
 
     private getHeader(poll: ViewPoll): Content {
-        /*
-        let title = `${this.translate.instant(`Motion`)} - ${motion.number}`;
-        if (motion.polls.length > 1) {
-            title += ` (${this.translate.instant(`Vote`)} ${motion.polls.length})`;
-        }
-        let subtitle = motion.title;
-        if (subtitle.length > 90) {
-            subtitle = subtitle.substring(0, 90) + `...`;
-        }
-        */
-
         return [
             {
                 text: poll.meeting.committee.name || ``,
@@ -262,12 +273,67 @@ export class PollPdfService extends BasePollPdfService {
         ];
     }
 
-    private getMeta(_poll: ViewPoll): Content {
-        // TODO: Display relevant meta data of poll config
-        return {
-            text: 'Es sind mindestens 2 maximal 4 anzukreuzen',
-            style: ['meta_info']
-        };
+    private getMeta(poll: ViewPoll): Content {
+        const config = poll.config;
+        if (config.min_options_amount > 1 || config.max_options_amount > 1) {
+            const text = [];
+            if (config.min_options_amount === config.max_options_amount) {
+                text.push(this.translate.instant(`Select {{num}} options`, { num: config.min_options_amount }));
+            } else {
+                if (config.min_options_amount > 1 && config.max_options_amount > 1) {
+                    text.push(
+                        this.translate.instant(`Select at least {{min}} and no more than {{max}} options`, {
+                            min: config.min_options_amount,
+                            max: config.max_options_amount
+                        })
+                    );
+                } else if (config.min_options_amount > 1) {
+                    text.push(
+                        this.translate.instant(`Select at least {{num}} options`, { num: config.min_options_amount })
+                    );
+                } else {
+                    text.push(
+                        this.translate.instant(`Select at most {{num}} options`, { num: config.max_options_amount })
+                    );
+                }
+            }
+
+            if (config instanceof ViewPollConfigRatingScore) {
+                if (config.min_vote_sum === config.max_vote_sum) {
+                    text.push(this.translate.instant(`Select {{num}} options`, { num: config.min_vote_sum }));
+                } else {
+                    if (config.min_vote_sum > 1 && config.max_vote_sum > 1) {
+                        text.push(
+                            this.translate.instant(`Cast at least {{min}} and no more than {{max}} votes`, {
+                                min: config.min_vote_sum,
+                                max: config.max_vote_sum
+                            })
+                        );
+                    } else if (config.min_vote_sum > 1) {
+                        text.push(this.translate.instant(`Cast at least {{num}} votes`, { num: config.min_vote_sum }));
+                    } else {
+                        text.push(
+                            this.translate.instant(`Cast a maximum of {{num}} votes`, { num: config.max_vote_sum })
+                        );
+                    }
+                }
+
+                if (config.max_votes_per_option) {
+                    text.push(
+                        this.translate.instant(`Cast a maximum of {{num}} votes per option`, {
+                            num: config.max_votes_per_option
+                        })
+                    );
+                }
+            }
+
+            return {
+                text: text.map(t => t + `\n`),
+                style: ['meta_info']
+            };
+        }
+
+        return [];
     }
 
     /**

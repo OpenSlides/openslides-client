@@ -13,8 +13,8 @@ export class PollOptionRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, PollOption);
     }
 
-    public getTitle = (_viewPollConfigOption: ViewPollOption): string => `Poll config option`;
+    public getTitle = (viewPollOption: ViewPollOption): string =>
+        viewPollOption.meeting_user_id ? viewPollOption.meeting_user.getTitle() : viewPollOption.text;
 
-    public getVerboseName = (plural = false): string =>
-        this.translate.instant(plural ? `Poll config options` : `Poll config option`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Poll options` : `Poll option`);
 }
