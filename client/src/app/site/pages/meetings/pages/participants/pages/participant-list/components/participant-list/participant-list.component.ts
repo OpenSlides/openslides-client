@@ -635,10 +635,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
     }
 
-    public get isMeetingAdminAndSelfSelected(): boolean {
-        return this.selectedRows.some(user => this.isMeetingAdminAndSelf(user));
-    }
-
     public canSeeItemMenu(): boolean {
         return (
             this.operator.hasPerms(Permission.userCanUpdate) ||
@@ -650,7 +646,18 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * Bulk deletes users. Needs multiSelect mode to fill selectedRows
      */
     protected async removeUsersFromMeeting(): Promise<void> {
-        await this.repo.removeUsersFromMeeting(this.selectedRows);
+        const filteredRows = this.selectedRows.filter(user => user.id !== this.operator.operatorId);
+        const removeSelf = this.selectedRows.length !== filteredRows.length;
+        if (removeSelf) {
+            this.matSnackBar.open(
+                this.translate.instant(`You were not removed from the meeting.`),
+                this.translate.instant(`Ok`),
+                { duration: 3000 }
+            );
+        }
+        if (filteredRows.length > 0) {
+            await this.repo.removeUsersFromMeeting(filteredRows);
+        }
     }
 
     /**

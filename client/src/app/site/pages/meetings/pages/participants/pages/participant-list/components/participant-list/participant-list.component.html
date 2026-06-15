@@ -292,17 +292,15 @@
             <span>{{ 'Locked out' | translate }}</span>
         </button>
 
-        @if (!isMeetingAdminAndSelf(user)) {
-            <button
-                *osPerms="permission.userCanManage"
-                class="red-warning-text"
-                mat-menu-item
-                (click)="removeUserFromMeeting(user)"
-            >
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'Delete' | translate }}</span>
-            </button>
-        }
+        <button
+            *osPerms="permission.userCanManage"
+            class="red-warning-text"
+            mat-menu-item
+            (click)="removeUserFromMeeting(user)"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
     </ng-template>
 </mat-menu>
 
@@ -378,7 +376,6 @@
     @if (isMultiSelect) {
         <div>
             <os-user-multiselect-actions
-                [canDelete]="!isMeetingAdminAndSelfSelected"
                 [canManage]="canManage"
                 [canUpdate]="canUpdate"
                 [selectedUsers]="selectedRows"
