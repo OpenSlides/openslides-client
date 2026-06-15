@@ -11,7 +11,12 @@
     <div class="flex-center">
         <!-- Button to open the global search -->
         @if (isSearchEnabled) {
-            <button aria-label="Global Search" mat-icon-button role="Search" (click)="openSearch()">
+            <button
+                mat-icon-button
+                role="Search"
+                [attr.aria-label]="'Global search' | translate"
+                (click)="openSearch()"
+            >
                 <mat-icon>search</mat-icon>
             </button>
         }
