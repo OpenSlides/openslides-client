@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';
 
@@ -46,29 +44,21 @@ interface TileCategoryInformation {
     standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
+    public motionRepo = inject(MotionControllerService);
+    public amendmentController = inject(AmendmentControllerService);
+    public motionService = inject(MotionForwardDialogService);
+    public multiselectService = inject(MotionMultiselectService);
+    public filterService = inject(MotionListFilterService);
+    public sortService = inject(MotionListSortService);
+    public perms = inject(MotionPermissionService);
+    public vp = inject(ViewPortService);
+    private route = inject(ActivatedRoute);
+    private infoDialog = inject(MotionListInfoDialogService);
+    private categoryController = inject(MotionCategoryControllerService);
+    private motionBlockController = inject(MotionBlockControllerService);
+    private tagsRepo = inject(TagControllerService);
+
     public readonly gridBlockType = GridBlockTileType;
-
-    /**
-     * String to define the current selected view.
-     */
-    public selectedView: MotionListviewType | undefined = undefined; // Not initialized
-
-    /**
-     * The motion, the user has currently selected in the quick-edit-dialog.
-     */
-    public selectedMotion: ViewMotion | null = null;
-
-    /**
-     * Value of the configuration variable `motions_amendments_enabled` - are amendments enabled?
-     */
-    public amendmentsEnabled = false;
-
-    /**
-     * Value of the config variable `motions_show_sequential_numbers`
-     */
-    public showSequential = false;
-
-    public recommendationEnabled = false;
 
     /**
      * Define extra filter properties
@@ -83,9 +73,21 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         `getExtendedRecommendationLabel`
     ];
 
-    public get canForward(): boolean {
-        return this._forwardingAvailable;
-    }
+    /**
+     * String to define the current selected view.
+     */
+    public selectedView: MotionListviewType | undefined = undefined; // Not initialized
+
+    /**
+     * The motion, the user has currently selected in the quick-edit-dialog.
+     */
+    public selectedMotion: ViewMotion | null = null;
+
+    public amendmentsEnabled = false;
+
+    public showSequential = false;
+
+    public recommendationEnabled = false;
 
     /**
      * List of `TileCategoryInformation`.
@@ -94,14 +96,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     public listTiles: TileCategoryInformation[] = [];
 
     private motionTiles: TileCategoryInformation[] = [];
-
     private categoryTiles: TileCategoryInformation[] = [];
 
-    private _forwardingAvailable = false;
-
-    /**
-     * The verbose name for the motions.
-     */
     public motionsVerboseName = ``;
 
     protected get hasCategories(): boolean {
@@ -120,32 +116,18 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return this._hasTags;
     }
 
-    /**
-     * The recommender of the current meeting.
-     */
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
     private _recommender?: string;
     private _hasCategories = false;
     private _hasMotionBlocks = false;
     private _hasAmendments = false;
     private _hasTags = false;
+    private _forwardingAvailable = false;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        public filterService: MotionListFilterService,
-        public sortService: MotionListSortService,
-        private infoDialog: MotionListInfoDialogService,
-        private categoryController: MotionCategoryControllerService,
-        private motionBlockController: MotionBlockControllerService,
-        private tagsRepo: TagControllerService,
-        public motionRepo: MotionControllerService,
-        public amendmentController: AmendmentControllerService,
-        public motionService: MotionForwardDialogService,
-        public multiselectService: MotionMultiselectService,
-        public perms: MotionPermissionService,
-        public vp: ViewPortService,
-        public operator: OperatorService
-    ) {
+    public constructor() {
         super();
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;
