@@ -214,6 +214,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public selectedEncoding = `utf-8`;
 
+    @Input()
+    protected selectedEncodingOption: string = this.selectedEncoding;
+
     /**
      * @returns the encodings available and their labels
      */
@@ -227,6 +230,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public get columnSeparators(): ValueLabelCombination[] {
         return this.importer.columnSeparators;
     }
+
+    public selectedColumnSeparator = '';
+
+    @Input()
+    protected selectedColumnSeparatorOption: string = this.selectedColumnSeparator;
 
     /**
      * @eturns the available text separators and their labels
@@ -460,8 +468,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Trigger for the column separator selection.
      */
-    public selectColSep(event: MatSelectChange): void {
-        this.importer.columnSeparator = event.value;
+    public selectColSep(): void {
+        this.importer.columnSeparator = this.columnSeparators[this.selectedColumnSeparator].value;
         this.importer.refreshFile();
     }
 
@@ -476,8 +484,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Trigger for the encoding selection.
      */
-    public selectEncoding(event: MatSelectChange): void {
-        this.importer.encoding = event.value;
+    public selectEncoding(value): void {
+        console.log(value);
+        this.importer.encoding = value;
         this.importer.refreshFile();
     }
 
@@ -556,6 +565,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected shortenSummary(summary: BackendImportSummary[]): BackendImportSummary[] {
-        return summary?.filter(col => col.name !== 'structure levels created' && col.name !== 'groups created');
+        return summary?.filter(
+            col => col.name !== 'structure levels created' && col.name !== 'groups created' && col.name !== 'warning'
+        );
     }
+
+    public applyFilter(): void {}
 }

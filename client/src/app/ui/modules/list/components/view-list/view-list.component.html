@@ -10,6 +10,7 @@
                 [filterService]="filterService!"
                 [searchFieldInput]="searchFieldInput"
                 [searchService]="searchService!"
+                [selectedEncodingOption]="selectedEncodingOption"
                 [showSpacer]="addBottomSpacer"
                 [sortService]="sortService!"
                 [totalCount]="totalCountObservable | async"
@@ -20,6 +21,7 @@
                 </div>
             </os-sort-filter-bar>
         }
+        {{ selectedColumnSeparatorOption }}
 
         <os-scrolling-table
             [addBottomSpacer]="addBottomSpacer"

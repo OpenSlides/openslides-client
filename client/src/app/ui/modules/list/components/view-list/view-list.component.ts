@@ -66,6 +66,12 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public csvConfiguration: boolean;
 
     @Input()
+    public selectedEncodingOption = '';
+
+    @Input()
+    public selectedColumnSeparatorOption = '';
+
+    @Input()
     public csvReloadButton: boolean;
 
     @Input()

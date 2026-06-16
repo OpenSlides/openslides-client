@@ -8,7 +8,6 @@
         </button>
     </ng-container>
 </os-head-bar>
-
 <div>
     <os-view-list
         [csvConfiguration]="csvConfiguration"
@@ -19,6 +18,8 @@
         [listObservable]="dataSource"
         [searchFieldInput]="searchFieldInput"
         [searchService]="searchService"
+        [selectedColumnSeparatorOption]="selectedColumnSeparatorOption"
+        [selectedEncodingOption]="selectedEncodingOption"
         [showFilterBar]="showFilterBar"
         [showHeader]="showHeader"
         [totalCount]="_totalCountObservable | async"
@@ -142,10 +143,13 @@
             </div>
         }
     </os-view-list>
+    @for (encoding of columnSeparators; track encoding) {
+        {{ encoding.value }}
+    }
     <!-- fix this -->
-    <footer class="footer">
+    <footer class="footer" style="padding-left: 30px">
         @let cols = shortenSummary(summary);
-        @for (col of cols; track col) {
+        @for (col of cols; track col; let i = $index) {
             @let colInfo = getSummaryInformation(col.name);
             <mat-icon inline style="margin-top: 5px; font-size: x-large" [ngClass]="colInfo[1]">
                 {{ colInfo[0] }}
