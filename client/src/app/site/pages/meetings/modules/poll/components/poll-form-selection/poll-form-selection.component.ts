@@ -37,7 +37,8 @@ export class PollFormSelectionComponent {
             strike_out: [false],
             allow_nota: [false],
             max_options_amount: [1],
-            min_options_amount: [1]
+            min_options_amount: [1],
+            display_chart: [``]
         });
 
         effect(this.onDataUpdated.bind(this));
