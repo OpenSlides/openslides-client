@@ -99,7 +99,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
 
     public async sendInvitationEmailSelected(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
-        const content = this.selectedUsers.length + ` ` + this.translate.instant(`emails`);
+        const content = this.selectedUsers().length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {
             this.repo
                 .sendInvitationEmails(this.selectedUsers(), this.activeMeetingIdService.meetingId)

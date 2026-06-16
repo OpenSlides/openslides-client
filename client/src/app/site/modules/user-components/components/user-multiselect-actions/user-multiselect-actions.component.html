@@ -3,7 +3,7 @@
     <span>{{ 'Select all' | translate }}</span>
 </button>
 
-<button mat-menu-item [disabled]="!selectedUsers.length" (click)="deselectAll.emit()">
+<button mat-menu-item [disabled]="!selectedUsers().length" (click)="deselectAll.emit()">
     <mat-icon>clear</mat-icon>
     <span>{{ 'Deselect all' | translate }}</span>
 </button>
@@ -20,13 +20,13 @@
     @if (ref.children.length) {
         <mat-divider />
     }
-    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="sendInvitationEmailSelected()">
+    <button mat-menu-item [disabled]="!selectedUsers().length" (click)="sendInvitationEmailSelected()">
         <mat-icon>mail</mat-icon>
         <span>{{ 'Send invitation email' | translate }}</span>
     </button>
     <button
         mat-menu-item
-        [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
+        [disabled]="!selectedUsers().length || !hasSelectedNonSamlUsers"
         (click)="resetPasswordsToDefaultSelected()"
     >
         <mat-icon>vpn_key</mat-icon>
@@ -34,7 +34,7 @@
     </button>
     <button
         mat-menu-item
-        [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
+        [disabled]="!selectedUsers().length || !hasSelectedNonSamlUsers"
         (click)="generateNewPasswordsPasswordsSelected()"
     >
         <mat-icon>vpn_key</mat-icon>
@@ -42,7 +42,7 @@
     </button>
     @if (canManage()) {
         <mat-divider />
-        <button class="red-warning-text" mat-menu-item [disabled]="!selectedUsers.length" (click)="deleteSelected()">
+        <button class="red-warning-text" mat-menu-item [disabled]="!selectedUsers().length" (click)="deleteSelected()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
