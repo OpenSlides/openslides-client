@@ -124,7 +124,11 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="column-title innerTable overflow-hidden">
-                <h1 aria-label="{{ getAriaLabel(motion) }}" class="title-line ellipsis-overflow">
+                <h1
+                    aria-label="{{ getAriaLabel(motion) }}"
+                    class="title-line ellipsis-overflow"
+                    [routerLink]="!isMultiSelect ? motion.id : null"
+                >
                     <!-- Is Favorite -->
                     @if (motion.getPersonalNote()?.star) {
                         <span class="favorite-star">
