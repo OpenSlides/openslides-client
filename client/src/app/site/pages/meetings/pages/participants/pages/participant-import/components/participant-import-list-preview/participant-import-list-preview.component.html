@@ -8,7 +8,7 @@
         </button>
     </ng-container>
 </os-head-bar>
-<div>
+<div class="static-sort-filter-bar">
     <os-view-list
         [csvConfiguration]="csvConfiguration"
         [csvReload]="importer"
@@ -144,7 +144,7 @@
         }
     </os-view-list>
     <!-- fix this -->
-    <footer class="footer" style="padding-left: 30px">
+    <footer class="footer">
         @let cols = shortenSummary(summary);
         @for (col of cols; track col; let i = $index) {
             @let colInfo = getSummaryInformation(col.name);

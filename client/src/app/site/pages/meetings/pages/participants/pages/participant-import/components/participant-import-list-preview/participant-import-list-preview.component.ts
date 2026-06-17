@@ -1,5 +1,7 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -54,6 +56,7 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [HeadBarModule, ListModule, MatIcon, AsyncPipe, MatTooltip, MatCheckbox, NgClass]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
@@ -283,7 +286,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public constructor(
         private dialog: MatDialog,
         protected translate: TranslateService,
-        protected readonly controller: ParticipantControllerService
+        protected readonly controller: ParticipantControllerService,
+        private cd: ChangeDetectorRef
     ) {}
 
     /**
@@ -300,6 +304,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
+        this.cd.detectChanges();
     }
 
     /**

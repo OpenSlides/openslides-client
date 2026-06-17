@@ -17,6 +17,7 @@ $os-yellow: rgb(255, 193, 7);
 }
 
 .footer {
+    padding-left: 35px;
     position: sticky;
     bottom: 0;
     left: 0;
@@ -27,10 +28,15 @@ $os-yellow: rgb(255, 193, 7);
     border-top: 1px solid #aaa;
     display: flex;
     align-items: center;
-    padding: 0 16px;
 }
 
 .icon {
     margin-top: 5px;
     font-size: x-large;
+}
+
+.static-sort-filter-bar {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
 }

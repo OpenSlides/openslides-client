@@ -7,7 +7,12 @@
                 [maxBufferPx]="rowHeight * 8"
                 [minBufferPx]="rowHeight * 6"
             >
-                <div [ngStyle]="{ overflow: horizontalScroll ? 'scroll' : 'hidden' }">
+                <div
+                    [ngStyle]="{
+                        'overflow-x': horizontalScroll ? 'auto' : 'hidden',
+                        'margin-bottom': horizontalScroll ? '51px' : '0px'
+                    }"
+                >
                     @if (showHeader) {
                         <div
                             class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
