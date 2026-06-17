@@ -105,6 +105,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public showFilterBar = true;
 
     /**
+     * Whether or not to allow horizontal scroll
+     */
+    public horizontalScroll = true;
+
+    /**
      * Whether or not to show the header
      */
     public showHeader = true;
@@ -214,9 +219,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public selectedEncoding = `utf-8`;
 
-    @Input()
-    protected selectedEncodingOption: string = this.selectedEncoding;
-
     /**
      * @returns the encodings available and their labels
      */
@@ -234,7 +236,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public selectedColumnSeparator = '';
 
     @Input()
-    protected selectedColumnSeparatorOption: string = this.selectedColumnSeparator;
+    protected selectedColumnSeparatorOption: string;
 
     /**
      * @eturns the available text separators and their labels
@@ -469,6 +471,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Trigger for the column separator selection.
      */
     public selectColSep(): void {
+        switch (this.selectedColumnSeparatorOption) {
+            case '1':
+                this.importer.columnSeparator = this.columnSeparators[0].value;
+        }
         this.importer.columnSeparator = this.columnSeparators[this.selectedColumnSeparator].value;
         this.importer.refreshFile();
     }

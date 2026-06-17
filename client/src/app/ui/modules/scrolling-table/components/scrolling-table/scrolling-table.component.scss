@@ -58,7 +58,6 @@
     height: 100%;
 
     .scrolling-table-row {
-        overflow: scroll;
         @include scrolling-table-style();
     }
 }

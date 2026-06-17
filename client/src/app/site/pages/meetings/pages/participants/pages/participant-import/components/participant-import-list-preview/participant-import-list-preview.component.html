@@ -15,11 +15,11 @@
         [csvReloadButton]="csvReloadButton"
         [filterProps]="filterProps"
         [filterService]="filterService"
+        [horizontalScroll]="horizontalScroll"
         [listObservable]="dataSource"
         [searchFieldInput]="searchFieldInput"
         [searchService]="searchService"
         [selectedColumnSeparatorOption]="selectedColumnSeparatorOption"
-        [selectedEncodingOption]="selectedEncodingOption"
         [showFilterBar]="showFilterBar"
         [showHeader]="showHeader"
         [totalCount]="_totalCountObservable | async"
@@ -143,9 +143,6 @@
             </div>
         }
     </os-view-list>
-    @for (encoding of columnSeparators; track encoding) {
-        {{ encoding.value }}
-    }
     <!-- fix this -->
     <footer class="footer" style="padding-left: 30px">
         @let cols = shortenSummary(summary);

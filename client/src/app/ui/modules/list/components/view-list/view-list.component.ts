@@ -65,11 +65,11 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public csvConfiguration: boolean;
 
-    @Input()
-    public selectedEncodingOption = '';
+    @Output()
+    public selectedEncoding = new EventEmitter<string>();
 
     @Input()
-    public selectedColumnSeparatorOption = '';
+    public selectedColumnSeparatorOption: string;
 
     @Input()
     public csvReloadButton: boolean;
@@ -119,6 +119,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     @Input()
     public showHeader: boolean;
+
+    @Input()
+    public horizontalScroll: boolean;
 
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.
@@ -286,5 +289,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
 
     public clearSearchField(): void {
         this._sortFilterBarComponent?.clearSearchField();
+    }
+
+    public sendSelectedEncoding(): void {
+        this.selectedEncoding.emit();
     }
 }

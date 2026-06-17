@@ -224,6 +224,7 @@
             class="radio-group"
             style="display: flex; flex-direction: column"
             [(ngModel)]="selectedEncodingOption"
+            (change)="sendSelectedEncoding()"
         >
             <mat-radio-button
                 value="utf-8"
@@ -252,25 +253,29 @@
 
         <!-- COLUMN SEPARATOR -->
         <h2>{{ 'Column separator' | translate }}</h2>
-        <mat-radio-group class="radio-group" [(ngModel)]="selectedColumnSeparatorOption">
+        <mat-radio-group
+            class="radio-group"
+            [(ngModel)]="selectedColumnSeparatorOption"
+            (change)="sendSelectedColumnSeparator()"
+        >
             <mat-radio-button
-                value="1"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== '1'"
-                [class.selected-button]="selectedColumnSeparatorOption === '1'"
+                value="Automatic"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Automatic'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Automatic'"
             >
                 {{ 'Automatic' | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="2"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== '2'"
-                [class.selected-button]="selectedColumnSeparatorOption === '2'"
+                value="Comma"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Comma'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Comma'"
             >
                 {{ 'Comma' | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="3"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== '3'"
-                [class.selected-button]="selectedColumnSeparatorOption === '3'"
+                value="Semicolon"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Semicolon'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Semicolon'"
             >
                 {{ 'Semicolon' | translate }}
             </mat-radio-button>
@@ -280,25 +285,29 @@
 
         <!-- TEXT SEPARATOR -->
         <h2>{{ 'Text separator' | translate }}</h2>
-        <mat-radio-group class="radio-group" [(ngModel)]="selectedTextSeparatorOption">
+        <mat-radio-group
+            class="radio-group"
+            [(ngModel)]="selectedTextSeparatorOption"
+            (change)="sendSelectedTextSeparator()"
+        >
             <mat-radio-button
-                value="1"
-                [class.not-selected-button]="selectedTextSeparatorOption !== '1'"
-                [class.selected-button]="selectedTextSeparatorOption === '1'"
+                value="''"
+                [class.not-selected-button]="selectedTextSeparatorOption !== `''`"
+                [class.selected-button]="selectedTextSeparatorOption === `''`"
             >
                 {{ "Double quotes ('')" | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="2"
-                [class.not-selected-button]="selectedTextSeparatorOption !== '2'"
-                [class.selected-button]="selectedTextSeparatorOption === '2'"
+                value="'"
+                [class.not-selected-button]="selectedTextSeparatorOption !== `'`"
+                [class.selected-button]="selectedTextSeparatorOption === `'`"
             >
                 {{ "Single quotes (')" | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="3"
-                [class.not-selected-button]="selectedTextSeparatorOption !== '3'"
-                [class.selected-button]="selectedTextSeparatorOption === '3'"
+                value="`"
+                [class.not-selected-button]="selectedTextSeparatorOption !== '`'"
+                [class.selected-button]="selectedTextSeparatorOption === '`'"
             >
                 {{ 'Gravis (`)' | translate }}
             </mat-radio-button>

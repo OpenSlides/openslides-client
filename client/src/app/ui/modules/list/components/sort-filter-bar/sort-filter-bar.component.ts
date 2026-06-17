@@ -68,14 +68,24 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     @Input()
     public searchService: SearchService<V> | undefined;
 
+    /**
+     * CSV options
+     */
     @Input()
     public csvConfiguration: boolean;
 
-    @Input()
     public selectedEncodingOption = 'utf-8';
+    public selectedColumnSeparatorOption = 'Automatic';
+    public selectedTextSeparatorOption = "''";
 
-    public selectedColumnSeparatorOption = '1';
-    public selectedTextSeparatorOption = '1';
+    @Output()
+    public selectedEncoding = new EventEmitter<string>();
+
+    @Output()
+    public selectedColumnSeparator = new EventEmitter<string>();
+
+    @Output()
+    public selectedTextSeparator = new EventEmitter<string>();
 
     @Input()
     public csvReload: ParticipantImportService;
@@ -234,7 +244,6 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
                 this.searchEdit = false;
             }
         });
-        console.log('sortfilter', this.selectedColumnSeparatorOption);
     }
 
     public ngOnDestroy(): void {
@@ -324,6 +333,21 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public clearSearchField(): void {
         this._searchFieldComponent?.clear();
+    }
+
+    public sendSelectedEncoding(): void {
+        console.log(this.selectedEncodingOption);
+        this.selectedEncoding.emit(this.selectedEncodingOption);
+    }
+
+    public sendSelectedColumnSeparator(): void {
+        console.log(this.selectedColumnSeparatorOption);
+        this.selectedColumnSeparator.emit(this.selectedColumnSeparatorOption);
+    }
+
+    public sendSelectedTextSeparator(): void {
+        console.log(this.selectedTextSeparatorOption);
+        this.selectedTextSeparator.emit(this.selectedTextSeparatorOption);
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {

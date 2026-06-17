@@ -54,6 +54,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     public defaultColumnWidth: number | null = null;
 
     @Input()
+    public horizontalScroll = false;
+
+    @Input()
     public showHeader = false;
 
     @Input()
