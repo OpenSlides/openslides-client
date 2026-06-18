@@ -66,10 +66,13 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     public csvConfiguration: boolean;
 
     @Output()
-    public selectedEncoding = new EventEmitter<string>();
+    public selectedEncodingOutput = new EventEmitter<V>();
 
-    @Input()
-    public selectedColumnSeparatorOption: string;
+    @Output()
+    public selectedColSepOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectedTextSeparatorOutput = new EventEmitter<V>();
 
     @Input()
     public csvReloadButton: boolean;
@@ -291,7 +294,18 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
         this._sortFilterBarComponent?.clearSearchField();
     }
 
-    public sendSelectedEncoding(): void {
-        this.selectedEncoding.emit();
+    public sendSelectedEncoding($event): void {
+        // FUNCIONA
+        this.selectedEncodingOutput.emit($event.value);
+    }
+
+    public sendSelectedColSep($event): void {
+        // FUNCIONA
+        this.selectedColSepOutput.emit($event.value);
+    }
+
+    public sendSelectedTextSeparator($event): void {
+        // FUNCIONA
+        this.selectedTextSeparatorOutput.emit($event.value);
     }
 }

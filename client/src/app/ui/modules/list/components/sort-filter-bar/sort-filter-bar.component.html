@@ -224,7 +224,7 @@
             class="radio-group"
             style="display: flex; flex-direction: column"
             [(ngModel)]="selectedEncodingOption"
-            (change)="sendSelectedEncoding()"
+            (change)="sendSelectedEncoding($event)"
         >
             <mat-radio-button
                 value="utf-8"
@@ -256,7 +256,7 @@
         <mat-radio-group
             class="radio-group"
             [(ngModel)]="selectedColumnSeparatorOption"
-            (change)="sendSelectedColumnSeparator()"
+            (change)="sendSelectedColumnSeparator($event)"
         >
             <mat-radio-button
                 value="Automatic"
@@ -288,7 +288,7 @@
         <mat-radio-group
             class="radio-group"
             [(ngModel)]="selectedTextSeparatorOption"
-            (change)="sendSelectedTextSeparator()"
+            (change)="sendSelectedTextSeparator($event)"
         >
             <mat-radio-button
                 value="''"

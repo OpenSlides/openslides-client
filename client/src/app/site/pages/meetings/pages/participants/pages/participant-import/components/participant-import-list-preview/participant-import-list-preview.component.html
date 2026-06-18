@@ -3,7 +3,7 @@
         <h1 class="mock-h2" translate>Import participants</h1>
     </div>
     <ng-container class="menu-slot">
-        <button mat-button>
+        <button mat-button (click)="importData(fieldsInfoDialog)">
             <span class="upper">Import</span>
         </button>
     </ng-container>
@@ -19,12 +19,14 @@
         [listObservable]="dataSource"
         [searchFieldInput]="searchFieldInput"
         [searchService]="searchService"
-        [selectedColumnSeparatorOption]="selectedColumnSeparatorOption"
         [showFilterBar]="showFilterBar"
         [showHeader]="showHeader"
         [totalCount]="_totalCountObservable | async"
         [vScrollFixed]="50"
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+        (selectedColSepOutput)="onColSepChanged($event)"
+        (selectedEncodingOutput)="onEncodingChanged($event)"
+        (selectedTextSeparatorOutput)="onTextSeparatorChanged($event)"
     >
         @if (dataSource | async) {
             @for (column of previewColumns; track column; let i = $index) {
@@ -143,7 +145,6 @@
             </div>
         }
     </os-view-list>
-    <!-- fix this -->
     <footer class="footer">
         @let cols = shortenSummary(summary);
         @for (col of cols; track col; let i = $index) {
@@ -155,3 +156,26 @@
         }
     </footer>
 </div>
+
+<ng-template #fieldsInfoDialog>
+    <div class="import-dialog">
+        <h2 class="import-dialog-title" mat-dialog-title translate>Import participants</h2>
+
+        <mat-dialog-content class="import-dialog-content">
+            <mat-spinner color="accent" diameter="80" strokeWidth="5"></mat-spinner>
+
+            <div class="import-status">
+                <div class="import-status-title" translate>Import in progress!</div>
+
+                <div class="import-status-subtitle" translate>
+                    Do not close the tab if you want to see the import status!
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+</ng-template>
+<!-- <mat-dialog-actions>
+        <button mat-button mat-dialog-close>
+            {{ 'Close' }}
+        </button>
+    </mat-dialog-actions> -->

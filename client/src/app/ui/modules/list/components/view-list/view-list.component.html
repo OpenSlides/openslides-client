@@ -14,6 +14,9 @@
                 [sortService]="sortService!"
                 [totalCount]="totalCountObservable | async"
                 (searchFieldChanged)="searchFilterUpdated.emit($event)"
+                (selectedColSepOutput)="sendSelectedColSep($event)"
+                (selectedEncodingOutput)="sendSelectedEncoding($event)"
+                (selectedTextSeparatorOutput)="sendSelectedTextSeparator($event)"
             >
                 <div class="extra-info-slot">
                     <ng-content select=".filter-bar-info-slot"></ng-content>

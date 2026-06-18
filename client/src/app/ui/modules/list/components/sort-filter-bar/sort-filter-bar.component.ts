@@ -79,13 +79,13 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     public selectedTextSeparatorOption = "''";
 
     @Output()
-    public selectedEncoding = new EventEmitter<string>();
+    public selectedEncodingOutput = new EventEmitter<V>();
 
     @Output()
-    public selectedColumnSeparator = new EventEmitter<string>();
+    public selectedColSepOutput = new EventEmitter<V>();
 
     @Output()
-    public selectedTextSeparator = new EventEmitter<string>();
+    public selectedTextSeparatorOutput = new EventEmitter<V>();
 
     @Input()
     public csvReload: ParticipantImportService;
@@ -335,19 +335,16 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this._searchFieldComponent?.clear();
     }
 
-    public sendSelectedEncoding(): void {
-        console.log(this.selectedEncodingOption);
-        this.selectedEncoding.emit(this.selectedEncodingOption);
+    public sendSelectedEncoding($event): void {
+        this.selectedEncodingOutput.emit($event);
     }
 
-    public sendSelectedColumnSeparator(): void {
-        console.log(this.selectedColumnSeparatorOption);
-        this.selectedColumnSeparator.emit(this.selectedColumnSeparatorOption);
+    public sendSelectedColumnSeparator($event): void {
+        this.selectedColSepOutput.emit($event);
     }
 
-    public sendSelectedTextSeparator(): void {
-        console.log(this.selectedTextSeparatorOption);
-        this.selectedTextSeparator.emit(this.selectedTextSeparatorOption);
+    public sendSelectedTextSeparator($event): void {
+        this.selectedTextSeparatorOutput.emit($event);
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {

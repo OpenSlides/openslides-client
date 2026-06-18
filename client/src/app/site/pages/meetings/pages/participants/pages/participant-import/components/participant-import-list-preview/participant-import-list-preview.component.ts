@@ -15,9 +15,9 @@ import {
     TemplateRef
 } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatSelectChange } from '@angular/material/select';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { _, TranslateService } from '@ngx-translate/core';
@@ -57,7 +57,17 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [HeadBarModule, ListModule, MatIcon, AsyncPipe, MatTooltip, MatCheckbox, NgClass]
+    imports: [
+        HeadBarModule,
+        ListModule,
+        MatIcon,
+        AsyncPipe,
+        MatTooltip,
+        MatCheckbox,
+        NgClass,
+        MatDialogModule,
+        MatProgressSpinner
+    ]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
@@ -220,7 +230,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Currently selected encoding. Is set and changed by the config's available
      * encodings and user mat-select input
      */
-    public selectedEncoding = `utf-8`;
+    public selectedEncoding: string;
 
     /**
      * @returns the encodings available and their labels
@@ -236,10 +246,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return this.importer.columnSeparators;
     }
 
-    public selectedColumnSeparator = '';
-
-    @Input()
-    protected selectedColumnSeparatorOption: string;
+    /**
+     * Currently selected column separator. Is set and changed by the config's available
+     * column separators and user mat-select input
+     */
+    public selectedColumnSeparator;
 
     /**
      * @eturns the available text separators and their labels
@@ -311,6 +322,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Resets the importer when leaving the view
      */
     public ngOnDestroy(): void {
+        this.importer.clearPreview();
         this.importer.clearAll();
         this.importer.clearFile();
     }
@@ -473,32 +485,24 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     /**
-     * Trigger for the column separator selection.
+     * The column separator selection.
      */
-    public selectColSep(): void {
-        switch (this.selectedColumnSeparatorOption) {
-            case '1':
-                this.importer.columnSeparator = this.columnSeparators[0].value;
-        }
-        this.importer.columnSeparator = this.columnSeparators[this.selectedColumnSeparator].value;
-        this.importer.refreshFile();
+    public onColSepChanged(label: string): void {
+        this.importer.columnSeparator = this.importer.columnSeparators.find(col => col.label === label)?.value;
     }
 
     /**
-     * Trigger for the column separator selection
+     * The text separator selection
      */
-    public selectTextSep(event: MatSelectChange): void {
-        this.importer.textSeparator = event.value;
-        this.importer.refreshFile();
+    public onTextSeparatorChanged(value: string): void {
+        this.importer.textSeparator = value;
     }
 
     /**
-     * Trigger for the encoding selection.
+     * The encoding selection.
      */
-    public selectEncoding(value): void {
-        console.log(value);
+    public onEncodingChanged(value: string): void {
         this.importer.encoding = value;
-        this.importer.refreshFile();
     }
 
     /**
@@ -581,5 +585,26 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         );
     }
 
-    public applyFilter(): void {}
+    //simplify this
+    public DefaultOptions(): void {
+        if (!this.importer.encoding) {
+            this.importer.encoding = this.importer.encodings[0].value;
+        }
+        if (!this.importer.columnSeparator) {
+            this.importer.columnSeparator = this.importer.columnSeparators[0].value;
+        }
+        if (!this.importer.textSeparator) {
+            this.importer.textSeparator = this.importer.textSeparators[0].value;
+        }
+    }
+
+    public async importData(dialogTemplate: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate, {
+            width: `500px`,
+            disableClose: false,
+            maxWidth: `90vw`,
+            maxHeight: `90vh`
+        });
+        await firstValueFrom(ref.afterClosed());
+    }
 }

@@ -40,3 +40,42 @@ $os-yellow: rgb(255, 193, 7);
     height: 100%;
     overflow: hidden;
 }
+
+.import-dialog {
+    width: 500px;
+    padding: 8px;
+}
+
+.import-dialog-title {
+    color: var(--theme-accent-400);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.import-dialog-content {
+    min-height: 260px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--theme-accent-400);
+    text-align: center;
+}
+
+.import-status {
+    margin-top: 32px;
+}
+
+.import-status-title {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.import-status-subtitle {
+    font-size: 18px;
+    line-height: 1.4;
+}
