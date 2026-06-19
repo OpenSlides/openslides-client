@@ -21,8 +21,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { _, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable, of } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { map, Observable, of } from 'rxjs';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
@@ -506,14 +505,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     /**
-     * Opens an info dialog with the given template as content.
-     */
-    public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
-        await firstValueFrom(ref.afterClosed());
-    }
-
-    /**
      * Returns the verbose title for a given summary title.
      */
     public getSummaryPointTitle(title: string): string {
@@ -579,32 +570,54 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
+    /**
+     * Summary adapted to the footer. Displays only "created", "updated", and "error" columns.
+     * @param summary
+     * @returns BackendImportSummary[]
+     */
     protected shortenSummary(summary: BackendImportSummary[]): BackendImportSummary[] {
         return summary?.filter(
             col => col.name !== 'structure levels created' && col.name !== 'groups created' && col.name !== 'warning'
         );
     }
 
-    //simplify this
-    public DefaultOptions(): void {
-        if (!this.importer.encoding) {
-            this.importer.encoding = this.importer.encodings[0].value;
-        }
-        if (!this.importer.columnSeparator) {
-            this.importer.columnSeparator = this.importer.columnSeparators[0].value;
-        }
-        if (!this.importer.textSeparator) {
-            this.importer.textSeparator = this.importer.textSeparators[0].value;
-        }
+    private DefaultOptions(): void {
+        this.importer.encoding ??= this.importer.encodings[0].value;
+        this.importer.columnSeparator ??= this.importer.columnSeparators[0].value;
+        this.importer.textSeparator ??= this.importer.textSeparators[0].value;
     }
 
-    public async importData(dialogTemplate: TemplateRef<any>): Promise<void> {
+    public async importData(dialogTemplate: TemplateRef<any>, summaryDialog: TemplateRef<any>): Promise<void> {
+        this.DefaultOptions();
         const ref = this.dialog.open(dialogTemplate, {
-            width: `500px`,
+            width: `600px`,
             disableClose: false,
             maxWidth: `90vw`,
             maxHeight: `90vh`
         });
-        await firstValueFrom(ref.afterClosed());
+
+        try {
+            if (
+                await Promise.all([
+                    /* this.importer.doImport() */ true,
+                    new Promise(resolve => setTimeout(resolve, 2000))
+                ])
+            ) {
+                this.importedDataSummary(summaryDialog);
+                ref.close();
+            }
+        } catch (error) {
+            console.error('FAILED IMPORT: ', error);
+            ref.close();
+        }
+    }
+
+    private importedDataSummary(summaryDialog: TemplateRef<any>): void {
+        this.dialog.open(summaryDialog, {
+            width: `600px`,
+            disableClose: false,
+            maxWidth: `90vw`,
+            maxHeight: `90vh`
+        });
     }
 }

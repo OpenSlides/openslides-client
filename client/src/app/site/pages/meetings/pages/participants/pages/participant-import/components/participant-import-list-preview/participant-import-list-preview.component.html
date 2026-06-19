@@ -3,7 +3,7 @@
         <h1 class="mock-h2" translate>Import participants</h1>
     </div>
     <ng-container class="menu-slot">
-        <button mat-button (click)="importData(fieldsInfoDialog)">
+        <button mat-button (click)="importData(ImportDialog, ImportDialogSummary)">
             <span class="upper">Import</span>
         </button>
     </ng-container>
@@ -157,16 +157,16 @@
     </footer>
 </div>
 
-<ng-template #fieldsInfoDialog>
+<ng-template #ImportDialog>
     <div class="import-dialog">
-        <h2 class="import-dialog-title" mat-dialog-title translate>Import participants</h2>
+        <h2 class="import-dialog-title" mat-dialog-title style="margin-bottom: 1em" translate>
+            Importing participants
+        </h2>
 
         <mat-dialog-content class="import-dialog-content">
-            <mat-spinner color="accent" diameter="80" strokeWidth="5"></mat-spinner>
-
+            <mat-spinner color="accent" diameter="100" strokeWidth="8"></mat-spinner>
             <div class="import-status">
                 <div class="import-status-title" translate>Import in progress!</div>
-
                 <div class="import-status-subtitle" translate>
                     Do not close the tab if you want to see the import status!
                 </div>
@@ -174,8 +174,28 @@
         </mat-dialog-content>
     </div>
 </ng-template>
-<!-- <mat-dialog-actions>
-        <button mat-button mat-dialog-close>
-            {{ 'Close' }}
-        </button>
-    </mat-dialog-actions> -->
+
+<ng-template #ImportDialogSummary>
+    <div class="summary-dialog">
+        <div cdk-focus-start class="summary-dialog-header">
+            <h2 class="summary-dialog-title" mat-dialog-title translate>Import successful</h2>
+            <button class="close-button" mat-dialog-close mat-icon-button translate>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <h4 class="summary-dialog-subtitle">{{ summary[0].value }}&nbsp;participants have been processed</h4>
+        <div>
+            <mat-dialog-content class="summary-dialog-content">
+                @for (row of summary; track row) {
+                    @let colInfo = getSummaryInformation(row.name);
+                    <div class="summary-row">
+                        <mat-icon inline [ngClass]="colInfo[1]">
+                            {{ colInfo[0] }}
+                        </mat-icon>
+                        <div class="summary-text">{{ row.value }}&nbsp;{{ row.name }}</div>
+                    </div>
+                }
+            </mat-dialog-content>
+        </div>
+    </div>
+</ng-template>
