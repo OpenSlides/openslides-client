@@ -71,6 +71,6 @@ export class MotionPollComponent extends BasePollComponent {
 
     // TODO: Check if can removed
     public getDetailLink(): string {
-        return `/${this.activeMeetingId}/motions/polls/${this.poll.sequential_number}`;
+        return `/${this.activeMeetingId}/polls/${this.poll.sequential_number}`;
     }
 }
