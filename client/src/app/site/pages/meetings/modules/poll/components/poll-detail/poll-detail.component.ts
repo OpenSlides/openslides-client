@@ -63,7 +63,7 @@ export class PollDetailComponent extends BaseComponent {
 
     public constructor() {
         super();
-        super.setTitle(`Singular poll`);
+        super.setTitle(this.translate.instant(`Singular poll`));
         this.poll = toSignal(
             this.activatedRoute.params.pipe(
                 map(params => params['id']),

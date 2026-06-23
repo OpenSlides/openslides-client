@@ -4,7 +4,7 @@
     <div class="poll-title-area">
         <!-- Title -->
         <span class="poll-title break-word">
-            @if (isSameMeeting() && getDetailLink() && !isDetailLink()) {
+            @if (isSameMeeting() && getDetailLink() && navigateToPollDetail()) {
                 <a [routerLink]="getDetailLink()">
                     {{ poll().title | translate }}
                 </a>
