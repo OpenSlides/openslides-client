@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone main repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: OpenSlides/OpenSlides
           path: "."
@@ -33,7 +33,7 @@ jobs:
         run: rm -r openslides-client
 
       - name: Clone openslides-client
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: "./openslides-client"
 
@@ -101,7 +101,7 @@ jobs:
     name: build-and-test-dev-image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: "recursive"
 

@@ -72,7 +72,7 @@ export class OpenSlidesRouterService {
         private operator: OperatorService
     ) {
         _auth.logoutObservable.subscribe(() => {
-            this.navigateToLogin();
+            this.navigateToLogin(true);
         });
         router.events
             .pipe(
@@ -100,17 +100,26 @@ export class OpenSlidesRouterService {
             });
     }
 
-    public navigateToLogin(): void {
+    public navigateToLogin(logout = false): void {
         const url = this.router.currentNavigation()?.extractedUrl.toString() || this.router.routerState.snapshot.url;
 
         // Navigate to login if the user is not already there
         if (!url.startsWith(`/${UrlTarget.LOGIN}`) && !new RegExp(`^/[0-9]+/${UrlTarget.LOGIN}`).test(url)) {
-            this.setNextAfterLoginUrl(url);
-            this.router.navigate([`/`, UrlTarget.LOGIN]);
+            const queryParams: Record<string, any> = {};
+            if (!logout) {
+                this.setNextAfterLoginUrl(url);
+                if (this.preLoginRedirectUrl && this.preLoginRedirectUrl.toString() !== `/`) {
+                    queryParams[`prevUrl`] = this.preLoginRedirectUrl;
+                }
+            }
+
+            this.router.navigate([`/`, UrlTarget.LOGIN], {
+                queryParams
+            });
         }
     }
 
-    public navigateAfterLogin(meetingId: number): void {
+    public navigateAfterLogin(meetingId?: number): void {
         let baseRoute: string | UrlTree = meetingId ? `${meetingId}/` : `/`;
         if (this.preLoginRedirectUrl) {
             baseRoute = this.preLoginRedirectUrl.toString();
