@@ -1,5 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
@@ -18,9 +19,18 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         },
         {
             idField: `ballot_ids`,
-            fieldset: [`represented_meeting_user_id`, `poll_id`]
+            fieldset: [`represented_meeting_user_id`, `poll_id`, `value`]
         },
-        { idField: `option_ids`, fieldset: FULL_FIELDSET }
+        {
+            idField: `option_ids`,
+            fieldset: FULL_FIELDSET,
+            follow: [
+                {
+                    idField: `meeting_user_id`,
+                    ...MeetingUserFieldsets.FullNameSubscription
+                }
+            ]
+        }
     ]
 };
 

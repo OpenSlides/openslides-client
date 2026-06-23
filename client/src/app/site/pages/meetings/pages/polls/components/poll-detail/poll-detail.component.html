@@ -1,0 +1,28 @@
+<os-head-bar [nav]="false">
+    <div class="title-slot">
+        <h1 class="mock-h2">{{ poll()?.title }}</h1>
+    </div>
+</os-head-bar>
+
+<mat-card class="os-card">
+    <mat-card-content>
+        <a [aria-label]="'Direct link to module of poll' | translate" [routerLink]="getDetailLink()">
+            <h1>{{ poll()?.title }}</h1>
+        </a>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab [label]="'Single votes' | translate">
+                <div class="tab-content">
+                    <os-poll-single-votes [poll]="poll()"></os-poll-single-votes>
+                </div>
+            </mat-tab>
+            <mat-tab [label]="'Entitled users' | translate">
+                <div class="tab-content">
+                    <os-poll-entitled-user [poll]="poll()"></os-poll-entitled-user>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+<mat-card class="os-card">
+    <mat-card-content><os-poll [poll]="poll()"></os-poll></mat-card-content>
+</mat-card>

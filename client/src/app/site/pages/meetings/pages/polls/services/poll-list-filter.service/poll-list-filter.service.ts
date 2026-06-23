@@ -4,7 +4,7 @@ import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
-import { ViewPoll } from '../../../../view-models';
+import { ViewPoll } from '../../view-models';
 
 @Injectable({
     providedIn: 'root'
