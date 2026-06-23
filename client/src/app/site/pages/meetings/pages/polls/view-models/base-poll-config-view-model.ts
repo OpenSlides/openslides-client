@@ -22,8 +22,7 @@ export abstract class BasePollConfigViewModel<
     }
 
     public get validBallots(): number | null {
-        // TODO: Change this to use the amount from result if available
-        return (this.poll.ballot_ids?.length || 0) - (this.invalidBallots || 0);
+        return (this.parsedResult()?.total_ballots || 0) - (this.parsedResult()?.invalid || 0);
     }
 
     public abstract get invalidBallots(): number | null;

@@ -10,6 +10,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 
 export enum VotingProhibition {
     POLL_WRONG_STATE = 1, // 1 so we can check with negation
@@ -62,7 +63,11 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
-    public hasVoted(poll: ViewPoll, user?: ViewUser): Observable<boolean> {
+    public hasVoted(poll: ViewPoll, user?: ViewMeetingUser): Observable<boolean> {
+        if (!user) {
+            user = this.operator.user.getMeetingUser();
+        }
+
         return this.pollRepo.pollBallotsByUser(poll.id, user.id).pipe(map(ballots => !!ballots.length));
     }
 
@@ -79,7 +84,6 @@ export class VotingService {
                 return this.getVotingProhibitionReason(poll, user, ballots);
             })
         );
-        // return this.userRepo.getViewModelObservable(user.id).pipe(map(u => !this.getVotingProhibitionReason(poll, u)));
     }
 
     private getVotingProhibitionReason(

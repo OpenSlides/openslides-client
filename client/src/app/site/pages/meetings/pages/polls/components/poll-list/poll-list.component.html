@@ -41,7 +41,7 @@
         *osScrollingTableCell="'votability'; row as poll; config: { width: 40, position: END_POSITION }"
         class="cell-slot fill"
     >
-        @if (canBeVoteFor(poll)) {
+        @if (canBeVoteFor(poll) | async) {
             <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
         } @else {
             <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>

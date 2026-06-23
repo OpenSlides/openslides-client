@@ -69,7 +69,6 @@ export class MotionPollComponent extends BasePollComponent {
 
     private operator = inject(OperatorService);
 
-    // TODO: Check if can removed
     public getDetailLink(): string {
         return `/${this.activeMeetingId}/polls/${this.poll.sequential_number}`;
     }

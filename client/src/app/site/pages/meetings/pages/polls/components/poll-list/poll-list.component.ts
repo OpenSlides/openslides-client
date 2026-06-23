@@ -1,7 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { map, Observable, of } from 'rxjs';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
@@ -28,7 +30,8 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
         TranslateKeyPipe,
         TranslatePipe,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        AsyncPipe
     ]
 })
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
@@ -41,18 +44,15 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
 
     public constructor() {
         super();
-        super.setTitle(`List of electronic votes`);
+        super.setTitle(this.translate.instant(`List of electronic votes`));
         this.listStorageIndex = POLL_LIST_STORAGE_INDEX;
     }
 
-    /**
-     * TODO: Can be removed, when OpenSlides/openslides-autoupdate-service#262 is resolved.
-     */
-    public canBeVoteFor(poll: ViewPoll): boolean {
+    public canBeVoteFor(poll: ViewPoll): Observable<boolean> {
         if (poll.state === PollState.Finished) {
-            return false;
+            return of(false);
         }
 
-        return poll.canBeVotedFor();
+        return this.votingService.hasVoted(poll).pipe(map(v => !v && poll.canBeVotedFor()));
     }
 }
