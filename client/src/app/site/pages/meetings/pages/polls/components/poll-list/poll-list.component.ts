@@ -9,10 +9,10 @@ import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
+import { DetailViewModule } from '../../../../modules/meetings-component-collector/detail-view/detail-view.module';
+import { ProjectableListModule } from '../../../../modules/meetings-component-collector/projectable-list/projectable-list.module';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollListFilterService } from '../../../../pages/polls/services/poll-list-filter.service/poll-list-filter.service';
-import { DetailViewModule } from '../../../meetings-component-collector/detail-view/detail-view.module';
-import { ProjectableListModule } from '../../../meetings-component-collector/projectable-list/projectable-list.module';
 
 const POLL_LIST_STORAGE_INDEX = `polls`;
 

@@ -18,11 +18,11 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { BaseVoteData } from '../../../../modules/poll/base/base-poll-detail.component';
+import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
+import { VotingService } from '../../../../modules/poll/services/voting.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { BaseVoteData } from '../../base/base-poll-detail.component';
-import { VotesFilterService } from '../../services/votes-filter.service';
-import { VotingService } from '../../services/voting.service';
 
 @Component({
     selector: `os-poll-single-votes`,

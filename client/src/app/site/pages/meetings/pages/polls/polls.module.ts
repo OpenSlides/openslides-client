@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { PollMainComponent } from './components/poll-main/poll-main.component';
-import { PollsRoutingModule } from './components/polls-routing.module';
+import { PollsRoutingModule } from './polls-routing.module';
 
 @NgModule({
     declarations: [PollMainComponent],

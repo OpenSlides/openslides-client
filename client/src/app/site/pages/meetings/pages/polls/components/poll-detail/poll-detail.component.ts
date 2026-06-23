@@ -14,11 +14,11 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { DetailViewModule } from '../../../../modules/meetings-component-collector/detail-view/detail-view.module';
+import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
+import { PollControllerService } from '../../../../modules/poll/services/poll-controller.service';
+import { VotingService } from '../../../../modules/poll/services/voting.service';
 import { ViewPoll } from '../../../../pages/polls';
-import { DetailViewModule } from '../../../meetings-component-collector/detail-view/detail-view.module';
-import { PollControllerService } from '../../services/poll-controller.service';
-import { VotingService } from '../../services/voting.service';
-import { PollComponent } from '../poll/poll.component';
 import { PollEntitledUserComponent } from '../poll-entitled-users/poll-entitled-user.component';
 import { PollSingleVotesComponent } from '../poll-single-votes/poll-single-votes.component';
 
