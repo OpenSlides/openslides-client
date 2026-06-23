@@ -44,20 +44,6 @@ interface TileCategoryInformation {
     standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
-    public motionRepo = inject(MotionControllerService);
-    public amendmentController = inject(AmendmentControllerService);
-    public motionService = inject(MotionForwardDialogService);
-    public multiselectService = inject(MotionMultiselectService);
-    public filterService = inject(MotionListFilterService);
-    public sortService = inject(MotionListSortService);
-    public perms = inject(MotionPermissionService);
-    public vp = inject(ViewPortService);
-    private route = inject(ActivatedRoute);
-    private infoDialog = inject(MotionListInfoDialogService);
-    private categoryController = inject(MotionCategoryControllerService);
-    private motionBlockController = inject(MotionBlockControllerService);
-    private tagsRepo = inject(TagControllerService);
-
     public readonly gridBlockType = GridBlockTileType;
 
     /**
@@ -126,6 +112,20 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasAmendments = false;
     private _hasTags = false;
     private _forwardingAvailable = false;
+
+    public motionRepo = inject(MotionControllerService);
+    public amendmentController = inject(AmendmentControllerService);
+    public motionService = inject(MotionForwardDialogService);
+    public multiselectService = inject(MotionMultiselectService);
+    public filterService = inject(MotionListFilterService);
+    public sortService = inject(MotionListSortService);
+    public perms = inject(MotionPermissionService);
+    public vp = inject(ViewPortService);
+    private route = inject(ActivatedRoute);
+    private infoDialog = inject(MotionListInfoDialogService);
+    private categoryController = inject(MotionCategoryControllerService);
+    private motionBlockController = inject(MotionBlockControllerService);
+    private tagsRepo = inject(TagControllerService);
 
     public constructor() {
         super();
