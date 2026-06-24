@@ -124,25 +124,21 @@
                 <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
             }
             <div class="column-title innerTable overflow-hidden">
-                <h1
-                    class="title-line ellipsis-overflow"
-                    [attr.aria-label]="getAriaLabel(motion)"
-                    [routerLink]="!isMultiSelect ? motion.id : null"
-                >
-                    <!-- Is Favorite -->
-                    @if (motion.getPersonalNote()?.star) {
-                        <span class="favorite-star">
-                            <mat-icon inline>star</mat-icon>
-                        </span>
-                    }
-                    <!-- Has File -->
-                    @if (motion.hasAttachments()) {
-                        <span class="icon-prefix">
-                            <mat-icon>attach_file</mat-icon>
-                        </span>
-                    }
-                    <!-- The title -->
-                    <span>
+                <h1 class="title-line ellipsis-overflow" [attr.aria-label]="getAriaLabel(motion)">
+                    <a [routerLink]="!isMultiSelect ? motion.id : null" [tabindex]="-1">
+                        <!-- Is Favorite -->
+                        @if (motion.getPersonalNote()?.star) {
+                            <span class="favorite-star">
+                                <mat-icon inline>star</mat-icon>
+                            </span>
+                        }
+                        <!-- Has File -->
+                        @if (motion.hasAttachments()) {
+                            <span class="icon-prefix">
+                                <mat-icon>attach_file</mat-icon>
+                            </span>
+                        }
+                        <!-- The title -->
                         @if (vp.isMobile && motion.number) {
                             <span>
                                 {{ motion.number }}
@@ -150,7 +146,7 @@
                             </span>
                         }
                         {{ motion.title }}
-                    </span>
+                    </a>
                 </h1>
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
