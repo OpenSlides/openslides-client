@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,18 +10,20 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { PollState } from 'src/app/domain/models/poll';
+import { KeyedTranslations } from 'src/app/domain/translations';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { BaseVoteData } from '../../../../modules/poll/base/base-poll-detail.component';
 import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
-import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
-import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { ViewPoll, ViewPollBallot, ViewPollConfigApproval, ViewPollOption } from '../../../../pages/polls';
 
 @Component({
     selector: `os-poll-single-votes`,
@@ -29,6 +31,7 @@ import { MeetingSettingsService } from '../../../../services/meeting-settings.se
     styleUrls: [`./poll-single-votes.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        IconContainerComponent,
         TranslatePipe,
         DirectivesModule,
         ListModule,
@@ -61,9 +64,12 @@ export class PollSingleVotesComponent extends BaseComponent {
             ballots.map(ballot => {
                 const user = ballot.represented_meeting_user?.user;
                 return {
+                    delegation: ballot.acting_meeting_user,
                     user: user,
                     id: user?.id,
-                    value: ballot.value
+                    weight: +ballot.weight !== 1 ? +ballot.weight : undefined,
+                    value: this.parseVoteValue(ballot.value),
+                    valueRaw: JSON.parse(ballot.value)
                 };
             })
         ),
@@ -74,8 +80,30 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
-    private meetingSettingsService = inject(MeetingSettingsService);
 
-    public voteWeightEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_weight`));
-    public delegationEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_delegations`));
+    public optionMap = rxResource<Record<Id, ViewPollOption>, { poll: ViewPoll }>({
+        params: () => ({ poll: this.poll() }),
+        defaultValue: {},
+        stream: ({ params }) =>
+            params.poll.options$.pipe(
+                map(options => {
+                    const optionMap: Record<Id, ViewPollOption> = {};
+                    for (const option of options) {
+                        optionMap[option.id] = option;
+                    }
+
+                    return optionMap;
+                })
+            )
+    });
+
+    private parseVoteValue(value: string): string | Record<number, string> {
+        const parsed = JSON.parse(value);
+
+        if (this.poll().config instanceof ViewPollConfigApproval) {
+            return this.translate.instant(KeyedTranslations[`poll_option.${parsed}`]);
+        }
+
+        return parsed;
+    }
 }

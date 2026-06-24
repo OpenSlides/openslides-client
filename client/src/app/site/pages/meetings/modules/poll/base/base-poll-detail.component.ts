@@ -18,13 +18,18 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { EntitledUsersTableEntry } from '../definitions';
 import { PollService } from '../services/poll.service';
 import { PollBallotControllerService } from '../services/poll-ballot-controller.service';
 import { BasePollPdfService } from './base-poll-pdf.service';
 
 export interface BaseVoteData extends Identifiable {
-    user?: ViewUser;
+    user: ViewUser;
+    delegation?: ViewMeetingUser;
+    weight?: number;
+    value: unknown;
+    valueRaw: unknown;
 }
 
 @Directive()
