@@ -1,3 +1,4 @@
+import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
@@ -44,7 +45,8 @@ import { ViewPoll, ViewPollBallot, ViewPollConfigApproval, ViewPollOption } from
         MatTooltipModule,
         MatIconModule,
         MatTabsModule,
-        PipesModule
+        PipesModule,
+        KeyValuePipe
     ]
 })
 export class PollSingleVotesComponent extends BaseComponent {
@@ -97,11 +99,26 @@ export class PollSingleVotesComponent extends BaseComponent {
             )
     });
 
+    public isMultiVote(vote: string | Record<number, string>): boolean {
+        return vote && typeof vote !== `string`;
+    }
+
+    public isGeneralAbstain(vote: unknown): boolean {
+        return Array.isArray(vote) && !vote.length;
+    }
+
     private parseVoteValue(value: string): string | Record<number, string> {
         const parsed = JSON.parse(value);
 
         if (this.poll().config instanceof ViewPollConfigApproval) {
             return this.translate.instant(KeyedTranslations[`poll_option.${parsed}`]);
+        }
+
+        if (Array.isArray(parsed)) {
+            return parsed.reduce((map, obj) => {
+                map[obj] = ``;
+                return map;
+            }, {});
         }
 
         return parsed;

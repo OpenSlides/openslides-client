@@ -57,8 +57,36 @@
                 <os-icon-container class="abstain" icon="circle" size="large">
                     {{ vote.value }}
                 </os-icon-container>
+            } @else if (vote.valueRaw === 'nota') {
+                @if (poll().config?.strike_out) {
+                    <os-icon-container class="yes" icon="check_circle" size="large">
+                        {{ 'General approval' | translate }}
+                    </os-icon-container>
+                } @else {
+                    <os-icon-container class="no" icon="cancel" size="large">
+                        {{ 'General rejection' | translate }}
+                    </os-icon-container>
+                }
+            } @else if (isGeneralAbstain(vote.valueRaw)) {
+                <os-icon-container class="abstain" icon="circle" size="large">
+                    {{ 'General abstain' | translate }}
+                </os-icon-container>
             } @else if (optionMap.value()[vote.value]) {
                 {{ optionMap.value()[vote.value] }}
+            } @else if (isMultiVote(vote.value)) {
+                @for (option of vote.value | keyvalue; track option.key) {
+                    {{ optionMap.value()[option.key] }}{{ option.value ? ':' : '' }}
+                    @if (option.value === 'yes') {
+                        {{ 'Yes' | translate }}
+                    } @else if (option.value === 'no') {
+                        {{ 'No' | translate }}
+                    } @else if (option.value === 'abstain') {
+                        {{ 'Abstain' | translate }}
+                    } @else {
+                        {{ option.value }}
+                    }
+                    <br />
+                }
             }
         </div>
     </os-list>
