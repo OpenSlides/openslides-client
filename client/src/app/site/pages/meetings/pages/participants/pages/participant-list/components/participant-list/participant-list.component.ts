@@ -629,8 +629,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
-    public isMeetingAdminAndSelf(user: ViewUser): boolean {
-        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
+    public isSelf(user: ViewUser): boolean {
+        return user.id === this.operator.user?.id;
     }
 
     public canSeeItemMenu(): boolean {
