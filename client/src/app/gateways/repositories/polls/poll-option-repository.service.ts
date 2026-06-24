@@ -15,7 +15,7 @@ export class PollOptionRepositoryService extends BaseMeetingRelatedRepository<Vi
     }
 
     public getTitle = (viewPollOption: ViewPollOption): string =>
-        viewPollOption.meeting_user_id ? viewPollOption.meeting_user.getTitle() : viewPollOption.text;
+        viewPollOption.meeting_user_id ? viewPollOption.meeting_user?.user?.getShortName() : viewPollOption.text;
 
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? _(`Poll options`) : _(`Poll option`));
