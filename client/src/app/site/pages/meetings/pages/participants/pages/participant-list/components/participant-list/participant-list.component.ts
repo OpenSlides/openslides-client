@@ -646,15 +646,15 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     protected async removeUsersFromMeeting(): Promise<void> {
         const filteredRows = this.selectedRows.filter(user => user.id !== this.operator.operatorId);
         const removeSelf = this.selectedRows.length !== filteredRows.length;
-        if (removeSelf) {
-            this.matSnackBar.open(
-                this.translate.instant(`You were not removed from the meeting.`),
-                this.translate.instant(`Ok`),
-                { duration: 3000 }
-            );
-        }
         if (filteredRows.length > 0) {
             await this.repo.removeUsersFromMeeting(filteredRows);
+            if (removeSelf) {
+                this.matSnackBar.open(
+                    this.translate.instant(`You were not removed from the meeting.`),
+                    this.translate.instant(`Ok`),
+                    { duration: 3000 }
+                );
+            }
         }
     }
 
