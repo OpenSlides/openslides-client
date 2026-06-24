@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -46,13 +46,13 @@ export class DashboardComponent extends BaseComponent {
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private orgaService: OrganizationService,
-        private meetingRepo: MeetingControllerService,
-        private themeService: ThemeService,
-        public operator: OperatorService
-    ) {
+    protected override translate = inject(TranslateService);
+    private orgaService = inject(OrganizationService);
+    private meetingRepo = inject(MeetingControllerService);
+    private themeService = inject(ThemeService);
+    public operator = inject(OperatorService);
+
+    public constructor() {
         super();
         super.setTitle(`Calendar`);
         this.loadMeetings();
@@ -95,7 +95,7 @@ export class DashboardComponent extends BaseComponent {
                 this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Past)
-                    .sort((a, b) => this.sortMeeting(a, b));
+                    .sort((a, b) => this.sortMeeting(a, b, true));
                 this.futureMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Future)
                     .sort((a, b) => this.sortMeeting(a, b));
@@ -106,9 +106,15 @@ export class DashboardComponent extends BaseComponent {
         );
     }
 
-    private sortMeeting(a: ViewMeeting, b: ViewMeeting): number {
+    private sortMeeting(a: ViewMeeting, b: ViewMeeting, swap = false): number {
         if (a.start_time !== b.start_time) {
+            if (swap) {
+                return b.start_time - a.start_time;
+            }
             return a.start_time - b.start_time;
+        }
+        if (swap) {
+            return b.end_time - a.end_time;
         }
         return a.end_time - b.end_time;
     }
