@@ -1,5 +1,4 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -46,11 +45,10 @@ export class DashboardComponent extends BaseComponent {
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    protected override translate = inject(TranslateService);
+    public operator = inject(OperatorService);
     private orgaService = inject(OrganizationService);
     private meetingRepo = inject(MeetingControllerService);
     private themeService = inject(ThemeService);
-    public operator = inject(OperatorService);
 
     public constructor() {
         super();
