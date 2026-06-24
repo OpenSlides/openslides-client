@@ -110,6 +110,6 @@ export class DashboardComponent extends BaseComponent {
         if (a.start_time !== b.start_time) {
             return a.start_time - b.start_time;
         }
-        return a.title.localeCompare(b.title, undefined, { sensitivity: `base` });
+        return a.end_time - b.end_time;
     }
 }

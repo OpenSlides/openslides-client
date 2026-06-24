@@ -67,10 +67,6 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return this.end_time ? new Date(this.end_time * 1000) : undefined;
     }
 
-    public get title(): string {
-        return this.title;
-    }
-
     public get userAmount(): number {
         return this.user_ids?.length || 0;
     }
