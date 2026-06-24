@@ -95,12 +95,27 @@ export class DashboardComponent extends BaseComponent {
                 this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Past)
-                    .sort((a, b) => b.end_time - a.end_time);
+                    .sort((a, b) => {
+                        return this.sortMeeting(a, b);
+                    });
                 this.futureMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Future)
-                    .sort((a, b) => a.end_time - b.end_time);
-                this.currentMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Current);
+                    .sort((a, b) => {
+                        return this.sortMeeting(a, b);
+                    });
+                this.currentMeetings = filteredMeetings
+                    .filter(meeting => meeting.relatedTime === RelatedTime.Current)
+                    .sort((a, b) => {
+                        return this.sortMeeting(a, b);
+                    });
             })
         );
+    }
+
+    private sortMeeting(a: ViewMeeting, b: ViewMeeting): number {
+        if (a.start_time !== b.start_time) {
+            return a.start_time - b.start_time;
+        }
+        return a.title.localeCompare(b.title, undefined, { sensitivity: `base` });
     }
 }
