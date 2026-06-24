@@ -95,19 +95,13 @@ export class DashboardComponent extends BaseComponent {
                 this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Past)
-                    .sort((a, b) => {
-                        return this.sortMeeting(a, b);
-                    });
+                    .sort((a, b) => this.sortMeeting(a, b));
                 this.futureMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Future)
-                    .sort((a, b) => {
-                        return this.sortMeeting(a, b);
-                    });
+                    .sort((a, b) => this.sortMeeting(a, b));
                 this.currentMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Current)
-                    .sort((a, b) => {
-                        return this.sortMeeting(a, b);
-                    });
+                    .sort((a, b) => this.sortMeeting(a, b));
             })
         );
     }
