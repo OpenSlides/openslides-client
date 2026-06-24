@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
-import { getPollListSubscriptionConfig } from '../../polls.subscription';
+import { getPollDetailSubscriptionConfig, getPollListSubscriptionConfig } from '../../polls.subscription';
 
 @Component({
     selector: `os-poll-main`,
@@ -11,8 +10,26 @@ import { getPollListSubscriptionConfig } from '../../polls.subscription';
     styleUrls: [`./poll-main.component.scss`],
     standalone: false
 })
-export class PollMainComponent extends BaseMeetingModelRequestHandler {
-    protected override getSubscriptions(id: Id): SubscriptionConfig<any>[] {
-        return [getPollListSubscriptionConfig(id)];
+export class PollMainComponent extends BaseModelRequestHandlerComponent {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`] && +params[`id`]) {
+            this.updateSubscribeTo(getPollDetailSubscriptionConfig(+params[`id`]), {
+                hideWhenDestroyed: true
+            });
+        }
+
+        if (!params[`id`]) {
+            this.updateSubscribeTo(getPollListSubscriptionConfig(params[`meetingId`]), {
+                hideWhenMeetingChanged: true
+            });
+        }
+    }
+
+    protected override onShouldCreateModelRequests(params: any, meetingId: Id): void {
+        if (+params[`id`]) {
+            this.subscribeTo(getPollDetailSubscriptionConfig(+params[`id`]), { hideWhenDestroyed: true });
+        } else {
+            this.subscribeTo(getPollListSubscriptionConfig(meetingId), { hideWhenMeetingChanged: true });
+        }
     }
 }

@@ -40,7 +40,10 @@
                 </div>
             }
         </div>
-        <!-- TODO: show value -->
+
+        <div *osScrollingTableCell="'vote'; row as vote">
+            {{ vote.value }}
+        </div>
     </os-list>
 </div>
 <div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">

@@ -9,18 +9,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
-import { map, of, switchMap, tap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PollState } from 'src/app/domain/models/poll';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { BaseVoteData } from '../../../../modules/poll/base/base-poll-detail.component';
 import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 
 @Component({
@@ -55,14 +55,15 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public selectedTab = signal(0);
 
-    public votesData$ = toObservable(this.poll).pipe(
+    public votesData$: Observable<BaseVoteData[]> = toObservable(this.poll).pipe(
         switchMap(poll => (poll.state === PollState.Finished ? poll.ballots$ : of([]))),
-        map(ballots =>
+        map((ballots: ViewPollBallot[]) =>
             ballots.map(ballot => {
-                const user = this.userRepo.getViewModel(ballot.represented_meeting_user_id);
+                const user = ballot.represented_meeting_user?.user;
                 return {
                     user: user,
-                    id: user?.id
+                    id: user?.id,
+                    value: ballot.value
                 };
             })
         ),
@@ -73,7 +74,6 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
-    private userRepo = inject(UserRepositoryService);
     private meetingSettingsService = inject(MeetingSettingsService);
 
     public voteWeightEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_weight`));

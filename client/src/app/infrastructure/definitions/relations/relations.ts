@@ -202,16 +202,16 @@ export const RELATIONS: Relation[] = [
         BIdField: `voted_ids`
     }),
     ...makeM2O({
-        OViewModel: ViewUser,
+        OViewModel: ViewMeetingUser,
         MViewModel: ViewPollBallot,
-        OField: `votes`,
-        MField: `user`
+        OField: `represented_ballots`,
+        MField: `represented_meeting_user`
     }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
         MViewModel: ViewPollBallot,
-        OField: `vote_delegated_votes`,
-        MField: `delegated_user`
+        OField: `acting_ballots`,
+        MField: `acting_meeting_user`
     }),
     ...makeM2M({
         AViewModel: ViewUser,

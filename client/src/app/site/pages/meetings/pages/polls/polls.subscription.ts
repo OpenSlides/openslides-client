@@ -18,10 +18,6 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             fieldset: FULL_FIELDSET
         },
         {
-            idField: `ballot_ids`,
-            fieldset: [`represented_meeting_user_id`, `poll_id`, `value`]
-        },
-        {
             idField: `option_ids`,
             fieldset: FULL_FIELDSET,
             follow: [
@@ -59,7 +55,46 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
         viewModelCtor: ViewPoll,
         ids,
         fieldset: FULL_FIELDSET,
-        follow: []
+        follow: [
+            {
+                idField: `config_id`,
+                fieldset: FULL_FIELDSET
+            },
+            {
+                idField: `ballot_ids`,
+                fieldset: [`poll_id`, `value`],
+                follow: [
+                    {
+                        idField: `acting_meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    },
+                    {
+                        idField: `represented_meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    }
+                ]
+            },
+            {
+                idField: `option_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription.follow
+                    }
+                ]
+            },
+            {
+                idField: `meeting_id`,
+                fieldset: [`name`],
+                follow: [
+                    {
+                        idField: `committee_id`,
+                        fieldset: [`name`]
+                    }
+                ]
+            }
+        ]
     },
     subscriptionName: `${POLL_DETAIL_SUBSCRIPTION}_${ids.join(`_`)}`
 });

@@ -31,6 +31,7 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     }
 }
 interface IMeetingUserRelations {
+    ballots: ViewPollBallot;
     user: ViewUser;
     groups: ViewGroup[];
     meeting: ViewMeeting;
@@ -43,9 +44,10 @@ interface IMeetingUserRelations {
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     poll_voted: ViewPoll;
+    acting_ballots: ViewPollBallot[];
+    represented_ballots: ViewPollBallot[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
-    vote_delegated_votes: ViewPollBallot[];
     structure_levels: ViewStructureLevel[];
     poll_options: ViewPollOption[];
 }

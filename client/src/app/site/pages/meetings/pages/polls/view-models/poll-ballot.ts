@@ -1,3 +1,4 @@
+import { Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 
 import { PollBallot } from '../../../../../../domain/models/poll/poll-ballot';
@@ -15,19 +16,27 @@ export class ViewPollBallot extends BaseViewModel<PollBallot> {
         return this._model;
     }
 
+    public get user(): ViewUser {
+        return this.represented_meeting_user.user;
+    }
+
+    public get user$(): Observable<ViewUser> {
+        return this.represented_meeting_user$.pipe(switchMap(m => m.user$));
+    }
+
     public get structureLevelIds(): Id[] {
-        return this.user.structure_level_ids();
+        return this.user?.structure_level_ids() || [];
     }
 
     public get groupIds(): Id[] {
-        return this.user.group_ids();
+        return this.user?.group_ids() || [];
     }
 }
 
 interface IViewPollBallotRelations {
     poll: ViewPoll;
-    user?: ViewUser;
-    delegated_user?: ViewMeetingUser;
+    acting_meeting_user?: ViewMeetingUser;
+    represented_meeting_user?: ViewMeetingUser;
 }
 
 export interface ViewPollBallot extends HasMeeting, ViewModelRelations<IViewPollBallotRelations>, PollBallot {}
