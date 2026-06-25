@@ -93,7 +93,8 @@ export class DashboardComponent extends BaseComponent {
                 this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Past)
-                    .sort((a, b) => this.sortMeeting(a, b, true));
+                    .sort((a, b) => this.sortMeeting(a, b))
+                    .reverse();
                 this.futureMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Future)
                     .sort((a, b) => this.sortMeeting(a, b));
@@ -104,15 +105,9 @@ export class DashboardComponent extends BaseComponent {
         );
     }
 
-    private sortMeeting(a: ViewMeeting, b: ViewMeeting, swap = false): number {
+    private sortMeeting(a: ViewMeeting, b: ViewMeeting): number {
         if (a.start_time !== b.start_time) {
-            if (swap) {
-                return b.start_time - a.start_time;
-            }
             return a.start_time - b.start_time;
-        }
-        if (swap) {
-            return b.end_time - a.end_time;
         }
         return a.end_time - b.end_time;
     }
