@@ -53,6 +53,6 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
             return of(false);
         }
 
-        return this.votingService.hasVoted(poll).pipe(map(v => !v && poll.canBeVotedFor()));
+        return this.votingService.hasVotedObservable(poll).pipe(map(v => !v && poll.canBeVotedFor()));
     }
 }

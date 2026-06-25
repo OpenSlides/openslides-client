@@ -42,9 +42,9 @@
         class="cell-slot fill"
     >
         @if (canBeVoteFor(poll) | async) {
-            <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
+            <mat-icon color="warn" [matTooltip]="'Voting is currently in progress.' | translate">warning</mat-icon>
         } @else {
-            <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
+            <mat-icon color="accent" [matTooltip]="'You have already voted.' | translate">check_circle</mat-icon>
         }
     </div>
 </os-projectable-list>

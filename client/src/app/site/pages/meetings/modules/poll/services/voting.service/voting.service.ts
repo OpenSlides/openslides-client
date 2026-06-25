@@ -63,7 +63,7 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
-    public hasVoted(poll: ViewPoll, user?: ViewMeetingUser): Observable<boolean> {
+    public hasVotedObservable(poll: ViewPoll, user?: ViewMeetingUser): Observable<boolean> {
         if (!user) {
             user = this.operator.user.getMeetingUser();
         }

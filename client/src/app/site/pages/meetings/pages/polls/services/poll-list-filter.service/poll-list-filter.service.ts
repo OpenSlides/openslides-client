@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
@@ -35,8 +35,14 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
      */
     protected getFilterDefinitions(): OsFilter<ViewPoll>[] {
         return [
-            // TODO: Add filter for published
-            // TODO: Add filter for has voted
+            {
+                property: `published`,
+                label: _(`Is published`),
+                options: [
+                    { label: _(`Is published`), condition: true },
+                    { label: _(`Is not published`), condition: [false, null] }
+                ]
+            },
             {
                 property: `state`,
                 label: this.translate.instant(`State`),
@@ -45,15 +51,7 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
                     { condition: PollState.Started, label: this.translate.instant(`started`) },
                     { condition: PollState.Finished, label: this.translate.instant(`finished`) }
                 ]
-            } /* ,
-            {
-                property: `hasVoted`,
-                label: this.translate.instant(`Votings`),
-                options: [
-                    { condition: false, label: this.translate.instant(`Voting is currently in progress.`) },
-                    { condition: true, label: this.translate.instant(`You have already voted.`) }
-                ]
-            } */
+            }
         ];
     }
 }
