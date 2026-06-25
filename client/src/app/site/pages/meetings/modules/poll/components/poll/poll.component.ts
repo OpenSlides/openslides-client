@@ -19,8 +19,8 @@ import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.p
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
+import { PollBallotPdfService } from '../../services/poll-ballot-pdf.service';
 import { PollControllerService } from '../../services/poll-controller.service';
-import { PollPdfService } from '../../services/poll-pdf.service/poll-pdf.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';
@@ -101,7 +101,7 @@ export class PollComponent extends BaseMeetingComponent {
     private choiceService = inject(ChoiceService);
     private repo = inject(PollControllerService);
     private dialog = inject(MatDialog);
-    private pollPdf = inject(PollPdfService);
+    private pollPdf = inject(PollBallotPdfService);
 
     public user = toSignal(this.operator.userObservable);
     public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);

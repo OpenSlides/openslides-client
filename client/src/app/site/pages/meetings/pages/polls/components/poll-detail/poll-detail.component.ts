@@ -23,7 +23,7 @@ import { DetailViewModule } from '../../../../modules/meetings-component-collect
 import { ProjectorButtonModule } from '../../../../modules/meetings-component-collector/projector-button/projector-button.module';
 import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
 import { PollControllerService } from '../../../../modules/poll/services/poll-controller.service';
-import { PollPdfService } from '../../../../modules/poll/services/poll-pdf.service/poll-pdf.service';
+import { PollPdfService } from '../../../../modules/poll/services/poll-pdf.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollEntitledUserComponent } from '../poll-entitled-users/poll-entitled-user.component';
@@ -86,8 +86,8 @@ export class PollDetailComponent extends BaseComponent {
         );
     }
 
-    public exportPollResults(): void {
-        // this.pollPdfService;
+    public async exportPollResults(): Promise<void> {
+        await this.pollPdfService.exportResult(this.poll());
     }
 
     public async deletePoll(): Promise<void> {

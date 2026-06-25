@@ -8,13 +8,13 @@ import {
     ViewPollConfigRatingApproval,
     ViewPollConfigRatingScore,
     ViewPollConfigSelection
-} from '../../../../pages/polls';
-import { MeetingPdfExportService } from '../../../../services/export';
+} from '../../../pages/polls';
+import { MeetingPdfExportService } from '../../../services/export';
 
 @Injectable({
     providedIn: `root`
 })
-export class PollPdfService {
+export class PollBallotPdfService {
     private translate = inject(TranslateService);
     protected pdfExport = inject(MeetingPdfExportService);
 
