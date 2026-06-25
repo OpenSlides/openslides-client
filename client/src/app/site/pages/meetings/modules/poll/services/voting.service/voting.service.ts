@@ -95,7 +95,7 @@ export class VotingService {
             return VotingProhibition.USER_IS_ANONYMOUS;
         }
 
-        if (ballots.length) {
+        if (ballots.find(b => b.represented_meeting_user_id === user.getMeetingUser().id) !== undefined) {
             return VotingProhibition.USER_HAS_VOTED;
         }
 
@@ -149,9 +149,11 @@ export class VotingService {
                 return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
             }
         }
-        // TODO: Check if voted for delegation && poll.hasVotedForDelegations(user?.id)
+
         if (this._currentUser?.id !== user?.id) {
-            return VotingProhibition.USER_HAS_VOTED;
+            if (poll.ballots.find(b => b.represented_meeting_user_id === user.getMeetingUser().id) !== undefined) {
+                return VotingProhibition.USER_HAS_VOTED;
+            }
         }
         if (this.operator.isAnonymous) {
             return VotingProhibition.USER_IS_ANONYMOUS;

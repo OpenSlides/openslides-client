@@ -27,7 +27,6 @@ import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { MotionPollComponent } from './components/motion-poll/motion-poll.component';
-import { MotionPollDetailContentComponent } from './components/motion-poll-detail-content/motion-poll-detail-content.component';
 import { MotionPollDialogComponent } from './components/motion-poll-dialog/motion-poll-dialog.component';
 import { MotionPollFormComponent } from './components/motion-poll-form/motion-poll-form.component';
 import { MotionPollService } from './services';
@@ -39,7 +38,6 @@ const MODULES = [MotionPollServiceModule];
     imports: [
         ...MODULES,
         MotionPollComponent,
-        MotionPollDetailContentComponent,
         MotionPollFormComponent,
         MotionPollDialogComponent,
         CustomIconComponent,
@@ -69,7 +67,7 @@ const MODULES = [MotionPollServiceModule];
         OpenSlidesTranslationModule.forChild(),
         IconContainerComponent
     ],
-    exports: [...MODULES, PollModule, MotionPollComponent, MotionPollDetailContentComponent],
+    exports: [...MODULES, PollModule, MotionPollComponent],
     providers: [{ provide: PollService, useClass: MotionPollService }]
 })
 export class MotionPollModule {

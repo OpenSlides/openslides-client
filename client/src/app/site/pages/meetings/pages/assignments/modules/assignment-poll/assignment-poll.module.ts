@@ -29,16 +29,13 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { AssignmentCommonServiceModule } from '../../services/assignment-common-service.module';
 import { AssignmentPollComponent } from './components/assignment-poll/assignment-poll.component';
-import { AssignmentPollDetailContentComponent } from './components/assignment-poll-detail-content/assignment-poll-detail-content.component';
 import { AssignmentPollDialogComponent } from './components/assignment-poll-dialog/assignment-poll-dialog.component';
 import { AssignmentPollService } from './services/assignment-poll.service';
 import { AssignmentPollServiceModule } from './services/assignment-poll-service.module';
 
-const COMPONENTS = [AssignmentPollDetailContentComponent];
-
 @NgModule({
-    declarations: [...COMPONENTS],
-    exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule, AssignmentPollComponent],
+    declarations: [],
+    exports: [PollModule, AssignmentPollServiceModule, AssignmentPollComponent],
     imports: [
         AssignmentPollComponent,
         AssignmentPollDialogComponent,
