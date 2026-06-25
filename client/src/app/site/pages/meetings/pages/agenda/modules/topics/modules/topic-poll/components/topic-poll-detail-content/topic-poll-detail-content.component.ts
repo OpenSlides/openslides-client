@@ -71,7 +71,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     }
 
     public get canSeeResults(): boolean {
-        return this.operator.hasPerms(Permission.pollCanManage) || this.isPublished;
+        return this.operator.hasPerms(Permission.agendaItemCanManagePolls) || this.isPublished;
     }
 
     public readonly shouldShowChart = false;

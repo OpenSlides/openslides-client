@@ -30,7 +30,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
         } else if (this.poll().isAssignmentPoll) {
             return this.operator.hasPerms(Permission.assignmentCanManagePolls);
         } else if (this.poll().isTopicPoll) {
-            return this.operator.hasPerms(Permission.pollCanManage);
+            return this.operator.hasPerms(Permission.agendaItemCanManagePolls);
         }
         return false;
     });
