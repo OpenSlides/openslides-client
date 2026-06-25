@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -15,14 +15,9 @@ import { ViewTopic } from '../../../../view-models';
     imports: [PollComponent, MatCardModule]
 })
 export class TopicPollComponent extends BasePollComponent<ViewTopic> {
-    // TODO: Use signals
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+    public pollId = input.required<Id>();
 
-    @Output()
-    public readonly dialogOpened = new EventEmitter<void>();
+    public dialogOpened = output();
 
     public get shouldShowPoll(): boolean {
         if (this.poll) {
@@ -39,7 +34,14 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> {
 
     private operator = inject(OperatorService);
 
-    // TODO: Maybe remove
+    public constructor() {
+        super();
+
+        effect(() => {
+            this.initializePoll(this.pollId());
+        });
+    }
+
     public getDetailLink(): string {
         return `/${this.poll.meeting_id}/topics/polls/${this.poll.sequential_number}`;
     }

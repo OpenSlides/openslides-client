@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,14 +17,9 @@ import { DirectivesModule } from 'src/app/ui/directives';
     imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
 export class AssignmentPollComponent extends BasePollComponent {
-    // TODO: Use signals
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+    public pollId = input.required<Id>();
 
-    @Output()
-    public readonly dialogOpened = new EventEmitter<void>();
+    public dialogOpened = output();
 
     public get showPoll(): boolean {
         if (this.poll) {
@@ -41,7 +36,14 @@ export class AssignmentPollComponent extends BasePollComponent {
 
     private operator = inject(OperatorService);
 
-    // TODO: Maybe remove
+    public constructor() {
+        super();
+
+        effect(() => {
+            this.initializePoll(this.pollId());
+        });
+    }
+
     public getDetailLink(): string {
         return `/${this.poll.meeting_id}/assignments/polls/${this.poll.sequential_number}`;
     }
