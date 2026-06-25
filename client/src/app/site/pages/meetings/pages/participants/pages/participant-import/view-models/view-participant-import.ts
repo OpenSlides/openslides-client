@@ -12,7 +12,7 @@ export const STATES = [
     _('Referenced participant'),
     _(`Faulty participant`)
 ];
-export const STATE_FITERABLE = [`new`, `done`, `generated`, `error`];
+export const STATE_FITERABLE = [`new`, `done`, `referenced`, `error`];
 
 export class ViewImportedParticipant implements Identifiable, BackendImportRow /* implements Searchable */ {
     // This class replaces BackendImportIdentifiedRow
@@ -47,7 +47,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     public is_locked_out;
     public is_physical_person;
 
-    public constructor(preview_id, preview: BackendImportRow) {
+    public constructor(preview_id: number, preview: BackendImportRow) {
         this.id = preview_id;
 
         this.data = preview.data;

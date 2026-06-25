@@ -38,6 +38,7 @@
                         isDefault: true;
                         config: getColumnConfig(column.property)
                     "
+                    [class.error-icon]="containsError(row.data, def)"
                 >
                     @let entry = row.data;
                     @let type = column.type;
@@ -90,6 +91,7 @@
                                 }
                                 @if (!getHeader(def).is_list && entry[def] !== undefined) {
                                     @if (getHeader(def).is_object) {
+                                        @let icon = getEntryIcon(entry[def]);
                                         <div class="list-field-entry">
                                             @if (getHeader(def).type === 'string') {
                                                 {{ entry[def].value }}
@@ -106,8 +108,12 @@
                                             &nbsp;
 
                                             @if (getActionIcon(entry[def])) {
-                                                <mat-icon color="accent" inline>
-                                                    {{ getEntryIcon(entry[def]) }}
+                                                <mat-icon
+                                                    inline
+                                                    [class.error-icon]="icon === 'error_outline'"
+                                                    [color]="icon !== 'error_outline' ? 'accent' : null"
+                                                >
+                                                    {{ icon }}
                                                 </mat-icon>
                                             }
                                         </div>
@@ -122,7 +128,7 @@
                 *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
-                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">&nbsp;#</div>
+                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">#</div>
                 @if (row.state === 'error') {
                     <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
                         {{ getActionIcon(row) }}
@@ -183,19 +189,26 @@
                 <mat-icon>close</mat-icon>
             </button>
         </div>
-        <h4 class="summary-dialog-subtitle">{{ summary[0].value }}&nbsp;participants have been processed</h4>
-        <div>
+        <h4 class="summary-dialog-subtitle">{{ summary[0]?.value }}&nbsp;participants have been processed</h4>
+        <div style="justify-content: center">
             <mat-dialog-content class="summary-dialog-content">
-                @for (row of summary; track row) {
-                    @let colInfo = getSummaryInformation(row.name);
-                    <div class="summary-row">
-                        <mat-icon inline [ngClass]="colInfo[1]">
-                            {{ colInfo[0] }}
-                        </mat-icon>
-                        <div class="summary-text">{{ row.value }}&nbsp;{{ row.name }}</div>
-                    </div>
-                }
+                <div>
+                    @let shortenedSummary = shortenSummary(summary);
+                    @for (row of shortenedSummary; track row) {
+                        @let colInfo = getSummaryInformation(row.name);
+                        <div class="summary-row">
+                            <mat-icon inline [ngClass]="colInfo[1]">
+                                {{ colInfo[0] }}
+                            </mat-icon>
+                            <div class="summary-text">{{ row.value }}&nbsp;{{ row.name }}</div>
+                        </div>
+                    }
+                </div>
             </mat-dialog-content>
+            @let extraInformation = summaryRest(summary);
+            @for (row of extraInformation; track row) {
+                <div class="summary-dialog-extraInfo">{{ row.value }}&nbsp;{{ row.name }}</div>
+            }
         </div>
     </div>
 </ng-template>

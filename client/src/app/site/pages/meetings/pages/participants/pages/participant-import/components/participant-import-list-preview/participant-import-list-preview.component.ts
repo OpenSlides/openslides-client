@@ -21,8 +21,9 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { _, TranslateService } from '@ngx-translate/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, Subscription } from 'rxjs';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -71,6 +72,8 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
+
+    protected activeMeetingIdService = inject(ActiveMeetingIdService);
 
     @ContentChildren(ImportListFirstTabDirective)
     public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
@@ -308,9 +311,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
         });
-        this.importer.previewsObservable.subscribe(previews => {
+        const tempPreviewsObservable: Subscription = this.importer.previewsObservable.subscribe(previews => {
             this.fillPreviewData(previews);
         });
+        tempPreviewsObservable.unsubscribe();
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
@@ -387,11 +391,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 return `error_outline`;
             case BackendImportState.Warning:
                 return `warning`;
-            case BackendImportState.New:
-                return `add_circle_outline`;
+            case BackendImportState.New: // item will be imported / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
             case BackendImportState.Done: // item will be updated / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `autorenew` : `done`;
             case BackendImportState.Generated:
+                return `merge`;
+            case BackendImportState.Referenced:
                 return `merge`;
             case BackendImportState.Remove:
                 return `remove`;
@@ -409,8 +415,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return 'os-green';
             case BackendImportState.Done: // item will be updated / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `os-yellow` : `accent`;
+                return this._state !== BackendImportPhase.FINISHED ? `os-yellow` : `os-green`;
             case BackendImportState.Generated:
+                return `accent`;
+            case BackendImportState.Referenced:
                 return `accent`;
             default:
                 return `block`; // fallback: Error
@@ -423,7 +431,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 error: ['error_outline', 'red-warning-text'],
                 warning: ['warning', 'warn'],
                 created: ['add_circle_outline', 'os-green'],
-                updated: ['autorenew', 'os-yellow']
+                updated: ['autorenew', 'os-yellow'],
+                // HAS TO BE ADDED TO SUMMARY IN ORDER TO WORK
+                referenced: ['merge', 'accent']
             }[item] ?? ['group', 'accent']
         );
     }
@@ -433,6 +443,15 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             return undefined;
         }
         return this.getActionIcon(item);
+    }
+
+    public containsError(entry: any, def: string): boolean {
+        const value = entry?.[def];
+        if (!value) return false;
+        if (Array.isArray(value)) {
+            return value.some(icon => this.getEntryIcon(icon) === 'error_outline');
+        }
+        return this.getEntryIcon(value) === 'error_outline';
     }
 
     /**
@@ -458,6 +477,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     (this._state !== BackendImportPhase.FINISHED
                         ? this.translate.instant(`will be updated`)
                         : this.translate.instant(`has been imported`))
+                );
+            case BackendImportState.Referenced:
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be referenced`)
+                        : this.translate.instant(`has been imported and referenced`))
                 );
             default:
                 return undefined;
@@ -581,43 +608,39 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         );
     }
 
-    private DefaultOptions(): void {
-        this.importer.encoding ??= this.importer.encodings[0].value;
-        this.importer.columnSeparator ??= this.importer.columnSeparators[0].value;
-        this.importer.textSeparator ??= this.importer.textSeparators[0].value;
+    protected summaryRest(summary: BackendImportSummary[]): BackendImportSummary[] {
+        return summary?.filter(col => col.name === 'structure levels created' || col.name === 'groups created');
     }
 
-    public async importData(dialogTemplate: TemplateRef<any>, summaryDialog: TemplateRef<any>): Promise<void> {
-        this.DefaultOptions();
-        const ref = this.dialog.open(dialogTemplate, {
+    protected async importData(dialogTemplate: TemplateRef<string>, summaryDialog: TemplateRef<string>): Promise<void> {
+        const customOptions = {
             width: `600px`,
             disableClose: false,
             maxWidth: `90vw`,
             maxHeight: `90vh`
+        };
+        const sleep: (ms: number) => Promise<unknown> = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        this.dialog.open(summaryDialog, {
+            data: this.summary,
+            ...customOptions
+        });
+        const ref = this.dialog.open(dialogTemplate, {
+            data: this.summary,
+            ...customOptions,
+            hasBackdrop: false
         });
 
         try {
-            if (
-                await Promise.all([
-                    /* this.importer.doImport() */ true,
-                    new Promise(resolve => setTimeout(resolve, 2000))
-                ])
-            ) {
-                this.importedDataSummary(summaryDialog);
-                ref.close();
-            }
-        } catch (error) {
-            console.error('FAILED IMPORT: ', error);
+            await this.importer.doImport();
+            await sleep(2000);
+        } finally {
             ref.close();
         }
     }
 
-    private importedDataSummary(summaryDialog: TemplateRef<any>): void {
-        this.dialog.open(summaryDialog, {
-            width: `600px`,
-            disableClose: false,
-            maxWidth: `90vw`,
-            maxHeight: `90vh`
-        });
-    }
+    /* private isReferenced(row: ViewImportedParticipant): boolean {
+        if (!row) return false
+
+        
+    } */
 }

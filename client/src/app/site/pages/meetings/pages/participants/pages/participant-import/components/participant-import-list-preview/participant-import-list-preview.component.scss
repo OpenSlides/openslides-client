@@ -17,6 +17,10 @@ $os-yellow: rgb(255, 193, 7);
     width: 100%;
 }
 
+.error-icon {
+    color: red;
+}
+
 .footer {
     padding-left: 35px;
     position: sticky;
@@ -29,11 +33,6 @@ $os-yellow: rgb(255, 193, 7);
     border-top: 1px solid #aaa;
     display: flex;
     align-items: center;
-}
-
-.icon {
-    margin-top: 5px;
-    font-size: x-large;
 }
 
 .static-sort-filter-bar {
@@ -55,7 +54,6 @@ $os-yellow: rgb(255, 193, 7);
 
     .import-dialog-content {
         min-height: fit-content;
-
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -99,16 +97,17 @@ $os-yellow: rgb(255, 193, 7);
     }
 
     .summary-dialog-content {
-        min-height: 260px;
+        display: flex;
         font-size: 17px;
         color: #000000;
         text-align: center;
+        justify-content: center;
+        margin-bottom: 22px;
     }
 
     .summary-row {
         display: flex;
-        align-items: start;
-        justify-content: center;
+        justify-content: start;
         gap: 10px;
         margin: 6px 0;
     }
@@ -121,5 +120,14 @@ $os-yellow: rgb(255, 193, 7);
         font-size: 18px;
         margin-left: 1.4em;
         margin-top: 0;
+    }
+
+    .summary-dialog-extraInfo {
+        font-size: 17px;
+        margin-left: 1.4em;
+    }
+
+    .summary-dialog-extraInfo:last-child {
+        margin-bottom: 16px;
     }
 }

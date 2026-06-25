@@ -33,6 +33,12 @@
     }
 }
 
+@mixin render-all-table() {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+}
+
 :host,
 .scrolling-table-container {
     display: block;
@@ -42,6 +48,7 @@
 
 .scrolling-table-header {
     @include scrolling-table-style();
+    @include render-all-table();
 
     .scrolling-table-cell {
         font-weight: 500;
@@ -58,6 +65,7 @@
 
     .scrolling-table-row {
         @include scrolling-table-style();
+        @include render-all-table();
     }
 }
 
