@@ -58,7 +58,6 @@ export class PollPdfService {
     private async getBallotPaper(documentContent: Content): Promise<TDocumentDefinitions> {
         return {
             pageSize: `A4`,
-            // pageMargins: [0, 0, 0, 0],
             defaultStyle: {
                 font: `PdfFont`,
                 fontSize: 10
