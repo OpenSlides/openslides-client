@@ -94,6 +94,12 @@
                         }
                     }
                 </div>
+                @if (activeMeetingSetting && canEditOwnDelegation(user)) {
+                    <button mat-menu-item (click)="openDialogEditInfo(user)">
+                        <mat-icon>edit</mat-icon>
+                        <span>{{ 'Change your delegation' | translate }}</span>
+                    </button>
+                }
             }
         </div>
         <mat-divider />
