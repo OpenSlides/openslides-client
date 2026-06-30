@@ -18,7 +18,6 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     // This class replaces BackendImportIdentifiedRow
 
     public meeting_id: number;
-    public is_referenced = false;
     public static COLLECTION = `importedParticipant`;
 
     public state: BackendImportState;
@@ -163,7 +162,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         return this.groups?.length > 0 ? true : false;
     }
 
-    public set setReferenced(value: boolean) {
-        this.is_referenced = value;
+    public set setState(value: BackendImportState) {
+        this.state = value;
     }
 }

@@ -299,6 +299,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
+    private tempPreviewsObservable: Subscription;
 
     public constructor(
         private dialog: MatDialog,
@@ -311,15 +312,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Starts with a clean preview (removing any previously existing import previews)
      */
     public ngOnInit(): void {
+        /* TODO: REMOVE THE MANUAL STATISTICS' CALCULATION */
         this._requiredFields = this.createRequiredFields();
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
         });
-        const tempPreviewsObservable: Subscription = this.importer.previewsObservable.subscribe(previews => {
+        this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
+            this._rows = this.calculateRows(previews);
             this.fillPreviewData(previews);
         });
-        tempPreviewsObservable.unsubscribe();
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
+        this.setHeaders({ preview: this._previewColumns });
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
         this.cd.detectChanges();
@@ -330,8 +333,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public ngOnDestroy(): void {
         this.importer.clearPreview();
-        this.importer.clearAll();
         this.importer.clearFile();
+        this.importer.clearAll();
     }
 
     /**
@@ -398,9 +401,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New: // item will be imported / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
             case BackendImportState.Done:
-                if (this.isReferenced(item)) {
-                    return 'merge';
-                } else return 'autorenew';
+                return 'autorenew';
+            case BackendImportState.Referenced:
+                return 'merge';
             case BackendImportState.Generated:
                 return `merge`;
             case BackendImportState.Remove:
@@ -446,9 +449,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 if (this._state === BackendImportPhase.FINISHED) {
                     return 'os-green';
                 }
-                if ('state' in item && this.isReferenced(item)) {
-                    return 'accent';
-                } else return 'os-yellow';
+                return 'os-yellow';
+            case BackendImportState.Referenced:
+                if (this._state === BackendImportPhase.FINISHED) {
+                    return 'os-green';
+                }
+                return 'accent';
             case BackendImportState.Generated:
                 return `accent`;
             default:
@@ -459,12 +465,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected getSummaryInformation(item: string): string[] {
         return (
             {
+                total: ['group', 'accent'],
                 error: ['error_outline', 'red-warning-text'],
                 warning: ['warning', 'warn'],
                 created: ['add_circle_outline', 'os-green'],
                 updated: ['autorenew', 'os-yellow'],
                 referenced: ['merge', 'accent']
-            }[item] ?? ['group', 'accent']
+            }[item] ?? ['', '']
         );
     }
 
@@ -501,17 +508,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
             case BackendImportState.Done:
-                return row.is_referenced
-                    ? this.translate.instant(this.modelName) +
-                          ` ` +
-                          (this._state !== BackendImportPhase.FINISHED
-                              ? this.translate.instant(`will be referenced`) // item will be referenced
-                              : this.translate.instant(`has been imported`)) // item has been imported
-                    : this.translate.instant(this.modelName) +
-                          ` ` +
-                          (this._state !== BackendImportPhase.FINISHED
-                              ? this.translate.instant(`will be updated`) // item will be updated
-                              : this.translate.instant(`has been imported`)); // item has been imported
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be updated`) // item will be updated
+                        : this.translate.instant(`has been imported`)) // item has been imported
+                );
+            case BackendImportState.Referenced:
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be referenced`) // item will be referenced
+                        : this.translate.instant(`has been imported`))
+                ); // item has been imported
             default:
                 return undefined;
         }
@@ -600,20 +611,35 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._previewColumns = (previews[0]?.headers ?? this._previewColumns).filter(
                 header => !header[`is_hidden`]
             );
-            this._summary = previews.some(preview => preview.statistics)
-                ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
-                : [];
-            this.setHeaders({ preview: this._previewColumns });
-            this._rows = this.calculateRows(previews);
-            // fix this, add referenced to footer
-            const count = this._rows.filter(row => row.is_referenced === true).length;
-            previews.some(preview => preview.statistics.push({ name: 'referenced', value: count }));
+            this.transformSummary(previews);
+        }
+    }
+
+    private transformSummary(previews: BackendImportPreview[]): void {
+        this._summary = undefined;
+        this._summary = previews.some(preview => preview.statistics)
+            ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
+            : [];
+        const countReferenced = this._rows.filter(row => row.state === BackendImportState.Referenced).length | 0;
+        const countUpdated =
+            this._rows.filter(row => this.isReferenced(row) === false && row.state === 'done').length | 0;
+        if (countReferenced > 0) {
+            const error = this._summary.find(item => item.name === 'error');
+            this._summary = this._summary.filter(item => item.name !== 'updated');
+            this._summary = this._summary.filter(item => item.name !== 'error');
+            this._summary.push({ name: 'updated', value: countUpdated });
+            this._summary.push({ name: 'referenced', value: countReferenced });
+            this._summary.push({ name: error?.name, value: error?.value });
         }
     }
 
     private calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
         return previews?.flatMap(preview =>
-            preview.rows.map(row => new ViewImportedParticipant(row.id, row, this.activeMeetingIdService.meetingId))
+            preview.rows.map(row => {
+                const participant = new ViewImportedParticipant(row.id, row, this.activeMeetingIdService.meetingId);
+                this.isReferenced(participant);
+                return participant;
+            })
         );
     }
 
@@ -644,6 +670,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected async importData(dialogTemplate: TemplateRef<string>, summaryDialog: TemplateRef<string>): Promise<void> {
+        this.tempPreviewsObservable.unsubscribe();
         const customOptions = {
             width: `600px`,
             disableClose: false,
@@ -679,7 +706,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 return false;
             }
         }
-        row.is_referenced = true;
+        if (row.state !== 'done') {
+            return false;
+        }
+        row.setState = BackendImportState.Referenced;
         return true;
     }
 }
