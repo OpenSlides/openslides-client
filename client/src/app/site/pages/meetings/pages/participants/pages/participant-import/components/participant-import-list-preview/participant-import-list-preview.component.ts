@@ -24,6 +24,7 @@ import { _, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { AccountControllerService } from 'src/app/site/pages/organization/pages/accounts/services/common/account-controller.service';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -74,6 +75,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public readonly START_POSITION = START_POSITION;
 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
+    protected accountsControllerService = inject(AccountControllerService);
 
     @ContentChildren(ImportListFirstTabDirective)
     public importListFirstTabs!: QueryList<ImportListFirstTabDirective>;
@@ -112,6 +114,15 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     @Output()
     public searchFilterUpdated = new EventEmitter<string>();
 
+    @Output()
+    public selectedTabChanged = new EventEmitter<number>();
+
+    /**
+     * Defines all necessary and optional fields, that a .csv-file can contain.
+     */
+    @Input()
+    public possibleFields: string[] = [];
+
     protected _totalCountObservable: Observable<number> = null;
 
     /**
@@ -139,14 +150,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     protected csvReloadButton = true; // Reload CSV file
 
-    /**
-     * Defines all necessary and optional fields, that a .csv-file can contain.
-     */
-    @Input()
-    public possibleFields: string[] = [];
-
-    @Output()
-    public selectedTabChanged = new EventEmitter<number>();
+    protected userAccounts = this.accountsControllerService.getViewModelList();
 
     public readonly Phase = BackendImportPhase;
 
@@ -286,7 +290,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
     private _summary: BackendImportSummary[];
-    private _rows: BackendImportIdentifiedRow[];
+    private _rows: ViewImportedParticipant[];
     private _previewColumns: BackendImportHeader[];
 
     private _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
@@ -333,7 +337,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Triggers a change in the tab group: Clearing the preview selection
      */
-    public onTabChange({ index }: MatTabChangeEvent): void {
+    protected onTabChange({ index }: MatTabChangeEvent): void {
         this.importer.clearAll();
         this.selectedTabChanged.emit(index);
     }
@@ -341,14 +345,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * True if there are custom tabs.
      */
-    public hasSeveralTabs(): boolean {
+    protected hasSeveralTabs(): boolean {
         return this.importListFirstTabs.length + this.importListLastTabs.length > 0;
     }
 
     /**
      * triggers the importer's onSelectFile after a file has been chosen
      */
-    public onSelectFile(event: any): void {
+    protected onSelectFile(event: any): void {
         this.uploadButton = false;
         this.importer.onSelectFile(event);
     }
@@ -356,14 +360,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Gets the relevant backend header information for a property.
      */
-    public getHeader(propertyName: string): BackendImportHeader {
+    protected getHeader(propertyName: string): BackendImportHeader {
         return this._headers[propertyName]?.preview;
     }
 
     /**
      * Gets the style of the column for the given property.
      */
-    public getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
+    protected getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
         const defaultHeader = this._headers[propertyName]?.default;
         const colWidth = defaultHeader?.width ?? 50;
         const def: ScrollingTableCellDefConfig = { minWidth: Math.max(150, colWidth) };
@@ -376,7 +380,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * Gets the label of the column for the given property.
      */
-    public getColumnLabel(propertyName: string): string {
+    protected getColumnLabel(propertyName: string): string {
         return this._headers[propertyName]?.default?.label ?? propertyName;
     }
 
@@ -385,19 +389,19 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param item a row or an entry with a current state
      * @return the icon for the item
      */
-    public getActionIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
-        switch (item[`state`] ?? item[`info`]) {
+    protected getActionIconRow(item: ViewImportedParticipant): string {
+        switch (item[`state`]) {
             case BackendImportState.Error: // no import possible
                 return `error_outline`;
             case BackendImportState.Warning:
                 return `warning`;
             case BackendImportState.New: // item will be imported / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
-            case BackendImportState.Done: // item will be updated / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `autorenew` : `done`;
+            case BackendImportState.Done:
+                if (this.isReferenced(item)) {
+                    return 'merge';
+                } else return 'autorenew';
             case BackendImportState.Generated:
-                return `merge`;
-            case BackendImportState.Referenced:
                 return `merge`;
             case BackendImportState.Remove:
                 return `remove`;
@@ -406,7 +410,31 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    public getColorIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
+    /**
+     * Get the icon for the the entry
+     * @param item a row or an entry with a current state
+     * @return the icon for the item
+     */
+    protected getActionIconEntry(item: BackendImportEntryObject): string {
+        switch (item[`info`]) {
+            case BackendImportState.Error: // no import possible
+                return `error_outline`;
+            case BackendImportState.Warning:
+                return `warning`;
+            case BackendImportState.New: // item will be imported / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
+            case BackendImportState.Done:
+                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
+            case BackendImportState.Generated:
+                return `merge`;
+            case BackendImportState.Remove:
+                return `remove`;
+            default:
+                return `block`; // fallback: Error
+        }
+    }
+
+    protected getColorIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `red-warning-text`;
@@ -415,37 +443,39 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return 'os-green';
             case BackendImportState.Done: // item will be updated / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `os-yellow` : `os-green`;
+                if (this._state === BackendImportPhase.FINISHED) {
+                    return 'os-green';
+                }
+                if ('state' in item && this.isReferenced(item)) {
+                    return 'accent';
+                } else return 'os-yellow';
             case BackendImportState.Generated:
-                return `accent`;
-            case BackendImportState.Referenced:
                 return `accent`;
             default:
                 return `block`; // fallback: Error
         }
     }
 
-    public getSummaryInformation(item: string): string[] {
+    protected getSummaryInformation(item: string): string[] {
         return (
             {
                 error: ['error_outline', 'red-warning-text'],
                 warning: ['warning', 'warn'],
                 created: ['add_circle_outline', 'os-green'],
                 updated: ['autorenew', 'os-yellow'],
-                // HAS TO BE ADDED TO SUMMARY IN ORDER TO WORK
                 referenced: ['merge', 'accent']
             }[item] ?? ['group', 'accent']
         );
     }
 
-    public getEntryIcon(item: BackendImportEntryObject): string {
+    protected getEntryIcon(item: BackendImportEntryObject): string {
         if (item.info === BackendImportState.Done || !item) {
             return undefined;
         }
-        return this.getActionIcon(item);
+        return this.getActionIconEntry(item);
     }
 
-    public containsError(entry: any, def: string): boolean {
+    protected containsError(entry: any, def: string): boolean {
         const value = entry?.[def];
         if (!value) return false;
         if (Array.isArray(value)) {
@@ -459,7 +489,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    public getRowTooltip(row: ViewImportedParticipant): string {
+    protected getRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -470,22 +500,18 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
-            case BackendImportState.Done: // item will be updated / has been imported
-                return (
-                    this.translate.instant(this.modelName) +
-                    ` ` +
-                    (this._state !== BackendImportPhase.FINISHED
-                        ? this.translate.instant(`will be updated`)
-                        : this.translate.instant(`has been imported`))
-                );
-            case BackendImportState.Referenced:
-                return (
-                    this.translate.instant(this.modelName) +
-                    ` ` +
-                    (this._state !== BackendImportPhase.FINISHED
-                        ? this.translate.instant(`will be referenced`)
-                        : this.translate.instant(`has been imported and referenced`))
-                );
+            case BackendImportState.Done:
+                return row.is_referenced
+                    ? this.translate.instant(this.modelName) +
+                          ` ` +
+                          (this._state !== BackendImportPhase.FINISHED
+                              ? this.translate.instant(`will be referenced`) // item will be referenced
+                              : this.translate.instant(`has been imported`)) // item has been imported
+                    : this.translate.instant(this.modelName) +
+                          ` ` +
+                          (this._state !== BackendImportPhase.FINISHED
+                              ? this.translate.instant(`will be updated`) // item will be updated
+                              : this.translate.instant(`has been imported`)); // item has been imported
             default:
                 return undefined;
         }
@@ -513,21 +539,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * The column separator selection.
      */
-    public onColSepChanged(label: string): void {
+    protected onColSepChanged(label: string): void {
         this.importer.columnSeparator = this.importer.columnSeparators.find(col => col.label === label)?.value;
     }
 
     /**
      * The text separator selection
      */
-    public onTextSeparatorChanged(value: string): void {
+    protected onTextSeparatorChanged(value: string): void {
         this.importer.textSeparator = value;
     }
 
     /**
      * The encoding selection.
      */
-    public onEncodingChanged(value: string): void {
+    protected onEncodingChanged(value: string): void {
         this.importer.encoding = value;
     }
 
@@ -579,11 +605,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 : [];
             this.setHeaders({ preview: this._previewColumns });
             this._rows = this.calculateRows(previews);
+            // fix this, add referenced to footer
+            const count = this._rows.filter(row => row.is_referenced === true).length;
+            previews.some(preview => preview.statistics.push({ name: 'referenced', value: count }));
         }
     }
 
     private calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
-        return previews?.flatMap(preview => preview.rows.map(row => new ViewImportedParticipant(row.id, row)));
+        return previews?.flatMap(preview =>
+            preview.rows.map(row => new ViewImportedParticipant(row.id, row, this.activeMeetingIdService.meetingId))
+        );
     }
 
     private createRequiredFields(): string[] {
@@ -598,7 +629,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     /**
-     * Summary adapted to the footer. Displays only "created", "updated", and "error" columns.
+     * Summary adapted to the footer. Displays only "created", "updated", "referenced" and "error" columns.
      * @param summary
      * @returns BackendImportSummary[]
      */
@@ -638,9 +669,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         }
     }
 
-    /* private isReferenced(row: ViewImportedParticipant): boolean {
-        if (!row) return false
-
-        
-    } */
+    private isReferenced(row: ViewImportedParticipant): boolean {
+        for (const user of this.userAccounts) {
+            if (
+                (user.meeting_ids.includes(row.meeting_id) && row.username && row.username === user.username) ||
+                (row.member_number && row.member_number === user.member_number) ||
+                (row.saml_id && row.saml_id === user.saml_id)
+            ) {
+                return false;
+            }
+        }
+        row.is_referenced = true;
+        return true;
+    }
 }

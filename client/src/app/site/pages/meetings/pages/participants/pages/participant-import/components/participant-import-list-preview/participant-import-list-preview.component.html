@@ -65,7 +65,7 @@
                                                     }
                                                     &nbsp;
 
-                                                    @if (getActionIcon(item)) {
+                                                    @if (getActionIconRow(item)) {
                                                         <mat-icon color="accent" inline>
                                                             {{ getEntryIcon(item.value) }}
                                                         </mat-icon>
@@ -107,7 +107,7 @@
                                             }
                                             &nbsp;
 
-                                            @if (getActionIcon(entry[def])) {
+                                            @if (getActionIconEntry(entry[def])) {
                                                 <mat-icon
                                                     inline
                                                     [class.error-icon]="icon === 'error_outline'"
@@ -131,7 +131,7 @@
                 <div *osScrollingTableCellLabel style="text-align: center; width: 100%">#</div>
                 @if (row.state === 'error') {
                     <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
-                        {{ getActionIcon(row) }}
+                        {{ getActionIconRow(row) }}
                     </mat-icon>
                 }
                 @if (row.state !== 'error' && row.messages.length) {
@@ -145,7 +145,7 @@
                         matTooltipPosition="right"
                         [ngClass]="getColorIcon(row)"
                     >
-                        {{ getActionIcon(row) }}
+                        {{ getActionIconRow(row) }}
                     </mat-icon>
                 }
             </div>
@@ -190,7 +190,7 @@
             </button>
         </div>
         <h4 class="summary-dialog-subtitle">{{ summary[0]?.value }}&nbsp;participants have been processed</h4>
-        <div style="justify-content: center">
+        <div style="justify-content: center; margin-bottom: 22px">
             <mat-dialog-content class="summary-dialog-content">
                 <div>
                     @let shortenedSummary = shortenSummary(summary);

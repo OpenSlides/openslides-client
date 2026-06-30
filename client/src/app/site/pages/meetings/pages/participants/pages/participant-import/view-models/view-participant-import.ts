@@ -17,6 +17,8 @@ export const STATE_FITERABLE = [`new`, `done`, `referenced`, `error`];
 export class ViewImportedParticipant implements Identifiable, BackendImportRow /* implements Searchable */ {
     // This class replaces BackendImportIdentifiedRow
 
+    public meeting_id: number;
+    public is_referenced = false;
     public static COLLECTION = `importedParticipant`;
 
     public state: BackendImportState;
@@ -24,58 +26,59 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     public data: Record<string, BackendImportEntry | BackendImportEntry[]>;
 
     public id: number;
-    public first_name;
-    public last_name;
-    public email;
-    public member_number;
-    public number;
+    public first_name: string;
+    public last_name: string;
+    public email: string;
+    public member_number: string;
+    public number: string;
     public vote_weight;
-    public gender;
-    public pronoun;
-    public username;
-    public default_password;
-    public saml_id;
-    public home_committee;
-    public external_comment;
-    public title;
+    public gender: string;
+    public pronoun: string;
+    public username: string;
+    public default_password: string;
+    public saml_id: string;
+    public home_committee: string;
+    public external_comment: string;
+    public title: string;
 
-    public structure_level;
+    public structure_level: string;
     public groups: string[];
 
-    public is_active;
-    public is_present;
-    public is_locked_out;
-    public is_physical_person;
+    public is_active: boolean;
+    public is_present: boolean;
+    public is_locked_out: boolean;
+    public is_physical_person: boolean;
 
-    public constructor(preview_id: number, preview: BackendImportRow) {
+    public constructor(preview_id: number, preview: BackendImportRow, meeting_id: number) {
+        this.meeting_id = meeting_id; // id of the meeting to import into
         this.id = preview_id;
 
         this.data = preview.data;
         this.messages = preview.messages;
         this.state = preview.state;
 
-        this.title = this.setValue(this.data?.['title']);
-        this.first_name = this.setValue(this.data?.['first_name']);
-        this.last_name = this.setValue(this.data?.['last_name']);
-        this.email = this.setValue(this.data?.['email']);
-        this.member_number = this.setValue(this.data?.['member_number']);
-        this.structure_level = this.data?.['structure_level'];
+        this.title = this.setValue(this.data?.['title']) as string;
+        this.first_name = this.setValue(this.data?.['first_name']) as string;
+        this.last_name = this.setValue(this.data?.['last_name']) as string;
+        this.email = this.setValue(this.data?.['email']) as string;
+        this.member_number = this.setValue(this.data?.['member_number']) as string;
+        this.structure_level = this.data?.['structure_level'] as string;
         this.groups = this.data?.['groups']?.[0];
-        this.number = this.setValue(this.data?.['number']);
-        this.vote_weight = this.setValue(this.data?.['vote_weight']);
-        this.gender = this.setValue(this.data?.['gender']);
-        this.pronoun = this.setValue(this.data?.['pronoun']);
-        this.username = this.setValue(this.data?.['username']);
-        this.default_password = this.setValue(this.data?.['default_password']);
+        this.number = this.setValue(this.data?.['number']) as string;
+        this.vote_weight = this.setValue(this.data?.['vote_weight']) as string;
+        this.gender = this.setValue(this.data?.['gender']) as string;
+        this.pronoun = this.setValue(this.data?.['pronoun']) as string;
+        this.username = this.setValue(this.data?.['username']) as string;
+        this.default_password = this.setValue(this.data?.['default_password']) as string;
 
-        this.is_active = this.getBooleanValue(this.setValue(this.data?.['is_active']));
-        this.is_physical_person = this.getBooleanValue(this.setValue(this.data?.['is_physical_person']));
-        this.is_present = this.getBooleanValue(this.setValue(this.data?.['is_present']));
-        this.is_locked_out = this.getBooleanValue(this.setValue(this.data?.['locked_out']));
+        this.is_active = this.getBooleanValue(this.setValue(this.data?.['is_active']) as boolean);
+        this.is_physical_person = this.getBooleanValue(this.setValue(this.data?.['is_physical_person']) as boolean);
+        this.is_present = this.getBooleanValue(this.setValue(this.data?.['is_present']) as boolean);
+        this.is_locked_out = this.getBooleanValue(this.setValue(this.data?.['locked_out']) as boolean);
 
-        this.saml_id = this.setValue(this.data?.['saml_id']);
-        this.home_committee = this.setValue(this.data?.['home_committee']);
-        this.external_comment = this.setValue(this.data?.['external_comment']);
+        this.saml_id = this.setValue(this.data?.['saml_id']) as string;
+        this.home_committee = this.setValue(this.data?.['home_committee']) as string;
+        this.external_comment = this.setValue(this.data?.['external_comment']) as string;
     }
 
     public static readonly REQUESTABLE_FIELDS: (keyof ViewImportedParticipant)[] = [
@@ -158,5 +161,9 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
 
     public get hasGroups(): boolean {
         return this.groups?.length > 0 ? true : false;
+    }
+
+    public set setReferenced(value: boolean) {
+        this.is_referenced = value;
     }
 }
