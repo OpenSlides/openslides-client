@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { PollState } from 'src/app/domain/models/poll';
 import { KeyedTranslations } from 'src/app/domain/translations';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -21,10 +22,19 @@ import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
-import { BaseVoteData } from '../../../../modules/poll/base/base-poll-detail.component';
 import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
 import { ViewPoll, ViewPollBallot, ViewPollConfigApproval, ViewPollOption } from '../../../../pages/polls';
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { ViewUser } from '../../../../view-models/view-user';
+
+export interface BaseVoteData extends Identifiable {
+    user: ViewUser;
+    delegation?: ViewMeetingUser;
+    weight?: number;
+    value: unknown;
+    valueRaw: unknown;
+}
 
 @Component({
     selector: `os-poll-single-votes`,
