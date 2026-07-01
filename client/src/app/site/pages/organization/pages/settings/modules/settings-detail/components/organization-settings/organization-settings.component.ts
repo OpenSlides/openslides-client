@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
@@ -51,7 +51,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
     ) {
         super();
         super.setTitle(this.pageTitle);
-        this.initTimezones();
 
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
@@ -59,6 +58,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 if (orga) {
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
+                        this.initTimezones();
                     }
                     if (!this.hasEdits) {
                         this.updateForm(orga);
@@ -82,7 +82,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language],
-                time_zone: [this._currentOrgaSettings.time_zone, Validators.required],
+                time_zone: [this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone)],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                 enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
                 disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
@@ -152,7 +152,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.time_zones.next(values);
             this.orgaSettingsForm
                 .get('time_zone')
-                .patchValue(this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone));
+                .patchValue(this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone ?? `UTC`));
+            this.markFormAsClean();
             this.cd.markForCheck();
         });
     }
