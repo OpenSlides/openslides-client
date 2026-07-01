@@ -66,7 +66,10 @@ export class PollSingleVotesComponent extends BaseComponent {
             ballots.map(ballot => {
                 const user = ballot.represented_meeting_user?.user;
                 return {
-                    delegation: ballot.acting_meeting_user,
+                    delegation:
+                        ballot.acting_meeting_user_id !== ballot.represented_meeting_user_id
+                            ? ballot.acting_meeting_user
+                            : null,
                     user: user,
                     id: user?.id,
                     weight: +ballot.weight !== 1 ? +ballot.weight : undefined,
