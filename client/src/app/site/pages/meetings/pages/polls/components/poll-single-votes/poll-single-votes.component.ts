@@ -74,7 +74,7 @@ export class PollSingleVotesComponent extends BaseComponent {
                     id: user?.id,
                     weight: +ballot.weight !== 1 ? +ballot.weight : undefined,
                     value: this.parseVoteValue(ballot.value),
-                    valueRaw: JSON.parse(ballot.value)
+                    valueRaw: ballot.parsedValue()
                 };
             })
         ),

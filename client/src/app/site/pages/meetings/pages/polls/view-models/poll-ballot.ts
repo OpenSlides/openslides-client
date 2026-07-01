@@ -8,7 +8,12 @@ import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { ViewPoll } from '..';
 
-export class ViewPollBallot extends BaseViewModel<PollBallot> {
+export type PollApprovalBallotValue = 'yes' | 'no' | 'abstain';
+export type PollSelectionBallotValue = 'nota' | number[];
+export type PollRatingApprovalBallotValue = Record<Id, 'yes' | 'no' | 'abstain'>;
+export type PollRatingScoreBallotValue = Record<Id, number>;
+
+export class ViewPollBallot<V = unknown> extends BaseViewModel<PollBallot> {
     public static COLLECTION = PollBallot.COLLECTION;
     protected _collection = PollBallot.COLLECTION;
 
@@ -30,6 +35,15 @@ export class ViewPollBallot extends BaseViewModel<PollBallot> {
 
     public get groupIds(): Id[] {
         return this.user?.group_ids() || [];
+    }
+
+    private _parsedValue: V = null;
+    public parsedValue(): V | null {
+        if (!this._parsedValue && this.value) {
+            this._parsedValue = JSON.parse(this.value);
+        }
+
+        return this._parsedValue;
     }
 }
 
