@@ -372,16 +372,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user) || [];
     }
 
-    /**
-     * Returns all votes given by the user in a given meeting.
-     */
-    public getAllVotes(meetingId?: number): ViewPollBallot[] {
-        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
-        return this.votes
-            .filter(vote => vote.meeting_id === meetingID)
-            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
-    }
-
     public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
         const sameNameIds = this.getName() ? data.name.get(this.getName()) : [];
         const sameEmailIds = this.email ? data.email.get(this.email) : [];

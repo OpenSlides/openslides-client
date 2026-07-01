@@ -3,7 +3,7 @@
         <mat-tab-group [(selectedIndex)]="selectedTab">
             <mat-tab [label]="'Selection' | translate">
                 <div class="tab-content">
-                    <os-poll-form-selection optionType="text" [data]="pollData" />
+                    <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
                 </div>
             </mat-tab>
             <mat-tab [label]="'Approval' | translate">

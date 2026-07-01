@@ -126,7 +126,6 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     }
 
     /**
-     * TODO: Some non abstract base poll service was required
      * @param poll
      */
     public canManagePoll(poll: ViewPoll): boolean {
@@ -135,7 +134,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         } else if (poll.isAssignmentPoll) {
             return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
         } else if (poll.isTopicPoll) {
-            return this.operator.hasPerms(this.permission.pollCanManage);
+            return this.operator.hasPerms(this.permission.agendaItemCanManagePolls);
         }
         return false;
     }

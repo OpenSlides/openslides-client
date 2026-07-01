@@ -171,7 +171,7 @@
             @if (topic && isEVotingEnabled) {
                 <div class="create-poll-button">
                     <button
-                        *osPerms="[permission.pollCanManage, permission.agendaItemCanManage]"
+                        *osPerms="[permission.agendaItemCanManagePolls, permission.agendaItemCanManage]"
                         create-poll-button
                         mat-stroked-button
                         (click)="openDialog()"

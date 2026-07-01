@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, Signal, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { KeyValuePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,20 +10,31 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { PollState } from 'src/app/domain/models/poll';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { KeyedTranslations } from 'src/app/domain/translations';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PipesModule } from 'src/app/ui/pipes';
 
-import { BaseVoteData } from '../../../../modules/poll/base/base-poll-detail.component';
 import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
-import { ViewPoll } from '../../../../pages/polls';
-import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { ViewPoll, ViewPollBallot, ViewPollConfigApproval, ViewPollOption } from '../../../../pages/polls';
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { ViewUser } from '../../../../view-models/view-user';
+
+export interface BaseVoteData extends Identifiable {
+    user: ViewUser;
+    delegation?: ViewMeetingUser;
+    weight?: number;
+    value: unknown;
+    valueRaw: unknown;
+}
 
 @Component({
     selector: `os-poll-single-votes`,
@@ -30,6 +42,7 @@ import { MeetingSettingsService } from '../../../../services/meeting-settings.se
     styleUrls: [`./poll-single-votes.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        IconContainerComponent,
         TranslatePipe,
         DirectivesModule,
         ListModule,
@@ -42,7 +55,8 @@ import { MeetingSettingsService } from '../../../../services/meeting-settings.se
         MatTooltipModule,
         MatIconModule,
         MatTabsModule,
-        PipesModule
+        PipesModule,
+        KeyValuePipe
     ]
 })
 export class PollSingleVotesComponent extends BaseComponent {
@@ -56,44 +70,70 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public selectedTab = signal(0);
 
-    public votesDataSubject: Subject<BaseVoteData[]>;
-
-    public votesDataObservable: Observable<BaseVoteData[]>;
-
-    public voteWeightEnabled: Signal<boolean>;
-    public delegationEnabled: Signal<boolean>;
+    public votesData$: Observable<BaseVoteData[]> = toObservable(this.poll).pipe(
+        switchMap(poll => (poll.state === PollState.Finished ? poll.ballots$ : of([]))),
+        map((ballots: ViewPollBallot[]) =>
+            ballots.map(ballot => {
+                const user = ballot.represented_meeting_user?.user;
+                return {
+                    delegation:
+                        ballot.acting_meeting_user_id !== ballot.represented_meeting_user_id
+                            ? ballot.acting_meeting_user
+                            : null,
+                    user: user,
+                    id: user?.id,
+                    weight: +ballot.weight !== 1 ? +ballot.weight : undefined,
+                    value: this.parseVoteValue(ballot.value),
+                    valueRaw: ballot.parsedValue()
+                };
+            })
+        ),
+        tap(ballots => (this.totalCount = ballots.length))
+    );
 
     public totalCount = 0;
 
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);
-    private userRepo = inject(UserRepositoryService);
-    private meetingSettingsService = inject(MeetingSettingsService);
 
-    public constructor() {
-        super();
+    public optionMap = rxResource<Record<Id, ViewPollOption>, { poll: ViewPoll }>({
+        params: () => ({ poll: this.poll() }),
+        defaultValue: {},
+        stream: ({ params }) =>
+            params.poll.options$.pipe(
+                map(options => {
+                    const optionMap: Record<Id, ViewPollOption> = {};
+                    for (const option of options) {
+                        optionMap[option.id] = option;
+                    }
 
-        this.votesDataSubject = new Subject<BaseVoteData[]>();
-        effect(() => {
-            if (this.poll().state === PollState.Finished) {
-                const results: BaseVoteData[] = this.poll().ballots.map(ballot => {
-                    const user = this.userRepo.getViewModel(ballot.represented_meeting_user_id);
-                    return {
-                        user: user,
-                        id: user?.id
-                    };
-                });
+                    return optionMap;
+                })
+            )
+    });
 
-                this.votesDataSubject.next(results);
-                this.totalCount = results.length;
-            } else {
-                this.votesDataSubject.next([]);
-                this.totalCount = 0;
-            }
-        });
+    public isMultiVote(vote: string | Record<number, string>): boolean {
+        return vote && typeof vote !== `string`;
+    }
 
-        this.votesDataObservable = this.votesDataSubject;
-        this.voteWeightEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_weight`));
-        this.delegationEnabled = toSignal(this.meetingSettingsService.get(`users_enable_vote_delegations`));
+    public isGeneralAbstain(vote: unknown): boolean {
+        return Array.isArray(vote) && !vote.length;
+    }
+
+    private parseVoteValue(value: string): string | Record<number, string> {
+        const parsed = JSON.parse(value);
+
+        if (this.poll().config instanceof ViewPollConfigApproval) {
+            return this.translate.instant(KeyedTranslations[`poll_option.${parsed}`]);
+        }
+
+        if (Array.isArray(parsed)) {
+            return parsed.reduce((map, obj) => {
+                map[obj] = ``;
+                return map;
+            }, {});
+        }
+
+        return parsed;
     }
 }

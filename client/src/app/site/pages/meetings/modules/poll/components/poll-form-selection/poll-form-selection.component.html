@@ -30,7 +30,7 @@
             </mat-form-field>
         </div>
 
-        <div class="margin-bottom-15">
+        <div class="margin-bottom-15 info-grid">
             <mat-form-field>
                 <mat-label>{{ '100% base' | translate }}</mat-label>
                 <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
@@ -45,6 +45,14 @@
                             </mat-option>
                         }
                     }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Display result as' | translate }}</mat-label>
+                <mat-select formControlName="display_chart">
+                    <mat-option value="">{{ 'Table' | translate }}</mat-option>
+                    <mat-option value="pie">{{ 'Pie chart' | translate }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

@@ -8,7 +8,7 @@ export class UserFieldsets {
 
 export class MeetingUserFieldsets {
     public static readonly FullNameSubscription: BaseSimplifiedModelRequest = {
-        fieldset: [`group_ids`, `meeting_id`, `user_id`, `number`, `vote_delegated_to_id`],
+        fieldset: [`group_ids`, `meeting_id`, `user_id`, `number`],
         follow: [
             { idField: `user_id`, ...UserFieldsets.FullNameSubscription },
             { idField: `structure_level_ids`, fieldset: [`name`] }

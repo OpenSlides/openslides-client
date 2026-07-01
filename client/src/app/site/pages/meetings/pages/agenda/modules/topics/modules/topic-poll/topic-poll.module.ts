@@ -26,13 +26,12 @@ import { SortingListModule } from 'src/app/ui/modules/sorting/modules';
 
 import { TopicCommonServiceModule } from '../../services/topic-common-service.module';
 import { TopicPollComponent } from './components/topic-poll/topic-poll.component';
-import { TopicPollDetailContentComponent } from './components/topic-poll-detail-content/topic-poll-detail-content.component';
 import { TopicPollDialogComponent } from './components/topic-poll-dialog/topic-poll-dialog.component';
 import { TopicPollService } from './services/topic-poll.service';
 import { TopicPollServiceModule } from './services/topic-poll-service.module';
 
 @NgModule({
-    declarations: [TopicPollDetailContentComponent],
+    declarations: [],
     imports: [
         CustomIconComponent,
         CommonModule,
@@ -63,7 +62,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [TopicPollDetailContentComponent, TopicPollComponent],
+    exports: [TopicPollComponent],
     providers: [{ provide: PollService, useClass: TopicPollService }]
 })
 export class TopicPollModule {}

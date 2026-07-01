@@ -19,7 +19,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         },
         {
             idField: `ballot_ids`,
-            fieldset: [`represented_meeting_user_id`, `poll_id`, `value`]
+            fieldset: [`poll_id`, `value`, `acting_meeting_user_id`, `represented_meeting_user_id`]
         },
         {
             idField: `option_ids`,
@@ -27,7 +27,18 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             follow: [
                 {
                     idField: `meeting_user_id`,
-                    ...MeetingUserFieldsets.FullNameSubscription
+                    fieldset: [...MeetingUserFieldsets.FullNameSubscription.fieldset, `vote_delegated_to_id`],
+                    follow: MeetingUserFieldsets.FullNameSubscription.follow
+                }
+            ]
+        },
+        {
+            idField: `meeting_id`,
+            fieldset: [`name`],
+            follow: [
+                {
+                    idField: `committee_id`,
+                    fieldset: [`name`]
                 }
             ]
         }
@@ -48,7 +59,46 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
         viewModelCtor: ViewPoll,
         ids,
         fieldset: FULL_FIELDSET,
-        follow: []
+        follow: [
+            {
+                idField: `config_id`,
+                fieldset: FULL_FIELDSET
+            },
+            {
+                idField: `ballot_ids`,
+                fieldset: [`poll_id`, `value`],
+                follow: [
+                    {
+                        idField: `acting_meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    },
+                    {
+                        idField: `represented_meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    }
+                ]
+            },
+            {
+                idField: `option_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription.follow
+                    }
+                ]
+            },
+            {
+                idField: `meeting_id`,
+                fieldset: [`name`],
+                follow: [
+                    {
+                        idField: `committee_id`,
+                        fieldset: [`name`]
+                    }
+                ]
+            }
+        ]
     },
     subscriptionName: `${POLL_DETAIL_SUBSCRIPTION}_${ids.join(`_`)}`
 });

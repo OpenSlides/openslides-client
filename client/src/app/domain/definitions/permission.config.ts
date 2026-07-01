@@ -89,7 +89,7 @@ Optional combination of requests to speak with presence status is possible. ( > 
             {
                 display_name: _(`Can manage polls`),
                 help_text: _(`Can create, change, start/stop and delete polls.`),
-                value: Permission.pollCanManage
+                value: Permission.agendaItemCanManagePolls
             },
             {
                 display_name: _(`Can see moderation notes`),

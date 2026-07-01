@@ -45,7 +45,7 @@ export class PollCannotVoteMessageComponent extends BaseMeetingComponent {
 
     public hasVoted = rxResource({
         params: () => ({ poll: this.poll(), user: this.user() }),
-        stream: ({ params }) => this.votingService.hasVoted(params.poll, params.user)
+        stream: ({ params }) => this.votingService.hasVotedObservable(params.poll, params.user.getMeetingUser())
     });
 
     public getVotingErrorFromName(errorName: VotingProhibition): string {

@@ -4,17 +4,17 @@
             <mat-tab-group [(selectedIndex)]="selectedTab">
                 <mat-tab [label]="'Selection' | translate">
                     <div class="tab-content">
-                        <os-poll-form-selection optionType="meeting_user" [data]="pollData" />
+                        <os-poll-form-selection [data]="pollData" [optionAmount]="optionAmount" />
                     </div>
                 </mat-tab>
                 <mat-tab [label]="'Approval per candidate' | translate">
                     <div class="tab-content">
-                        <os-poll-form-rating-approval optionType="meeting_user" [data]="pollData" />
+                        <os-poll-form-rating-approval [data]="pollData" [optionAmount]="optionAmount" />
                     </div>
                 </mat-tab>
                 <mat-tab [label]="'Score' | translate">
                     <div class="tab-content">
-                        <os-poll-form-rating-score optionType="meeting_user" [data]="pollData" />
+                        <os-poll-form-rating-score [data]="pollData" [optionAmount]="optionAmount" />
                     </div>
                 </mat-tab>
                 <mat-tab [label]="'List' | translate">

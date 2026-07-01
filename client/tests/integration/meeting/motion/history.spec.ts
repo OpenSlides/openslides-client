@@ -23,7 +23,7 @@ test.describe(`motion history mode test`, () => {
             agenda_create: false,
             agenda_type: `internal`
         });
-        // TODO: Create a poll
+
         await os4request(context, `motion.update`, {
             id: motion.id,
             title: `MotionHistoryTestChangedTitle`,

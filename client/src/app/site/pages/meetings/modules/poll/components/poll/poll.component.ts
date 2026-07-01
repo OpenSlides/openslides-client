@@ -19,6 +19,7 @@ import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.p
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
+import { PollBallotPdfService } from '../../services/poll-ballot-pdf.service';
 import { PollControllerService } from '../../services/poll-controller.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
@@ -59,7 +60,6 @@ export class PollComponent extends BaseMeetingComponent {
     public allowEdit = input<boolean>(false);
 
     public dialogOpened = output<void>();
-    public downloadPdf = output<void>();
 
     public stateChangePending = signal(false);
 
@@ -68,12 +68,7 @@ export class PollComponent extends BaseMeetingComponent {
     });
 
     public getDetailLink = computed(() => {
-        // TODO: new permissions
-        if (this.operator.hasPerms(this.permission.pollCanManage)) {
-            return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
-        }
-
-        return null;
+        return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
     });
 
     public navigateToPollDetail = input<boolean>(false);
@@ -106,6 +101,7 @@ export class PollComponent extends BaseMeetingComponent {
     private choiceService = inject(ChoiceService);
     private repo = inject(PollControllerService);
     private dialog = inject(MatDialog);
+    private pollPdf = inject(PollBallotPdfService);
 
     public user = toSignal(this.operator.userObservable);
     public currentMeetingId = toSignal(this.activeMeetingIdService.meetingIdObservable);
@@ -117,6 +113,10 @@ export class PollComponent extends BaseMeetingComponent {
 
     public openVotingWarning(): void {
         this.dialog.open(VotingPrivacyWarningDialogComponent, infoDialogSettings);
+    }
+
+    public async downloadPdf(): Promise<void> {
+        this.pollPdf.downloadBallotPaper(this.poll());
     }
 
     public async anonymizePoll(): Promise<void> {

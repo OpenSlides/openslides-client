@@ -2,14 +2,8 @@ import Big from 'big.js';
 import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
 import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
-import { HasPoll, ViewPollOption } from '..';
+import { HasPoll, RatingScorePollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
-
-export interface RatingScorePollResult {
-    [key: number]: string;
-    abstain?: string;
-    invalid?: number;
-}
 
 export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfigRatingScore, RatingScorePollResult> {
     public get poll_config_rating_score(): PollConfigRatingScore {
@@ -55,6 +49,10 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
         }
 
         return total.toNumber();
+    }
+
+    protected getResultFromString(result: string): RatingScorePollResult {
+        return new RatingScorePollResult(this, JSON.parse(result));
     }
 }
 

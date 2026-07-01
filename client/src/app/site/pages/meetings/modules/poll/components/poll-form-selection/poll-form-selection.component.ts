@@ -1,5 +1,13 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+    AbstractControl,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,6 +36,7 @@ export class PollFormSelectionComponent {
     ];
 
     public data = input.required<Partial<ViewPoll>>();
+    public optionAmount = input<number>(null);
 
     private fb = inject(UntypedFormBuilder);
 
@@ -36,11 +45,26 @@ export class PollFormSelectionComponent {
             onehundred_percent_base: [`valid`],
             strike_out: [false],
             allow_nota: [false],
-            max_options_amount: [1],
-            min_options_amount: [1]
+            max_options_amount: [1, [Validators.required, Validators.min(1)]],
+            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]],
+            display_chart: [``]
         });
 
         effect(this.onDataUpdated.bind(this));
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    private minOptionsAmountValidator(): ValidatorFn {
+        return (field: AbstractControl): ValidationErrors | null => {
+            const min = Number(field.getRawValue());
+            const max = Number(field.parent?.get('max_options_amount')?.getRawValue());
+
+            if (Number.isNaN(min) || Number.isNaN(max)) {
+                return null;
+            }
+
+            return min <= max ? null : { minGreaterThanMax: true };
+        };
     }
 
     private onDataUpdated(): void {
@@ -54,5 +78,15 @@ export class PollFormSelectionComponent {
         }
 
         this.form.patchValue(patch);
+    }
+
+    private onOptionAmountUpdate(): void {
+        const maxCtrl = this.form.get('max_options_amount');
+        if (this.optionAmount()) {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(this.optionAmount())]);
+        } else {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
+        }
+        maxCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 }

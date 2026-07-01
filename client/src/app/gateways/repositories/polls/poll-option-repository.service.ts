@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { _ } from '@ngx-translate/core';
 import { PollOption } from 'src/app/domain/models/poll/poll-option';
 import { ViewPollOption } from 'src/app/site/pages/meetings/pages/polls/view-models/poll-option';
 
@@ -13,8 +14,9 @@ export class PollOptionRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, PollOption);
     }
 
-    public getTitle = (_viewPollConfigOption: ViewPollOption): string => `Poll config option`;
+    public getTitle = (viewPollOption: ViewPollOption): string =>
+        viewPollOption.meeting_user_id ? viewPollOption.meeting_user?.user?.getShortName() : viewPollOption.text;
 
     public getVerboseName = (plural = false): string =>
-        this.translate.instant(plural ? `Poll config options` : `Poll config option`);
+        this.translate.instant(plural ? _(`Poll options`) : _(`Poll option`));
 }
