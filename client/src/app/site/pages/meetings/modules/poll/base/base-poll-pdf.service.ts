@@ -1,7 +1,6 @@
 import { Directive, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Content, ContentText, StyleDictionary } from 'pdfmake/interfaces';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
 import { PollTableData, PollVisibility, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -10,7 +9,6 @@ import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/activ
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { ViewAssignment } from '../../../pages/assignments';
 import { ViewUser } from '../../../view-models/view-user';
@@ -55,14 +53,6 @@ export abstract class BasePollPdfService {
      */
     protected logoUrl = ``;
 
-    private get activeMeeting(): ViewMeeting {
-        return this.activeMeetingService.meeting!;
-    }
-
-    private get activeMeetingId(): Id {
-        return this.activeMeetingService.meetingId!;
-    }
-
     private get activeVoteWeight(): boolean {
         return this.meetingSettingsService.instant(`users_enable_vote_weight`);
     }
@@ -77,127 +67,6 @@ export abstract class BasePollPdfService {
     public constructor(protected pollService: PollService) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
-    }
-
-    /**
-     * Get the amount of ballots to be printed
-     *
-     * @returns the amount of ballots, depending on the config settings
-     */
-    protected getBallotCount(): number {
-        switch (this.ballotCountSelection) {
-            case `NUMBER_OF_ALL_PARTICIPANTS`:
-                return this.userRepo.getViewModelList().length;
-            case `NUMBER_OF_DELEGATES`:
-                return this.userRepo
-                    .getViewModelList()
-                    .filter(
-                        user =>
-                            user.group_ids(this.activeMeetingId) &&
-                            user.group_ids(this.activeMeetingId).includes(this.activeMeeting.admin_group_id)
-                    ).length;
-            case `CUSTOM_NUMBER`:
-                return this.ballotCustomCount;
-            default:
-                throw new Error(`Amount of ballots cannot be computed`);
-        }
-    }
-
-    /**
-     * Creates an entry for an option (a label with a circle)
-     *
-     * @returns pdfMake definitions
-     */
-    protected createBallotOption(decision: string): { margin: number[]; columns: object[] } {
-        const BallotCircleDimensions = { yDistance: 6, size: 8 };
-        return {
-            margin: [21 + BallotCircleDimensions.size, 10, 0, 0],
-            columns: [
-                {
-                    width: 15,
-                    canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
-                },
-                {
-                    width: `auto`,
-                    text: decision
-                }
-            ]
-        };
-    }
-
-    /**
-     * Helper to draw a circle on its position on the ballot paper
-     *
-     * @param y vertical offset
-     * @param size the size of the circle
-     * @returns an array containing one circle definition for pdfMake
-     */
-    private drawCircle(y: number, size: number): object[] {
-        return [
-            {
-                type: `ellipse`,
-                x: 0,
-                y,
-                lineColor: `black`,
-                r1: size,
-                r2: size
-            }
-        ];
-    }
-
-    /**
-     * Abstract function for creating a single ballot with header and all options
-     *
-     * @param data AbstractPollData
-     * @returns pdfmake definitions
-     */
-    protected abstract createBallot(data: AbstractPollData): object;
-
-    /**
-     * Create a createPdf definition for the correct amount of ballots
-     *
-     * @param rowsPerPage (precalculated) value of pair of ballots fitting on one page.
-     * A value too high might result in phantom items split onto several pages
-     * @param data predefined data to be used
-     * @returns pdfmake definitions
-     */
-    protected getPages(rowsPerPage: number, data: AbstractPollData): Content[] {
-        const amount = this.getBallotCount();
-        const fullpages = Math.floor(amount / (rowsPerPage * 2));
-        let partialpageEntries = amount % (rowsPerPage * 2);
-        const content: Content[] = [];
-        for (let i = 0; i < fullpages; i++) {
-            const body = [];
-            for (let j = 0; j < rowsPerPage; j++) {
-                body.push([this.createBallot(data), this.createBallot(data)]);
-            }
-            content.push({
-                table: {
-                    headerRows: 1,
-                    widths: [`*`, `*`],
-                    body
-                },
-                pageBreak: `after`
-            });
-        }
-        if (partialpageEntries) {
-            const partialPageBody = [];
-            while (partialpageEntries > 1) {
-                partialPageBody.push([this.createBallot(data), this.createBallot(data)]);
-                partialpageEntries -= 2;
-            }
-            if (partialpageEntries === 1) {
-                partialPageBody.push([this.createBallot(data), ``]);
-            }
-            content.push({
-                table: {
-                    headerRows: 1,
-                    widths: [`50%`, `50%`],
-                    body: partialPageBody
-                }
-            });
-        }
-        return content;
     }
 
     /**
@@ -258,36 +127,6 @@ export abstract class BasePollPdfService {
     }
 
     protected abstract getPollResultFileNamePrefix(poll: ViewPoll): string;
-
-    /**
-     * Downloads a pdf with the ballot papet page definitions.
-     *
-     * @param docDefinition the structure of the PDF document
-     * @param filename the name of the file to use
-     */
-    public downloadWithBallotPaper(docDefinition: Content, filename: string): void {
-        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
-    }
-
-    /**
-     * Overall document definition and styles for blank PDF documents
-     * (e.g. ballots)
-     *
-     * @param documentContent the content of the pdf as object
-     * @returns the pdf document definition ready to export
-     */
-    private async getBallotPaper(documentContent: Content): Promise<TDocumentDefinitions> {
-        return {
-            pageSize: `A4`,
-            pageMargins: [0, 0, 0, 0],
-            defaultStyle: {
-                font: `PdfFont`,
-                fontSize: 10
-            },
-            content: documentContent,
-            styles: this.getBlankPaperStyles()
-        };
-    }
 
     protected getRowsPerPage(poll: ViewPoll): number {
         if (poll.config instanceof ViewPollConfigSelection) {

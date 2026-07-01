@@ -1,10 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
-import { ViewPoll } from '../../../pages/polls';
+import { MeetingPdfExportService } from '../../../services/export';
 
 @Injectable({
     providedIn: `root`
 })
 export class PollPdfService {
-    public async exportResult(_poll: ViewPoll): Promise<void> {}
+    private translate = inject(TranslateService);
+    private pdfExport = inject(MeetingPdfExportService);
+
+    public async exportResult(_poll: ViewPoll): Promise<void> {
+        // this.pdfExport.download({ docDefinition: content, filename, metadata });
+    }
 }
