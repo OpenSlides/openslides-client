@@ -23,16 +23,10 @@ import { EntitledUsersTableComponent } from './components/entitled-users-table/e
 import { PollCannotVoteMessageComponent } from './components/poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollFilteredVotesChartComponent } from './components/poll-filtered-votes-chart/poll-filtered-votes-chart.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
-import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from './pipes';
 
 const PIPES = [PollKeyVerbosePipe, PollParseNumberPipe];
-const COMPONENTS = [
-    PollFilteredVotesChartComponent,
-    CheckInputComponent,
-    EntitledUsersTableComponent,
-    VotesTableComponent
-];
+const COMPONENTS = [PollFilteredVotesChartComponent, CheckInputComponent, EntitledUsersTableComponent];
 
 @NgModule({
     declarations: [...COMPONENTS],
