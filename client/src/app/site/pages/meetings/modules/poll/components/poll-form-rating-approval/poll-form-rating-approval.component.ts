@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import {
+    AbstractControl,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,6 +45,7 @@ export class PollFormRatingApprovalComponent {
     ];
 
     public data = input<Partial<ViewPoll>>();
+    public optionAmount = input<number>(null);
 
     private fb = inject(UntypedFormBuilder);
 
@@ -44,8 +53,33 @@ export class PollFormRatingApprovalComponent {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false],
-            max_options_amount: [1],
-            min_options_amount: [1]
+            max_options_amount: [1, [Validators.required, Validators.min(1)]],
+            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
         });
+
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    private minOptionsAmountValidator(): ValidatorFn {
+        return (field: AbstractControl): ValidationErrors | null => {
+            const min = Number(field.getRawValue());
+            const max = Number(field.parent?.get('max_options_amount')?.getRawValue());
+
+            if (Number.isNaN(min) || Number.isNaN(max)) {
+                return null;
+            }
+
+            return min <= max ? null : { minGreaterThanMax: true };
+        };
+    }
+
+    private onOptionAmountUpdate(): void {
+        const maxCtrl = this.form.get('max_options_amount');
+        if (this.optionAmount()) {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(this.optionAmount())]);
+        } else {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
+        }
+        maxCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 }

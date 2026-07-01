@@ -22,6 +22,14 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
+    public override get formsValid(): boolean {
+        if (!super.formsValid) {
+            return false;
+        }
+
+        return this.approvalForm().approvalForm.valid;
+    }
+
     private pollService = inject(PollService);
 
     public override submitPoll(): void {

@@ -1,4 +1,6 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -37,7 +39,23 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
+    public override get formsValid(): boolean {
+        if (!super.formsValid) {
+            return false;
+        }
+
+        return this.getSelectedMethod() === `approval`
+            ? this.approvalForm().approvalForm.valid
+            : this.selectionPollForm().form.valid;
+    }
+
     public selectedTab = signal(0);
+
+    public options = rxResource<string[], { form: UntypedFormGroup }>({
+        params: () => ({ form: this.pollForm().pollForm }),
+        defaultValue: [],
+        stream: ({ params }) => params.form.get('options').valueChanges
+    });
 
     private pollService = inject(PollService);
 

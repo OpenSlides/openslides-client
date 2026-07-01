@@ -45,9 +45,34 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
+    public override get formsValid(): boolean {
+        if (!super.formsValid) {
+            return false;
+        }
+
+        switch (this.getSelectedMethod()) {
+            case `approval`:
+                return this.approvalForm()?.approvalForm.valid;
+            case `selection`:
+                return this.selectionForm()?.form.valid;
+            case `rating_approval`:
+                return this.ratingApprovalForm()?.form.valid;
+            case `rating_score`:
+                return this.ratingScoreForm()?.form.valid;
+        }
+
+        return false;
+    }
+
     public get hasMultipleOptions(): boolean {
         const assignment = this.pollData?.content_object as ViewAssignment;
         return assignment.candidates.length > 1;
+    }
+
+    public get optionAmount(): number {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+
+        return assignment.candidates.length;
     }
 
     public selectedTab = signal(0);
