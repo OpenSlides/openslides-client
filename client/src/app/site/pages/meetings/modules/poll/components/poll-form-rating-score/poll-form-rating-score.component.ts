@@ -51,7 +51,6 @@ export class PollFormRatingScoreComponent {
     public constructor() {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
-            allow_abstain: [false],
             max_votes_per_option: [1],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [
