@@ -28,8 +28,15 @@ export class PollVoteSelectionComponent extends PollVoteBaseComponent<ViewPollCo
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionIds = signal<Set<number>>(new Set());
 
-    public isSingleSelect = computed(() => {
+    public isSingleSelect = computed<boolean>(() => {
         return (this.config()?.max_options_amount ?? 1) === 1;
+    });
+
+    public selectionInvalid = computed<boolean>(() => {
+        return (
+            this.selectedOptionIds().size > this.config().max_options_amount ||
+            this.selectedOptionIds().size < this.config().min_options_amount
+        );
     });
 
     public availableVotes = computed<number>(() => {

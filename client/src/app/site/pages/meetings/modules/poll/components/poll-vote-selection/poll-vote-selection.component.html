@@ -126,12 +126,7 @@
 
 @if (options().length > 0) {
     <div class="submit-area">
-        <button
-            color="accent"
-            mat-raised-button
-            [disabled]="loading() || selectedOptionIds().size === 0"
-            (click)="submitVote()"
-        >
+        <button color="accent" mat-raised-button [disabled]="loading() || selectionInvalid()" (click)="submitVote()">
             <mat-icon>how_to_vote</mat-icon>
             {{ 'Submit vote now' | translate }}
         </button>

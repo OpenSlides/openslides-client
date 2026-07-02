@@ -63,7 +63,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
     });
 
     public max = computed(() => {
-        return this.maxResource.hasValue() ? this.maxResource.value() : 1;
+        return this.maxResource.hasValue() ? this.maxResource.value() : 0;
     });
 
     private voteInfoSubscription: ModelSubscription;
