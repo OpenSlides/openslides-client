@@ -51,9 +51,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return [];
         }
 
-        const showPercent =
-            this.config().onehundredPercentBaseNum &&
-            (this.onehundredPercentBase() === `yes_no` || this.onehundredPercentBase() === `yes_no_abstain`);
+        const showPercent = this.config().onehundredPercentBaseNum && this.onehundredPercentBase() !== `disabled`;
         const rows = [
             {
                 key: `Y`,
@@ -61,7 +59,10 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 icon: `check_circle`,
                 amount: +results.yes || 0,
                 percent: showPercent
-                    ? Big(results.yes).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
+                    ? Big(results.yes || 0)
+                          .div(this.config().onehundredPercentBaseNum)
+                          .mul(100)
+                          .toNumber()
                     : null
             },
             {
@@ -70,7 +71,10 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 icon: `cancel`,
                 amount: +results.no || 0,
                 percent: showPercent
-                    ? Big(results.no).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
+                    ? Big(results.no || 0)
+                          .div(this.config().onehundredPercentBaseNum)
+                          .mul(100)
+                          .toNumber()
                     : null
             }
         ];
@@ -83,7 +87,10 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 amount: +results.abstain || 0,
                 percent:
                     this.onehundredPercentBase() === `yes_no_abstain`
-                        ? Big(results.abstain).div(this.config().onehundredPercentBaseNum).mul(100).toNumber()
+                        ? Big(results.abstain || 0)
+                              .div(this.config().onehundredPercentBaseNum)
+                              .mul(100)
+                              .toNumber()
                         : null
             });
         }

@@ -26,7 +26,7 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
             case 'valid':
                 return this.validBallots;
             case 'cast':
-                return this.poll.ballot_ids.length;
+                return this.parsedResult().total_ballots;
             case 'entitled':
                 return null;
             case 'entitled_present':
