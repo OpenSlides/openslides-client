@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -249,7 +250,8 @@ export class BackendImportListComponent implements OnInit {
     public constructor(
         private dialog: MatDialog,
         private translate: TranslateService,
-        private router: Router
+        private router: Router,
+        private cd: ChangeDetectorRef
     ) {}
 
     /**
@@ -272,6 +274,7 @@ export class BackendImportListComponent implements OnInit {
             map(previews => this.calculateRows(previews)),
             delay(50)
         );
+        this.cd.detectChanges();
     }
 
     /**

@@ -29,7 +29,7 @@
         (selectedTextSeparatorOutput)="onTextSeparatorChanged($event)"
     >
         @if (dataSource | async) {
-            @for (column of previewColumns; track column; let i = $index) {
+            @for (column of previewColumns; track column) {
                 <div
                     *osScrollingTableCell="
                         column.property;
@@ -42,86 +42,82 @@
                 >
                     @let entry = row.data;
                     @let type = column.type;
-                    <div>
-                        <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) }}</div>
-                        @if (entry && (entry[def] || type === 'boolean')) {
-                            <div class="flex-vertical-center">
-                                @if (getHeader(def).is_list && entry[def]) {
-                                    <div>
-                                        @for (item of entry[def]; track item) {
-                                            @if (getHeader(def).is_object) {
-                                                <div class="list-field-entry">
-                                                    @if (getHeader(def).type === 'string') {
-                                                        {{ item.value }}
-                                                    }
-                                                    @if (getHeader(def).type === 'number') {
-                                                        {{ item.value }}
-                                                    }
-                                                    @if (getHeader(def).type === 'date') {
-                                                        {{ item.value }}
-                                                    }
-                                                    @if (getHeader(def).type === 'boolean') {
-                                                        <mat-checkbox disabled [checked]="item.value" />
-                                                    }
-                                                    &nbsp;
-
-                                                    @if (getActionIconRow(item)) {
-                                                        <mat-icon color="accent" inline>
-                                                            {{ getEntryIcon(item.value) }}
-                                                        </mat-icon>
-                                                    }
-                                                </div>
-                                            } @else {
-                                                @if (getHeader(def).type === 'string') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'number') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'date') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'boolean') {
-                                                    <mat-checkbox disabled [checked]="item.value" />
-                                                }
-                                                &nbsp;
-                                            }
-                                        }
-                                    </div>
-                                }
-                                @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                    <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) }}</div>
+                    @if (entry && (entry[def] || type === 'boolean')) {
+                        <div class="flex-vertical-center">
+                            @if (getHeader(def).is_list && entry[def]) {
+                                @for (item of entry[def]; track item) {
                                     @if (getHeader(def).is_object) {
-                                        @let icon = getEntryIcon(entry[def]);
                                         <div class="list-field-entry">
                                             @if (getHeader(def).type === 'string') {
-                                                {{ entry[def].value }}
+                                                {{ item.value }}
                                             }
                                             @if (getHeader(def).type === 'number') {
-                                                {{ entry[def].value }}
+                                                {{ item.value }}
                                             }
                                             @if (getHeader(def).type === 'date') {
-                                                {{ entry[def].value }}
+                                                {{ item.value }}
                                             }
                                             @if (getHeader(def).type === 'boolean') {
-                                                <mat-checkbox disabled [checked]="entry[def].value" />
+                                                <mat-checkbox disabled [checked]="item.value" />
                                             }
                                             &nbsp;
 
-                                            @if (getActionIconEntry(entry[def])) {
-                                                <mat-icon
-                                                    inline
-                                                    [class.error-icon]="icon === 'error_outline'"
-                                                    [color]="icon !== 'error_outline' ? 'accent' : null"
-                                                >
-                                                    {{ icon }}
+                                            @if (getActionIconRow(item)) {
+                                                <mat-icon color="accent" inline>
+                                                    {{ getEntryIcon(item.value) }}
                                                 </mat-icon>
                                             }
                                         </div>
+                                    } @else {
+                                        @if (getHeader(def).type === 'string') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'number') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'date') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'boolean') {
+                                            <mat-checkbox disabled [checked]="item.value" />
+                                        }
+                                        &nbsp;
                                     }
                                 }
-                            </div>
-                        }
-                    </div>
+                            }
+                            @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                                @if (getHeader(def).is_object) {
+                                    @let icon = getEntryIcon(entry[def]);
+                                    <div class="list-field-entry">
+                                        @if (getHeader(def).type === 'string') {
+                                            {{ entry[def].value }}
+                                        }
+                                        @if (getHeader(def).type === 'number') {
+                                            {{ entry[def].value }}
+                                        }
+                                        @if (getHeader(def).type === 'date') {
+                                            {{ entry[def].value }}
+                                        }
+                                        @if (getHeader(def).type === 'boolean') {
+                                            <mat-checkbox disabled [checked]="entry[def].value" />
+                                        }
+                                        &nbsp;
+
+                                        @if (getActionIconEntry(entry[def])) {
+                                            <mat-icon
+                                                inline
+                                                [class.error-icon]="icon === 'error_outline'"
+                                                [color]="icon !== 'error_outline' ? 'accent' : null"
+                                            >
+                                                {{ icon }}
+                                            </mat-icon>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
                 </div>
             }
             <div

@@ -1,5 +1,6 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -56,6 +57,7 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         HeadBarModule,
         ListModule,
@@ -311,6 +313,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public ngOnInit(): void {
         /* TODO: REMOVE THE MANUAL STATISTICS' CALCULATION */
+        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._requiredFields = this.createRequiredFields();
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
@@ -319,7 +322,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._rows = this.calculateRows(previews);
             this.fillPreviewData(previews);
         });
-        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
         this.setHeaders({ preview: this._previewColumns });
@@ -612,11 +614,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this.cd.markForCheck();
             this._previewColumns = (previews[0]?.headers ?? this._previewColumns).filter(
                 header => !header[`is_hidden`]
             );
             this.transformSummary(previews);
+            this.cd.markForCheck();
         }
     }
 
@@ -688,16 +690,18 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             ...customOptions,
             hasBackdrop: false
         });
-        const success = await this.importer.doImport();
-        await sleep(2000);
-        if (success) {
-            // The close() is needed here so dialogs don't overlap if the second one opens
-            ref.close();
-            this.dialog.open(summaryDialog, {
-                data: this.summary,
-                ...customOptions
-            });
-        }
+        try {
+            await sleep(2000);
+            if (await this.importer.doImport()) {
+                // The close() is needed here so dialogs don't overlap if the second one opens
+                ref.close();
+                this.dialog.open(summaryDialog, {
+                    data: this.summary,
+                    ...customOptions
+                });
+            }
+        } catch {}
+        this.cd.detectChanges();
         ref.close();
     }
 
