@@ -12,11 +12,13 @@
                         <os-poll-form-rating-approval [data]="pollData" [optionAmount]="optionAmount" />
                     </div>
                 </mat-tab>
-                <mat-tab [label]="'Score' | translate">
-                    <div class="tab-content">
-                        <os-poll-form-rating-score [data]="pollData" [optionAmount]="optionAmount" />
-                    </div>
-                </mat-tab>
+                @if (allowCumulative()) {
+                    <mat-tab [label]="'Cumulative' | translate">
+                        <div class="tab-content">
+                            <os-poll-form-rating-score [data]="pollData" [optionAmount]="optionAmount" />
+                        </div>
+                    </mat-tab>
+                }
                 <mat-tab [label]="'List' | translate">
                     <div class="tab-content">
                         <os-poll-form-approval [data]="pollData" />
