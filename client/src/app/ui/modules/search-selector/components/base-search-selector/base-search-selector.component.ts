@@ -258,7 +258,6 @@ export abstract class BaseSearchSelectorComponent
      * Used to determine, if this form control is empty before the timeout is fulfilled.
      */
     private _snapshotValue: Selectable[] | Selectable | null = null;
-    private _isFirstUpdate = true;
 
     private _selectableItemsIdMap: Record<number, Selectable> = {};
     private _selectableItemsList: Selectable[] = [];
@@ -410,33 +409,16 @@ export abstract class BaseSearchSelectorComponent
         this.selectedIds = (nextValue as []) ?? [];
     }
 
-    /**
-     * Can be overriden to perform actions after the first update triggered.
-     * This method is only called, if this form is not empty.
-     */
-    protected onAfterFirstUpdate(): void | Promise<void> {}
-
     protected override push(value: Selectable): void {
         this._snapshotValue = value;
         const nextValue = this.transformPropagateFn(value);
         setTimeout(() => super.push(nextValue));
     }
 
-    private triggerUpdate(): void {
-        if (this.empty) {
-            return;
-        }
-        if (this._isFirstUpdate) {
-            this._isFirstUpdate = false;
-            this.onAfterFirstUpdate();
-        }
-    }
-
     private setNextValue(value: any): void {
         this._snapshotValue = value;
         setTimeout(() => {
             this.contentForm.setValue(value);
-            this.triggerUpdate();
         });
     }
 
