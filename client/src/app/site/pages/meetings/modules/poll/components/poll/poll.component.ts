@@ -58,6 +58,7 @@ export class PollComponent extends BaseMeetingComponent {
     public poll = input.required<ViewPoll>();
 
     public allowEdit = input<boolean>(false);
+    public navigateToPollDetail = input<boolean>(false);
 
     public dialogOpened = output<void>();
 
@@ -70,8 +71,6 @@ export class PollComponent extends BaseMeetingComponent {
     public getDetailLink = computed(() => {
         return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
     });
-
-    public navigateToPollDetail = input<boolean>(false);
 
     public pollStateAction: Signal<PollStateAction | null> = computed(() => {
         return this.pollStateActions[this.poll().state] ?? null;

@@ -32,6 +32,44 @@
         <a [aria-label]="'Direct link to module of poll' | translate" [routerLink]="getDetailLink()">
             <h1>{{ poll()?.title }}</h1>
         </a>
+
+        <!-- Subtitle -->
+        <div class="italic spacer-bottom-20">
+            <!-- Type and State -->
+            <div class="type-and-state italic spacer-bottom-20 break-word">
+                <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
+                    {{ poll().visibility | translateKey: 'poll_visibility' }}
+                    @if (poll().isAnonymous) {
+                        <span>&nbsp;</span>
+                    }
+                    &middot;&nbsp;
+                </span>
+                <!-- State -->
+                <span class="break-word">
+                    @if (poll().isEVoting && poll().canBeVotedFor()) {
+                        {{ 'Voting in progress' | translate }}
+                    } @else if (poll().isFinished && poll().published) {
+                        {{ 'published' | translate }}
+                    } @else {
+                        {{ poll().state | translateKey: 'poll_state' }}
+                    }
+                </span>
+            </div>
+        </div>
+
+        @if (poll().canBeVotedFor()) {
+            <os-poll-progress [poll]="poll()" />
+
+            <div class="poll-content">
+                <div class="user-subtitle">
+                    {{ 'Present entitled users' | translate }}: {{ presentEntitledUsers.value() }}
+                </div>
+                <div class="user-subtitle">{{ 'All entitled users' | translate }}: {{ entitledUsers.value() }}</div>
+            </div>
+        } @else if (poll().isFinished) {
+            <os-poll-result [poll]="poll()" />
+        }
+
         <mat-tab-group [(selectedIndex)]="selectedTab">
             <mat-tab [label]="'Single votes' | translate">
                 <div class="tab-content">
@@ -44,8 +82,7 @@
                 </div>
             </mat-tab>
         </mat-tab-group>
+
+        <os-poll-meta [poll]="poll()" />
     </mat-card-content>
-</mat-card>
-<mat-card class="os-card">
-    <mat-card-content><os-poll [poll]="poll()"></os-poll></mat-card-content>
 </mat-card>

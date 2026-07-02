@@ -1,2 +1,9 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 @use 'src/assets/styles/poll/card.scss';
+
+.poll-content {
+    text-align: right;
+    display: grid;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
