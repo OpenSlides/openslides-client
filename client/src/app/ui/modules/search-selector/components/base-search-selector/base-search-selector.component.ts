@@ -303,6 +303,7 @@ export abstract class BaseSearchSelectorComponent
             this.selectedIds.push(id);
         }
         this.setNextValue(this.selectedIds);
+        this.cd.markForCheck();
     }
 
     public onOpenChanged(event: boolean): void {
