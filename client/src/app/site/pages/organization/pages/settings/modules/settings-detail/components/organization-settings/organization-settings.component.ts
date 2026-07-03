@@ -51,12 +51,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
     ) {
         super();
         super.setTitle(this.pageTitle);
-        this.initTimezones();
 
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
                 this._currentOrgaSettings = orga;
                 if (orga) {
+                    this.initTimezones();
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
                     }
@@ -150,11 +150,16 @@ export class OrganizationSettingsComponent extends BaseComponent {
     private async initTimezones(): Promise<void> {
         this.timeZone.getTZForSearchSelector().then(values => {
             this.time_zones.next(values);
+            this.patchTimezoneInForm();
+        });
+    }
+
+    private patchTimezoneInForm(): void {
+        if (!this.orgaSettingsForm?.get('time_zone').value) {
             this.orgaSettingsForm
                 .get('time_zone')
-                .patchValue(this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone));
-            this.cd.markForCheck();
-        });
+                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+        }
     }
 
     public getAdditionallySearchedValuesFn(item: Selectable): string[] {
