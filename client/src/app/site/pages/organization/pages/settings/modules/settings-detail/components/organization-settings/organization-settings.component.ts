@@ -181,10 +181,4 @@ export class OrganizationSettingsComponent extends BaseComponent {
             .then(() => this.markFormAsClean())
             .catch(this.raiseError);
     }
-
-    public observeClickNotFound(): void {
-        // the list search selector checks if something observes clickNotFound
-        // else it will disable itself (sometimes).
-        console.warn('Timezone: Click not found');
-    }
 }

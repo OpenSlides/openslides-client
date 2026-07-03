@@ -44,7 +44,6 @@
                             formControlName="time_zone"
                             [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
                             [inputListValues]="time_zones"
-                            (clickNotFound)="observeClickNotFound()"
                         ></os-list-search-selector>
                     </mat-form-field>
                 </div>
@@ -210,8 +209,8 @@
                             <textarea formControlName="saml_attr_mapping" matInput [rows]="ssoConfigRows"></textarea>
                             <mat-hint>
                                 {{
-                                    'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
-                                        | translate
+                                    'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute
+                            name).' | translate
                                 }}
                             </mat-hint>
                         </mat-form-field>
