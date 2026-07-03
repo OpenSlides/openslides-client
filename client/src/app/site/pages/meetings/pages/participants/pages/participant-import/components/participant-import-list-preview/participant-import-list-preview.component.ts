@@ -320,6 +320,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         });
         this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
             this._rows = this.calculateRows(previews);
+            this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
             this.fillPreviewData(previews);
         });
         this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
@@ -634,7 +635,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             const error = this._summary.find(item => item.name === 'error');
             this._summary = this._summary.filter(item => item.name !== 'updated');
             this._summary = this._summary.filter(item => item.name !== 'error');
-            this._summary.push({ name: 'updated', value: countUpdated });
+            if (countUpdated > 0) {
+                this._summary.push({ name: 'updated', value: countUpdated });
+            }
             this._summary.push({ name: 'referenced', value: countReferenced });
             this._summary.push({ name: error?.name, value: error?.value });
         }
@@ -721,6 +724,4 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         row.setState = BackendImportState.Referenced;
         return true;
     }
-
-    private processErrors(): void {}
 }

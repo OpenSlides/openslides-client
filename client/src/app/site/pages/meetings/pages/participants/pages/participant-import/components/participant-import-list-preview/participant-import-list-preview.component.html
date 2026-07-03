@@ -3,7 +3,7 @@
         <h1 class="mock-h2" translate>Import participants</h1>
     </div>
     <ng-container class="menu-slot">
-        <button mat-button (click)="importData(ImportDialog, ImportDialogSummary)">
+        <button mat-button [disabled]="uploadButton" (click)="importData(ImportDialog, ImportDialogSummary)">
             <span class="upper">Import</span>
         </button>
     </ng-container>
