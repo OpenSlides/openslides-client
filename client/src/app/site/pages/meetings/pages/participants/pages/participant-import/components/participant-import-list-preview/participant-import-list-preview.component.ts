@@ -20,6 +20,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 import { _, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
@@ -303,6 +304,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     public constructor(
         private dialog: MatDialog,
+        private router: Router,
         protected translate: TranslateService,
         protected readonly controller: ParticipantControllerService,
         private cd: ChangeDetectorRef
@@ -355,6 +357,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * triggers the importer's onSelectFile after a file has been chosen
      */
+    // not working, fix this
     protected onSelectFile(event: any): void {
         this.uploadButton = false;
         this.importer.onSelectFile(event);
@@ -698,14 +701,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             if (await this.importer.doImport()) {
                 // The close() is needed here so dialogs don't overlap if the second one opens
                 ref.close();
-                this.dialog.open(summaryDialog, {
-                    data: this.summary,
-                    ...customOptions
-                });
+                this.dialog
+                    .open(summaryDialog, {
+                        data: this.summary,
+                        ...customOptions
+                    })
+                    .afterClosed()
+                    .subscribe(() => this.redirect());
             }
         } catch {}
         this.cd.detectChanges();
         ref.close();
+    }
+
+    private redirect(): void {
+        this.router.navigateByUrl(this.router.url.replace('/import/preview', ''));
     }
 
     private isReferenced(row: ViewImportedParticipant): boolean {

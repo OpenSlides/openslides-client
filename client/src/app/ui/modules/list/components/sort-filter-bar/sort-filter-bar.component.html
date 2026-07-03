@@ -77,13 +77,14 @@
             }
         }
 
-        <!-- CSV-Encoding Button -->
+        <!-- CSV-Reload Button -->
         @if (csvReload) {
+            <!-- not working, fix this -->
             <button
                 mat-button
                 style="width: max-content"
                 [class.not-selected-option]="(filterMenu.opened || csvConfigMenu.opened) === true"
-                (click)="csvReload.refreshFile()"
+                (click)="onCsvReload($event)"
             >
                 <mat-icon>autorenew</mat-icon>
                 @if ((vp.isMobileSubject | async) === false) {

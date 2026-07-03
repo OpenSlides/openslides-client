@@ -29,9 +29,9 @@ $os-yellow: rgb(255, 193, 7);
     left: 0;
     right: 0;
     height: 50px;
-    background: white;
+    background-color: var(--mat-app-background-color);
     z-index: 1;
-    border-top: 1px solid #aaa;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
     display: flex;
     align-items: center;
 }
@@ -100,7 +100,7 @@ $os-yellow: rgb(255, 193, 7);
     .summary-dialog-content {
         display: flex;
         font-size: 17px;
-        color: #000000;
+        color: var(--theme-contrast-400);
         text-align: center;
         justify-content: center;
     }

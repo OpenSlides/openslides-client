@@ -347,6 +347,11 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this.selectedTextSeparatorOutput.emit($event);
     }
 
+    // not working. fix this
+    public onCsvReload($event): void {
+        this.csvReload.onSelectFile($event);
+    }
+
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
         if ((event.ctrlKey || event.metaKey) && event.key === `f`) {
             event.preventDefault();
