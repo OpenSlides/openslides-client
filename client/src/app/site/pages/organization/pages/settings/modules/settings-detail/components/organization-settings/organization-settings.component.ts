@@ -121,6 +121,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     public revertChanges(): void {
         if (this.orgaSettingsForm) {
+            this.orgaSettingsForm.get('time_zone').setValue(null);
             this.updateForm(this._currentOrgaSettings!);
             this.markFormAsClean();
         }
@@ -179,5 +180,11 @@ export class OrganizationSettingsComponent extends BaseComponent {
             .update(payload)
             .then(() => this.markFormAsClean())
             .catch(this.raiseError);
+    }
+
+    public observeClickNotFound(): void {
+        // the list search selector checks if something observes clickNotFound
+        // else it will disable itself (sometimes).
+        console.warn('Timezone: Click not found');
     }
 }

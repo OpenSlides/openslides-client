@@ -44,6 +44,7 @@
                             formControlName="time_zone"
                             [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
                             [inputListValues]="time_zones"
+                            (clickNotFound)="observeClickNotFound()"
                         ></os-list-search-selector>
                     </mat-form-field>
                 </div>
