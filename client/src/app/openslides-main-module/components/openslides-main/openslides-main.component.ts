@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, DOCUMENT, inject, OnInit } from '@angular/core';
+import { ApplicationRef, Component, DOCUMENT, Inject, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
+import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
@@ -32,6 +33,8 @@ export class OpenSlidesMainComponent implements OnInit {
     public title = `OpenSlides`;
 
     private document = inject(DOCUMENT);
+    private _viewContainer = inject(ViewContainerRef);
+    private _openslidesService = inject(OpenSlidesService);
     private appRef = inject(ApplicationRef);
     private lifecycleService = inject(LifecycleService);
     private domSanitizer = inject(DomSanitizer);
@@ -45,7 +48,8 @@ export class OpenSlidesMainComponent implements OnInit {
     private modelStore = inject(ViewModelStoreService);
     private ctService = inject(CustomTranslationService);
 
-    public constructor() {
+    public constructor(
+    ) {
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();
