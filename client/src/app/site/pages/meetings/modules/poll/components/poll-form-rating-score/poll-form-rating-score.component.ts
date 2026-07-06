@@ -51,17 +51,26 @@ export class PollFormRatingScoreComponent {
     public constructor() {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
+            allow_general_abstain: [false],
             max_votes_per_option: [1],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [
                 1,
-                [Validators.required, Validators.min(0), this.minOptionsAmountValidator(`max_options_amount`)]
+                [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
             ],
             max_vote_sum: [1, [Validators.required, Validators.min(1)]],
-            min_vote_sum: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator(`max_vote_sum`)]]
+            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
         });
 
         effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    public getSerialzedForm(): Record<string, unknown> {
+        return {
+            ...this.form.value,
+            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`],
+            min_vote_sum: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_vote_sum`]
+        };
     }
 
     private minOptionsAmountValidator(dependant: string): ValidatorFn {

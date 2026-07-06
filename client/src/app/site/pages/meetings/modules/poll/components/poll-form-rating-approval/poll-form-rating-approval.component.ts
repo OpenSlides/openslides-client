@@ -60,6 +60,10 @@ export class PollFormRatingApprovalComponent {
         effect(this.onOptionAmountUpdate.bind(this));
     }
 
+    public getSerialzedForm(): Record<string, unknown> {
+        return this.form.value;
+    }
+
     private minOptionsAmountValidator(): ValidatorFn {
         return (field: AbstractControl): ValidationErrors | null => {
             const min = Number(field.getRawValue());

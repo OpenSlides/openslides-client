@@ -54,4 +54,8 @@ export class PollFormApprovalComponent {
             allow_abstain: [false]
         });
     }
+
+    public getSerialzedForm(): Record<string, unknown> {
+        return this.approvalForm.value;
+    }
 }

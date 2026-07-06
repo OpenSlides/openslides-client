@@ -136,13 +136,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private getMethodConfig(): unknown {
         switch (this.getSelectedMethod()) {
             case `approval`:
-                return { ...this.approvalForm()?.approvalForm.value };
+                return { ...this.approvalForm()?.getSerialzedForm() };
             case `selection`:
-                return { ...this.selectionForm()?.form.value };
+                return { ...this.selectionForm()?.getSerialzedForm() };
             case `rating_approval`:
-                return { ...this.ratingApprovalForm()?.form.value };
+                return { ...this.ratingApprovalForm()?.getSerialzedForm() };
             case `rating_score`:
-                return { ...this.ratingScoreForm()?.form.value };
+                return { ...this.ratingScoreForm()?.getSerialzedForm() };
         }
         return {};
     }
