@@ -128,7 +128,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "fetch-mock": "^12.6.0",
     "jasmine-core": "^5.13.0",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^5.2.1",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.1",
