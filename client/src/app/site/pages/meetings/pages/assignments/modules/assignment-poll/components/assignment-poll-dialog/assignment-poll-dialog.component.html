@@ -25,6 +25,21 @@
                     </div>
                 </mat-tab>
             </mat-tab-group>
+        } @else if (allowCumulative()) {
+            <mat-tab-group [(selectedIndex)]="selectedTab">
+                <mat-tab [label]="'Single candidate' | translate">
+                    <div class="tab-content">
+                        <os-poll-form-approval [data]="pollData" />
+                    </div>
+                </mat-tab>
+                @if (allowCumulative()) {
+                    <mat-tab [label]="'Cumulative' | translate">
+                        <div class="tab-content">
+                            <os-poll-form-rating-score [data]="pollData" [optionAmount]="optionAmount" />
+                        </div>
+                    </mat-tab>
+                }
+            </mat-tab-group>
         } @else {
             <os-poll-form-approval [data]="pollData" />
         }

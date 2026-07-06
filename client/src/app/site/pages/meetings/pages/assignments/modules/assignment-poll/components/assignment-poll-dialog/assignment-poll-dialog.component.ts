@@ -127,7 +127,11 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     private getSelectedMethod(): string {
         if (!this.hasMultipleOptions) {
-            return `approval`;
+            if (this.selectedTab() != 1) {
+                return `approval`;
+            }
+
+            return `rating_score`;
         }
 
         return TAB_METHOD_MAP[this.selectedTab()];
