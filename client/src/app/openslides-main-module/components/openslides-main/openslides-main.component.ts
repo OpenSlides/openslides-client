@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, DOCUMENT, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, Component, DOCUMENT, inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -15,7 +15,6 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
 import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
-import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
@@ -32,23 +31,21 @@ export class OpenSlidesMainComponent implements OnInit {
 
     public title = `OpenSlides`;
 
-    public constructor(
-        @Inject(DOCUMENT) private document: Document,
-        _viewContainer: ViewContainerRef,
-        _openslidesService: OpenSlidesService,
-        private appRef: ApplicationRef,
-        private lifecycleService: LifecycleService,
-        private domSanitizer: DomSanitizer,
-        private openslidesStatus: OpenSlidesStatusService,
-        private matIconRegistry: MatIconRegistry,
-        private translate: TranslateService,
-        private storageService: StorageService,
-        private config: DateFnsConfigurationService,
-        private updateService: UpdateService,
-        private router: Router,
-        private modelStore: ViewModelStoreService,
-        private ctService: CustomTranslationService
-    ) {
+    private document = inject(DOCUMENT);
+    private appRef = inject(ApplicationRef);
+    private lifecycleService = inject(LifecycleService);
+    private domSanitizer = inject(DomSanitizer);
+    private openslidesStatus = inject(OpenSlidesStatusService);
+    private matIconRegistry = inject(MatIconRegistry);
+    private translate = inject(TranslateService);
+    private storageService = inject(StorageService);
+    private config = inject(DateFnsConfigurationService);
+    private updateService = inject(UpdateService);
+    private router = inject(Router);
+    private modelStore = inject(ViewModelStoreService);
+    private ctService = inject(CustomTranslationService);
+
+    public constructor() {
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();

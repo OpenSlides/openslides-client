@@ -1,4 +1,4 @@
-import { Injectable, Injector, Type } from '@angular/core';
+import { inject, Injectable, Injector, Type } from '@angular/core';
 import { ActionWorkerAppConfig } from 'src/app/gateways/repositories/action-worker/action-worker.config';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MeetingUserAppConfig } from 'src/app/gateways/repositories/meeting_user/meeting-user-config';
@@ -64,13 +64,12 @@ const appConfigs: AppConfig[] = [
     providedIn: `root`
 })
 export class AppLoadService {
-    public constructor(
-        private injector: Injector,
-        private modelMapper: CollectionMapperService,
-        private mainMenuService: MainMenuService,
-        private fallbackRoutesService: FallbackRoutesService
-    ) {
-        OpenSlidesInjector.setInjector(injector);
+    private injector = inject(Injector);
+    private modelMapper = inject(CollectionMapperService);
+    private mainMenuService = inject(MainMenuService);
+    private fallbackRoutesService = inject(FallbackRoutesService);
+    public constructor() {
+        OpenSlidesInjector.setInjector(this.injector);
     }
 
     public async loadApps(): Promise<void> {
