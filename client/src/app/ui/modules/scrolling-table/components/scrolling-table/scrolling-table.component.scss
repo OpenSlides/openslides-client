@@ -49,6 +49,10 @@
 .scrolling-table-header {
     @include scrolling-table-style();
     @include render-all-table();
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--mat-app-background-color);
 
     .scrolling-table-cell {
         font-weight: 500;
@@ -67,6 +71,33 @@
         @include scrolling-table-style();
         @include render-all-table();
     }
+}
+
+.virtual-scroll-viewport-participant-import {
+    min-height: calc(100% - 51px);
+    overflow: auto;
+    width: 100%;
+
+    ::ng-deep .cdk-virtual-scroll-content-wrapper {
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .scrolling-table-row {
+        @include scrolling-table-style();
+        @include render-all-table();
+    }
+}
+
+.scroll-container {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+}
+
+.table-body {
+    width: max-content;
+    min-width: 100%;
 }
 
 .scrolling-table-cell ::ng-deep {
