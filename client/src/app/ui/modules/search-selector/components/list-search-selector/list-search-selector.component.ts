@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { auditTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
@@ -16,8 +16,7 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     standalone: false
 })
 export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
-    @Input()
-    public dependDisableOnEmptyItems = false;
+    public dependDisableOnEmptyItems = input<boolean>(false);
 
     private _inputListValuesSubscription: Subscription;
 
@@ -40,7 +39,9 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
                 this.selectableItems = items;
                 if (this.contentForm) {
                     this.disabled =
-                        ((this.disabled && !this.dependDisableOnEmptyItems) || !items || (!!items && !items.length)) &&
+                        ((this.disabled && !this.dependDisableOnEmptyItems()) ||
+                            !items ||
+                            (!!items && !items.length)) &&
                         !this.clickNotFound.observed;
                 }
             });
