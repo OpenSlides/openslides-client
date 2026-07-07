@@ -326,12 +326,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public canVoteForGroups(): Id[] {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
         const present = this.isPresentInMeeting();
-        if (
-            !(
-                present &&
-                (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
-            )
-        ) {
+        if (!(
+            present &&
+            (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
+        )) {
             return [];
         }
         return Array.from(

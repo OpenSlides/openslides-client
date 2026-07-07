@@ -124,10 +124,10 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
             },
             {
                 property: `isLockedOutOfMeeting`,
-                label: `Locked out`,
+                label: _(`Locked out`),
                 options: [
-                    { condition: true, label: `Is locked out` },
-                    { condition: [false, null], label: `Is not locked out` }
+                    { condition: true, label: _(`Is locked out`) },
+                    { condition: [false, null], label: _(`Is not locked out`) }
                 ]
             },
             {

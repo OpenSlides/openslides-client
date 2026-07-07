@@ -4,20 +4,28 @@
         <div class="title-slot">
             @if (block) {
                 <os-icon-container
-                    icon="check"
+                    icon="videocam"
                     size="large"
-                    [iconTooltip]="'Finished' | translate"
+                    [iconTooltip]="'Is being projected' | translate"
                     [noWrap]="true"
-                    [showIcon]="block.isFinished"
+                    [showIcon]="isProjected()"
                 >
                     <os-icon-container
-                        icon="lock"
+                        icon="check"
                         size="large"
-                        [iconTooltip]="'Internal' | translate"
+                        [iconTooltip]="'Finished' | translate"
                         [noWrap]="true"
-                        [showIcon]="block.internal"
+                        [showIcon]="block.isFinished"
                     >
-                        <os-projectable-title titleStyle="h1" [mockH2]="true" [model]="block"></os-projectable-title>
+                        <os-icon-container
+                            icon="lock"
+                            size="large"
+                            [iconTooltip]="'Internal' | translate"
+                            [noWrap]="true"
+                            [showIcon]="block.internal"
+                        >
+                            <h1 class="mock-h2">{{ block.title }}</h1>
+                        </os-icon-container>
                     </os-icon-container>
                 </os-icon-container>
             }

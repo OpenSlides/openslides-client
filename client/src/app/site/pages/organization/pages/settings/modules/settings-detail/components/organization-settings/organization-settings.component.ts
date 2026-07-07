@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { Selectable } from 'src/app/domain/interfaces';
 import { objectToFormattedString } from 'src/app/infrastructure/utils';
@@ -25,7 +23,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
     public readonly translations = availableTranslations;
 
-    public time_zones = new BehaviorSubject<Selectable[]>([]);
+    public time_zones = signal<Selectable[]>([]);
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -41,22 +39,21 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private controller: OrganizationControllerService,
-        private formBuilder: UntypedFormBuilder,
-        private operator: OperatorService,
-        private timeZone: TimeZoneService,
-        private cd: ChangeDetectorRef
-    ) {
+    private formBuilder = inject(UntypedFormBuilder);
+    private controller = inject(OrganizationControllerService);
+    private operator = inject(OperatorService);
+    private timeZone = inject(TimeZoneService);
+    private cd = inject(ChangeDetectorRef);
+
+    public constructor() {
         super();
         super.setTitle(this.pageTitle);
-        this.initTimezones();
 
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
                 this._currentOrgaSettings = orga;
                 if (orga) {
+                    this.initTimezones();
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
                     }
@@ -82,7 +79,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 users_email_sender: [this._currentOrgaSettings.users_email_sender],
                 users_email_subject: [this._currentOrgaSettings.users_email_subject],
                 default_language: [this._currentOrgaSettings.default_language],
-                time_zone: [this._currentOrgaSettings.time_zone, Validators.required],
+                time_zone: [this._currentOrgaSettings.time_zone],
                 require_duplicate_from: [this._currentOrgaSettings.require_duplicate_from ?? false],
                 enable_anonymous: [this._currentOrgaSettings.enable_anonymous ?? false],
                 disable_forward_with_attachments: [this._currentOrgaSettings.disable_forward_with_attachments ?? false],
@@ -149,12 +146,17 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private async initTimezones(): Promise<void> {
         this.timeZone.getTZForSearchSelector().then(values => {
-            this.time_zones.next(values);
+            this.time_zones.set(values);
+            this.patchTimezoneInForm();
+        });
+    }
+
+    private patchTimezoneInForm(): void {
+        if (!this.orgaSettingsForm?.get('time_zone').value) {
             this.orgaSettingsForm
                 .get('time_zone')
-                .patchValue(this.timeZone.getTimezoneIdByName(this._currentOrgaSettings.time_zone));
-            this.cd.markForCheck();
-        });
+                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+        }
     }
 
     public getAdditionallySearchedValuesFn(item: Selectable): string[] {

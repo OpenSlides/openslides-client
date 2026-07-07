@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ChessDialogModule } from '../chess-dialog.module';
@@ -14,7 +13,6 @@ import { ChessDialogModule } from '../chess-dialog.module';
 export class ChessChallengeService {
     public constructor(
         private notifyService: NotifyService,
-        private op: OperatorService,
         private dialog: MatDialog,
         private translate: TranslateService,
         private prompt: PromptService

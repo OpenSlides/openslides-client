@@ -12,6 +12,7 @@ updates:
        typescript-eslint:
           patterns:
             - "@typescript-eslint/*"
+            - "typescript-eslint"
        opentelemetry:
           patterns:
             - "@opentelemetry/*"

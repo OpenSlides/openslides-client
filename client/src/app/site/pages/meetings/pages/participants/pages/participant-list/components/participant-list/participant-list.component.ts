@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -52,6 +51,25 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
     standalone: false
 })
 export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewUser> implements OnInit {
+    public repo = inject(ParticipantControllerService);
+    public operator = inject(OperatorService);
+    public filterService = inject(ParticipantListFilterService);
+    public sortService = inject(ParticipantListSortService);
+    public viewport = inject(ViewPortService);
+    private csvExport = inject(ParticipantCsvExportService);
+    private groupRepo = inject(GroupControllerService);
+    private userRepo = inject(UserControllerService);
+    private userService = inject(UserService);
+    private structureLevelRepo = inject(StructureLevelControllerService);
+    private choiceService = inject(ChoiceService);
+    private pdfExport = inject(ParticipantPdfExportService);
+    private infoDialog = inject(ParticipantListInfoDialogService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    private route = inject(ActivatedRoute);
+    private prompt = inject(PromptService);
+    private interactionService = inject(InteractionService);
+    private dialog = inject(MatDialog);
+
     /**
      * All available groups, where the user can be in.
      */
@@ -100,7 +118,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public get totalVoteWeight(): number {
-        let votes;
+        let votes: number;
         if (this.listComponent) {
             votes = this.listComponent.source?.reduce(
                 (previous, current) => previous + (current.vote_weight() || 0),
@@ -201,27 +219,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
     );
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: ParticipantControllerService,
-        private groupRepo: GroupControllerService,
-        private userRepo: UserControllerService,
-        private userService: UserService,
-        private structureLevelRepo: StructureLevelControllerService,
-        private choiceService: ChoiceService,
-        public operator: OperatorService,
-        public filterService: ParticipantListFilterService,
-        public sortService: ParticipantListSortService,
-        public viewport: ViewPortService,
-        private csvExport: ParticipantCsvExportService,
-        private pdfExport: ParticipantPdfExportService,
-        private infoDialog: ParticipantListInfoDialogService,
-        private organizationSettingsService: OrganizationSettingsService,
-        private route: ActivatedRoute,
-        private prompt: PromptService,
-        private interactionService: InteractionService,
-        private dialog: MatDialog
-    ) {
+    public constructor() {
         super();
 
         // enable multiSelect for this listView
@@ -631,12 +629,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         await this.repo.removeUsersFromMeeting([user]);
     }
 
-    public isMeetingAdminAndSelf(user: ViewUser): boolean {
-        return this.operator.isMeetingAdmin && user.id === this.operator.user?.id;
-    }
-
-    public get isMeetingAdminAndSelfSelected(): boolean {
-        return this.selectedRows.some(user => this.isMeetingAdminAndSelf(user));
+    public isSelf(user: ViewUser): boolean {
+        return user.id === this.operator.user?.id;
     }
 
     public canSeeItemMenu(): boolean {
@@ -650,7 +644,18 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * Bulk deletes users. Needs multiSelect mode to fill selectedRows
      */
     protected async removeUsersFromMeeting(): Promise<void> {
-        await this.repo.removeUsersFromMeeting(this.selectedRows);
+        const filteredRows = this.selectedRows.filter(user => user.id !== this.operator.operatorId);
+        const removeSelf = this.selectedRows.length !== filteredRows.length;
+        if (filteredRows.length > 0) {
+            await this.repo.removeUsersFromMeeting(filteredRows);
+            if (removeSelf) {
+                this.matSnackBar.open(
+                    this.translate.instant(`You were not removed from the meeting.`),
+                    this.translate.instant(`Ok`),
+                    { duration: 3000 }
+                );
+            }
+        }
     }
 
     /**

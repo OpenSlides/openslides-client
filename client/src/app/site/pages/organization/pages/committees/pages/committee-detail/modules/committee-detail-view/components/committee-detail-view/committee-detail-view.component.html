@@ -62,10 +62,13 @@
                 {{ committee.description }}
             </div>
             <!-- forward motions to -->
-            @if (committee.forward_to_committees.length > 0 && isOrgaAdmin()) {
+            @if (committee.forward_to_committee_ids?.length > 0 && isOrgaAdmin()) {
                 <os-committee-meta-info icon="file_upload" title="{{ 'Forward motions to' | translate }}">
                     <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
-                        @for (forwarding of sortCommitteesByName(committee.forward_to_committees); track forwarding) {
+                        @for (
+                            forwarding of sortCommitteesByName(committee.forward_to_committee_ids);
+                            track forwarding
+                        ) {
                             <li>
                                 @if (canAccessCommittee(forwarding)) {
                                     <a [routerLink]="['/', 'committees', forwarding.id]">
@@ -77,7 +80,7 @@
                             </li>
                         }
                     </ul>
-                    @if (committee.forward_to_committees.length > 1) {
+                    @if (committee.forward_to_committee_ids?.length > 1) {
                         <button mat-button (click)="toggleForwardingList()">
                             @if (!forwardingExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
@@ -95,11 +98,11 @@
                 </os-committee-meta-info>
             }
             <!-- receive motions from -->
-            @if (committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()) {
+            @if (committee.receive_forwardings_from_committee_ids?.length > 0 && isOrgaAdmin()) {
                 <os-committee-meta-info icon="file_download" title="{{ 'Receive motions from' | translate }}">
                     <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
                         @for (
-                            receive of sortCommitteesByName(committee.receive_forwardings_from_committees);
+                            receive of sortCommitteesByName(committee.receive_forwardings_from_committee_ids);
                             track receive
                         ) {
                             <li>
@@ -113,7 +116,7 @@
                             </li>
                         }
                     </ul>
-                    @if (committee.receive_forwardings_from_committees.length > 1) {
+                    @if (committee.receive_forwardings_from_committee_ids?.length > 1) {
                         <button mat-button (click)="toggleReceiveList()">
                             @if (!receiveExpanded) {
                                 <mat-icon class="icon-text">expand_more</mat-icon>
