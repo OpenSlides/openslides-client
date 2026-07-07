@@ -84,8 +84,9 @@
                 mat-button
                 style="width: max-content"
                 [class.not-selected-option]="(filterMenu.opened || csvConfigMenu.opened) === true"
-                (click)="onCsvReload($event)"
+                (click)="fileInput.click()"
             >
+                <input #fileInput class="fileInput" type="file" (change)="sendCsvReload($event)" />
                 <mat-icon>autorenew</mat-icon>
                 @if ((vp.isMobileSubject | async) === false) {
                     <span class="upper">

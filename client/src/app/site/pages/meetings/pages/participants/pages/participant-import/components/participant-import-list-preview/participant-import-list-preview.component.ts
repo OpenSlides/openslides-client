@@ -118,6 +118,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     @Output()
     public selectedTabChanged = new EventEmitter<number>();
 
+    @Output()
+    protected selectedNewFile = new EventEmitter<File>();
+
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
      */
@@ -323,11 +326,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
             this._rows = this.calculateRows(previews);
             this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
+            this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
             this.fillPreviewData(previews);
+            this.setHeaders({ preview: this._previewColumns });
         });
-        this._totalCountObservable = this._dataSource.pipe(map(items => items.length));
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
-        this.setHeaders({ preview: this._previewColumns });
     }
 
     /**
@@ -357,7 +360,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     /**
      * triggers the importer's onSelectFile after a file has been chosen
      */
-    // not working, fix this
     protected onSelectFile(event: any): void {
         this.uploadButton = false;
         this.importer.onSelectFile(event);
@@ -555,6 +557,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public downloadCsvExample(): void {
         this.importer.downloadCsvExample();
+    }
+
+    public getCsvReload(event: Event): void {
+        this.importer.clearFile();
+        this.importer.onSelectFile(event);
+        this.importer.refreshFile();
     }
 
     /**

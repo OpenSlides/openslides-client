@@ -153,7 +153,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; width: auto">
             <div style="display: flex; flex-direction: column">
                 <h3 class="instructions" translate>{{ 'Import templates' | translate }}</h3>
-                <div>
+                <div (selectedNewFile)="sendCsvReload($event)">
                     <input
                         #fileInput
                         accept="text"
@@ -162,7 +162,7 @@
                         id="user-import-file-input"
                         tabindex="0"
                         type="file"
-                        (change)="onSelectFile($event)"
+                        (change)="onSelectedFile($event)"
                         (keydown.enter)="fileInput.click()"
                         (keydown.space)="fileInput.click(); $event.preventDefault()"
                     />

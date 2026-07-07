@@ -14,6 +14,7 @@
                 [sortService]="sortService!"
                 [totalCount]="totalCountObservable | async"
                 (searchFieldChanged)="searchFilterUpdated.emit($event)"
+                (selectNewFile)="sendCsvReload($event)"
                 (selectedColSepOutput)="sendSelectedColSep($event)"
                 (selectedEncodingOutput)="sendSelectedEncoding($event)"
                 (selectedTextSeparatorOutput)="sendSelectedTextSeparator($event)"

@@ -24,6 +24,7 @@
         [totalCount]="_totalCountObservable | async"
         [vScrollFixed]="50"
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+        (selectNewFile)="getCsvReload($event)"
         (selectedColSepOutput)="onColSepChanged($event)"
         (selectedEncodingOutput)="onEncodingChanged($event)"
         (selectedTextSeparatorOutput)="onTextSeparatorChanged($event)"

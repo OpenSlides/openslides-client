@@ -74,6 +74,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Output()
     public selectedTextSeparatorOutput = new EventEmitter<V>();
 
+    @Output()
+    public selectNewFile = new EventEmitter<Event>();
+
     @Input()
     public csvReloadButton: boolean;
 
@@ -304,5 +307,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
 
     public sendSelectedTextSeparator($event): void {
         this.selectedTextSeparatorOutput.emit($event.value);
+    }
+
+    public sendCsvReload(event: Event): void {
+        this.selectNewFile.emit(event);
     }
 }

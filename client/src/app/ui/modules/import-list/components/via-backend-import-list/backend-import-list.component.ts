@@ -246,6 +246,7 @@ export class BackendImportListComponent implements OnInit {
 
     public hideOldCard = true;
     protected uploadButton: boolean;
+    protected selectedNewFile;
 
     public constructor(
         private dialog: MatDialog,
@@ -296,7 +297,7 @@ export class BackendImportListComponent implements OnInit {
     /**
      * triggers the importer's onSelectFile after a file has been chosen
      */
-    public onSelectFile(event: any): void {
+    public onSelectedFile(event: Event): void {
         this.uploadButton = false;
         this._importer.onSelectFile(event);
     }
@@ -552,5 +553,9 @@ export class BackendImportListComponent implements OnInit {
 
     protected showPreview(): void {
         this.router.navigateByUrl(this.router.url.concat('/preview'));
+    }
+
+    protected sendCsvReload(event: Event): void {
+        this._importer.onSelectFile(event);
     }
 }

@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -86,6 +87,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     @Output()
     public selectedTextSeparatorOutput = new EventEmitter<V>();
+
+    @Output() // csvReload
+    public selectNewFile = new EventEmitter<Event>();
+
+    @ViewChild(`fileInput`)
+    private fileInput!: ElementRef<HTMLInputElement>;
 
     @Input()
     public csvReload: ParticipantImportService;
@@ -348,8 +355,8 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     }
 
     // not working. fix this
-    public onCsvReload($event): void {
-        this.csvReload.onSelectFile($event);
+    public sendCsvReload(event: Event): void {
+        this.selectNewFile.emit(event);
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
