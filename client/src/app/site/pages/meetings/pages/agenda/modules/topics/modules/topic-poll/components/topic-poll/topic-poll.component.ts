@@ -22,7 +22,7 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> {
     public get shouldShowPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.agendaItemCanManagePolls) ||
+                this.operator.hasPerms(Permission.agendaItemCanSeePolls) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {

@@ -32,6 +32,23 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
     public ballots = signal<ViewPollBallot[]>([]);
     public selectedOptionValues = signal<Map<number, number>>(new Map());
 
+    public selectionInvalid = computed<boolean>(() => {
+        let totalAmount = 0;
+        let maxAmount = 0;
+        this.selectedOptionValues().forEach(value => {
+            totalAmount += value;
+            maxAmount = maxAmount < value ? value : maxAmount;
+        });
+
+        return (
+            maxAmount > this.config().max_votes_per_option ||
+            totalAmount > this.config().max_vote_sum ||
+            totalAmount < this.config().min_vote_sum ||
+            this.selectedOptionValues().size > this.config().max_options_amount ||
+            this.selectedOptionValues().size < this.config().min_options_amount
+        );
+    });
+
     public availableVotes = computed<number>(() => {
         if (this.selectedOptionValues().has(0) || this.selectedOptionValues().has(-1)) {
             return 0;

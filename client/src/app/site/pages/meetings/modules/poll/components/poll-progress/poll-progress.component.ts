@@ -24,34 +24,15 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
 export class PollProgressComponent extends BaseUiComponent implements OnDestroy {
     public poll = input.required<ViewPoll>();
 
-    public canManagePoll = computed(() => {
-        if (this.poll().isMotionPoll) {
-            return this.operator.hasPerms(Permission.motionCanManagePolls);
-        } else if (this.poll().isAssignmentPoll) {
-            return this.operator.hasPerms(Permission.assignmentCanManagePolls);
-        } else if (this.poll().isTopicPoll) {
-            return this.operator.hasPerms(Permission.agendaItemCanManagePolls);
-        }
-        return false;
-    });
-
     public votescast = computed(() => {
         return Object.keys(this.poll().ballot_ids ?? {}).length;
     });
 
-    public canSeeProgressBar = computed(() => {
-        if (!this.canSeeNames) {
-            return false;
-        }
-        return this.canManageSpeakers || this.canManagePoll();
-    });
+    public canSeeProgressBar = signal(false);
 
     public valueInPercent = computed(() => {
         return (this.votescast() / this.max()) * 100;
     });
-
-    private canSeeNames = signal(false);
-    private canManageSpeakers = signal(false);
 
     private autoupdate = inject(AutoupdateService);
     private userRepo = inject(UserControllerService);
@@ -82,7 +63,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
     });
 
     public max = computed(() => {
-        return this.maxResource.hasValue() ? this.maxResource.value() : 1;
+        return this.maxResource.hasValue() ? this.maxResource.value() : 0;
     });
 
     private voteInfoSubscription: ModelSubscription;
@@ -107,8 +88,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
         });
 
         this.operator.userObservable.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.canSeeNames.set(this.operator.hasPerms(Permission.userCanSee));
-            this.canManageSpeakers.set(this.operator.hasPerms(Permission.listOfSpeakersCanManage));
+            this.canSeeProgressBar.set(this.operator.hasPerms(Permission.pollCanSeeProgress));
         });
     }
 

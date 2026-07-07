@@ -1,4 +1,5 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -14,6 +15,7 @@ import { PollFormRatingScoreComponent } from 'src/app/site/pages/meetings/module
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 const TAB_METHOD_MAP = [`selection`, `rating_approval`, `rating_score`, `approval`];
 
@@ -76,8 +78,10 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     }
 
     public selectedTab = signal(0);
+    public allowCumulative = signal(false);
 
     private pollService = inject(PollService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     public constructor() {
         super();
@@ -87,6 +91,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
             this.method = collection.replace(`poll_config_`, ``);
             this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
         }
+
+        this.meetingSettingsService
+            .get(`assignment_poll_enable_max_votes_per_option`)
+            .pipe(takeUntilDestroyed())
+            .subscribe(v => {
+                this.allowCumulative.set(v);
+            });
     }
 
     public override submitPoll(): void {
@@ -116,7 +127,11 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     private getSelectedMethod(): string {
         if (!this.hasMultipleOptions) {
-            return `approval`;
+            if (this.selectedTab() != 1) {
+                return `approval`;
+            }
+
+            return `rating_score`;
         }
 
         return TAB_METHOD_MAP[this.selectedTab()];
@@ -125,13 +140,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private getMethodConfig(): unknown {
         switch (this.getSelectedMethod()) {
             case `approval`:
-                return { ...this.approvalForm()?.approvalForm.value };
+                return { ...this.approvalForm()?.getSerialzedForm() };
             case `selection`:
-                return { ...this.selectionForm()?.form.value };
+                return { ...this.selectionForm()?.getSerialzedForm() };
             case `rating_approval`:
-                return { ...this.ratingApprovalForm()?.form.value };
+                return { ...this.ratingApprovalForm()?.getSerialzedForm() };
             case `rating_score`:
-                return { ...this.ratingScoreForm()?.form.value };
+                return { ...this.ratingScoreForm()?.getSerialzedForm() };
         }
         return {};
     }

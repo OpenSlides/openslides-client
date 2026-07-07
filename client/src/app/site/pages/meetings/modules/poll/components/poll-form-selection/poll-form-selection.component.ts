@@ -45,13 +45,21 @@ export class PollFormSelectionComponent {
             onehundred_percent_base: [`valid`],
             strike_out: [false],
             allow_nota: [false],
+            allow_general_abstain: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
-            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]],
+            min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
             display_chart: [``]
         });
 
         effect(this.onDataUpdated.bind(this));
         effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    public getSerialzedForm(): Record<string, unknown> {
+        return {
+            ...this.form.value,
+            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`]
+        };
     }
 
     private minOptionsAmountValidator(): ValidatorFn {

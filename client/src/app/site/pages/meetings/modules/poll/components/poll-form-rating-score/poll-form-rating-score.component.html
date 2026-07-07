@@ -1,20 +1,20 @@
 <form [formGroup]="form">
     <div class="poll-preview-meta-info-form">
-        <div class="margin-bottom-15 info-grid">
-            <mat-form-field>
-                <mat-label>{{ 'Election method' | translate }}</mat-label>
-                <mat-select formControlName="allow_abstain">
-                    <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
-                    <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="margin-bottom-15">
+            <mat-checkbox formControlName="allow_general_abstain">
+                {{ 'General abstain' | translate }}
+            </mat-checkbox>
         </div>
 
         <div class="margin-bottom-15 info-grid">
-            <mat-form-field>
-                <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
-                <input formControlName="min_vote_sum" matInput type="number" />
-            </mat-form-field>
+            @if (!form.get('allow_general_abstain').value) {
+                <mat-form-field>
+                    <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
+                    <input formControlName="min_vote_sum" matInput type="number" />
+                </mat-form-field>
+            } @else {
+                <div></div>
+            }
 
             <mat-form-field>
                 <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
@@ -23,10 +23,14 @@
         </div>
 
         <div class="margin-bottom-15 info-grid">
-            <mat-form-field>
-                <mat-label>{{ 'Min amount of options voted' | translate }}</mat-label>
-                <input formControlName="min_options_amount" matInput type="number" />
-            </mat-form-field>
+            @if (!form.get('allow_general_abstain').value) {
+                <mat-form-field>
+                    <mat-label>{{ 'Min amount of options voted' | translate }}</mat-label>
+                    <input formControlName="min_options_amount" matInput type="number" />
+                </mat-form-field>
+            } @else {
+                <div></div>
+            }
 
             <mat-form-field>
                 <mat-label>{{ 'Max amount of options voted' | translate }}</mat-label>

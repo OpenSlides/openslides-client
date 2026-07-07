@@ -24,7 +24,7 @@ export class AssignmentPollComponent extends BasePollComponent {
     public get showPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.assignmentCanManagePolls) ||
+                this.operator.hasPerms(Permission.assignmentCanSeePolls) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {

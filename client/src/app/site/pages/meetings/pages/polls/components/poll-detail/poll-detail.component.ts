@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map, switchMap } from 'rxjs';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -21,7 +22,9 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { DetailViewModule } from '../../../../modules/meetings-component-collector/detail-view/detail-view.module';
 import { ProjectorButtonModule } from '../../../../modules/meetings-component-collector/projector-button/projector-button.module';
-import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
+import { PollMetaComponent } from '../../../../modules/poll/components/poll-meta/poll-meta.component';
+import { PollProgressComponent } from '../../../../modules/poll/components/poll-progress/poll-progress.component';
+import { PollResultComponent } from '../../../../modules/poll/components/poll-result/poll-result.component';
 import { PollControllerService } from '../../../../modules/poll/services/poll-controller.service';
 import { PollPdfService } from '../../../../modules/poll/services/poll-pdf.service';
 import { VotingService } from '../../../../modules/poll/services/voting.service';
@@ -35,7 +38,9 @@ import { PollSingleVotesComponent } from '../poll-single-votes/poll-single-votes
     styleUrls: [`./poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        PollComponent,
+        PollMetaComponent,
+        PollProgressComponent,
+        PollResultComponent,
         DetailViewModule,
         ProjectorButtonModule,
         PollEntitledUserComponent,
@@ -68,8 +73,40 @@ export class PollDetailComponent extends BaseComponent {
 
     public selectedTab = signal(0);
 
+    public presentEntitledUsers = rxResource({
+        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
+        defaultValue: 0,
+        stream: ({ params }) =>
+            this.userRepo.getViewModelListObservable().pipe(
+                map(users => {
+                    return users.filter(user => {
+                        const countable = user.isVoteCountable;
+                        const inVoteGroup = params.entitledGroupIds.intersect(user.group_ids()).length;
+
+                        return countable && inVoteGroup;
+                    }).length;
+                })
+            )
+    });
+
+    public entitledUsers = rxResource({
+        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
+        defaultValue: 0,
+        stream: ({ params }) =>
+            this.userRepo.getViewModelListObservable().pipe(
+                map(users => {
+                    return users.filter(user => {
+                        const inVoteGroup = params.entitledGroupIds.intersect(user.group_ids()).length;
+
+                        return inVoteGroup;
+                    }).length;
+                })
+            )
+    });
+
     public override translate = inject(TranslateService);
     public pollRepo = inject(PollControllerService);
+    public userRepo = inject(UserRepositoryService);
     private pollPdfService = inject(PollPdfService);
     public votingService = inject(VotingService);
     private activatedRoute = inject(ActivatedRoute);

@@ -42,7 +42,7 @@ export class MotionPollComponent extends BasePollComponent {
     public get showPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.motionCanManagePolls) ||
+                this.operator.hasPerms(Permission.motionCanSeePolls) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {

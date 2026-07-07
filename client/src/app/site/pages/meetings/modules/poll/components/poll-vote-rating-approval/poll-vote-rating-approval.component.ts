@@ -39,6 +39,10 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
         return maxVotes - this.selectedOptions().size;
     });
 
+    public selectionInvalid = computed<boolean>(() => {
+        return this.selectedOptions().size === 0;
+    });
+
     public isSelected(optionId: number, value?: string): boolean {
         return (
             this.selectedOptions().has(optionId) &&

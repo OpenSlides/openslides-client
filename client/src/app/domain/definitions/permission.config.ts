@@ -92,6 +92,11 @@ Optional combination of requests to speak with presence status is possible. ( > 
                 value: Permission.agendaItemCanManagePolls
             },
             {
+                display_name: _(`Can see ballot results`),
+                help_text: _(`Can see unpublished ballot results.`),
+                value: Permission.agendaItemCanSeePolls
+            },
+            {
                 display_name: _(`Can see moderation notes`),
                 help_text: _(`Can see all moderation notes in each list of speakers.`),
                 anon_allowed: true,
@@ -180,6 +185,11 @@ Further requirements:
                 display_name: _(`Can manage motion polls`),
                 help_text: _(`Can create, modify, start/stop and delete votings.`),
                 value: Permission.motionCanManagePolls
+            },
+            {
+                display_name: _(`Can see ballot results`),
+                help_text: _(`Can see unpublished ballot results.`),
+                value: Permission.motionCanSeePolls
             }
         ]
     },
@@ -207,6 +217,11 @@ Note: The right to vote is defined directly in the ballot.`
                 display_name: _(`Can manage ballots`),
                 help_text: _(`Can create, modify, start/stop and delete ballots.`),
                 value: Permission.assignmentCanManagePolls
+            },
+            {
+                display_name: _(`Can see ballot results`),
+                help_text: _(`Can see unpublished ballot results.`),
+                value: Permission.assignmentCanSeePolls
             },
             {
                 display_name: _(`Can nominate another participant`),
@@ -335,6 +350,11 @@ Note: For privacy reasons, it is recommended to limit the rights to view the His
 
 Note: The chat menu item becomes visible to all participants, except admins, as soon as a chat has been created.`),
                 value: Permission.chatCanManage
+            },
+            {
+                display_name: _(`Can see poll progress`),
+                help_text: _(`Can see the progress bar of a running poll.`),
+                value: Permission.pollCanSeeProgress
             }
         ]
     }

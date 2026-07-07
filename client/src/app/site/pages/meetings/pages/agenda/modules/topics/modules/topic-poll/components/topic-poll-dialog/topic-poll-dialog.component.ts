@@ -91,9 +91,9 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
     private getMethodConfig(): unknown {
         switch (this.getSelectedMethod()) {
             case `approval`:
-                return { ...this.approvalForm()?.approvalForm.value };
+                return { ...this.approvalForm()?.getSerialzedForm() };
             case `selection`:
-                return { ...this.selectionPollForm()?.form.value };
+                return { ...this.selectionPollForm()?.getSerialzedForm() };
         }
         return {};
     }

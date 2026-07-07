@@ -92,7 +92,7 @@
     }
 </div>
 
-@if (config()?.min_vote_sum === 0) {
+@if (config()?.min_vote_sum === 0 && config()?.min_options_amount === 0) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>
@@ -100,33 +100,26 @@
     </div>
 
     <div class="option-list">
-        @if (config().min_vote_sum === 0) {
-            <div class="option-row" role="row">
-                <div class="vote-option-title grid-name-area" role="rowheader">
-                    {{ 'General abstain' | translate }}
-                </div>
-                <div class="vote-button-area" role="gridcell">
-                    <os-poll-vote-button
-                        optionType="abstain"
-                        [isSelected]="+getOptionVote(0) > 0"
-                        [loading]="loading()"
-                        [optionTitle]="'General abstain' | translate"
-                        (toggleOption)="setOptionVote(0, '1')"
-                    />
-                </div>
+        <div class="option-row" role="row">
+            <div class="vote-option-title grid-name-area" role="rowheader">
+                {{ 'General abstain' | translate }}
             </div>
-        }
+            <div class="vote-button-area" role="gridcell">
+                <os-poll-vote-button
+                    optionType="abstain"
+                    [isSelected]="+getOptionVote(0) > 0"
+                    [loading]="loading()"
+                    [optionTitle]="'General abstain' | translate"
+                    (toggleOption)="setOptionVote(0, '1')"
+                />
+            </div>
+        </div>
     </div>
 }
 
 @if (options().length > 0) {
     <div class="submit-area">
-        <button
-            color="accent"
-            mat-raised-button
-            [disabled]="loading() || selectedOptionValues().size === 0"
-            (click)="submitVote()"
-        >
+        <button color="accent" mat-raised-button [disabled]="loading() || selectionInvalid()" (click)="submitVote()">
             <mat-icon>how_to_vote</mat-icon>
             {{ 'Submit vote now' | translate }}
         </button>
