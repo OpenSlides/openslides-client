@@ -16,6 +16,9 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     standalone: false
 })
 export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
+    @Input()
+    public dependDisableOnEmptyItems = false;
+
     private _inputListValuesSubscription: Subscription;
 
     /**
@@ -37,7 +40,8 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
                 this.selectableItems = items;
                 if (this.contentForm) {
                     this.disabled =
-                        (this.disabled || !items || (!!items && !items.length)) && !this.clickNotFound.observed;
+                        ((this.disabled && !this.dependDisableOnEmptyItems) || !items || (!!items && !items.length)) &&
+                        !this.clickNotFound.observed;
                 }
             });
             this.subscriptions.push(this._inputListValuesSubscription);
