@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, inject, ViewContainerRef } from '@angular/core';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 
@@ -9,8 +9,12 @@ import { SpinnerService } from 'src/app/site/modules/global-spinner';
     standalone: false
 })
 export class OpenSlidesOverlayContainerComponent {
-    public constructor(_viewContainer: ViewContainerRef, _domService: DomService, _spinnerService: SpinnerService) {
-        _domService.setViewContainer(_viewContainer);
-        _spinnerService.show(undefined, { hideWhenStable: true });
+    private _viewContainer = inject(ViewContainerRef);
+    private _domService = inject(DomService);
+    private _spinnerService = inject(SpinnerService);
+
+    public constructor() {
+        this._domService.setViewContainer(this._viewContainer);
+        this._spinnerService.show(undefined, { hideWhenStable: true });
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
@@ -27,11 +27,10 @@ export class CommitteeImportService extends BaseBackendImportService {
         warning: _(`Committees with warnings: affected cells will be skipped`)
     };
 
-    public constructor(
-        importServiceCollector: ImportServiceCollectorService,
-        private exporter: CsvExportForBackendService,
-        private repo: CommitteeControllerService
-    ) {
+    private exporter = inject(CsvExportForBackendService);
+    private repo = inject(CommitteeControllerService);
+
+    public constructor(importServiceCollector: ImportServiceCollectorService) {
         super(importServiceCollector);
     }
 

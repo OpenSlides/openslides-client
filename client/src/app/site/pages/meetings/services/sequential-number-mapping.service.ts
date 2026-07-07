@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src/app/domain/interfaces';
@@ -52,13 +52,13 @@ export class SequentialNumberMappingService {
     private _subscriptions: Subscription[] = [];
     private _repositories: BaseMeetingRelatedRepository<any, any>[] = [];
 
-    public constructor(
-        collectionMapperService: MeetingCollectionMapperService,
-        private activeMeeting: ActiveMeetingService,
-        private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
-    ) {
-        collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
+    private activeMeeting = inject(ActiveMeetingService);
+    private autoupdateService = inject(AutoupdateService);
+    private collectionMapperService = inject(MeetingCollectionMapperService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+
+    public constructor() {
+        this.collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();
         });

@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -238,17 +239,17 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     private readonly _directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
-    public constructor(
-        private dialog: MatDialog,
-        private cd: ChangeDetectorRef,
-        private fb: UntypedFormBuilder,
-        private translate: TranslateService,
-        private repo: MediafileControllerService,
-        private activeMeeting: ActiveMeetingService,
-        private promptService: PromptService
-    ) {
+    private activeMeeting = inject(ActiveMeetingService);
+    private cd = inject(ChangeDetectorRef);
+    private dialog = inject(MatDialog);
+    private fb = inject(UntypedFormBuilder);
+    private promptService = inject(PromptService);
+    private repo = inject(MediafileControllerService);
+    private translate = inject(TranslateService);
+
+    public constructor() {
         super();
-        this.moveForm = fb.group({ directory_id: [] });
+        this.moveForm = this.fb.group({ directory_id: [] });
         this.subscriptions.push(
             this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
                 this.movingToPublicFolder = id && this.repo.getViewModel(id).isPublishedOrganizationWide;

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
@@ -45,11 +45,10 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     private subscriptionName: string;
 
-    public constructor(
-        @Optional() @Self() ngControl: NgControl,
-        private meetingSettingsService: MeetingSettingsService,
-        private modelRequestService: ModelRequestService
-    ) {
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private modelRequestService = inject(ModelRequestService);
+
+    public constructor(@Optional() @Self() ngControl: NgControl) {
         super(ngControl);
         this.shouldPropagateOnRegistering = false;
     }
