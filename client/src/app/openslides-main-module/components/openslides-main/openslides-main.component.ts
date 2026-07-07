@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, DOCUMENT, Inject, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, Component, DOCUMENT, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -48,8 +48,7 @@ export class OpenSlidesMainComponent implements OnInit {
     private modelStore = inject(ViewModelStoreService);
     private ctService = inject(CustomTranslationService);
 
-    public constructor(
-    ) {
+    public constructor() {
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();
