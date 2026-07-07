@@ -3,6 +3,7 @@ import {
     AfterViewInit,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -206,18 +207,13 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
     private _isSavingSubject = new BehaviorSubject(false);
     private _isSaveButtonEnabled = true;
 
-    /**
-     * Empty constructor
-     */
-    public constructor(
-        public vp: ViewPortService,
-        private menu: MainMenuService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private routingState: RoutingStateService,
-        private headbarService: GlobalHeadbarService,
-        private _viewContainerRef: ViewContainerRef
-    ) {}
+    public vp = inject(ViewPortService);
+    private headbarService = inject(GlobalHeadbarService);
+    private menu = inject(MainMenuService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private routingState = inject(RoutingStateService);
+    private _viewContainerRef = inject(ViewContainerRef);
 
     /**
      * Detect if the cancel edit event was used

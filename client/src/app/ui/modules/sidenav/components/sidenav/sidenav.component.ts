@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, inject, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 
@@ -34,7 +34,7 @@ export class SidenavComponent {
         return this.isMobile ? (this.sideNav?.opened ?? false) : this.desktopOpen;
     }
 
-    public constructor(private vp: ViewPortService) {}
+    private vp = inject(ViewPortService);
 
     public close(): void {
         if (this.isMobile) {

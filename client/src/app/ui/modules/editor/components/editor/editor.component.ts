@@ -165,10 +165,6 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     private domParser = new DOMParser();
 
-    public constructor() {
-        super();
-    }
-
     public ngAfterViewInit(): void {
         const editorConfig = {
             element: this.editorEl.nativeElement,

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -9,7 +9,7 @@ import { ChoiceAnswer, ChoiceDialogConfig } from '../definitions';
 
 @Injectable({ providedIn: `root` })
 export class ChoiceService {
-    public constructor(private dialog: MatDialog) {}
+    private dialog = inject(MatDialog);
 
     /**
      * Opens the dialog. Returns the chosen value after the user accepts.

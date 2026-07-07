@@ -4,6 +4,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -242,10 +243,8 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {}
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
