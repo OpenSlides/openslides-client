@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -39,13 +39,11 @@ export class HttpService {
         return this._actionWorkerWatch;
     }
 
-    public constructor(
-        private http: HttpClient,
-        private errorMapper: ErrorMapService,
-        private injector: Injector,
-        private snackBar: MatSnackBar,
-        private translate: TranslateService
-    ) {}
+    private errorMapper = inject(ErrorMapService);
+    private http = inject(HttpClient);
+    private injector = inject(Injector);
+    private snackBar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
 
     /**
      * Send the a http request the the given path.

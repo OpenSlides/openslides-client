@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
@@ -17,7 +17,7 @@ export type GetUserEditablePresenterResult = Record<Id, GetUserEditableIdentifie
     providedIn: `root`
 })
 export class GetUserEditablePresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(payload: GetUserEditablePresenterPayload): Promise<GetUserEditablePresenterResult> {
         return await this.presenter.call(Presenter.GET_USER_EDITABLE, payload);

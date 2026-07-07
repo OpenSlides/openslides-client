@@ -68,6 +68,7 @@ export class AppLoadService {
     private modelMapper = inject(CollectionMapperService);
     private mainMenuService = inject(MainMenuService);
     private fallbackRoutesService = inject(FallbackRoutesService);
+
     public constructor() {
         OpenSlidesInjector.setInjector(this.injector);
     }
