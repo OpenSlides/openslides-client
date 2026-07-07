@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
 import {
     BasePollDialogComponent,
@@ -47,6 +47,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     }
 
     private pollService = inject(PollService);
+    private translate = inject(TranslateService);
 
     public override methodPayload(): PollMethodPayload {
         const config = { ...this.approvalFormValue };
@@ -58,5 +59,18 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
 
     public override optionsPayload(): PollOptionsPayload {
         return {};
+    }
+
+    public analogPollOptions(): { key: string; title: string }[] {
+        const options = [
+            { key: `yes`, title: this.translate.instant(`Yes`) },
+            { key: `no`, title: this.translate.instant(`No`) }
+        ];
+
+        if (this.approvalFormValue.allow_abstain) {
+            options.push({ key: `abstain`, title: this.translate.instant(`Abstain`) });
+        }
+
+        return options;
     }
 }

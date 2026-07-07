@@ -6,28 +6,39 @@
     </div>
 
     <div class="poll-result" [class.hidden]="!analogPollFormOpen()">
-        <os-poll-edit-result configType="approval" [pollConfigData]="approvalFormValue" [pollData]="pollData" />
+        <os-poll-edit-result
+            configType="approval"
+            [pollConfigData]="approvalFormValue"
+            [pollData]="pollData"
+            [options]="analogPollOptions()"
+        />
     </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    @if (isAnalogPoll.value() && !analogPollFormOpen()) {
-        <button mat-button [disabled]="!formsValid" (click)="analogPollFormOpen.set(true)">
-            <span>{{ 'Next' | translate }}</span>
-        </button>
-    } @else {
-        <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
-            <span>{{ 'Save' | translate }}</span>
-        </button>
-    }
+    <div class="dialog-actions">
+        <div>
+            <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
+                <span>{{ 'Save' | translate }}</span>
+            </button>
 
-    @if (!analogPollFormOpen()) {
-        <button mat-button [mat-dialog-close]="false">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    } @else {
-        <button mat-button (click)="analogPollFormOpen.set(false)">
-            <span>{{ 'Back' | translate }}</span>
-        </button>
-    }
+            <button mat-button [mat-dialog-close]="false">
+                <span>{{ 'Cancel' | translate }}</span>
+            </button>
+        </div>
+
+        <div>
+            @if (isAnalogPoll.value()) {
+                @if (analogPollFormOpen()) {
+                    <button mat-button (click)="analogPollFormOpen.set(false)">
+                        <span>{{ 'Edit Poll' | translate }}</span>
+                    </button>
+                } @else {
+                    <button mat-button (click)="analogPollFormOpen.set(true)">
+                        <span>{{ 'Edit Result' | translate }}</span>
+                    </button>
+                }
+            }
+        </div>
+    </div>
 </mat-dialog-actions>

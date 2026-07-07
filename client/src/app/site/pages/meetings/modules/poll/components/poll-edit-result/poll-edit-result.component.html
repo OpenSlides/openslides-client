@@ -1,10 +1,55 @@
-@switch (configType()) {
-    @case ('approval')
-    @case ('rating_score')
-    @case ('selection') {
-        OPTION
-    }
-    @case ('rating_approval') {
-        PER OPTION
-    }
+<h2>{{ pollData().title }}</h2>
+
+@for (option of options(); track option.key) {
+    <div class="option">
+        @switch (configType()) {
+            @case ('approval')
+            @case ('rating_score')
+            @case ('selection') {
+                <mat-form-field class="option-amount">
+                    <mat-label>{{ option.title }}</mat-label>
+                    <input matInput [formControlName]="option.key" />
+                </mat-form-field>
+
+                <mat-checkbox [formControlName]="option.key + '_majority'">{{ 'majority' | translate }}</mat-checkbox>
+            }
+            @case ('rating_approval') {
+                PER OPTION
+            }
+        }
+    </div>
+}
+
+@if (pollConfigDataLax().min_options_amount === 0 && pollConfigDataLax().min_vote_sum === 0) {
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Global abstain</mat-label>
+            <input matInput formControlName="abstain" type="number" />
+        </mat-form-field>
+    </div>
+}
+
+@if (pollConfigDataLax().allow_nota) {
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>General rejection/General approval</mat-label>
+            <input matInput formControlName="nota" type="number" />
+        </mat-form-field>
+    </div>
+}
+
+<div class="option">
+    <mat-form-field class="option-amount">
+        <mat-label>Invalid votes</mat-label>
+        <input matInput formControlName="invalid" type="number" />
+    </mat-form-field>
+</div>
+
+@if (configType() !== 'approval') {
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Total ballots</mat-label>
+            <input matInput formControlName="total_ballots" type="number" />
+        </mat-form-field>
+    </div>
 }
