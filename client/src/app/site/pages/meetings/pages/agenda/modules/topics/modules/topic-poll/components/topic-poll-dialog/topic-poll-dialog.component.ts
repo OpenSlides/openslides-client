@@ -5,9 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
-import { PollVisibility } from 'src/app/domain/models/poll';
-import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
-import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import {
+    BasePollDialogComponent,
+    PollMethodPayload,
+    PollOptionsPayload
+} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
@@ -59,29 +61,23 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
     private pollService = inject(PollService);
 
-    public override submitPoll(): void {
-        const formValues = this.pollForm().getValues();
-        const visibility: PollVisibility = formValues?.visibility;
-
-        const payload: PollUpdatePayload = {
-            title: formValues?.title,
+    public override methodPayload(): PollMethodPayload {
+        return {
             method: this.getSelectedMethod(),
-            method_config: this.getMethodConfig(),
-            visibility,
-            allow_vote_split: false
+            method_config: this.getMethodConfig()
         };
+    }
 
-        if (this.getSelectedMethod() !== `approval`) {
-            payload.options = formValues.options;
-            payload.option_type = `text`;
+    public override optionsPayload(): PollOptionsPayload {
+        if (this.getSelectedMethod() === `approval`) {
+            return {};
         }
 
-        if (visibility !== PollVisibility.Manually) {
-            payload.entitled_group_ids = formValues?.entitled_group_ids ?? [];
-            payload.live_voting_enabled = formValues?.live_voting_enabled ?? false;
-        }
-
-        this.dialogRef.close(payload);
+        const formValues = this.pollForm().getValues();
+        return {
+            options: formValues.options,
+            option_type: `text`
+        };
     }
 
     private getSelectedMethod(): string {

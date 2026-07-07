@@ -1,0 +1,10 @@
+@switch (configType()) {
+    @case ('approval')
+    @case ('rating_score')
+    @case ('selection') {
+        OPTION
+    }
+    @case ('rating_approval') {
+        PER OPTION
+    }
+}

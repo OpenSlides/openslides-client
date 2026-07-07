@@ -1,14 +1,33 @@
 <mat-dialog-content>
-    <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
-        <os-poll-form-approval [data]="pollData" />
-    </os-poll-form>
+    <div class="poll-config" [class.hidden]="analogPollFormOpen()">
+        <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
+            <os-poll-form-approval [data]="pollData" />
+        </os-poll-form>
+    </div>
+
+    <div class="poll-result" [class.hidden]="!analogPollFormOpen()">
+        <os-poll-edit-result configType="approval" [pollConfigData]="approvalFormValue" [pollData]="pollData" />
+    </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
-        <span>{{ 'Save' | translate }}</span>
-    </button>
-    <button mat-button [mat-dialog-close]="false">
-        <span>{{ 'Cancel' | translate }}</span>
-    </button>
+    @if (isAnalogPoll.value() && !analogPollFormOpen()) {
+        <button mat-button [disabled]="!formsValid" (click)="analogPollFormOpen.set(true)">
+            <span>{{ 'Next' | translate }}</span>
+        </button>
+    } @else {
+        <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+    }
+
+    @if (!analogPollFormOpen()) {
+        <button mat-button [mat-dialog-close]="false">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    } @else {
+        <button mat-button (click)="analogPollFormOpen.set(false)">
+            <span>{{ 'Back' | translate }}</span>
+        </button>
+    }
 </mat-dialog-actions>

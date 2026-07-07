@@ -1,10 +1,14 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { PollVisibility } from 'src/app/domain/models/poll';
-import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
-import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
+import {
+    BasePollDialogComponent,
+    PollMethodPayload,
+    PollOptionsPayload
+} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
@@ -12,8 +16,16 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 @Component({
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
-    imports: [PollFormComponent, PollFormApprovalComponent, MatDialogModule, MatButtonModule, TranslatePipe],
-    styleUrls: [`./motion-poll-dialog.component.scss`]
+    imports: [
+        PollEditResultComponent,
+        PollFormComponent,
+        PollFormApprovalComponent,
+        MatDialogModule,
+        MatButtonModule,
+        TranslatePipe
+    ],
+    styleUrls: [`./motion-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent {
     private approvalForm = viewChild.required(PollFormApprovalComponent);
@@ -30,26 +42,21 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         return this.approvalForm().approvalForm.valid;
     }
 
+    public get approvalFormValue(): Partial<PollConfigApproval> {
+        return this.approvalForm().approvalForm.value;
+    }
+
     private pollService = inject(PollService);
 
-    public override submitPoll(): void {
-        const formValues = this.pollForm().getValues();
-        const config = { ...this.approvalForm().approvalForm.value };
-        const visibility: PollVisibility = formValues?.visibility;
-
-        const payload: PollUpdatePayload = {
-            title: formValues?.title,
+    public override methodPayload(): PollMethodPayload {
+        const config = { ...this.approvalFormValue };
+        return {
             method: `approval`,
-            method_config: config,
-            visibility,
-            allow_vote_split: false
+            method_config: config
         };
+    }
 
-        if (visibility !== PollVisibility.Manually) {
-            payload.entitled_group_ids = formValues?.entitled_group_ids ?? [];
-            payload.live_voting_enabled = formValues?.live_voting_enabled ?? false;
-        }
-
-        this.dialogRef.close(payload);
+    public override optionsPayload(): PollOptionsPayload {
+        return {};
     }
 }
