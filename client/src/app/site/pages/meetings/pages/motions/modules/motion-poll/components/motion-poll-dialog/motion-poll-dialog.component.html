@@ -8,9 +8,9 @@
     <div class="poll-result" [class.hidden]="!analogPollFormOpen()">
         <os-poll-edit-result
             configType="approval"
+            [options]="analogPollOptions()"
             [pollConfigData]="approvalFormValue"
             [pollData]="pollData"
-            [options]="analogPollOptions()"
         />
     </div>
 </mat-dialog-content>

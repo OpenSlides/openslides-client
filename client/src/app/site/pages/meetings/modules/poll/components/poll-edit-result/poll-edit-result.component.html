@@ -1,46 +1,42 @@
 <h2>{{ pollData().title }}</h2>
 
-<form [formGroup]="resultForm()">
-    @for (option of options(); track option.key) {
+<form>
+    @for (option of options(); track option.key; let i = $index) {
         <div class="option">
             @switch (configType()) {
                 @case ('approval')
                 @case ('rating_score')
                 @case ('selection') {
-                    {{ resultForm().get(option.key + '_majority').value }}
                     <mat-form-field class="option-amount">
                         <mat-label>{{ option.title }}</mat-label>
-                        <input
-                            matInput
-                            [formControlName]="option.key"
-                        />
+                        <input matInput type="number" [formField]="resultForm.options[i].value" />
                     </mat-form-field>
 
-                    <mat-checkbox class="option-majority" [formControlName]="option.key + '_majority'">
+                    <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
                         {{ 'majority' | translate }}
                     </mat-checkbox>
                 }
                 @case ('rating_approval') {
-                    PER OPTION
+                    OPTIONS
                 }
             }
         </div>
     }
 
-    @if (pollConfigDataLax().min_options_amount === 0 && pollConfigDataLax().min_vote_sum === 0) {
+    @if (showAbstain()) {
         <div class="option">
             <mat-form-field class="option-amount">
                 <mat-label>Global abstain</mat-label>
-                <input matInput formControlName="abstain" type="number" />
+                <input matInput type="number" [formField]="resultForm.abstain" />
             </mat-form-field>
         </div>
     }
 
-    @if (pollConfigDataLax().allow_nota) {
+    @if (showNota()) {
         <div class="option">
             <mat-form-field class="option-amount">
                 <mat-label>General rejection/General approval</mat-label>
-                <input matInput formControlName="nota" type="number" />
+                <input matInput type="number" [formField]="resultForm.nota" />
             </mat-form-field>
         </div>
     }
@@ -48,16 +44,14 @@
     <div class="option">
         <mat-form-field class="option-amount">
             <mat-label>Invalid votes</mat-label>
-            <input matInput formControlName="invalid" type="number" />
+            <input matInput type="number" [formField]="resultForm.invalid" />
         </mat-form-field>
     </div>
 
-    @if (configType() !== 'approval') {
-        <div class="option">
-            <mat-form-field class="option-amount">
-                <mat-label>Total ballots</mat-label>
-                <input matInput formControlName="total_ballots" type="number" />
-            </mat-form-field>
-        </div>
-    }
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Total ballots</mat-label>
+            <input matInput type="number" [formField]="resultForm.total_ballots" />
+        </mat-form-field>
+    </div>
 </form>

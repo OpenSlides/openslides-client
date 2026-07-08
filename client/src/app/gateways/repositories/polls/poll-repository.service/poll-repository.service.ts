@@ -52,30 +52,16 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
 
     public async update(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
         if (payload.visibility === PollVisibility.Manually) {
-            return this.updateAnalogPoll(poll.id, payload);
+            return this.updateAnalogPoll(poll, payload);
         }
 
         return this.updateElectronicPoll(poll, payload);
     }
 
-    private async createAnalogPoll(_poll: any): Promise<Identifiable> {
-        /*
-        const payload = {
-            meeting_id: this.activeMeetingId,
-            title: poll.title,
-            publish_immediately: poll.publish_immediately,
-            type: poll.type,
-            global_abstain: poll.global_abstain,
-            global_no: poll.global_no,
-            global_yes: poll.global_yes,
-            options: this.getAnalogOptions(poll.options),
-            content_object_id: poll.content_object_id,
-            ...this.getAnalogPollVotesValues(poll),
-            ...this.getAnalogPollGlobalValues(poll)
-        };
-        return this.sendActionToBackend(PollAction.CREATE, payload);
-        */
-        throw new Error(`not implemented`);
+    private async createAnalogPoll(payload: any): Promise<Identifiable> {
+        delete payload.live_voting_enabled;
+
+        return this.voteApi.create(payload);
     }
 
     private async createElectronicPoll(payload: PollCreatePayload): Promise<Identifiable> {
@@ -86,21 +72,12 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.voteApi.create(payload);
     }
 
-    private async updateAnalogPoll(_pollId: Id, _payload: PollUpdatePayload): Promise<void> {
-        /*
-        let payload: any;
-        if (poll.state === PollState.Created) {
-            payload = this.getUpdateCreatedAnalogPollPayload(update, poll);
-        } else {
-            payload = this.updateOtherStateAnalogPoll(update, poll);
+    private async updateAnalogPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
+        if (poll.config.METHOD_NAME === payload.method) {
+            delete payload[`method`];
         }
-        const optionUpdatePayload = this.getAnalogOptions(option, true);
-        return this.sendActionsToBackend([
-            { action: PollAction.UPDATE, data: [payload] },
-            { action: PollAction.UPDATE_OPTION, data: optionUpdatePayload }
-        ]);
-        */
-        throw new Error(`not implemented`);
+
+        return this.voteApi.update(poll.id, payload);
     }
 
     private async updateElectronicPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
