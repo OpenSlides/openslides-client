@@ -175,6 +175,31 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.setHeaders({ default: cols });
     }
 
+    /** The header's order according to how they are displayed on the template file */
+    private headersOrder = [
+        'title',
+        'first_name',
+        'last_name',
+        'email',
+        'member_number',
+        'structure_level',
+        'groups',
+        'number',
+        'vote_weight',
+        'gender',
+        'pronoun',
+        'username',
+        'default_password',
+        'is_active',
+        'is_physical_person',
+        'is_present',
+        'locked_out',
+        'saml_id',
+        'home_committee',
+        'external',
+        'comment'
+    ];
+
     public get defaultColumns(): ImportListHeaderDefinition[] {
         return this._defaultColumns;
     }
@@ -331,6 +356,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this.setHeaders({ preview: this._previewColumns });
         });
         this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
+        this.importer.previewsObservable.subscribe(d => {
+            console.log(d);
+        });
     }
 
     /**
@@ -392,6 +420,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return this._headers[propertyName]?.default?.label ?? propertyName;
     }
 
+    private hasNoChanges(item: ViewImportedParticipant): boolean {
+        const hasChanges = Object.values(item).some(value =>
+            Array.isArray(value) ? value.some(val => val?.info === 'new') : value?.info === 'new'
+        );
+        return !hasChanges;
+    }
+
     /**
      * Get the icon for the the item
      * @param item a row or an entry with a current state
@@ -402,13 +437,18 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Error: // no import possible
                 return this._state !== BackendImportPhase.FINISHED ? `error_outline` : 'close';
             case BackendImportState.Warning:
-                return `warning`;
+                return this.hasNoChanges(item) ? `warning` : ``;
             case BackendImportState.New: // item will be imported / has been imported
                 return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
             case BackendImportState.Done:
-                return this._state !== BackendImportPhase.FINISHED ? 'autorenew' : 'done';
+                console.log(this.hasNoChanges(item));
+                return this._state !== BackendImportPhase.FINISHED
+                    ? this.hasNoChanges(item)
+                        ? ''
+                        : 'autorenew'
+                    : 'done';
             case BackendImportState.Referenced:
-                return this._state !== BackendImportPhase.FINISHED ? 'merge' : 'done';
+                return this._state !== BackendImportPhase.FINISHED ? 'merge' : `done`;
             case BackendImportState.Generated:
                 return `merge`;
             case BackendImportState.Remove:
@@ -430,11 +470,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Warning:
                 return `warning`;
             case BackendImportState.New: // item will be imported / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
+                return BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
             case BackendImportState.Done:
                 return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
             case BackendImportState.Generated:
-                return `merge`;
+                return `person`;
             case BackendImportState.Remove:
                 return `remove`;
             default:
@@ -468,6 +508,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected getSummaryInformation(item: string): string[] {
+        // FIX FOOTER WHEN DATA IS NOT CHANGED
         return (
             {
                 total: ['group', 'accent'],
@@ -516,24 +557,24 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     this.translate.instant(this.modelName) +
                     ` ` +
                     (this._state !== BackendImportPhase.FINISHED
-                        ? this.translate.instant(`will be imported`) // item will be updated
-                        : this.translate.instant(`has been imported`)) // item has been imported
+                        ? this.translate.instant(`will be created`) // item will be updated
+                        : this.translate.instant(`has been created`)) // item has been created
                 );
             case BackendImportState.Done:
-                return (
-                    this.translate.instant(this.modelName) +
-                    ` ` +
-                    (this._state !== BackendImportPhase.FINISHED
-                        ? this.translate.instant(`will be updated`) // item will be updated
-                        : this.translate.instant(`has been imported`)) // item has been imported
-                );
+                return this.hasNoChanges(row)
+                    ? ``
+                    : this.translate.instant(this.modelName) +
+                          ` ` +
+                          (this._state !== BackendImportPhase.FINISHED
+                              ? this.translate.instant(`will be updated`) // item will be updated
+                              : this.translate.instant(`has been updated`)); // item has been updated
             case BackendImportState.Referenced:
                 return (
                     this.translate.instant(this.modelName) +
                     ` ` +
                     (this._state !== BackendImportPhase.FINISHED
                         ? this.translate.instant(`will be referenced`) // item will be referenced
-                        : this.translate.instant(`has been imported`)) // item has been imported
+                        : this.translate.instant(`has been referenced`)) // item has been referenced
                 );
             default:
                 return undefined;
@@ -626,9 +667,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            this._previewColumns = (previews[0]?.headers ?? this._previewColumns).filter(
-                header => !header[`is_hidden`]
-            );
+            const orderMap = new Map(this.headersOrder.map((property, index) => [property, index]));
+            this._previewColumns = (previews[0]?.headers ?? this._previewColumns)
+                .filter(header => !header.is_hidden)
+                .sort((a, b) => {
+                    const aIndex = orderMap.get(a.property) ?? this.headersOrder.length;
+                    const bIndex = orderMap.get(b.property) ?? this.headersOrder.length;
+                    return aIndex - bIndex;
+                });
             this.transformSummary(previews);
             this.cd.markForCheck();
         }

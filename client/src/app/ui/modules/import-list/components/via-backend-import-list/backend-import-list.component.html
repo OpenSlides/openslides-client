@@ -152,7 +152,7 @@
     <mat-card-content>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; width: auto">
             <div style="display: flex; flex-direction: column">
-                <h3 class="instructions" translate>{{ 'Import templates' | translate }}</h3>
+                <h3 class="instructions" translate>{{ 'Import template' | translate }}</h3>
                 <div (selectedNewFile)="sendCsvReload($event)">
                     <input
                         #fileInput
@@ -163,17 +163,17 @@
                         tabindex="0"
                         type="file"
                         (change)="onSelectedFile($event)"
-                        (keydown.enter)="fileInput.click()"
-                        (keydown.space)="fileInput.click(); $event.preventDefault()"
+                        (keydown.enter)="downloadCsvExample()"
+                        (keydown.space)="downloadCsvExample(); $event.preventDefault()"
                     />
                     <button
                         aria-label="{{ 'Information' | translate }}"
                         class="outlined-border"
                         matButton
                         outlined
-                        (click)="fileInput.click()"
-                        (keydown.enter)="fileInput.click()"
-                        (keydown.space)="fileInput.click(); $event.preventDefault()"
+                        (click)="downloadCsvExample()"
+                        (keydown.enter)="downloadCsvExample()"
+                        (keydown.space)="downloadCsvExample(); $event.preventDefault()"
                     >
                         <mat-icon>download</mat-icon>
                         <mat-label>CSV</mat-label>
@@ -181,7 +181,7 @@
                 </div>
             </div>
             <div style="display: flex; flex-direction: column">
-                <h3 class="instructions" translate>{{ 'Required column names' | translate }}</h3>
+                <h3 class="instructions" translate>{{ 'Description of columns' | translate }}</h3>
                 <div>
                     <button class="outlined-border" matButton outlined translate (click)="openDialog(fieldsInfoDialog)">
                         <mat-icon color="accent">info</mat-icon>
@@ -233,7 +233,7 @@
             [disabled]="uploadButton"
             (click)="showPreview()"
         >
-            {{ 'Upload' | translate }}
+            {{ 'Select file' | translate }}
         </button>
     </mat-card-content>
 </mat-card>
@@ -558,7 +558,7 @@
 -->
 <ng-template #fieldsInfoDialog>
     <div class="action-title" mat-dialog-title>
-        <h1 class="dialog-title" translate>The fields are defined as follows</h1>
+        <h1 class="dialog-title" translate>Description of column names</h1>
     </div>
     <mat-dialog-content>
         <table>

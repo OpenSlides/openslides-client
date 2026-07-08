@@ -125,7 +125,7 @@
                 *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
-                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">#</div>
+                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>
                 @if (row.state === 'error') {
                     <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
                         {{ getActionIconRow(row) }}

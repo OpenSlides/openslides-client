@@ -55,8 +55,8 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 property: `changedVoteWeight`,
                 label: _(`Vote weight`),
                 options: [
-                    { condition: [false, null], label: _(`Has changed vote weight`) },
-                    { condition: true, label: _(`Has unchanged vote weight`) }
+                    { condition: true, label: _(`Has changed vote weight`) },
+                    { condition: [false, null], label: _(`Has unchanged vote weight`) }
                 ]
             },
             {
