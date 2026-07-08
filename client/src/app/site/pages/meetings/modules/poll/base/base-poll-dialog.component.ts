@@ -10,6 +10,7 @@ import { PollUpdatePayload } from 'src/app/gateways/vote-api.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { PollEditResultComponent } from '../components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from '../components/poll-form/poll-form.component';
 
 export interface OptionsObject {
@@ -39,6 +40,7 @@ export interface PollOptionsPayload {
 @Directive()
 export abstract class BasePollDialogComponent extends BaseUiComponent {
     protected pollForm = viewChild.required(PollFormComponent);
+    protected pollResultForm = viewChild(PollEditResultComponent);
 
     public get formsValid(): boolean {
         if (!this.pollForm) {
@@ -66,24 +68,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
         this.addKeyListener();
     }
 
-    private addKeyListener(): void {
-        if (!this.dialogRef) {
-            return;
-        }
-
-        this.subscriptions.push(
-            this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-                if (event.key === `Enter` && event.shiftKey) {
-                    this.submitPoll();
-                }
-
-                if (event.key === `Escape`) {
-                    this.dialogRef.close();
-                }
-            })
-        );
-    }
-
     /**
      * Submits the values from dialog.
      */
@@ -102,6 +86,11 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
         if (visibility !== PollVisibility.Manually) {
             payload.entitled_group_ids = formValues?.entitled_group_ids ?? [];
             payload.live_voting_enabled = formValues?.live_voting_enabled ?? false;
+        } else if (this.pollResultForm()) {
+            const result = this.pollResultForm().serializeResult();
+            if (result) {
+                payload.result = result;
+            }
         }
 
         this.dialogRef.close(payload);
@@ -116,4 +105,22 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
      * Returns the poll options related part of the payload
      */
     public abstract optionsPayload(): PollOptionsPayload;
+
+    private addKeyListener(): void {
+        if (!this.dialogRef) {
+            return;
+        }
+
+        this.subscriptions.push(
+            this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
+                if (event.key === `Enter` && event.shiftKey) {
+                    this.submitPoll();
+                }
+
+                if (event.key === `Escape`) {
+                    this.dialogRef.close();
+                }
+            })
+        );
+    }
 }
