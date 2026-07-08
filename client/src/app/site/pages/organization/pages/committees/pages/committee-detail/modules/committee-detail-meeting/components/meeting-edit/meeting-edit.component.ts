@@ -327,6 +327,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private updateForm(meeting: ViewMeeting): void {
+        console.log(`aaaaah`);
+        console.log(meeting);
+        console.log(this.meetingForm);
+
         const start_time = meeting.start_time ? new Date(meeting.start_time * 1000) : null;
         const end_time = meeting.end_time ? new Date(meeting.end_time * 1000) : null;
         const {
@@ -400,8 +404,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         } = {
             ...this.meetingForm.value
         };
+        console.log(`aaaaah`);
         const time_zone_string = this.timeZone.getTimezoneNameById(time_zone);
         if (!this.meetingForm.get(`daterange`).disabled) {
+            console.log(`aaaaah`);
+            console.log(start_time);
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
                 end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
@@ -472,5 +479,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             return accounts;
         }
         return accounts.filter(account => this._committee_users_set.has(account.id));
+    }
+
+    public resetRange(): void {
+        this.meetingForm.patchValue({
+            start: null,
+            end: null
+        });
     }
 }

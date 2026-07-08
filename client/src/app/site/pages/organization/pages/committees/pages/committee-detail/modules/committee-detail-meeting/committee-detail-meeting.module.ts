@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -34,6 +36,8 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         MatCheckboxModule,
         MatInputModule,
         MatSelectModule,
+        MatTimepickerModule,
+        MatDatepickerModule,
         MatIconModule,
         AccountSearchSelectorModule,
         SearchSelectorModule,
