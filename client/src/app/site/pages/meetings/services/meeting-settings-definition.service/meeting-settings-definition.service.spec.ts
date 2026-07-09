@@ -37,16 +37,6 @@ const fakeSettings: SettingsGroup[] = [
                         type: `daterange`
                     },
                     {
-                        key: `four` as keyof Settings,
-                        label: `Setting four`,
-                        type: `datetime`
-                    },
-                    {
-                        key: `five` as keyof Settings,
-                        label: `Setting five`,
-                        type: `date`
-                    },
-                    {
                         key: `a` as keyof Settings,
                         label: `Setting a`
                     },
@@ -154,8 +144,6 @@ const typeToDefault: Record<SettingsType, any> = {
     translations: {},
     ranking: [],
     choice: null,
-    date: null,
-    datetime: null,
     daterange: [null, null],
     string: ``,
     text: ``,
