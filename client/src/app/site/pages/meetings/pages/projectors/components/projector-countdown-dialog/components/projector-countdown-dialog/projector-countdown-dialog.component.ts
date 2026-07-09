@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { CountdownDialogData } from '../../definitions';
     selector: `os-projector-countdown-dialog`,
     templateUrl: `./projector-countdown-dialog.component.html`,
     styleUrls: [`./projector-countdown-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectorCountdownDialogComponent implements OnInit {

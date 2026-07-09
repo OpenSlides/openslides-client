@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -14,6 +14,7 @@ import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subsc
     templateUrl: `./dashboard.component.html`,
     styleUrls: [`./dashboard.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent extends BaseComponent {

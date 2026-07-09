@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export interface EditorHtmlDialogOutput {
@@ -10,6 +10,7 @@ export interface EditorHtmlDialogOutput {
     selector: `os-editor-html-dialog`,
     templateUrl: `./editor-html-dialog.component.html`,
     styleUrls: [`./editor-html-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorHtmlDialogComponent {

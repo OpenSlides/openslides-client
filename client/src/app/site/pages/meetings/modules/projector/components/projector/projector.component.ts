@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -17,6 +17,7 @@ import { Dimension } from '../../../../pages/projectors/definitions';
     imports: [DirectivesModule, PipesModule],
     selector: `os-projector`,
     templateUrl: `./projector.component.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: [`./projector.component.scss`]
 })
 export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDestroy {

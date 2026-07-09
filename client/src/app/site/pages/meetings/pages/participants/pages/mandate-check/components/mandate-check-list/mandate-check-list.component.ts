@@ -110,7 +110,7 @@ class MandateCheckEntry implements Identifiable {
     ],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnDestroy, OnInit {
     public structureLevels: ViewStructureLevel[] = [];

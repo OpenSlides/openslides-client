@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -74,6 +74,7 @@ class HistoryListDate {
     selector: `os-history-list`,
     templateUrl: `./history-list.component.html`,
     styleUrls: [`./history-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HistoryListComponent extends BaseMeetingComponent implements OnInit, OnDestroy {

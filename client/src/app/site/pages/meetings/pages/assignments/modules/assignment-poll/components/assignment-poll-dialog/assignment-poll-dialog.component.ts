@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -24,6 +24,7 @@ import { AssignmentPollService, UnknownUserLabel } from '../../services/assignme
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {

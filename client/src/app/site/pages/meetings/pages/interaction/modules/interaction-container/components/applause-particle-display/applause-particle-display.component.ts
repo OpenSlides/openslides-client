@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NgParticlesService } from '@tsparticles/angular';
 import { Container, Engine } from '@tsparticles/engine';
@@ -17,6 +17,7 @@ import { particleConfig, particleOptions } from './particle-options';
     templateUrl: `./applause-particle-display.component.html`,
     styleUrls: [`./applause-particle-display.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ApplauseParticleDisplayComponent extends BaseMeetingComponent implements OnInit {

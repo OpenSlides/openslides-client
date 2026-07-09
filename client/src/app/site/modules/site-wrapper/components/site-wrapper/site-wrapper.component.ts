@@ -1,4 +1,12 @@
-import { Component, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+    Component,
+    EmbeddedViewRef,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ActivationEnd, Router } from '@angular/router';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
@@ -19,6 +27,7 @@ interface RoutingData {
     selector: `os-site-wrapper`,
     templateUrl: `./site-wrapper.component.html`,
     styleUrls: [`./site-wrapper.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SiteWrapperComponent implements OnInit, OnDestroy {

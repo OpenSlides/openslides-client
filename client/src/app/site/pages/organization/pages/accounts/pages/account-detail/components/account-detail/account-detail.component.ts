@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,7 @@ interface ParticipationTableMeetingDataRow {
     selector: `os-account-detail`,
     templateUrl: `./account-detail.component.html`,
     styleUrls: [`./account-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {

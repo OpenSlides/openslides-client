@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
@@ -6,6 +6,7 @@ import { LifecycleService } from 'src/app/site/services/lifecycle.service';
     selector: `os-info-actions`,
     templateUrl: `./info-actions.component.html`,
     styleUrls: [`./info-actions.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class InfoActionsComponent extends BaseComponent {

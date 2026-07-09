@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -14,6 +14,7 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
     selector: `os-theme-list`,
     templateUrl: `./theme-list.component.html`,
     styleUrls: [`./theme-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {

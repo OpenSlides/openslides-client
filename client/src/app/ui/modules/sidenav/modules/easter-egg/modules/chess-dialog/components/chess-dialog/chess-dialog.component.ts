@@ -1,4 +1,12 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Inject,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
@@ -18,6 +26,7 @@ interface ChessDialogConfig {
     templateUrl: `./chess-dialog.component.html`,
     styleUrls: [`./chess-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ChessDialogComponent extends BaseGameDialogComponent implements OnInit {

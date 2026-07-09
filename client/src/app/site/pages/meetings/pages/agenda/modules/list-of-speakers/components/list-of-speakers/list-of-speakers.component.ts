@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -19,6 +19,7 @@ import { ViewListOfSpeakers } from '../../view-models';
     selector: `os-list-of-speakers`,
     templateUrl: `./list-of-speakers.component.html`,
     styleUrls: [`./list-of-speakers.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnInit, OnDestroy {

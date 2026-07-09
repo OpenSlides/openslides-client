@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
@@ -14,6 +14,7 @@ interface OrgaMenuEntry extends BaseMenuEntry<OML> {
     selector: `os-organization-navigation`,
     templateUrl: `./organization-navigation.component.html`,
     styleUrls: [`./organization-navigation.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationNavigationComponent {

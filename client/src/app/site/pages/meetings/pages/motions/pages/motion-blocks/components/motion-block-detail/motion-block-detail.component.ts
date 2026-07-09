@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -24,6 +24,7 @@ import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/servic
     selector: `os-motion-block-detail`,
     templateUrl: `./motion-block-detail.component.html`,
     styleUrls: [`./motion-block-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {

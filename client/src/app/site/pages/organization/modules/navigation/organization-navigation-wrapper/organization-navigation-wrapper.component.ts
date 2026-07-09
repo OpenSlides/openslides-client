@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,7 @@ import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/
     selector: `os-organization-navigation-wrapper`,
     templateUrl: `./organization-navigation-wrapper.component.html`,
     styleUrls: [`./organization-navigation-wrapper.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationNavigationWrapperComponent extends BaseComponent implements OnInit {

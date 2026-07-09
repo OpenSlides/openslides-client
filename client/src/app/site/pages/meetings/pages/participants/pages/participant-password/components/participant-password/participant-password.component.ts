@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, of, switchAll, tap } from 'rxjs';
@@ -14,6 +14,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     selector: `os-participant-password`,
     templateUrl: `./participant-password.component.html`,
     styleUrls: [`./participant-password.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantPasswordComponent extends BaseMeetingComponent implements OnInit {

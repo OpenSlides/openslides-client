@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
@@ -10,6 +10,7 @@ import {
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: TopicPollFormComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollFormComponent extends BasePollFormComponent {

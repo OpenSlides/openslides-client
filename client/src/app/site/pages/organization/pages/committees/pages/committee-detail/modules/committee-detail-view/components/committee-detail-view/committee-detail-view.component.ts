@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
@@ -21,6 +21,7 @@ import { CommitteeSortService } from '../../../../../committee-list/services/com
     selector: `os-committee-detail-view`,
     templateUrl: `./committee-detail-view.component.html`,
     styleUrls: [`./committee-detail-view.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent implements OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
@@ -16,6 +16,7 @@ import { MeetingService } from '../services/meeting.service';
     templateUrl: `./committee-meeting-preview.component.html`,
     styleUrls: [`./committee-meeting-preview.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {

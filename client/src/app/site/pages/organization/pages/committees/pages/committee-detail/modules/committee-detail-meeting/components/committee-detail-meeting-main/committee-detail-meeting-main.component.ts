@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { getMeetingCreateSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
@@ -9,6 +9,7 @@ import { getCommitteeMeetingDetailSubscriptionConfig } from '../../../../../../c
     selector: `os-committee-detail-meeting-main`,
     templateUrl: `./committee-detail-meeting-main.component.html`,
     styleUrls: [`./committee-detail-meeting-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandlerComponent {

@@ -11,7 +11,8 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -91,6 +92,7 @@ const DEFAULT_COLOR_PALETE = [
     templateUrl: `./editor.component.html`,
     styleUrls: [`./editor.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {

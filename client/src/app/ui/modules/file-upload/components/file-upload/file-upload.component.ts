@@ -6,7 +6,8 @@ import {
     Input,
     Output,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -27,6 +28,7 @@ let uniqueCounter = 0;
     selector: `os-file-upload`,
     templateUrl: `./file-upload.component.html`,
     styleUrls: [`./file-upload.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class FileUploadComponent {

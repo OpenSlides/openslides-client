@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
@@ -10,6 +10,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
     selector: `os-chat-group-detail-message`,
     templateUrl: `./chat-group-detail-message.component.html`,
     styleUrls: [`./chat-group-detail-message.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ChatGroupDetailMessageComponent {

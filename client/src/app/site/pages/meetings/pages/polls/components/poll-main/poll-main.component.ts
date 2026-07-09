@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
 
@@ -9,6 +9,7 @@ import { getPollListSubscriptionConfig } from '../../polls.subscription';
     selector: `os-poll-main`,
     templateUrl: `./poll-main.component.html`,
     styleUrls: [`./poll-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PollMainComponent extends BaseMeetingModelRequestHandler {

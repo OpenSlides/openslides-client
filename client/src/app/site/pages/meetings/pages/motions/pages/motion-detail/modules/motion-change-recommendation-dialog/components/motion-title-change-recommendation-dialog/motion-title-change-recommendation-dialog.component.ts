@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { Validators } from '@angular/forms';
 
 import {
@@ -33,6 +33,7 @@ export interface MotionTitleChangeRecommendationDialogComponentData extends Base
     templateUrl: `./motion-title-change-recommendation-dialog.component.html`,
     styleUrls: [`./motion-title-change-recommendation-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionTitleChangeRecommendationDialogComponentData> {

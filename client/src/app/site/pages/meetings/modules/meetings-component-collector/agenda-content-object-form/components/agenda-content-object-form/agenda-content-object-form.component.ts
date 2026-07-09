@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -15,6 +15,7 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
     selector: `os-agenda-content-object-form`,
     templateUrl: `./agenda-content-object-form.component.html`,
     styleUrls: [`./agenda-content-object-form.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AgendaContentObjectFormComponent

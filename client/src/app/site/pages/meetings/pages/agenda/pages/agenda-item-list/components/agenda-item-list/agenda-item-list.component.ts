@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { _ } from '@ngx-translate/core';
@@ -42,6 +42,7 @@ const AGENDA_ITEM_LIST_STORAGE_INDEX = `agenda_item_list`;
     selector: `os-agenda-item-list`,
     templateUrl: `./agenda-item-list.component.html`,
     styleUrls: [`./agenda-item-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAgendaItem> implements OnInit {

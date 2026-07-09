@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,6 +31,7 @@ import { ViewStructureLevel } from '../../../../../structure-levels/view-models'
     selector: `os-participant-create-wizard`,
     templateUrl: `./participant-create-wizard.component.html`,
     styleUrls: [`./participant-create-wizard.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {

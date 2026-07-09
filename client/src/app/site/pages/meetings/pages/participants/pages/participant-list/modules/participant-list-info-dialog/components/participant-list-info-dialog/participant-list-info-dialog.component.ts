@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -22,6 +22,7 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
     selector: `os-participant-list-info-dialog`,
     templateUrl: `./participant-list-info-dialog.component.html`,
     styleUrls: [`./participant-list-info-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit, OnDestroy {

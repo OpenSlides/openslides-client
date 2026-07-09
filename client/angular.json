@@ -25,9 +25,7 @@
                             "base": "dist/client"
                         },
                         "index": "src/index.html",
-                        "polyfills": [
-                            "src/polyfills.ts"
-                        ],
+                        "polyfills": ["src/polyfills.ts"],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
@@ -46,19 +44,13 @@
                                 "output": "/pdfjs/"
                             }
                         ],
-                        "styles": [
-                            "src/styles.scss"
-                        ],
-                        "scripts": [
-                            "src/assets/jitsi/external_api.js"
-                        ],
+                        "styles": ["src/styles.scss"],
+                        "scripts": ["src/assets/jitsi/external_api.js"],
                         "webWorkerTsConfig": "tsconfig.worker.json",
                         "serviceWorker": "ngsw-config.json",
                         "browser": "src/main.ts",
                         "stylePreprocessorOptions": {
-                            "includePaths": [
-                                "."
-                            ]
+                            "includePaths": ["."]
                         }
                     },
                     "configurations": {
@@ -92,6 +84,13 @@
                             "aot": true,
                             "statsJson": false,
                             "progress": false
+                        },
+                        "testing": {
+                            "aot": false,
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "assets": ["src/favicon.ico", "src/assets", "src/manifest.webmanifest"],
+                            "scripts": []
                         }
                     },
                     "defaultConfiguration": "production"
@@ -115,35 +114,20 @@
                     }
                 },
                 "test": {
-                    "builder": "@angular/build:karma",
+                    "builder": "@angular/build:unit-test",
                     "options": {
-                        "main": "src/test.ts",
-                        "polyfills": [
-                            "src/polyfills.ts"
-                        ],
                         "tsConfig": "tsconfig.spec.json",
-                        "karmaConfig": "karma.conf.js",
-                        "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets",
-                            "src/manifest.webmanifest"
-                        ],
-                        "styles": [
-                            "src/styles.scss"
-                        ],
-                        "scripts": [],
-                        "webWorkerTsConfig": "tsconfig.worker.json",
-                        "sourceMap": false
+                        "reporters": ["default"],
+                        "coverageReporters": ["html", "text-summary"],
+                        "setupFiles": ["src/test.ts"],
+                        "buildTarget": ":build:testing",
+                        "runner": "vitest"
                     }
                 },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "src/**/*.ts",
-                            "src/**/*.html"
-                        ]
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
                     }
                 }
             }
@@ -155,35 +139,33 @@
             "path": ".angular/.cache",
             "environment": "all"
         },
-        "schematicCollections": [
-            "@angular-eslint/schematics"
-        ],
+        "schematicCollections": ["@angular-eslint/schematics"],
         "analytics": false
     },
     "schematics": {
-      "@schematics/angular:component": {
-        "type": "component"
-      },
-      "@schematics/angular:directive": {
-        "type": "directive"
-      },
-      "@schematics/angular:service": {
-        "type": "service"
-      },
-      "@schematics/angular:guard": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:interceptor": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:module": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:pipe": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:resolver": {
-        "typeSeparator": "."
-      }
+        "@schematics/angular:component": {
+            "type": "component"
+        },
+        "@schematics/angular:directive": {
+            "type": "directive"
+        },
+        "@schematics/angular:service": {
+            "type": "service"
+        },
+        "@schematics/angular:guard": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+            "typeSeparator": "."
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
@@ -10,6 +10,7 @@ import { ViewProjector } from '../../../../view-models';
     selector: `os-fullscreen-projector-main`,
     templateUrl: `./fullscreen-projector-main.component.html`,
     styleUrls: [`./fullscreen-projector-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerComponent {

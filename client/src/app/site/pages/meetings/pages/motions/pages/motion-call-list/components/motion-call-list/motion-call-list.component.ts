@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FlatNode } from 'src/app/infrastructure/definitions/tree';
@@ -19,6 +19,7 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
     selector: `os-motion-call-list`,
     templateUrl: `./motion-call-list.component.html`,
     styleUrls: [`./motion-call-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotion> implements OnInit {

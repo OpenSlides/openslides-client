@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -37,6 +37,7 @@ export interface ProjectionDialogConfig {
     selector: `os-projection-dialog`,
     templateUrl: `./projection-dialog.component.html`,
     styleUrls: [`./projection-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {

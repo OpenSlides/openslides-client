@@ -9,7 +9,8 @@ import {
     OnInit,
     Output,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import {
     AbstractControl,
@@ -34,6 +35,7 @@ import { OneOfValidator } from '../../validators';
     selector: `os-user-detail-view`,
     templateUrl: `./user-detail-view.component.html`,
     styleUrls: [`./user-detail-view.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {

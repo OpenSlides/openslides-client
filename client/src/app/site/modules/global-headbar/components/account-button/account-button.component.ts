@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
@@ -26,6 +26,7 @@ import { AccountDialogMainComponent } from '../account-dialog-main/account-dialo
     selector: `os-account-button`,
     templateUrl: `./account-button.component.html`,
     styleUrls: [`./account-button.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {

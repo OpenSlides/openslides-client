@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
@@ -38,6 +38,7 @@ export class BasePermsTestComponent<ComponentDataType extends object> {
             id="delegation"
         ></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {

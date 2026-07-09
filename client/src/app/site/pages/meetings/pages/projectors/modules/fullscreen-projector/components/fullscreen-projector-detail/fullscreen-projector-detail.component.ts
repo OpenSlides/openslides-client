@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -11,6 +11,7 @@ import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen
     selector: `os-fullscreen-projector-detail`,
     templateUrl: `./fullscreen-projector-detail.component.html`,
     styleUrls: [`./fullscreen-projector-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class FullscreenProjectorDetailComponent implements OnInit {

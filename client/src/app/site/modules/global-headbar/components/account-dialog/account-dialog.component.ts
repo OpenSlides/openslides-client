@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,6 +28,7 @@ enum MenuItems {
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
     styleUrls: [`./account-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {

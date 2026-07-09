@@ -1,5 +1,5 @@
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Constructable } from 'src/app/domain/interfaces/constructable';
 
@@ -9,6 +9,7 @@ import { BannerDefinition, BannerService } from '../../services/banner.service';
     selector: `os-banner`,
     templateUrl: `./banner.component.html`,
     styleUrls: [`./banner.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BannerComponent implements OnDestroy {

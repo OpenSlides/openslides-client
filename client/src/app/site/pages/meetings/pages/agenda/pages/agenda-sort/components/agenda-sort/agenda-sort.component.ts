@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -16,6 +16,7 @@ import { AgendaItemControllerService } from '../../../../services/agenda-item-co
     selector: `os-agenda-sort`,
     templateUrl: `./agenda-sort.component.html`,
     styleUrls: [`./agenda-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaItem> implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -12,6 +12,7 @@ import { MediafileCommonService } from '../../../../services/mediafile-common.se
     selector: `os-mediafile-upload`,
     templateUrl: `./mediafile-upload.component.html`,
     styleUrls: [`./mediafile-upload.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MediafileUploadComponent extends OrganizationMediafileUploadComponent implements OnInit {

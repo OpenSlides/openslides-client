@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,6 +23,7 @@ export interface MotionForwardDialogReturnData {
     selector: `os-motion-forward-dialog`,
     templateUrl: `./motion-forward-dialog.component.html`,
     styleUrls: [`./motion-forward-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionForwardDialogComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, forwardRef, inject } from '@angular/core';
+import { AfterViewInit, Component, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { Extension } from '@tiptap/core';
@@ -29,6 +29,7 @@ import { TextStyle } from '../../../../../../../ui/modules/editor/components/edi
     templateUrl: `../../../../../../../ui/modules/editor/components/editor/editor.component.html`,
     styleUrls: [`../../../../../../../ui/modules/editor/components/editor/editor.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MotionEditorComponent), multi: true }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionEditorComponent extends EditorComponent implements AfterViewInit {

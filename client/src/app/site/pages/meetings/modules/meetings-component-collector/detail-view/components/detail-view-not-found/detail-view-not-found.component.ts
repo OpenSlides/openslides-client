@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: `os-detail-view-not-found`,
     templateUrl: `./detail-view-not-found.component.html`,
     styleUrls: [`./detail-view-not-found.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DetailViewNotFoundComponent {}

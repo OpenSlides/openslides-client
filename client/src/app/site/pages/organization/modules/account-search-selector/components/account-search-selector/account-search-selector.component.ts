@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -24,6 +24,7 @@ import { AccountSortService } from '../../../../pages/accounts/pages/account-lis
         `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.scss`
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {

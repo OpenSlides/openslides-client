@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
@@ -13,6 +13,7 @@ import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/
     selector: `os-meeting-import`,
     templateUrl: `./meeting-import.component.html`,
     styleUrls: [`./meeting-import.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MeetingImportComponent extends BaseComponent implements OnInit {

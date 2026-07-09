@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -25,6 +25,7 @@ const PointlessPasswordFeedback = _(`New and old passwords are identical!`);
     selector: `os-password-form`,
     templateUrl: `./password-form.component.html`,
     styleUrls: [`./password-form.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PasswordFormComponent extends BaseComponent implements OnInit {

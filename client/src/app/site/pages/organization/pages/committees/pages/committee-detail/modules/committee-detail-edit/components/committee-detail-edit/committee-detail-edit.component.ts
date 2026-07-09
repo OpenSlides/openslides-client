@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
@@ -28,6 +28,7 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
     selector: `os-committee-detail-edit`,
     templateUrl: `./committee-detail-edit.component.html`,
     styleUrls: [`./committee-detail-edit.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {

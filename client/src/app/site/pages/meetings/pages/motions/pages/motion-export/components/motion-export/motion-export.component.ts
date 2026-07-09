@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    inject,
+    OnDestroy,
+    ViewChild,
+    ViewEncapsulation,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,6 +54,7 @@ interface SavedSelections {
     templateUrl: `./motion-export.component.html`,
     styleUrls: [`./motion-export.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         ReactiveFormsModule,

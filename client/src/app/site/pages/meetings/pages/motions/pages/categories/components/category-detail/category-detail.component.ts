@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,6 +22,7 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     selector: `os-category-detail`,
     templateUrl: `./category-detail.component.html`,
     styleUrls: [`./category-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CategoryDetailComponent extends BaseMeetingComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,6 +33,7 @@ import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pd
     selector: `os-topic-detail`,
     templateUrl: `./topic-detail.component.html`,
     styleUrls: [`./topic-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {

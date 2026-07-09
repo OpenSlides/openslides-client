@@ -1,6 +1,6 @@
 <os-head-bar
     [editMode]="hasEdits"
-    [isSaveButtonEnabled]="orgaSettingsForm?.valid"
+    [isSaveButtonEnabled]="$safeNavigationMigration(orgaSettingsForm?.valid)"
     (cancelEditEvent)="revertChanges()"
     (saveEvent)="onSubmit()"
 >

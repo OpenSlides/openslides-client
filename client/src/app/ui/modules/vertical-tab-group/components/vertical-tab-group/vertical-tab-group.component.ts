@@ -7,7 +7,8 @@ import {
     Input,
     Output,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { MatTab } from '@angular/material/tabs';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,6 +21,7 @@ import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-
     selector: `os-vertical-tab-group`,
     templateUrl: `./vertical-tab-group.component.html`,
     styleUrls: [`./vertical-tab-group.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class VerticalTabGroupComponent {

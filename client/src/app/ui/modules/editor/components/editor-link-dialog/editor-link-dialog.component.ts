@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface EditorLinkDialogInput {
@@ -16,6 +16,7 @@ export interface EditorLinkDialogOutput {
     selector: `os-editor-link-dialog`,
     templateUrl: `./editor-link-dialog.component.html`,
     styleUrls: [`editor-link-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorLinkDialogComponent {

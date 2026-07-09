@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -14,6 +14,7 @@ import {
     selector: `os-topic-detail-main`,
     templateUrl: `./topic-detail-main.component.html`,
     styleUrls: [`./topic-detail-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {

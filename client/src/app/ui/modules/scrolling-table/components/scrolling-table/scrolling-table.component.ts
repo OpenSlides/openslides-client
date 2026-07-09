@@ -1,6 +1,16 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    inject,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -33,6 +43,7 @@ interface DataSourceProvider<T> {
     templateUrl: `./scrolling-table.component.html`,
     styleUrls: [`./scrolling-table.component.scss`],
     providers: [{ provide: SCROLLING_TABLE, useExisting: ScrollingTableComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>

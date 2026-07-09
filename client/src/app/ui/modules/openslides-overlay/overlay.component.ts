@@ -8,7 +8,8 @@ import {
     TemplateRef,
     Type,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 
 import { OverlayPosition } from './definitions';
@@ -16,6 +17,7 @@ import { OverlayPosition } from './definitions';
 @Component({
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent {

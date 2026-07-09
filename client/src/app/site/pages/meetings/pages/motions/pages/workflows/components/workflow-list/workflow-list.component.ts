@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -15,6 +15,7 @@ const WORKFLOW_LIST_STORAGE_INDEX = `workflows`;
     selector: `os-workflow-list`,
     templateUrl: `./workflow-list.component.html`,
     styleUrls: [`./workflow-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMotionWorkflow> implements OnInit {

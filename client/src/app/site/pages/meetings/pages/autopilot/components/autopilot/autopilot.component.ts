@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
@@ -25,6 +25,7 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
     styleUrls: [`./autopilot.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -14,6 +14,7 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollComponent extends BasePollComponent implements OnInit {

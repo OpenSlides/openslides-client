@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -19,6 +19,7 @@ const MOTION_BLOCK_LIST_STORAGE_INDEX = `motion_blocks`;
     templateUrl: `./motion-block-list.component.html`,
     styleUrls: [`./motion-block-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewMotionBlock> implements OnInit {

@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
@@ -14,6 +24,7 @@ export type Size = `small` | `medium` | `large`;
     templateUrl: `./rounded-input.component.html`,
     styleUrls: [`./rounded-input.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RoundedInputComponent extends BaseFormControlComponent<string> implements OnInit {

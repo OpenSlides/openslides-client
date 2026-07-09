@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +29,7 @@ import { LoadFontService } from '../../services/load-font.service';
     templateUrl: `./meetings-navigation-wrapper.component.html`,
     styleUrls: [`./meetings-navigation-wrapper.component.scss`],
     animations: [navItemAnim],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         SidenavModule,

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
 import {
@@ -12,6 +12,7 @@ import {
     styleUrls: [`../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: MotionPollFormComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollFormComponent extends BasePollFormComponent {

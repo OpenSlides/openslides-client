@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
@@ -13,6 +13,7 @@ const INFO_SUBSCRIPTION = `meeting_info`;
     selector: `os-meeting-info`,
     templateUrl: `./meeting-info.component.html`,
     styleUrls: [`./meeting-info.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {

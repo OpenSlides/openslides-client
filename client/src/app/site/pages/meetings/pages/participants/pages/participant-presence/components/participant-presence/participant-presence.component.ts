@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -8,6 +8,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
     selector: `os-participant-presence`,
     templateUrl: `./participant-presence.component.html`,
     styleUrls: [`./participant-presence.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantPresenceComponent implements OnInit {

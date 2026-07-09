@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
@@ -9,6 +9,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
     selector: `os-reset-password`,
     templateUrl: `./reset-password.component.html`,
     styleUrls: [`./reset-password.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ResetPasswordComponent extends BaseComponent implements OnInit {

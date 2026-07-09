@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -69,6 +69,7 @@ interface RestrictionShape {
     selector: `os-workflow-detail`,
     templateUrl: `./workflow-detail.component.html`,
     styleUrls: [`./workflow-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WorkflowDetailComponent extends BaseMeetingComponent {

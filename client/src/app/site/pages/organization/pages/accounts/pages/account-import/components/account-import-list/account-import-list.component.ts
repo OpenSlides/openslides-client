@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -11,6 +11,7 @@ import { AccountImportService } from '../../services/account-import.service/acco
     selector: `os-account-import-list`,
     templateUrl: `./account-import-list.component.html`,
     styleUrls: [`./account-import-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountImportListComponent extends BaseViaBackendImportListComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
@@ -17,6 +17,7 @@ import {
     selector: `os-autopilot-main`,
     templateUrl: `./autopilot-main.component.html`,
     styleUrls: [`./autopilot-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AutopilotMainComponent extends BaseMeetingModelRequestHandler {
