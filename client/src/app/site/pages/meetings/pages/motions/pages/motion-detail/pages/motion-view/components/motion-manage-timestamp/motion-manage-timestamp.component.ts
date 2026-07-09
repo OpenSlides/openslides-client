@@ -73,13 +73,11 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
 
         this.subscriptions.push(
             this.form.get(`date`).valueChanges.subscribe(currDate => {
-                if (isDate(currDate) !== !!this.form.get(`time`).value) {
-                    this.form.get(`time`).setValue(isDate(currDate) ? `00:00` : ``);
-                }
+                this.form.get(`time`).setValue(currDate ?? null);
             }),
             this.form.get(`time`).valueChanges.subscribe(currTime => {
                 if (!!currTime !== isDate(this.form.get(`date`).value)) {
-                    this.form.get(`date`).setValue(currTime ? new Date() : null);
+                    this.form.get(`date`).setValue(currTime);
                 }
             })
         );
