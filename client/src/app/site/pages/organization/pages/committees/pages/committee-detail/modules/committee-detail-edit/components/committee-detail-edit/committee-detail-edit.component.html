@@ -86,7 +86,6 @@
                         formControlName="parent_id"
                         [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
                         [includeNone]="isOrgaManager && isCreateView"
-                        [multiple]="false"
                         [repo]="committeeRepo"
                         [required]="!isOrgaManager && isCreateView"
                         [showChips]="false"
