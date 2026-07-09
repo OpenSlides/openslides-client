@@ -50,7 +50,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
     }
 
     public override get disabled(): boolean {
-        return this.isListEmpty() || this._disabled;
+        return super.disabled || (this.isListEmpty() && !this.clickNotFound.observed);
     }
 
     @Input()
