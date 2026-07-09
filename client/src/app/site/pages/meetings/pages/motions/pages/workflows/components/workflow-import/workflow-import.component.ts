@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UploadFileJsonProcessorService } from 'src/app/infrastructure/utils/import/json-import-file-utils';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
 

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';

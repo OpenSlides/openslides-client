@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 

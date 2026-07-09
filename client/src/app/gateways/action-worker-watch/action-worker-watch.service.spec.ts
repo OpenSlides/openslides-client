@@ -120,6 +120,7 @@ class MockWaitForActionDialogService {
     public closingPromptOpenFor: (Partial<ActionWorker> & {
         closed: number;
     })[] = [];
+
     public currentDialogs = new BehaviorSubject<
         Record<
             number,

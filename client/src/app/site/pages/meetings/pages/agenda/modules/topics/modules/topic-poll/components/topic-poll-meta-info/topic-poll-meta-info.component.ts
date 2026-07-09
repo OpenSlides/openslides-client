@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { PollPropertyVerbose } from 'src/app/domain/models/poll';
 import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';

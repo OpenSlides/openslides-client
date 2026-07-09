@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';

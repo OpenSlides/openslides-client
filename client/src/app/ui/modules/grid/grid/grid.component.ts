@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Input, QueryList, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 
 import { TileComponent } from '../tile/tile.component';
 

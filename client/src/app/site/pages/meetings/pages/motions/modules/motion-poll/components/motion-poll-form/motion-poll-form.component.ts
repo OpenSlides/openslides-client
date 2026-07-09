@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
 import {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { ThemeService } from 'src/app/site/services/theme.service';
 

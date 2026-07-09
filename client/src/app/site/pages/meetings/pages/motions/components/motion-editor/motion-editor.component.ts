@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, forwardRef, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { Extension } from '@tiptap/core';

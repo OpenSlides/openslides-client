@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { inject } from '@angular/core';
 import { distinctUntilChanged, map, skip } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';

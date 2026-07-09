@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { EasterEggContentPlatformService } from '../../modules/easter-egg/services/easter-egg-content-platform.service';
 

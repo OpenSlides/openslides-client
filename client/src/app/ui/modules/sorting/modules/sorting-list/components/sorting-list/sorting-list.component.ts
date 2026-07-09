@@ -1,13 +1,13 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     EventEmitter,
     Input,
     OnDestroy,
     Output,
-    TemplateRef,
-    ChangeDetectionStrategy
+    TemplateRef
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { _ } from '@ngx-translate/core';
 import { BaseModel } from 'src/app/domain/models/base/base-model';

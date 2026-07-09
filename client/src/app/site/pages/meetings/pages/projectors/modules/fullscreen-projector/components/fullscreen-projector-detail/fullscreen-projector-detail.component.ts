@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';

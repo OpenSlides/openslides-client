@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';

@@ -1,5 +1,5 @@
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { C4DialogModule } from '../../modules/c4-dialog';
 import { ChessDialogModule } from '../../modules/chess-dialog';

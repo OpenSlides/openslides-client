@@ -1,8 +1,8 @@
-import type { MockedObject } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 import { StorageService } from 'src/app/gateways/storage.service';
+import type { MockedObject } from 'vitest';
 
 import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { ColorService } from './color.service';

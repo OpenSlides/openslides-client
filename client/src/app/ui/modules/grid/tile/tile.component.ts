@@ -1,12 +1,12 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
     OnInit,
     Output,
     TemplateRef,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 
 import { GridTileClickEvent, GridTileDimension } from '../definitions';

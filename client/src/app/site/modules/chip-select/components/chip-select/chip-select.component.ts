@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, input, QueryList, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, input, QueryList } from '@angular/core';
 
 import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.component';
 

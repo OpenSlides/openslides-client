@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';

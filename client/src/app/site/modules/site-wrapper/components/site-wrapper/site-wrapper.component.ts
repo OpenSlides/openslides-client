@@ -1,11 +1,11 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EmbeddedViewRef,
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ActivationEnd, Router } from '@angular/router';

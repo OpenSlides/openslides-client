@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -9,8 +10,7 @@ import {
     OnInit,
     Output,
     QueryList,
-    TemplateRef,
-    ChangeDetectionStrategy
+    TemplateRef
 } from '@angular/core';
 import {
     AbstractControl,

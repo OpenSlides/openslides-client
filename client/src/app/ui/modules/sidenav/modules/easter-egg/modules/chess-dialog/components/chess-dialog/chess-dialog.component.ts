@@ -1,11 +1,11 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     Inject,
     OnInit,
     ViewChild,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    ViewEncapsulation
 } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';

@@ -2,6 +2,7 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     EventEmitter,
@@ -9,8 +10,7 @@ import {
     Input,
     OnDestroy,
     Output,
-    TemplateRef,
-    ChangeDetectionStrategy
+    TemplateRef
 } from '@angular/core';
 import { auditTime, Observable, Subscription } from 'rxjs';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';

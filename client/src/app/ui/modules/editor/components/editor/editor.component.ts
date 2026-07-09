@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -11,8 +12,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewChildren,
-    ChangeDetectionStrategy
+    ViewChildren
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';

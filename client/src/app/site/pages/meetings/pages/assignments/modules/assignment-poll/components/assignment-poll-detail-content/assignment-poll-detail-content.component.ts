@@ -1,13 +1,13 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
     Input,
     OnInit,
     QueryList,
-    ViewChildren,
-    ChangeDetectionStrategy
+    ViewChildren
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
