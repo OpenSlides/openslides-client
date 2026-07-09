@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -34,10 +34,8 @@ export class MeetingComponentServiceCollectorService {
         return this.componentServiceCollector.router;
     }
 
-    public constructor(
-        private componentServiceCollector: ComponentServiceCollectorService,
-        public activeMeetingIdService: ActiveMeetingIdService,
-        public activeMeetingService: ActiveMeetingService,
-        public meetingSettingsService: MeetingSettingsService
-    ) {}
+    public activeMeetingIdService = inject(ActiveMeetingIdService);
+    public activeMeetingService = inject(ActiveMeetingService);
+    public meetingSettingsService = inject(MeetingSettingsService);
+    private componentServiceCollector = inject(ComponentServiceCollectorService);
 }

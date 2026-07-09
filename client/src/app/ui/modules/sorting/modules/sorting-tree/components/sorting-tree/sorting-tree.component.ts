@@ -1,7 +1,7 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, inject, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
 import { auditTime, Observable, Subscription } from 'rxjs';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
@@ -223,16 +223,8 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     @ContentChild(TemplateRef, { static: true })
     public innerNode!: TemplateRef<any>;
 
-    /**
-     * Constructor
-     *
-     * @param treeService Service to get data from store and build the tree nodes.
-     * @param sortService Service to sort tree nodes by their given items.
-     */
-    public constructor(
-        private treeService: TreeService,
-        private sortService: TreeSortService<T>
-    ) {}
+    private treeService = inject(TreeService);
+    private sortService = inject(TreeSortService<T>);
 
     /**
      * On destroy - unsubscribe the subscription

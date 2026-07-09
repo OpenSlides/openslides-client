@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
@@ -43,7 +43,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
     private controller = inject(OrganizationControllerService);
     private operator = inject(OperatorService);
     private timeZone = inject(TimeZoneService);
-    private cd = inject(ChangeDetectorRef);
 
     public constructor() {
         super();

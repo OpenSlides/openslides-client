@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
 import { committeeHeadersAndVerboseNames } from 'src/app/site/pages/organization/pages/committees/pages/committee-import/definitions';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
@@ -32,10 +31,7 @@ export class CommitteeImportListComponent extends BaseViaBackendImportListCompon
         is_list: [`forward_to_committees`, `organization_tags`, `managers`, `meeting_admins`].includes(header)
     }));
 
-    public constructor(
-        protected override translate: TranslateService,
-        public override importer: CommitteeImportService
-    ) {
+    public constructor(public override importer: CommitteeImportService) {
         super(importer);
     }
 }

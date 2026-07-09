@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, Input, QueryList } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, input, QueryList } from '@angular/core';
 
 import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.component';
 
@@ -9,13 +9,9 @@ import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.co
     standalone: false
 })
 export class ChipSelectComponent implements AfterContentInit {
-    public constructor() {}
+    public readonly chipClass = input<string | null>(null);
 
-    @Input()
-    public chipClass: string | null;
-
-    @Input()
-    public canOpen: boolean;
+    public readonly canOpen = input<boolean>(false);
 
     @ContentChildren(ChipSelectChipComponent) public inputChips: QueryList<ChipSelectChipComponent>;
 

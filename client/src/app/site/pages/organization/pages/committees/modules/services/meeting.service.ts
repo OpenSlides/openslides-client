@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { FileExportService } from 'src/app/gateways/export/file-export.service/file-export.service';
 import { ExportMeetingPresenterService } from 'src/app/gateways/presenter/export-meeting-presenter.service';
@@ -10,12 +10,10 @@ import { AccountFilterService } from '../../../accounts/services/common/account-
     providedIn: 'root'
 })
 export class MeetingService {
-    public constructor(
-        private router: Router,
-        private accountFilterService: AccountFilterService,
-        private exporter: FileExportService,
-        private exportMeetingPresenter: ExportMeetingPresenterService
-    ) {}
+    private router = inject(Router);
+    private accountFilterService = inject(AccountFilterService);
+    private exporter = inject(FileExportService);
+    private exportMeetingPresenter = inject(ExportMeetingPresenterService);
 
     public async navigateToMeetingUsers(meeting: ViewMeeting): Promise<void> {
         await this.router.navigate([`accounts`, `meeting`, meeting.id]);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { HttpService } from '../http.service';
 import { Action } from './action';
@@ -16,7 +16,7 @@ let uniqueFnId = 0;
 export class ActionService {
     private readonly _beforeActionFnMap: Record<number, ActionFn> = {};
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     /**
      * Registers a boolean function that will be used to check if actions should currently be allowed to be sent.

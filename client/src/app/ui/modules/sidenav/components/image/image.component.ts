@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { HttpService } from 'src/app/gateways/http.service';
 
 @Component({
@@ -39,7 +39,7 @@ export class ImageComponent {
 
     private _source: string | null = null;
 
-    public constructor(private http: HttpService) {} // Maybe the wrong place here!
+    private http = inject(HttpService);
 
     private onChange(): void {
         this.loaded = false;

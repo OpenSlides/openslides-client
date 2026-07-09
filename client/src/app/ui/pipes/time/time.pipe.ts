@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
     standalone: false
 })
 export class TimePipe implements PipeTransform {
-    public constructor(private translate: TranslateService) {}
+    private translate = inject(TranslateService);
 
     public transform(timestamp: number): string {
         return new Date(timestamp * 1000).toLocaleString(this.translate.getCurrentLang());

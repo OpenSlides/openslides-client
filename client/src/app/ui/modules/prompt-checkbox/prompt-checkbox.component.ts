@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PromptService } from '../prompt-dialog';
@@ -34,7 +34,7 @@ export class PromptCheckboxComponent {
      */
     @Output() public selected = new EventEmitter<boolean>();
 
-    public constructor(public prompt: PromptService) {}
+    public prompt = inject(PromptService);
 
     public async openPrompt(): Promise<void> {
         if (!this.disabled) {

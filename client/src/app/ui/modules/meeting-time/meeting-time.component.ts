@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
@@ -12,7 +12,7 @@ import { PipesModule } from '../../pipes';
     imports: [CommonModule, PipesModule]
 })
 export class MeetingTimeComponent {
-    public constructor(public timeZoneService: TimeZoneService) {}
+    public timeZoneService = inject(TimeZoneService);
 
     @Input()
     public meeting?: ViewMeeting;

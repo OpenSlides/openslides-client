@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
@@ -11,12 +11,10 @@ import { ChessDialogModule } from '../chess-dialog.module';
     providedIn: 'root'
 })
 export class ChessChallengeService {
-    public constructor(
-        private notifyService: NotifyService,
-        private dialog: MatDialog,
-        private translate: TranslateService,
-        private prompt: PromptService
-    ) {}
+    private notifyService = inject(NotifyService);
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
+    private prompt = inject(PromptService);
 
     public startListening(): void {
         this.notifyService
