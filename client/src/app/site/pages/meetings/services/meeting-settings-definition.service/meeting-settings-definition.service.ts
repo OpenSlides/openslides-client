@@ -53,6 +53,7 @@ export class MeetingSettingsDefinitionService {
             case `ranking`:
                 return [];
             case `choice`:
+                return null;
             case `daterange`:
                 return [null, null];
             case `string`:

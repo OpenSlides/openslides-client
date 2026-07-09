@@ -64,7 +64,7 @@ const fakeSettings: SettingsGroup[] = [
                         key: `bool` as keyof Settings,
                         label: `Boolean setting`,
                         type: `boolean`
-                    }, //
+                    },
                     {
                         key: `groups` as keyof Settings,
                         label: `Group setting`,
@@ -114,7 +114,7 @@ const fakeSettingsMap: Record<string, SettingsInput> = fakeSettings
     );
 
 const fakeSettingsDefaults: Record<string, any> = {
-    ...[`one`, `two`, `four`, `five`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
+    ...[`one`, `two`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
     bool: true,
     ...[`a`, `b`, `c`, `d`].mapToObject(letter => ({ [letter]: letter })),
     e: `e.mail@email.mail`,
@@ -126,7 +126,7 @@ const fakeSettingsDefaults: Record<string, any> = {
 };
 
 const fakeBrokenSettingsDefaults: Record<string, any> = {
-    ...[`one`, `two`, `four`, `five`].mapToObject(letter => ({ [letter]: letter })),
+    ...[`one`, `two`].mapToObject(letter => ({ [letter]: letter })),
     bool: `not a bool`,
     ...[`a`, `b`, `c`, `d`].mapToObject((prop, index) => ({ [prop]: index + 1 })),
     e: 3,
