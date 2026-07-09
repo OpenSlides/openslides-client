@@ -116,9 +116,6 @@ export class BackendImportListComponent implements OnInit {
      */
     @Input()
     public set defaultColumns(cols: ImportListHeaderDefinition[]) {
-        /**title	first_name	last_name	email	member_number	structure_level	groups	number	vote_weight	gender	pronoun	username	default_password	is_active	is_physical_person	is_present	locked_out	saml_id	home_committee	external	comment
-        */
-        
         this._defaultColumns = cols;
         this.setHeaders({ default: cols });
     }
@@ -131,7 +128,6 @@ export class BackendImportListComponent implements OnInit {
      * The actual headers of the preview, as they were delivered by the backend.
      */
     public get previewColumns(): BackendImportHeader[] {
-        console.log(this._previewColumns)
         return this._previewColumns;
     }
 
@@ -550,11 +546,8 @@ export class BackendImportListComponent implements OnInit {
         };
         try {
             this._importer.onSelectFile(droppedFile);
-            this.uploadButton=false
-        }
-        catch {
-            e => e
-        }
+            this.uploadButton = false;
+        } catch {}
     }
 
     public onChange(event: Event): void {

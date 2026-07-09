@@ -195,7 +195,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public get totalCountObservable(): Observable<number> {
-        return this._totalCountObservable ?? this._source.pipe(map(items => items.length));
+        return this._totalCountObservable ?? this._source.pipe(map(items => items?.length));
     }
 
     public get source(): V[] {

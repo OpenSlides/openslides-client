@@ -8,7 +8,8 @@ export enum BackendImportState {
     Done = `done`,
     Generated = `generated`,
     Remove = `remove`,
-    Referenced = `referenced`
+    Referenced = `referenced`,
+    Unchanged = `unchanged`
     // could be expanded later
 }
 

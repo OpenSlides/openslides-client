@@ -136,13 +136,14 @@
                         warning
                     </mat-icon>
                 }
-                @if (row.state !== 'error') {
+                @let icon = getActionIconRow(row);
+                @if (row.state !== 'error' && icon !== '') {
                     <mat-icon
                         matTooltip="{{ getRowTooltip(row) }}"
                         matTooltipPosition="right"
                         [ngClass]="getColorIcon(row)"
                     >
-                        {{ getActionIconRow(row) }}
+                        {{ icon }}
                     </mat-icon>
                 }
             </div>
