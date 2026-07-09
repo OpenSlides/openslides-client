@@ -2,7 +2,6 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
         "declaration": false,
         "experimentalDecorators": true,
         "esModuleInterop": true,
