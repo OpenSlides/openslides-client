@@ -5,7 +5,6 @@ import angular from "angular-eslint";
 import prettier from "eslint-plugin-prettier/recommended";
 import eslintConfigPrettier from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import unusedImports from "eslint-plugin-unused-imports";
 import stylistic from "@stylistic/eslint-plugin";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 
@@ -28,7 +27,6 @@ export default tseslint.config({
     plugins: {
         "@stylistic": stylistic,
         "simple-import-sort": simpleImportSort,
-        "unused-imports": unusedImports,
     },
     processor: angular.processInlineTemplates,
     rules: {
@@ -70,7 +68,6 @@ export default tseslint.config({
 
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
-        "unused-imports/no-unused-imports": "error",
 
         "no-restricted-properties": ["error", {
             property: "asObservable",
