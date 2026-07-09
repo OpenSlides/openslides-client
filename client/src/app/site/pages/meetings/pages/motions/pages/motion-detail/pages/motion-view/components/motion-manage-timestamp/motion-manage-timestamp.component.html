@@ -24,15 +24,15 @@
         <form [formGroup]="form">
             <os-datepicker formControlName="date"></os-datepicker>
             <mat-form-field style="width: 100%">
-                <input formControlName="time" matInput style="width: 100%" [format]="24" [ngxTimepicker]="timepicker" />
+                <input formControlName="time" matInput style="width: 100%" [matTimepicker]="timepicker" />
+
                 <div class="suffix-wrapper" matSuffix>
-                    <ngx-material-timepicker-toggle [for]="timepicker">
-                        <mat-icon class="icon" ngxMaterialTimepickerToggleIcon style="margin-right: 10px">
-                            access_time
-                        </mat-icon>
-                    </ngx-material-timepicker-toggle>
+                    <mat-timepicker-toggle [for]="timepicker">
+                        <mat-icon class="icon" matTimepickerToggleIcon style="margin-right: 10px">access_time</mat-icon>
+                    </mat-timepicker-toggle>
                 </div>
-                <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+
+                <mat-timepicker #timepicker></mat-timepicker>
             </mat-form-field>
         </form>
         <p>

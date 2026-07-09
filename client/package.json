@@ -87,7 +87,6 @@
     "ngx-date-fns": "^12.0.1",
     "ngx-device-detector": "^11.0.0",
     "ngx-file-drop": "^16.0.0",
-    "ngx-material-timepicker": "^13.1.1",
     "ngx-papaparse": "^8.0.0",
     "pdfmake": "^0.3.11",
     "pofile": "^1.1.4",
