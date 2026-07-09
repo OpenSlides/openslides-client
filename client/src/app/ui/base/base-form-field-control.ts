@@ -104,7 +104,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     private _required = false;
 
-    private _disabled = false;
+    protected _disabled = false;
 
     protected subscriptions: Subscription[] = [];
 
