@@ -4,12 +4,14 @@ import { UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { djb2hash } from 'src/app/infrastructure/utils';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
     PollOptionsPayload
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
@@ -22,6 +24,7 @@ const TAB_METHOD_MAP = [`selection`, `approval`];
     templateUrl: `./topic-poll-dialog.component.html`,
     styleUrls: [`./topic-poll-dialog.component.scss`],
     imports: [
+        PollEditResultComponent,
         PollFormComponent,
         PollFormApprovalComponent,
         PollFormSelectionComponent,
@@ -60,6 +63,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
     });
 
     private pollService = inject(PollService);
+    private translate = inject(TranslateService);
 
     public override methodPayload(): PollMethodPayload {
         return {
@@ -80,11 +84,27 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         };
     }
 
-    private getSelectedMethod(): string {
-        return TAB_METHOD_MAP[this.selectedTab()];
+    public analogPollOptions(): { key: string; title: string }[] {
+        const options = [];
+        if (this.getSelectedMethod() === `approval`) {
+            options.push(
+                { key: `yes`, title: this.translate.instant(`Yes`) },
+                { key: `no`, title: this.translate.instant(`No`) }
+            );
+
+            if (this.approvalForm().form.value.allow_abstain) {
+                options.push({ key: `abstain`, title: this.translate.instant(`Abstain`) });
+            }
+        } else {
+            for (const option of this.options.value()) {
+                options.push({ key: `text-${djb2hash(option)}`, title: option });
+            }
+        }
+
+        return options;
     }
 
-    private getMethodConfig(): unknown {
+    public getMethodConfig(): unknown {
         switch (this.getSelectedMethod()) {
             case `approval`:
                 return { ...this.approvalForm()?.getSerialzedForm() };
@@ -92,5 +112,9 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
                 return { ...this.selectionPollForm()?.getSerialzedForm() };
         }
         return {};
+    }
+
+    private getSelectedMethod(): string {
+        return TAB_METHOD_MAP[this.selectedTab()];
     }
 }
