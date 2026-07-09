@@ -47,7 +47,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         }
 
         return this.getSelectedMethod() === `approval`
-            ? this.approvalForm().approvalForm.valid
+            ? this.approvalForm().form.valid
             : this.selectionPollForm().form.valid;
     }
 

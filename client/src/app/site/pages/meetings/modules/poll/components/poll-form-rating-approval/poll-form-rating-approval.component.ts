@@ -1,13 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import {
-    AbstractControl,
-    ReactiveFormsModule,
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    ValidationErrors,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +8,7 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { RatingApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-rating-approval';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 @Component({
     selector: 'os-poll-form-rating-approval',
@@ -31,9 +24,7 @@ import { ViewPoll } from '../../../../pages/polls';
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollFormRatingApprovalComponent {
-    public form: UntypedFormGroup;
-
+export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public validPercentBases: [RatingApprovalOnehundredPercentBase, string][] = [
         [`yes_no`, _('Yes/No per candidate')],
         [`yes_no_abstain`, _('Yes/No/Abstain per candidate')],
@@ -47,9 +38,7 @@ export class PollFormRatingApprovalComponent {
     public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    private fb = inject(UntypedFormBuilder);
-
-    public constructor() {
+    public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false],

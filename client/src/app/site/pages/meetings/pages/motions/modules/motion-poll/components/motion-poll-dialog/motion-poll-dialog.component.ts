@@ -39,11 +39,11 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
             return false;
         }
 
-        return this.approvalForm().approvalForm.valid;
+        return this.approvalForm().form.valid;
     }
 
     public get approvalFormValue(): Partial<PollConfigApproval> {
-        return this.approvalForm().approvalForm.value;
+        return this.approvalForm().form.value;
     }
 
     private pollService = inject(PollService);

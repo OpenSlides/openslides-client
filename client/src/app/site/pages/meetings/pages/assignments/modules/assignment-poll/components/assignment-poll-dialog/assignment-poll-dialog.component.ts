@@ -56,7 +56,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
         switch (this.getSelectedMethod()) {
             case `approval`:
-                return this.approvalForm()?.approvalForm.valid;
+                return this.approvalForm()?.form.valid;
             case `selection`:
                 return this.selectionForm()?.form.valid;
             case `rating_approval`:

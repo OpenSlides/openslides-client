@@ -1,13 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import {
-    AbstractControl,
-    ReactiveFormsModule,
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    ValidationErrors,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,6 +7,7 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 @Component({
     selector: 'os-poll-form-selection',
@@ -23,9 +16,7 @@ import { ViewPoll } from '../../../../pages/polls';
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollFormSelectionComponent {
-    public form: UntypedFormGroup;
-
+export class PollFormSelectionComponent extends PollFormBaseComponent {
     public validPercentBases: [SelectionOnehundredPercentBase, string][] = [
         [`no_general`, _('Sum of votes without general options')],
         [`valid`, _('All valid ballots')],
@@ -38,9 +29,14 @@ export class PollFormSelectionComponent {
     public data = input.required<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    private fb = inject(UntypedFormBuilder);
-
     public constructor() {
+        super();
+
+        effect(this.onDataUpdated.bind(this));
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             strike_out: [false],
@@ -50,9 +46,6 @@ export class PollFormSelectionComponent {
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
             display_chart: [``]
         });
-
-        effect(this.onDataUpdated.bind(this));
-        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
