@@ -33,8 +33,6 @@ export class OpenSlidesMainComponent implements OnInit {
     public title = `OpenSlides`;
 
     private document = inject(DOCUMENT);
-    private _viewContainer = inject(ViewContainerRef);
-    private _openslidesService = inject(OpenSlidesService);
     private appRef = inject(ApplicationRef);
     private lifecycleService = inject(LifecycleService);
     private domSanitizer = inject(DomSanitizer);
@@ -48,7 +46,7 @@ export class OpenSlidesMainComponent implements OnInit {
     private modelStore = inject(ViewModelStoreService);
     private ctService = inject(CustomTranslationService);
 
-    public constructor() {
+    public constructor(_viewContainer: ViewContainerRef, _openslidesService: OpenSlidesService) {
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();

@@ -4,7 +4,6 @@ import {
     ContentChild,
     ContentChildren,
     EventEmitter,
-    inject,
     Input,
     Output,
     QueryList,
@@ -87,10 +86,8 @@ export class VerticalTabGroupComponent {
     private _currentTabLength = 0;
     private _isMobile = false;
 
-    private vp = inject(ViewPortService);
-
-    public constructor() {
-        this.vp.isMobileSubject.subscribe(isMobile => (this._isMobile = isMobile));
+    public constructor(vp: ViewPortService) {
+        vp.isMobileSubject.subscribe(isMobile => (this._isMobile = isMobile));
     }
 
     public changeTabSelection(index: number): void {

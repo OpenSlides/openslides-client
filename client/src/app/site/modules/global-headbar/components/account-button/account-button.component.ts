@@ -89,12 +89,15 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private theme = inject(ThemeService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
-    private chessChallengeService = inject(ChessChallengeService);
     private dialog = inject(MatDialog);
     private router = inject(Router);
 
+    public constructor(chessChallengeService: ChessChallengeService) {
+        super();
+        chessChallengeService.startListening();
+    }
+
     public ngOnInit(): void {
-        this.chessChallengeService.startListening();
         this.operator.operatorUpdated.subscribe(() => this.onOperatorUpdate());
 
         this.meetingSettingsService

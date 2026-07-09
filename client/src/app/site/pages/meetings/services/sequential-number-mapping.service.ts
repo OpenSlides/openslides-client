@@ -54,11 +54,10 @@ export class SequentialNumberMappingService {
 
     private activeMeeting = inject(ActiveMeetingService);
     private autoupdateService = inject(AutoupdateService);
-    private collectionMapperService = inject(MeetingCollectionMapperService);
     private modelRequestBuilder = inject(ModelRequestBuilderService);
 
-    public constructor() {
-        this.collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
+    public constructor(collectionMapperService: MeetingCollectionMapperService) {
+        collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();
         });

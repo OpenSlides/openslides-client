@@ -76,14 +76,14 @@ export class GlobalSearchComponent implements OnDestroy {
     private globalSearchService = inject(GlobalSearchService);
     private viewport = inject(ViewPortService);
 
-    // #### These functions need injections ####
-    public inMeeting = !!this.activeMeeting.meetingId;
+    public get inMeeting(): boolean {
+        return !!this.activeMeeting.meetingId;
+    }
 
     public currentFilters = this.formBuilder.group({
         ...Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, false])),
         meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
     });
-    // ###########
 
     public constructor() {
         this.updateCurrentlyAvailableFilters();
