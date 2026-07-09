@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EasterEggContentPlatformDialogComponent } from './easter-egg-content-platform-dialog.component';
 
-xdescribe(`EasterEggContentPlatformDialogComponent`, () => {
+describe.skip(`EasterEggContentPlatformDialogComponent`, () => {
     let component: EasterEggContentPlatformDialogComponent;
     let fixture: ComponentFixture<EasterEggContentPlatformDialogComponent>;
 

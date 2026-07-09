@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PromptDialogComponent } from './prompt-dialog.component';
 
-xdescribe(`PromptDialogComponent`, () => {
+describe.skip(`PromptDialogComponent`, () => {
     let component: PromptDialogComponent;
     let fixture: ComponentFixture<PromptDialogComponent>;
 

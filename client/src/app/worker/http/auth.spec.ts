@@ -14,14 +14,14 @@ const FAIL_BODY = JSON.stringify({ message: `Not signed in`, success: false });
 
 describe(`shared worker auth singleton`, () => {
     beforeEach(() => {
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(0));
         fetchMock.mockGlobal();
         WorkerHttpAuth.reset();
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
         fetchMock.hardReset();
         WorkerHttpAuth.unsubscribe(`test`);
     });
@@ -37,7 +37,7 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentToken()).toBeResolvedTo(`bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`);
+        await expect(WorkerHttpAuth.currentToken()).resolves.toEqual(`bearer ${AUTH_TOKENS.VALID_TILL_120_UID_1}`);
     });
 
     it(`reads user from token`, async () => {
@@ -51,7 +51,7 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(1);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(1);
     });
 
     it(`updates token`, async () => {
@@ -71,7 +71,7 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(2);
         fetchMock.modifyRoute(`who-am-i`, {
             response: {
                 headers: {
@@ -81,9 +81,9 @@ describe(`shared worker auth singleton`, () => {
                 body: AUTH_BODY
             }
         });
-        jasmine.clock().tick(60 * 1000);
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(1);
-        await expectAsync(WorkerHttpAuth.updating()).toBeResolvedTo(true);
+        vi.advanceTimersByTime(60 * 1000);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(1);
+        await expect(WorkerHttpAuth.updating()).resolves.toEqual(true);
     });
 
     it(`stop updating token`, async () => {
@@ -103,7 +103,7 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(2);
         WorkerHttpAuth.stopRefresh();
         fetchMock.modifyRoute(`who-am-i`, {
             response: {
@@ -114,9 +114,9 @@ describe(`shared worker auth singleton`, () => {
                 body: JSON.parse(AUTH_BODY)
             }
         });
-        jasmine.clock().tick(60 * 1000);
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(2);
-        await expectAsync(WorkerHttpAuth.updating()).toBeResolvedTo(false);
+        vi.advanceTimersByTime(60 * 1000);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(2);
+        await expect(WorkerHttpAuth.updating()).resolves.toEqual(false);
     });
 
     it(`is unauthenticated`, async () => {
@@ -129,8 +129,8 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(null);
-        await expectAsync(WorkerHttpAuth.currentToken()).toBeResolvedTo(``);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(null);
+        await expect(WorkerHttpAuth.currentToken()).resolves.toEqual(``);
     });
 
     it(`used invalid token`, async () => {
@@ -144,8 +144,8 @@ describe(`shared worker auth singleton`, () => {
 
         WorkerHttpAuth.subscribe(`test`, () => {});
         await WorkerHttpAuth.update();
-        await expectAsync(WorkerHttpAuth.currentUser()).toBeResolvedTo(null);
-        await expectAsync(WorkerHttpAuth.currentToken()).toBeResolvedTo(``);
-        await expectAsync(WorkerHttpAuth.updating()).toBeResolvedTo(false);
+        await expect(WorkerHttpAuth.currentUser()).resolves.toEqual(null);
+        await expect(WorkerHttpAuth.currentToken()).resolves.toEqual(``);
+        await expect(WorkerHttpAuth.updating()).resolves.toEqual(false);
     });
 });

@@ -89,7 +89,7 @@ describe(`HttpStreamEndpointService`, () => {
     ]) {
         it(`test isEndpointHealthy ${date.title}`, async () => {
             http.returnValue = date.returnValue;
-            await expectAsync(service.isEndpointHealthy(healthEndpointConfig)).toBeResolvedTo(date.expected);
+            await expect(service.isEndpointHealthy(healthEndpointConfig)).resolves.toEqual(date.expected);
             expect(http.lastRequests).toEqual(date.expectRequests);
         });
     }

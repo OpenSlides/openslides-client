@@ -3,7 +3,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { FilterMenuComponent } from './filter-menu.component';
 
-xdescribe(`FilterMenuComponent`, () => {
+describe.skip(`FilterMenuComponent`, () => {
     class TestBaseViewModel extends BaseViewModel {}
 
     let component: FilterMenuComponent<TestBaseViewModel>;

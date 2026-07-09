@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicPollFormComponent } from './topic-poll-form.component';
 
-xdescribe(`TopicPollFormComponent`, () => {
+describe.skip(`TopicPollFormComponent`, () => {
     let component: TopicPollFormComponent;
     let fixture: ComponentFixture<TopicPollFormComponent>;
 

@@ -4,7 +4,7 @@ import { OpenSlidesMainModule } from '../../openslides-main.module';
 import { OpenSlidesMainRoutingModule } from '../../openslides-main-routing.module';
 import { OpenSlidesMainComponent } from './openslides-main.component';
 
-xdescribe(`OpenslidesMainComponent`, () => {
+describe.skip(`OpenslidesMainComponent`, () => {
     let component: OpenSlidesMainComponent;
     let fixture: ComponentFixture<OpenSlidesMainComponent>;
 

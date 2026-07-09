@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExpandableContentWrapperComponent } from './expandable-content-wrapper.component';
 
-xdescribe(`ExpandableContentWrapperComponent`, () => {
+describe.skip(`ExpandableContentWrapperComponent`, () => {
     let component: ExpandableContentWrapperComponent;
     let fixture: ComponentFixture<ExpandableContentWrapperComponent>;
 

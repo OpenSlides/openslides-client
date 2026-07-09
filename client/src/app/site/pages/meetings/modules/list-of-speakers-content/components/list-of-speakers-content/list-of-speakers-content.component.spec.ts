@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListOfSpeakersContentComponent } from './list-of-speakers-content.component';
 
-xdescribe(`ListOfSpeakersContentComponent`, () => {
+describe.skip(`ListOfSpeakersContentComponent`, () => {
     let component: ListOfSpeakersContentComponent;
     let fixture: ComponentFixture<ListOfSpeakersContentComponent>;
 

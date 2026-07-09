@@ -63,8 +63,8 @@ describe(`http subscription polling`, () => {
     afterEach(() => fetchMock.hardReset());
 
     it(`initializes inactive`, () => {
-        expect(getHttpSubscriptionSSEInstance(`/does-not-resolve`).active).toBeFalse();
-        expect(fetchMock.callHistory.called(`/does-not-resolve`)).toBeFalse();
+        expect(getHttpSubscriptionSSEInstance(`/does-not-resolve`).active).toBe(false);
+        expect(fetchMock.callHistory.called(`/does-not-resolve`)).toBe(false);
     });
 
     it(`receives data once`, async () => {
@@ -74,7 +74,7 @@ describe(`http subscription polling`, () => {
         subscr.start();
         const data = await receivedData;
         expect(data).toEqual(`resp:0\n`);
-        expect(subscr.active).toBeTrue();
+        expect(subscr.active).toBe(true);
         await subscr.stop();
     });
 
@@ -89,7 +89,8 @@ describe(`http subscription polling`, () => {
             (d: any) => errorResolver(d)
         );
         subscr.start();
-        await expectAsync(receivedError).toBeResolved();
+        await expect(receivedError).resolves.not.toThrow();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         expectAsync(receivedData).toBePending();
         expect(((await receivedError) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
         expect(((await receivedError) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
@@ -101,7 +102,7 @@ describe(`http subscription polling`, () => {
         const receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionSSEInstance(`/error400-expected-format`, (d: any) => resolver(d));
         subscr.start();
-        await expectAsync(receivedData).toBeResolved();
+        await expect(receivedData).resolves.not.toThrow();
         expect(((await receivedData) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
         expect(((await receivedData) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
@@ -116,7 +117,7 @@ describe(`http subscription polling`, () => {
             const subscr = getHttpSubscriptionSSEInstance(`/resolves`, () => resolver());
             const start = subscr.start();
             await receivedData;
-            await expectAsync(start).toBeResolved();
+            await expect(start).resolves.not.toThrow();
             expect(subscr.active).toBeFalsy();
         });
 
@@ -127,14 +128,14 @@ describe(`http subscription polling`, () => {
             const start = subscr.start();
             await receivedData;
             await subscr.stop();
-            return expectAsync(start).toBeResolved();
+            return expect(start).resolves.not.toThrow();
         });
 
         it(`instant stop`, async () => {
             const subscr = getHttpSubscriptionSSEInstance(`/does-not-resolve`);
             const start = subscr.start();
             await subscr.stop();
-            return expectAsync(start).toBeResolved();
+            return expect(start).resolves.not.toThrow();
         });
 
         it(`stops on server error`, async () => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FullscreenProjectorDetailComponent } from './fullscreen-projector-detail.component';
 
-xdescribe(`FullscreenProjectorDetailComponent`, () => {
+describe.skip(`FullscreenProjectorDetailComponent`, () => {
     let component: FullscreenProjectorDetailComponent;
     let fixture: ComponentFixture<FullscreenProjectorDetailComponent>;
 

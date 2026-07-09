@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountSearchSelectorComponent } from './account-search-selector.component';
 
-xdescribe(`AccountSearchSelectorComponent`, () => {
+describe.skip(`AccountSearchSelectorComponent`, () => {
     let component: AccountSearchSelectorComponent;
     let fixture: ComponentFixture<AccountSearchSelectorComponent>;
 

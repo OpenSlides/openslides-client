@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantCreateWizardComponent } from './participant-create-wizard.component';
 
-xdescribe(`ParticipantCreateWizardComponent`, () => {
+describe.skip(`ParticipantCreateWizardComponent`, () => {
     let component: ParticipantCreateWizardComponent;
     let fixture: ComponentFixture<ParticipantCreateWizardComponent>;
 

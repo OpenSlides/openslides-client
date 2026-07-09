@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModerationNoteComponent } from './moderation-note.component';
 
-xdescribe(`ModerationNoteComponent`, () => {
+describe.skip(`ModerationNoteComponent`, () => {
     let component: ModerationNoteComponent;
     let fixture: ComponentFixture<ModerationNoteComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionContentChangeRecommendationDialogComponent } from './motion-content-change-recommendation-dialog.component';
 
-xdescribe(`MotionContentChangeRecommendationDialogComponent`, () => {
+describe.skip(`MotionContentChangeRecommendationDialogComponent`, () => {
     let component: MotionContentChangeRecommendationDialogComponent;
     let fixture: ComponentFixture<MotionContentChangeRecommendationDialogComponent>;
 

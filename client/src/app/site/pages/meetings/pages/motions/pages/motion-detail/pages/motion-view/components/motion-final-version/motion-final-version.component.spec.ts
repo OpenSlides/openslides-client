@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionFinalVersionComponent } from './motion-final-version.component';
 
-xdescribe(`MotionFinalVersionComponent`, () => {
+describe.skip(`MotionFinalVersionComponent`, () => {
     let component: MotionFinalVersionComponent;
     let fixture: ComponentFixture<MotionFinalVersionComponent>;
 

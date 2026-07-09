@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ScrollingTableNoDataDirective } from './scrolling-table-no-data.directive';
 
-xdescribe(`ScrollingTableNoDataDirective`, () => {
+describe.skip(`ScrollingTableNoDataDirective`, () => {
     let directive: ScrollingTableNoDataDirective;
 
     beforeEach(async () => {

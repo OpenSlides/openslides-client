@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AllocationListComponent } from './allocation-list.component';
 
-xdescribe(`AllocationListComponent`, () => {
+describe.skip(`AllocationListComponent`, () => {
     let component: AllocationListComponent;
     let fixture: ComponentFixture<AllocationListComponent>;
 

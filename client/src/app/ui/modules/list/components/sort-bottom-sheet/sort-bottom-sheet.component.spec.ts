@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SortBottomSheetComponent } from './sort-bottom-sheet.component';
 
-xdescribe(`SortBottomSheetComponent`, () => {
+describe.skip(`SortBottomSheetComponent`, () => {
     let component: SortBottomSheetComponent<any>;
     let fixture: ComponentFixture<SortBottomSheetComponent<any>>;
 

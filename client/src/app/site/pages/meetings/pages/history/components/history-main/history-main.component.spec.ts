@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryMainComponent } from './history-main.component';
 
-xdescribe(`HistoryMainComponent`, () => {
+describe.skip(`HistoryMainComponent`, () => {
     let component: HistoryMainComponent;
     let fixture: ComponentFixture<HistoryMainComponent>;
 

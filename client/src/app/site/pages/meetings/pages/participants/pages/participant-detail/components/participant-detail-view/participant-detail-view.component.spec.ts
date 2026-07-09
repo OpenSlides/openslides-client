@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantDetailViewComponent } from './participant-detail-view.component';
 
-xdescribe(`ParticipantDetailViewComponent`, () => {
+describe.skip(`ParticipantDetailViewComponent`, () => {
     let component: ParticipantDetailViewComponent;
     let fixture: ComponentFixture<ParticipantDetailViewComponent>;
 

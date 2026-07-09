@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParagraphBasedAmendmentEditorComponent } from './paragraph-based-amendment-editor.component';
 
-xdescribe(`ParagraphBasedAmendmentEditorComponent`, () => {
+describe.skip(`ParagraphBasedAmendmentEditorComponent`, () => {
     let component: ParagraphBasedAmendmentEditorComponent;
     let fixture: ComponentFixture<ParagraphBasedAmendmentEditorComponent>;
 

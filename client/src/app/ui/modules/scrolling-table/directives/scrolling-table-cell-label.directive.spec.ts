@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ScrollingTableCellLabelDirective } from './scrolling-table-cell-label.directive';
 
-xdescribe(`ScrollingTableCellLabelDirective`, () => {
+describe.skip(`ScrollingTableCellLabelDirective`, () => {
     let directive: ScrollingTableCellLabelDirective;
 
     beforeEach(async () => {

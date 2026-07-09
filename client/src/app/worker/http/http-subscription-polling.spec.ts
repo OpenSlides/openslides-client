@@ -28,7 +28,7 @@ function getResponseBody(data = ``, hash = `0`) {
 
 describe(`http subscription polling`, () => {
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         fetchMock.mockGlobal();
         fetchMock.route(`end:/instant-forever?longpolling=1`, getResponseBody(`instant-forever`));
         fetchMock.route(`end:/error400-expected-format?longpolling=1`, {
@@ -42,12 +42,12 @@ describe(`http subscription polling`, () => {
 
     afterEach(() => {
         fetchMock.hardReset();
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
     });
 
     it(`initializes inactive`, () => {
-        expect(getHttpSubscriptionPollingInstance().active).toBeFalse();
-        expect(fetchMock.callHistory.called(`/once-instant?longpolling=1`)).toBeFalse();
+        expect(getHttpSubscriptionPollingInstance().active).toBe(false);
+        expect(fetchMock.callHistory.called(`/once-instant?longpolling=1`)).toBe(false);
     });
 
     it(`receives data once`, async () => {
@@ -56,7 +56,7 @@ describe(`http subscription polling`, () => {
         const subscr = getHttpSubscriptionPollingInstance(`/instant-forever`, () => resolver());
         subscr.start();
         await receivedData;
-        expect(subscr.active).toBeTrue();
+        expect(subscr.active).toBe(true);
         await subscr.stop();
     });
 
@@ -65,10 +65,10 @@ describe(`http subscription polling`, () => {
         let receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionPollingInstance(`/instant-forever`, () => resolver());
         subscr.start();
-        await expectAsync(receivedData).toBeResolved();
+        await expect(receivedData).resolves.not.toThrow();
         receivedData = new Promise(resolve => (resolver = resolve));
-        jasmine.clock().tick(POLLING_INTERVAL + 200);
-        await expectAsync(receivedData).toBeResolved();
+        vi.advanceTimersByTime(POLLING_INTERVAL + 200);
+        await expect(receivedData).resolves.not.toThrow();
         await subscr.stop();
     });
 
@@ -83,7 +83,8 @@ describe(`http subscription polling`, () => {
             (d: any) => errorResolver(d)
         );
         subscr.start();
-        await expectAsync(receivedError).toBeResolved();
+        await expect(receivedError).resolves.not.toThrow();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         expectAsync(receivedData).toBePending();
         expect(((await receivedError) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
         expect(((await receivedError) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
@@ -95,7 +96,7 @@ describe(`http subscription polling`, () => {
         const receivedData = new Promise(resolve => (resolver = resolve));
         const subscr = getHttpSubscriptionPollingInstance(`/error400-expected-format`, (d: any) => resolver(d));
         subscr.start();
-        await expectAsync(receivedData).toBeResolved();
+        await expect(receivedData).resolves.not.toThrow();
         expect(((await receivedData) as ErrorDescription)?.type).toEqual(ErrorType.CLIENT);
         expect(((await receivedData) as ErrorDescription)?.error?.type).toEqual(`mock-error`);
         await subscr.stop();
@@ -115,9 +116,9 @@ describe(`http subscription polling`, () => {
                 delay: 10000,
                 response: getResponseBody(`once-instant`)
             });
-            jasmine.clock().tick(POLLING_INTERVAL + 600);
+            vi.advanceTimersByTime(POLLING_INTERVAL + 600);
             await subscr.stop();
-            await expectAsync(start).toBeResolved();
+            await expect(start).resolves.not.toThrow();
         });
 
         it(`stop after data received`, async () => {
@@ -127,14 +128,14 @@ describe(`http subscription polling`, () => {
             const start = subscr.start();
             await receivedData;
             await subscr.stop();
-            return expectAsync(start).toBeResolved();
+            return expect(start).resolves.not.toThrow();
         });
 
         it(`instant stop`, async () => {
             const subscr = getHttpSubscriptionPollingInstance(`/instant-forever`);
             const start = subscr.start();
             await subscr.stop();
-            return expectAsync(start).toBeResolved();
+            return expect(start).resolves.not.toThrow();
         });
 
         it(`stops on server error`, async () => {

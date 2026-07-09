@@ -16,7 +16,7 @@ describe(`ConnectionStatusService`, () => {
     let bannerService: BannerService;
 
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         TestBed.configureTestingModule({
             providers: [ConnectionStatusService, { provide: BannerService, useClass: MockBannerService }]
         });
@@ -25,7 +25,7 @@ describe(`ConnectionStatusService`, () => {
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
     });
 
     it(`should be created`, () => {

@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GlobalHeadbarModule } from '../../global-headbar.module';
 import { AccountDialogComponent } from './account-dialog.component';
 
-xdescribe(`AccountDialogComponent`, () => {
+describe.skip(`AccountDialogComponent`, () => {
     let component: AccountDialogComponent;
     let fixture: ComponentFixture<AccountDialogComponent>;
 

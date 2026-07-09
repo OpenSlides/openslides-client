@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomIconComponent } from './custom-icon.component';
 
-xdescribe(`CustomIconComponent`, () => {
+describe.skip(`CustomIconComponent`, () => {
     let component: CustomIconComponent;
     let fixture: ComponentFixture<CustomIconComponent>;
 

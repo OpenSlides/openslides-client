@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionMetaDataComponent } from './motion-meta-data.component';
 
-xdescribe(`MotionMetaDataComponent`, () => {
+describe.skip(`MotionMetaDataComponent`, () => {
     let component: MotionMetaDataComponent;
     let fixture: ComponentFixture<MotionMetaDataComponent>;
 

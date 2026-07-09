@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantListInfoDialogComponent } from './participant-list-info-dialog.component';
 
-xdescribe(`ParticipantListInfoDialogComponent`, () => {
+describe.skip(`ParticipantListInfoDialogComponent`, () => {
     let component: ParticipantListInfoDialogComponent;
     let fixture: ComponentFixture<ParticipantListInfoDialogComponent>;
 

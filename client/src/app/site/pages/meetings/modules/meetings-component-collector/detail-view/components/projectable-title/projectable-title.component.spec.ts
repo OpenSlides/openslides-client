@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectableTitleComponent } from './projectable-title.component';
 
-xdescribe(`ProjectableTitleComponent`, () => {
+describe.skip(`ProjectableTitleComponent`, () => {
     let component: ProjectableTitleComponent;
     let fixture: ComponentFixture<ProjectableTitleComponent>;
 

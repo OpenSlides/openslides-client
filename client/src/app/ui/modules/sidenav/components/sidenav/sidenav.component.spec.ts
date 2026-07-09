@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidenavComponent } from './sidenav.component';
 
-xdescribe(`SidenavComponent`, () => {
+describe.skip(`SidenavComponent`, () => {
     let component: SidenavComponent;
     let fixture: ComponentFixture<SidenavComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChipSelectChipComponent } from './chip-select-chip.component';
 
-xdescribe(`ChipSelectChipComponent`, () => {
+describe.skip(`ChipSelectChipComponent`, () => {
     let component: ChipSelectChipComponent;
     let fixture: ComponentFixture<ChipSelectChipComponent>;
 

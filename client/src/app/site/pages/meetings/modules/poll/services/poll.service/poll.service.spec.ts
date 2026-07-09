@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { PollService } from './poll.service';
 
 // TODO: Enable test
-xdescribe(`PollService`, () => {
+describe.skip(`PollService`, () => {
     let service: PollService;
 
     beforeEach(() => {

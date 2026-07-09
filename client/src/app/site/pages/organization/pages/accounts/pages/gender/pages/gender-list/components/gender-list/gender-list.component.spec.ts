@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GenderListComponent } from './gender-list.component';
 
-xdescribe(`GenderListComponent`, () => {
+describe.skip(`GenderListComponent`, () => {
     let component: GenderListComponent;
     let fixture: ComponentFixture<GenderListComponent>;
 

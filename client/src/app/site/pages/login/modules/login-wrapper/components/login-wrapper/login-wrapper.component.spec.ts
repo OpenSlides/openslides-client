@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginWrapperComponent } from './login-wrapper.component';
 
-xdescribe(`LoginWrapperComponent`, () => {
+describe.skip(`LoginWrapperComponent`, () => {
     let component: LoginWrapperComponent;
     let fixture: ComponentFixture<LoginWrapperComponent>;
 

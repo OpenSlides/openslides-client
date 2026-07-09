@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingSettingsGroupListComponent } from './meeting-settings-group-list.component';
 
-xdescribe(`MeetingSettingsGroupListComponent`, () => {
+describe.skip(`MeetingSettingsGroupListComponent`, () => {
     let component: MeetingSettingsGroupListComponent;
     let fixture: ComponentFixture<MeetingSettingsGroupListComponent>;
 

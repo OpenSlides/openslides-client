@@ -10,7 +10,11 @@ const ACTION_URL = `/system/action/handle_request`;
 const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
 
 class MockHttpService {
-    public lastPosts: { path: string; data: any; queryParams: QueryParams }[] = [];
+    public lastPosts: {
+        path: string;
+        data: any;
+        queryParams: QueryParams;
+    }[] = [];
 
     public returnType: `response` | `error` | `nothing` | `too little` | `non-response` | `no results` = `response`;
 
@@ -122,24 +126,24 @@ describe(`ActionService`, () => {
     });
 
     it(`test sendRequests errors`, async () => {
-        await expectAsync(service.sendRequests([])).toBeRejectedWithError(
+        await expect(service.sendRequests([])).rejects.toThrowError(
             `The action service did not return responses for each request.`
         );
         const actionPayload = [{ action: `majestically`, data: getActionData(6, 9) }];
         http.returnType = `error`;
-        await expectAsync(service.sendRequests(actionPayload)).toBeRejectedWith(`Action majestically failed`);
+        await expect(service.sendRequests(actionPayload)).rejects.toEqual(`Action majestically failed`);
         http.returnType = `too little`;
-        await expectAsync(service.sendRequests(actionPayload)).toBeRejectedWithError(
+        await expect(service.sendRequests(actionPayload)).rejects.toThrowError(
             `The action service did not return responses for each request.`
         );
         http.returnType = `non-response`;
-        await expectAsync(service.sendRequests(actionPayload)).toBeRejectedWithError(
+        await expect(service.sendRequests(actionPayload)).rejects.toThrowError(
             `Unknown return type from action service`
         );
         http.returnType = `nothing`;
-        await expectAsync(service.sendRequests(actionPayload)).toBeResolvedTo(null);
+        await expect(service.sendRequests(actionPayload)).resolves.toEqual(null);
         http.returnType = `no results`;
-        await expectAsync(service.sendRequests(actionPayload)).toBeResolvedTo(null);
+        await expect(service.sendRequests(actionPayload)).resolves.toEqual(null);
     });
 
     it(`test create`, async () => {

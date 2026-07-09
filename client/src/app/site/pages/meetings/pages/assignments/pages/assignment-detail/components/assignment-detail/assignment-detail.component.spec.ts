@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentDetailComponent } from './assignment-detail.component';
 
-xdescribe(`AssignmentDetailComponent`, () => {
+describe.skip(`AssignmentDetailComponent`, () => {
     let component: AssignmentDetailComponent;
     let fixture: ComponentFixture<AssignmentDetailComponent>;
 

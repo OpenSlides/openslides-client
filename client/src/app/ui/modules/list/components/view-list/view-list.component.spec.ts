@@ -4,7 +4,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 
 import { ViewListComponent } from './view-list.component';
 
-xdescribe(`ViewListComponent`, () => {
+describe.skip(`ViewListComponent`, () => {
     class TestIdentifiable implements Identifiable {
         readonly id: Id;
     }

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PrivacyPolicyComponent } from './privacy-policy.component';
 
-xdescribe(`PrivacyPolicyComponent`, () => {
+describe.skip(`PrivacyPolicyComponent`, () => {
     let component: PrivacyPolicyComponent;
     let fixture: ComponentFixture<PrivacyPolicyComponent>;
 

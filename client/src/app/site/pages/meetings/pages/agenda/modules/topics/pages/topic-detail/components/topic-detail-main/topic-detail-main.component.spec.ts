@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicDetailMainComponent } from './topic-detail-main.component';
 
-xdescribe(`TopicDetailMainComponent`, () => {
+describe.skip(`TopicDetailMainComponent`, () => {
     let component: TopicDetailMainComponent;
     let fixture: ComponentFixture<TopicDetailMainComponent>;
 

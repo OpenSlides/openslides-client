@@ -33,7 +33,10 @@ const testData: Record<
     string,
     {
         title: string;
-        range: { start: Date; end: Date };
+        range: {
+            start: Date;
+            end: Date;
+        };
         expect: Record<string, Record<string, string>>;
     }
 > = {

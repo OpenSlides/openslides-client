@@ -53,12 +53,12 @@ describe(`MeetingSettingDirective`, () => {
     let meetingSettingsService: MockMeetingSettingsService;
     const update = () => {
         fixture.detectChanges();
-        jasmine.clock().tick(100000);
+        vi.advanceTimersByTime(100000);
     };
     const getElement = (css: string) => fixture.debugElement.query(By.css(css));
 
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         fixture = TestBed.configureTestingModule({
             declarations: [MeetingSettingDirective, TestComponent],
             providers: [
@@ -72,7 +72,7 @@ describe(`MeetingSettingDirective`, () => {
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
     });
 
     it(`check if element gets restricted`, async () => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StreamComponent } from './stream.component';
 
-xdescribe(`StreamComponent`, () => {
+describe.skip(`StreamComponent`, () => {
     let component: StreamComponent;
     let fixture: ComponentFixture<StreamComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CallDialogComponent } from './call-dialog.component';
 
-xdescribe(`CallDialogComponent`, () => {
+describe.skip(`CallDialogComponent`, () => {
     let component: CallDialogComponent;
     let fixture: ComponentFixture<CallDialogComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaForwardDialogComponent } from './agenda-forward-dialog.component';
 
-xdescribe('AgendaForwardDialogComponent', () => {
+describe.skip('AgendaForwardDialogComponent', () => {
     let component: AgendaForwardDialogComponent;
     let fixture: ComponentFixture<AgendaForwardDialogComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicPollMetaInfoComponent } from './topic-poll-meta-info.component';
 
-xdescribe(`TopicPollMetaInfoComponent`, () => {
+describe.skip(`TopicPollMetaInfoComponent`, () => {
     let component: TopicPollMetaInfoComponent;
     let fixture: ComponentFixture<TopicPollMetaInfoComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColorFormFieldComponent } from './color-form-field.component';
 
-xdescribe(`ColorFormFieldComponent`, () => {
+describe.skip(`ColorFormFieldComponent`, () => {
     let component: ColorFormFieldComponent;
     let fixture: ComponentFixture<ColorFormFieldComponent>;
 

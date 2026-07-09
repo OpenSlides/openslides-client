@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StoppedWaitingForActionDialogComponent } from './stopped-waiting-for-action-dialog.component';
 
-xdescribe(`StoppedWaitingForActionDialogComponent`, () => {
+describe.skip(`StoppedWaitingForActionDialogComponent`, () => {
     let component: StoppedWaitingForActionDialogComponent;
     let fixture: ComponentFixture<StoppedWaitingForActionDialogComponent>;
 

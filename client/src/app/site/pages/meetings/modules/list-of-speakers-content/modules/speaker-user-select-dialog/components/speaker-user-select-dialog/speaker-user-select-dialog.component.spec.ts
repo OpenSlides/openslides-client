@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpeakerUserSelectDialogComponent } from './speaker-user-select-dialog.component';
 
-xdescribe(`SpeakerUserSelectDialogComponent`, () => {
+describe.skip(`SpeakerUserSelectDialogComponent`, () => {
     let component: SpeakerUserSelectDialogComponent;
     let fixture: ComponentFixture<SpeakerUserSelectDialogComponent>;
 

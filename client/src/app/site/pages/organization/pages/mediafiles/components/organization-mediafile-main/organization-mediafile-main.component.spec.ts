@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationMediafileMainComponent } from './organization-mediafile-main.component';
 
-xdescribe(`OrganizationMediafileMainComponent`, () => {
+describe.skip(`OrganizationMediafileMainComponent`, () => {
     let component: OrganizationMediafileMainComponent;
     let fixture: ComponentFixture<OrganizationMediafileMainComponent>;
 

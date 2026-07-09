@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasswordFormComponent } from './password-form.component';
 
-xdescribe(`PasswordFormComponent`, () => {
+describe.skip(`PasswordFormComponent`, () => {
     let component: PasswordFormComponent;
     let fixture: ComponentFixture<PasswordFormComponent>;
 

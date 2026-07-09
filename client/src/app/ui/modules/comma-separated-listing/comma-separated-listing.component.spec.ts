@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommaSeparatedListingComponent } from './comma-separated-listing.component';
 
-xdescribe(`CommaSeparatedListingComponent`, () => {
+describe.skip(`CommaSeparatedListingComponent`, () => {
     let component: CommaSeparatedListingComponent;
     let fixture: ComponentFixture<CommaSeparatedListingComponent>;
 

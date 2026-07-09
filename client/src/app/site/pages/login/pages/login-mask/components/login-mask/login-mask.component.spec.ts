@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginMaskComponent } from './login-mask.component';
 
-xdescribe(`LoginMaskComponent`, () => {
+describe.skip(`LoginMaskComponent`, () => {
     let component: LoginMaskComponent;
     let fixture: ComponentFixture<LoginMaskComponent>;
 

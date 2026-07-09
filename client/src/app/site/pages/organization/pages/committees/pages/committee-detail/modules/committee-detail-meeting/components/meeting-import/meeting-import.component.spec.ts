@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingImportComponent } from './meeting-import.component';
 
-xdescribe(`MeetingImportComponent`, () => {
+describe.skip(`MeetingImportComponent`, () => {
     let component: MeetingImportComponent;
     let fixture: ComponentFixture<MeetingImportComponent>;
 

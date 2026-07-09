@@ -155,9 +155,9 @@ describe(`MeetingSettingsDefinitionService`, () => {
     let service: MeetingSettingsDefinitionService;
 
     function mockGetters(settingsDefaults = fakeSettingsDefaults): void {
-        spyOnProperty(service, `settings`).and.returnValue(fakeSettings);
-        spyOnProperty(service, `settingsDefaults`).and.returnValue(settingsDefaults);
-        spyOnProperty(service, `settingsMap`).and.returnValue(fakeSettingsMap as SettingsMap);
+        vi.spyOn(service, `settings`).mockReturnValue(fakeSettings);
+        vi.spyOn(service, `settingsDefaults`).mockReturnValue(settingsDefaults);
+        vi.spyOn(service, `settingsMap`).mockReturnValue(fakeSettingsMap as SettingsMap);
     }
 
     beforeEach(() => {
@@ -202,9 +202,7 @@ describe(`MeetingSettingsDefinitionService`, () => {
 
     for (const haveDefaults of [true, false]) {
         for (const setting of fakeSettings[0].subgroups[0].settings) {
-            it(`test getDefaultValue for ${setting.type ?? `no given type`}${
-                haveDefaults ? `` : ` if there's no defaults`
-            }`, () => {
+            it(`test getDefaultValue for ${setting.type ?? `no given type`}${haveDefaults ? `` : ` if there's no defaults`}`, () => {
                 mockGetters(haveDefaults ? fakeSettingsDefaults : {});
                 expect(service.getDefaultValue(setting)).toEqual(
                     haveDefaults
@@ -216,9 +214,7 @@ describe(`MeetingSettingsDefinitionService`, () => {
             });
             const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
             for (let i = 0; i < keys.length; i++) {
-                it(`test getDefaultValue for ${setting.type ?? `no given type`} with settings keys${
-                    haveDefaults ? `` : ` if there's no defaults`
-                } ${i + 1}`, () => {
+                it(`test getDefaultValue for ${setting.type ?? `no given type`} with settings keys${haveDefaults ? `` : ` if there's no defaults`} ${i + 1}`, () => {
                     mockGetters(haveDefaults ? fakeSettingsDefaults : {});
                     expect(service.getDefaultValue(keys[i])).toEqual(
                         haveDefaults

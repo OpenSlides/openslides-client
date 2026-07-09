@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ScrollingTableComponent } from './scrolling-table.component';
 
-xdescribe(`ScrollingTableComponent`, () => {
+describe.skip(`ScrollingTableComponent`, () => {
     let component: ScrollingTableComponent<any>;
     let fixture: ComponentFixture<ScrollingTableComponent<any>>;
 

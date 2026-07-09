@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediafileListComponent } from './mediafile-list.component';
 
-xdescribe(`MediafileListComponent`, () => {
+describe.skip(`MediafileListComponent`, () => {
     let component: MediafileListComponent;
     let fixture: ComponentFixture<MediafileListComponent>;
 

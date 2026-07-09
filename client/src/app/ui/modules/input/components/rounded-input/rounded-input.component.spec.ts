@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoundedInputComponent } from './rounded-input.component';
 
-xdescribe(`RoundedInputComponent`, () => {
+describe.skip(`RoundedInputComponent`, () => {
     let component: RoundedInputComponent;
     let fixture: ComponentFixture<RoundedInputComponent>;
 

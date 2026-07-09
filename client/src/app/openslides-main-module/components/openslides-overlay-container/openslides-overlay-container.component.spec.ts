@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OpenSlidesOverlayContainerComponent } from './openslides-overlay-container.component';
 
-xdescribe(`OpenslidesOverlayContainerComponent`, () => {
+describe.skip(`OpenslidesOverlayContainerComponent`, () => {
     let component: OpenSlidesOverlayContainerComponent;
     let fixture: ComponentFixture<OpenSlidesOverlayContainerComponent>;
 

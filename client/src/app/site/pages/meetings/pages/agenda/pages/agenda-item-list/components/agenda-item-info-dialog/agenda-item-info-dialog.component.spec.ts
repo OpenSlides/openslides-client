@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { AgendaItemInfoDialogComponent } from './agenda-item-info-dialog.component';
 
-xdescribe(`AgendaItemInfoDialogComponent`, () => {
+describe.skip(`AgendaItemInfoDialogComponent`, () => {
     let component: AgendaItemInfoDialogComponent;
     let fixture: ComponentFixture<AgendaItemInfoDialogComponent>;
 

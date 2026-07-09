@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CountUsersComponent } from './count-users.component';
 
-xdescribe(`CountUsersComponent`, () => {
+describe.skip(`CountUsersComponent`, () => {
     let component: CountUsersComponent;
     let fixture: ComponentFixture<CountUsersComponent>;
 

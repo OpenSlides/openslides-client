@@ -77,7 +77,7 @@ describe(`MeetingMediaAdapterService`, () => {
 
     for (const test of testCases) {
         it(`test ${test.functionName} function`, async () => {
-            await expectAsync(service[test.functionName](test.place, ...test.restPayload)).toBeResolved();
+            await expect(service[test.functionName](test.place, ...test.restPayload)).resolves.not.toThrow();
             expect(actionService.lastActions.length).toBe(1);
             expect(actionService.lastActions[0].requests).toEqual([
                 { action: test.expectedAction, data: [{ ...test.expectedData, place: test.place }] }

@@ -4,7 +4,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 
 import { SortFilterBarComponent } from './sort-filter-bar.component';
 
-xdescribe(`SortFilterBarComponent`, () => {
+describe.skip(`SortFilterBarComponent`, () => {
     class TestIdentifiable implements Identifiable {
         readonly id: Id;
     }

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationSettingsComponent } from './organization-settings.component';
 
-xdescribe(`OrganizationSettingsComponent`, () => {
+describe.skip(`OrganizationSettingsComponent`, () => {
     let component: OrganizationSettingsComponent;
     let fixture: ComponentFixture<OrganizationSettingsComponent>;
 

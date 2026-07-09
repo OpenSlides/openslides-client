@@ -3,7 +3,7 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ProjectableListComponent } from './projectable-list.component';
 
-xdescribe(`ProjectableListComponent`, () => {
+describe.skip(`ProjectableListComponent`, () => {
     class TestViewModel extends BaseViewModel {}
 
     let component: ProjectableListComponent<TestViewModel>;

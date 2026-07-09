@@ -8,7 +8,9 @@ class MockIdentifiable {
         public en: string,
         public ti: boolean,
         private _fi: (originItem: MockIdentifiable) => string,
-        public ab: { data: string },
+        public ab: {
+            data: string;
+        },
         public le?: number[]
     ) {}
 
@@ -79,6 +81,7 @@ describe(`ListSearchService`, () => {
         generateService([]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`apple`)).not.toThrow();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25, 1)).toBePending();
     });
 
@@ -86,6 +89,7 @@ describe(`ListSearchService`, () => {
         generateService([`en`]);
         service.initSearchService(new BehaviorSubject([]));
         expect(() => service.search(`apple`)).not.toThrow();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(getWaitUntilPromiseForService(data => data.length !== 0, 1)).toBePending();
     });
 
@@ -93,33 +97,33 @@ describe(`ListSearchService`, () => {
         generateService([`ti`]);
         service.initSearchService(new BehaviorSubject(getSourceData(10)));
         expect(() => service.search(`true`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([0, 3, 4, 5, 7, 9]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([0, 3, 4, 5, 7, 9]);
     });
 
     it(`test search with alsoFilterByProperties`, async () => {
         generateService([`ti`], [`en`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`doctor`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([6, 14, 22]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([6, 14, 22]);
     });
 
     it(`test search trim`, async () => {
         generateService([`ti`], [`en`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`doctor `)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([6, 14, 22]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([6, 14, 22]);
     });
 
     it(`test search function`, async () => {
         generateService([`fi`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`doctor`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([6]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([6]);
         service.exitSearchService();
         generateService([`fi`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`banana`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([
             1, 4, 7, 10, 13, 16, 19, 22
         ]);
     });
@@ -128,14 +132,14 @@ describe(`ListSearchService`, () => {
         generateService([`id`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`5`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([5, 15]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([5, 15]);
     });
 
     it(`test search array`, async () => {
         generateService([`le`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`5`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([
             4, 5, 6, 8, 9, 10, 11, 12, 17, 18, 19, 21, 22, 23, 24
         ]);
     });
@@ -144,14 +148,14 @@ describe(`ListSearchService`, () => {
         generateService([`ti`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`doctor`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([]);
     });
 
     it(`test search with multiple properties`, async () => {
         generateService([`le`, `id`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`5`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([
             4, 5, 6, 8, 9, 10, 11, 12, 15, 17, 18, 19, 21, 22, 23, 24
         ]);
     });
@@ -160,14 +164,14 @@ describe(`ListSearchService`, () => {
         generateService([`en`, `id`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`5`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([5, 15]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([5, 15]);
     });
 
     it(`test if really only the first additional property is searched`, async () => {
         generateService([`ti`], [`en`, `id`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`5`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([]);
     });
 
     it(`test if the second additional property is used, if the first isn't filled`, async () => {
@@ -181,7 +185,7 @@ describe(`ListSearchService`, () => {
         );
         expect(() => service.search(`a`)).not.toThrow();
         // does not contain uneven ids, even though `en` for 1 should be `apple`
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([
             0, 2, 8, 10, 16, 18, 24
         ]);
     });
@@ -190,6 +194,6 @@ describe(`ListSearchService`, () => {
         generateService([`ab.data`]);
         service.initSearchService(new BehaviorSubject(getSourceData(25)));
         expect(() => service.search(`elppa`)).not.toThrow();
-        await expectAsync(getWaitUntilPromiseForService(data => data.length !== 25)).toBeResolvedTo([6, 14, 22]);
+        await expect(getWaitUntilPromiseForService(data => data.length !== 25)).resolves.toEqual([6, 14, 22]);
     });
 });

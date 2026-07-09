@@ -47,7 +47,8 @@ describe(`MainMenuService`, () => {
             for (let j = 0; j < i; j++) {
                 service.toggleMenu();
             }
-            await expectAsync(promise1).toBeResolved();
+            await expect(promise1).resolves.not.toThrow();
+            // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
             await expectAsync(promise2).toBePending();
         });
     }

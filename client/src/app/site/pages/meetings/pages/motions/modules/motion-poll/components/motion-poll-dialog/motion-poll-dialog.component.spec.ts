@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionPollDialogComponent } from './motion-poll-dialog.component';
 
-xdescribe(`MotionPollDialogComponent`, () => {
+describe.skip(`MotionPollDialogComponent`, () => {
     let component: MotionPollDialogComponent;
     let fixture: ComponentFixture<MotionPollDialogComponent>;
 

@@ -35,12 +35,12 @@ describe(`utils: functions`, () => {
     describe(`toBase64 function`, () => {
         it(`test with a blob`, async () => {
             const blob = new Blob([`A blobbery blobby blob blob.`]);
-            await expectAsync(toBase64(blob)).toBeResolvedTo(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
+            await expect(toBase64(blob)).resolves.toEqual(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
         });
 
         it(`test with a file`, async () => {
             const file = new File([`A filery fily file file.`], `Peter`);
-            await expectAsync(toBase64(file)).toBeResolvedTo(`QSBmaWxlcnkgZmlseSBmaWxlIGZpbGUu`);
+            await expect(toBase64(file)).resolves.toEqual(`QSBmaWxlcnkgZmlseSBmaWxlIGZpbGUu`);
         });
     });
 
@@ -275,16 +275,16 @@ describe(`utils: functions`, () => {
         ];
 
         beforeEach(() => {
-            jasmine.clock().install();
+            vi.useFakeTimers();
         });
 
         afterEach(() => {
-            jasmine.clock().uninstall();
+            vi.useRealTimers();
         });
 
         for (const date of data) {
             it(`test with ${date.test.toLocaleString()}`, () => {
-                jasmine.clock().mockDate(date.test);
+                vi.setSystemTime(date.test);
                 expect(isEasterEggTime()).toBe(date.expect);
             });
         }
@@ -592,10 +592,15 @@ describe(`utils: functions`, () => {
     describe(`partitionModelsForUpdate function`, () => {
         type TestModel = Identifiable & Record<string, any>;
         interface PartitionModelsForUpdateTestPayload<T extends Identifiable> {
-            test: { newValues: (T | Omit<T, `id`>)[]; originals: T[] };
+            test: {
+                newValues: (T | Omit<T, `id`>)[];
+                originals: T[];
+            };
             expect: ListUpdateData<T>;
         }
-        const data: ({ title: string } & PartitionModelsForUpdateTestPayload<TestModel>)[] = [
+        const data: ({
+            title: string;
+        } & PartitionModelsForUpdateTestPayload<TestModel>)[] = [
             {
                 title: `models that should create`,
                 test: { newValues: [{ a: 1, b: 2 }], originals: [] },
@@ -775,28 +780,28 @@ describe(`utils: functions`, () => {
             const l1 = [els[0], els[1]];
             const l2 = [els[0], els[3]];
 
-            expect(viewModelListEqual(l1, l2)).toBeFalse();
+            expect(viewModelListEqual(l1, l2)).toBe(false);
         });
 
         it(`detects change via change date switch`, () => {
             const l1 = [els[0], els[1]];
             const l2 = [els[0], els[2]];
 
-            expect(viewModelListEqual(l1, l2)).toBeFalse();
+            expect(viewModelListEqual(l1, l2)).toBe(false);
         });
 
         it(`detects change via size change`, () => {
             const l1 = [els[0], els[1]];
             const l2 = [els[0]];
 
-            expect(viewModelListEqual(l1, l2)).toBeFalse();
+            expect(viewModelListEqual(l1, l2)).toBe(false);
         });
 
         it(`detects equality`, () => {
             const l1 = [els[0], els[1], els[3]];
             const l2 = [els[0], els[1], els[3]];
 
-            expect(viewModelListEqual(l1, l2)).toBeTrue();
+            expect(viewModelListEqual(l1, l2)).toBe(true);
         });
     });
 
@@ -809,19 +814,19 @@ describe(`utils: functions`, () => {
         ];
 
         it(`detects change via id switch`, () => {
-            expect(viewModelEqual(els[0], els[2])).toBeFalse();
+            expect(viewModelEqual(els[0], els[2])).toBe(false);
         });
 
         it(`detects change via change date switch`, () => {
-            expect(viewModelEqual(els[0], els[1])).toBeFalse();
+            expect(viewModelEqual(els[0], els[1])).toBe(false);
         });
 
         it(`detects change via empty`, () => {
-            expect(viewModelEqual(els[0], null)).toBeFalse();
+            expect(viewModelEqual(els[0], null)).toBe(false);
         });
 
         it(`detects equality`, () => {
-            expect(viewModelEqual(els[0], els[3])).toBeTrue();
+            expect(viewModelEqual(els[0], els[3])).toBe(true);
         });
     });
 });

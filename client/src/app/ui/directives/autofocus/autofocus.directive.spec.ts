@@ -18,24 +18,24 @@ describe(`AutofocusDirective`, () => {
     let input: HTMLInputElement;
 
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         fixture = TestBed.configureTestingModule({
             declarations: [AutofocusDirective, TestComponent]
         }).createComponent(TestComponent);
 
         input = fixture.debugElement.query(By.css(`#box`)).nativeElement;
-        spyOn(input, `focus`);
+        vi.spyOn(input, `focus`).mockReturnValue(undefined);
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
     });
 
     it(`check if element gets in focus`, async () => {
         expect(input.focus).not.toHaveBeenCalled();
 
         fixture.detectChanges();
-        jasmine.clock().tick(100000);
+        vi.advanceTimersByTime(100000);
 
         expect(input.focus).toHaveBeenCalled();
     });

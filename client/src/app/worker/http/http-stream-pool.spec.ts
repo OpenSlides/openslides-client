@@ -45,21 +45,21 @@ describe(`http stream pool`, () => {
         httpStreamPool = new SimpleHttpStreamPool(endpoint);
     });
 
-    xit(`returns active streams`, () => {});
+    it.skip(`returns active streams`, () => {});
 
-    xit(`reconnects stream on online status`, () => {});
+    it.skip(`reconnects stream on online status`, () => {});
 
-    xit(`stops stream on offline status`, () => {});
+    it.skip(`stops stream on offline status`, () => {});
 
-    xit(`reconnect all streams`, () => {});
+    it.skip(`reconnect all streams`, () => {});
 
-    xit(`reconnects single stream`, () => {});
+    it.skip(`reconnects single stream`, () => {});
 
-    xit(`error on reconnect unknown stream`, () => {});
+    it.skip(`error on reconnect unknown stream`, () => {});
 
-    xit(`removes stream`, () => {});
+    it.skip(`removes stream`, () => {});
 
-    xit(`sends broadcast to specified function`, () => {});
+    it.skip(`sends broadcast to specified function`, () => {});
 
     describe(`healthchecks`, () => {
         let healthy = false;
@@ -89,12 +89,12 @@ describe(`http stream pool`, () => {
 
         it(`recognizes healty service`, async () => {
             healthy = true;
-            await expectAsync(httpStreamPool.isEndpointHealthy()).toBeResolvedTo(true);
+            await expect(httpStreamPool.isEndpointHealthy()).resolves.toEqual(true);
         });
 
         it(`recognizes unhealty service`, async () => {
             healthy = false;
-            await expectAsync(httpStreamPool.isEndpointHealthy()).toBeResolvedTo(false);
+            await expect(httpStreamPool.isEndpointHealthy()).resolves.toEqual(false);
         });
 
         it(`can handle broken health endpoint`, async () => {
@@ -104,12 +104,12 @@ describe(`http stream pool`, () => {
                 }
             });
 
-            await expectAsync(httpStreamPool.isEndpointHealthy()).toBeResolvedTo(false);
+            await expect(httpStreamPool.isEndpointHealthy()).resolves.toEqual(false);
         });
 
         it(`wait healthy instantly`, async () => {
             healthy = true;
-            await expectAsync(httpStreamPool.waitUntilEndpointHealthy()).toBeResolvedTo(false);
+            await expect(httpStreamPool.waitUntilEndpointHealthy()).resolves.toEqual(false);
         });
     });
 });

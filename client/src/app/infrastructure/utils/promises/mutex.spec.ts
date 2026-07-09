@@ -6,7 +6,8 @@ describe(`utils: promise: mutex`, () => {
         const firstLock = mutex.lock();
         const secLock = mutex.lock();
 
-        await expectAsync(firstLock).toBeResolved();
+        await expect(firstLock).resolves.not.toThrow();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(secLock).toBePending();
     });
 
@@ -15,9 +16,9 @@ describe(`utils: promise: mutex`, () => {
         const firstLock = mutex.lock();
         const secLock = mutex.lock();
 
-        await expectAsync(firstLock).toBeResolved();
+        await expect(firstLock).resolves.not.toThrow();
         (await firstLock)();
 
-        await expectAsync(secLock).toBeResolved();
+        await expect(secLock).resolves.not.toThrow();
     });
 });

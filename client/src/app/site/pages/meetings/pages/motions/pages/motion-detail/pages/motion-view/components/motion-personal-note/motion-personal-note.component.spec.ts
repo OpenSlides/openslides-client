@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionPersonalNoteComponent } from './motion-personal-note.component';
 
-xdescribe(`MotionPersonalNoteComponent`, () => {
+describe.skip(`MotionPersonalNoteComponent`, () => {
     let component: MotionPersonalNoteComponent;
     let fixture: ComponentFixture<MotionPersonalNoteComponent>;
 

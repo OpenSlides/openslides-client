@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DesignMainComponent } from './design-main.component';
 
-xdescribe(`DesignMainComponent`, () => {
+describe.skip(`DesignMainComponent`, () => {
     let component: DesignMainComponent;
     let fixture: ComponentFixture<DesignMainComponent>;
 

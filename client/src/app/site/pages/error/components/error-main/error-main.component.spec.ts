@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ErrorMainComponent } from './error-main.component';
 
-xdescribe(`ErrorMainComponent`, () => {
+describe.skip(`ErrorMainComponent`, () => {
     let component: ErrorMainComponent;
     let fixture: ComponentFixture<ErrorMainComponent>;
 

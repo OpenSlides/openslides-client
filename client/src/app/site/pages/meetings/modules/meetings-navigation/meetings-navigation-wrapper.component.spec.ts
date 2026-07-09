@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingsNavigationWrapperComponent } from './meetings-navigation-wrapper.component';
 
-xdescribe(`MeetingsNavigationWrapperComponent`, () => {
+describe.skip(`MeetingsNavigationWrapperComponent`, () => {
     let component: MeetingsNavigationWrapperComponent;
     let fixture: ComponentFixture<MeetingsNavigationWrapperComponent>;
 

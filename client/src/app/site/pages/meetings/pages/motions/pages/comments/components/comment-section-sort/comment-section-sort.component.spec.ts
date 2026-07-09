@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentSectionSortComponent } from './comment-section-sort.component';
 
-xdescribe(`CommentSectionSortComponent`, () => {
+describe.skip(`CommentSectionSortComponent`, () => {
     let component: CommentSectionSortComponent;
     let fixture: ComponentFixture<CommentSectionSortComponent>;
 

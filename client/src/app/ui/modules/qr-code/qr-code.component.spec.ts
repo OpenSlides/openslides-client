@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QrCodeComponent } from './qr-code.component';
 
-xdescribe(`QrCodeComponent`, () => {
+describe.skip(`QrCodeComponent`, () => {
     let component: QrCodeComponent;
     let fixture: ComponentFixture<QrCodeComponent>;
 

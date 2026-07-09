@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ListenEditingDirective } from './listen-editing.directive';
 
-xdescribe(`ListenEditingDirective`, () => {
+describe.skip(`ListenEditingDirective`, () => {
     let directive: ListenEditingDirective;
 
     beforeEach(async () => {

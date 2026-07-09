@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CountdownControlsComponent } from './countdown-controls.component';
 
-xdescribe(`CountdownControlsComponent`, () => {
+describe.skip(`CountdownControlsComponent`, () => {
     let component: CountdownControlsComponent;
     let fixture: ComponentFixture<CountdownControlsComponent>;
 

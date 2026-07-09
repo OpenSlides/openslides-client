@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeadBarComponent } from './head-bar.component';
 
-xdescribe(`HeadBarComponent`, () => {
+describe.skip(`HeadBarComponent`, () => {
     let component: HeadBarComponent;
     let fixture: ComponentFixture<HeadBarComponent>;
 

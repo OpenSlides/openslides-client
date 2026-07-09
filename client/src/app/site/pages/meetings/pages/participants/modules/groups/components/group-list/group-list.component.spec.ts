@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupListComponent } from './group-list.component';
 
-xdescribe(`GroupListComponent`, () => {
+describe.skip(`GroupListComponent`, () => {
     let component: GroupListComponent;
     let fixture: ComponentFixture<GroupListComponent>;
 

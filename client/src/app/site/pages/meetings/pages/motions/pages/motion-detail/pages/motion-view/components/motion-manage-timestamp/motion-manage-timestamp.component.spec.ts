@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionManageTimestampComponent } from './motion-manage-timestamp.component';
 
-xdescribe(`MotionManageTimestampComponent`, () => {
+describe.skip(`MotionManageTimestampComponent`, () => {
     let component: MotionManageTimestampComponent;
     let fixture: ComponentFixture<MotionManageTimestampComponent>;
 

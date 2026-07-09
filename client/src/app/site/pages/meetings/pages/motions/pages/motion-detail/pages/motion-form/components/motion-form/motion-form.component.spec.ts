@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionFormComponent } from './motion-form.component';
 
-xdescribe(`MotionDetailFormComponent`, () => {
+describe.skip(`MotionDetailFormComponent`, () => {
     let component: MotionFormComponent;
     let fixture: ComponentFixture<MotionFormComponent>;
 

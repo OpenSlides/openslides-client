@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AutopilotSettingsComponent } from './autopilot-settings.component';
 
-xdescribe(`AutopilotSettingsComponent`, () => {
+describe.skip(`AutopilotSettingsComponent`, () => {
     let component: AutopilotSettingsComponent;
     let fixture: ComponentFixture<AutopilotSettingsComponent>;
 

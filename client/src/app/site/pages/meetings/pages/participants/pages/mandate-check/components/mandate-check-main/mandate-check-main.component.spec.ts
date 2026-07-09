@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MandateCheckMainComponent } from './mandate-check-main.component';
 
-xdescribe('MandateCheckMainComponent', () => {
+describe.skip('MandateCheckMainComponent', () => {
     let component: MandateCheckMainComponent;
     let fixture: ComponentFixture<MandateCheckMainComponent>;
 

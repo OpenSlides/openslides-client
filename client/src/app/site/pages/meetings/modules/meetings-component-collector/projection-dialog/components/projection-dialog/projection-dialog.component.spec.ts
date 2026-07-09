@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectionDialogComponent } from './projection-dialog.component';
 
-xdescribe(`ProjectionDialogComponent`, () => {
+describe.skip(`ProjectionDialogComponent`, () => {
     let component: ProjectionDialogComponent;
     let fixture: ComponentFixture<ProjectionDialogComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DatepickerComponent } from './datepicker.component';
 
-xdescribe(`DatepickerComponent`, () => {
+describe.skip(`DatepickerComponent`, () => {
     let component: DatepickerComponent;
     let fixture: ComponentFixture<DatepickerComponent>;
 

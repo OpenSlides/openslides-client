@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 
 import { ListComponent } from './list.component';
 
-xdescribe(`ListComponent`, () => {
+describe.skip(`ListComponent`, () => {
     let component: ListComponent<Identifiable>;
     let fixture: ComponentFixture<ListComponent<Identifiable>>;
 

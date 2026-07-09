@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OverlayComponent } from './overlay.component';
 
-xdescribe(`OverlayComponent`, () => {
+describe.skip(`OverlayComponent`, () => {
     let component: OverlayComponent;
     let fixture: ComponentFixture<OverlayComponent>;
 

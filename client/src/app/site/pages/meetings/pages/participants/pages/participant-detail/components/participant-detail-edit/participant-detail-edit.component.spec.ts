@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantDetailEditComponent } from './participant-detail-edit.component';
 
-xdescribe(`ParticipantDetailEditComponent`, () => {
+describe.skip(`ParticipantDetailEditComponent`, () => {
     let component: ParticipantDetailEditComponent;
     let fixture: ComponentFixture<ParticipantDetailEditComponent>;
 

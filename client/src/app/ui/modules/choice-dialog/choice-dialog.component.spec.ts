@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChoiceDialogComponent } from './choice-dialog.component';
 
-xdescribe(`ChoiceDialogComponent`, () => {
+describe.skip(`ChoiceDialogComponent`, () => {
     let component: ChoiceDialogComponent;
     let fixture: ComponentFixture<ChoiceDialogComponent>;
 

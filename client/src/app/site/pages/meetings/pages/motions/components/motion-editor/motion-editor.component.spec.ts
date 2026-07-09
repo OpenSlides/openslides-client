@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionEditorComponent } from './motion-editor.component';
 
-xdescribe(`MotionEditor`, () => {
+describe.skip(`MotionEditor`, () => {
     let component: MotionEditorComponent;
     let fixture: ComponentFixture<MotionEditorComponent>;
 

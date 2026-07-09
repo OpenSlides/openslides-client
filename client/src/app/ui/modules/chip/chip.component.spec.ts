@@ -44,9 +44,9 @@ describe(`ChipComponent`, () => {
         fixture.detectChanges();
 
         expect(component.cssClass).toBe(`i-am-a-class`);
-        expect(
-            fixture.debugElement.query(By.css(`.os-chip`)).nativeElement.classList.contains(`i-am-a-class`)
-        ).toBeTrue();
+        expect(fixture.debugElement.query(By.css(`.os-chip`)).nativeElement.classList.contains(`i-am-a-class`)).toBe(
+            true
+        );
     });
 
     it(`should contain content`, () => {

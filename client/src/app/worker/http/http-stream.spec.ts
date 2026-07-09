@@ -93,20 +93,20 @@ describe(`http stream`, () => {
     });
 
     it(`receives data`, () => {
-        spyOn(httpStream, `onData`);
+        vi.spyOn(httpStream, `onData`).mockReturnValue(undefined);
         subscription.sendData(`test-data`);
         expect(httpStream.onData).toHaveBeenCalledWith(`test-data`);
     });
 
     it(`receives error`, () => {
-        spyOn(httpStream, `onError`);
+        vi.spyOn(httpStream, `onError`).mockReturnValue(undefined);
         subscription.sendError(`test-error`);
         expect(httpStream.onError).toHaveBeenCalledWith(`test-error`);
     });
 
     it(`receives error via data in onError`, () => {
-        spyOn(httpStream, `onData`);
-        spyOn(httpStream, `onError`);
+        vi.spyOn(httpStream, `onData`).mockReturnValue(undefined);
+        vi.spyOn(httpStream, `onError`).mockReturnValue(undefined);
         const error = new ErrorDescription(ErrorType.UNKNOWN, null, ``);
         subscription.sendData(error);
         expect(httpStream.onError).toHaveBeenCalledWith(error);
@@ -135,44 +135,47 @@ describe(`http stream`, () => {
     it(`restart`, async () => {
         const start = httpStream.start();
         await httpStream.restart();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(start).toBePending();
     });
 
     it(`force start`, async () => {
         const start = httpStream.start();
         const forceStart = httpStream.start(true);
-        await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+        await expect(start).resolves.toEqual({ stopReason: `aborted` });
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(forceStart).toBePending();
     });
 
     it(`passes subscription active`, async () => {
         subscription.setActive(true);
-        expect(httpStream.active).toBeTrue();
+        expect(httpStream.active).toBe(true);
     });
 
     it(`passes subscription inactive`, async () => {
         subscription.setActive(false);
-        expect(httpStream.active).toBeFalse();
+        expect(httpStream.active).toBe(false);
     });
 
     it(`resolves data received`, async () => {
         httpStream.start();
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(httpStream.receivedData).toBePending();
         subscription.sendData(`test-error`);
-        await expectAsync(httpStream.receivedData).toBeResolved();
+        await expect(httpStream.receivedData).resolves.not.toThrow();
     });
 
     describe(`receives stop reasons`, () => {
         it(`error`, async () => {
             const start = httpStream.start();
             subscription.stopCustom(`test`);
-            await expectAsync(start).toBeResolvedTo({ stopReason: `error`, error: null });
+            await expect(start).resolves.toEqual({ stopReason: `error`, error: null });
         });
 
         it(`abort`, async () => {
             const start = httpStream.start();
             await httpStream.abort();
-            await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+            await expect(start).resolves.toEqual({ stopReason: `aborted` });
         });
 
         it(`abort with error`, async () => {
@@ -180,12 +183,13 @@ describe(`http stream`, () => {
             const e = new Error();
             e.name = `AbortError`;
             subscription.stopCustom(e);
-            await expectAsync(start).toBeResolvedTo({ stopReason: `aborted` });
+            await expect(start).resolves.toEqual({ stopReason: `aborted` });
         });
 
         it(`in-use`, async () => {
             const start = httpStream.start();
-            await expectAsync(httpStream.start()).toBeResolvedTo({ stopReason: `in-use` });
+            await expect(httpStream.start()).resolves.toEqual({ stopReason: `in-use` });
+            // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
             await expectAsync(start).toBePending();
         });
 
@@ -193,13 +197,13 @@ describe(`http stream`, () => {
             const start = httpStream.start();
             subscription.sendError(`test-error`);
             subscription.stopCustom();
-            await expectAsync(start).toBeResolvedTo({ stopReason: `error`, error: `test-error` });
+            await expect(start).resolves.toEqual({ stopReason: `error`, error: `test-error` });
         });
 
         it(`clean resolve`, async () => {
             const start = httpStream.start();
             subscription.stopCustom();
-            await expectAsync(start).toBeResolvedTo({ stopReason: `resolved` });
+            await expect(start).resolves.toEqual({ stopReason: `resolved` });
         });
     });
 });

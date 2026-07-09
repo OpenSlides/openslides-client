@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VotesTableComponent } from './votes-table.component';
 
-xdescribe(`VotesTableComponent`, () => {
+describe.skip(`VotesTableComponent`, () => {
     let component: VotesTableComponent;
     let fixture: ComponentFixture<VotesTableComponent>;
 

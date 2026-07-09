@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountPasswordComponent } from './account-password.component';
 
-xdescribe(`AccountPasswordComponent`, () => {
+describe.skip(`AccountPasswordComponent`, () => {
     let component: AccountPasswordComponent;
     let fixture: ComponentFixture<AccountPasswordComponent>;
 

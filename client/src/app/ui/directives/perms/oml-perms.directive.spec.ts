@@ -68,12 +68,12 @@ describe(`OmlPermsDirective`, () => {
     let operatorService: MockOperatorService;
     const update = () => {
         fixture.detectChanges();
-        jasmine.clock().tick(100000);
+        vi.advanceTimersByTime(100000);
     };
     const getElement = (css: string) => fixture.debugElement.query(By.css(css));
 
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         fixture = TestBed.configureTestingModule({
             declarations: [OmlPermsDirective, TestComponent],
             providers: [OmlPermsDirective, { provide: OperatorService, useClass: MockOperatorService }]
@@ -84,7 +84,7 @@ describe(`OmlPermsDirective`, () => {
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
     });
 
     it(`check if element gets restricted`, async () => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SiteWrapperComponent } from './site-wrapper.component';
 
-xdescribe(`SiteWrapperComponent`, () => {
+describe.skip(`SiteWrapperComponent`, () => {
     let component: SiteWrapperComponent;
     let fixture: ComponentFixture<SiteWrapperComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridComponent } from './grid.component';
 
-xdescribe(`GridComponent`, () => {
+describe.skip(`GridComponent`, () => {
     let component: GridComponent;
     let fixture: ComponentFixture<GridComponent>;
 

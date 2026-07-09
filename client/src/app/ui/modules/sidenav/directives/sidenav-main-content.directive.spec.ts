@@ -1,6 +1,6 @@
 import { SidenavMainContentDirective } from './sidenav-main-content.directive';
 
-xdescribe(`SidenavMainContentDirective`, () => {
+describe.skip(`SidenavMainContentDirective`, () => {
     it(`should create an instance`, () => {
         const directive = new SidenavMainContentDirective();
         expect(directive).toBeTruthy();

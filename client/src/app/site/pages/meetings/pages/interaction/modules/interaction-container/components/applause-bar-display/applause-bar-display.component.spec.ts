@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplauseBarDisplayComponent } from './applause-bar-display.component';
 
-xdescribe(`ApplauseBarDisplayComponent`, () => {
+describe.skip(`ApplauseBarDisplayComponent`, () => {
     let component: ApplauseBarDisplayComponent;
     let fixture: ComponentFixture<ApplauseBarDisplayComponent>;
 

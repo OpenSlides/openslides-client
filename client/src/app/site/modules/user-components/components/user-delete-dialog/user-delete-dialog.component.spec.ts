@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserDeleteDialogComponent } from './user-delete-dialog.component';
 
-xdescribe(`UserDeleteDialogComponent`, () => {
+describe.skip(`UserDeleteDialogComponent`, () => {
     let component: UserDeleteDialogComponent;
     let fixture: ComponentFixture<UserDeleteDialogComponent>;
 

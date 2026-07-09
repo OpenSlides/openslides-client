@@ -5,6 +5,7 @@ describe(`utils: promise: deferred`, () => {
         const def = new Deferred();
 
         expect(def.wasResolved).toBe(false);
+        // TODO: vitest-migration: Unsupported matcher ".toBePending()" found. Vitest does not have a direct equivalent. Please migrate this manually, for example by using `Promise.race` to check if the promise settles within a short timeout.
         await expectAsync(def).toBePending();
     });
 
@@ -13,7 +14,7 @@ describe(`utils: promise: deferred`, () => {
         def.resolve();
 
         expect(def.wasResolved).toBe(true);
-        await expectAsync(def).toBeResolved();
+        await expect(def).resolves.not.toThrow();
     });
 
     it(`can be unresolved`, async () => {

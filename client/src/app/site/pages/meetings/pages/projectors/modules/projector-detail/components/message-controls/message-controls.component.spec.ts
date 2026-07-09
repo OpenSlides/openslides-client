@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MessageControlsComponent } from './message-controls.component';
 
-xdescribe(`MessageControlsComponent`, () => {
+describe.skip(`MessageControlsComponent`, () => {
     let component: MessageControlsComponent;
     let fixture: ComponentFixture<MessageControlsComponent>;
 

@@ -17,12 +17,21 @@ class MockHttpService {
 }
 
 export class MockPresenterService {
-    public returnValueFns = new Map<Presenter, (data?: any) => { error?: string; returnValue?: any }>();
+    public returnValueFns = new Map<
+        Presenter,
+        (data?: any) => {
+            error?: string;
+            returnValue?: any;
+        }
+    >();
 
     public constructor() {}
 
     public async call<R, D = any>(presenter: Presenter, data?: D): Promise<R> {
-        const fn: (data?: any) => { error?: string; returnValue?: any } =
+        const fn: (data?: any) => {
+            error?: string;
+            returnValue?: any;
+        } =
             this.returnValueFns.get(presenter) ??
             (() => ({ error: `MockPresenterService: Called unexpected presenter` }));
         const returnValue = fn(data);
@@ -68,7 +77,7 @@ describe(`PresenterService`, () => {
         const name = presenterNames[i % presenterNames.length];
         const data = exampleData[i % exampleData.length];
         it(`does nothing strange for "${name}" presenter with ${data.title}`, async () => {
-            await expectAsync(service.call(name, data.data)).toBeResolvedTo(
+            await expect(service.call(name, data.data)).resolves.toEqual(
                 `/system/presenter/handle_request | [{"presenter":"${name}"${data.expected}}]`
             );
         });
@@ -76,7 +85,7 @@ describe(`PresenterService`, () => {
 
     it(`handles wrong return value with error`, async () => {
         http.wrap = !http.wrap;
-        await expectAsync(service.call(Presenter.GET_USERS, { some: `data` })).toBeRejectedWithError(
+        await expect(service.call(Presenter.GET_USERS, { some: `data` })).rejects.toThrowError(
             `The presenter service has returned a wrong format`
         );
         http.wrap = !http.wrap;

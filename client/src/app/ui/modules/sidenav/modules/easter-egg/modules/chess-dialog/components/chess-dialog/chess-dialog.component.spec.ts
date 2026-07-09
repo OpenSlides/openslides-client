@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChessDialogComponent } from './chess-dialog.component';
 
-xdescribe(`ChessDialogComponent`, () => {
+describe.skip(`ChessDialogComponent`, () => {
     let component: ChessDialogComponent;
     let fixture: ComponentFixture<ChessDialogComponent>;
 

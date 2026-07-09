@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HistoryListComponent } from './history-list.component';
 
-xdescribe(`HistoryListComponent`, () => {
+describe.skip(`HistoryListComponent`, () => {
     let component: HistoryListComponent;
     let fixture: ComponentFixture<HistoryListComponent>;
 

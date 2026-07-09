@@ -4,7 +4,7 @@ import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/ba
 
 import { MotionManageMotionMeetingUsersComponent } from './motion-manage-motion-meeting-users.component';
 
-xdescribe(`MotionManageSubmittersComponent`, () => {
+describe.skip(`MotionManageSubmittersComponent`, () => {
     let component: MotionManageMotionMeetingUsersComponent<BaseHasMeetingUserViewModel, BaseModel>;
     let fixture: ComponentFixture<MotionManageMotionMeetingUsersComponent<BaseHasMeetingUserViewModel, BaseModel>>;
 

@@ -21,7 +21,13 @@ describe(`ErrorMapService`, () => {
 
     const testData: {
         title: string;
-        test: { message: string; options: { url: string; data?: any } };
+        test: {
+            message: string;
+            options: {
+                url: string;
+                data?: any;
+            };
+        };
         expect: string | Error;
         testConditionCheck?: boolean; // Boolean value that determines wheter the error map constants still have a form that is conducive to this test
     }[] = [
@@ -157,7 +163,7 @@ describe(`ErrorMapService`, () => {
 
         service = TestBed.inject(ErrorMapService);
 
-        spyOn(console, `warn`);
+        vi.spyOn(console, `warn`).mockReturnValue(undefined);
     });
 
     for (const date of testData) {
@@ -184,7 +190,8 @@ describe(`ErrorMapService`, () => {
         expect(service.getCleanErrorMessage(`1, 2, 3, 4, 5, 6, 7, 8, 9`, { url: `test123456789` })).toBe(
             `Error: Number range begins with 1`
         );
-        expect(console.warn).toHaveBeenCalledOnceWith(
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(
             `ErrorMapService has found multiple matches for "1, 2, 3, 4, 5, 6, 7, 8, 9"`
         );
 

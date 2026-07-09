@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PollCannotVoteMessageComponent } from './poll-cannot-vote-message.component';
 
-xdescribe(`PollCannotVoteMessageComponent`, () => {
+describe.skip(`PollCannotVoteMessageComponent`, () => {
     let component: PollCannotVoteMessageComponent;
     let fixture: ComponentFixture<PollCannotVoteMessageComponent>;
 

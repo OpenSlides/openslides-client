@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UnsupportedBrowserComponent } from './unsupported-browser.component';
 
-xdescribe(`UnsupportedBrowserComponent`, () => {
+describe.skip(`UnsupportedBrowserComponent`, () => {
     let component: UnsupportedBrowserComponent;
     let fixture: ComponentFixture<UnsupportedBrowserComponent>;
 

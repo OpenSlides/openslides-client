@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GlobalHeadbarModule } from '../../global-headbar.module';
 import { GlobalHeadbarComponent } from './global-headbar.component';
 
-xdescribe(`GlobalHeadbarComponent`, () => {
+describe.skip(`GlobalHeadbarComponent`, () => {
     let component: GlobalHeadbarComponent;
     let fixture: ComponentFixture<GlobalHeadbarComponent>;
 

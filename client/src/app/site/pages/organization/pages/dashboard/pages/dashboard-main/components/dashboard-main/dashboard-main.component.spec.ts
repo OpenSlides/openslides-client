@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardMainComponent } from './dashboard-main.component';
 
-xdescribe(`DashboardMainComponent`, () => {
+describe.skip(`DashboardMainComponent`, () => {
     let component: DashboardMainComponent;
     let fixture: ComponentFixture<DashboardMainComponent>;
 

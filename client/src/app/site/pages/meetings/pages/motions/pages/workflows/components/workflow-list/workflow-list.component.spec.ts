@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WorkflowListComponent } from './workflow-list.component';
 
-xdescribe(`WorkflowListComponent`, () => {
+describe.skip(`WorkflowListComponent`, () => {
     let component: WorkflowListComponent;
     let fixture: ComponentFixture<WorkflowListComponent>;
 

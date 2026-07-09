@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StructureLevelListComponent } from './structure-level-list.component';
 
-xdescribe(`StructureLevelListComponent`, () => {
+describe.skip(`StructureLevelListComponent`, () => {
     let component: StructureLevelListComponent;
     let fixture: ComponentFixture<StructureLevelListComponent>;
 

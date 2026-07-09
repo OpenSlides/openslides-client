@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StartComponent } from './start.component';
 
-xdescribe(`StartComponent`, () => {
+describe.skip(`StartComponent`, () => {
     let component: StartComponent;
     let fixture: ComponentFixture<StartComponent>;
 

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GlobalHeadbarModule } from '../../global-headbar.module';
 import { GlobalSearchComponent } from './global-search.component';
 
-xdescribe(`GlobalSearchComponent`, () => {
+describe.skip(`GlobalSearchComponent`, () => {
     let component: GlobalSearchComponent;
     let fixture: ComponentFixture<GlobalSearchComponent>;
 

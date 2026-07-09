@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionManagePollsComponent } from './motion-manage-polls.component';
 
-xdescribe(`MotionManagePollsComponent`, () => {
+describe.skip(`MotionManagePollsComponent`, () => {
     let component: MotionManagePollsComponent;
     let fixture: ComponentFixture<MotionManagePollsComponent>;
 

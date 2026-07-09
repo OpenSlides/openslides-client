@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PaperDirective } from './paper.directive';
 
-xdescribe(`PaperDirective`, () => {
+describe.skip(`PaperDirective`, () => {
     let directive: PaperDirective;
 
     beforeEach(async () => {

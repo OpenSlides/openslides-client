@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionForwardDialogComponent } from './motion-forward-dialog.component';
 
-xdescribe(`MotionForwardDialogComponent`, () => {
+describe.skip(`MotionForwardDialogComponent`, () => {
     let component: MotionForwardDialogComponent;
     let fixture: ComponentFixture<MotionForwardDialogComponent>;
 

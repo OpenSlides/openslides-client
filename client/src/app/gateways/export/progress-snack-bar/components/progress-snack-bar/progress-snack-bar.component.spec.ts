@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressSnackBarComponent } from './progress-snack-bar.component';
 
-xdescribe(`ProgressSnackBarComponent`, () => {
+describe.skip(`ProgressSnackBarComponent`, () => {
     let component: ProgressSnackBarComponent;
     let fixture: ComponentFixture<ProgressSnackBarComponent>;
 

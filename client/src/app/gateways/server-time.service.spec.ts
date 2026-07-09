@@ -22,18 +22,18 @@ describe(`ServerTimeService`, () => {
     let service: ServerTimeService;
 
     beforeEach(() => {
-        jasmine.clock().install();
+        vi.useFakeTimers();
         TestBed.configureTestingModule({
             providers: [ServerTimeService, { provide: LifecycleService, useClass: MockLifecycleService }]
         });
 
         service = TestBed.inject(ServerTimeService);
-        spyOn(console, `error`);
+        vi.spyOn(console, `error`).mockReturnValue(undefined);
         fetchMock.mockGlobal();
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        vi.useRealTimers();
         fetchMock.hardReset();
     });
 
@@ -50,14 +50,14 @@ describe(`ServerTimeService`, () => {
         expect(servertime).toBeGreaterThanOrEqual(now - 1);
     });
 
-    xit(`should update getServerOffsetObservable correctly`, async () => {
+    it.skip(`should update getServerOffsetObservable correctly`, async () => {
         fetchMock.get(`/assets/time.txt`, {
             headers: {
                 Date: new Date(Math.floor(Date.now() / 1000) - 10).toUTCString()
             }
         });
 
-        jasmine.clock().tick(1000);
+        vi.advanceTimersByTime(1000);
         const serverOffset = Math.floor(
             (await lastValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)))) / 1000
         );
@@ -65,7 +65,7 @@ describe(`ServerTimeService`, () => {
         expect(serverOffset).toBeGreaterThanOrEqual(9);
     });
 
-    xit(`should retry`, async () => {
+    it.skip(`should retry`, async () => {
         fetchMock.get(
             `/assets/time.txt`,
             {
@@ -78,14 +78,14 @@ describe(`ServerTimeService`, () => {
             }
         );
 
-        jasmine.clock().tick(300);
+        vi.advanceTimersByTime(300);
         const updatedPromise = firstValueFrom(service.getServerOffsetObservable().pipe(skip(1), take(1)));
         fetchMock.modifyRoute(`time.txt`, {
             headers: {
                 Date: new Date().toUTCString()
             }
         });
-        await expectAsync(updatedPromise).toBeResolved();
+        await expect(updatedPromise).resolves.not.toThrow();
         expect(console.error).toHaveBeenCalled();
     });
 });

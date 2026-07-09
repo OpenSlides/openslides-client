@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionCallListComponent } from './motion-call-list.component';
 
-xdescribe(`MotionCallListComponent`, () => {
+describe.skip(`MotionCallListComponent`, () => {
     let component: MotionCallListComponent;
     let fixture: ComponentFixture<MotionCallListComponent>;
 

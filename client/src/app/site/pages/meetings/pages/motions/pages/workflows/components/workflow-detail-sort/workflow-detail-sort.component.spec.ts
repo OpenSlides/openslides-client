@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WorkflowDetailSortComponent } from './workflow-detail-sort.component';
 
-xdescribe(`WorkflowDetailSortComponent`, () => {
+describe.skip(`WorkflowDetailSortComponent`, () => {
     let component: WorkflowDetailSortComponent;
     let fixture: ComponentFixture<WorkflowDetailSortComponent>;
 

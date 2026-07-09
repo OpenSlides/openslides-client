@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionViewComponent } from './motion-view.component';
 
-xdescribe(`MotionDetailViewComponent`, () => {
+describe.skip(`MotionDetailViewComponent`, () => {
     let component: MotionViewComponent;
     let fixture: ComponentFixture<MotionViewComponent>;
 

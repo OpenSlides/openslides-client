@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplauseParticleDisplayComponent } from './applause-particle-display.component';
 
-xdescribe(`ApplauseParticleDisplayComponent`, () => {
+describe.skip(`ApplauseParticleDisplayComponent`, () => {
     let component: ApplauseParticleDisplayComponent;
     let fixture: ComponentFixture<ApplauseParticleDisplayComponent>;
 

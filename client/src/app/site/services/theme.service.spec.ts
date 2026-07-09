@@ -1,3 +1,4 @@
+import type { MockedObject } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
@@ -9,18 +10,23 @@ import { GENERAL_DEFAULT_COLORS, ThemeService } from './theme.service';
 
 describe(`ThemeService`, () => {
     let service: ThemeService;
-    let orgaSettingsSpy: jasmine.SpyObj<OrganizationSettingsService>;
-    let themeRepoSpy: jasmine.SpyObj<ThemeRepositoryService>;
-    let storageSpy: jasmine.SpyObj<StorageService>;
+    let orgaSettingsSpy: MockedObject<OrganizationSettingsService>;
+    let themeRepoSpy: MockedObject<ThemeRepositoryService>;
+    let storageSpy: MockedObject<StorageService>;
 
     beforeEach(() => {
+        // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
         const spy1 = jasmine.createSpyObj(`OrganizationSettingsService`, [`get`]);
+        // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
         const spy3 = jasmine.createSpyObj(`ThemeRepositoryService`, [`getViewModelObservable`]);
+        // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
         const spy4 = jasmine.createSpyObj(`StorageService`, [`set`, `get`]);
-        spy1.get.and.callFake(function (_) {
+        spy1.get.mockImplementation(function (_) {
+            // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
             return jasmine.createSpyObj(Observable, [`subscribe`]);
         });
-        spy4.get.and.callFake(function (_) {
+        spy4.get.mockImplementation(function (_) {
+            // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
             return jasmine.createSpyObj(Observable, [`then`]);
         });
         TestBed.configureTestingModule({
@@ -33,26 +39,26 @@ describe(`ThemeService`, () => {
             ]
         });
         service = TestBed.inject(ThemeService);
-        orgaSettingsSpy = TestBed.inject(OrganizationSettingsService) as jasmine.SpyObj<OrganizationSettingsService>;
-        themeRepoSpy = TestBed.inject(ThemeRepositoryService) as jasmine.SpyObj<ThemeRepositoryService>;
-        storageSpy = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
+        orgaSettingsSpy = TestBed.inject(OrganizationSettingsService) as MockedObject<OrganizationSettingsService>;
+        themeRepoSpy = TestBed.inject(ThemeRepositoryService) as MockedObject<ThemeRepositoryService>;
+        storageSpy = TestBed.inject(StorageService) as MockedObject<StorageService>;
     });
 
     it(`should be created`, () => {
         expect(service).toBeTruthy();
-        expect(orgaSettingsSpy.get.calls.count()).toBe(1);
-        expect(themeRepoSpy.getViewModelObservable.calls.count()).toBe(0);
-        expect(storageSpy.get.calls.count()).toBe(1);
+        expect(vi.mocked(orgaSettingsSpy.get).mock.calls.length).toBe(1);
+        expect(vi.mocked(themeRepoSpy.getViewModelObservable).mock.calls.length).toBe(0);
+        expect(vi.mocked(storageSpy.get).mock.calls.length).toBe(1);
     });
 
     it(`set isDarkMode to true and toggleDarkMode`, () => {
         let dark: boolean | null = null;
         service.isDarkModeObservable.subscribe(mode => (dark = mode));
         service.isDarkMode = true;
-        expect(storageSpy.set.calls.count()).toBe(1);
+        expect(vi.mocked(storageSpy.set).mock.calls.length).toBe(1);
         expect(dark).toBe(true);
         service.toggleDarkMode();
-        expect(storageSpy.set.calls.count()).toBe(2);
+        expect(vi.mocked(storageSpy.set).mock.calls.length).toBe(2);
         expect(dark).toBe(false);
     });
 

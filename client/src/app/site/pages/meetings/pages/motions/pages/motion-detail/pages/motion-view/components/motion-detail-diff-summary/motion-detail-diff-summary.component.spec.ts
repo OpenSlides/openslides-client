@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionDetailDiffSummaryComponent } from './motion-detail-diff-summary.component';
 
-xdescribe(`MotionDetailDiffSummaryComponent`, () => {
+describe.skip(`MotionDetailDiffSummaryComponent`, () => {
     let component: MotionDetailDiffSummaryComponent;
     let fixture: ComponentFixture<MotionDetailDiffSummaryComponent>;
 

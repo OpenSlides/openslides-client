@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GlobalSpinnerComponent } from './global-spinner.component';
 
-xdescribe(`GlobalSpinnerComponent`, () => {
+describe.skip(`GlobalSpinnerComponent`, () => {
     let component: GlobalSpinnerComponent;
     let fixture: ComponentFixture<GlobalSpinnerComponent>;
 

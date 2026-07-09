@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ResizedDirective } from './resized.directive';
 
-xdescribe(`ResizedDirective`, () => {
+describe.skip(`ResizedDirective`, () => {
     let directive: ResizedDirective;
 
     beforeEach(async () => {

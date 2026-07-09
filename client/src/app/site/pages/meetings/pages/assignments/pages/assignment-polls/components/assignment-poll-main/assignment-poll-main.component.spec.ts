@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentPollMainComponent } from './assignment-poll-main.component';
 
-xdescribe(`AssignmentPollMainComponent`, () => {
+describe.skip(`AssignmentPollMainComponent`, () => {
     let component: AssignmentPollMainComponent;
     let fixture: ComponentFixture<AssignmentPollMainComponent>;
 

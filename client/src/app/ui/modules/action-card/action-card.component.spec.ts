@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionCardComponent } from './action-card.component';
 
-xdescribe(`ActionCardComponent`, () => {
+describe.skip(`ActionCardComponent`, () => {
     let component: ActionCardComponent;
     let fixture: ComponentFixture<ActionCardComponent>;
 

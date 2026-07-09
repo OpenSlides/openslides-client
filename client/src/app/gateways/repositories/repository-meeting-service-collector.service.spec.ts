@@ -95,7 +95,7 @@ describe(`RepositoryMeetingServiceCollectorService and MeetingServiceCollectorSe
         ).toEqual([`A collection`, [`key1`, `key2`, `abc`], `B collection`, [`1`, `2`, `something`]]);
         const promise = firstValueFrom(service.getNewKeyUpdatesObservable(`A collection`).pipe(skip(1)));
         service.registerNewKeyUpdates(`A collection`, [`a`, `b`, `c`]);
-        await expectAsync(promise).toBeResolvedTo([`a`, `b`, `c`]);
+        await expect(promise).resolves.toEqual([`a`, `b`, `c`]);
     });
 
     it(`test collectionToKeyUpdatesObservableMap for yet unknown collection`, async () => {
@@ -107,6 +107,6 @@ describe(`RepositoryMeetingServiceCollectorService and MeetingServiceCollectorSe
             ])
         ).toEqual([`C collection`, []]);
         service.registerNewKeyUpdates(`C collection`, [`a`, `b`, `c`]);
-        await expectAsync(promise).toBeResolvedTo([`a`, `b`, `c`]);
+        await expect(promise).resolves.toEqual([`a`, `b`, `c`]);
     });
 });

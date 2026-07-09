@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorListEntryComponent } from './projector-list-entry.component';
 
-xdescribe(`ProjectorListEntryComponent`, () => {
+describe.skip(`ProjectorListEntryComponent`, () => {
     let component: ProjectorListEntryComponent;
     let fixture: ComponentFixture<ProjectorListEntryComponent>;
 
