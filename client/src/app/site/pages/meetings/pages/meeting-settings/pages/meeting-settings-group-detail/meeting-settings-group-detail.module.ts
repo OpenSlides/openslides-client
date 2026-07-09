@@ -10,8 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-// time picker because angular still doesnt offer one!!
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { DatepickerModule } from 'src/app/ui/modules/datepicker';
@@ -52,7 +50,6 @@ import { MeetingSettingsGroupDetailRoutingModule } from './meeting-settings-grou
         MatDatepickerModule,
         MatTooltipModule,
         MatInputModule,
-        NgxMaterialTimepickerModule,
         FormsModule,
         ReactiveFormsModule,
         DatepickerModule,
