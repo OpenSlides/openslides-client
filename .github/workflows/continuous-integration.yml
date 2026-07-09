@@ -133,5 +133,5 @@ jobs:
         working-directory: packages/openslides-motion-diff/
 
       - name: Build and run karma tests
-        run: npm run test-silently -- --browsers=ChromiumHeadlessNoSandbox
+        run: npm run test-silently
         working-directory: client/

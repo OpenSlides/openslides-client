@@ -4,7 +4,11 @@
     "compilerOptions": {
         "outDir": "./out-tsc/spec",
         "types": ["vitest/globals"],
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "paths": {
+            "@openslides/motion-diff": ["../packages/openslides-motion-diff"],
+            "*": ["./*"]
+        }
     },
     "files": ["src/test.ts", "src/polyfills.ts"],
     "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
