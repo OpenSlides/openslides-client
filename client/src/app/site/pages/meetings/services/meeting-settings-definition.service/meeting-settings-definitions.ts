@@ -26,8 +26,6 @@ export type SettingsType =
     | `integer`
     | `boolean`
     | `choice`
-    | `date`
-    | `datetime`
     | `translations`
     | `ranking`
     | `groups`

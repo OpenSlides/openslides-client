@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface EditorImageData {
@@ -25,10 +25,9 @@ export interface EditorImageDialogOutput {
 export class EditorImageDialogComponent {
     public image: EditorImageData;
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public data: EditorImageDialogInput,
-        private dialogRef: MatDialogRef<EditorImageDialogComponent>
-    ) {
+    private dialogRef = inject(MatDialogRef<EditorImageDialogComponent>);
+
+    public constructor(@Inject(MAT_DIALOG_DATA) public data: EditorImageDialogInput) {
         this.image = data.image;
     }
 

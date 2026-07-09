@@ -17,9 +17,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
@@ -128,6 +128,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatFormFieldModule,
         MatTabsModule,
         MatTooltipModule,
+        MatTimepickerModule,
         MatChipsModule,
         MatCheckboxModule,
         MatSelectModule,
@@ -137,7 +138,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatProgressBarModule,
         ParticipantSearchSelectorModule,
         OpenSlidesDateAdapterModule,
-        NgxMaterialTimepickerModule,
         DatepickerModule,
         // Detail view
         ScrollingModule,

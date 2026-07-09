@@ -5,6 +5,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -248,11 +249,12 @@ export class BackendImportListComponent implements OnInit {
     protected uploadButton: boolean;
     protected selectedNewFile;
 
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
+
     public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService,
-        private router: Router,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private router: Router
     ) {}
 
     /**

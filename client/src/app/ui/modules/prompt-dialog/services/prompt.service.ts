@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -11,10 +11,8 @@ import { PromptDialogComponent } from '../prompt-dialog.component';
 export class PromptService {
     private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {}
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
 
     /**
      * Opens the dialog. Returns true, if the user accepts.

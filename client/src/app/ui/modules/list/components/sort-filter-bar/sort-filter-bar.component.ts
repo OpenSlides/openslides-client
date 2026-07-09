@@ -4,6 +4,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -239,11 +240,9 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     private mobileSubscription: Subscription | null;
 
-    public constructor(
-        protected translate: TranslateService,
-        public vp: ViewPortService,
-        private bottomSheet: MatBottomSheet
-    ) {}
+    public vp = inject(ViewPortService);
+    protected translate = inject(TranslateService);
+    private bottomSheet = inject(MatBottomSheet);
 
     public ngOnInit(): void {
         this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {

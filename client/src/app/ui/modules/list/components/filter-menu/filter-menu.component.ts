@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -58,7 +59,7 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     @Input()
     public showSpacer = false;
 
-    public constructor(private cd: ChangeDetectorRef) {}
+    private cd = inject(ChangeDetectorRef);
 
     /**
      * Directly closes again if no sorting is available
