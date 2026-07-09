@@ -9,7 +9,7 @@
                 @case ('selection') {
                     <mat-form-field class="option-amount">
                         <mat-label>{{ option.title }}</mat-label>
-                        <input matInput type="number" [formField]="resultForm.options[i].value" />
+                        <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
                     </mat-form-field>
 
                     <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
@@ -53,5 +53,13 @@
             <mat-label>Total ballots</mat-label>
             <input matInput type="number" [formField]="resultForm.total_ballots" />
         </mat-form-field>
+        <button
+            matIconButton
+            type="button"
+            [attr.aria-label]="'Update total ballots' | translate"
+            (click)="updateTotalBallots()"
+        >
+            <mat-icon>calculate</mat-icon>
+        </button>
     </div>
 </form>

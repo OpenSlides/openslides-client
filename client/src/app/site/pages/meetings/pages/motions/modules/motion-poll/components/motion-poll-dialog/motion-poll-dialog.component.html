@@ -5,14 +5,16 @@
         </os-poll-form>
     </div>
 
-    <div class="poll-result" [class.hidden]="!analogPollFormOpen()">
-        <os-poll-edit-result
-            configType="approval"
-            [options]="analogPollOptions()"
-            [pollConfigData]="approvalFormValue"
-            [pollData]="pollData"
-        />
-    </div>
+    @if (analogPollFormOpen()) {
+        <div class="poll-result">
+            <os-poll-edit-result
+                configType="approval"
+                [options]="analogPollOptions()"
+                [pollConfigData]="approvalFormValue"
+                [pollData]="pollData"
+            />
+        </div>
+    }
 </mat-dialog-content>
 
 <mat-dialog-actions>

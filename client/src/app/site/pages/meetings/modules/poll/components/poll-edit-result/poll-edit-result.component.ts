@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, OnInit, signal } from '@angular/core';
-import { disabled, form, FormField } from '@angular/forms/signals';
+import { applyEach, disabled, form, FormField, schema } from '@angular/forms/signals';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AnyPollConfig, Poll } from 'src/app/domain/models/poll';
@@ -12,8 +14,14 @@ import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-sele
 
 type PollConfigUnion = PollConfigApproval & PollConfigRatingApproval & PollConfigRatingScore & PollConfigSelection;
 
+interface OptionValue {
+    yes: number;
+    no: number;
+    abstain: number;
+}
+
 interface OptionFormEntry {
-    value: number;
+    value: OptionValue;
     majority: boolean;
 }
 
@@ -29,7 +37,15 @@ interface PollEditResultModel {
     selector: 'os-poll-edit-result',
     templateUrl: './poll-edit-result.component.html',
     styleUrl: './poll-edit-result.component.scss',
-    imports: [MatCheckboxModule, MatFormFieldModule, MatInputModule, FormField, TranslatePipe],
+    imports: [
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        FormField,
+        TranslatePipe
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollEditResultComponent implements OnInit {
@@ -48,31 +64,62 @@ export class PollEditResultComponent implements OnInit {
         total_ballots: 0
     });
 
+    private optionSchema = schema<OptionFormEntry>(option => {
+        // TODO: Angular 22: Wrap rule into `when`
+        disabled(option.value.yes, ({ valueOf }) => valueOf(option.majority));
+        disabled(option.value.no, ({ valueOf }) => valueOf(option.majority));
+        disabled(option.value.abstain, ({ valueOf }) => valueOf(option.majority));
+    });
+
     public readonly resultForm = form(this.model, s => {
-        // TODO: this.model().options is empty at this time
-        for (let i = 0; i < this.model().options.length; i++) {
-            // TODO: Angular 22: Wrap rule into `when`
-            disabled(s.options[i].value, ({ valueOf }) => valueOf(s.options[i].majority));
-        }
+        applyEach(s.options, this.optionSchema);
+    });
+
+    public showAbstain = computed(() => {
+        const cfg = this.pollConfigDataLax();
+        return cfg.min_options_amount === 0 && cfg.min_vote_sum === 0;
+    });
+
+    public showNota = computed(() => {
+        return !!this.pollConfigDataLax().allow_nota;
     });
 
     public ngOnInit(): void {
-        this.rebuildModelFromInputs();
-    }
-
-    private rebuildModelFromInputs(): void {
-        const builtOptions = this.options().map(() => ({
-            value: 0,
-            majority: false
+        const result = this.pollData().result ? JSON.parse(this.pollData().result) : {};
+        const builtOptions = this.options().map(opt => ({
+            value: {
+                yes: isNaN(+result[opt.key]) ? null : (result[opt.key] ?? null),
+                no: null,
+                abstain: null
+            },
+            majority: result[opt.key] === `majority`
         }));
 
         this.model.set({
             options: builtOptions,
-            abstain: 0,
-            nota: 0,
-            invalid: 0,
-            total_ballots: 0
+            abstain: this.showAbstain() ? (result[`abstain`] ?? null) : null,
+            nota: result[`nota`] ?? null,
+            invalid: result[`invalid`] ?? null,
+            total_ballots: result[`total_ballots`] ?? null
         });
+    }
+
+    public updateTotalBallots(): void {
+        const data = this.model();
+        if (data.options.some(opt => opt.majority)) {
+            return;
+        }
+
+        if (this.configType() !== 'rating_approval') {
+            this.resultForm
+                .total_ballots()
+                .value.set(
+                    data.invalid +
+                        data.abstain +
+                        data.nota +
+                        data.options.reduce((p, c) => p + c.value.yes + c.value.no + c.value.abstain, 0)
+                );
+        }
     }
 
     public serializeResult(): Record<string, unknown> {
@@ -83,25 +130,16 @@ export class PollEditResultComponent implements OnInit {
             if (m.options[index]?.majority) {
                 serializedOptions[option.key] = `majority`;
             } else {
-                serializedOptions[option.key] = m.options[index]?.value ?? 0;
+                serializedOptions[option.key] = m.options[index]?.value.yes ?? 0;
             }
         });
 
         return {
             ...serializedOptions,
-            invalid: m.invalid,
-            total_ballots: m.total_ballots,
+            ...(m.invalid !== null ? { invalid: m.invalid } : {}),
+            ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
             ...(this.showAbstain() ? { abstain: m.abstain } : {}),
             ...(this.showNota() ? { nota: m.nota } : {})
         };
-    }
-
-    public showAbstain(): boolean {
-        const cfg = this.pollConfigDataLax();
-        return cfg.min_options_amount === 0 && cfg.min_vote_sum === 0;
-    }
-
-    public showNota(): boolean {
-        return !!this.pollConfigDataLax().allow_nota;
     }
 }

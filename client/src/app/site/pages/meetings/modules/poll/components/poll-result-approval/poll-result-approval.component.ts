@@ -159,7 +159,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.poll().ballot_ids.length;
+        return this.config().parsedResult()?.total_ballots;
     });
 
     public entitledUsers = computed<number | null>(() => {
