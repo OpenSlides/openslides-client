@@ -29,6 +29,12 @@
                         {{ 'Votes' | translate }}
                     </div>
                 }
+                @if (config()?.max_yes_amount<config()?.max_vote_sum) {
+                    <div>
+                        {{ 'Available yes votes' | translate }}:
+                        <b>{{ config()?.max_yes_amount - yesVotesUsed() }}/{{ config()?.max_yes_amount }}</b>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -62,6 +68,7 @@
             <div class="vote-button-area" role="gridcell">
                 <os-poll-vote-button
                     optionType="yes"
+                    [disabled]="isYesDisabled(option.id)"
                     [isSelected]="isSelected(option.id, 'yes')"
                     [loading]="loading()"
                     [optionTitle]="'Yes' | translate"

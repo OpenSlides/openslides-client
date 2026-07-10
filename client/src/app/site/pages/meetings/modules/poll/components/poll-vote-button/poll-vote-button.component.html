@@ -4,7 +4,7 @@
     role="radio"
     [ariaLabel]="optionTitle()"
     [attr.aria-checked]="isSelected() ? 'true' : 'false'"
-    [disabled]="loading()"
+    [disabled]="loading() || disabled()"
     (click)="toggleOption.emit(!isSelected())"
 >
     <div class="vote-button-content" [class.button-content-opaque]="!isSelected()">

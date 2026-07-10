@@ -30,6 +30,23 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
 
     public selectedOptions = signal<Map<number, string>>(new Map());
 
+    public yesVotesUsed = computed<number>(() => {
+        let count = 0;
+        for (const value of this.selectedOptions().values()) {
+            if (value === 'yes') count++;
+        }
+        return count;
+    });
+
+    public maxYesReached = computed<boolean>(() => {
+        const max = this.config()?.max_yes_amount;
+        return max != null && this.yesVotesUsed() >= max;
+    });
+
+    public isYesDisabled(optionId: number): boolean {
+        return this.maxYesReached() && !this.isSelected(optionId, 'yes');
+    }
+
     public availableVotes = computed<number>(() => {
         if (this.selectedOptions().has(0)) {
             return 0;
@@ -60,6 +77,9 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
             selected.set(optionId, null);
         } else {
             selected.delete(0);
+            if (value === 'yes' && this.maxYesReached()) {
+                return;
+            }
             if ((this.config()?.max_options_amount ?? 1) === 1) {
                 selected.clear();
             } else {

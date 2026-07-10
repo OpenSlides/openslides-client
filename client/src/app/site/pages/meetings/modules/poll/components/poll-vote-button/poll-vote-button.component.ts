@@ -21,6 +21,7 @@ export class PollVoteButtonComponent {
 
     public optionType = input<OptionType>(`yes`);
     public loading = input<boolean>(false);
+    public disabled = input<boolean>(false);
 
     public votedClass = computed<string>(() => {
         return this.isSelected() ? `voted-${this.optionType()}` : ``;
