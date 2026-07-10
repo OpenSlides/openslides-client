@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -40,6 +41,7 @@ import { CommentSectionSortComponent } from './components/comment-section-sort/c
         MatFormFieldModule,
         MatDialogModule,
         MatInputModule,
+        MatTooltipModule,
         MatCheckboxModule,
         ReactiveFormsModule
     ]
