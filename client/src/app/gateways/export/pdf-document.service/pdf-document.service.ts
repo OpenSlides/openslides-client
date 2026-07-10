@@ -570,7 +570,7 @@ export class PdfDocumentService {
                 landscape: false,
                 imageUrls: imageUrls
             }),
-            filename: `${filetitle}.pdf`,
+            filename: `${this.sanitizeFilename(filetitle)}.pdf`,
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: null,
@@ -590,7 +590,7 @@ export class PdfDocumentService {
             progressService: this.progressService
         });
         if (file) {
-            saveAs(file, config.filename, { autoBom: true });
+            saveAs(file, this.sanitizeFilename(config.filename), { autoBom: true });
         }
     }
 
@@ -607,7 +607,7 @@ export class PdfDocumentService {
                 pageMargins: [50, 80, 50, 75],
                 landscape: true
             }),
-            filename: `${filetitle}.pdf`,
+            filename: `${this.sanitizeFilename(filetitle)}.pdf`,
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
@@ -1077,5 +1077,9 @@ export class PdfDocumentService {
                 .filter((_, index) => downloads[index].type === `image/svg+xml`)
                 .mapToObject((url, index) => ({ [url]: atob(svgs[index].data) }))
         };
+    }
+
+    private sanitizeFilename(value: string): string {
+        return value.replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 }
