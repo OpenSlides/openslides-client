@@ -595,6 +595,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
              * the regular amendment changes are shown in the "original" view.
              */
             return ChangeRecoMode.Original;
+        } else if (
+            mode === ChangeRecoMode.Original &&
+            this.hasChangeRecommendations &&
+            this.motion?.isParagraphBasedAmendment()
+        ) {
+            /**
+             * Paragraph-based amendments with change recommendations should display
+             * the Diff view. See issue:
+             * https://github.com/OpenSlides/openslides-client/issues/6221
+             */
+            return ChangeRecoMode.Diff;
         }
         return mode;
     }
