@@ -16,17 +16,21 @@
         <ng-container *osPerms="permission.projectorCanManage" class="meta-text-block-action-row">
             <button
                 mat-icon-button
-                matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
+                matTooltip="{{
+                    'Sets this projector as the reference for the autopilot and the the current list of speakers'
+                        | translate
+                }}"
                 (click)="setProjectorAsReference()"
             >
                 @if (projector.isReferenceProjector) {
                     <mat-icon class="grey-icon">star</mat-icon>
+                    fwmotion
                 }
                 @if (!projector.isReferenceProjector) {
                     <mat-icon class="grey-icon">star_border</mat-icon>
                 }
             </button>
-            <button mat-icon-button matTooltip="{{ 'Open projector' | translate }}">
+            <button mat-icon-button matTooltip="{{ 'Open projector in new tab' | translate }}">
                 <a target="_blank" [routerLink]="getFullScreenLink()">
                     <mat-icon class="grey-icon">slideshow</mat-icon>
                 </a>
