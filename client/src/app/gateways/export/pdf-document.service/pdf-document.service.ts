@@ -1080,6 +1080,6 @@ export class PdfDocumentService {
     }
 
     private sanitizeFilename(value: string): string {
-        return value.replace(/[^a-zA-Z0-9_-]/g, '_');
+        return value.replace(/[^a-zA-Z0-9_-üöäÜÖÄ§\s]/g, '_');
     }
 }
