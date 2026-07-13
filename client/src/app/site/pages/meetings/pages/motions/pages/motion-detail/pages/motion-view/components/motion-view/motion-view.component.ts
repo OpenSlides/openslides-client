@@ -602,8 +602,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         ) {
             /**
              * Paragraph-based amendments with change recommendations should display
-             * the Diff view. See issue:
-             * https://github.com/OpenSlides/openslides-client/issues/6221
+             * the Diff view.
              */
             return ChangeRecoMode.Diff;
         }
