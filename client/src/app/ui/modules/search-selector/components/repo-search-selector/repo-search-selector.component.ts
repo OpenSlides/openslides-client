@@ -1,4 +1,14 @@
-import { Component, inject, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Self,
+    ViewEncapsulation,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
@@ -16,6 +26,7 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./repo-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: RepoSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {

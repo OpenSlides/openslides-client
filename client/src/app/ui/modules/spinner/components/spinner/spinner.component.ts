@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 
 /**
@@ -8,6 +8,7 @@ import { _ } from '@ngx-translate/core';
     selector: `os-spinner`,
     templateUrl: `./spinner.component.html`,
     styleUrls: [`./spinner.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SpinnerComponent {

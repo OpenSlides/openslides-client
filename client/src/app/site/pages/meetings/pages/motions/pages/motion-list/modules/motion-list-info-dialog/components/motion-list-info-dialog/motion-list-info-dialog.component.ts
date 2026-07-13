@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
@@ -21,6 +21,7 @@ import { MotionListInfoDialogConfig } from '../../definitions';
     selector: `os-motion-list-info-dialog`,
     templateUrl: `./motion-list-info-dialog.component.html`,
     styleUrls: [`./motion-list-info-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionListInfoDialogComponent {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
@@ -27,6 +27,7 @@ export interface AgendaForwardDialogReturnData {
     selector: 'os-agenda-forward-dialog',
     templateUrl: './agenda-forward-dialog.component.html',
     styleUrl: './agenda-forward-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         MatCheckboxModule,

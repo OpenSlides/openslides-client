@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
@@ -14,6 +14,7 @@ import { ProjectorCountdownControllerService } from '../../services/projector-co
     selector: `os-countdown-controls`,
     templateUrl: `./countdown-controls.component.html`,
     styleUrls: [`./countdown-controls.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CountdownControlsComponent {

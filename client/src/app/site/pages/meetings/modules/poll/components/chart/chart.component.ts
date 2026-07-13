@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 
@@ -24,6 +24,7 @@ type Label = SingleLineLabel | MultiLineLabel;
     selector: `os-chart`,
     templateUrl: `./chart.component.html`,
     styleUrls: [`./chart.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ChartjsComponent]
 })
 export class ChartComponent {

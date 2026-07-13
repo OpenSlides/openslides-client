@@ -1,4 +1,12 @@
-import { ApplicationRef, Component, DOCUMENT, inject, OnInit, ViewContainerRef } from '@angular/core';
+import {
+    ApplicationRef,
+    Component,
+    DOCUMENT,
+    inject,
+    OnInit,
+    ViewContainerRef,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -25,6 +33,7 @@ const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
     selector: `os-root`,
     templateUrl: `./openslides-main.component.html`,
     styleUrls: [`./openslides-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OpenSlidesMainComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { inject } from '@angular/core';
 import { distinctUntilChanged, map, skip } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -42,6 +42,7 @@ const accountListSubsciptionContent = {
     selector: `os-account-main`,
     templateUrl: `./account-main.component.html`,
     styleUrls: [`./account-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {

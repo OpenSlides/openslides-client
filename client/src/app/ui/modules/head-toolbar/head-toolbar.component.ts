@@ -7,7 +7,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
@@ -24,6 +25,7 @@ import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global
     styleUrls: [`./head-toolbar.component.scss`],
     imports: [MatToolbarModule],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class HeadToolbarComponent implements AfterViewInit, OnDestroy {

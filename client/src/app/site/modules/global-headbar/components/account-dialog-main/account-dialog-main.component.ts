@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { getDashboardMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/pages/dashboard/dashboard.subscription';
 
@@ -6,6 +6,7 @@ import { getDashboardMeetingListSubscriptionConfig } from 'src/app/site/pages/or
     selector: `os-account-dialog-main`,
     templateUrl: `./account-dialog-main.component.html`,
     styleUrls: [`./account-dialog-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDialogMainComponent extends BaseModelRequestHandlerComponent {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ViewProjector, ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
@@ -11,6 +11,7 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
     selector: `os-message-controls`,
     templateUrl: `./message-controls.component.html`,
     styleUrls: [`./message-controls.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MessageControlsComponent {

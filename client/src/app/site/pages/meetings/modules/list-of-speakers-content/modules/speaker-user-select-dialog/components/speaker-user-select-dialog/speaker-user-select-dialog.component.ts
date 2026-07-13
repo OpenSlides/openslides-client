@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -17,6 +17,7 @@ interface SpeakerUserSelectDialogComponentData {
     selector: `os-speaker-user-select-dialog`,
     templateUrl: `./speaker-user-select-dialog.component.html`,
     styleUrls: [`./speaker-user-select-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SpeakerUserSelectDialogComponent {

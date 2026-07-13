@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,6 +16,7 @@ import { StructureLevelSortService } from '../../services/structure-level-sort.s
     selector: `os-structure-level-list`,
     templateUrl: `./structure-level-list.component.html`,
     styleUrls: [`./structure-level-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class StructureLevelListComponent extends BaseMeetingListViewComponent<ViewStructureLevel> {

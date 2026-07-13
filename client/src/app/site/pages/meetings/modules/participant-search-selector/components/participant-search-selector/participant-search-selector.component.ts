@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ import { UserSelectionData } from '../..';
     selector: `os-participant-search-selector`,
     templateUrl: `./participant-search-selector.component.html`,
     styleUrls: [`./participant-search-selector.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit, OnDestroy {

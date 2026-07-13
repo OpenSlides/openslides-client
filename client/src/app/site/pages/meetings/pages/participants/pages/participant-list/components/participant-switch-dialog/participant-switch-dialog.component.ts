@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
@@ -13,6 +13,7 @@ interface ParticipantSwitchDialogConfig {
     selector: `os-participant-switch-dialog`,
     templateUrl: `./participant-switch-dialog.component.html`,
     styleUrls: [`./participant-switch-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantSwitchDialogComponent {

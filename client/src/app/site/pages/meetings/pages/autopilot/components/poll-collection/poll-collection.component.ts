@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -19,6 +19,7 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {

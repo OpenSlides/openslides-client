@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { PasswordForm } from '../../definitions';
     selector: `os-user-password-form`,
     templateUrl: `./user-password-form.component.html`,
     styleUrls: [`./user-password-form.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserPasswordFormComponent implements OnInit, OnDestroy {

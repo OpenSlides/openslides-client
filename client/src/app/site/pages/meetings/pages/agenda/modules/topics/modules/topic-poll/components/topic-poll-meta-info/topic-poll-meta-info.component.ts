@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PollPropertyVerbose } from 'src/app/domain/models/poll';
 import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
@@ -9,6 +9,7 @@ import { TopicPollMethodVerbose } from '../../definitions';
     selector: `os-topic-poll-meta-info`,
     templateUrl: `./topic-poll-meta-info.component.html`,
     styleUrls: [`./topic-poll-meta-info.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollMetaInfoComponent extends BasePollMetaInformationComponent {

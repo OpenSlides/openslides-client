@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -17,6 +17,7 @@ import { getMotionWorkflowDetailSubscriptionConfig } from '../../../../motions.s
     selector: `os-workflow-detail-sort`,
     templateUrl: `./workflow-detail-sort.component.html`,
     styleUrls: [`./workflow-detail-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponent {

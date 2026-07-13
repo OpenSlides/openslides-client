@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
@@ -13,6 +13,7 @@ import { MotionCategoryControllerService } from '../../../../modules/categories/
     selector: `os-category-list-sort`,
     templateUrl: `./category-list-sort.component.html`,
     styleUrls: [`./category-list-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CategoryListSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {

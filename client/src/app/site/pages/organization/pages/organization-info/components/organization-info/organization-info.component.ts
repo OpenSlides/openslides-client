@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
@@ -8,6 +8,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     selector: `os-organization-info`,
     templateUrl: `./organization-info.component.html`,
     styleUrls: [`./organization-info.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationInfoComponent extends BaseComponent implements OnInit {

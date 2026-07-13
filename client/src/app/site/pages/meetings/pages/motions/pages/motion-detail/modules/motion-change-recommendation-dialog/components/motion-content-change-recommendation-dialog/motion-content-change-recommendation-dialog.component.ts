@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
@@ -42,6 +42,7 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
     selector: `os-motion-content-change-recommendation-dialog`,
     templateUrl: `./motion-content-change-recommendation-dialog.component.html`,
     styleUrls: [`./motion-content-change-recommendation-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {

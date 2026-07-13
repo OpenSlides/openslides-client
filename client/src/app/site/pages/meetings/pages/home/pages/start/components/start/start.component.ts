@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -12,6 +12,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
     selector: `os-start`,
     templateUrl: `./start.component.html`,
     styleUrls: [`./start.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class StartComponent extends BaseMeetingComponent implements OnInit {

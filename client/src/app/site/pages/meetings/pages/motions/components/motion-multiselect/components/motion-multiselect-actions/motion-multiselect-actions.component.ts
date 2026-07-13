@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -20,6 +20,7 @@ import { MotionMultiselectService } from '../../services/motion-multiselect.serv
     selector: `os-motion-multiselect-actions`,
     templateUrl: `./motion-multiselect-actions.component.html`,
     styleUrls: [`./motion-multiselect-actions.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {

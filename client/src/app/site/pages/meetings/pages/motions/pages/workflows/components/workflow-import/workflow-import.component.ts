@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { UploadFileJsonProcessorService } from 'src/app/infrastructure/utils/import/json-import-file-utils';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
 
@@ -9,6 +9,7 @@ import { MotionWorkflowControllerService } from '../../../../modules/workflows/s
     selector: `os-workflow-import`,
     templateUrl: `./workflow-import.component.html`,
     styleUrls: [`./workflow-import.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WorkflowImportComponent {

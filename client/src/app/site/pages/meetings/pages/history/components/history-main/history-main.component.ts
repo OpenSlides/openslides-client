@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
@@ -10,6 +10,7 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../participants/p
     selector: `os-history-main`,
     templateUrl: `./history-main.component.html`,
     styleUrls: [`./history-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {

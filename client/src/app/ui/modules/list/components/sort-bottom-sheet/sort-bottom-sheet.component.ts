@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
@@ -17,6 +17,7 @@ import { SortListService } from 'src/app/ui/modules/list/definitions/sort-servic
     selector: `os-sort-bottom-sheet`,
     templateUrl: `./sort-bottom-sheet.component.html`,
     styleUrls: [`./sort-bottom-sheet.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SortBottomSheetComponent<V> implements OnInit {

@@ -6,7 +6,8 @@ import {
     Input,
     OnInit,
     QueryList,
-    ViewChildren
+    ViewChildren,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
@@ -33,6 +34,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     selector: `os-assignment-poll-detail-content`,
     templateUrl: `./assignment-poll-detail-content.component.html`,
     styleUrls: [`./assignment-poll-detail-content.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollDetailContentComponent implements OnInit, AfterViewInit {

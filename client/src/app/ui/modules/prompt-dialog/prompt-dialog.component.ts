@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ interface PromptDialogData {
     selector: `os-prompt-dialog`,
     templateUrl: `./prompt-dialog.component.html`,
     styleUrls: [`./prompt-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class PromptDialogComponent {

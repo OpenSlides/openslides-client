@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { _ } from '@ngx-translate/core';
@@ -40,6 +49,7 @@ export class TextOptionSelectable implements Selectable {
     selector: `os-topic-poll-dialog`,
     templateUrl: `./topic-poll-dialog.component.html`,
     styleUrls: [`./topic-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {

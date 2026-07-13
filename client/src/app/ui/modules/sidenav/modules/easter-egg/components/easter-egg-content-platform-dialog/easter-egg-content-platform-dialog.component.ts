@@ -1,5 +1,5 @@
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { C4DialogModule } from '../../modules/c4-dialog';
 import { ChessDialogModule } from '../../modules/chess-dialog';
@@ -13,6 +13,7 @@ interface EasterEggModuleDescription {
     selector: `os-easter-egg-content-platform-dialog`,
     templateUrl: `./easter-egg-content-platform-dialog.component.html`,
     styleUrls: [`./easter-egg-content-platform-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EasterEggContentPlatformDialogComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.subscription';
@@ -7,6 +7,7 @@ import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.sub
     selector: `os-committee-detail`,
     templateUrl: `./committee-detail.component.html`,
     styleUrls: [`./committee-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {

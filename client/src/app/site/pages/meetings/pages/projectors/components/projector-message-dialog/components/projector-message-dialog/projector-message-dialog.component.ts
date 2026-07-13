@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,7 @@ import { MessageDialogData } from '../../definitions';
     selector: `os-projector-message-dialog`,
     templateUrl: `./projector-message-dialog.component.html`,
     styleUrls: [`./projector-message-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectorMessageDialogComponent extends BaseComponent implements OnInit {

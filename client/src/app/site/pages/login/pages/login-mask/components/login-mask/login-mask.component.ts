@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
@@ -35,6 +35,7 @@ interface LoginValues {
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
     animations: [fadeInAnim],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {

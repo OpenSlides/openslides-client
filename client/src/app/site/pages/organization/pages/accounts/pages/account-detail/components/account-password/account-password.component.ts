@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -14,6 +14,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
     selector: `os-account-password`,
     templateUrl: `./account-password.component.html`,
     styleUrls: [`./account-password.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountPasswordComponent extends BaseComponent implements OnInit, AfterViewInit {

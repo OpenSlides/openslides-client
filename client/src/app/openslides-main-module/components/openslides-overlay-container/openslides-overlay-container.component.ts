@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 
@@ -6,6 +6,7 @@ import { SpinnerService } from 'src/app/site/modules/global-spinner';
     selector: `os-openslides-overlay-container`,
     templateUrl: `./openslides-overlay-container.component.html`,
     styleUrls: [`./openslides-overlay-container.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OpenSlidesOverlayContainerComponent {

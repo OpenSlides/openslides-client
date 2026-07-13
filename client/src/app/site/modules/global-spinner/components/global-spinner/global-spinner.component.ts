@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
@@ -10,6 +10,7 @@ import { UpdateService } from '../../../site-wrapper/services/update.service';
     selector: `os-global-spinner`,
     templateUrl: `./global-spinner.component.html`,
     styleUrls: [`./global-spinner.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class GlobalSpinnerComponent extends SpinnerComponent {

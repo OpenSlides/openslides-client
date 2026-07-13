@@ -10,7 +10,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -72,6 +73,7 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     templateUrl: `./head-bar.component.html`,
     styleUrls: [`./head-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HeadBarComponent implements OnInit, AfterViewInit {

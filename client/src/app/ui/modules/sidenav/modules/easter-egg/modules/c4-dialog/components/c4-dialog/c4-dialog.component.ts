@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
 
@@ -25,6 +25,7 @@ enum BoardStatus {
     selector: `os-c4-dialog`,
     templateUrl: `./c4-dialog.component.html`,
     styleUrls: [`./c4-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class C4DialogComponent extends BaseGameDialogComponent implements OnInit {

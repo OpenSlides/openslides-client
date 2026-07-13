@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -14,6 +14,7 @@ import {
     selector: `os-assignment-main`,
     templateUrl: `./assignment-main.component.html`,
     styleUrls: [`./assignment-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
     selector: `os-committee-list`,
     templateUrl: `./committee-list.component.html`,
     styleUrls: [`./committee-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {

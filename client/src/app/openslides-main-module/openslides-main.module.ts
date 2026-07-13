@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -58,7 +58,7 @@ if (isFirefox && `serviceWorker` in navigator) {
             return initializerFn();
         }),
         httpInterceptorProviders,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideTranslateService({
             fallbackLang: `en`,
             loader: {

@@ -1,7 +1,17 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, ContentChild, EventEmitter, inject, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    Output,
+    TemplateRef,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { auditTime, Observable, Subscription } from 'rxjs';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
@@ -58,6 +68,7 @@ class Movement {
     selector: `os-sorting-tree`,
     templateUrl: `./sorting-tree.component.html`,
     styleUrls: [`./sorting-tree.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SortingTreeComponent<T extends Identifiable & Displayable> implements OnDestroy {

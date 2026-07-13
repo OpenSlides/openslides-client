@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { _ } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
     selector: `os-comment-section-list`,
     templateUrl: `./comment-section-list.component.html`,
     styleUrls: [`./comment-section-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommentSectionListComponent extends BaseComponent implements OnInit {

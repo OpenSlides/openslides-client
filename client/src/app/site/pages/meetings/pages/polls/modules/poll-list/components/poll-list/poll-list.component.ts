@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -14,6 +14,7 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
     selector: `os-poll-list`,
     templateUrl: `./poll-list.component.html`,
     styleUrls: [`./poll-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -15,6 +15,7 @@ import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/mot
     selector: `os-motion-poll`,
     templateUrl: `./motion-poll.component.html`,
     styleUrls: [`./motion-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollComponent extends BasePollComponent {

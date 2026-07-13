@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import { TagControllerService } from '../../../../modules/tags/services';
     selector: `os-tag-list`,
     templateUrl: `./tag-list.component.html`,
     styleUrls: [`./tag-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> implements OnInit {

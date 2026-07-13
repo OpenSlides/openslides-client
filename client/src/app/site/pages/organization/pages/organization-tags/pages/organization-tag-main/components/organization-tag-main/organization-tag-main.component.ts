@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
@@ -10,6 +10,7 @@ import { getOrganizationTagListSubscriptionConfig } from '../../../../organizati
     selector: `os-organization-tag-main`,
     templateUrl: `./organization-tag-main.component.html`,
     styleUrls: [`./organization-tag-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationTagMainComponent extends BaseModelRequestHandlerComponent {

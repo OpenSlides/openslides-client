@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
@@ -10,6 +10,7 @@ import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subs
     selector: `os-motion-poll-main`,
     templateUrl: `./motion-poll-main.component.html`,
     styleUrls: [`./motion-poll-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {

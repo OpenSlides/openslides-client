@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PromptService } from '../prompt-dialog';
@@ -10,6 +10,7 @@ import { PromptService } from '../prompt-dialog';
     providers: [
         { provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: `noop` } as MatCheckboxDefaultOptions }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatCheckboxModule]
 })
 export class PromptCheckboxComponent {

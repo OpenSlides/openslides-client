@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -15,6 +15,7 @@ import { ViewOrganizationTag } from '../../../../view-models';
     selector: `os-organization-tag-list`,
     templateUrl: `./organization-tag-list.component.html`,
     styleUrls: [`./organization-tag-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {

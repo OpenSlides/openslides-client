@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
 import {
@@ -14,6 +14,7 @@ import { ViewAssignment } from '../../../../view-models';
     styleUrls: [`../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: AssignmentPollFormComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollFormComponent extends BasePollFormComponent implements OnInit {

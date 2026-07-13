@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
@@ -16,6 +16,7 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     selector: `os-motion-detail`,
     templateUrl: `./motion-detail.component.html`,
     styleUrls: [`./motion-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionDetailComponent extends BaseModelRequestHandlerComponent {

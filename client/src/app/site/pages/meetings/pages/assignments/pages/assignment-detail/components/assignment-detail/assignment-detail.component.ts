@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,6 +35,7 @@ import { AssignmentCandidateControllerService } from '../../services/assignment-
     selector: `os-assignment-detail`,
     templateUrl: `./assignment-detail.component.html`,
     styleUrls: [`./assignment-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {

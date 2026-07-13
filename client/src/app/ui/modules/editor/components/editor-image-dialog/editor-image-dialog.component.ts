@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface EditorImageData {
@@ -20,6 +20,7 @@ export interface EditorImageDialogOutput {
     selector: `os-editor-image-dialog`,
     templateUrl: `./editor-image-dialog.component.html`,
     styleUrls: [`editor-image-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorImageDialogComponent {

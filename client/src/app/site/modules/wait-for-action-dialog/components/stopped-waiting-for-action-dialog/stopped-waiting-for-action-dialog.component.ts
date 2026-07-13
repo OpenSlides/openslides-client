@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { WaitForActionDialogService } from '../../services/wait-for-action-dialog.service';
@@ -7,6 +7,7 @@ import { WaitForActionDialogService } from '../../services/wait-for-action-dialo
     selector: `os-stopped-waiting-for-action-dialog`,
     templateUrl: `./stopped-waiting-for-action-dialog.component.html`,
     styleUrls: [`./stopped-waiting-for-action-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class StoppedWaitingForActionDialogComponent extends BaseUiComponent {

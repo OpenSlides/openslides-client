@@ -12,7 +12,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
@@ -53,6 +54,7 @@ export enum BackendImportPhase {
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BackendImportListComponent implements OnInit, OnDestroy {

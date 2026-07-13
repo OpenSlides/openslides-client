@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,7 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
     selector: `os-projector-detail`,
     templateUrl: `./projector-detail.component.html`,
     styleUrls: [`./projector-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectorDetailComponent extends BaseMeetingComponent implements OnInit {

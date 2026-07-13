@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -10,6 +10,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
     selector: `os-organization-statistics`,
     templateUrl: `./organization-statistics.component.html`,
     styleUrls: [`./organization-statistics.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationStatisticsComponent extends BaseComponent implements OnInit {

@@ -1,10 +1,11 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { HttpService } from 'src/app/gateways/http.service';
 
 @Component({
     selector: `os-image`,
     templateUrl: `./image.component.html`,
     styleUrls: [`./image.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ImageComponent {

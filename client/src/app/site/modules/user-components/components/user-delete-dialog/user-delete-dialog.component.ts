@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CML } from 'src/app/domain/definitions/organization-permission';
 import {
@@ -18,6 +18,7 @@ interface UserDeleteDialogConfig {
     templateUrl: `./user-delete-dialog.component.html`,
     styleUrls: [`./user-delete-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserDeleteDialogComponent implements OnInit {

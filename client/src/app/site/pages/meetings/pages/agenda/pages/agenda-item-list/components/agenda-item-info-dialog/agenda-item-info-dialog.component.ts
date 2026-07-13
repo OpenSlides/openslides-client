@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -16,6 +16,7 @@ import { ViewAgendaItem } from '../../../../view-models';
     selector: `os-agenda-item-info-dialog`,
     templateUrl: `./agenda-item-info-dialog.component.html`,
     styleUrls: [`./agenda-item-info-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AgendaItemInfoDialogComponent implements OnInit {

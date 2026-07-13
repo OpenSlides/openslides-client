@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, Input } from '@angular/core';
+import { Component, ElementRef, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
@@ -9,6 +9,7 @@ import { Color, ColorService } from 'src/app/site/services/color.service';
     selector: `os-chip`,
     templateUrl: `./chip.component.html`,
     styleUrls: [`./chip.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, MatChipsModule, MatRippleModule]
 })
 export class ChipComponent {

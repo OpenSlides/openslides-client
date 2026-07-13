@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
@@ -12,6 +12,7 @@ import { PointOfOrderData } from '../../services/point-of-order-dialog.service';
     selector: `os-point-of-order-dialog`,
     templateUrl: `./point-of-order-dialog.component.html`,
     styleUrls: [`./point-of-order-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PointOfOrderDialogComponent {
