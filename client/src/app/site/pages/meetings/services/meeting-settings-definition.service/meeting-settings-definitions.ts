@@ -324,7 +324,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     }
                 ]
-            },
+            }
+            /* TODO: Migrate
             {
                 label: _(`Vote`),
                 settings: [
@@ -335,6 +336,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     }
                 ]
             }
+            */
         ]
     },
     {
@@ -786,6 +788,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     }
                 ]
             },
+            /* TODO: Update to new keys
             {
                 label: _(`Vote`),
                 settings: [
@@ -844,27 +847,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     }
                 ]
             },
-            {
-                label: _(`Ballot papers`),
-                settings: [
-                    {
-                        key: `motion_poll_ballot_paper_selection`,
-                        label: _(`Number of ballot papers`),
-                        type: `choice`,
-                        choices: {
-                            NUMBER_OF_DELEGATES: _(`Number of all delegates`),
-                            NUMBER_OF_ALL_PARTICIPANTS: _(`Number of all participants`),
-                            CUSTOM_NUMBER: _(`Use the following custom number`)
-                        }
-                    },
-                    {
-                        key: `motion_poll_ballot_paper_number`,
-                        label: _(`Custom number of ballot papers`),
-                        type: `integer`,
-                        validators: [Validators.min(1)]
-                    }
-                ]
-            },
+            */
             {
                 label: _(`Forwarding`),
                 settings: [
@@ -889,6 +872,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
         label: _(`Elections`),
         icon: `how_to_vote`,
         subgroups: [
+            /* TODO: Move
             {
                 label: _(`Ballot`),
                 settings: [
@@ -935,6 +919,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     }
                 ]
             },
+            */
             {
                 label: _(`List of speakers`),
                 settings: [
@@ -942,27 +927,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `assignment_poll_add_candidates_to_list_of_speakers`,
                         label: _(`Put all candidates on the list of speakers`),
                         type: `boolean`
-                    }
-                ]
-            },
-            {
-                label: _(`Ballot papers`),
-                settings: [
-                    {
-                        key: `assignment_poll_ballot_paper_selection`,
-                        label: _(`Number of ballot papers`),
-                        type: `choice`,
-                        choices: {
-                            NUMBER_OF_DELEGATES: _(`Number of all delegates`),
-                            NUMBER_OF_ALL_PARTICIPANTS: _(`Number of all participants`),
-                            CUSTOM_NUMBER: _(`Use the following custom number`)
-                        }
-                    },
-                    {
-                        key: `assignment_poll_ballot_paper_number`,
-                        label: _(`Custom number of ballot papers`),
-                        type: `integer`,
-                        validators: [Validators.min(1)]
                     }
                 ]
             }
