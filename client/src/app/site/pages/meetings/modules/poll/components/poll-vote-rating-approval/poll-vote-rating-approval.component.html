@@ -29,6 +29,12 @@
                         {{ 'Votes' | translate }}
                     </div>
                 }
+                @if (config()?.max_yes_amount < config()?.max_vote_sum) {
+                    <div>
+                        {{ 'Available yes votes' | translate }}:
+                        <b>{{ config()?.max_yes_amount - yesVotesUsed() }}/{{ config()?.max_yes_amount }}</b>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -62,8 +68,8 @@
             <div class="vote-button-area" role="gridcell">
                 <os-poll-vote-button
                     optionType="yes"
+                    [disabled]="loading() || isYesDisabled(option.id)"
                     [isSelected]="isSelected(option.id, 'yes')"
-                    [loading]="loading()"
                     [optionTitle]="'Yes' | translate"
                     (toggleOption)="toggleOption(option.id, 'yes')"
                 />
@@ -71,8 +77,8 @@
             <div class="vote-button-area" role="gridcell">
                 <os-poll-vote-button
                     optionType="no"
+                    [disabled]="loading()"
                     [isSelected]="isSelected(option.id, 'no')"
-                    [loading]="loading()"
                     [optionTitle]="'No' | translate"
                     (toggleOption)="toggleOption(option.id, 'no')"
                 />
@@ -81,8 +87,8 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
+                        [disabled]="loading()"
                         [isSelected]="isSelected(option.id, 'abstain')"
-                        [loading]="loading()"
                         [optionTitle]="'Abstain' | translate"
                         (toggleOption)="toggleOption(option.id, 'abstain')"
                     />
@@ -108,8 +114,8 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
+                        [disabled]="loading()"
                         [isSelected]="isSelected(0)"
-                        [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
                         (toggleOption)="toggleOption(0)"
                     />
