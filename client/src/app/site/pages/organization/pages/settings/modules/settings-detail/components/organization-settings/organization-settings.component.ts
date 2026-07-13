@@ -23,7 +23,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
     public readonly translations = availableTranslations;
 
-    public time_zones = signal<Selectable[]>([]);
+    public timeZones = signal<Selectable[]>([]);
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -145,7 +145,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private async initTimezones(): Promise<void> {
         this.timeZone.getTZForSearchSelector().then(values => {
-            this.time_zones.set(values);
+            this.timeZones.set(values);
             this.patchTimezoneInForm();
         });
     }
