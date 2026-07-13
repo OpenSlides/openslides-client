@@ -129,7 +129,7 @@
         <div class="groupsCell">
             @if (user.groups()?.length) {
                 <div>
-                    <os-icon-container icon="people" [noWrap]="true">
+                    <os-icon-container icon="people" [attr.aria-label]="'Groups' | translate" [noWrap]="true">
                         <os-comma-separated-listing [list]="user.groups()">
                             <ng-template let-group>{{ group.getTitle() }}</ng-template>
                         </os-comma-separated-listing>
@@ -138,12 +138,16 @@
             }
             @if (user.structure_levels()?.length) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="flag">{{ user.structure_levels() }}</os-icon-container>
+                    <os-icon-container icon="flag" [attr.aria-label]="'Stucture level' | translate">
+                        {{ user.structure_levels() }}
+                    </os-icon-container>
                 </div>
             }
             @if (user.number()) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
+                    <os-icon-container icon="perm_identity" [attr.aria-label]="'Participants number' | translate">
+                        {{ user.number() }}
+                    </os-icon-container>
                 </div>
             }
             @if (user.vote_delegated_to() && voteDelegationEnabled) {
@@ -152,7 +156,13 @@
                     matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
                     matTooltipPosition="left"
                 >
-                    <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
+                    <os-icon-container
+                        icon="forward"
+                        [attr.aria-label]="'Voting right delegated to (proxy)' | translate"
+                        [noWrap]="true"
+                    >
+                        {{ user.vote_delegated_to() }}
+                    </os-icon-container>
                 </div>
             }
             @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
@@ -161,7 +171,11 @@
                     matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                     matTooltipPosition="left"
                 >
-                    <os-icon-container icon="work" [noWrap]="true">
+                    <os-icon-container
+                        icon="work"
+                        [attr.aria-label]="'Voting right received from (principals)' | translate"
+                        [noWrap]="true"
+                    >
                         <span>{{ user.vote_delegations_from().length }}:</span>
                         {{ user.vote_delegations_from() }}
                     </os-icon-container>

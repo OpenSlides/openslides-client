@@ -126,14 +126,14 @@
                 (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
             >
                 @if (isInMeeting) {
-                    <os-icon-container icon="group">
+                    <os-icon-container icon="group" [attr.aria-label]="'Groups' | translate">
                         <os-comma-separated-listing [list]="getGroups(mediafile)" [showElementsAmount]="3">
                             <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
                         </os-comma-separated-listing>
                     </os-icon-container>
                 }
                 @if (!isInMeeting) {
-                    <os-icon-container icon="edit"></os-icon-container>
+                    <os-icon-container icon="edit" [attr.aria-label]="'Edit' | translate"></os-icon-container>
                 }
             </div>
         }
