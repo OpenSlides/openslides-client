@@ -2,7 +2,6 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
         "declaration": false,
         "experimentalDecorators": true,
         "esModuleInterop": true,
@@ -15,6 +14,10 @@
         "noImplicitReturns": true,
         "noPropertyAccessFromIndexSignature": true,
         "outDir": "./dist/out-tsc",
+        "paths": {
+            "@openslides/motion-diff": ["../packages/openslides-motion-diff"],
+            "*": ["./*"]
+        },
         "sourceMap": true,
         "strict": false,
         "target": "ES2022",

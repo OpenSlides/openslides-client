@@ -4,9 +4,7 @@
     "compilerOptions": {
         "outDir": "./out-tsc/app",
         "types": [],
-        "paths": {
-            "@openslides/motion-diff": ["../packages/openslides-motion-diff"]
-        }
+        "rootDir": "./src"
     },
     "files": ["src/main.ts", "src/polyfills.ts"],
     "include": ["src/**/*.d.ts"],
