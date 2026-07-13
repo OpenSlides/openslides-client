@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EmbeddedViewRef,
     EventEmitter,
@@ -8,8 +9,7 @@ import {
     TemplateRef,
     Type,
     ViewChild,
-    ViewContainerRef,
-    ChangeDetectionStrategy
+    ViewContainerRef
 } from '@angular/core';
 
 import { OverlayPosition } from './definitions';

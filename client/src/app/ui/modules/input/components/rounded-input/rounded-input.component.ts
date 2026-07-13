@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
@@ -6,8 +7,7 @@ import {
     Input,
     OnInit,
     Output,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 import { forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';

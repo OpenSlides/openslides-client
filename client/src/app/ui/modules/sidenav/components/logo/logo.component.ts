@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';

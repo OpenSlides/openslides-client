@@ -2,14 +2,14 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     inject,
     Input,
     OnInit,
     Output,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';

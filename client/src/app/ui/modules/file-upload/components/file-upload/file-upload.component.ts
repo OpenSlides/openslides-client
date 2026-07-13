@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ElementRef,
@@ -6,8 +7,7 @@ import {
     Input,
     Output,
     TemplateRef,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject, Observable } from 'rxjs';

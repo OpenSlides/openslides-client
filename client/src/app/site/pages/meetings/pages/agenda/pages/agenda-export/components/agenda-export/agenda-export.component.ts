@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     OnDestroy,
     ViewChild,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    ViewEncapsulation
 } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';

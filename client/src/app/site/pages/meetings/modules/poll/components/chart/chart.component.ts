@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 

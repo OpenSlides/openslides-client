@@ -1,11 +1,11 @@
 import {
     ApplicationRef,
+    ChangeDetectionStrategy,
     Component,
     DOCUMENT,
     inject,
     OnInit,
-    ViewContainerRef,
-    ChangeDetectionStrategy
+    ViewContainerRef
 } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';

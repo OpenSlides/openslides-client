@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 

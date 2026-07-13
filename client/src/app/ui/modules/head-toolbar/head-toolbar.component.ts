@@ -1,14 +1,14 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnDestroy,
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    ViewEncapsulation
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';

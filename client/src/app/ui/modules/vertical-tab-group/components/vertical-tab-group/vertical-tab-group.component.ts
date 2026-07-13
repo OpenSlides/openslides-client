@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ContentChildren,
@@ -7,8 +8,7 @@ import {
     Input,
     Output,
     QueryList,
-    TemplateRef,
-    ChangeDetectionStrategy
+    TemplateRef
 } from '@angular/core';
 import { MatTab } from '@angular/material/tabs';
 import { BehaviorSubject, Observable } from 'rxjs';

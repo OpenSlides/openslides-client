@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';

@@ -1,12 +1,12 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     Inject,
     QueryList,
     ViewChild,
-    ViewChildren,
-    ChangeDetectionStrategy
+    ViewChildren
 } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';

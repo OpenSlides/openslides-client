@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';

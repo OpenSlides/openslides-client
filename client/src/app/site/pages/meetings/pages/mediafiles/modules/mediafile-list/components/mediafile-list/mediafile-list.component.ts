@@ -1,11 +1,11 @@
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ChangeDetectionStrategy
+    ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';

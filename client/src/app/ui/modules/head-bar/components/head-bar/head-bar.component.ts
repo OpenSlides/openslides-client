@@ -1,6 +1,7 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     inject,
@@ -10,8 +11,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ContentChildren,
@@ -12,8 +13,7 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    ViewEncapsulation
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
 

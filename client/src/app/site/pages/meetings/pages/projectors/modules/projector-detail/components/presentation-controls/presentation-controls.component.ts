@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { combineLatest, map, merge, mergeMap, Observable, of } from 'rxjs';
 import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
