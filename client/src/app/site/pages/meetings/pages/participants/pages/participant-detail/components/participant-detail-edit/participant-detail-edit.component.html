@@ -135,7 +135,6 @@
                                 <os-repo-search-selector
                                     formControlName="vote_delegated_to_id"
                                     [includeNone]="true"
-                                    [multiple]="false"
                                     [repo]="repo"
                                     [sortService]="sortService"
                                     [subscriptionConfig]="participantSubscriptionConfig"
@@ -173,7 +172,6 @@
                             formControlName="home_committee_id"
                             [disabled]="!canManageHomeCommittee"
                             [includeNone]="true"
-                            [multiple]="false"
                             [repo]="committeeController"
                             [sortService]="committeeSortService"
                             [subscriptionConfig]="committeeSubscriptionConfig"
