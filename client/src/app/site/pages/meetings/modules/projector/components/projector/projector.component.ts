@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { AuthTokenService } from '@app/site/services/auth-token.service';
+import { ConnectionStatusService } from '@app/site/services/connection-status.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { DirectivesModule } from '@app/ui/directives';
+import { PipesModule } from '@app/ui/pipes';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { AuthTokenService } from 'src/app/site/services/auth-token.service';
-import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { PipesModule } from 'src/app/ui/pipes';
 
 import { Dimension } from '../../../../pages/projectors/definitions';
 

@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
+import { GlobalHeadbarService } from '@app/site/modules/global-headbar/global-headbar.service';
 
 /**
  * Reusable toolbar compoment

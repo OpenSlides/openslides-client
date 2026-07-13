@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
+import { Identifiable } from '@app/domain/interfaces';
+import { DetailNavigable, isDetailNavigable } from '@app/domain/interfaces/detail-navigable';
 
 @Component({
     selector: `os-detail-view-navigator`,

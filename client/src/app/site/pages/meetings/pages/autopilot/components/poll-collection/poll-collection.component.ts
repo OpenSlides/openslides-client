@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { PollContentObject } from '@app/domain/models/poll';
+import { PollClassType } from '@app/domain/models/poll/poll-constants';
+import { Topic } from '@app/domain/models/topics/topic';
+import { BaseComponent } from '@app/site/base/base.component';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollContentObject } from 'src/app/domain/models/poll';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';

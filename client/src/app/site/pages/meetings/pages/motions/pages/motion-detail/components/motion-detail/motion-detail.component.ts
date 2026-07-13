@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Motion } from '@app/domain/models/motions/motion';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import {
     getMotionAdditionalDetailSubscriptionConfig,

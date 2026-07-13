@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
 
 @Component({
     selector: `os-topic-poll-form`,

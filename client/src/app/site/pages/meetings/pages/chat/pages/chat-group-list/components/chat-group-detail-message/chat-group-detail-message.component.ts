@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { ViewChatMessage } from '@app/site/pages/meetings/pages/chat';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 @Component({
     selector: `os-chat-group-detail-message`,

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { committeeHeadersAndVerboseNames } from 'src/app/site/pages/organization/pages/committees/pages/committee-import/definitions';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+import { BaseViaBackendImportListComponent } from '@app/site/base/base-via-backend-import-list.component';
+import { committeeHeadersAndVerboseNames } from '@app/site/pages/organization/pages/committees/pages/committee-import/definitions';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 
 import { CommitteeImportService } from '../../services/committee-import.service/committee-import.service';
 

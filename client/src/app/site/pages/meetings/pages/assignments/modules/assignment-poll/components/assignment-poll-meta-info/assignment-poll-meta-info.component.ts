@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PollPropertyVerbose } from 'src/app/domain/models/poll/poll-constants';
-import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { PollPropertyVerbose } from '@app/domain/models/poll/poll-constants';
+import { BasePollMetaInformationComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewOption } from '@app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollMethodVerbose } from '../../definitions';
 

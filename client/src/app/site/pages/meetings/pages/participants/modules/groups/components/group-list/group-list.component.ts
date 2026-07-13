@@ -2,17 +2,17 @@ import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } fr
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { Permission } from '@app/domain/definitions/permission';
+import { AppPermission, DisplayPermission, PERMISSIONS } from '@app/domain/definitions/permission.config';
+import { permissionChildren, permissionParents } from '@app/domain/definitions/permission-relations';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { isUniqueAmong } from '@app/infrastructure/utils/validators/is-unique-among';
+import { CanComponentDeactivate } from '@app/site/guards/watch-for-changes.guard';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
-import { permissionChildren, permissionParents } from 'src/app/domain/definitions/permission-relations';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
-import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GroupControllerService } from '../../services';
 

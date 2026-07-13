@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { ColorService } from '@app/site/services/color.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { ColorService } from 'src/app/site/services/color.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { OrganizationTagDialogService } from '../../../../modules/organization-tag-dialog/services/organization-tag-dialog.service';
 import { OrganizationTagControllerService } from '../../../../services/organization-tag-controller.service';

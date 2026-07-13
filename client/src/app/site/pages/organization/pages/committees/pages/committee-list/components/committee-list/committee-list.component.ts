@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Action } from '@app/gateways/actions';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { SpinnerService } from '@app/site/modules/global-spinner';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ChoiceAnswer } from '@app/ui/modules/choice-dialog/definitions';
+import { ChoiceService } from '@app/ui/modules/choice-dialog/services/choice.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Action } from 'src/app/gateways/actions';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { SpinnerService } from 'src/app/site/modules/global-spinner';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceAnswer } from 'src/app/ui/modules/choice-dialog/definitions';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';
 
 import { ViewOrganizationTag } from '../../../../../organization-tags';
 import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';

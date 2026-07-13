@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CML } from 'src/app/domain/definitions/organization-permission';
+import { CML } from '@app/domain/definitions/organization-permission';
 import {
     GetUserRelatedModelsCommittee,
     GetUserRelatedModelsPresenterResult,
     GetUserRelatedModelsUser
-} from 'src/app/gateways/presenter';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+} from '@app/gateways/presenter';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 
 interface UserDeleteDialogConfig {
     toRemove: ViewUser[];

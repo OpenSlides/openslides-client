@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PollPropertyVerbose } from 'src/app/domain/models/poll';
-import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { PollPropertyVerbose } from '@app/domain/models/poll';
+import { BasePollMetaInformationComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
+import { ViewOption } from '@app/site/pages/meetings/pages/polls';
 
 import { TopicPollMethodVerbose } from '../../definitions';
 

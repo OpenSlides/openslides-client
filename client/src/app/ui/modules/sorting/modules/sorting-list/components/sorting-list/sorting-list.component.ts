@@ -9,9 +9,9 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { Mutex } from '@app/infrastructure/utils/promises';
 import { Observable, Subscription } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Mutex } from 'src/app/infrastructure/utils/promises';
 
 @Component({
     selector: `os-sorting-list`,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { HttpService } from 'src/app/gateways/http.service';
+import { HttpService } from '@app/gateways/http.service';
 
 @Component({
     selector: `os-image`,

@@ -10,22 +10,22 @@ import {
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { allAvailableTranslations } from '@app/domain/definitions/languages';
+import { HasSequentialNumber } from '@app/domain/interfaces';
+import { StorageService } from '@app/gateways/storage.service';
+import { langToTimeLocale } from '@app/infrastructure/utils';
+import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-functions';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { UpdateService } from '@app/site/modules/site-wrapper/services/update.service';
+import { CustomTranslationService } from '@app/site/modules/translations/custom-translation.service';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
+import { OpenSlidesService } from '@app/site/services/openslides.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { ViewModelStoreService } from '@app/site/services/view-model-store.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
-import { allAvailableTranslations } from 'src/app/domain/definitions/languages';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { langToTimeLocale } from 'src/app/infrastructure/utils';
-import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
-import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
-import { OpenSlidesService } from 'src/app/site/services/openslides.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { ViewPoll } from '../../../../../polls';

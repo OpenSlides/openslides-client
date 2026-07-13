@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OrganizationControllerService } from '@app/site/pages/organization/services/organization-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-organization-info`,

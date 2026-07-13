@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
+import { BaseComponent } from '@app/site/base/base.component';
+import { MainMenuEntry, MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { SidenavComponent } from '@app/ui/modules/sidenav/components/sidenav/sidenav.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
 @Component({
     selector: `os-organization-navigation-wrapper`,

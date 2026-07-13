@@ -2,31 +2,31 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
-import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { Selectable } from 'src/app/domain/interfaces';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { Motion } from 'src/app/domain/models/motions';
-import { User } from 'src/app/domain/models/users/user';
-import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
-import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { Collection, Fqid, Id } from '@app/domain/definitions/key-types';
+import { Selectable } from '@app/domain/interfaces';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { Motion } from '@app/domain/models/motions';
+import { User } from '@app/domain/models/users/user';
+import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-history-entry';
+import { ViewHistoryPosition } from '@app/gateways/repositories/history-position/view-history-position';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
 import {
     collectionIdFromFqid,
     fqidFromCollectionAndId,
     idFromFqid,
     isFqid
-} from 'src/app/infrastructure/utils/transform-functions';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
+} from '@app/infrastructure/utils/transform-functions';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { DEFAULT_FIELDSET } from '@app/site/services/model-request-builder';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewModelStoreService } from '@app/site/services/view-model-store.service';
+import { TranslateService } from '@ngx-translate/core';
+import { distinctUntilChanged, filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
 
 import { ViewUser } from '../../../../view-models/view-user';
 import { ViewAssignment } from '../../../assignments';

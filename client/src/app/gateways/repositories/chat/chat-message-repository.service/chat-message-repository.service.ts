@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ChatMessage } from 'src/app/domain/models/chat/chat-message';
-import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { ChatMessage } from '@app/domain/models/chat/chat-message';
+import { ViewChatMessage } from '@app/site/pages/meetings/pages/chat';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

@@ -1,30 +1,30 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { MeetingProjectionType } from '@app/gateways/repositories/meeting-repository.service';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { hasListOfSpeakers, ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import {
     MultiProjectionBuildDescriptor,
     ProjectionBuildDescriptor
-} from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+} from '@app/site/pages/meetings/view-models/projection-build-descriptor';
+import { DurationService } from '@app/site/services/duration.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';

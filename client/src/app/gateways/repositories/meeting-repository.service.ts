@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Action } from '@app/gateways/actions';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { getUnixTime } from 'date-fns';
-import { Action } from 'src/app/gateways/actions';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { Identifiable } from '../../domain/interfaces/identifiable';

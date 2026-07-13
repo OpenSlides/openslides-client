@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
 

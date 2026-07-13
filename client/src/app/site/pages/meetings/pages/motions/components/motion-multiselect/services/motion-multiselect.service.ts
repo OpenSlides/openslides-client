@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { Action, ActionService } from '@app/gateways/actions';
+import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { SpinnerService } from '@app/site/modules/global-spinner';
+import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { ChoiceService } from '@app/ui/modules/choice-dialog';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Action, ActionService } from 'src/app/gateways/actions';
-import { ActionRequest } from 'src/app/gateways/actions/action-utils';
-import { SpinnerService } from 'src/app/site/modules/global-spinner';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import {
     AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,

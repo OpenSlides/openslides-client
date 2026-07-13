@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
+import { BaseFormControlComponent } from '@app/ui/base/base-form-control';
 import { debounceTime } from 'rxjs';
-import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 /**
  * Type declared to see, which values are possible for some inputs.

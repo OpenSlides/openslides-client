@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
-import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { BaseMenuEntry, getCustomStyleForEntry } from '@app/site/base/base-menu-entry';
+import { MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
+import { AuthService } from '@app/site/services/auth.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
 
 interface OrgaMenuEntry extends BaseMenuEntry<OML> {
     optionalCML?: CML;

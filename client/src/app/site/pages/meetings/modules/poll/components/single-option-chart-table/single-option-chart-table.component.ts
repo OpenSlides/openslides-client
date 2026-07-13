@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-import { ThemeService } from 'src/app/site/services/theme.service';
+import { PollData, PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll';
+import { ThemeService } from '@app/site/services/theme.service';
 
 import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';

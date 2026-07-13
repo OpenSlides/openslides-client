@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AgendaItemType, ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { BaseViaBackendImportListMeetingComponent } from '@app/site/base/base-via-backend-import-list-meeting.component';
+import { DurationService } from '@app/site/services/duration.service';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
-import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { BaseViaBackendImportListMeetingComponent } from 'src/app/site/base/base-via-backend-import-list-meeting.component';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicImportService } from '../../services/topic-import.service';

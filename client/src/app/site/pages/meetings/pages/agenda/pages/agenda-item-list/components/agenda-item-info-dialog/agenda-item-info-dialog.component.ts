@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { DurationService } from 'src/app/site/services/duration.service';
+import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { DurationService } from '@app/site/services/duration.service';
 
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';

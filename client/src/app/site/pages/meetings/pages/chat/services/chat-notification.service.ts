@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { StorageService } from '@app/gateways/storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 import { ViewChatMessage } from '../view-models';
 import { ChatMessageControllerService } from './chat-message-controller.service';

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewContainerRef } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { DomService } from 'src/app/openslides-main-module/services/dom.service';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { DomService } from '@app/openslides-main-module/services/dom.service';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
 
 import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen-projector.component';
 

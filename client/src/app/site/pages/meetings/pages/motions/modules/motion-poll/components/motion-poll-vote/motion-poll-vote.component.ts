@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
+import { Id } from '@app/domain/definitions/key-types';
+import { VoteValue } from '@app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 
 import { ViewOption } from '../../../../../polls';
 

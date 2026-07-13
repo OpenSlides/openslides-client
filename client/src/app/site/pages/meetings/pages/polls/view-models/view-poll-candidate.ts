@@ -1,5 +1,5 @@
-import { PollCandidate } from 'src/app/domain/models/poll-candidate-lists/poll-candidate';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';

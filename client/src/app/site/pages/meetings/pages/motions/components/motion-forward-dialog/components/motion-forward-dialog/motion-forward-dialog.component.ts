@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from '@app/gateways/presenter';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { ViewMotion } from '../../../../view-models';
 

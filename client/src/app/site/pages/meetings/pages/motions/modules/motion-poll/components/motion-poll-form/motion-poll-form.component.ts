@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
+import { PollPropertyVerboseKey } from '@app/domain/models/poll';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+import { _ } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll-form`,

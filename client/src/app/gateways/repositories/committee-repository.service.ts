@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';

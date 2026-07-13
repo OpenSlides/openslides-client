@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { UserSelectionData } from '@app/site/pages/meetings/modules/participant-search-selector';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 
 interface ParticipantSwitchDialogConfig {
     leftUser: ViewUser;

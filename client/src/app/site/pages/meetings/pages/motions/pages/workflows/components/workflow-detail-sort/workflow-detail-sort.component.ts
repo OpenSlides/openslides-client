@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MotionState } from '@app/domain/models/motions/motion-state';
+import { Action } from '@app/gateways/actions';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { Action } from 'src/app/gateways/actions';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMotionState, ViewMotionWorkflow } from '../../../../modules';
 import { MotionStateControllerService } from '../../../../modules/states/services';

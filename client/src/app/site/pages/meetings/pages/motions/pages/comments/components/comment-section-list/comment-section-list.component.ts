@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionCommentSection } from '@app/domain/models/motions/motion-comment-section';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { GroupControllerService } from '@app/site/pages/meetings/pages/participants/modules';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
 

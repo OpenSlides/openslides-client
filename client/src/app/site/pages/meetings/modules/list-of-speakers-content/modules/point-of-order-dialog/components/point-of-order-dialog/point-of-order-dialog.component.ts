@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ViewPointOfOrderCategory } from '@app/site/pages/meetings/pages/agenda';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
-import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { PointOfOrderData } from '../../services/point-of-order-dialog.service';
 

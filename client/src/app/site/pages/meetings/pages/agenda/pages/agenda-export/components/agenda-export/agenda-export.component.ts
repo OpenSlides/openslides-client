@@ -16,13 +16,13 @@ import { MatChipOption, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { Id } from '@app/domain/definitions/key-types';
+import { StorageService } from '@app/gateways/storage.service';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 
 import {
     AGENDA_LIST_ITEM_SUBSCRIPTION,

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 
 import { ViewPoll } from '../../../../view-models';
 import { PollListFilterService } from '../../services/poll-list-filter.service/poll-list-filter.service';

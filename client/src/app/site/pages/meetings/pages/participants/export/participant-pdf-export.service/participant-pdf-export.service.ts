@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export/meeting-pdf-export.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export/meeting-pdf-export.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { ParticipantPdfService } from '../participant-pdf.service';
 

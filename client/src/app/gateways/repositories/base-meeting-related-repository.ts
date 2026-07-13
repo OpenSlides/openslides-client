@@ -1,4 +1,4 @@
-import { HasMeetingId } from 'src/app/domain/interfaces';
+import { HasMeetingId } from '@app/domain/interfaces';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';

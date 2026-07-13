@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { SequentialNumberMappingService } from '../../../../services/sequential-number-mapping.service';
 import {

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 

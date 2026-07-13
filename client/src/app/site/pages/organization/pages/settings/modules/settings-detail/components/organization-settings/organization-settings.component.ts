@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { availableTranslations } from '@app/domain/definitions/languages';
+import { Selectable } from '@app/domain/interfaces';
+import { objectToFormattedString } from '@app/infrastructure/utils';
+import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { OrganizationControllerService } from '@app/site/pages/organization/services/organization-controller.service';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
+import { OperatorService } from '@app/site/services/operator.service';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
 import { _ } from '@ngx-translate/core';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
-import { Selectable } from 'src/app/domain/interfaces';
-import { objectToFormattedString } from 'src/app/infrastructure/utils';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
 @Component({
     selector: `os-organization-settings`,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
 import { map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
 
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
 import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';

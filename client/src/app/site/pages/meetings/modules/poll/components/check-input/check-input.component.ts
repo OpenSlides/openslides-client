@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 @Component({
     selector: `os-check-input`,

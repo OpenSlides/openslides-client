@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseViaBackendImportListComponent } from '@app/site/base/base-via-backend-import-list.component';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { accountColumns, accountHeadersAndVerboseNames } from '../../definitions';
 import { AccountImportService } from '../../services/account-import.service/account-import.service';

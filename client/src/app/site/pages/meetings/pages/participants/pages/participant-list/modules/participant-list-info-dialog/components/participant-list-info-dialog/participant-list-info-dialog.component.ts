@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Permission } from '@app/domain/definitions/permission';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { GENDERS } from '@app/domain/models/users/user';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { GroupControllerService } from '@app/site/pages/meetings/pages/participants/modules';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { GENDERS } from 'src/app/domain/models/users/user';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models';

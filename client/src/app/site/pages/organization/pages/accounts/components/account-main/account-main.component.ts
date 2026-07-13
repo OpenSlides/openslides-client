@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { inject } from '@angular/core';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { getMeetingListSubscriptionConfig } from '@app/site/pages/organization/organization.subscription';
+import { OperatorService } from '@app/site/services/operator.service';
 import { distinctUntilChanged, map, skip } from 'rxjs';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
 import { ViewOrganization } from '../../../../view-models/view-organization';

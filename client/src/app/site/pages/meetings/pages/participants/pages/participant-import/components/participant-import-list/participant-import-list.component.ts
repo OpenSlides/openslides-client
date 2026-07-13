@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseViaBackendImportListMeetingComponent } from '@app/site/base/base-via-backend-import-list-meeting.component';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseViaBackendImportListMeetingComponent } from 'src/app/site/base/base-via-backend-import-list-meeting.component';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 
 import { participantColumns, participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportService } from '../../services';

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewMotionWorkflow } from '../../../../modules';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';

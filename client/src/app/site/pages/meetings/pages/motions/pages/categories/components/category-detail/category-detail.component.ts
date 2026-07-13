@@ -3,14 +3,14 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion, ViewMotionCategory } from '@app/site/pages/meetings/pages/motions';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';

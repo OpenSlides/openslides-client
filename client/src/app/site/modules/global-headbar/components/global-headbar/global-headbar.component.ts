@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 import { GlobalHeadbarService } from '../../global-headbar.service';
 import { GlobalSearchComponent } from '../global-search/global-search.component';

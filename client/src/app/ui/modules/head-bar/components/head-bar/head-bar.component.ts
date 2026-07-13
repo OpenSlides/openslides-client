@@ -14,8 +14,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GlobalHeadbarService } from '@app/site/modules/global-headbar/global-headbar.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
 
 import { MainMenuService } from '../../../../../site/pages/meetings/services/main-menu.service';
 import { ViewPortService } from '../../../../../site/services/view-port.service';

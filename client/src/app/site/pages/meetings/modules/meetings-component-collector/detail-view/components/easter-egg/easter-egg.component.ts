@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { isEasterEggTime } from 'src/app/infrastructure/utils';
+import { isEasterEggTime } from '@app/infrastructure/utils';
 
 @Component({
     selector: `os-easter-egg`,

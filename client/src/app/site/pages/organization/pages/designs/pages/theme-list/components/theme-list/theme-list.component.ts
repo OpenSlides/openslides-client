@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { ViewTheme } from '@app/site/pages/organization/pages/designs';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ThemeBuilderDialogService } from '../../../../modules/theme-builder-dialog/services/theme-builder-dialog.service';
 import { ThemeControllerService } from '../../../../services/theme-controller.service';

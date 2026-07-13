@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
 
 @Component({
     selector: `os-motion-block-create-dialog`,

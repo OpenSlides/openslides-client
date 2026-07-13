@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { endOfDay, fromUnixTime } from 'date-fns';
-import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Selectable } from 'src/app/domain/interfaces';
+import { Ids } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { Selectable } from '@app/domain/interfaces';
 import {
     GetForwardingMeetingsPresenter,
     GetForwardingMeetingsPresenterMeeting,
     GetForwardingMeetingsPresenterService
-} from 'src/app/gateways/presenter';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+} from '@app/gateways/presenter';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewCommittee } from '@app/site/pages/organization/pages/committees';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
+import { TranslateService } from '@ngx-translate/core';
+import { endOfDay, fromUnixTime } from 'date-fns';
+import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';

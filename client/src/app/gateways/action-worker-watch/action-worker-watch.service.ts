@@ -1,12 +1,12 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { ActionWorkerState } from '@app/domain/models/action-worker/action-worker';
+import { idFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { WaitForActionReason, waitForActionReason } from '@app/site/modules/wait-for-action-dialog/definitions';
+import { WaitForActionDialogService } from '@app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
+import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, timer } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
-import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { WaitForActionReason, waitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
-import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
 import { ViewActionWorker } from '../repositories/action-worker/view-action-worker';

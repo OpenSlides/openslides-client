@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Permission } from '@app/domain/definitions/permission';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewStructureLevel } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { StructureLevelControllerService } from '../../services/structure-level-controller.service';
 import { StructureLevelSortService } from '../../services/structure-level-sort.service';

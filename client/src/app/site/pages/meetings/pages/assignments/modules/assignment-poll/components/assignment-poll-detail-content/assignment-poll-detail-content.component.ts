@@ -9,22 +9,22 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
+import { Permission } from '@app/domain/definitions/permission';
+import { PollData } from '@app/domain/models/poll/generic-poll';
 import {
     PollMethod,
     PollPercentBase,
     PollState,
     PollTableData,
     VotingResult
-} from 'src/app/domain/models/poll/poll-constants';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
+} from '@app/domain/models/poll/poll-constants';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { ChartData } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { TranslateService } from '@ngx-translate/core';
+import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 
 import { ViewPoll } from '../../../../../polls';
 import { ViewAssignment } from '../../../../view-models';

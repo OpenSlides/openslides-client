@@ -1,10 +1,10 @@
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { Action } from 'src/app/gateways/actions';
-import { BaseMotionMeetingUserRepositoryService } from 'src/app/gateways/repositories/motions/util';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { Action } from '@app/gateways/actions';
+import { BaseMotionMeetingUserRepositoryService } from '@app/gateways/repositories/motions/util';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 
 import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';
 import { ViewMotion } from '../view-models';

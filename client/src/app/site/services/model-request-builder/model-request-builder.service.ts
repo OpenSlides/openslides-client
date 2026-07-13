@@ -4,7 +4,7 @@ import {
     Fields,
     GenericRelationFieldDecriptor,
     RelationFieldDescriptor
-} from 'src/app/domain/interfaces/model-request';
+} from '@app/domain/interfaces/model-request';
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';

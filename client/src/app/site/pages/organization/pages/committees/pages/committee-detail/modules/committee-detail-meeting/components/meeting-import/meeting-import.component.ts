@@ -1,13 +1,13 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
-import { UploadFileJsonProcessorService } from 'src/app/infrastructure/utils/import/json-import-file-utils';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.service';
+import { UploadFileJsonProcessorService } from '@app/infrastructure/utils/import/json-import-file-utils';
+import { BaseComponent } from '@app/site/base/base.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
+import { FileData } from '@app/ui/modules/file-upload/components/file-upload/file-upload.component';
 
 @Component({
     selector: `os-meeting-import`,

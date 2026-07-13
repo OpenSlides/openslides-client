@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/organization-tags.subscription';
 import { getCommitteeListSubscriptionConfig } from '../../../../committees.subscription';

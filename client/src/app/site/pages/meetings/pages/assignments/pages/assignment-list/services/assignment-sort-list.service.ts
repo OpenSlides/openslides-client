@@ -1,8 +1,8 @@
 import { Injectable, ProviderToken } from '@angular/core';
-import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 
 /**
  * Sorting service for the assignment list

@@ -8,11 +8,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Id } from '@app/domain/definitions/key-types';
+import { NotifyResponse } from '@app/gateways/notify.service';
 import { Chess, EVENT_TYPE } from 'cm-chess/src/Chess';
 import { BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'cm-chessboard/src/Chessboard';
 import { PromotionDialog } from 'cm-chessboard/src/extensions/promotion-dialog/PromotionDialog';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { NotifyResponse } from 'src/app/gateways/notify.service';
 
 import { BaseGameDialogComponent, State } from '../../../../components/base-game-dialog/base-game-dialog';
 

@@ -1,7 +1,7 @@
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Constructable } from '@app/domain/interfaces/constructable';
 import { Observable } from 'rxjs';
-import { Constructable } from 'src/app/domain/interfaces/constructable';
 
 import { BannerDefinition, BannerService } from '../../services/banner.service';
 

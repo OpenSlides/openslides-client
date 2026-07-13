@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from '@angular/core';
-import { DomService } from 'src/app/openslides-main-module/services/dom.service';
+import { DomService } from '@app/openslides-main-module/services/dom.service';
 
 import { CustomOverlayConfig, OverlayInstance } from '../definitions';
 import { OverlayComponent } from '../overlay.component';

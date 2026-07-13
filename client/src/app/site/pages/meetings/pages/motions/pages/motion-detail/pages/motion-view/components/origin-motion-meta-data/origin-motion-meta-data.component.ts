@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Selectable } from '@app/domain/interfaces';
+import { Motion } from '@app/domain/models/motions';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { ViewMotion, ViewMotionCategory, ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { ViewMotion, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';

@@ -12,11 +12,11 @@ import {
     ViewChild
 } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { Mapable, Mutable } from '@app/infrastructure/utils';
+import { KeyCode } from '@app/infrastructure/utils/key-code';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Mapable, Mutable } from 'src/app/infrastructure/utils';
-import { KeyCode } from 'src/app/infrastructure/utils/key-code';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { SCROLLING_TABLE } from '../../definitions/index';
 import { ScrollingTableCellDefinition } from '../../directives/scrolling-table-cell-definition';

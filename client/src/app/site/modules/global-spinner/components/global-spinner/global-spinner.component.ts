@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ConnectionStatusService } from '@app/site/services/connection-status.service';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
+import { SpinnerComponent } from '@app/ui/modules/spinner/components/spinner/spinner.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
-import { SpinnerComponent } from 'src/app/ui/modules/spinner/components/spinner/spinner.component';
 
 import { UpdateService } from '../../../site-wrapper/services/update.service';
 

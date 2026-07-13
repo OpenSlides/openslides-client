@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { OsSortProperty } from 'src/app/site/base/base-sort.service';
-import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
+import { OsSortProperty } from '@app/site/base/base-sort.service';
+import { SortListService } from '@app/ui/modules/list/definitions/sort-service';
 
 /**
  * A bottom sheet used for setting a list's sorting, used by {@link SortFilterBarComponent}

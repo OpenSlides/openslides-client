@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { FileExportService } from '@app/gateways/export/file-export.service/file-export.service';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import JSZip from 'jszip';
-import { FileExportService } from 'src/app/gateways/export/file-export.service/file-export.service';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 
 @Injectable({
     providedIn: 'root'

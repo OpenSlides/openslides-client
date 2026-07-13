@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Permission } from '@app/domain/definitions/permission';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { ParticipantListSortService } from '../../../../pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import {

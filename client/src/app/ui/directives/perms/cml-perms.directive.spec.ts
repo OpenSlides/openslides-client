@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Observable, Subject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { CmlPermsDirective } from './cml-perms.directive';
 import { BasePermsTestComponent } from './perms.directive.spec';

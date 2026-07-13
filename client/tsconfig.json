@@ -16,7 +16,9 @@
         "outDir": "./dist/out-tsc",
         "paths": {
             "@openslides/motion-diff": ["../packages/openslides-motion-diff"],
-            "*": ["./*"]
+            "@app/*": ["./src/app/*"],
+            "node_modules/chart.js/dist/types/basic": ["./node_modules/chart.js/dist/types/basic"],
+            "node_modules/chart.js/dist/types/utils": ["./node_modules/chart.js/dist/types/utils"]
         },
         "sourceMap": true,
         "strict": false,

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Action } from '@app/gateways/actions';
+import { TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { NullablePartial } from '@app/infrastructure/utils';
+import { AgendaListTitle } from '@app/site/pages/meetings/pages/agenda';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { MotionFormatResult } from '@app/site/pages/meetings/pages/motions/services/common/motion-format.service';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Action } from 'src/app/gateways/actions';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { NullablePartial } from 'src/app/infrastructure/utils';
-import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionFormatResult } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';

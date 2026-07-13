@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
+} from '@app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getOrganizationTagListSubscriptionConfig } from '../../../../organization-tags.subscription';
 

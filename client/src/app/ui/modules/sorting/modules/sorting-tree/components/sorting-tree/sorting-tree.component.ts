@@ -12,11 +12,11 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode, TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from '@app/infrastructure/utils';
+import { SortDefinition } from '@app/site/base/base-sort.service';
 import { auditTime, Observable, Subscription } from 'rxjs';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
-import { SortDefinition } from 'src/app/site/base/base-sort.service';
 
 import { TreeService, TreeSortService } from '../../services';
 

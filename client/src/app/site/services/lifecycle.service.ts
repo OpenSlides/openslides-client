@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { StorageService } from '@app/gateways/storage.service';
+import { Deferred } from '@app/infrastructure/utils/promises';
 
 @Injectable({
     providedIn: `root`

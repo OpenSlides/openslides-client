@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { Identifiable } from '@app/domain/interfaces';
 
 import { ListComponent } from './list.component';
 

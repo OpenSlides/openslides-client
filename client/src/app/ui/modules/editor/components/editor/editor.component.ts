@@ -16,6 +16,8 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { unwrapNode } from '@app/infrastructure/utils/dom-helpers';
+import { BaseFormControlComponent } from '@app/ui/base/base-form-control';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { TranslateService } from '@ngx-translate/core';
 import { Editor, Extension } from '@tiptap/core';
@@ -37,8 +39,6 @@ import { Text } from '@tiptap/extension-text';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { Underline } from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
-import { unwrapNode } from 'src/app/infrastructure/utils/dom-helpers';
-import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import tinycolor from 'tinycolor2';
 
 import { ArrowNavigationDirective } from '../../directives/tab-navigation.directive';

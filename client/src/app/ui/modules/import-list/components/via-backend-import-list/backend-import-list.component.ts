@@ -18,12 +18,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { BackendImportService } from 'src/app/ui/base/import-service';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';

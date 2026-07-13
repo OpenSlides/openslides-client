@@ -1,7 +1,7 @@
+import { Identifiable } from '@app/domain/interfaces';
+import { OsFilter, OsFilterIndicator, OsFilterOption } from '@app/site/base/base-filter.service';
+import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { OsFilter, OsFilterIndicator, OsFilterOption } from 'src/app/site/base/base-filter.service';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 export interface FilterListService<V extends Identifiable> extends ViewModelListProvider<V> {
     readonly unfilteredCount: number;
     readonly filterCount: number;

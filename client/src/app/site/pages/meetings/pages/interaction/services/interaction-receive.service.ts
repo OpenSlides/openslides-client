@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { NotifyService } from '@app/gateways/notify.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import {
     BehaviorSubject,
@@ -12,8 +14,6 @@ import {
     startWith,
     Subscription
 } from 'rxjs';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { BroadcastService } from './broadcast.service';

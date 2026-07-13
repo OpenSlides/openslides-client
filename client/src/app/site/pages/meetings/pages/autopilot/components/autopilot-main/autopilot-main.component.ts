@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
+import { ProjectorRepositoryService } from '@app/gateways/repositories/projectors/projector-repository.service';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { BaseMeetingModelRequestHandler } from '@app/site/pages/meetings/base/base-meeting-model-request-handler.component';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
 import { distinctUntilChanged, map } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
-import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
 import {
     AUTOPILOT_CONTENT_SUBSCRIPTION,

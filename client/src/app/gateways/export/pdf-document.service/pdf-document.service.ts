@@ -1,4 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
+import { Functionable } from '@app/infrastructure/utils';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import {
@@ -16,12 +22,6 @@ import {
     TableCell,
     TDocumentDefinitions
 } from 'pdfmake/interfaces';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
-import { Functionable } from 'src/app/infrastructure/utils';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { HttpService } from '../../http.service';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';

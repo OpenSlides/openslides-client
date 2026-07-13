@@ -6,7 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { MotionBlockEditDialogComponent } from './components/motion-block-edit-dialog/motion-block-edit-dialog.component';
 

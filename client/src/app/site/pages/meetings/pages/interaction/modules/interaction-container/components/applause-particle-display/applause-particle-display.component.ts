@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { ElementSize } from '@app/ui/directives/resized/resized.directive';
 import { TranslateService } from '@ngx-translate/core';
 import { NgParticlesService } from '@tsparticles/angular';
 import { Container, Engine } from '@tsparticles/engine';
 import { loadEmittersPlugin } from '@tsparticles/plugin-emitters';
 import { loadTextShape } from '@tsparticles/shape-text';
 import { loadSlim } from '@tsparticles/slim';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { ElementSize } from 'src/app/ui/directives/resized/resized.directive';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { particleConfig, particleOptions } from './particle-options';

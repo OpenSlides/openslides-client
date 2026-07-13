@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { ModificationType } from '@app/domain/models/motions/motions.constants';
+import { isNumberRange } from '@app/infrastructure/utils/validators';
+import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { isNumberRange } from 'src/app/infrastructure/utils/validators';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { LineRange } from '../../../../../../definitions/index';
 import {

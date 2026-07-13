@@ -4,10 +4,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
 import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
-import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
-import { environment } from 'src/environments/environment';
 
+import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from 'src/app/infrastructure/definitions/tree';
-import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from '@app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from '@app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`

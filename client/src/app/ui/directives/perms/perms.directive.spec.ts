@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DelegationSetting } from '@app/domain/definitions/delegation-setting';
+import { Permission } from '@app/domain/definitions/permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Observable, Subject } from 'rxjs';
-import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { PermsDirective } from './perms.directive';
 

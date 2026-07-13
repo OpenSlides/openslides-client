@@ -11,8 +11,8 @@ import {
     TemplateRef
 } from '@angular/core';
 import { MatTab } from '@angular/material/tabs';
+import { ViewPortService } from '@app/site/services/view-port.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 import { VerticalTabGroupContentState } from '../../definitions';
 import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-tab-group-label-header.directive';

@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Collection, Ids } from '@app/domain/definitions/key-types';
 import { Observable, Subject } from 'rxjs';
-import { Collection, Ids } from 'src/app/domain/definitions/key-types';
 
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';

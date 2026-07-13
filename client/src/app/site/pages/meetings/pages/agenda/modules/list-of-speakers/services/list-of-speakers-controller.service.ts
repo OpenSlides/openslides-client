@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { ListOfSpeakersRepositoryService } from '@app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
 import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';

@@ -8,6 +8,12 @@ import {
     RoutesRecognized,
     UrlTree
 } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import {
+    ActiveMeetingIdService,
+    MeetingIdChangedEvent
+} from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { AuthService } from '@app/site/services/auth.service';
 import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -19,12 +25,6 @@ import {
     Subject,
     tap
 } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import {
-    ActiveMeetingIdService,
-    MeetingIdChangedEvent
-} from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { AuthService } from 'src/app/site/services/auth.service';
 
 import { UpdateService } from '../modules/site-wrapper/services/update.service';
 import { OperatorService } from './operator.service';

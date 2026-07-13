@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
+import { BasePollMetaInformationComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
 
 @Component({
     selector: `os-motion-poll-meta-information`,

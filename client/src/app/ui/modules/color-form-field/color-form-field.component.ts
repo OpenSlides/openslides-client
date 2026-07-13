@@ -5,8 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { BaseFormControlComponent } from '../../base/base-form-control';
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { getAssignmentListMinimalSubscriptionConfig } from '../../../assignments/assignments.subscription';
 import { getMotionListMinimalSubscriptionConfig } from '../../../motions/motions.subscription';

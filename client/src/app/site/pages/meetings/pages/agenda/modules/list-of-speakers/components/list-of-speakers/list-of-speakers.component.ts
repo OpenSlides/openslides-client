@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ListOfSpeakersContentComponent } from '@app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ListOfSpeakersContentComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
 import { ListOfSpeakersControllerService } from '../../services/list-of-speakers-controller.service';

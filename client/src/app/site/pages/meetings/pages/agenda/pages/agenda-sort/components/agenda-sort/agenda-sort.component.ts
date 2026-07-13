@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
+import { AgendaItemType, ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import {
     BaseSortTreeViewComponent,
     SortTreeFilterId,
     SortTreeFilterOption
-} from 'src/app/ui/base/base-sort-tree-view-component';
+} from '@app/ui/base/base-sort-tree-view-component';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 

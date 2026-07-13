@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 const DEFAULT_LOGO = `/assets/img/openslides-logo.svg`;
 const DEFAULT_LOGO_DARK_THEME = `/assets/img/openslides-logo-dark.svg`;

@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { distinctUntilChanged, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
-import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { Permission } from '@app/domain/definitions/permission';
+import { ProjectionDialogService } from '@app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
+import { ViewProjection, ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import {
     isMultiProjectionBuildDescriptor,
     isProjectable,
@@ -11,7 +10,8 @@ import {
     MultiProjectionBuildDescriptor,
     Projectable,
     ProjectionBuildDescriptor
-} from 'src/app/site/pages/meetings/view-models';
+} from '@app/site/pages/meetings/view-models';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 
 @Component({
     selector: `os-projector-button`,

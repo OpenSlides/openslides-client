@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
-import { HtmlColor } from 'src/app/domain/definitions/key-types';
-import { Color, ColorService } from 'src/app/site/services/color.service';
+import { HtmlColor } from '@app/domain/definitions/key-types';
+import { Color, ColorService } from '@app/site/services/color.service';
 
 @Component({
     selector: `os-chip`,

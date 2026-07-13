@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BaseComponent } from '@app/site/base/base.component';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { MessageDialogData } from '../../definitions';
 

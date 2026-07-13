@@ -1,16 +1,16 @@
 import { Directive, inject } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { BallotPaperSelection } from '@app/domain/models/meetings/meeting.constants';
+import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from '@app/domain/models/poll';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewOption, ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
-import { PollMethod, PollTableData, PollType, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { ViewAssignment } from '../../../pages/assignments';
 import { ViewUser } from '../../../view-models/view-user';

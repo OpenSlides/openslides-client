@@ -1,9 +1,9 @@
 import { Injectable, ProviderToken } from '@angular/core';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
+import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { _ } from '@ngx-translate/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
-import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 @Injectable({
     providedIn: `root`

@@ -1,14 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { deepCopy } from '@app/infrastructure/utils/transform-functions';
+import { ViewMotionBlock, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { Observable } from 'rxjs';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import {
-    ViewMotionBlock,
-    ViewMotionCategory,
-    ViewMotionState,
-    ViewTag
-} from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service';

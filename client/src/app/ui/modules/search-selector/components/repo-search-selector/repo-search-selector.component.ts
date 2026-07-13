@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { ModelRequestService, SubscribeToConfig } from '@app/site/services/model-request.service';
 import { map, OperatorFunction } from 'rxjs';
-import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
 import { Settings } from '../../../../../domain/models/meetings/meeting';
 import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsDefinitionService } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
     SettingsGroup,
     SKIPPED_SETTINGS
-} from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: `os-meeting-settings-group-list`,
