@@ -15,6 +15,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
@@ -491,8 +492,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         $event.preventDefault();
         this.changeRecommendationMenu.closeMenu();
 
+        const recoModel = new MotionChangeRecommendation(reco.getModel());
         if (this.motion.text) {
-            const recoModel = reco.getModel();
             const motionText = this.diff.extractMotionLineRange(
                 this.lineNumberingService.insertLineNumbers({
                     html: this.motion.text,
@@ -517,7 +518,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 from: reco.getLineFrom(),
                 to: reco.getLineTo()
             },
-            changeRecommendation: reco.getModel(),
+            changeRecommendation: recoModel,
             firstLine: reco.motion.firstLine
         };
         this.dialog.openContentChangeRecommendationDialog(data);
