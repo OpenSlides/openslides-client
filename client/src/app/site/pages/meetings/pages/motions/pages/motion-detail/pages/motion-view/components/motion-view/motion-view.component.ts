@@ -591,6 +591,16 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
              * the regular amendment changes are shown in the "original" view.
              */
             return ChangeRecoMode.Original;
+        } else if (
+            mode === ChangeRecoMode.Original &&
+            this.hasChangeRecommendations &&
+            this.motion?.isParagraphBasedAmendment()
+        ) {
+            /**
+             * Paragraph-based amendments with change recommendations should display
+             * the Diff view.
+             */
+            return ChangeRecoMode.Diff;
         }
         return mode;
     }

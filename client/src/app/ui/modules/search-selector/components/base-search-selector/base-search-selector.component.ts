@@ -85,7 +85,6 @@ export abstract class BaseSearchSelectorComponent
     /**
      * Label showing, if there are no options for a specific search.
      */
-    @Input()
     public noOptionsFoundLabel = _(`No options found`);
 
     /**
