@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { YES_KEY } from 'src/app/domain/models/poll';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewPollConfigRatingApproval } from '../../../../pages/polls';
@@ -29,6 +30,23 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
     private promptService = inject(PromptService);
 
     public selectedOptions = signal<Map<number, string>>(new Map());
+
+    public yesVotesUsed = computed<number>(() => {
+        let count = 0;
+        for (const value of this.selectedOptions().values()) {
+            if (value === YES_KEY) count++;
+        }
+        return count;
+    });
+
+    public maxYesReached = computed<boolean>(() => {
+        const max = this.config()?.max_yes_amount;
+        return max != null && this.yesVotesUsed() >= max;
+    });
+
+    public isYesDisabled(optionId: number): boolean {
+        return this.maxYesReached() && !this.isSelected(optionId, YES_KEY);
+    }
 
     public availableVotes = computed<number>(() => {
         if (this.selectedOptions().has(0)) {
@@ -60,6 +78,9 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
             selected.set(optionId, null);
         } else {
             selected.delete(0);
+            if (value === YES_KEY && this.maxYesReached()) {
+                return;
+            }
             if ((this.config()?.max_options_amount ?? 1) === 1) {
                 selected.clear();
             } else {

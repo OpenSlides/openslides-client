@@ -9,6 +9,7 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
 
     public max_options_amount!: number;
     public min_options_amount!: number;
+    public max_yes_amount!: number;
     public allow_abstain!: boolean;
     public onehundred_percent_base!: RatingApprovalOnehundredPercentBase;
 
@@ -29,6 +30,7 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
         `poll_id`,
         `max_options_amount`,
         `min_options_amount`,
+        `max_yes_amount`,
         `allow_abstain`,
         `onehundred_percent_base`
     ];

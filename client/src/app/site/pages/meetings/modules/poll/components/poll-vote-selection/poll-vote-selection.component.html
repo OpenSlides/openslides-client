@@ -67,8 +67,8 @@
             </div>
             <div class="vote-button-area" role="gridcell">
                 <os-poll-vote-button
+                    [disabled]="loading()"
                     [isSelected]="isSelected(option.id)"
-                    [loading]="loading()"
                     [optionTitle]="option.text || option.meeting_user?.user?.getName()"
                     [optionType]="config().strike_out ? 'no' : 'yes'"
                     (toggleOption)="toggleOption(option.id)"
@@ -95,8 +95,8 @@
                 </div>
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
+                        [disabled]="loading()"
                         [isSelected]="isSelected(-1)"
-                        [loading]="loading()"
                         [optionTitle]="optionName"
                         [optionType]="config().strike_out ? 'yes' : 'no'"
                         (toggleOption)="toggleOption(-1)"
@@ -113,8 +113,8 @@
                 <div class="vote-button-area" role="gridcell">
                     <os-poll-vote-button
                         optionType="abstain"
+                        [disabled]="loading()"
                         [isSelected]="isSelected(0)"
-                        [loading]="loading()"
                         [optionTitle]="'General abstain' | translate"
                         (toggleOption)="toggleOption(0)"
                     />

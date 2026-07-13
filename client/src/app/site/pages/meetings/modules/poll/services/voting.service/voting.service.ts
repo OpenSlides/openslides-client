@@ -75,6 +75,7 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      */
     public votingProhibited(poll: ViewPoll, user?: ViewUser): Observable<VotingProhibition | null> {
+        // TODO: [potatojuicemachine::10.07.2026] user being undefined will throw here. Not sure what the correct fix would be.
         return combineLatest([
             this.userRepo.getViewModelObservable(user.id),
             this.pollRepo.getViewModelObservable(poll.id),

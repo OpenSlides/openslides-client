@@ -2,8 +2,8 @@
     @for (action of voteActions(); track action.vote) {
         <div class="vote-button-area" role="gridcell">
             <os-poll-vote-button
+                [disabled]="loading()"
                 [isSelected]="isOptionSelected(action.vote)"
-                [loading]="loading()"
                 [optionTitle]="action.label | translate"
                 [optionType]="action.vote"
                 (toggleOption)="submitVote(action.vote)"

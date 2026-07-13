@@ -53,6 +53,7 @@ export class PollFormRatingApprovalComponent {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false],
+            max_yes_amount: [1, [Validators.required, Validators.min(1)]],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
         });
@@ -78,12 +79,19 @@ export class PollFormRatingApprovalComponent {
     }
 
     private onOptionAmountUpdate(): void {
+        const optionAmount = this.optionAmount();
         const maxCtrl = this.form.get('max_options_amount');
-        if (this.optionAmount()) {
-            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(this.optionAmount())]);
+        const maxYesCtrl = this.form.get('max_yes_amount');
+        if (optionAmount) {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
+            maxYesCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
+            maxCtrl?.setValue(optionAmount, { emitEvent: false });
+            maxYesCtrl.setValue(optionAmount, { emitEvent: false });
         } else {
             maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
+            maxYesCtrl?.setValidators([Validators.required, Validators.min(1)]);
         }
         maxCtrl?.updateValueAndValidity({ emitEvent: false });
+        maxYesCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 }
