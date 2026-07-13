@@ -20,7 +20,6 @@ export class PollVoteButtonComponent {
     public optionTitle = input.required<string>();
 
     public optionType = input<OptionType>(`yes`);
-    public loading = input<boolean>(false);
     public disabled = input<boolean>(false);
 
     public votedClass = computed<string>(() => {

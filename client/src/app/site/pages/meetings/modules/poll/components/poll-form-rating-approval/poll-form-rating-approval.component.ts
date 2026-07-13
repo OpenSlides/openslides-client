@@ -79,14 +79,14 @@ export class PollFormRatingApprovalComponent {
     }
 
     private onOptionAmountUpdate(): void {
-        const option_amount = this.optionAmount();
+        const optionAmount = this.optionAmount();
         const maxCtrl = this.form.get('max_options_amount');
         const maxYesCtrl = this.form.get('max_yes_amount');
-        if (option_amount) {
-            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(option_amount)]);
-            maxYesCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(option_amount)]);
-            maxCtrl?.setValue(option_amount, { emitEvent: false });
-            maxYesCtrl.setValue(option_amount, { emitEvent: false });
+        if (optionAmount) {
+            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
+            maxYesCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
+            maxCtrl?.setValue(optionAmount, { emitEvent: false });
+            maxYesCtrl.setValue(optionAmount, { emitEvent: false });
         } else {
             maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
             maxYesCtrl?.setValidators([Validators.required, Validators.min(1)]);

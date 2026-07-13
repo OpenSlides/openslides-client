@@ -107,8 +107,8 @@
             <div class="vote-button-area" role="gridcell">
                 <os-poll-vote-button
                     optionType="abstain"
+                    [disabled]="loading()"
                     [isSelected]="+getOptionVote(0) > 0"
-                    [loading]="loading()"
                     [optionTitle]="'General abstain' | translate"
                     (toggleOption)="setOptionVote(0, '1')"
                 />
