@@ -1,4 +1,4 @@
-import { Injectable, ProviderToken } from '@angular/core';
+import { inject, ProviderToken, Service } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { UserRepositoryService } from '@app/gateways/repositories/users';
@@ -8,9 +8,7 @@ import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ParticipantListSortService extends BaseSortListService<ViewUser> {
     /**
      * set the storage key name
@@ -42,10 +40,10 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
 
     private _voteWeightEnabled: boolean;
 
-    public constructor(
-        private meetingSettings: MeetingSettingsService,
-        private operator: OperatorService
-    ) {
+    private meetingSettings = inject(MeetingSettingsService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super({
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ids } from '@app/domain/definitions/key-types';
@@ -29,9 +29,7 @@ import {
     MotionForwardDialogReturnData
 } from '../components/motion-forward-dialog/motion-forward-dialog.component';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionForwardDialogService extends BaseDialogService<
     MotionForwardDialogComponent,
     ViewMotion[],
@@ -50,17 +48,17 @@ export class MotionForwardDialogService extends BaseDialogService<
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired = true;
 
-    public constructor(
-        private translate: TranslateService,
-        private repo: MotionRepositoryService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private formatService: MotionFormatService,
-        private snackbar: MatSnackBar,
-        private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService,
-        private modelRequest: ModelRequestService
-    ) {
+    private translate = inject(TranslateService);
+    private repo = inject(MotionRepositoryService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private formatService = inject(MotionFormatService);
+    private snackbar = inject(MatSnackBar);
+    private presenter = inject(GetForwardingMeetingsPresenterService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private operator = inject(OperatorService);
+    private modelRequest = inject(ModelRequestService);
+
+    public constructor() {
         super();
 
         this.activeMeeting.meetingIdObservable.subscribe(() => {
