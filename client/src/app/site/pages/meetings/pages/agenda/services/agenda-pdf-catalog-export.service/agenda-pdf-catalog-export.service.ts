@@ -605,11 +605,7 @@ export class AgendaPdfCatalogExportService {
             case `main-margin`:
                 return [0, 0, 0, 7];
             default:
-                console.warn(
-                    this.translate
-                        .instant(`An undefined class was called. Please add the class: {}`)
-                        .replace(`{}`, name)
-                );
+                console.warn(`An undefined class was called. Please add the class: ${name}`);
                 return {};
         }
     }
