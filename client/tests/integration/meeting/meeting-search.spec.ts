@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
 import { login, logout } from '../helpers/auth';
 import {
     createAccount,
@@ -45,7 +46,7 @@ test.describe('Testing meeting search', () => {
     test('search for agenda topic in meeting', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/home`);
-        await page.locator('button[aria-label="Global Search"]').click();
+        await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('AgendaTest');
         await page.locator('input[value="current"]').click();
         await page.locator('.filter-section').locator('div', { hasText: 'Agenda' }).click();
@@ -57,7 +58,7 @@ test.describe('Testing meeting search', () => {
     test('search for blup in meeting and find nothing', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/home`);
-        await page.locator('button[aria-label="Global Search"]').click();
+        await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('blup');
         await page.locator('input[value="current"]').click();
         await page.locator('.filter-section').locator('div', { hasText: 'Agenda' }).click();

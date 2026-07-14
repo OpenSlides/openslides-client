@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -80,9 +80,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
 
     public directorySelectionForm: UntypedFormGroup;
 
-    public constructor(private formBuilder: UntypedFormBuilder) {
-        super();
-    }
+    private formBuilder = inject(UntypedFormBuilder);
 
     /**
      * Init

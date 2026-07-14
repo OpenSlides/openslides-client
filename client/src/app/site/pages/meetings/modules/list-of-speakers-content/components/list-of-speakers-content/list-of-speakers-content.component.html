@@ -142,13 +142,18 @@
         <div class="add-self-buttons">
             <!-- Add me and remove me if OP has correct permission -->
             @if (addSelf && !isOpInWaitlist()) {
-                <button mat-stroked-button [disabled]="closed || !canAddDueToPresence" (click)="addMyself()">
+                <button
+                    mat-stroked-button
+                    [attr.aria-label]="'Add me' | translate"
+                    [disabled]="closed || !canAddDueToPresence"
+                    (click)="addMyself()"
+                >
                     <mat-icon>add</mat-icon>
                     <span>{{ 'Add me' | translate }}</span>
                 </button>
             }
             @if (isOpInWaitlist()) {
-                <button mat-stroked-button (click)="removeSpeaker()">
+                <button mat-stroked-button [attr.aria-label]="'Remove me' | translate" (click)="removeSpeaker()">
                     <mat-icon>remove</mat-icon>
                     <span>{{ 'Remove me' | translate }}</span>
                 </button>
@@ -158,6 +163,7 @@
                 <button
                     color="warn"
                     mat-stroked-button
+                    [attr.aria-label]="'Point of order' | translate"
                     [disabled]="restrictPointOfOrderActions && closed"
                     (click)="addPointOfOrder()"
                 >
@@ -169,7 +175,12 @@
                 </button>
             }
             @if (showPointOfOrders && isOpInWaitlist(true)) {
-                <button color="warn" mat-stroked-button (click)="removePointOfOrder()">
+                <button
+                    color="warn"
+                    mat-stroked-button
+                    [attr.aria-label]="'Withdraw point of order' | translate"
+                    (click)="removePointOfOrder()"
+                >
                     <mat-icon>remove</mat-icon>
                     <span translate>Withdraw point of order</span>
                 </button>
@@ -177,7 +188,12 @@
             @if (addSelf) {
                 <!-- Interposed question -->
                 @if (showInterposedQuestions | async) {
-                    <button mat-stroked-button [disabled]="closed || !activeSpeaker" (click)="addInterposedQuestion()">
+                    <button
+                        mat-stroked-button
+                        [attr.aria-label]="'Interposed question' | translate"
+                        [disabled]="closed || !activeSpeaker"
+                        (click)="addInterposedQuestion()"
+                    >
                         <mat-icon>contact_support</mat-icon>
                         &nbsp;
                         <span>
@@ -191,6 +207,7 @@
                 <button
                     *osPerms="permission.listOfSpeakersCanManage"
                     mat-stroked-button
+                    [attr.aria-label]="'Intervention' | translate"
                     [disabled]="closed"
                     (click)="addIntervention()"
                 >

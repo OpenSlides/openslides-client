@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { _ } from '@ngx-translate/core';
 import { pairwise, startWith, Subscription } from 'rxjs';
@@ -48,13 +48,6 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public currentlyAvailableFilters = [];
 
-    public currentFilters = this.formBuilder.group({
-        ...Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, false])),
-        meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
-    });
-
-    public inMeeting = !!this.activeMeeting.meetingId;
-
     public get resultCount(): number {
         return this.results.length;
     }
@@ -76,14 +69,23 @@ export class GlobalSearchComponent implements OnDestroy {
     private filterChangeSubscription: Subscription;
     private viewportSubscription: Subscription;
 
-    public constructor(
-        private activeMeeting: ActiveMeetingService,
-        public operator: OperatorService,
-        private globalSearchService: GlobalSearchService,
-        private formBuilder: FormBuilder,
-        private viewport: ViewPortService,
-        private cd: ChangeDetectorRef
-    ) {
+    public operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private cd = inject(ChangeDetectorRef);
+    private formBuilder = inject(FormBuilder);
+    private globalSearchService = inject(GlobalSearchService);
+    private viewport = inject(ViewPortService);
+
+    public get inMeeting(): boolean {
+        return !!this.activeMeeting.meetingId;
+    }
+
+    public currentFilters = this.formBuilder.group({
+        ...Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, false])),
+        meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
+    });
+
+    public constructor() {
         this.updateCurrentlyAvailableFilters();
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())

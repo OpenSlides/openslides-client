@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription } from 'rxjs';
@@ -44,18 +44,18 @@ export class ActiveMeetingService {
     private _meetingSubject = new BehaviorSubject<ViewMeeting | null>(null);
     private _meetingSubcription: Subscription | null = null;
 
-    public constructor(
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private repo: MeetingControllerService,
-        private lifecycle: LifecycleService,
-        private bannerService: BannerService,
-        private archiveService: ArchiveStatusService,
-        private authService: AuthService,
-        private modelRequestService: ModelRequestService,
-        private router: Router,
-        private translate: TranslateService,
-        private meetingSettingsDefinitionService: MeetingSettingsDefinitionService
-    ) {
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private archiveService = inject(ArchiveStatusService);
+    private authService = inject(AuthService);
+    private bannerService = inject(BannerService);
+    private lifecycle = inject(LifecycleService);
+    private meetingSettingsDefinitionService = inject(MeetingSettingsDefinitionService);
+    private modelRequestService = inject(ModelRequestService);
+    private repo = inject(MeetingControllerService);
+    private router = inject(Router);
+    private translate = inject(TranslateService);
+
+    public constructor() {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
                 this.setupModelSubscription();

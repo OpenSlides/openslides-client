@@ -21,8 +21,6 @@ export class QrCodeComponent implements AfterViewInit {
 
     private _textSubject = new BehaviorSubject<string>(``);
 
-    public constructor() {}
-
     public ngAfterViewInit(): void {
         this._textSubject.pipe(distinctUntilChanged()).subscribe(text => this.createCanvas(text));
     }

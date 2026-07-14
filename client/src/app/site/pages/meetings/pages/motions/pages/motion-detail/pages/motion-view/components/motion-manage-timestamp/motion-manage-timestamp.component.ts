@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { fromUnixTime, getHours, getMinutes, isDate } from 'date-fns';
+import { fromUnixTime, isDate } from 'date-fns';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -73,13 +73,11 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
 
         this.subscriptions.push(
             this.form.get(`date`).valueChanges.subscribe(currDate => {
-                if (isDate(currDate) !== !!this.form.get(`time`).value) {
-                    this.form.get(`time`).setValue(isDate(currDate) ? `00:00` : ``);
-                }
+                this.form.get(`time`).setValue(currDate ?? null);
             }),
             this.form.get(`time`).valueChanges.subscribe(currTime => {
                 if (!!currTime !== isDate(this.form.get(`date`).value)) {
-                    this.form.get(`date`).setValue(currTime ? new Date() : null);
+                    this.form.get(`date`).setValue(currTime);
                 }
             })
         );
@@ -95,10 +93,9 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
     }
 
     public async onSave(): Promise<void> {
-        const date: { date: Date | null; time: string } = this.form.value;
-        const [hours, minutes, ..._] = date.time.split(`:`);
+        const date: { date: Date | null; time: Date } = this.form.value;
         if (date.date) {
-            date.date.setHours(+hours, +minutes);
+            date.date.setHours(+date.time.getHours(), +date.time.getMinutes());
         }
         await this.motionController
             .update({ [this.field]: date.date ? Math.floor(date.date.getTime() / 1000) : null }, this.motion)
@@ -119,19 +116,16 @@ export class MotionManageTimestampComponent extends BaseUiComponent implements O
     public onEdit(): void {
         const timestamp = this.motion[this.field];
         const date = timestamp
-            ? this.getTimes(timestamp)
+            ? {
+                  date: fromUnixTime(timestamp),
+                  time: fromUnixTime(timestamp)
+              }
             : {
                   date: ``,
                   time: ``
               };
         this.form.patchValue(date);
         this.isEditMode = true;
-    }
-
-    public getTimes(timestamp: number): { date: Date; time: string } {
-        const date = fromUnixTime(timestamp);
-        const time = getHours(date) + `:` + getMinutes(date);
-        return { date, time };
     }
 
     public clearForm(): void {

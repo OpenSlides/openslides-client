@@ -2,6 +2,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
     Component,
+    inject,
     OnDestroy,
     TemplateRef,
     ViewChild,
@@ -28,13 +29,8 @@ import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global
 export class HeadToolbarComponent implements AfterViewInit, OnDestroy {
     @ViewChild(`toolbarContent`) public toolbarContent: TemplateRef<unknown>;
 
-    /**
-     * Empty constructor
-     */
-    public constructor(
-        private headbarService: GlobalHeadbarService,
-        private _viewContainerRef: ViewContainerRef
-    ) {}
+    private headbarService = inject(GlobalHeadbarService);
+    private _viewContainerRef = inject(ViewContainerRef);
 
     public ngAfterViewInit(): void {
         this.headbarService.additionalHeadbar = new TemplatePortal(this.toolbarContent, this._viewContainerRef);

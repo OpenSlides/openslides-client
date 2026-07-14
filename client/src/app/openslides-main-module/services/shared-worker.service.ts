@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import {
     defer,
     filter,
@@ -51,7 +51,9 @@ export class SharedWorkerService {
     private messageEventSubscription: Subscription;
     private windowMode = false;
 
-    public constructor(private zone: NgZone) {
+    private zone = inject(NgZone);
+
+    public constructor() {
         this.connectWorker(true);
     }
 

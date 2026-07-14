@@ -6,14 +6,14 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 import { AuthTokenService } from '../../site/services/auth-token.service';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
-    public constructor(private authTokenService: AuthTokenService) {}
+    private authTokenService = inject(AuthTokenService);
 
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (this.authTokenService.rawAccessToken) {

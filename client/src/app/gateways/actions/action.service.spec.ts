@@ -14,8 +14,6 @@ class MockHttpService {
 
     public returnType: `response` | `error` | `nothing` | `too little` | `non-response` | `no results` = `response`;
 
-    public constructor() {}
-
     public async post<R>(path: string, data: any, queryParams: QueryParams): Promise<R> {
         this.lastPosts.push({ path, data, queryParams });
         if (

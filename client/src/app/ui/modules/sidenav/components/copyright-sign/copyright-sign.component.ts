@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { EasterEggContentPlatformService } from '../../modules/easter-egg/services/easter-egg-content-platform.service';
 
@@ -12,7 +12,7 @@ export class CopyrightSignComponent {
     private clickTimeout: number | null = null;
     private clickCounter = 0;
 
-    public constructor(private dialog: EasterEggContentPlatformService) {}
+    private dialog = inject(EasterEggContentPlatformService);
 
     public launchC4(event: Event): void {
         event.stopPropagation();

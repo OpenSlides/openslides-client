@@ -187,7 +187,12 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
         this.agendaReceiveExpanded = !this.agendaReceiveExpanded;
     }
 
-    public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
+    public sortCommitteesByName(ids: number[]): ViewCommittee[] {
+        const committees: ViewCommittee[] = [];
+        for (const id of ids) {
+            committees.push(this.committeeRepo.getViewModelUnsafe(id));
+        }
+
         return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
 

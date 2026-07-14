@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
@@ -76,13 +76,11 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     private _canEditMeetingSetting = true;
     private _canEditMeetingSubscription: Subscription;
 
-    public constructor(
-        private translate: TranslateService,
-        private meetingRepo: MeetingControllerService,
-        private meetingService: MeetingService,
-        private promptService: PromptService,
-        public operator: OperatorService
-    ) {}
+    public operator = inject(OperatorService);
+    private meetingRepo = inject(MeetingControllerService);
+    private meetingService = inject(MeetingService);
+    private promptService = inject(PromptService);
+    private translate = inject(TranslateService);
 
     /**
      * Get the subject

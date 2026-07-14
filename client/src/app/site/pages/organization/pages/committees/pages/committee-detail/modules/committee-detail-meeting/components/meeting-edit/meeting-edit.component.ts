@@ -170,7 +170,18 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => this.time_zones.next(values));
+        this.timeZone.getTZForSearchSelector().then(values => {
+            this.time_zones.next(values);
+            this.patchTimezoneInForm();
+        });
+    }
+
+    private patchTimezoneInForm(): void {
+        if (!this.meetingForm?.get('time_zone').value) {
+            this.meetingForm
+                .get('time_zone')
+                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+        }
     }
 
     public getAdditionallySearchedValuesFn(item: Selectable): string[] {

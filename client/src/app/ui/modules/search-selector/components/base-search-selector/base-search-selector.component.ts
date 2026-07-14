@@ -1,9 +1,11 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
+    ChangeDetectorRef,
     ContentChild,
     Directive,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     Output,
@@ -83,7 +85,6 @@ export abstract class BaseSearchSelectorComponent
     /**
      * Label showing, if there are no options for a specific search.
      */
-    @Input()
     public noOptionsFoundLabel = _(`No options found`);
 
     /**
@@ -267,6 +268,8 @@ export abstract class BaseSearchSelectorComponent
         return this.searchValueForm.value.trim().toLowerCase();
     }
 
+    private cd = inject(ChangeDetectorRef);
+
     public ngOnInit(): void {
         this.subscriptions.push(
             this.searchValueForm.valueChanges.pipe(debounceTime(100), distinctUntilChanged()).subscribe(value => {
@@ -299,6 +302,7 @@ export abstract class BaseSearchSelectorComponent
             this.selectedIds.push(id);
         }
         this.setNextValue(this.selectedIds);
+        this.cd.markForCheck();
     }
 
     public onOpenChanged(event: boolean): void {
