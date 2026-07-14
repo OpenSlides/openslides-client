@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { PdfError } from '@app/gateways/export/pdf-document.service';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
-import { PdfError } from 'src/app/gateways/export/pdf-document.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewAssignment } from '../view-models';
 import { AssignmentPdfService } from './assignment-pdf.service';

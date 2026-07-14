@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { AccountExportService } from '../../../../services/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';

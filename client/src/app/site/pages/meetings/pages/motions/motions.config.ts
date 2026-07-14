@@ -1,18 +1,18 @@
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
-import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
-import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
-import { MotionEditor } from 'src/app/domain/models/motions/motion-editor';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
-import { MotionSupporter } from 'src/app/domain/models/motions/motion-supporter';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { MotionWorkingGroupSpeaker } from 'src/app/domain/models/motions/motion-working-group-speaker';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { Tag } from 'src/app/domain/models/tag/tag';
+import { Permission } from '@app/domain/definitions/permission';
+import { Motion } from '@app/domain/models/motions/motion';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { MotionCategory } from '@app/domain/models/motions/motion-category';
+import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
+import { MotionComment } from '@app/domain/models/motions/motion-comment';
+import { MotionCommentSection } from '@app/domain/models/motions/motion-comment-section';
+import { MotionEditor } from '@app/domain/models/motions/motion-editor';
+import { MotionState } from '@app/domain/models/motions/motion-state';
+import { MotionSubmitter } from '@app/domain/models/motions/motion-submitter';
+import { MotionSupporter } from '@app/domain/models/motions/motion-supporter';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
+import { MotionWorkingGroupSpeaker } from '@app/domain/models/motions/motion-working-group-speaker';
+import { PersonalNote } from '@app/domain/models/motions/personal-note';
+import { Tag } from '@app/domain/models/tag/tag';
 import {
     MotionBlockRepositoryService,
     MotionCategoryRepositoryService,
@@ -25,11 +25,11 @@ import {
     MotionSubmitterRepositoryService,
     MotionWorkflowRepositoryService,
     MotionWorkingGroupSpeakerRepositoryService
-} from 'src/app/gateways/repositories/motions';
-import { MotionSupporterRepositoryService } from 'src/app/gateways/repositories/motions/motion-supporter';
-import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
-import { TagRepositoryService } from 'src/app/gateways/repositories/tags';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+} from '@app/gateways/repositories/motions';
+import { MotionSupporterRepositoryService } from '@app/gateways/repositories/motions/motion-supporter';
+import { PersonalNoteRepositoryService } from '@app/gateways/repositories/motions/personal-note-repository.service';
+import { TagRepositoryService } from '@app/gateways/repositories/tags';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import {
     ViewMotionBlock,

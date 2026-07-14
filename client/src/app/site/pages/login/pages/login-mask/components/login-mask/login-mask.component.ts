@@ -1,22 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Meeting } from '@app/domain/models/meetings/meeting';
+import { fadeInAnim } from '@app/infrastructure/animations';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ORGANIZATION_ID, OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
+import { AuthService } from '@app/site/services/auth.service';
+import { AutoupdateService } from '@app/site/services/autoupdate';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { fadeInAnim } from 'src/app/infrastructure/animations';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ORGANIZATION_ID, OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { BrowserSupportService } from '../../../../services/browser-support.service';
 
@@ -35,6 +35,7 @@ interface LoginValues {
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
     animations: [fadeInAnim],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {

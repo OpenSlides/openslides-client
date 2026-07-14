@@ -1,8 +1,8 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
-import { SubscriptionConfig, SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS, mergeSubscriptionFollow } from '@app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from '@app/domain/fieldsets/user';
+import { SubscriptionConfig, SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewProjection } from '../projectors';

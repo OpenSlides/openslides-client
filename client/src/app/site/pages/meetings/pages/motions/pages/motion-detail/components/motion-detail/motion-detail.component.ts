@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Motion } from '@app/domain/models/motions/motion';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import {
     getMotionAdditionalDetailSubscriptionConfig,
@@ -16,6 +16,7 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     selector: `os-motion-detail`,
     templateUrl: `./motion-detail.component.html`,
     styleUrls: [`./motion-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionDetailComponent extends BaseModelRequestHandlerComponent {

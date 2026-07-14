@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
+import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
-import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
-import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionControllerService } from '../../common/motion-controller.service';

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Content, ContentColumns } from 'pdfmake/interfaces';
-import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import {
     ChildNodeParagraphPayload,
     CreateSpecificParagraphPayload,
     HtmlToPdfService
-} from 'src/app/gateways/export/html-to-pdf.service';
+} from '@app/gateways/export/html-to-pdf.service';
+import { Content, ContentColumns } from 'pdfmake/interfaces';
 
 /**
  * Shape of line number objects

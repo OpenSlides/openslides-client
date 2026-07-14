@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';

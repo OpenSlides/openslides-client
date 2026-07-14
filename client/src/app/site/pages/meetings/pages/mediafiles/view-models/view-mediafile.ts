@@ -1,10 +1,10 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { Id } from '@app/domain/definitions/key-types';
+import { HasProperties } from '@app/domain/interfaces/has-properties';
+import { ViewMediafileMeetingUsageKey } from '@app/domain/models/mediafiles/mediafile.constants';
+import { Meeting } from '@app/domain/models/meetings/meeting';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { collectionIdFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';

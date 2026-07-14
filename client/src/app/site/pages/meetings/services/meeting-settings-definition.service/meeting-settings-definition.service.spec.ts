@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { meetingSettingsDefaults } from 'src/app/domain/definitions/meeting-settings-defaults';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { Group } from 'src/app/domain/models/users/group';
+import { meetingSettingsDefaults } from '@app/domain/definitions/meeting-settings-defaults';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { Group } from '@app/domain/models/users/group';
 
 import { MeetingSettingsDefinitionService, SettingsMap } from './meeting-settings-definition.service';
 import {

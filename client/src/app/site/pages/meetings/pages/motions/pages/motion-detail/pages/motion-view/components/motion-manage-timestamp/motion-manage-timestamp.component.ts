@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Permission } from '@app/domain/definitions/permission';
+import { KeyOfType } from '@app/infrastructure/utils/keyof-type';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { fromUnixTime, isDate } from 'date-fns';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { KeyOfType } from 'src/app/infrastructure/utils/keyof-type';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../../../../view-models';

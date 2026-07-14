@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { isProjectable, Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { isProjectable, Projectable, ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 
 @Injectable()
 export class ProjectableListService {

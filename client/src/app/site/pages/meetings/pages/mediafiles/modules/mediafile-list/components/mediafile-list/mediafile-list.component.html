@@ -206,7 +206,7 @@
             mat-button
             type="submit"
             [disabled]="!fileEditForm?.valid"
-            [mat-dialog-close]="fileEditForm?.value"
+            [mat-dialog-close]="$safeNavigationMigration(fileEditForm?.value)"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>

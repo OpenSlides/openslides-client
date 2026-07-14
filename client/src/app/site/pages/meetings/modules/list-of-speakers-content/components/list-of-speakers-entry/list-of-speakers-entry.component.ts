@@ -9,20 +9,20 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { SpeakerState } from '@app/domain/models/speakers/speaker-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from '@app/domain/models/speakers/speech-state';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
+import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
+import { SpeakerControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
+import { DurationService } from '@app/site/services/duration.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, startWith } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';

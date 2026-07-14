@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
+import { BaseFilterListService, OsFilter, OsFilterOption } from '@app/site/base/base-filter.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 
 import { AssignmentPhases } from '../../../definitions';
 import { ViewAssignment } from '../../../view-models';

@@ -1,14 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 @Component({
     selector: `os-privacy-policy-content`,
     templateUrl: `./privacy-policy-content.component.html`,
     styleUrls: [`./privacy-policy-content.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PrivacyPolicyContentComponent extends BaseUiComponent implements OnInit {

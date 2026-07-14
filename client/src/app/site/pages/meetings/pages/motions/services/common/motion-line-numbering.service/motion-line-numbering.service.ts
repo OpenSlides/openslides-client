@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { infoDialogSettings, mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { infoDialogSettings, mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 
 import {
     MotionContentChangeRecommendationDialogComponent,

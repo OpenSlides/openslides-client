@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ChatGroupControllerService } from './chat-group-controller.service';
 

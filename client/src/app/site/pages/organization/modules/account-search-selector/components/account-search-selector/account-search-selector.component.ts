@@ -1,18 +1,18 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { User } from '@app/domain/models/users/user';
+import { SearchUsersPresenterService } from '@app/gateways/presenter';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserScope } from '@app/site/services/user.service';
+import { BaseSearchSelectorComponent } from '@app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
 import { distinctUntilChanged } from 'rxjs';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { User } from 'src/app/domain/models/users/user';
-import { SearchUsersPresenterService } from 'src/app/gateways/presenter';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserScope } from 'src/app/site/services/user.service';
-import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
 
 import { AccountSortService } from '../../../../pages/accounts/pages/account-list/services/account-list-sort.service/account-sort.service';
 
@@ -24,6 +24,7 @@ import { AccountSortService } from '../../../../pages/accounts/pages/account-lis
         `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.scss`
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {

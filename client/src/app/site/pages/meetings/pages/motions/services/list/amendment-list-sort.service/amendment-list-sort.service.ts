@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { OsSortingOption } from '@app/site/base/base-sort.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 
 import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 

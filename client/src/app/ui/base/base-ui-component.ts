@@ -1,8 +1,8 @@
 import { Directive, OnDestroy } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { SubscriptionMap } from '@app/infrastructure/utils/subscription-map';
 import { Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 
 @Directive()
 export class BaseUiComponent implements OnDestroy {

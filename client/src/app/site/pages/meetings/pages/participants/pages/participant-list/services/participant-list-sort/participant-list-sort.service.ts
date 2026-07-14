@@ -1,12 +1,12 @@
 import { Injectable, ProviderToken } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from '@app/site/base/base-sort.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Injectable({
     providedIn: `root`

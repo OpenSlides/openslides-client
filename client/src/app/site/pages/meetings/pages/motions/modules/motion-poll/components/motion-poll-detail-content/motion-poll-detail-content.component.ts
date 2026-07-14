@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { VOTE_UNDOCUMENTED } from '@app/domain/models/poll';
+import { PollData } from '@app/domain/models/poll/generic-poll';
+import { PollState, PollTableData } from '@app/domain/models/poll/poll-constants';
+import { ChartData } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { combineLatestWith, map } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
-import { PollData } from 'src/app/domain/models/poll/generic-poll';
-import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
-import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionPollService } from '../../services';
 

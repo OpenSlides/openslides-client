@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
+import { djb2hash } from '@app/infrastructure/utils';
+import { replaceHtmlEntities } from '@app/infrastructure/utils/dom-helpers';
 import { TranslateService } from '@ngx-translate/core';
 import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
-import { djb2hash } from 'src/app/infrastructure/utils';
-import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';

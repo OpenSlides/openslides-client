@@ -34,6 +34,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
         }
         if (Array.isArray(value)) {
             this.selectableItems = value;
+            this.isListEmpty.set(!value || (!!value && !value.length));
         } else {
             this._inputListValuesSubscription = value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
                 this.selectableItems = items;

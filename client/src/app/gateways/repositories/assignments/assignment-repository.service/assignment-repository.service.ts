@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { AgendaItemRepositoryService } from '@app/gateways/repositories/agenda';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';

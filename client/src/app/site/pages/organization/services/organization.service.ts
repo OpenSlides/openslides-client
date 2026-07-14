@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
 import { ModelSubscription } from '../../../services/autoupdate';

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ProjectorMessage } from 'src/app/domain/models/projector/projector-message';
-import { ProjectorMessageRepositoryService } from 'src/app/gateways/repositories/projector-messages/projector-message-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { Identifiable } from '@app/domain/interfaces';
+import { ProjectorMessage } from '@app/domain/models/projector/projector-message';
+import { ProjectorMessageRepositoryService } from '@app/gateways/repositories/projector-messages/projector-message-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewProjectorMessage } from '@app/site/pages/meetings/pages/projectors';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectorMessageControllerService extends BaseMeetingControllerService<

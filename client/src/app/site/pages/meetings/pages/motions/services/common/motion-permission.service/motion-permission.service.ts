@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { Permission } from '@app/domain/definitions/permission';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 import { ViewMotion } from '../../../view-models';
 

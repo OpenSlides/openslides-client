@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { ApplauseType } from '@app/domain/models/meetings/applause';
+import { BaseICCGatewayService } from '@app/gateways/base-icc-gateway.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ApplauseType } from 'src/app/domain/models/meetings/applause';
-import { BaseICCGatewayService } from 'src/app/gateways/base-icc-gateway.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 export interface Applause {
     level: number;

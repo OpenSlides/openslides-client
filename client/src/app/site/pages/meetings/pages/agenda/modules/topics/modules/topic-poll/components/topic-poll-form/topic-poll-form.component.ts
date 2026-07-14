@@ -1,8 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
 
 @Component({
     selector: `os-topic-poll-form`,
@@ -10,6 +10,7 @@ import {
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: TopicPollFormComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollFormComponent extends BasePollFormComponent {

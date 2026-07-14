@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { TopicExportService } from '../topic-export.service';
 

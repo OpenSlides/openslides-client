@@ -11,11 +11,11 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
 import { _ } from '@ngx-translate/core';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 
 enum MimeType {
     mp4 = `video/mp4`,

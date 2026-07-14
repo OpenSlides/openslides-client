@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode } from 'src/app/infrastructure/definitions/tree';
-import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.service';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode } from '@app/infrastructure/definitions/tree';
+import { BaseSortService, OsSortProperty } from '@app/site/base/base-sort.service';
 
 /**
  * Sorting service for trees.

@@ -1,6 +1,5 @@
+import { HttpMethod } from '@app/infrastructure/definitions/http';
 import fetchMock from 'fetch-mock';
-import { NormalizedRequestOptions } from 'node_modules/fetch-mock/dist/esm/RequestUtils';
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionSSE } from './http-subscription-sse';
@@ -19,7 +18,7 @@ function getHttpSubscriptionSSEInstance(url = `/`, onData: any = () => {}, onErr
     return new HttpSubscriptionSSE(endpointConfig, handlerConfig);
 }
 
-function getValidStream(req: NormalizedRequestOptions, interval: number, resolveAfter = -1) {
+function getValidStream(req: any, interval: number, resolveAfter = -1) {
     let cnt = 0;
     let abort = false;
     const textEncoder = new TextEncoder();

@@ -1,5 +1,17 @@
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
+import { ActionWorker, ActionWorkerState } from '@app/domain/models/action-worker/action-worker';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { copy } from '@app/infrastructure/utils/transform-functions';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import {
+    WaitForActionData,
+    WaitForActionReason,
+    waitForActionReason
+} from '@app/site/modules/wait-for-action-dialog/definitions';
+import { WaitForActionDialogService } from '@app/site/modules/wait-for-action-dialog/services';
+import { ModelRequestService } from '@app/site/services/model-request.service';
 import {
     BehaviorSubject,
     filter,
@@ -11,18 +23,6 @@ import {
     startWith,
     takeUntil
 } from 'rxjs';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
-import { ActionWorker, ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { copy } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import {
-    WaitForActionData,
-    WaitForActionReason,
-    waitForActionReason
-} from 'src/app/site/modules/wait-for-action-dialog/definitions';
-import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
 import { ViewActionWorker } from '../repositories/action-worker/view-action-worker';

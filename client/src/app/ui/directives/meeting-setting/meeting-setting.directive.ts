@@ -1,7 +1,7 @@
 import { Directive, EmbeddedViewRef, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 const SUBSCRIPTION_NAME = `settingsSubscription`;
 

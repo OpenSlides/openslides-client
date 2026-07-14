@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
-import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
-import { Poll } from 'src/app/domain/models/poll/poll';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from '@app/domain/models/poll';
+import { OptionData, PollData } from '@app/domain/models/poll/generic-poll';
+import { Poll } from '@app/domain/models/poll/poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -13,10 +11,12 @@ import {
     PollPercentBase,
     PollType,
     YES_KEY
-} from 'src/app/domain/models/poll/poll-constants';
-import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/domain/models/poll/poll-constants';
+import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
