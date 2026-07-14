@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Constructable } from '@app/domain/interfaces/constructable';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -13,9 +13,7 @@ export class BannerDefinition {
     public component?: Constructable;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class BannerService {
     private get currentBanners(): BannerDefinition[] {
         return this._activeBanners.value;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 
 const SmallestSupportedBrowserVersion: any = {
@@ -17,9 +17,7 @@ export interface BrowserRecommendation {
     url: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class BrowserSupportService {
     public readonly recommendedBrowsers: BrowserRecommendation[] = [
         {
@@ -32,7 +30,7 @@ export class BrowserSupportService {
         }
     ];
 
-    public constructor(private deviceService: DeviceDetectorService) {}
+    private deviceService = inject(DeviceDetectorService);
 
     public getDeviceInfo(): DeviceInfo {
         return this.deviceService.getDeviceInfo();
