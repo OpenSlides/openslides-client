@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Content, ContentText, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { FontPlace } from '@app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
     PdfFontDescription,
     PdfVirtualFileSystem,
     TocLineDefinition,
     TocTableDefinition
-} from 'src/app/gateways/export/pdf-document.service';
-import { HttpService } from 'src/app/gateways/http.service';
-import { mmToPoints } from 'src/app/infrastructure/utils';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/gateways/export/pdf-document.service';
+import { HttpService } from '@app/gateways/http.service';
+import { mmToPoints } from '@app/infrastructure/utils';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { Content, ContentText, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 interface MeetingDownloadLandscapeConfig {
     docDefinition: Content;

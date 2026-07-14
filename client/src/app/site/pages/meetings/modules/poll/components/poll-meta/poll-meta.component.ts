@@ -1,9 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
-import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { TranslateKeyPipe } from 'src/app/ui/pipes/translate-key/translate-key.pipe';
 
 import {
     ViewPoll,

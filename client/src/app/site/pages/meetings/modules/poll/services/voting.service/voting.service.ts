@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 import { _ } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';

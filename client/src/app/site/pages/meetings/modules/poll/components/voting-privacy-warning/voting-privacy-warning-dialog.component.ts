@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -7,6 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: `os-voting-privacy-warning-dialog`,
     templateUrl: `./voting-privacy-warning-dialog.component.html`,
     styleUrls: [`./voting-privacy-warning-dialog.component.scss`],
-    imports: [MatButtonModule, MatDialogModule, TranslatePipe]
+    imports: [MatButtonModule, MatDialogModule, TranslatePipe],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class VotingPrivacyWarningDialogComponent {}

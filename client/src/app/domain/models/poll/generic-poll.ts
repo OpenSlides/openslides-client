@@ -1,7 +1,7 @@
-import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 
 import { PollConfigApproval } from './poll-config-approval';
 import { PollConfigRatingApproval } from './poll-config-rating-approval';

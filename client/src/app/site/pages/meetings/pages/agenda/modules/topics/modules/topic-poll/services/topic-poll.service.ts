@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
-import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
+import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
+import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
+import { Topic } from '@app/domain/models/topics/topic';
+import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 
 import { ViewTopic } from '../../../view-models';
 

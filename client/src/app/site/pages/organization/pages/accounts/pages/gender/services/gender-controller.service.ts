@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Gender } from 'src/app/domain/models/gender/gender';
-import { GenderRepositoryService } from 'src/app/gateways/repositories/gender/gender-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { Gender } from '@app/domain/models/gender/gender';
+import { GenderRepositoryService } from '@app/gateways/repositories/gender/gender-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
+import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
 import { ViewGender } from '../view-models/view-gender';
 

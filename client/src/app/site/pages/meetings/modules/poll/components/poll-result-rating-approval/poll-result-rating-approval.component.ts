@@ -1,8 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
-import { RatingApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-rating-approval';
 
 import { RatingApprovalPollResult, ViewPollConfigRatingApproval, ViewPollOption } from '../../../../pages/polls';
 import { PollParseNumberPipe } from '../../pipes';

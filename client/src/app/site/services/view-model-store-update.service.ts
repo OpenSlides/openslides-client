@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Collection, Id, Ids } from 'src/app/domain/definitions/key-types';
-import { BaseModel, BaseModelTemplate } from 'src/app/domain/models/base/base-model';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
-import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-update-manager.service';
+import { Collection, Id, Ids } from '@app/domain/definitions/key-types';
+import { BaseModel, BaseModelTemplate } from '@app/domain/models/base/base-model';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { DataStoreService } from '@app/site/services/data-store.service';
+import { DataStoreUpdateManagerService } from '@app/site/services/data-store-update-manager.service';
 
 type DeletedModels = Record<string, number[]>;
 export type ChangedModels = Record<string, BaseModel[]>;

@@ -1,5 +1,5 @@
+import { Id } from '@app/domain/definitions/key-types';
 import { Observable, switchMap } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 import { PollBallot } from '../../../../../../domain/models/poll/poll-ballot';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';

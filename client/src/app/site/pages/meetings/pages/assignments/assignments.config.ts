@@ -1,9 +1,9 @@
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { AssignmentCandidate } from 'src/app/domain/models/assignments/assignment-candidate';
-import { AssignmentCandidateRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-candidate-repository.service';
-import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { Permission } from '@app/domain/definitions/permission';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { AssignmentCandidate } from '@app/domain/models/assignments/assignment-candidate';
+import { AssignmentCandidateRepositoryService } from '@app/gateways/repositories/assignments/assignment-candidate-repository.service';
+import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ViewAssignment, ViewAssignmentCandidate } from './view-models';
 

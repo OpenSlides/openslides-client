@@ -1,9 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ThemeService } from '@app/site/services/theme.service';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import Big from 'big.js';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { SelectionPollResult, ViewPollConfigSelection, ViewPollOption } from '../../../../pages/polls';

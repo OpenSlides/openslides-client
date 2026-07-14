@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
+import { BaseComponent } from '@app/site/base/base.component';
 
 import { ViewPoll } from '../../../../pages/polls';
 

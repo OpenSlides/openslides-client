@@ -1,21 +1,21 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { djb2hash } from 'src/app/infrastructure/utils';
+import { djb2hash } from '@app/infrastructure/utils';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
     PollOptionsPayload
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollEditResultComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
-import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
-import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
-import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollFormSelectionComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 const TAB_METHOD_MAP = [`selection`, `approval`];
 
@@ -32,7 +32,8 @@ const TAB_METHOD_MAP = [`selection`, `approval`];
         MatDialogModule,
         MatButtonModule,
         TranslatePipe
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent {
     public majority: string;

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { PollBallot } from '@app/domain/models/poll/poll-ballot';
+import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
 import { BehaviorSubject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { PollBallot } from 'src/app/domain/models/poll/poll-ballot';
-import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

@@ -1,6 +1,6 @@
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
-import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, SelectionPollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Motion } from '@app/domain/models/motions/motion';
+import { Poll } from '@app/domain/models/poll/poll';
+import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
+import { PollVisibility } from '@app/domain/models/poll/poll-constants';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
-import { PollVisibility } from 'src/app/domain/models/poll/poll-constants';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 

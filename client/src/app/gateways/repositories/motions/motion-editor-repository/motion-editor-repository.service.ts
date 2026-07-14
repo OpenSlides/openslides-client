@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MotionEditor } from 'src/app/domain/models/motions/motion-editor';
+import { MotionEditor } from '@app/domain/models/motions/motion-editor';
 
 import { ViewMotionEditor } from '../../../../site/pages/meetings/pages/motions/modules/editors/view-models/view-motion-editor';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

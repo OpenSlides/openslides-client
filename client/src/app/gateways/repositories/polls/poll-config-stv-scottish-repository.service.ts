@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
-import { ViewPollConfigStvScottish } from 'src/app/site/pages/meetings/pages/polls/view-models/poll-config-stv-scottish';
+import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
+import { ViewPollConfigStvScottish } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-stv-scottish';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

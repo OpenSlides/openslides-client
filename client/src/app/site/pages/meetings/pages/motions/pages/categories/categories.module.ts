@@ -11,12 +11,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SortingModule } from 'src/app/ui/modules/sorting';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
+import { ChoiceDialogComponent } from '@app/ui/modules/choice-dialog';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SortingModule } from '@app/ui/modules/sorting';
 
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';

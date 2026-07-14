@@ -1,6 +1,6 @@
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { BaseViewModel, ViewModelConstructor } from 'src/app/site/base/base-view-model';
+import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { BaseViewModel, ViewModelConstructor } from '@app/site/base/base-view-model';
 /**
  * Unifies the ModelConstructor and ViewModelConstructor.
  */

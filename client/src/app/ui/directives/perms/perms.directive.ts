@@ -1,7 +1,7 @@
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { DelegationSetting } from '@app/domain/definitions/delegation-setting';
+import { Permission } from '@app/domain/definitions/permission';
 import { Subscription } from 'rxjs';
-import { DelegationSetting } from 'src/app/domain/definitions/delegation-setting';
-import { Permission } from 'src/app/domain/definitions/permission';
 
 import { BasePermsDirective } from './base-perms.directive';
 

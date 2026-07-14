@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollResultApprovalComponent } from '../poll-result-approval/poll-result-approval.component';

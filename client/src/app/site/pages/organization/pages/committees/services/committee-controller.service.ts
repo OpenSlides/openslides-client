@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Action } from 'src/app/gateways/actions';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+import { Action } from '@app/gateways/actions';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Ids } from '../../../../../../domain/definitions/key-types';
 import { Identifiable } from '../../../../../../domain/interfaces';

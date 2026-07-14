@@ -5,12 +5,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { AnyPollConfig, Poll } from '@app/domain/models/poll';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
+import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AnyPollConfig, Poll } from 'src/app/domain/models/poll';
-import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
-import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
-import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
-import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
 
 type PollConfigUnion = PollConfigApproval & PollConfigRatingApproval & PollConfigRatingScore & PollConfigSelection;
 

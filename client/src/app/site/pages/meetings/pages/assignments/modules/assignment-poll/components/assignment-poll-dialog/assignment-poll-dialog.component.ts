@@ -1,23 +1,23 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TranslatePipe } from '@ngx-translate/core';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
     PollOptionsPayload
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
-import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
-import { PollFormRatingApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
-import { PollFormRatingScoreComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-rating-score/poll-form-rating-score.component';
-import { PollFormSelectionComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollFormRatingApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormRatingScoreComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-score/poll-form-rating-score.component';
+import { PollFormSelectionComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const TAB_METHOD_MAP = [`selection`, `rating_approval`, `rating_score`, `approval`];
 
@@ -35,7 +35,8 @@ const TAB_METHOD_MAP = [`selection`, `rating_approval`, `rating_score`, `approva
         MatButtonModule,
         MatTabsModule,
         TranslatePipe
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private approvalForm = viewChild(PollFormApprovalComponent);

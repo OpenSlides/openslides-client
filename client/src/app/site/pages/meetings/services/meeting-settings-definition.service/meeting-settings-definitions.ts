@@ -1,10 +1,10 @@
 import { ValidatorFn, Validators } from '@angular/forms';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
+import { ObjectReplaceKeysConfig } from '@app/infrastructure/utils';
+import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
 import { _ } from '@ngx-translate/core';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { ViewMeeting } from '../../view-models/view-meeting';

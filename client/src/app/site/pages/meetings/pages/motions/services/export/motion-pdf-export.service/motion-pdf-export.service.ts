@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { ProgressSnackBarService } from '@app/gateways/export/progress-snack-bar/services/progress-snack-bar.service';
+import { ProgressSnackBarControlService } from '@app/gateways/export/progress-snack-bar/services/progress-snack-bar-control.service';
+import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
-import { ProgressSnackBarService } from 'src/app/gateways/export/progress-snack-bar/services/progress-snack-bar.service';
-import { ProgressSnackBarControlService } from 'src/app/gateways/export/progress-snack-bar/services/progress-snack-bar-control.service';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
 import { ViewMotion } from '../../../view-models';
 import { AmendmentListPdfService } from '../amendment-list-pdf.service';

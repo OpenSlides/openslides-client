@@ -1,5 +1,5 @@
-import { HasMeetingId } from 'src/app/domain/interfaces';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { HasMeetingId } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
 
 export interface PollDialogData {
     title: string;

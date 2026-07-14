@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { PollBallotControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-ballot-controller.service';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ActivePollsService } from '@app/site/pages/meetings/services/active-polls.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { PollBallotControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-ballot-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ActivePollsService } from 'src/app/site/pages/meetings/services/active-polls.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BannerDefinition, BannerService } from './banner.service';
 

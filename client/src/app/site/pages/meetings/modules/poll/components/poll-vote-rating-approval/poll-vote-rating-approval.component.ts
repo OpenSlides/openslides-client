@@ -2,9 +2,9 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { YES_KEY } from '@app/domain/models/poll';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { YES_KEY } from 'src/app/domain/models/poll';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewPollConfigRatingApproval } from '../../../../pages/polls';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';

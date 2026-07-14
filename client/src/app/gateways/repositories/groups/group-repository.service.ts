@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Group } from 'src/app/domain/models/users/group';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Identifiable } from '@app/domain/interfaces';
+import { Group } from '@app/domain/models/users/group';
+import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';

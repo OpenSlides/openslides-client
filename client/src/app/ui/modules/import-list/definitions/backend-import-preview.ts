@@ -1,4 +1,4 @@
-import { Identifiable } from 'src/app/domain/interfaces';
+import { Identifiable } from '@app/domain/interfaces';
 
 export enum BackendImportState {
     Error = `error`,

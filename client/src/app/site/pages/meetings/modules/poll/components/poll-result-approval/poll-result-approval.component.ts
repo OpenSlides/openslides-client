@@ -1,10 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
+import { ThemeService } from '@app/site/services/theme.service';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
-import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-approval';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
 
 import { ApprovalPollResult, ViewPollConfigApproval } from '../../../../pages/polls';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';

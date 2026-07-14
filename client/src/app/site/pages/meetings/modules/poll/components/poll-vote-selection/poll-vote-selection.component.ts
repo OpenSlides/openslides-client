@@ -2,8 +2,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewPollBallot, ViewPollConfigSelection } from '../../../../pages/polls';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { HasMeetingId, Identifiable } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { PollBallotRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-repository.service';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { PollCreatePayload, PollUpdatePayload } from '@app/gateways/vote-api.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { HasMeetingId, Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { PollCreatePayload, PollUpdatePayload } from 'src/app/gateways/vote-api.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
 

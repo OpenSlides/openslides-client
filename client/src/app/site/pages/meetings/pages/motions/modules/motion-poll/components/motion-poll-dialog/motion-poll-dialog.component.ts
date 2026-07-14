@@ -1,17 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
     PollOptionsPayload
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollEditResultComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
-import { PollFormComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
-import { PollFormApprovalComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll-dialog`,
@@ -24,8 +24,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
         MatButtonModule,
         TranslatePipe
     ],
-    styleUrls: [`./motion-poll-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`./motion-poll-dialog.component.scss`]
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent {
     private approvalForm = viewChild.required(PollFormApprovalComponent);

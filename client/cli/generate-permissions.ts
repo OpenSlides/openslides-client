@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
-import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import dedent from 'ts-dedent';
+
+import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-functions';
 
 overloadJsFunctions();
 

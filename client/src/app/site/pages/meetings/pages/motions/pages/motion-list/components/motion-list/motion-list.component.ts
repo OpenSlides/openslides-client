@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { OsFilterOptionCondition } from '@app/site/base/base-filter.service';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewMotionCategory, ViewMotionState } from '@app/site/pages/meetings/pages/motions';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { GridBlockTileType } from '@app/ui/modules/grid';
 import { firstValueFrom, map } from 'rxjs';
-import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { GridBlockTileType } from 'src/app/ui/modules/grid';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
@@ -41,6 +41,7 @@ interface TileCategoryInformation {
     selector: `os-motion-list`,
     templateUrl: `./motion-list.component.html`,
     styleUrls: [`./motion-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { OrganizationRepositoryService } from '@app/gateways/repositories/organization-repository.service';
 import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
-import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 
 import { OrganizationSetting } from '../../../../domain/models/organizations/organization';
 import { ViewOrganization } from '../view-models/view-organization';

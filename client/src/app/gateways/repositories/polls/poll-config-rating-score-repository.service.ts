@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
-import { ViewPollConfigRatingScore } from 'src/app/site/pages/meetings/pages/polls/view-models/poll-config-rating-score';
+import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
+import { ViewPollConfigRatingScore } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-rating-score';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

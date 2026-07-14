@@ -1,19 +1,19 @@
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollBallot } from 'src/app/domain/models/poll/poll-ballot';
-import { PollConfigApproval } from 'src/app/domain/models/poll/poll-config-approval';
-import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
-import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
-import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
-import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
-import { PollOption } from 'src/app/domain/models/poll/poll-option';
-import { PollBallotRepositoryService } from 'src/app/gateways/repositories/polls/poll-ballot-repository.service';
-import { PollConfigApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-approval-repository.service';
-import { PollConfigRatingApprovalRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
-import { PollConfigRatingScoreRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-rating-score-repository.service';
-import { PollConfigSelectionRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-selection-repository.service';
-import { PollConfigStvScottishRepositoryService } from 'src/app/gateways/repositories/polls/poll-config-stv-scottish-repository.service';
-import { PollOptionRepositoryService } from 'src/app/gateways/repositories/polls/poll-option-repository.service';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollBallot } from '@app/domain/models/poll/poll-ballot';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
+import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
+import { PollOption } from '@app/domain/models/poll/poll-option';
+import { PollBallotRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-repository.service';
+import { PollConfigApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-approval-repository.service';
+import { PollConfigRatingApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
+import { PollConfigRatingScoreRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-score-repository.service';
+import { PollConfigSelectionRepositoryService } from '@app/gateways/repositories/polls/poll-config-selection-repository.service';
+import { PollConfigStvScottishRepositoryService } from '@app/gateways/repositories/polls/poll-config-stv-scottish-repository.service';
+import { PollOptionRepositoryService } from '@app/gateways/repositories/polls/poll-option-repository.service';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
 import {

@@ -1,5 +1,5 @@
-import { PollContentObject } from 'src/app/domain/models/poll';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { PollContentObject } from '@app/domain/models/poll';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 import { ViewPoll } from './poll';

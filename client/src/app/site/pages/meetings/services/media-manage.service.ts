@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, merge, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 import {
     FONT_PLACES,
     FontDefaults,
@@ -9,10 +8,11 @@ import {
     LOGO_PLACES,
     LogoDisplayNames,
     LogoPlace
-} from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
-import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
-import { MeetingMediafileRepositoryService } from 'src/app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
+} from '@app/domain/models/mediafiles/mediafile.constants';
+import { MeetingMediaAdapterService } from '@app/gateways/meeting-media-adapter.service';
+import { MediafileRepositoryService } from '@app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { MeetingMediafileRepositoryService } from '@app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
+import { BehaviorSubject, distinctUntilChanged, merge, Observable } from 'rxjs';
 
 import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
 import { ActiveMeetingService } from './active-meeting.service';

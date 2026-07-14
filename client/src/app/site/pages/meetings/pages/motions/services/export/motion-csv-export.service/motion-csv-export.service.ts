@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { ChangeRecoMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
+import { CsvColumnDefinitionMap, CsvColumnDefinitionProperty } from '@app/gateways/export/csv-export.service';
+import { reconvertChars, stripHtmlTags } from '@app/infrastructure/utils';
+import { MeetingCsvExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ChangeRecoMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { CsvColumnDefinitionMap, CsvColumnDefinitionProperty } from 'src/app/gateways/export/csv-export.service';
-import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
-import { MeetingCsvExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { ViewMotion } from '../../../view-models';

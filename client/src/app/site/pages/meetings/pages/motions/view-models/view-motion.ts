@@ -1,7 +1,7 @@
+import { HasHistoryEntries } from '@app/gateways/repositories/history-entry/has-history-entries';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import { _ } from '@ngx-translate/core';
-import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
 import { Id } from '../../../../../../domain/definitions/key-types';
 import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';

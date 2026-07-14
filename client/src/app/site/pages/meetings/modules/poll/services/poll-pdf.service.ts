@@ -1,8 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import Big from 'big.js';
-import { Content } from 'pdfmake/interfaces';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import {
     ViewPollBallot,
     ViewPollConfigApproval,
@@ -10,8 +7,11 @@ import {
     ViewPollConfigRatingScore,
     ViewPollConfigSelection,
     ViewPollOption
-} from 'src/app/site/pages/meetings/pages/polls';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+} from '@app/site/pages/meetings/pages/polls';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { TranslateService } from '@ngx-translate/core';
+import Big from 'big.js';
+import { Content } from 'pdfmake/interfaces';
 
 import { MeetingPdfExportService } from '../../../services/export';
 
@@ -319,10 +319,7 @@ export class PollPdfService {
 
     private createSummaryRows(
         config:
-            | ViewPollConfigApproval
-            | ViewPollConfigSelection
-            | ViewPollConfigRatingApproval
-            | ViewPollConfigRatingScore
+            ViewPollConfigApproval | ViewPollConfigSelection | ViewPollConfigRatingApproval | ViewPollConfigRatingScore
     ): { label: string; value: string; isSummary?: boolean }[] {
         const rows = [];
         if (config.validBallots !== null && config.validBallots !== undefined) {

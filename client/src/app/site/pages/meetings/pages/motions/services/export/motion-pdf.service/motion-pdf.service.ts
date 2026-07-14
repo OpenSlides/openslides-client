@@ -1,19 +1,19 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import Big from 'big.js';
-import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 import {
     ChangeRecoMode,
     LineNumberingMode,
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
-} from 'src/app/domain/models/motions/motions.constants';
-import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+} from '@app/domain/models/motions/motions.constants';
+import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { ViewMotion, ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { TranslateService } from '@ngx-translate/core';
+import Big from 'big.js';
+import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 
 import { getRecommendationTypeName } from '../../../definitions';
 import { ViewUnifiedChangeType } from '../../../modules';

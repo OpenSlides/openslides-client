@@ -3,26 +3,26 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Identifiable, Selectable } from 'src/app/domain/interfaces';
-import { Action, ActionService } from 'src/app/gateways/actions';
-import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { Fqid, Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { Identifiable, Selectable } from '@app/domain/interfaces';
+import { Action, ActionService } from '@app/gateways/actions';
+import { getIntlCollatorForLang } from '@app/infrastructure/utils';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 import {
     ParticipantSearchSelectorModule,
     UserSelectionData
-} from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { ParticipantListSortService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { SortingListModule } from 'src/app/ui/modules/sorting/modules';
+} from '@app/site/pages/meetings/modules/participant-search-selector';
+import { ParticipantListSortService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { SortingListModule } from '@app/ui/modules/sorting/modules';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ViewMotionSupporter } from '../../../../../../modules/supporters';
 import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services';

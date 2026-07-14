@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { UserScope } from 'src/app/site/services/user.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { UserScope } from '@app/site/services/user.service';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';

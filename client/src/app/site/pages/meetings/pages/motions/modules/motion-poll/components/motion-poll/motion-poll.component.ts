@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -6,13 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { Permission } from '@app/domain/definitions/permission';
+import { ProjectorButtonModule } from '@app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
+import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { OperatorService } from '@app/site/services/operator.service';
+import { DirectivesModule } from '@app/ui/directives';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ProjectorButtonModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { DirectivesModule } from 'src/app/ui/directives';
 
 import { ViewPoll } from '../../../../../polls';
 
@@ -32,7 +32,8 @@ import { ViewPoll } from '../../../../../polls';
         ProjectorButtonModule
     ],
     templateUrl: `./motion-poll.component.html`,
-    styleUrls: [`./motion-poll.component.scss`]
+    styleUrls: [`./motion-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class MotionPollComponent extends BasePollComponent {
     public pollViewModel = input.required<ViewPoll>();

@@ -1,4 +1,4 @@
-import { FieldDescriptor, Fields, HasFields, ModelRequest } from 'src/app/domain/interfaces/model-request';
+import { FieldDescriptor, Fields, HasFields, ModelRequest } from '@app/domain/interfaces/model-request';
 
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';

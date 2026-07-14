@@ -1,6 +1,6 @@
+import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
-import { PollConfigRatingScore } from 'src/app/domain/models/poll/poll-config-rating-score';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, RatingScorePollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';

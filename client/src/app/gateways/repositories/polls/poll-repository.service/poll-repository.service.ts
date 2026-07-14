@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollState, PollVisibility } from '@app/domain/models/poll/poll-constants';
+import { PollCreatePayload, PollUpdatePayload, VoteApiService } from '@app/gateways/vote-api.service';
+import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 import { map, Observable, switchMap, takeWhile } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState, PollVisibility } from 'src/app/domain/models/poll/poll-constants';
-import { PollCreatePayload, PollUpdatePayload, VoteApiService } from 'src/app/gateways/vote-api.service';
-import { ViewPoll, ViewPollBallot } from 'src/app/site/pages/meetings/pages/polls';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';

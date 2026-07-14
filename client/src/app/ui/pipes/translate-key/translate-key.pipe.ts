@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { KeyedTranslations } from '@app/domain/translations';
 import { TranslatePipe } from '@ngx-translate/core';
-import { KeyedTranslations } from 'src/app/domain/translations';
 
 @Pipe({
     name: `translateKey`

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -10,6 +10,7 @@ import { ChatGroupDialogData } from '../../services/chat-group-dialog.service';
     selector: `os-chat-group-dialog`,
     templateUrl: `./chat-group-dialog.component.html`,
     styleUrls: [`./chat-group-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ChatGroupDialogComponent implements OnInit {

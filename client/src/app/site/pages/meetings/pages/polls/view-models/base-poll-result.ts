@@ -1,4 +1,4 @@
-import { djb2hash } from 'src/app/infrastructure/utils';
+import { djb2hash } from '@app/infrastructure/utils';
 
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 

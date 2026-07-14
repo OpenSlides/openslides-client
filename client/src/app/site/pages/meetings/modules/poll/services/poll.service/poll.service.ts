@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { OptionData } from 'src/app/domain/models/poll/generic-poll';
-import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
+import { OptionData } from '@app/domain/models/poll/generic-poll';
+import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -13,10 +12,11 @@ import {
     VOTE_UNDOCUMENTED,
     VotingResult,
     YES_KEY
-} from 'src/app/domain/models/poll/poll-constants';
-import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
+} from '@app/domain/models/poll/poll-constants';
+import { ChartData, ChartDate } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';

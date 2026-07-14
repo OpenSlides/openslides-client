@@ -1,20 +1,21 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { PollComponent } from 'src/app/site/pages/meetings/modules/poll/components/poll/poll.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { DirectivesModule } from 'src/app/ui/directives';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { OperatorService } from '@app/site/services/operator.service';
+import { DirectivesModule } from '@app/ui/directives';
 
 @Component({
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
-    imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
+    imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AssignmentPollComponent extends BasePollComponent {
     public pollId = input.required<Id>();

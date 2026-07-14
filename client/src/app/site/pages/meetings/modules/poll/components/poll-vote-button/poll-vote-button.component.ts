@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CustomIconComponent } from 'src/app/ui/modules/custom-icon';
-import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
+import { CustomIconComponent } from '@app/ui/modules/custom-icon';
+import { CustomIcon } from '@app/ui/modules/custom-icon/definitions';
 
 type OptionType = `yes` | `no` | `abstain`;
 

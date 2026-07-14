@@ -3,8 +3,8 @@ import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Va
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { _, TranslatePipe } from '@ngx-translate/core';
-import { SelectionOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-selection';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';

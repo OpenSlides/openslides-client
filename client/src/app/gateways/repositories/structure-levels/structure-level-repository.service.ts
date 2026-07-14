@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
 import { _ } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 import { Identifiable } from '../../../domain/interfaces';
 import { StructureLevel } from '../../../domain/models/structure-levels/structure-level';

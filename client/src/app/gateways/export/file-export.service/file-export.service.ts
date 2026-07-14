@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpService } from '@app/gateways/http.service';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
-import { HttpService } from 'src/app/gateways/http.service';
 
 @Injectable({
     providedIn: `root`

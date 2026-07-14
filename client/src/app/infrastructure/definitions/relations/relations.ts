@@ -2,28 +2,28 @@ import {
     FONT_PLACES,
     LOGO_PLACES,
     ViewMediafileMeetingUsageKey
-} from 'src/app/domain/models/mediafiles/mediafile.constants';
+} from '@app/domain/models/mediafiles/mediafile.constants';
 import {
     MeetingDefaultProjectorIdsKey,
     ViewMeetingDefaultProjectorsKey,
     ViewMeetingMediafileUsageKey
-} from 'src/app/domain/models/meetings/meeting.constants';
-import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
-import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
-import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
-import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
-import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
-import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
-import { ViewMotionEditor } from 'src/app/site/pages/meetings/pages/motions/modules/editors';
-import { ViewMotionSupporter } from 'src/app/site/pages/meetings/pages/motions/modules/supporters/view-models/view-motion-supporter';
-import { ViewMotionWorkingGroupSpeaker } from 'src/app/site/pages/meetings/pages/motions/modules/working-group-speakers';
+} from '@app/domain/models/meetings/meeting.constants';
+import { PROJECTIONDEFAULTS } from '@app/domain/models/projector/projection-default';
+import { ViewProjectorMeetingUsageKey } from '@app/domain/models/projector/projector.constants';
+import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-history-entry';
+import { ViewHistoryPosition } from '@app/gateways/repositories/history-position/view-history-position';
+import { ViewPointOfOrderCategory } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
+import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
+import { ViewMotionEditor } from '@app/site/pages/meetings/pages/motions/modules/editors';
+import { ViewMotionSupporter } from '@app/site/pages/meetings/pages/motions/modules/supporters/view-models/view-motion-supporter';
+import { ViewMotionWorkingGroupSpeaker } from '@app/site/pages/meetings/pages/motions/modules/working-group-speakers';
 import {
     ViewStructureLevel,
     ViewStructureLevelListOfSpeakers
-} from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
-import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
+} from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
+import { ViewResource } from '@app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
 import {

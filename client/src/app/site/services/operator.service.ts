@@ -1,4 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DelegationSetting, delegationSettings } from '@app/domain/definitions/delegation-setting';
+import { UserFieldsets } from '@app/domain/fieldsets/user';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { User } from '@app/domain/models/users/user';
+import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import {
     BehaviorSubject,
     combineLatest,
@@ -8,14 +16,6 @@ import {
     startWith,
     Subject
 } from 'rxjs';
-import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { User } from 'src/app/domain/models/users/user';
-import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';

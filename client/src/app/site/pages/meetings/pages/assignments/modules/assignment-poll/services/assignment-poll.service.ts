@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { PollVisibility } from '@app/domain/models/poll';
+import { Poll } from '@app/domain/models/poll/poll';
+import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
+import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PollVisibility } from 'src/app/domain/models/poll';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { BaseOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-types';
-import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';

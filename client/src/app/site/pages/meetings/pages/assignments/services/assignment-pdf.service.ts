@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
+import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
-import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
-import { PollConfigSelection } from 'src/app/domain/models/poll/poll-config-selection';
-import { PollTableData, VotingResult } from 'src/app/domain/models/poll/poll-constants';
-import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models';

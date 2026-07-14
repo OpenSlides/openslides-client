@@ -1,5 +1,5 @@
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { BasePollResult } from './base-poll-result';
 import { HasPoll } from './has-polls';

@@ -1,5 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { ViewPoll, ViewPollOption } from '../../../pages/polls';
 import { ViewUser } from '../../../view-models/view-user';

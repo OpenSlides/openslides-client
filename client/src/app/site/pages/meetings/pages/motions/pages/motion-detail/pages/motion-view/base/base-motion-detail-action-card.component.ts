@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 /**
  * A wrapper component for components in the motion detail view which uses an `<action-card />`.

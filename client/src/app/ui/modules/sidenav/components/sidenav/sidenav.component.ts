@@ -1,6 +1,6 @@
-import { Component, ContentChild, inject, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, inject, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
 
 import { SidenavDrawerContentDirective } from '../../directives/sidenav-drawer-content.directive';
 import { SidenavMainContentDirective } from '../../directives/sidenav-main-content.directive';
@@ -9,6 +9,7 @@ import { SidenavMainContentDirective } from '../../directives/sidenav-main-conte
     selector: `os-sidenav`,
     templateUrl: `./sidenav.component.html`,
     styleUrls: [`./sidenav.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SidenavComponent {

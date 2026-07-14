@@ -1,7 +1,7 @@
+import { Identifiable } from '@app/domain/interfaces';
+import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { PollConfigRatingApproval } from 'src/app/domain/models/poll/poll-config-rating-approval';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
 
 import { HasPoll, RatingApprovalPollResult, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';

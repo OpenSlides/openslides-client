@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { PollControllerService } from '../modules/poll/services/poll-controller.service';
 import { ViewPoll } from '../pages/polls';

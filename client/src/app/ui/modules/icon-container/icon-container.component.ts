@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
 
@@ -7,6 +7,7 @@ import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
     selector: `os-icon-container`,
     templateUrl: `./icon-container.component.html`,
     styleUrls: [`./icon-container.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, MatIconModule, MatTooltipModule]
 })
 export class IconContainerComponent {

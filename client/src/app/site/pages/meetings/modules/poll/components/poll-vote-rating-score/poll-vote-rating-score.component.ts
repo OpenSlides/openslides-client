@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewPollBallot, ViewPollConfigRatingScore } from '../../../../pages/polls';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';

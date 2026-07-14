@@ -1,5 +1,5 @@
-import { PollConfigStvScottish } from 'src/app/domain/models/poll/poll-config-stv-scottish';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { HasPoll, ViewPollOption } from '..';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';

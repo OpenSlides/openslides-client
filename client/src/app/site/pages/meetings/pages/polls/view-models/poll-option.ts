@@ -1,6 +1,6 @@
-import { OptionTitle } from 'src/app/domain/models/poll';
-import { PollOption } from 'src/app/domain/models/poll/poll-option';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { OptionTitle } from '@app/domain/models/poll';
+import { PollOption } from '@app/domain/models/poll/poll-option';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewPoll } from '..';

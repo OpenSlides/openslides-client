@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { SpinnerService } from '@app/site/modules/global-spinner';
+import { ChoiceService } from '@app/ui/modules/choice-dialog';
+import { ChoiceAnswer } from '@app/ui/modules/choice-dialog/definitions';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from 'src/app/site/modules/global-spinner';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { ChoiceAnswer } from 'src/app/ui/modules/choice-dialog/definitions';
 
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';

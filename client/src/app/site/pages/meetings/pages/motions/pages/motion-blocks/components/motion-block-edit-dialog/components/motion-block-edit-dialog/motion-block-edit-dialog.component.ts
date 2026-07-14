@@ -1,12 +1,13 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
 
 @Component({
     selector: `os-motion-block-edit-dialog`,
     templateUrl: `./motion-block-edit-dialog.component.html`,
     styleUrls: [`./motion-block-edit-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionBlockEditDialogComponent {

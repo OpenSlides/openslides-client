@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { MediafileRepositoryService } from '@app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewMediafile } from '../view-models';
