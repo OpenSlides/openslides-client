@@ -3,7 +3,13 @@ import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 
+import { PollConfigApproval } from './poll-config-approval';
+import { PollConfigRatingApproval } from './poll-config-rating-approval';
+import { PollConfigRatingScore } from './poll-config-rating-score';
+import { PollConfigSelection } from './poll-config-selection';
+
 export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
+export type AnyPollConfig = PollConfigApproval | PollConfigRatingApproval | PollConfigRatingScore | PollConfigSelection;
 
 /**
  * The main interface to describe everything related to polls

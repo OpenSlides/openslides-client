@@ -1,13 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import {
-    AbstractControl,
-    ReactiveFormsModule,
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    ValidationErrors,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +8,7 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { RatingScoreOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-rating-score';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 @Component({
     selector: 'os-poll-form-rating-score',
@@ -31,9 +24,7 @@ import { ViewPoll } from '../../../../pages/polls';
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollFormRatingScoreComponent {
-    public form: UntypedFormGroup;
-
+export class PollFormRatingScoreComponent extends PollFormBaseComponent {
     public validPercentBases: [RatingScoreOnehundredPercentBase, string][] = [
         [`yes_no`, _('Yes/No per candidate')],
         [`valid`, _('All valid ballots')],
@@ -46,9 +37,12 @@ export class PollFormRatingScoreComponent {
     public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    private fb = inject(UntypedFormBuilder);
-
     public constructor() {
+        super();
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_general_abstain: [false],
@@ -61,8 +55,6 @@ export class PollFormRatingScoreComponent {
             max_vote_sum: [1, [Validators.required, Validators.min(1)]],
             min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
         });
-
-        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {

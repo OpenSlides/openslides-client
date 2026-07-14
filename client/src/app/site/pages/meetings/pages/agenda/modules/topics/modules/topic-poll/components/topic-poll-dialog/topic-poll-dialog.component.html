@@ -1,29 +1,58 @@
 <mat-dialog-content>
-    <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled" [optionEdit]="selectedTab() === 0">
-        <mat-tab-group [(selectedIndex)]="selectedTab">
-            <mat-tab [label]="'Selection' | translate">
-                <div class="tab-content">
-                    <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
-                </div>
-            </mat-tab>
-            <mat-tab [label]="'Approval' | translate">
-                <div class="tab-content">
-                    <os-poll-form-approval [data]="pollData" />
-                </div>
-            </mat-tab>
-        </mat-tab-group>
-    </os-poll-form>
+    <div class="poll-config" [class.hidden]="analogPollFormOpen()">
+        <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled" [optionEdit]="selectedTab() === 0">
+            <mat-tab-group [(selectedIndex)]="selectedTab">
+                <mat-tab [label]="'Selection' | translate">
+                    <div class="tab-content">
+                        <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
+                    </div>
+                </mat-tab>
+                <mat-tab [label]="'Approval' | translate">
+                    <div class="tab-content">
+                        <os-poll-form-approval [data]="pollData" />
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </os-poll-form>
+    </div>
+
+    @if (analogPollFormOpen()) {
+        <div class="poll-result">
+            <os-poll-edit-result
+                configType="approval"
+                [options]="analogPollOptions()"
+                [pollConfigData]="getMethodConfig()"
+                [pollData]="pollData"
+            />
+        </div>
+    }
 </mat-dialog-content>
 
 <!-- Actions -->
 <mat-dialog-actions>
-    <!-- Save Button -->
-    <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
-        <span>{{ 'Save' | translate }}</span>
-    </button>
+    <div class="dialog-actions">
+        <div>
+            <button mat-button [disabled]="!formsValid" (click)="submitPoll()">
+                <span>{{ 'Save' | translate }}</span>
+            </button>
 
-    <!-- Cancel Button -->
-    <button mat-button [mat-dialog-close]="false">
-        <span>{{ 'Cancel' | translate }}</span>
-    </button>
+            <button mat-button [mat-dialog-close]="false">
+                <span>{{ 'Cancel' | translate }}</span>
+            </button>
+        </div>
+
+        <div>
+            @if (isAnalogPoll.value()) {
+                @if (analogPollFormOpen()) {
+                    <button mat-button (click)="analogPollFormOpen.set(false)">
+                        <span>{{ 'Edit Poll' | translate }}</span>
+                    </button>
+                } @else {
+                    <button mat-button (click)="analogPollFormOpen.set(true)">
+                        <span>{{ 'Edit Result' | translate }}</span>
+                    </button>
+                }
+            }
+        </div>
+    </div>
 </mat-dialog-actions>

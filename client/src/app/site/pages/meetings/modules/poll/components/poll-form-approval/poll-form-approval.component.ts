@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,6 +7,7 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { ApprovalOnehundredPercentBase } from 'src/app/domain/models/poll/poll-config-approval';
 
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 @Component({
     selector: 'os-poll-form-approval',
@@ -15,9 +16,7 @@ import { ViewPoll } from '../../../../pages/polls';
     styleUrl: './poll-form-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollFormApprovalComponent {
-    public approvalForm: UntypedFormGroup;
-
+export class PollFormApprovalComponent extends PollFormBaseComponent {
     private _data: Partial<ViewPoll>;
 
     public validPercentBases: [ApprovalOnehundredPercentBase, string][] = [
@@ -33,12 +32,12 @@ export class PollFormApprovalComponent {
     @Input()
     public set data(data: Partial<ViewPoll>) {
         this._data = data;
-        if (data && this.approvalForm) {
+        if (data && this.form) {
             const patch: Record<string, any> = {};
             if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
             if (data.config?.onehundred_percent_base !== undefined)
                 patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
-            this.approvalForm.patchValue(patch);
+            this.form.patchValue(patch);
         }
     }
 
@@ -46,16 +45,14 @@ export class PollFormApprovalComponent {
         return this._data;
     }
 
-    private fb = inject(UntypedFormBuilder);
-
-    public constructor() {
-        this.approvalForm = this.fb.group({
+    public initForm(): void {
+        this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false]
         });
     }
 
     public getSerialzedForm(): Record<string, unknown> {
-        return this.approvalForm.value;
+        return this.form.value;
     }
 }

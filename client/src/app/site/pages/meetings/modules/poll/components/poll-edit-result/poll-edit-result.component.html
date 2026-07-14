@@ -1,0 +1,65 @@
+<h2>{{ pollData().title }}</h2>
+
+<form>
+    @for (option of options(); track option.key; let i = $index) {
+        <div class="option">
+            @switch (configType()) {
+                @case ('approval')
+                @case ('rating_score')
+                @case ('selection') {
+                    <mat-form-field class="option-amount">
+                        <mat-label>{{ option.title }}</mat-label>
+                        <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
+                    </mat-form-field>
+
+                    <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
+                        {{ 'majority' | translate }}
+                    </mat-checkbox>
+                }
+                @case ('rating_approval') {
+                    OPTIONS
+                }
+            }
+        </div>
+    }
+
+    @if (showAbstain()) {
+        <div class="option">
+            <mat-form-field class="option-amount">
+                <mat-label>Global abstain</mat-label>
+                <input matInput type="number" [formField]="resultForm.abstain" />
+            </mat-form-field>
+        </div>
+    }
+
+    @if (showNota()) {
+        <div class="option">
+            <mat-form-field class="option-amount">
+                <mat-label>General rejection/General approval</mat-label>
+                <input matInput type="number" [formField]="resultForm.nota" />
+            </mat-form-field>
+        </div>
+    }
+
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Invalid votes</mat-label>
+            <input matInput type="number" [formField]="resultForm.invalid" />
+        </mat-form-field>
+    </div>
+
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Total ballots</mat-label>
+            <input matInput type="number" [formField]="resultForm.total_ballots" />
+        </mat-form-field>
+        <button
+            matIconButton
+            type="button"
+            [attr.aria-label]="'Update total ballots' | translate"
+            (click)="updateTotalBallots()"
+        >
+            <mat-icon>calculate</mat-icon>
+        </button>
+    </div>
+</form>

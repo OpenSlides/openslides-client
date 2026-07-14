@@ -14,7 +14,7 @@ export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
             return [];
         }
 
-        return JSON.parse(this.poll().result) || {};
+        return this.poll()?.config?.parsedResult() || {};
     });
 
     public config = computed<T | undefined>(() => {
