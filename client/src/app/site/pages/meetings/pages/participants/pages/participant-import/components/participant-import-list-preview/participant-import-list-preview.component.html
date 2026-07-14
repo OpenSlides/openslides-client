@@ -65,8 +65,8 @@
                                             &nbsp;
 
                                             @if (getActionIconRow(item)) {
-                                                <mat-icon color="accent" inline>
-                                                    {{ getEntryIcon(item.value) }}
+                                                <mat-icon class="lower-margin-top" color="accent" inline>
+                                                    {{ getEntryIcon(item) }}
                                                 </mat-icon>
                                             }
                                         </div>
@@ -76,6 +76,9 @@
                                         }
                                         @if (getHeader(def).type === 'number') {
                                             {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'decimal') {
+                                            {{ this.getShortenedDecimal(entry[def].value) }}
                                         }
                                         @if (getHeader(def).type === 'date') {
                                             {{ item.value }}
@@ -89,13 +92,16 @@
                             }
                             @if (!getHeader(def).is_list && entry[def] !== undefined) {
                                 @if (getHeader(def).is_object) {
-                                    @let icon = getEntryIcon(entry[def]);
+                                    @let icon = getActionIconEntry(entry[def]);
                                     <div class="list-field-entry">
                                         @if (getHeader(def).type === 'string') {
                                             {{ entry[def].value }}
                                         }
                                         @if (getHeader(def).type === 'number') {
                                             {{ entry[def].value }}
+                                        }
+                                        @if (getHeader(def).type === 'decimal') {
+                                            {{ this.getShortenedDecimal(entry[def].value) }}
                                         }
                                         @if (getHeader(def).type === 'date') {
                                             {{ entry[def].value }}
@@ -105,7 +111,7 @@
                                         }
                                         &nbsp;
 
-                                        @if (getActionIconEntry(entry[def])) {
+                                        @if (getEntryIcon(entry[def]) || checkChanges(row, column.property)) {
                                             <mat-icon
                                                 inline
                                                 [class.error-icon]="icon === 'error_outline'"
@@ -122,7 +128,7 @@
                 </div>
             }
             <div
-                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
+                *osScrollingTableCell="'errors'; row as row; config: { width: 90, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
                 <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>

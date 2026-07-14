@@ -1,4 +1,5 @@
 import { _ } from '@ngx-translate/core';
+import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import {
     BackendImportEntry,
@@ -30,19 +31,20 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     public email: string;
     public member_number: string;
     public number: string;
-    public vote_weight;
+    public vote_weight: Decimal;
     public gender: string;
     public pronoun: string;
     public username: string;
     public default_password: string;
     public saml_id: string;
     public home_committee: string;
-    public external_comment: string;
+    public comment: string;
     public title: string;
 
-    public structure_level: string;
+    public structure_levels: string[];
     public groups: string[];
 
+    public external: boolean;
     public is_active: boolean;
     public is_present: boolean;
     public is_locked_out: boolean;
@@ -61,7 +63,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         this.last_name = this.setValue(this.data?.['last_name']) as string;
         this.email = this.setValue(this.data?.['email']) as string;
         this.member_number = this.setValue(this.data?.['member_number']) as string;
-        this.structure_level = this.data?.['structure_level'] as string;
+        this.structure_levels = this.data?.['structure_level'] as string[];
         this.groups = this.data?.['groups']?.[0];
         this.number = this.setValue(this.data?.['number']) as string;
         this.vote_weight = this.setValue(this.data?.['vote_weight']) as string;
@@ -74,10 +76,11 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         this.is_physical_person = this.getBooleanValue(this.setValue(this.data?.['is_physical_person']) as boolean);
         this.is_present = this.getBooleanValue(this.setValue(this.data?.['is_present']) as boolean);
         this.is_locked_out = this.getBooleanValue(this.setValue(this.data?.['locked_out']) as boolean);
+        this.external = this.getBooleanValue(this.setValue(this.data?.['external'] as boolean));
 
         this.saml_id = this.setValue(this.data?.['saml_id']) as string;
         this.home_committee = this.setValue(this.data?.['home_committee']) as string;
-        this.external_comment = this.setValue(this.data?.['external_comment']) as string;
+        this.comment = this.setValue(this.data?.['comment']) as string;
     }
 
     public static readonly REQUESTABLE_FIELDS: (keyof ViewImportedParticipant)[] = [
@@ -93,9 +96,10 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         'default_password',
         'saml_id',
         'home_committee',
-        'external_comment',
+        'comment',
+        'external',
         'title',
-        'structure_level',
+        'structure_levels',
         'groups',
         'is_active',
         'is_present',
@@ -122,12 +126,28 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         return field.value;
     }
 
+    protected getDecimalFields(): (keyof ViewImportedParticipant)[] {
+        return [`vote_weight`];
+    }
+
+    public get voteWeight(): Decimal {
+        return this.vote_weight;
+    }
+
+    public get getGroups(): string[] {
+        return [this.groups['value']];
+    }
+
+    public get getStructureLevels(): string[] {
+        return this.structure_levels;
+    }
+
     public getBooleanValue(value: string | number | boolean | undefined): boolean {
         return !!value;
     }
 
     public get changedVoteWeight(): boolean {
-        return this.vote_weight < 1 || this.vote_weight > 1 || !this.vote_weight ? true : false;
+        return !this.vote_weight ? true : false;
     }
 
     public get hasMemberNumber(): boolean {

@@ -23,8 +23,10 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { _, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
+import { StructureLevel } from 'src/app/domain/models/structure-levels';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from 'src/app/site/pages/organization/pages/accounts/services/common/account-controller.service';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
@@ -49,6 +51,7 @@ import {
 } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
@@ -451,46 +454,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @return the icon for the item
      */
     protected getActionIconEntry(item: BackendImportEntryObject): string {
-        console.log('ITEM INFO INSIDE ICONENTRY', item[`info`], typeof item, item, item.info, item.value);
-        switch (typeof item) {
-            case 'string':
-                switch (item['info']) {
-                    // for lists
-                    case BackendImportState.Error: // no import possible
-                        return `error_outline`;
-                    case BackendImportState.Warning:
-                        return `warning`;
-                    case BackendImportState.New:
-                        return `add_circle_outline`;
-                    case BackendImportState.Done:
-                        return `autorenew`;
-                    case BackendImportState.Generated:
-                        return `merge`;
-                    case BackendImportState.Remove:
-                        return `remove`;
-                    default:
-                        return `mood`; // fallback: Error
-                }
-            case 'object':
-                switch (item.info) {
-                    // for objects
-                    case BackendImportState.Error: // no import possible
-                        return `error_outline`;
-                    case BackendImportState.Warning:
-                        return `warning`;
-                    case BackendImportState.New:
-                        return `add_circle_outline`;
-                    case BackendImportState.Done:
-                        return `autorenew`;
-                    case BackendImportState.Generated:
-                        return `merge`;
-                    case BackendImportState.Remove:
-                        return `remove`;
-                    default:
-                        return `mood_bad`; // fallback: Error
-                }
+        switch (item.info) {
+            case BackendImportState.Error: // no import possible
+                return `error_outline`;
+            case BackendImportState.Warning:
+                return `warning`;
+            case BackendImportState.New:
+                return `add_circle_outline`;
+            case BackendImportState.Done:
+                return 'autorenew';
+            case BackendImportState.Generated:
+                return `merge`;
+            case BackendImportState.Remove:
+                return `remove`;
             default:
-                return 'rowing'; // fallback: Error
+                return `mood_bad`; // fallback: Error
         }
     }
 
@@ -651,8 +629,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     public getShortenedDecimal(decimalString: string): string {
-        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
-            decimalString = decimalString.substring(0, decimalString.length - 1);
+        while (decimalString?.length && [`0`, `.`].includes(decimalString?.charAt(decimalString?.length - 1))) {
+            decimalString = decimalString?.substring(0, decimalString?.length - 1);
         }
         return decimalString;
     }
@@ -704,16 +682,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         const countReferenced = this._rows.filter(row => row?.state === BackendImportState.Referenced)?.length | 0;
         const countUnchanged = this._rows.filter(row => row?.state === BackendImportState.Unchanged)?.length | 0;
         const countUpdated =
-            this._summary.find(item => item?.name === 'updated')?.value - countReferenced - countUnchanged;
+            (this._summary.find(item => item?.name === 'updated')?.value - countReferenced - countUnchanged) | 0;
         const error = this._summary.find(item => item.name === 'error');
         this._summary = this._summary.filter(item => item.name !== 'updated');
         if (countReferenced > 0) {
             this._summary.push({ name: 'referenced', value: countReferenced });
         }
         if (countUpdated > 0) {
-            if (countUpdated - countUnchanged !== 0) {
-                this._summary.push({ name: 'updated', value: countUpdated });
-            }
+            this._summary.push({ name: 'updated', value: countUpdated });
         }
         this._summary = this._summary.filter(item => item.name !== 'error');
         this._summary.push({ name: error?.name, value: error?.value });
@@ -813,17 +789,114 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         if (item.state !== BackendImportState.Done) {
             return false;
         }
-        const itemValues = Object.values(item);
-        const someNew = itemValues.some(value =>
-            Array.isArray(value) ? value.some(val => val?.info === 'new') : value?.info === 'new'
-        );
-        const allNew = itemValues.every(value =>
-            Array.isArray(value) ? value.every(val => val?.info === 'new') : value?.info === 'new'
-        );
-        if (!someNew && !allNew) {
+        if (this.checkChanges(item) === false) {
             item.setState = BackendImportState.Unchanged;
             return true;
         }
         return false;
+    }
+
+    protected checkChanges(item: ViewImportedParticipant, headerName?: string): false | '' | 'autorenew' {
+        for (const user of this.userAccounts) {
+            if (
+                (user.meeting_ids.includes(item.meeting_id) && item.username && item.username === user.username) ||
+                (item.member_number && item.member_number === user.member_number) ||
+                (item.saml_id && item.saml_id === user.saml_id)
+            ) {
+                const updatedUser = user.getModel();
+                const changes: Partial<Record<keyof ViewUser, { old: unknown; new: unknown }>> = {};
+                for (const key of Object.keys(updatedUser) as (keyof ViewUser)[]) {
+                    if (key in item) {
+                        const importedValue = item[key as keyof ViewImportedParticipant];
+                        if (key === 'id') {
+                            continue;
+                        }
+                        if (updatedUser[key] !== importedValue) {
+                            changes[key] = {
+                                old: updatedUser[key],
+                                new: importedValue
+                            };
+                        }
+                    }
+                    if (item.is_locked_out !== user.is_locked_out) {
+                        changes['locked_out'] = {
+                            old: user.is_locked_out,
+                            new: item.is_locked_out
+                        };
+                    }
+                    if (item.is_present !== user.isPresentInMeeting()) {
+                        changes['is_present'] = {
+                            old: user.isPresentInMeeting(),
+                            new: item.is_present
+                        };
+                    }
+                    if (item.saml_id !== user.saml_id) {
+                        changes['saml_id'] = {
+                            old: user.saml_id,
+                            new: item.saml_id
+                        };
+                    }
+                    if (item.number !== user.number()) {
+                        changes['number'] = {
+                            old: user.number(),
+                            new: item.number
+                        };
+                    }
+                    if (item.comment !== user.comment(this.activeMeetingIdService.meetingId)) {
+                        changes['comment'] = {
+                            old: user.comment(),
+                            new: item.comment
+                        };
+                    }
+                    if (item.gender !== user.gender_name) {
+                        changes['gender'] = {
+                            old: user.gender_name,
+                            new: item.gender
+                        };
+                    }
+                    if (
+                        this.getShortenedDecimal(item.voteWeight) !==
+                        this.getShortenedDecimal(user.voteWeight.toString())
+                    ) {
+                        changes['vote_weight'] = {
+                            old: user.voteWeight,
+                            new: item.voteWeight
+                        };
+                    }
+                    if (item.external !== user.external) {
+                        changes['external'] = {
+                            old: user.external,
+                            new: item.external
+                        };
+                    }
+                    const structureLevels = this.createStructureLevelModels(
+                        user.structure_levels(this.activeMeetingIdService.meetingId)
+                    );
+                    const userSLevels = new Set(structureLevels);
+                    const userSLevelsIds = new Set(structureLevels.map(level => level.id));
+                    const itemSLevels = new Set(item.getStructureLevels);
+                    console.log('LEVELS', itemSLevels, userSLevels);
+                    itemSLevels.forEach(itemSLevel => {
+                        if (itemSLevel['id'] && !userSLevelsIds.has(itemSLevel['id'])) {
+                            changes['structure_level'] = {
+                                old: userSLevels['value'],
+                                new: itemSLevel['value']
+                            };
+                        }
+                    });
+                }
+                if (Object.keys(changes).includes(headerName)) {
+                    return 'autorenew';
+                }
+                if (Object.keys(changes).length === 0) {
+                    return false;
+                }
+            }
+        }
+        return '';
+    }
+
+    private createStructureLevelModels(structureLevels: ViewStructureLevel[]): StructureLevel[] {
+        return structureLevels.map(structureLevel => structureLevel.getModel());
     }
 }
