@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
 import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
 import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
@@ -9,9 +9,7 @@ import { _ } from '@ngx-translate/core';
 
 import { TopicExportService } from '../topic-export.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicImportService extends BaseBackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
@@ -34,18 +32,12 @@ export class TopicImportService extends BaseBackendImportService {
         warning: _(`Topics with warnings (will be skipped)`)
     };
 
-    /**
-     * Constructor. Calls the abstract class and sets the expected header
-     *
-     * @param durationService: a service for converting time strings and numbers
-     * @param repo: The Agenda repository service
-     */
-    public constructor(
-        serviceCollector: ImportServiceCollectorService,
-        private repo: TopicRepositoryService,
-        private exporter: TopicExportService,
-        private activeMeetingId: ActiveMeetingIdService
-    ) {
+    private repo = inject(TopicRepositoryService);
+    private exporter = inject(TopicExportService);
+    private activeMeetingId = inject(ActiveMeetingIdService);
+
+    public constructor() {
+        const serviceCollector = inject(ImportServiceCollectorService);
         super(serviceCollector);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { ChatMessage } from '@app/domain/models/chat/chat-message';
 import { ChatMessageRepositoryService } from '@app/gateways/repositories/chat/chat-message-repository.service';
@@ -7,15 +7,15 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 
 import { ViewChatMessage } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ChatMessageControllerService extends BaseMeetingControllerService<ViewChatMessage, ChatMessage> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ChatMessageRepositoryService
-    ) {
-        super(controllerServiceCollector, ChatMessage, repo);
+    protected override repo: ChatMessageRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(ChatMessageRepositoryService);
+        super(controllerServiceCollector, ChatMessage, repoForSuper);
+        this.repo = repoForSuper;
     }
 
     public create(chatMessage: Partial<ChatMessage>): Promise<Identifiable[]> {

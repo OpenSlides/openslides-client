@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Topic } from '@app/domain/models/topics/topic';
 import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
@@ -8,15 +8,15 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 
 import { ViewTopic } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TopicControllerService extends BaseMeetingControllerService<ViewTopic, Topic> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: TopicRepositoryService
-    ) {
-        super(controllerServiceCollector, Topic, repo);
+    protected override repo: TopicRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(TopicRepositoryService);
+        super(controllerServiceCollector, Topic, repoForSuper);
+        this.repo = repoForSuper;
     }
 
     public create(...topics: Partial<Topic>[]): Promise<Identifiable[]> {
