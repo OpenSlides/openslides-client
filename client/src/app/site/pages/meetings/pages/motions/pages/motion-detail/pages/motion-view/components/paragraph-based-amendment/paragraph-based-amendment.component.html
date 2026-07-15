@@ -119,9 +119,8 @@
             </span>
         </div>
     }
-</section>
-<!-- Show entire motion text -->
-@if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {
+    <!-- Show entire motion text -->
+    @if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {}
     <div>
         @if (motion && motion.isParagraphBasedAmendment() && motion.lead_motion) {
             <mat-checkbox class="show-entire-text-check" (change)="showAmendmentContext = !showAmendmentContext">
@@ -129,4 +128,4 @@
             </mat-checkbox>
         }
     </div>
-}
+</section>
