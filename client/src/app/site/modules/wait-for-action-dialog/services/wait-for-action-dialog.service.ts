@@ -1,11 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Id } from '@app/domain/definitions/key-types';
+import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
+import { ActionWorkerWatchService } from '@app/gateways/action-worker-watch/action-worker-watch.service';
+import { ActionWorkerRepositoryService } from '@app/gateways/repositories/action-worker/action-worker-repository.service';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
-import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
-import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 import { BannerService } from '../../site-wrapper/services/banner.service';
 import { StoppedWaitingForActionDialogComponent } from '../components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';

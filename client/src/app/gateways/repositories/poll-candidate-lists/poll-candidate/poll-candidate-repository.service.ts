@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PollCandidate } from 'src/app/domain/models/poll-candidate-lists/poll-candidate';
-import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
+import { ViewPollCandidate } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
+import { DEFAULT_FIELDSET, Fieldsets } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

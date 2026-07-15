@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Identifiable } from '@app/domain/interfaces';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { MotionListInfoDialogComponent } from '../components/motion-list-info-dialog/motion-list-info-dialog.component';
 import { MotionListInfoDialogConfig } from '../definitions';

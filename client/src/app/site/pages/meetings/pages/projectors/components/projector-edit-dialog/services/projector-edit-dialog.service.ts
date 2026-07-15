@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Projector } from '@app/domain/models/projector/projector';
+import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ProjectorEditDialogComponent } from '../components/projector-edit-dialog/projector-edit-dialog.component';
 

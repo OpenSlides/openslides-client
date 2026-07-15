@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Vote } from '@app/domain/models/poll/vote';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewPoll, ViewVote } from '@app/site/pages/meetings/pages/polls';
+import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Vote } from 'src/app/domain/models/poll/vote';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

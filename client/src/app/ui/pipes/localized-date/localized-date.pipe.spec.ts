@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 import { LocalizedDatePipe } from './localized-date.pipe';
 

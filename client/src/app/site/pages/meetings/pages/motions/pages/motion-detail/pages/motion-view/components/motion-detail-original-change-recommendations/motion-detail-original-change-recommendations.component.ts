@@ -9,15 +9,15 @@ import {
     Output,
     Renderer2
 } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { ModificationType } from '@app/domain/models/motions/motions.constants';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
+import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { AutoupdateCommunicationService } from '@app/site/services/autoupdate/autoupdate-communication.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { filter, firstValueFrom } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { AutoupdateCommunicationService } from 'src/app/site/services/autoupdate/autoupdate-communication.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';

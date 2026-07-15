@@ -1,11 +1,11 @@
-import { Permission } from 'src/app/domain/definitions/permission';
-import { StructureLevel } from 'src/app/domain/models/structure-levels/structure-level';
-import { Group } from 'src/app/domain/models/users/group';
-import { User } from 'src/app/domain/models/users/user';
-import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
-import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { Permission } from '@app/domain/definitions/permission';
+import { StructureLevel } from '@app/domain/models/structure-levels/structure-level';
+import { Group } from '@app/domain/models/users/group';
+import { User } from '@app/domain/models/users/user';
+import { GroupRepositoryService } from '@app/gateways/repositories/groups';
+import { StructureLevelRepositoryService } from '@app/gateways/repositories/structure-levels';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ViewUser } from '../../view-models/view-user';
 import { ViewGroup } from './modules';

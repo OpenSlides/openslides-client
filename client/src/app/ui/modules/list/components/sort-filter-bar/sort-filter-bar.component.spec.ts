@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
 
 import { SortFilterBarComponent } from './sort-filter-bar.component';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HistoryEntry } from 'src/app/domain/models/history-entry/history-entry';
+import { HistoryEntry } from '@app/domain/models/history-entry/history-entry';
 
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';

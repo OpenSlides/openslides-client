@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { EasterEggContentPlatformDialogComponent } from '../components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
 

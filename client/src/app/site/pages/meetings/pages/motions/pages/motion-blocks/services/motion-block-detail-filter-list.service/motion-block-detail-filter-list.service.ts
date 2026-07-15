@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 

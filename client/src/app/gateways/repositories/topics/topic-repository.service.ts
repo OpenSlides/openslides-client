@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Topic } from '@app/domain/models/topics/topic';
+import { ViewAgendaItem, ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';

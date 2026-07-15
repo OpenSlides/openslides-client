@@ -123,7 +123,7 @@
             mat-button
             type="submit"
             [disabled]="!groupForm?.valid"
-            (click)="saveGroup(groupForm?.value)"
+            (click)="saveGroup($safeNavigationMigration(groupForm?.value))"
         >
             <span>{{ 'Save' | translate }}</span>
         </button>

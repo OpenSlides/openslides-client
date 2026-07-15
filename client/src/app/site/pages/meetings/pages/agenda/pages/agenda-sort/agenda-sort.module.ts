@@ -8,9 +8,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SortingModule } from 'src/app/ui/modules/sorting';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SortingModule } from '@app/ui/modules/sorting';
 
 import { AgendaSortRoutingModule } from './agenda-sort-routing.module';
 import { AgendaSortComponent } from './components/agenda-sort/agenda-sort.component';

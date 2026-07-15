@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-repository.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
 import { ThemeGeneralColors, ThemeRequiredValues } from '../../domain/models/theme/theme';

@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 @Directive()
 export abstract class BaseMeetingModelRequestHandler extends BaseModelRequestHandlerComponent {

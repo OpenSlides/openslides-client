@@ -1,4 +1,5 @@
 import { inject, Injectable, NgZone } from '@angular/core';
+import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage, WorkerMessageContent, WorkerResponse } from '@app/worker/interfaces';
 import {
     defer,
     filter,
@@ -17,13 +18,8 @@ import {
     timeout,
     timer
 } from 'rxjs';
-import {
-    SW_BROADCAST_CHANNEL_NAME,
-    WorkerMessage,
-    WorkerMessageContent,
-    WorkerResponse
-} from 'src/app/worker/interfaces';
-import { environment } from 'src/environments/environment';
+
+import { environment } from '../../../environments/environment';
 
 const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 4000;
 const SHARED_WORKER_READY_TIMEOUT = 10000;

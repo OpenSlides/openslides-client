@@ -50,7 +50,10 @@
                     <span>
                         <span>{{ 'Amendment to' | translate }}</span>
                         &nbsp;
-                        <a [routerLink]="parent?.getDetailStateUrl()" [state]="{ back: 'true' }">
+                        <a
+                            [routerLink]="$safeNavigationMigration(parent?.getDetailStateUrl())"
+                            [state]="{ back: 'true' }"
+                        >
                             {{ parent.number || parent.title }}
                         </a>
                     </span>

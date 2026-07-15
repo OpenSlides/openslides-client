@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ImportListModule } from 'src/app/ui/modules/import-list';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ImportListModule } from '@app/ui/modules/import-list';
 
 import { CommitteeImportRoutingModule } from './committee-import-routing.module';
 import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';

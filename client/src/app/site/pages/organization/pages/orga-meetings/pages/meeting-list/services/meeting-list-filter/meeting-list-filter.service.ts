@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { RelatedTime, ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
 

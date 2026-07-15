@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PollValues } from 'src/app/domain/models/poll';
+import { PollValues } from '@app/domain/models/poll';
 
 /**
  * Pipe to transform a key from polls into a speaking word.

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { DuplicateStatus, ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 import { _ } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { DuplicateStatus, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { GenderControllerService } from '../../pages/gender/services/gender-controller.service';
 

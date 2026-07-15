@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { SpeechState } from '@app/domain/models/speakers/speech-state';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from '@app/gateways/presenter';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingTimeComponent } from '@app/ui/modules/meeting-time/meeting-time.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
 
 import { ViewAgendaItem } from '../../../../view-models';
 
@@ -27,6 +27,7 @@ export interface AgendaForwardDialogReturnData {
     selector: 'os-agenda-forward-dialog',
     templateUrl: './agenda-forward-dialog.component.html',
     styleUrl: './agenda-forward-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         MatCheckboxModule,

@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 import { Dimension } from '../../../../definitions';
 
@@ -10,6 +10,7 @@ import { Dimension } from '../../../../definitions';
     selector: `os-fullscreen-projector`,
     templateUrl: `./fullscreen-projector.component.html`,
     styleUrls: [`./fullscreen-projector.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class FullscreenProjectorComponent implements OnInit {

@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
+import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';

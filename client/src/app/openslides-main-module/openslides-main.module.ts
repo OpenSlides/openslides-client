@@ -1,13 +1,13 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
 import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
-import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
-import { environment } from 'src/environments/environment';
 
+import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
@@ -58,7 +58,7 @@ if (isFirefox && `serviceWorker` in navigator) {
             return initializerFn();
         }),
         httpInterceptorProviders,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideTranslateService({
             fallbackLang: `en`,
             loader: {

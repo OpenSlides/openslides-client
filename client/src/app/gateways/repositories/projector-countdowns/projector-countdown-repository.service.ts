@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
-import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
+import { Identifiable } from '@app/domain/interfaces';
+import { ProjectorCountdown } from '@app/domain/models/projector/projector-countdown';
+import { ViewProjectorCountdown } from '@app/site/pages/meetings/pages/projectors';
 
 import { ServerTimeService } from '../../server-time.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';

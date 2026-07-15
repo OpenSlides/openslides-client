@@ -1,12 +1,12 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { Projectable } from 'src/app/site/pages/meetings/view-models';
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { Id } from '@app/domain/definitions/key-types';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { SpeakerState } from '@app/domain/models/speakers/speaker-state';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewStructureLevelListOfSpeakers } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { Projectable } from '@app/site/pages/meetings/view-models';
+import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models/base-projectable-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
 import { SpeakerStateOnList } from '../../../definitions/index';
 import { HasAgendaItem } from '../../../view-models';

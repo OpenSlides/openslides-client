@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SpinnerModule } from 'src/app/ui/modules/spinner';
+import { SpinnerModule } from '@app/ui/modules/spinner';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { HeadBarComponent } from './components/head-bar/head-bar.component';

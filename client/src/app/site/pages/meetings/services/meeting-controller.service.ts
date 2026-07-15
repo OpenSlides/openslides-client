@@ -1,10 +1,10 @@
 import { Injectable, Injector } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Action } from '@app/gateways/actions';
+import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.service';
+import { PointOfOrderCategoryRepositoryService } from '@app/gateways/repositories/point-of-order-category/point-of-order-category-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Action } from 'src/app/gateways/actions';
-import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
-import { PointOfOrderCategoryRepositoryService } from 'src/app/gateways/repositories/point-of-order-category/point-of-order-category-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
 
 import { Identifiable } from '../../../../domain/interfaces';
 import { Meeting } from '../../../../domain/models/meetings/meeting';

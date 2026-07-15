@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Permission } from '@app/domain/definitions/permission';
 
 import { OperatorService } from './operator.service';
 
