@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
 import { ViewPollCandidate } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { DEFAULT_FIELDSET, Fieldsets } from '@app/site/services/model-request-builder';
@@ -16,11 +16,10 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
  * Should it ever become necessary to perform actions or call upon the ViewModelLists,
  * please create a new controller service instead of directly calling the repository.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository<ViewPollCandidate, PollCandidate> {
-    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repoServiceCollector, PollCandidate);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Group } from '@app/domain/models/users/group';
 import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
@@ -8,11 +8,10 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGroup, Group> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, Group);
     }
 

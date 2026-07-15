@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
@@ -14,19 +14,17 @@ import { MeetingMediafileRepositoryService } from '../meeting-mediafile/meeting-
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Mediafile> {
     private get activeMeetingId(): number {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingService: ActiveMeetingService,
-        private meetingMediaRepo: MeetingMediafileRepositoryService
-    ) {
+    private activeMeetingService = inject(ActiveMeetingService);
+    private meetingMediaRepo = inject(MeetingMediafileRepositoryService);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Mediafile);
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile): number =>
