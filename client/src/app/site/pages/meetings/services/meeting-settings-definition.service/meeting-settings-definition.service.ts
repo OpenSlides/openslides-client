@@ -114,13 +114,15 @@ export class MeetingSettingsDefinitionService {
         for (const group of this.settings) {
             for (const subgroup of group.subgroups) {
                 for (const setting of subgroup.settings) {
-                    if (isSettingsInput(setting)) {
+                    if (isSettingsInput(setting) && setting.subscriptionKey === undefined) {
                         this.validateSetting(setting);
                         const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
                         for (const key of keys) {
                             localSettingsMap[key] = setting;
                         }
                     }
+
+                    // TODO: Handle subscriptionKey
                 }
             }
         }

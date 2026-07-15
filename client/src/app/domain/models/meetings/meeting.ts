@@ -140,14 +140,7 @@ export class Settings {
     public motions_create_enable_additional_submitter_text: boolean;
     public motions_enable_restricted_editor_for_manager: boolean;
     public motions_enable_restricted_editor_for_non_manager: boolean;
-
-    // DELETE
-    public motion_poll_default_type!: PollVisibility;
-    public motion_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
-    public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
-    public motion_poll_projection_max_columns!: number;
-    // DELETE END
+    public motion_poll_config_id: Id;
 
     // Users
     public users_enable_presence_view!: boolean;
@@ -173,25 +166,31 @@ export class Settings {
     public assignments_export_preamble!: string;
 
     public assignment_poll_add_candidates_to_list_of_speakers!: boolean;
-
-    // DELETE
-    public assignment_poll_enable_max_votes_per_option!: boolean;
-    public assignment_poll_sort_poll_result_by_votes!: boolean;
-    public assignment_poll_default_type!: PollVisibility;
-    public assignment_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
-    // DELETE END
+    public assignment_poll_default_method: string;
+    public assignment_poll_config_id: Id;
 
     // topic poll
-    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    public topic_poll_default_method: string;
+    public topic_poll_config_id: Id;
 
     // default poll
     // DELETE
+    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_sort_poll_result_by_votes: boolean;
     public poll_default_type: PollVisibility;
     public poll_default_onehundred_percent_base: BaseOnehundredPercentBase;
     public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_default_live_voting_enabled: boolean;
+    public assignment_poll_enable_max_votes_per_option!: boolean;
+    public assignment_poll_sort_poll_result_by_votes!: boolean;
+    public assignment_poll_default_type!: PollVisibility;
+    public assignment_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
+    public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
+    public motion_poll_default_type!: PollVisibility;
+    public motion_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
+    public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
+    public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
+    public motion_poll_projection_max_columns!: number;
     // DELETE END
 
     // SSO
