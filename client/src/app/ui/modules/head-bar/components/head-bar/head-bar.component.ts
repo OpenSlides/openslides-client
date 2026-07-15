@@ -1,7 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     inject,

@@ -110,14 +110,13 @@
                                             <mat-checkbox disabled [checked]="entry[def].value" />
                                         }
                                         &nbsp;
-
-                                        @if (getEntryIcon(entry[def]) || checkChanges(row, column.property)) {
+                                        @if (getEntryIcon(entry[def])) {
                                             <mat-icon
                                                 inline
                                                 [class.error-icon]="icon === 'error_outline'"
                                                 [color]="icon !== 'error_outline' ? 'accent' : null"
                                             >
-                                                {{ icon }}
+                                                {{ icon === 'merge' ? icon : checkChanges(row, column.property) }}
                                             </mat-icon>
                                         }
                                     </div>
@@ -128,7 +127,7 @@
                 </div>
             }
             <div
-                *osScrollingTableCell="'errors'; row as row; config: { width: 90, position: START_POSITION }"
+                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
                 <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>

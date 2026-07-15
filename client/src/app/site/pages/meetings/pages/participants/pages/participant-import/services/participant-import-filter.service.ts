@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-
-import { STATE_FITERABLE, STATES, ViewImportedParticipant } from '../view-models/view-participant-import';
 import { GENDER_FITLERABLE, GENDERS } from '@app/domain/models/users/user';
 import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
+import { _ } from '@ngx-translate/core';
+
+import { STATE_FITERABLE, STATES, ViewImportedParticipant } from '../view-models/view-participant-import';
 
 @Injectable({
     providedIn: 'root'

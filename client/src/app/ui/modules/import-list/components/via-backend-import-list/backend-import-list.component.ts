@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -21,6 +20,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,7 +40,6 @@ import {
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
-import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 
 export enum BackendImportPhase {
     LOADING_PREVIEW,
@@ -550,7 +549,9 @@ export class BackendImportListComponent implements OnInit {
         try {
             this._importer.onSelectFile(droppedFile);
             this.uploadButton = false;
-        } catch {}
+        } catch {
+            this.uploadButton = false;
+        }
     }
 
     public onChange(event: Event): void {

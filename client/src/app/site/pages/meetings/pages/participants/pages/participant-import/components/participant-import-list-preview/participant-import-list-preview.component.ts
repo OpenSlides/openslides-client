@@ -21,17 +21,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { _, TranslateService } from '@ngx-translate/core';
-import { map, Observable, of, Subscription } from 'rxjs';
-
-
-import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
-import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
-import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
-import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
-import { ViewImportedParticipant } from '../../view-models/view-participant-import';
-import { StructureLevel } from '@app/domain/models/structure-levels';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -39,7 +28,14 @@ import { AccountControllerService } from '@app/site/pages/organization/pages/acc
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
-import { BackendImportHeader, BackendImportSummary, BackendImportIdentifiedRow, BackendImportState, BackendImportEntryObject, BackendImportPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import {
+    BackendImportEntryObject,
+    BackendImportHeader,
+    BackendImportIdentifiedRow,
+    BackendImportPreview,
+    BackendImportState,
+    BackendImportSummary
+} from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { ImportListFirstTabDirective } from '@app/ui/modules/import-list/directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '@app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '@app/ui/modules/import-list/directives/import-list-status-template.directive';
@@ -47,6 +43,14 @@ import { ListModule } from '@app/ui/modules/list';
 import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
+import { _, TranslateService } from '@ngx-translate/core';
+import { map, Observable, of, Subscription } from 'rxjs';
+
+import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
+import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
+import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
+import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
+import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -795,7 +799,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 (item.saml_id && item.saml_id === user.saml_id)
             ) {
                 const updatedUser = user.getModel();
-                const changes: Partial<Record<keyof ViewUser, { old: unknown; new: unknown }>> = {};
+                const changes: Partial<Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[] }>> = {};
                 for (const key of Object.keys(updatedUser) as (keyof ViewUser)[]) {
                     if (key in item) {
                         const importedValue = item[key as keyof ViewImportedParticipant];
@@ -860,34 +864,27 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.external
                         };
                     }
-                    const structureLevels = this.createStructureLevelModels(
-                        user.structure_levels(this.activeMeetingIdService.meetingId)
+                    const structureLevels = user.structureLevels(this.activeMeetingIdService.meetingId).split(', ');
+                    const itemSLevels = item.getStructureLevels.map(level => level['value']);
+                    console.log(
+                        'LEVELS',
+                        itemSLevels,
+                        structureLevels,
+                        item.structure_levels.difference(structureLevels)
                     );
-                    const userSLevels = new Set(structureLevels);
-                    const userSLevelsIds = new Set(structureLevels.map(level => level.id));
-                    const itemSLevels = new Set(item.getStructureLevels);
-                    console.log('LEVELS', itemSLevels, userSLevels);
-                    itemSLevels.forEach(itemSLevel => {
-                        if (itemSLevel['id'] && !userSLevelsIds.has(itemSLevel['id'])) {
-                            changes['structure_level'] = {
-                                old: userSLevels['value'],
-                                new: itemSLevel['value']
-                            };
-                        }
-                    });
                 }
                 if (Object.keys(changes).includes(headerName)) {
                     return 'autorenew';
                 }
+                /* if (Object.keys(changes).includes('structure_levels')) {
+                    console.log('autorenew');
+                    return 'autorenew';
+                } */
                 if (Object.keys(changes).length === 0) {
                     return false;
                 }
             }
         }
         return '';
-    }
-
-    private createStructureLevelModels(structureLevels: ViewStructureLevel[]): StructureLevel[] {
-        return structureLevels.map(structureLevel => structureLevel.getModel());
     }
 }

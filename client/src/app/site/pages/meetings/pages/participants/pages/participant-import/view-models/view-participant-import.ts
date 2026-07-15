@@ -1,8 +1,11 @@
 import { Decimal } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
-import { BackendImportRow, BackendImportState, BackendImportEntry } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import {
+    BackendImportEntry,
+    BackendImportRow,
+    BackendImportState
+} from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-
 
 export const STATES = [
     _(`New participant`),
