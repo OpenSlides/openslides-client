@@ -21,6 +21,7 @@ import {
     ViewStructureLevel,
     ViewStructureLevelListOfSpeakers
 } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { ViewMeetingPollDefault } from '@app/site/pages/meetings/view-models/view-meeting-poll-default';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewResource } from '@app/site/pages/organization/pages/resources';
@@ -191,6 +192,25 @@ export const RELATIONS: Relation[] = [
         possibleViewModelsField: `organization_tags`,
         viewModelField: `tagged`,
         viewModelIdField: `tagged_ids`
+    }),
+    // ########## Meetings
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMeetingPollDefault,
+        AField: `assignment_poll_config`,
+        BField: `meeting`
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMeetingPollDefault,
+        AField: `motion_poll_config`,
+        BField: `meeting`
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMeetingPollDefault,
+        AField: `topic_poll_config`,
+        BField: `meeting`
     }),
     // ########## User
     ...makeM2M({

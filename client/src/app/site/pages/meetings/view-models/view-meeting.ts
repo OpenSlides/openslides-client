@@ -40,6 +40,7 @@ import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewPoll, ViewPollBallot } from '../pages/polls';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
+import { ViewMeetingPollDefault } from './view-meeting-poll-default';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
@@ -212,6 +213,9 @@ interface IMeetingRelations {
     point_of_order_categories: ViewPointOfOrderCategory[];
     structure_levels: ViewStructureLevel[];
     relevant_history_entries: ViewHistoryEntry[];
+    assignment_poll_config: ViewMeetingPollDefault;
+    motion_poll_config: ViewMeetingPollDefault;
+    topic_poll_config: ViewMeetingPollDefault;
 }
 export interface ViewMeeting
     extends
