@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Deferred } from '@app/infrastructure/utils/promises';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OpenSlidesStatusService {
     public get stable(): Promise<void> {
         return this._stable;
