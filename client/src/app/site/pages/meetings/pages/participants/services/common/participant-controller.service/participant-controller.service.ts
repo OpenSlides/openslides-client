@@ -1,4 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
+import { User } from '@app/domain/models/users/user';
+import { Action, ActionService } from '@app/gateways/actions';
+import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } from '@app/gateways/presenter';
+import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user';
+import {
+    ExtendedUserPatchFn,
+    RawUser,
+    UserPatchFn,
+    UserRepositoryService,
+    UserStateField
+} from '@app/gateways/repositories/users';
+import { UserAction } from '@app/gateways/repositories/users/user-action';
+import { toDecimal } from '@app/infrastructure/utils';
+import { UserDeleteDialogService } from '@app/site/modules/user-components';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { UserService } from '@app/site/services/user.service';
+import { CreateUserNameInformation, UserControllerService } from '@app/site/services/user-controller.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import {
     auditTime,
     BehaviorSubject,
@@ -12,32 +38,6 @@ import {
     switchAll,
     tap
 } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { User } from 'src/app/domain/models/users/user';
-import { Action, ActionService } from 'src/app/gateways/actions';
-import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } from 'src/app/gateways/presenter';
-import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
-import {
-    ExtendedUserPatchFn,
-    RawUser,
-    UserPatchFn,
-    UserRepositoryService,
-    UserStateField
-} from 'src/app/gateways/repositories/users';
-import { UserAction } from 'src/app/gateways/repositories/users/user-action';
-import { toDecimal } from 'src/app/infrastructure/utils';
-import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { UserService } from 'src/app/site/services/user.service';
-import { CreateUserNameInformation, UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
     `structure_level_ids`,

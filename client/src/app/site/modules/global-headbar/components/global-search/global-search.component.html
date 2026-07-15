@@ -100,7 +100,9 @@
                                 @if (result.title) {
                                     <h3>
                                         @if (result.obj?.number) {
-                                            <span [innerHTML]="result.obj?.number + ': '"></span>
+                                            <span
+                                                [innerHTML]="$safeNavigationMigration(result.obj?.number) + ': '"
+                                            ></span>
                                         }
                                         <span [innerHTML]="result.title"></span>
                                     </h3>

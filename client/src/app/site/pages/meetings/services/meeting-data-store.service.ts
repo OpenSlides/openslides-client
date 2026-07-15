@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
+import { DataStoreService } from '@app/site/services/data-store.service';
 
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 

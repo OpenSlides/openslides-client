@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { Identifiable } from '@app/domain/interfaces';
+import { Topic } from '@app/domain/models/topics/topic';
+import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewTopic } from '../../view-models';
 

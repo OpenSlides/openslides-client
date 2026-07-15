@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Theme } from 'src/app/domain/models/theme/theme';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Theme } from '@app/domain/models/theme/theme';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { ViewTheme } from '@app/site/pages/organization/pages/designs';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ThemeAction } from './theme.action';

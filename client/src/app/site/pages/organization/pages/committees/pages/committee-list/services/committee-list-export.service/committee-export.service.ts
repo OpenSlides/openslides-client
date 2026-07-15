@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { CsvColumnsDefinition } from '@app/gateways/export/csv-export.service';
+import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
-import { CsvColumnsDefinition } from 'src/app/gateways/export/csv-export.service';
-import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 
 import { ViewCommittee } from '../../../../view-models/view-committee';
 

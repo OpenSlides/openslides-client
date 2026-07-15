@@ -1,7 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import {
     GeneralValueVerbose,
     GlobalOptionKey,
@@ -9,13 +8,14 @@ import {
     PollPercentBaseVerbose,
     PollPropertyVerbose,
     VoteValue
-} from 'src/app/domain/models/poll';
+} from '@app/domain/models/poll';
 import {
     BasePollDialogComponent,
     OptionsObject
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
 import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
@@ -24,6 +24,7 @@ import { AssignmentPollService, UnknownUserLabel } from '../../services/assignme
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {

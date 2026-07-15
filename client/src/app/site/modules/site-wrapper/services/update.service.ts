@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { StorageService } from '@app/gateways/storage.service';
 import { filter, Observable, Subject } from 'rxjs';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: `root`

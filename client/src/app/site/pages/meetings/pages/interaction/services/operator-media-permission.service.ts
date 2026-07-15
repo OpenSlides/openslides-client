@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { SpinnerService } from '@app/site/modules/global-spinner';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from 'src/app/site/modules/global-spinner';
 
 const givePermsMessage = _(`Please allow OpenSlides to access your microphone and/or camera`);
 const accessDeniedMessage = _(`Media access is denied`);

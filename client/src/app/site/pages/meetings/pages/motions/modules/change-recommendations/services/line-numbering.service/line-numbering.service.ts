@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
+import { djb2hash } from '@app/infrastructure/utils';
 import { DiffCompat, LineNumbering, VERSION } from '@openslides/motion-diff';
-import { djb2hash } from 'src/app/infrastructure/utils';
 
 import { DiffCache } from '../../../../definitions';
 import { DIFF_VERSION } from '../diff-factory.service';

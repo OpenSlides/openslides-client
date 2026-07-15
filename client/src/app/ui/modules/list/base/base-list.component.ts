@@ -9,10 +9,10 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 import { ScrollingTableManageService } from '../../scrolling-table';
 import { ViewListComponent } from '../components/view-list/view-list.component';

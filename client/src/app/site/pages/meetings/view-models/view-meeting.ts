@@ -1,15 +1,15 @@
-import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
-import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
-import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { HasProjectorTitle } from '@app/domain/interfaces/has-projector-title';
+import { HasProperties } from '@app/domain/interfaces/has-properties';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '@app/domain/models/mediafiles/mediafile.constants';
+import { Meeting } from '@app/domain/models/meetings/meeting';
 import {
     ViewMeetingDefaultProjectorsKey,
     ViewMeetingMediafileUsageKey
-} from 'src/app/domain/models/meetings/meeting.constants';
-import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { ViewHistoryEntry } from 'src/app/gateways/repositories/history-entry/view-history-entry';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+} from '@app/domain/models/meetings/meeting.constants';
+import { ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-history-entry';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
 
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';

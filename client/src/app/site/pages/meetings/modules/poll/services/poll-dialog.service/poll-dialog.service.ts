@@ -1,8 +1,8 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { firstValueFrom } from 'rxjs';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 @Injectable({
     providedIn: 'root'

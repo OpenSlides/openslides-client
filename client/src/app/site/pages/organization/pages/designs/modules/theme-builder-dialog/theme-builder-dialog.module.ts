@@ -6,8 +6,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ColorFormFieldComponent } from 'src/app/ui/modules/color-form-field';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ColorFormFieldComponent } from '@app/ui/modules/color-form-field';
 
 import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog.component';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { isValidId } from '@app/infrastructure/utils';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import { filter, first, Observable, Subscription } from 'rxjs';
-import { isValidId } from 'src/app/infrastructure/utils';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate';
 import { ModelData } from './autoupdate/utils';

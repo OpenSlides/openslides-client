@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from 'src/app/gateways/http.service';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { AUTOUPDATE_DEFAULT_ENDPOINT } from 'src/app/site/services/autoupdate';
+import { HttpService } from '@app/gateways/http.service';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { AUTOUPDATE_DEFAULT_ENDPOINT } from '@app/site/services/autoupdate';
 
 /**
  * The format of the count statistic

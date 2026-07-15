@@ -12,7 +12,7 @@ const FILE_TEMPLATE = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
     import { _ } from "@ngx-translate/core";
-    import { Settings } from 'src/app/domain/models/meetings/meeting';
+    import { Settings } from '@app/domain/models/meetings/meeting';
 
     export const meetingSettingsDefaults: { [key in keyof Settings]: any } = {
 `;

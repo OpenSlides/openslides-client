@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { HtmlColor } from 'src/app/domain/definitions/key-types';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { HtmlColor } from '@app/domain/definitions/key-types';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ViewOrganizationTag } from '../../../view-models';
 import { OrganizationTagDialogComponent } from '../components/organization-tag-dialog.component';

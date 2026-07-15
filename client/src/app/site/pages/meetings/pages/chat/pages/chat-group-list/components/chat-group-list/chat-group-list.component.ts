@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewChatGroup } from '@app/site/pages/meetings/pages/chat';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { VerticalTabGroupContentState } from '@app/ui/modules/vertical-tab-group';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { VerticalTabGroupContentState } from 'src/app/ui/modules/vertical-tab-group';
 
 import { ChatGroupDialogService } from '../../../../modules/chat-group-dialog/services/chat-group-dialog.service';
 import { ChatGroupControllerService, ChatNotificationService } from '../../../../services';

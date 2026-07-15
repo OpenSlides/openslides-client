@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionSupporter } from 'src/app/domain/models/motions/motion-supporter';
-import { Action } from 'src/app/gateways/actions';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionSupporter } from '@app/domain/models/motions/motion-supporter';
+import { Action } from '@app/gateways/actions';
 
 import { ViewMotionSupporter } from '../../../../site/pages/meetings/pages/motions/modules/supporters/view-models/view-motion-supporter';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';

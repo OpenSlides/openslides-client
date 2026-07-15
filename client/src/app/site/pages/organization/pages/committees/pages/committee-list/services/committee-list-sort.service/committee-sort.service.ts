@@ -1,8 +1,8 @@
 import { Injectable, ProviderToken } from '@angular/core';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { CommitteeRepositoryService } from '@app/gateways/repositories/committee-repository.service';
+import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { _ } from '@ngx-translate/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
-import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewCommittee } from '../../../../view-models';
 

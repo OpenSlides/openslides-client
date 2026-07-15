@@ -1,9 +1,9 @@
 import { Injectable, ProviderToken } from '@angular/core';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions';
+import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
+import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { _ } from '@ngx-translate/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { MotionBlockRepositoryService } from 'src/app/gateways/repositories/motions';
-import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
 @Injectable({
     providedIn: `root`

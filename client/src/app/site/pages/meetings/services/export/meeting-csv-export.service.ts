@@ -5,8 +5,8 @@ import {
     DEFAULT_COLUMN_SEPARATOR,
     DEFAULT_ENCODING,
     DEFAULT_LINE_SEPARATOR
-} from 'src/app/gateways/export/csv-export.service';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+} from '@app/gateways/export/csv-export.service';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { MeetingSettingsService } from '../meeting-settings.service';
 

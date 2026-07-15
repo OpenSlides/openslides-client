@@ -1,6 +1,7 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnDestroy,
@@ -10,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
+import { GlobalHeadbarService } from '@app/site/modules/global-headbar/global-headbar.service';
 
 /**
  * Reusable toolbar compoment
@@ -24,6 +25,7 @@ import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global
     styleUrls: [`./head-toolbar.component.scss`],
     imports: [MatToolbarModule],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class HeadToolbarComponent implements AfterViewInit, OnDestroy {

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { PermissionGuard } from 'src/app/site/guards/permission.guard';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { PermissionGuard } from '@app/site/guards/permission.guard';
 
 import { OrganizationMediafileMainComponent } from './components/organization-mediafile-main/organization-mediafile-main.component';
 

@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Permission } from '@app/domain/definitions/permission';
+import { PasswordForm } from '@app/site/modules/user-components';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map, of, switchAll, tap } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PasswordForm } from 'src/app/site/modules/user-components';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-participant-password`,
     templateUrl: `./participant-password.component.html`,
     styleUrls: [`./participant-password.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantPasswordComponent extends BaseMeetingComponent implements OnInit {

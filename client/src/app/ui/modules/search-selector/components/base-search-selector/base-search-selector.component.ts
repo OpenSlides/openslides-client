@@ -16,10 +16,10 @@ import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { Id } from '@app/domain/definitions/key-types';
+import { Selectable } from '@app/domain/interfaces/selectable';
 import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 import { BaseFormFieldControlComponent } from '../../../../base/base-form-field-control';
 import { OsOptionSelectionChanged } from '../../definitions';
@@ -85,7 +85,6 @@ export abstract class BaseSearchSelectorComponent
     /**
      * Label showing, if there are no options for a specific search.
      */
-    @Input()
     public noOptionsFoundLabel = _(`No options found`);
 
     /**

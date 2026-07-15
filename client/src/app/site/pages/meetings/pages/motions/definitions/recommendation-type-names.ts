@@ -1,4 +1,4 @@
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { ModificationType } from '@app/domain/models/motions/motions.constants';
 
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../modules';
 

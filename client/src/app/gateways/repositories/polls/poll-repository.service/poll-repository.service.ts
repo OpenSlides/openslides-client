@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Decimal } from 'src/app/domain/definitions/key-types';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { toDecimal } from 'src/app/infrastructure/utils';
-import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Decimal } from '@app/domain/definitions/key-types';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollState, PollType } from '@app/domain/models/poll/poll-constants';
+import { toDecimal } from '@app/infrastructure/utils';
+import { VoteControllerService } from '@app/site/pages/meetings/modules/poll/services/vote-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';

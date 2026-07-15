@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { PollClassType } from '@app/domain/models/poll/poll-constants';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 
 @Injectable({
     providedIn: `root`

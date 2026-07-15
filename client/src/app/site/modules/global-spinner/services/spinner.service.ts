@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { EventType, Router, RoutesRecognized } from '@angular/router';
+import { ConnectionStatusService } from '@app/site/services/connection-status.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { OverlayInstance, OverlayService } from '@app/ui/modules/openslides-overlay';
 import { combineLatest, filter, startWith, Subscription } from 'rxjs';
-import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { OverlayInstance, OverlayService } from 'src/app/ui/modules/openslides-overlay';
 
 import { GlobalSpinnerComponent } from '../components/global-spinner/global-spinner.component';
 import { SpinnerConfig } from '../definitions';

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { NotifyService } from '@app/gateways/notify.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewUser } from '../../../view-models/view-user';

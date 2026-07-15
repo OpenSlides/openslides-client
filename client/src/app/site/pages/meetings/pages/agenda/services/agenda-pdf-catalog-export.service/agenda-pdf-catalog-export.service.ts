@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
+import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { DurationService } from '@app/site/services/duration.service';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
-import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
-import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';

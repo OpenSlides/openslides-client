@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 

@@ -1,4 +1,4 @@
-import { HasPollIds } from 'src/app/domain/interfaces/has-poll-ids';
+import { HasPollIds } from '@app/domain/interfaces/has-poll-ids';
 
 import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';

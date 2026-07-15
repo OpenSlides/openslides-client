@@ -4,11 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { AccountSearchSelectorModule } from '@app/site/pages/organization/modules/account-search-selector';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { OrganizationTagCommonServiceModule } from '../../../../../organization-tags/services/organization-tag-common-service.module';
 import { CommitteeDetailEditRoutingModule } from './committee-detail-edit-routing.module';

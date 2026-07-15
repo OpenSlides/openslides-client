@@ -140,7 +140,9 @@
                         <os-comma-separated-listing [list]="managers">
                             <ng-template let-manager>
                                 <ng-container *osOmlPerms="OML.can_manage_users">
-                                    <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                                    <a [routerLink]="['/', 'accounts', $safeNavigationMigration(manager?.id)]">
+                                        {{ manager }}
+                                    </a>
                                 </ng-container>
                                 <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
                                     <span>{{ manager }}</span>

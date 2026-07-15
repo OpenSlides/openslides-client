@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HistoryPosition } from 'src/app/domain/models/history-position/history-position';
+import { HistoryPosition } from '@app/domain/models/history-position/history-position';
 
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';

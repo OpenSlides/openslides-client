@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { getAccountDetailSubscriptionConfig } from '../../../../accounts.subscription';
 
@@ -7,6 +7,7 @@ import { getAccountDetailSubscriptionConfig } from '../../../../accounts.subscri
     selector: `os-account-detail-main`,
     templateUrl: `./account-detail-main.component.html`,
     styleUrls: [`./account-detail-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent {
