@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
-import { ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionComment } from '@app/domain/models/motions/motion-comment';
+import { ViewMotionComment } from '@app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

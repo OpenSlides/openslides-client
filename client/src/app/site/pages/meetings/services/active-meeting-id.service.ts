@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
 import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 import { MeetingDataStoreService } from './meeting-data-store.service';
 

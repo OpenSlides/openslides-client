@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingCsvExportForBackendService } from '@app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingCsvExportForBackendService } from 'src/app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 
 import { AgendaPdfCatalogExportService } from '../../../../services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service';
 

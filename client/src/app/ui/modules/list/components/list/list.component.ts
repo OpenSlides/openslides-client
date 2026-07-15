@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 
 import { BaseListComponent } from '../../base/base-list.component';
 

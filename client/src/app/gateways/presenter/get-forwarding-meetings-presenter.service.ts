@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';

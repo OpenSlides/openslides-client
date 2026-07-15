@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { toDecimal } from 'src/app/infrastructure/utils';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
+import { toDecimal } from '@app/infrastructure/utils';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

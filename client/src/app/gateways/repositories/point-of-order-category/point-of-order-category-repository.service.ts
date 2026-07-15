@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { PointOfOrderCategory } from 'src/app/domain/models/point-of-order-category/point-of-order-category';
-import { ListUpdateData } from 'src/app/infrastructure/utils';
-import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { PointOfOrderCategory } from '@app/domain/models/point-of-order-category/point-of-order-category';
+import { ListUpdateData } from '@app/infrastructure/utils';
+import { ViewPointOfOrderCategory } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';

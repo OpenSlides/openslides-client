@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import QRCode from 'qrcode';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: `os-qr-code`,
     templateUrl: `./qr-code.component.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: [`./qr-code.component.scss`]
 })
 export class QrCodeComponent implements AfterViewInit {

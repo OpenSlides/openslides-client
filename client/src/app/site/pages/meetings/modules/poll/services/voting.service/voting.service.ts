@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { PollState, PollType } from '@app/domain/models/poll/poll-constants';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';

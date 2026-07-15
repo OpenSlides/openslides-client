@@ -70,8 +70,6 @@
                     formControlName="time_zone"
                     [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
                     [inputListValues]="time_zones"
-                    [keepOpen]="false"
-                    [multiple]="false"
                 ></os-list-search-selector>
             </mat-form-field>
 
@@ -87,7 +85,7 @@
 
             <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
             <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
-            <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
+            <mat-form-field *osCmlPerms="CML.can_manage; committeeId: $safeNavigationMigration(committee?.id)">
                 <mat-label>{{ 'Tags' | translate }}</mat-label>
                 <os-repo-search-selector
                     formControlName="organization_tag_ids"

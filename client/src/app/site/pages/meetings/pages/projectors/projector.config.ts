@@ -1,13 +1,13 @@
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Projection } from 'src/app/domain/models/projector/projection';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
-import { ProjectorMessage } from 'src/app/domain/models/projector/projector-message';
-import { ProjectionRepositoryService } from 'src/app/gateways/repositories/projections/projection-repository.service';
-import { ProjectorCountdownRepositoryService } from 'src/app/gateways/repositories/projector-countdowns/projector-countdown-repository.service';
-import { ProjectorMessageRepositoryService } from 'src/app/gateways/repositories/projector-messages/projector-message-repository.service';
-import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { Permission } from '@app/domain/definitions/permission';
+import { Projection } from '@app/domain/models/projector/projection';
+import { Projector } from '@app/domain/models/projector/projector';
+import { ProjectorCountdown } from '@app/domain/models/projector/projector-countdown';
+import { ProjectorMessage } from '@app/domain/models/projector/projector-message';
+import { ProjectionRepositoryService } from '@app/gateways/repositories/projections/projection-repository.service';
+import { ProjectorCountdownRepositoryService } from '@app/gateways/repositories/projector-countdowns/projector-countdown-repository.service';
+import { ProjectorMessageRepositoryService } from '@app/gateways/repositories/projector-messages/projector-message-repository.service';
+import { ProjectorRepositoryService } from '@app/gateways/repositories/projectors/projector-repository.service';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from './view-models';
 

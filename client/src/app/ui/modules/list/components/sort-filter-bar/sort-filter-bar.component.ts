@@ -14,6 +14,12 @@ import {
 } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
+import { Identifiable } from '@app/domain/interfaces';
+import { OsFilterIndicator } from '@app/site/base/base-filter.service';
+import { OsSortingOption } from '@app/site/base/base-sort.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
+import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';

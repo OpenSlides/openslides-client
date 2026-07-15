@@ -1,14 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { CanComponentDeactivate } from '@app/site/guards/watch-for-changes.guard';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion, ViewMotionCategory } from '@app/site/pages/meetings/pages/motions';
+import { ChoiceService } from '@app/ui/modules/choice-dialog';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
@@ -22,6 +22,7 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     selector: `os-category-detail-sort`,
     templateUrl: `./category-detail-sort.component.html`,
     styleUrls: [`./category-detail-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CategoryDetailSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {

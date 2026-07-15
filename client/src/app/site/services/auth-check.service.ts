@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
 import { CookieService } from 'ngx-cookie-service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';

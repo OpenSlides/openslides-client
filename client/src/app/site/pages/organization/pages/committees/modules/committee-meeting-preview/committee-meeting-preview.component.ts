@@ -1,12 +1,12 @@
-import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
@@ -16,6 +16,7 @@ import { MeetingService } from '../services/meeting.service';
     templateUrl: `./committee-meeting-preview.component.html`,
     styleUrls: [`./committee-meeting-preview.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {

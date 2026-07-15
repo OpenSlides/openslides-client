@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { UserExport } from '@app/domain/models/users/user.export';
+import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
-import { UserExport } from 'src/app/domain/models/users/user.export';
-import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { AccountCsvExportExample } from '../../export/csv-export-example';
 import { accountColumns } from '../../pages/account-import/definitions';

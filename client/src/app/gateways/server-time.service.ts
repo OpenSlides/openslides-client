@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
 @Injectable({
     providedIn: `root`

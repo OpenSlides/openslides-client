@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
-import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
+import { Id } from '@app/domain/definitions/key-types';
+import { MeetingMediafile } from '@app/domain/models/meeting-mediafile/meeting-mediafile';
+import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { BaseRepository } from '../base-repository';

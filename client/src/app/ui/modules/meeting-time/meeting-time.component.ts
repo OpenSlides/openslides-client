@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { TimeZoneService } from 'src/app/site/services/time-zone.service';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
 
 import { PipesModule } from '../../pipes';
 
@@ -9,6 +9,7 @@ import { PipesModule } from '../../pipes';
     selector: `os-meeting-time`,
     templateUrl: `./meeting-time.component.html`,
     styleUrls: [`./meeting-time.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, PipesModule]
 })
 export class MeetingTimeComponent {

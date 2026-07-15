@@ -1,15 +1,15 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { toBase64 } from '@app/infrastructure/utils';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { toBase64 } from 'src/app/infrastructure/utils';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { PipesModule } from '../../pipes';
 import { FileUploadModule } from '../file-upload';
@@ -27,6 +27,7 @@ export interface UploadSuccessEvent {
     selector: `os-media-upload-content`,
     templateUrl: `./media-upload-content.component.html`,
     styleUrls: [`./media-upload-content.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

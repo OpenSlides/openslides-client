@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewPoll } from '../../../../view-models';
 

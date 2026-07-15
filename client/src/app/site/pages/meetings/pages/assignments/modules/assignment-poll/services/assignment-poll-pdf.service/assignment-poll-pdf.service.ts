@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
+import { PollMethod } from '@app/domain/models/poll/poll-constants';
+import { AbstractPollData, BasePollPdfService } from '@app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
-import {
-    AbstractPollData,
-    BasePollPdfService
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { ViewAssignment } from '../../../../view-models';

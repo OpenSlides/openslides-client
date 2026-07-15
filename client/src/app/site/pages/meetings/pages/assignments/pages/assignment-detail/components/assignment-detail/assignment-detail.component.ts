@@ -1,27 +1,27 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { HasSequentialNumber } from '@app/domain/interfaces';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { UserSelectionData } from '@app/site/pages/meetings/modules/participant-search-selector';
+import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { ViewAssignment, ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignments';
+import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
 import { AssignmentPhases } from '../../../../definitions';
@@ -35,6 +35,7 @@ import { AssignmentCandidateControllerService } from '../../services/assignment-
     selector: `os-assignment-detail`,
     templateUrl: `./assignment-detail.component.html`,
     styleUrls: [`./assignment-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {

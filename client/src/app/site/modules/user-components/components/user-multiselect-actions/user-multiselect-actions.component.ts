@@ -8,12 +8,12 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 
 @Component({
     selector: `os-user-multiselect-actions`,

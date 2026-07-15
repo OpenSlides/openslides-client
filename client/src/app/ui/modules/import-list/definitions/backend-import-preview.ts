@@ -1,4 +1,4 @@
-import { Identifiable } from 'src/app/domain/interfaces';
+import { Identifiable } from '@app/domain/interfaces';
 import { ViewImportedParticipant } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 
 export enum BackendImportState {

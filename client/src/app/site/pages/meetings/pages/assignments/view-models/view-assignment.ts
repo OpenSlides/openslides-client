@@ -1,11 +1,11 @@
+import { HasSequentialNumber } from '@app/domain/interfaces';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { HasHistoryEntries } from '@app/gateways/repositories/history-entry/has-history-entries';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { _ } from '@ngx-translate/core';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';

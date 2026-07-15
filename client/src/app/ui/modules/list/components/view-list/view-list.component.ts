@@ -10,6 +10,8 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ParticipantImportService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/services';

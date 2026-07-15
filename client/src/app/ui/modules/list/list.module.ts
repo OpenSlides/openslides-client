@@ -15,10 +15,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { InputModule } from 'src/app/ui/modules/input';
-import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { InputModule } from '@app/ui/modules/input';
+import { ScrollingTableModule } from '@app/ui/modules/scrolling-table';
 
 import { FilterMenuComponent } from './components/filter-menu/filter-menu.component';
 import { ListComponent } from './components/list/list.component';

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MotionFormattingRepresentation } from '@app/domain/models/motions/motion';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
 import {

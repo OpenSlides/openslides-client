@@ -1,12 +1,12 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PollContentObject } from '@app/domain/models/poll';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { PollDialogData, PollDialogResult } from '@app/site/pages/meetings/modules/poll/definitions';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { firstValueFrom } from 'rxjs';
-import { PollContentObject } from 'src/app/domain/models/poll';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { PollDialogData, PollDialogResult } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 @Injectable({ providedIn: 'root' })
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {

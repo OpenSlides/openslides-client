@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { UserExport } from 'src/app/domain/models/users/user.export';
+import { UserExport } from '@app/domain/models/users/user.export';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
     CsvColumnsDefinition
-} from 'src/app/gateways/export/csv-export.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+} from '@app/gateways/export/csv-export.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { TranslateService } from '@ngx-translate/core';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
 import { participantColumns } from '../../pages/participant-import/definitions';

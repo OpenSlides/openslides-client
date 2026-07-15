@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';

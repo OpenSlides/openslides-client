@@ -1,4 +1,4 @@
-import { Organization } from 'src/app/domain/models/organizations/organization';
+import { Organization } from '@app/domain/models/organizations/organization';
 
 import { BaseViewModel, ViewModelRelations } from '../../../base/base-view-model';
 import { ViewMediafile } from '../../meetings/pages/mediafiles';

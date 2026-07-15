@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Data, Router, UrlSegment, UrlTree } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
 import { firstValueFrom } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesRouterService } from './openslides-router.service';

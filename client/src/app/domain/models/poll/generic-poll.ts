@@ -1,9 +1,9 @@
+import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ViewPollCandidateList } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { Observable } from 'rxjs';
-import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 

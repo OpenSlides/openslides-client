@@ -8,12 +8,12 @@ import {
     Output
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Collection, Id } from '@app/domain/definitions/key-types';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 import { _ } from '@ngx-translate/core';
 import { filter, firstValueFrom, Subscription } from 'rxjs';
-import { Collection, Id } from 'src/app/domain/definitions/key-types';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
 const ROUTE_SUBSCRIPTION_NAME = `routeSubscription`;
 

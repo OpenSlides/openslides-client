@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
 

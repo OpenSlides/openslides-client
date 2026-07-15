@@ -1,5 +1,6 @@
 import {
     ChangeDetectorRef,
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ContentChildren,
@@ -18,6 +19,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -55,6 +59,7 @@ export enum BackendImportPhase {
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BackendImportListComponent implements OnInit {

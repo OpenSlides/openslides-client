@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Projector } from '@app/domain/models/projector/projector';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';

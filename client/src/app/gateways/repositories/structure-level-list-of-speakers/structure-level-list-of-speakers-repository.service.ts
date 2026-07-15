@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { StructureLevelListOfSpeakers } from 'src/app/domain/models/structure-levels/structure-level-list-of-speakers';
-import { StructureLevelListOfSpeakersAction } from 'src/app/gateways/repositories/structure-level-list-of-speakers/structure-level-list-of-speakers.action';
-import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { Identifiable } from '@app/domain/interfaces';
+import { StructureLevelListOfSpeakers } from '@app/domain/models/structure-levels/structure-level-list-of-speakers';
+import { StructureLevelListOfSpeakersAction } from '@app/gateways/repositories/structure-level-list-of-speakers/structure-level-list-of-speakers.action';
+import { ViewStructureLevelListOfSpeakers } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

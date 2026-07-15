@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Theme } from 'src/app/domain/models/theme/theme';
-import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Theme } from '@app/domain/models/theme/theme';
+import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
+import { OrganizationControllerService } from '@app/site/pages/organization/services/organization-controller.service';
+import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
 import { ViewTheme } from '../view-models';
 

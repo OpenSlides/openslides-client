@@ -1,4 +1,10 @@
 import { Directive, inject, Injector, ProviderToken } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { deepCopy } from '@app/infrastructure/utils/transform-functions';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { SortListService } from '@app/ui/modules/list/definitions/sort-service';
 import {
     auditTime,
     BehaviorSubject,
@@ -8,12 +14,6 @@ import {
     isObservable,
     Observable
 } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ModelRequest } from '@app/domain/interfaces/model-request';
 import { _ } from '@ngx-translate/core';
-import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
+import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
 
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';

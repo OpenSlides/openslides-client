@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 import {
     CollectionMappedTypes,
     CollectionMapperService,
     CollectionType
-} from 'src/app/site/services/collection-mapper.service';
-import { CollectionMapper } from 'src/app/site/services/collection-mapper.service/collection-mapper';
+} from '@app/site/services/collection-mapper.service';
+import { CollectionMapper } from '@app/site/services/collection-mapper.service/collection-mapper';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: `root`
