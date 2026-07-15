@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ListSearchService } from 'src/app/ui/modules/list/services/list-search.service';
+import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 
 @Injectable({
     providedIn: 'root'

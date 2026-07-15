@@ -1,5 +1,5 @@
 import { Identifiable } from '@app/domain/interfaces';
-import { ViewImportedParticipant } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
+import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 
 export enum BackendImportState {
     Error = `error`,

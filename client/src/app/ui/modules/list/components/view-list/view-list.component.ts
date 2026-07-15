@@ -13,13 +13,12 @@ import {
 import { Identifiable } from '@app/domain/interfaces';
 import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ParticipantImportService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/services';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
+
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
 import { FilterListService, SearchService, SortListService } from '../../definitions';
 import { SortFilterBarComponent } from '../sort-filter-bar/sort-filter-bar.component';
+import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
 
 @Component({
     selector: `os-view-list`,

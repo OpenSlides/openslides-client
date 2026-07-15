@@ -22,17 +22,11 @@ import { FilterListService } from '@app/ui/modules/list/definitions/filter-servi
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
-import { OsSortingOption } from 'src/app/site/base/base-sort.service';
-import { ParticipantImportService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/services';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
-import { OsSortOption, SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
 import { SearchService } from '../../definitions/search-service';
 import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
+import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
 
 /**
  * Reusable bar for list views, offering sorting and filter options.

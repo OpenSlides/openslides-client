@@ -23,32 +23,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { _, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
-import { StructureLevel } from 'src/app/domain/models/structure-levels';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { AccountControllerService } from 'src/app/site/pages/organization/pages/accounts/services/common/account-controller.service';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
-import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
-import {
-    BackendImportEntryObject,
-    BackendImportHeader,
-    BackendImportIdentifiedRow,
-    BackendImportPreview,
-    BackendImportState,
-    BackendImportSummary
-} from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
-import { ImportListFirstTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-first-tab.directive';
-import { ImportListLastTabDirective } from 'src/app/ui/modules/import-list/directives/import-list-last-tab.directive';
-import { ImportListStatusTemplateDirective } from 'src/app/ui/modules/import-list/directives/import-list-status-template.directive';
-import { ListModule } from 'src/app/ui/modules/list';
-import { ListSearchService } from 'src/app/ui/modules/list/services/list-search.service';
-import { ScrollingTableCellDefConfig } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
-import {
-    END_POSITION,
-    START_POSITION
-} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
+
 
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
@@ -56,6 +31,22 @@ import { ParticipantImportService } from '../../services/participant-import.serv
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
+import { StructureLevel } from '@app/domain/models/structure-levels';
+import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
+import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import { BackendImportHeader, BackendImportSummary, BackendImportIdentifiedRow, BackendImportState, BackendImportEntryObject, BackendImportPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import { ImportListFirstTabDirective } from '@app/ui/modules/import-list/directives/import-list-first-tab.directive';
+import { ImportListLastTabDirective } from '@app/ui/modules/import-list/directives/import-list-last-tab.directive';
+import { ImportListStatusTemplateDirective } from '@app/ui/modules/import-list/directives/import-list-status-template.directive';
+import { ListModule } from '@app/ui/modules/list';
+import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
+import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
+import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 @Component({
     selector: `os-participant-import-list-preview`,

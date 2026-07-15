@@ -1,6 +1,6 @@
 import {
-    ChangeDetectorRef,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -25,10 +25,6 @@ import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { ViewImportedParticipant } from 'src/app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
-import { BackendImportService } from 'src/app/ui/base/import-service';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
@@ -44,6 +40,7 @@ import {
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
+import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 
 export enum BackendImportPhase {
     LOADING_PREVIEW,
@@ -59,7 +56,6 @@ export enum BackendImportPhase {
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BackendImportListComponent implements OnInit {
