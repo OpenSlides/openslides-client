@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
@@ -16,19 +16,18 @@ import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-mo
 import { DiffServiceFactory } from '../diff-factory.service';
 import { MotionDiffService } from '../motion-diff.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionChangeRecommendationRepositoryService,
-        private diffServiceFactory: DiffServiceFactory
-    ) {
-        super(controllerServiceCollector, MotionChangeRecommendation, repo);
+    protected override repo: MotionChangeRecommendationRepositoryService;
+    private diffServiceFactory = inject(DiffServiceFactory);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(MotionChangeRecommendationRepositoryService);
+        super(controllerServiceCollector, MotionChangeRecommendation, repoForSuper);
     }
 
     public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {

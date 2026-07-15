@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
 import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions';
@@ -8,16 +8,16 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ViewMotionBlock } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionBlockControllerService extends BaseMeetingControllerService<ViewMotionBlock, MotionBlock> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionBlockRepositoryService,
-        private motionRepo: MotionControllerService
-    ) {
-        super(controllerServiceCollector, MotionBlock, repo);
+    protected override repo: MotionBlockRepositoryService;
+    private motionRepo = inject(MotionControllerService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(MotionBlockRepositoryService);
+        super(controllerServiceCollector, MotionBlock, repoForSuper);
+        this.repo = repoForSuper;
     }
 
     public create(...blocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {

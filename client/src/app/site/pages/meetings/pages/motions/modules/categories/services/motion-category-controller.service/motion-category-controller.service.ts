@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCategory } from '@app/domain/models/motions/motion-category';
@@ -12,21 +12,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ViewMotionCategory } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);
 
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionCategoryRepositoryService,
-        private treeService: TreeService
-    ) {
-        super(controllerServiceCollector, MotionCategory, repo);
-        repo.getViewModelListObservable().subscribe(categories =>
-            this._currentCategoriesSubject.next(this.createCategoriesTree(categories))
-        );
+    protected override repo: MotionCategoryRepositoryService;
+    private treeService = inject(TreeService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(MotionCategoryRepositoryService);
+        super(controllerServiceCollector, MotionCategory, repoForSuper);
+        this.repo = repoForSuper;
+        this.repo
+            .getViewModelListObservable()
+            .subscribe(categories => this._currentCategoriesSubject.next(this.createCategoriesTree(categories)));
     }
 
     public override getViewModelList(): ViewMotionCategory[] {
