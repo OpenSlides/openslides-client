@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
@@ -13,15 +13,19 @@ import { map } from 'rxjs/operators';
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewMediafile } from '../view-models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
-    public constructor(
-        protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MediafileRepositoryService,
-        private operator: OperatorService,
-        private activeMeeting: ActiveMeetingService
-    ) {
+    protected override controllerServiceCollector: MeetingControllerServiceCollectorService;
+    protected override repo: MediafileRepositoryService;
+    private operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MediafileRepositoryService);
         super(controllerServiceCollector, Mediafile, repo);
+        this.controllerServiceCollector = controllerServiceCollector;
+        this.repo = repo;
     }
 
     public move(files: Identifiable[], directoryId: Id | null): Promise<void> {

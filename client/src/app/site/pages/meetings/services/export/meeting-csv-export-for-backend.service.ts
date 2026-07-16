@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     CsvColumnsDefinition,
     DEFAULT_COLUMN_SEPARATOR,
@@ -10,13 +10,9 @@ import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { MeetingSettingsService } from '../meeting-settings.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MeetingCsvExportForBackendService extends CsvExportForBackendService {
-    public constructor(private meetingSettings: MeetingSettingsService) {
-        super();
-    }
+    private meetingSettings = inject(MeetingSettingsService);
 
     /**
      * Saves an array of model data to a CSV.
