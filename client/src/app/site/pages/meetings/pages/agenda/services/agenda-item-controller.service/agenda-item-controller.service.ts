@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id, Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { AgendaItem, AgendaItemType } from '@app/domain/models/agenda/agenda-item';
@@ -12,15 +12,15 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 
 import { ViewAgendaItem } from '../../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: AgendaItemRepositoryService
-    ) {
-        super(controllerServiceCollector, AgendaItem, repo);
+    protected override repo: AgendaItemRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repoForSuper = inject(AgendaItemRepositoryService);
+        super(controllerServiceCollector, AgendaItem, repoForSuper);
+        this.repo = repoForSuper;
     }
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {

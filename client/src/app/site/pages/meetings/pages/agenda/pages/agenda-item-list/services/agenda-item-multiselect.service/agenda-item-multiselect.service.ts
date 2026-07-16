@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { SpinnerService } from '@app/site/modules/global-spinner';
 import { ChoiceService } from '@app/ui/modules/choice-dialog';
 import { ChoiceAnswer } from '@app/ui/modules/choice-dialog/definitions';
@@ -9,20 +9,15 @@ import { TagControllerService } from '../../../../../motions/modules/tags/servic
 import { AgendaItemControllerService } from '../../../../services';
 import { ViewAgendaItem } from '../../../../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaItemMultiselectService {
+    private choiceService = inject(ChoiceService);
+    private spinnerService = inject(SpinnerService);
+    public repo = inject(AgendaItemControllerService);
+    private tagRepo = inject(TagControllerService);
+    private translate = inject(TranslateService);
+
     private messageForSpinner = this.translate.instant(`Agenda items are in process. Please wait ...`);
-
-    public constructor(
-        private choiceService: ChoiceService,
-        private spinnerService: SpinnerService,
-        public repo: AgendaItemControllerService,
-        private tagRepo: TagControllerService,
-        private translate: TranslateService
-    ) {}
-
     /**
      * Opens a dialog and adds/removes the selected tags for all given agenda items.
      *

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Speaker } from '@app/domain/models/speakers/speaker';
@@ -14,16 +14,16 @@ import { map, Observable } from 'rxjs';
 import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: SpeakerRepositoryService,
-        protected userRepo: UserControllerService
-    ) {
-        super(controllerServiceCollector, Speaker, repo);
+    protected userRepo = inject(UserControllerService);
+    protected override repo: SpeakerRepositoryService;
+
+    public constructor() {
+        const repoForSuper = inject(SpeakerRepositoryService);
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        super(controllerServiceCollector, Speaker, repoForSuper);
+        this.repo = repoForSuper;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
