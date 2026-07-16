@@ -1,3 +1,4 @@
+import { Id } from '@app/domain/definitions/key-types';
 import { HasProjectorTitle } from '@app/domain/interfaces/has-projector-title';
 import { HasProperties } from '@app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '@app/domain/models/mediafiles/mediafile.constants';
@@ -88,6 +89,18 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
 
     public get isTemplate(): boolean {
         return !!this.template_for_organization_id;
+    }
+
+    public get topic_poll_default_group_ids(): Id[] {
+        return this.topic_poll_config.group_ids;
+    }
+
+    public get assignment_poll_default_group_ids(): Id[] {
+        return this.assignment_poll_config.group_ids;
+    }
+
+    public get motion_poll_default_group_ids(): Id[] {
+        return this.motion_poll_config.group_ids;
     }
 
     public get relatedTime(): RelatedTime {

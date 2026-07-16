@@ -41,9 +41,15 @@
                                     choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder;
                                     track choice
                                 ) {
-                                    <mat-option [value]="choice.key">
-                                        {{ choice.value | toString | translate }}
-                                    </mat-option>
+                                    @if (setting.choiceI18nPrefix) {
+                                        <mat-option [value]="choice.value">
+                                            {{ choice.value | toString | translateKey: setting.choiceI18nPrefix }}
+                                        </mat-option>
+                                    } @else {
+                                        <mat-option [value]="choice.key">
+                                            {{ choice.value | toString | translate }}
+                                        </mat-option>
+                                    }
                                 }
                             }
                         </mat-select>

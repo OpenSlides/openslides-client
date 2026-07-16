@@ -175,7 +175,6 @@ export class Settings {
 
     // default poll
     // DELETE
-    public topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     public poll_sort_poll_result_by_votes: boolean;
     public poll_default_type: PollVisibility;
     public poll_default_onehundred_percent_base: BaseOnehundredPercentBase;
@@ -185,10 +184,8 @@ export class Settings {
     public assignment_poll_sort_poll_result_by_votes!: boolean;
     public assignment_poll_default_type!: PollVisibility;
     public assignment_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
     public motion_poll_default_type!: PollVisibility;
     public motion_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
     public motion_poll_projection_max_columns!: number;
     // DELETE END

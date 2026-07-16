@@ -39,7 +39,7 @@ export interface ChoicesFunctionDefinition<V> {
 
 export interface SettingsSubscriptionKey<V> {
     idField: keyof Settings;
-    field: keyof V;
+    field: keyof V & string;
 }
 
 export interface SettingsInput<V = any> {

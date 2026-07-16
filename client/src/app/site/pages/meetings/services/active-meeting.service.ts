@@ -129,7 +129,8 @@ export class ActiveMeetingService {
         await this.modelRequestService.updateSubscribeTo({
             ...getActiveMeetingSubscriptionConfig(
                 this.meetingId!,
-                this.meetingSettingsDefinitionService.getSettingsKeys()
+                this.meetingSettingsDefinitionService.getSettingsKeys(),
+                this.meetingSettingsDefinitionService.getSettingsFollow()
             ),
             hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
         });

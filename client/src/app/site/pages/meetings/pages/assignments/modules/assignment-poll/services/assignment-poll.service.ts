@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollVisibility } from '@app/domain/models/poll';
 import { Poll } from '@app/domain/models/poll/poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
@@ -24,19 +24,18 @@ export class AssignmentPollService extends PollService {
     public defaultPollType: PollVisibility | undefined;
     public defaultGroupIds: number[] = [];
 
-    public constructor(
-        pollServiceMapper: PollServiceMapperService,
-        protected override translate: TranslateService,
-        private pollRepo: PollControllerService
-    ) {
+    private pollRepo = inject(PollControllerService);
+    private meetingPollSettingsService = inject(MeetingPollSettingsService);
+
+    public constructor(pollServiceMapper: PollServiceMapperService) {
         super();
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
             .get(`assignment_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingSettingsService
-            .get(`assignment_poll_default_group_ids`)
-            .subscribe(ids => (this.defaultGroupIds = ids));
+        this.meetingPollSettingsService
+            .get(`assignment`, `group_ids`)
+            .subscribe(ids => (this.defaultGroupIds = ids ?? []));
         this.meetingSettingsService
             .get(`assignment_poll_sort_poll_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));
