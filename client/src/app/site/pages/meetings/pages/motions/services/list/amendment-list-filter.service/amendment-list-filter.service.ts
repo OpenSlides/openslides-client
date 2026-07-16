@@ -1,7 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { OsFilter } from '@app/site/base/base-filter.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
-import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import { MotionControllerService } from '../../common/motion-controller.service';
@@ -44,9 +43,8 @@ export class AmendmentListFilterService extends MotionListFilterService {
     protected override translate = inject(TranslateService);
 
     public constructor() {
-        const store = inject(ActiveFiltersService);
         const motionRepo = inject(MotionControllerService);
-        super(store);
+        super();
 
         this.updateFilterForRepo({
             repo: motionRepo,

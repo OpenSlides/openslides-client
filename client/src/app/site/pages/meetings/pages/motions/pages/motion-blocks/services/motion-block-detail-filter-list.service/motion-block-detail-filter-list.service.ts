@@ -1,6 +1,5 @@
 import { inject, Service } from '@angular/core';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
-import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
@@ -22,11 +21,6 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     private _blockId = 0;
 
     protected override translate = inject(TranslateService);
-
-    public constructor() {
-        const store = inject(ActiveFiltersService);
-        super(store);
-    }
 
     /**
      * @override from parent
