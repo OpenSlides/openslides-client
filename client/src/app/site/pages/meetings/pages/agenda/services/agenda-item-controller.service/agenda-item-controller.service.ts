@@ -18,9 +18,8 @@ export class AgendaItemControllerService extends BaseMeetingControllerService<Vi
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(AgendaItemRepositoryService);
-        super(controllerServiceCollector, AgendaItem, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(AgendaItemRepositoryService);
+        super(controllerServiceCollector, AgendaItem, repo);
     }
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {

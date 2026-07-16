@@ -16,9 +16,8 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(VoteRepositoryService);
-        super(controllerServiceCollector, Vote, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(VoteRepositoryService);
+        super(controllerServiceCollector, Vote, repo);
     }
 
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<Record<Id, Id[]>> {

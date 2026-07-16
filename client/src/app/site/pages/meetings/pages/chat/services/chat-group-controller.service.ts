@@ -13,9 +13,8 @@ export class ChatGroupControllerService extends BaseMeetingControllerService<Vie
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(ChatGroupRepositoryService);
-        super(controllerServiceCollector, ChatGroup, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(ChatGroupRepositoryService);
+        super(controllerServiceCollector, ChatGroup, repo);
     }
 
     public create(chatGroup: Partial<ChatGroup>): Promise<Identifiable[]> {

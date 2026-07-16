@@ -28,9 +28,8 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
 
     public constructor() {
         const controllerServiceCollector = inject(ControllerServiceCollectorService);
-        const repoForSuper = inject(ListOfSpeakersRepositoryService);
-        super(controllerServiceCollector, ListOfSpeakers, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(ListOfSpeakersRepositoryService);
+        super(controllerServiceCollector, ListOfSpeakers, repo);
     }
 
     public readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {

@@ -15,9 +15,8 @@ export class StructureLevelControllerService extends BaseMeetingControllerServic
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(StructureLevelRepositoryService);
-        super(controllerServiceCollector, StructureLevel, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(StructureLevelRepositoryService);
+        super(controllerServiceCollector, StructureLevel, repo);
     }
 
     public create(...structureLevels: Partial<StructureLevel>[]): Promise<Identifiable[] | void> {

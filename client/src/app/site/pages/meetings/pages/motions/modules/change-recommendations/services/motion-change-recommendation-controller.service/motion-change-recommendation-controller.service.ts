@@ -26,8 +26,8 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(MotionChangeRecommendationRepositoryService);
-        super(controllerServiceCollector, MotionChangeRecommendation, repoForSuper);
+        const repo = inject(MotionChangeRecommendationRepositoryService);
+        super(controllerServiceCollector, MotionChangeRecommendation, repo);
     }
 
     public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {

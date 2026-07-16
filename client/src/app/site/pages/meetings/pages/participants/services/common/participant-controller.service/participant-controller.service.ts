@@ -72,9 +72,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(UserRepositoryService);
-        super(controllerServiceCollector, User, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(UserRepositoryService);
+        super(controllerServiceCollector, User, repo);
 
         let meetingUserIds = [];
         this.activeMeetingIdService.meetingIdObservable

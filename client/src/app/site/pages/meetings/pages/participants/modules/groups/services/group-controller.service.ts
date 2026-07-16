@@ -33,9 +33,8 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
 
     public constructor() {
         const repositoryServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(GroupRepositoryService);
-        super(repositoryServiceCollector, ViewGroup, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(GroupRepositoryService);
+        super(repositoryServiceCollector, ViewGroup, repo);
     }
 
     public create(...groups: Partial<Group>[]): Promise<Identifiable[]> {

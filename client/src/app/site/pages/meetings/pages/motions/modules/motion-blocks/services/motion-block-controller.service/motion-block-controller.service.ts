@@ -15,9 +15,8 @@ export class MotionBlockControllerService extends BaseMeetingControllerService<V
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(MotionBlockRepositoryService);
-        super(controllerServiceCollector, MotionBlock, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(MotionBlockRepositoryService);
+        super(controllerServiceCollector, MotionBlock, repo);
     }
 
     public create(...blocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {

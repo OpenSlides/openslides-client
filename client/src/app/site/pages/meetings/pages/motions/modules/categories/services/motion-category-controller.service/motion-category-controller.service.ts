@@ -21,9 +21,8 @@ export class MotionCategoryControllerService extends BaseMeetingControllerServic
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(MotionCategoryRepositoryService);
-        super(controllerServiceCollector, MotionCategory, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(MotionCategoryRepositoryService);
+        super(controllerServiceCollector, MotionCategory, repo);
         this.repo
             .getViewModelListObservable()
             .subscribe(categories => this._currentCategoriesSubject.next(this.createCategoriesTree(categories)));

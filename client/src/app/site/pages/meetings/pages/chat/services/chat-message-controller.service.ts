@@ -13,9 +13,8 @@ export class ChatMessageControllerService extends BaseMeetingControllerService<V
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(ChatMessageRepositoryService);
-        super(controllerServiceCollector, ChatMessage, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(ChatMessageRepositoryService);
+        super(controllerServiceCollector, ChatMessage, repo);
     }
 
     public create(chatMessage: Partial<ChatMessage>): Promise<Identifiable[]> {

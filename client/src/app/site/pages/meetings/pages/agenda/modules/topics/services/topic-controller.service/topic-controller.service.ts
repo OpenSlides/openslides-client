@@ -14,9 +14,8 @@ export class TopicControllerService extends BaseMeetingControllerService<ViewTop
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(TopicRepositoryService);
-        super(controllerServiceCollector, Topic, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(TopicRepositoryService);
+        super(controllerServiceCollector, Topic, repo);
     }
 
     public create(...topics: Partial<Topic>[]): Promise<Identifiable[]> {

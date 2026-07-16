@@ -20,10 +20,9 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
     protected override repo: SpeakerRepositoryService;
 
     public constructor() {
-        const repoForSuper = inject(SpeakerRepositoryService);
+        const repo = inject(SpeakerRepositoryService);
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        super(controllerServiceCollector, Speaker, repoForSuper);
-        this.repo = repoForSuper;
+        super(controllerServiceCollector, Speaker, repo);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

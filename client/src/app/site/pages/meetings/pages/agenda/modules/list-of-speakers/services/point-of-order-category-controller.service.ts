@@ -15,8 +15,7 @@ export class PointOfOrderCategoryControllerService extends BaseMeetingController
 
     public constructor() {
         const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repoForSuper = inject(PointOfOrderCategoryRepositoryService);
-        super(controllerServiceCollector, PointOfOrderCategory, repoForSuper);
-        this.repo = repoForSuper;
+        const repo = inject(PointOfOrderCategoryRepositoryService);
+        super(controllerServiceCollector, PointOfOrderCategory, repo);
     }
 }
