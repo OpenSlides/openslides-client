@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 import { DataStoreService } from '@app/site/services/data-store.service';
 import { RelationManagerService } from '@app/site/services/relation-manager.service';
@@ -10,9 +10,7 @@ import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 import { MeetingSettingsService } from './meeting-settings.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingControllerServiceCollectorService {
     public get translate(): TranslateService {
         return this.controllerServiceCollector.translate;
@@ -30,11 +28,9 @@ export class MeetingControllerServiceCollectorService {
         return this.controllerServiceCollector.viewModelStoreService;
     }
 
-    public constructor(
-        private controllerServiceCollector: ControllerServiceCollectorService,
-        public activeMeetingIdService: ActiveMeetingIdService,
-        public activeMeetingService: ActiveMeetingService,
-        public collectionMapperService: MeetingCollectionMapperService,
-        public meetingSettingsService: MeetingSettingsService
-    ) {}
+    private controllerServiceCollector = inject(ControllerServiceCollectorService);
+    public activeMeetingIdService = inject(ActiveMeetingIdService);
+    public activeMeetingService = inject(ActiveMeetingService);
+    public collectionMapperService = inject(MeetingCollectionMapperService);
+    public meetingSettingsService = inject(MeetingSettingsService);
 }

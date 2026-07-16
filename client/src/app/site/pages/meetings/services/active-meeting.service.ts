@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { BannerDefinition, BannerService } from '@app/site/modules/site-wrapper/services/banner.service';
@@ -15,9 +15,7 @@ import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
 import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActiveMeetingService {
     public get guestsEnabled(): boolean {
         const activeMeeting = this._meetingSubject.getValue();
