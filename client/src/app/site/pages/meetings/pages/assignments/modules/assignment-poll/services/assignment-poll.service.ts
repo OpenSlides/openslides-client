@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from '@app/domain/models/poll';
 import { OptionData, PollData } from '@app/domain/models/poll/generic-poll';
@@ -29,20 +29,20 @@ export const UnknownUserLabel = _(`Deleted user`);
  * perfectly fits on assignments. Motion polls are now the special case; assignment polls should
  * be the default case.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AssignmentPollService extends PollService {
     public defaultPollMethod: PollMethod | undefined;
     public defaultPercentBase: PollPercentBase | undefined;
     public defaultPollType: PollType | undefined;
     public defaultGroupIds: number[] = [];
 
-    public constructor(
-        pollServiceMapper: PollServiceMapperService,
-        protected override translate: TranslateService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    protected override translate = inject(TranslateService);
+    private pollRepo = inject(PollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
+        const pollServiceMapper = inject(PollServiceMapperService);
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
             .get(`assignment_poll_default_onehundred_percent_base`)

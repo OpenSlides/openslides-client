@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -31,20 +31,18 @@ interface TopicPollTableEntry {
     data: number | undefined;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicPollService extends PollService {
     public defaultPollMethod: PollMethod;
     public defaultPercentBase: PollPercentBase;
     public defaultGroupIds: number[];
 
-    public constructor(
-        pollServiceMapper: PollServiceMapperService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private pollRepo = inject(PollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
+        const pollServiceMapper = inject(PollServiceMapperService);
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`poll_default_onehundred_percent_base`)

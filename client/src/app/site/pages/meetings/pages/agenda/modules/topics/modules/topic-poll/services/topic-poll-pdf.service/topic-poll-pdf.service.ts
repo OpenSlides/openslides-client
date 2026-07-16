@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AbstractPollData, BasePollPdfService } from '@app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,15 +7,13 @@ import { TopicControllerService } from '../../../../services/topic-controller.se
 import { ViewTopic } from '../../../../view-models';
 import { TopicPollService } from '../topic-poll.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicPollPdfService extends BasePollPdfService {
-    public constructor(
-        protected override translate: TranslateService,
-        private topicRepo: TopicControllerService,
-        pollService: TopicPollService
-    ) {
+    protected override translate = inject(TranslateService);
+    private topicRepo = inject(TopicControllerService);
+
+    public constructor() {
+        const pollService = inject(TopicPollService);
         super(pollService);
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)

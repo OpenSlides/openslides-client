@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PollMethod } from '@app/domain/models/poll/poll-constants';
 import { AbstractPollData, BasePollPdfService } from '@app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
@@ -9,16 +9,14 @@ import { AssignmentControllerService } from '../../../../services/assignment-con
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../assignment-poll.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AssignmentPollPdfService extends BasePollPdfService {
-    public constructor(
-        meetingSettingsService: MeetingSettingsService,
-        protected override translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService,
-        pollService: AssignmentPollService
-    ) {
+    protected override translate = inject(TranslateService);
+    private assignmentRepo = inject(AssignmentControllerService);
+
+    public constructor() {
+        const meetingSettingsService = inject(MeetingSettingsService);
+        const pollService = inject(AssignmentPollService);
         super(pollService);
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
