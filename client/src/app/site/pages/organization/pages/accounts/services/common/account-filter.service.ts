@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { OML } from '@app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
@@ -15,9 +15,7 @@ import { GenderControllerService } from '../../pages/gender/services/gender-cont
 type Email = string;
 type Name = string;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
 
@@ -59,20 +57,20 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         );
     }
 
-    public constructor(
-        store: ActiveFiltersService,
-        private operator: OperatorService,
-        private controller: UserControllerService,
-        private meetingRepo: MeetingControllerService,
-        private genderRepo: GenderControllerService
-    ) {
+    private operator = inject(OperatorService);
+    private controller = inject(UserControllerService);
+    private meetingRepo = inject(MeetingControllerService);
+    private genderRepo = inject(GenderControllerService);
+
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
 
         this.controller.getViewModelListObservable().subscribe(users => {
             this.updateUserMaps(users);
         });
         this.updateFilterForRepo({
-            repo: genderRepo,
+            repo: this.genderRepo,
             filter: this.genderFilterOption,
             noneOptionLabel: _(`not specified`)
         });

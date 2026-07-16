@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { OrganizationRepositoryService } from '@app/gateways/repositories/organization-repository.service';
 import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 
@@ -6,9 +6,7 @@ import { OrganizationSetting } from '../../../../domain/models/organizations/org
 import { ViewOrganization } from '../view-models/view-organization';
 import { ORGANIZATION_ID, OrganizationService } from './organization.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OrganizationSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
@@ -17,18 +15,17 @@ export class OrganizationSettingsService {
 
     private hasDataSubject = new BehaviorSubject(false);
 
+    private organization = inject(OrganizationService);
+    private repo = inject(OrganizationRepositoryService);
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(
-        private organization: OrganizationService,
-        private repo: OrganizationRepositoryService
-    ) {
+    public constructor() {
         this.repo
             .getModifiedIdsObservable()
             .subscribe(ids => this.hasDataSubject.next(this.hasDataSubject.value || ids.includes(ORGANIZATION_ID)));
 
-        organization.organizationObservable.subscribe(activeOrganization => {
+        this.organization.organizationObservable.subscribe(activeOrganization => {
             if (activeOrganization) {
                 for (const key of Object.keys(this.settingSubjects)) {
                     this.settingSubjects[key].next(activeOrganization[key as keyof ViewOrganization] as any);
