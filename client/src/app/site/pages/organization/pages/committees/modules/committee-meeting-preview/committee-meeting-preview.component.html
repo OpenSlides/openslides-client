@@ -103,6 +103,8 @@
 <ng-template #canNotManageUsersTemplate>
     <div class="fake-button-no-touch" matTooltip="{{ userAmount }} {{ 'participants' | translate }}">
         <mat-icon
+            [attr.aria-hidden]="false"
+            [attr.aria-label]="('Number of participants' | translate) + ' ' + userAmount"
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"
@@ -119,6 +121,8 @@
         (click)="changeToMeetingUsers()"
     >
         <mat-icon
+            [attr.aria-hidden]="false"
+            [attr.aria-label]="('Number of participants' | translate) + ' ' + userAmount"
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"

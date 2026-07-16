@@ -22,7 +22,7 @@
                     </button>
                 </div>
             }
-            @for (filter of filterService?.filterStack || []; track filter) {
+            @for (filter of filterService?.filterStack || []; track filter.option) {
                 <div>
                     <button
                         mat-stroked-button
@@ -54,6 +54,8 @@
                         matBadge="&#8288;"
                         matBadgeColor="accent"
                         matBadgeSize="small"
+                        [attr.aria-hidden]="false"
+                        [attr.aria-label]="(hasSortOptionSelected ? 'active custom sort': 'default sort' | translate)"
                         [matBadgeHidden]="!hasSortOptionSelected"
                         [matBadgeOverlap]="false"
                     >
@@ -68,6 +70,8 @@
                         matBadge="&#8288;"
                         matBadgeColor="accent"
                         matBadgeSize="small"
+                        [attr.aria-hidden]="false"
+                        [attr.aria-label]="(hasSortOptionSelected ? 'active custom sort' : 'default sort') | translate"
                         [matBadgeHidden]="!hasSortOptionSelected"
                         [matBadgeOverlap]="false"
                     >
@@ -87,6 +91,8 @@
                 <mat-icon
                     matBadgeColor="accent"
                     matBadgeSize="small"
+                    [attr.aria-hidden]="false"
+                    [attr.aria-label]="('Amount of active filters' | translate) + ': ' + filterAmount"
                     [matBadge]="filterAmount"
                     [matBadgeHidden]="filterAmount === 0 || (vp.isMobileSubject | async) === false"
                     [matBadgeOverlap]="false"
@@ -98,6 +104,8 @@
                         class="upper"
                         matBadgeColor="accent"
                         matBadgeSize="small"
+                        [attr.aria-hidden]="false"
+                        [attr.aria-label]="('Amount of active filters' | translate) + ': ' + filterAmount"
                         [matBadge]="filterAmount"
                         [matBadgeHidden]="filterAmount === 0"
                         [matBadgeOverlap]="false"

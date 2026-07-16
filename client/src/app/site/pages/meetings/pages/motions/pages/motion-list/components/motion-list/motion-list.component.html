@@ -60,6 +60,10 @@
                             <div class="flex-center background-selected">
                                 <span
                                     class="tile-content-prefix"
+                                    [attr.aria-hidden]="false"
+                                    [attr.aria-label]="
+                                        ('Amount of motions in category' | translate) + ': ' + tile.amountOfMotions
+                                    "
                                     [matBadge]="tile.amountOfMotions"
                                     [matBadgeColor]="'accent'"
                                 >
