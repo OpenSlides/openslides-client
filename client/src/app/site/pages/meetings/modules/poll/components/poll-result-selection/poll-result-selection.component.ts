@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -65,12 +66,16 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public translate = inject(TranslateService);
 
     public resultOptions = computed<Results>(() => {
+        const results = this.results();
+
+        const showPieChart = this.config().display_chart === `pie`;
         const showPercent =
-            this.config().onehundred_percent_base !== `disabled` && this.config().onehundredPercentBaseNum;
+            this.config().onehundred_percent_base !== `disabled` &&
+            this.config().onehundredPercentBaseNum &&
+            !this.options().some(o => +results[o.id] === VOTE_MAJORITY);
         const colors = this.generateChartColors(this.options()?.length ?? 0);
 
         const rows: Results = [];
-        const results = this.results();
         for (const i in this.options()) {
             const option = this.options()[i];
             const optionText = option.text
@@ -80,7 +85,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 key: option.fqid,
                 option: option,
                 votingOption: optionText,
-                color: colors[i],
+                color: showPieChart ? colors[i] : null,
                 amount: +results[option.id] || 0,
                 percent: showPercent
                     ? Big(results[option.id] || 0)

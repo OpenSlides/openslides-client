@@ -11,6 +11,7 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
     public max_options_amount!: number;
     public min_options_amount!: number;
     public allow_nota!: boolean;
+    public display_chart!: string;
     public onehundred_percent_base!: SelectionOnehundredPercentBase;
 
     public get max_vote_sum(): number {
@@ -32,7 +33,8 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
         `min_options_amount`,
         `allow_nota`,
         `strike_out`,
-        `onehundred_percent_base`
+        `onehundred_percent_base`,
+        `display_chart`
     ];
 }
 

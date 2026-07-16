@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '@app/domain/models/meetings/meeting';
+import { FollowList } from '@app/site/services/model-request-builder';
 
 import { meetingSettingsDefaults } from '../../../../../domain/definitions/meeting-settings-defaults';
+import { ViewMeeting } from '../../view-models/view-meeting';
 import { isSettingsInput, meetingSettings, SettingsGroup, SettingsInput } from './meeting-settings-definitions';
 
 export type SettingsMap = { [key in keyof Settings]: SettingsInput };
@@ -34,6 +36,10 @@ export class MeetingSettingsDefinitionService {
 
     public getSettingsKeys(): (keyof Settings)[] {
         return Object.keys(this.settingsMap) as (keyof Settings)[];
+    }
+
+    public getSettingsFollow(): FollowList<ViewMeeting> {
+        return this.createSettingsFollowMap();
     }
 
     public getDefaultValue(setting: keyof Settings | SettingsInput): any {
@@ -114,16 +120,42 @@ export class MeetingSettingsDefinitionService {
         for (const group of this.settings) {
             for (const subgroup of group.subgroups) {
                 for (const setting of subgroup.settings) {
-                    if (isSettingsInput(setting)) {
+                    if (isSettingsInput(setting) && setting.subscriptionKey === undefined) {
                         this.validateSetting(setting);
                         const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
                         for (const key of keys) {
                             localSettingsMap[key] = setting;
                         }
                     }
+
+                    // TODO: Handle subscriptionKey
                 }
             }
         }
         return localSettingsMap;
+    }
+
+    private createSettingsFollowMap(): FollowList<ViewMeeting> {
+        const localSettingsMap: Record<string, Set<string>> = {};
+        for (const group of this.settings) {
+            for (const subgroup of group.subgroups) {
+                for (const setting of subgroup.settings) {
+                    if (isSettingsInput(setting) && setting.subscriptionKey !== undefined) {
+                        this.validateSetting(setting);
+                        const s = setting.subscriptionKey;
+                        if (localSettingsMap[s.idField]) {
+                            localSettingsMap[s.idField].add(s.field);
+                        } else {
+                            localSettingsMap[s.idField] = new Set([s.field]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return Object.keys(localSettingsMap).map(c => ({
+            idField: c as keyof ViewMeeting,
+            fieldset: Array.from(localSettingsMap[c])
+        }));
     }
 }

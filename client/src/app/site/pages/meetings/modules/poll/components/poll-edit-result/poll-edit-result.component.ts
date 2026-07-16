@@ -5,7 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { AnyPollConfig, Poll } from '@app/domain/models/poll';
+import { AnyPollConfig, Poll, VOTE_MAJORITY, VOTE_UNDOCUMENTED } from '@app/domain/models/poll';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
@@ -65,10 +65,15 @@ export class PollEditResultComponent implements OnInit {
     });
 
     private optionSchema = schema<OptionFormEntry>(option => {
-        // TODO: Angular 22: Wrap rule into `when`
-        disabled(option.value.yes, ({ valueOf }) => valueOf(option.majority));
-        disabled(option.value.no, ({ valueOf }) => valueOf(option.majority));
-        disabled(option.value.abstain, ({ valueOf }) => valueOf(option.majority));
+        disabled(option.value.yes, {
+            when: ({ valueOf }) => valueOf(option.majority)
+        });
+        disabled(option.value.no, {
+            when: ({ valueOf }) => valueOf(option.majority)
+        });
+        disabled(option.value.abstain, {
+            when: ({ valueOf }) => valueOf(option.majority)
+        });
     });
 
     public readonly resultForm = form(this.model, s => {
@@ -92,7 +97,7 @@ export class PollEditResultComponent implements OnInit {
                 no: null,
                 abstain: null
             },
-            majority: result[opt.key] === `majority`
+            majority: result[opt.key] === VOTE_MAJORITY
         }));
 
         this.model.set({
@@ -128,9 +133,9 @@ export class PollEditResultComponent implements OnInit {
 
         this.options().forEach((option, index) => {
             if (m.options[index]?.majority) {
-                serializedOptions[option.key] = `majority`;
+                serializedOptions[option.key] = VOTE_MAJORITY;
             } else {
-                serializedOptions[option.key] = m.options[index]?.value.yes ?? 0;
+                serializedOptions[option.key] = m.options[index]?.value.yes ?? VOTE_UNDOCUMENTED;
             }
         });
 

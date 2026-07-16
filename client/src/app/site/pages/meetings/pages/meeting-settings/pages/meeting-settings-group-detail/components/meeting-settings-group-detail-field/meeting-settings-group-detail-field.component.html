@@ -41,9 +41,15 @@
                                     choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder;
                                     track choice
                                 ) {
-                                    <mat-option [value]="choice.key">
-                                        {{ choice.value | toString | translate }}
-                                    </mat-option>
+                                    @if (setting.choiceI18nPrefix) {
+                                        <mat-option [value]="choice.value">
+                                            {{ choice.value | toString | translateKey: setting.choiceI18nPrefix }}
+                                        </mat-option>
+                                    } @else {
+                                        <mat-option [value]="choice.key">
+                                            {{ choice.value | toString | translate }}
+                                        </mat-option>
+                                    }
                                 }
                             }
                         </mat-select>
@@ -71,8 +77,7 @@
                                 [type]="formType(setting.type!)"
                                 [value]="internalValue"
                             />
-                        }
-                        @if (setting.type !== 'email') {
+                        } @else {
                             <input
                                 formControlName="value"
                                 matInput
@@ -87,9 +92,7 @@
                         <mat-hint>{{ setting.helpText | translate }}</mat-hint>
                     }
                 </mat-form-field>
-            }
-
-            @if (isExcludedType(setting.type!)) {
+            } @else {
                 <div class="settings-form-group">
                     @if (setting.type === 'boolean') {
                         <div>

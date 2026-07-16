@@ -1,5 +1,8 @@
 <div class="result-container">
-    <div class="result-wrapper">
+    <div
+        [class.result-table-wrapper]="config().display_chart !== 'pie'"
+        [class.result-wrapper]="config().display_chart === 'pie'"
+    >
         <table class="result-table">
             <tbody>
                 <tr>
@@ -29,7 +32,11 @@
                                 </os-icon-container>
                             } @else {
                                 <span>
-                                    {{ votingOption }}
+                                    @if (option) {
+                                        <os-poll-vote-option [option]="option" />
+                                    } @else {
+                                        {{ votingOption }}
+                                    }
                                 </span>
                             }
                         </td>
@@ -147,8 +154,10 @@
             </tbody>
         </table>
 
-        <div class="doughnut-chart-normal">
-            <os-chart type="doughnut" [data]="chartData()"></os-chart>
-        </div>
+        @if (config().display_chart === `pie`) {
+            <div class="doughnut-chart-normal">
+                <os-chart type="doughnut" [data]="chartData()"></os-chart>
+            </div>
+        }
     </div>
 </div>
