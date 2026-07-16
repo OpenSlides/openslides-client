@@ -4,8 +4,6 @@ import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
-import { PollVisibility } from '../poll';
-import { BaseOnehundredPercentBase } from '../poll/poll-config-types';
 import { ApplauseType } from './applause';
 import { ExportCsvEncoding, MeetingDefaultProjectorIdsKey, MeetingMediafileUsageIdKey } from './meeting.constants';
 
@@ -173,22 +171,12 @@ export class Settings {
     public topic_poll_default_method: string;
     public topic_poll_config_id: Id;
 
-    // default poll
-    // DELETE
-    public poll_sort_poll_result_by_votes: boolean;
-    public poll_default_type: PollVisibility;
-    public poll_default_onehundred_percent_base: BaseOnehundredPercentBase;
-    public poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    // General poll settings
     public poll_default_live_voting_enabled: boolean;
-    public assignment_poll_enable_max_votes_per_option!: boolean;
-    public assignment_poll_sort_poll_result_by_votes!: boolean;
-    public assignment_poll_default_type!: PollVisibility;
-    public assignment_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public motion_poll_default_type!: PollVisibility;
-    public motion_poll_default_onehundred_percent_base!: BaseOnehundredPercentBase;
-    public motion_poll_projection_name_order_first!: `first_name` | `last_name`;
-    public motion_poll_projection_max_columns!: number;
-    // DELETE END
+    public poll_enable_max_votes_per_option: boolean;
+    public poll_default_allow_invalid: boolean;
+    public poll_default_allow_vote_split: boolean;
+    public poll_projection_name_order_first: `first_name` | `last_name`;
 
     // SSO
     public external_id!: string;
@@ -424,7 +412,11 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_config_id`,
         `topic_poll_default_method`,
         `topic_poll_config_id`,
+        `poll_enable_max_votes_per_option`,
         `poll_default_live_voting_enabled`,
+        `poll_default_allow_invalid`,
+        `poll_default_allow_vote_split`,
+        `poll_projection_name_order_first`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,

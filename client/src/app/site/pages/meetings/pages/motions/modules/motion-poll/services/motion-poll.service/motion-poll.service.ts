@@ -27,11 +27,11 @@ export class MotionPollService extends PollService {
         private repo: MotionPollControllerService
     ) {
         super();
-        this.meetingSettingsService
-            .get(`motion_poll_default_onehundred_percent_base`)
+        this.meetingPollSettingsService
+            .get(`motion`, `onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingSettingsService
-            .get(`motion_poll_default_type`)
+        this.meetingPollSettingsService
+            .get(`motion`, `visibility`)
             .subscribe(type => (this.defaultPollVisibility = type as any));
         this.meetingPollSettingsService.get(`motion`, `group_ids`).subscribe(ids => (this.defaultGroupIds = ids ?? []));
     }

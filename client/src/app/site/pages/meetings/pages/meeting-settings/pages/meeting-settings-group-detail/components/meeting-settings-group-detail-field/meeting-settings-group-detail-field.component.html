@@ -77,8 +77,7 @@
                                 [type]="formType(setting.type!)"
                                 [value]="internalValue"
                             />
-                        }
-                        @if (setting.type !== 'email') {
+                        } @else {
                             <input
                                 formControlName="value"
                                 matInput
@@ -93,9 +92,7 @@
                         <mat-hint>{{ setting.helpText | translate }}</mat-hint>
                     }
                 </mat-form-field>
-            }
-
-            @if (isExcludedType(setting.type!)) {
+            } @else {
                 <div class="settings-form-group">
                     @if (setting.type === 'boolean') {
                         <div>

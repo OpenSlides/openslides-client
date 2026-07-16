@@ -23,16 +23,19 @@ export class TopicPollService extends PollService {
     public constructor(pollServiceMapper: PollServiceMapperService) {
         super();
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
-        this.meetingSettingsService
-            .get(`poll_default_onehundred_percent_base`)
+        this.meetingPollSettingsService
+            .get(`topic`, `onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? `valid`));
 
         this.meetingPollSettingsService.get(`topic`, `group_ids`).subscribe(ids => (this.defaultGroupIds = ids ?? []));
 
-        this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
+        this.meetingPollSettingsService
+            .get(`topic`, `sort_result_by_votes`)
+            .subscribe(sort => (this.sortByVote = sort));
     }
 
     public getDefaultPollData(contentObject: Topic): Partial<PollDialogData> {
+        // TODO: Use all available defaults
         const poll: Partial<PollDialogData> = {
             content_object: contentObject,
             title: this.translate.instant(`Vote`),

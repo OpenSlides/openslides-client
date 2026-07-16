@@ -959,7 +959,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         // TODO: Disable depending on vote method
                     },
                     {
-                        key: `motion_poll_default_sort_result_by_votes`,
+                        key: `topic_poll_default_sort_result_by_votes`,
                         subscriptionKey: {
                             idField: `topic_poll_config_id`,
                             field: `sort_result_by_votes`
@@ -1119,7 +1119,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         // TODO: Disable depending on vote method
                     },
                     {
-                        key: `motion_poll_default_sort_result_by_votes`,
+                        key: `assignment_poll_default_sort_result_by_votes`,
                         subscriptionKey: {
                             idField: `assignment_poll_config_id`,
                             field: `sort_result_by_votes`

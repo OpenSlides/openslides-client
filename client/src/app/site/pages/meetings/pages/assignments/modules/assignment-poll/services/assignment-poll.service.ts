@@ -30,17 +30,17 @@ export class AssignmentPollService extends PollService {
     public constructor(pollServiceMapper: PollServiceMapperService) {
         super();
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
-        this.meetingSettingsService
-            .get(`assignment_poll_default_onehundred_percent_base`)
+        this.meetingPollSettingsService
+            .get(`assignment`, `onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingPollSettingsService
             .get(`assignment`, `group_ids`)
             .subscribe(ids => (this.defaultGroupIds = ids ?? []));
-        this.meetingSettingsService
-            .get(`assignment_poll_sort_poll_result_by_votes`)
+        this.meetingPollSettingsService
+            .get(`assignment`, `sort_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));
         this.meetingSettingsService
-            .get(`assignment_poll_enable_max_votes_per_option`)
+            .get(`poll_enable_max_votes_per_option`)
             .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
     }
 

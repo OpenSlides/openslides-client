@@ -96,7 +96,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         }
 
         this.meetingSettingsService
-            .get(`assignment_poll_enable_max_votes_per_option`)
+            .get(`poll_enable_max_votes_per_option`)
             .pipe(takeUntilDestroyed())
             .subscribe(v => {
                 this.allowCumulative.set(v);
