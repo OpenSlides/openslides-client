@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ChangeRecoMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
 import { CsvColumnDefinitionMap, CsvColumnDefinitionProperty } from '@app/gateways/export/csv-export.service';
 import { reconvertChars, stripHtmlTags } from '@app/infrastructure/utils';
@@ -50,20 +50,16 @@ const MotionCsvExportExample: MotionCsvExport[] = [
     }
 ];
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCsvExportService {
     public crMode = ChangeRecoMode;
 
-    public constructor(
-        private csvExport: MeetingCsvExportService,
-        private translate: TranslateService,
-        private meetingSettingsService: MeetingSettingsService,
-        private motionService: MotionControllerService,
-        private motionFormatService: MotionFormatService,
-        private commentRepo: MotionCommentSectionControllerService
-    ) {}
+    private csvExport = inject(MeetingCsvExportService);
+    private translate = inject(TranslateService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private motionService = inject(MotionControllerService);
+    private motionFormatService = inject(MotionFormatService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
 
     /**
      * Creates the motion text

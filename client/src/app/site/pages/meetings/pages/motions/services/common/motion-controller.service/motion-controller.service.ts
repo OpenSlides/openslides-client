@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id, Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Motion } from '@app/domain/models/motions/motion';
@@ -6,7 +6,6 @@ import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { Action, createEmptyAction } from '@app/gateways/actions';
 import { CreateResponse } from '@app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from '@app/gateways/repositories/motions';
-import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { NullablePartial } from '@app/infrastructure/utils';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
@@ -21,17 +20,16 @@ import { MotionLineNumberingService } from '../motion-line-numbering.service/mot
 
 export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
+    protected override repo: MotionRepositoryService;
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private diffFactroy = inject(DiffServiceFactory);
 
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionRepositoryService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private diffFactroy: DiffServiceFactory,
-        private userRepo: UserRepositoryService
-    ) {
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionRepositoryService);
         super(controllerServiceCollector, Motion, repo);
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this._lineLength = lineLength));
