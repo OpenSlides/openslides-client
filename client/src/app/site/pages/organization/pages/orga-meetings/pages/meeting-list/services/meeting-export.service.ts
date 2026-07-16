@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CsvColumnDefinitionProperty, CsvColumnsDefinition } from '@app/gateways/export/csv-export.service';
 import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
@@ -6,11 +6,7 @@ import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MeetingListServiceModule } from './meeting-list-service.module';
-
-@Injectable({
-    providedIn: MeetingListServiceModule
-})
+@Service()
 export class MeetingCsvExportService {
     private meetingHeadersAndVerboseNames = {
         name: _(`Meeting`),
@@ -29,11 +25,9 @@ export class MeetingCsvExportService {
         motionsAmount: _(`Motions`)
     };
 
-    public constructor(
-        private csvExport: CsvExportForBackendService,
-        private translate: TranslateService,
-        private meetingRepo: MeetingControllerService
-    ) {}
+    private csvExport = inject(CsvExportForBackendService);
+    private translate = inject(TranslateService);
+    private meetingRepo = inject(MeetingControllerService);
 
     public export(meetings: ViewMeeting[]): void {
         this.csvExport.export(

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Settings } from '@app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
 import { Functionable } from '@app/infrastructure/utils';
@@ -308,9 +308,7 @@ export interface HeaderLogos {
  * this.pdfDocumentService.download(motionContent, 'test.pdf');
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PdfDocumentService {
     /**
      * A list of all images to add to the virtual file system.
@@ -324,16 +322,16 @@ export class PdfDocumentService {
 
     private settings: Partial<Settings> = {};
 
-    public constructor(
-        private translate: TranslateService,
-        private httpService: HttpService,
-        // private matSnackBar: MatSnackBar,
-        private progressSnackBarService: ProgressSnackBarService,
-        private progressService: ProgressSnackBarControlService,
-        private pdfImagesService: PdfImagesService,
-        private mediaManageService: MediaManageService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private translate = inject(TranslateService);
+    private httpService = inject(HttpService);
+    // private matSnackBar = inject(MatSnackBar);
+    private progressSnackBarService = inject(ProgressSnackBarService);
+    private progressService = inject(ProgressSnackBarControlService);
+    private pdfImagesService = inject(PdfImagesService);
+    private mediaManageService = inject(MediaManageService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         this.makeSettingsSubscriptions();
     }
 
