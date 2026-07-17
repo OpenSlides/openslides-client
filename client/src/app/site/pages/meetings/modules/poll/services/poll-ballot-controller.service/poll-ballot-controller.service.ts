@@ -28,7 +28,7 @@ export class PollBallotControllerService extends BaseMeetingControllerService<Vi
         const userIds = [this.operator.user.id, ...(this.operator.user.vote_delegations_from_ids() || [])];
         return combineLatest(
             viewPolls.map(poll => {
-                return combineLatest(userIds.map(userId => this.pollRepo.pollBallotsByUser(poll.id, userId))).pipe(
+                return combineLatest(userIds.map(userId => this.pollRepo.pollBallotUsersByUser(poll.id, userId))).pipe(
                     map(ballots => !!ballots.map(b => !!b.length).some(b => b))
                 );
             })
