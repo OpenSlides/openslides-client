@@ -22,13 +22,13 @@ export const UnknownUserLabel = _(`Deleted user`);
 export class AssignmentPollService extends PollService {
     private defaultPercentBase: BaseOnehundredPercentBase | undefined;
     private defaultPollType: PollVisibility | undefined;
-    private defaultVotingType: any;
+    private defaultVotingType: string;
+    private defaultDisplayChart: string;
     private defaultGroupIds: number[] = [];
     private defaultAllowAbstain = false;
     private defaultAllowNota = false;
     private defaultActiveStrikeOut = false;
     private defaultEnableLiveVote = false;
-    private defaultDisplayChart: string;
 
     private pollRepo = inject(PollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
@@ -75,8 +75,6 @@ export class AssignmentPollService extends PollService {
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
         const poll: Partial<Poll> = {
             title: this.translate.instant(`Ballot`),
-            // onehundred_percent_base: this.defaultPercentBase,
-            // pollmethod: this.defaultPollMethod,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
             onehundred_percent_base: this.defaultPercentBase,
