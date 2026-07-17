@@ -213,14 +213,6 @@ export const RELATIONS: Relation[] = [
         BField: `meeting`
     }),
     // ########## User
-    ...makeM2M({
-        AViewModel: ViewMeetingUser,
-        BViewModel: ViewPoll,
-        AField: `poll_voted`,
-        AIdField: `poll_voted_ids`,
-        BField: `voted`,
-        BIdField: `voted_ids`
-    }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
         MViewModel: ViewPollBallot,

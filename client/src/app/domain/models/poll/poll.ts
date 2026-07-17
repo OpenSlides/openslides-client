@@ -47,7 +47,6 @@ export class Poll extends BaseModel<Poll> {
         `sequential_number`,
         `content_object_id`,
         `ballot_ids`,
-        `voted_ids`,
         `entitled_group_ids`,
         `projection_ids`,
         `meeting_id`

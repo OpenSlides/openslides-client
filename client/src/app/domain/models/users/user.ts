@@ -44,10 +44,6 @@ export class User extends BaseDecimalModel<User> {
     public committee_ids!: Id[]; // (committee/user_ids)[];
     public meeting_user_ids!: Id[]; // (meeting_user/user_id);
 
-    public poll_voted_ids!: string[]; // (poll/voted_ids)[];
-    public vote_ids!: string[]; // (vote/user_id)[];
-    public option_ids!: string[];
-    public poll_candidate_ids!: Id[]; // (poll_candidate/user_id);
     public organization_id!: Id; // organization/committee_ids;
 
     public organization_management_level!: keyof OMLMapping;

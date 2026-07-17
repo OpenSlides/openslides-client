@@ -26,15 +26,7 @@ export class PollBallot extends BaseModel<PollBallot> {
         return [`weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollBallot)[] = [
-        `id`,
-        `weight`,
-        `split`,
-        `value`,
-        `poll_id`,
-        `acting_meeting_user_id`,
-        `represented_meeting_user_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof PollBallot)[] = [`id`, `weight`, `split`, `value`, `poll_id`];
 }
 
 export interface PollBallot extends HasMeetingId {}
