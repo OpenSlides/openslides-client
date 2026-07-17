@@ -74,8 +74,16 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         }
 
         const patch: Record<string, any> = {};
-        for (const field of [`onehundred_percent_base`, `allow_nota`, `max_options_amount`, `min_options_amount`]) {
-            if (this.data().config && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
+        for (const field of [
+            `onehundred_percent_base`,
+            `allow_nota`,
+            `max_options_amount`,
+            `min_options_amount`,
+            `strike_out`,
+            `display_chart`,
+            `live_vote_enabled`
+        ]) {
+            if (this.data() && this.data()[field] !== undefined) patch[field] = this.data()[field];
         }
 
         this.form.patchValue(patch);

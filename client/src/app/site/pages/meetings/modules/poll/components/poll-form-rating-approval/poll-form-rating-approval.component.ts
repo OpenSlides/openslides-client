@@ -39,15 +39,10 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public optionAmount = input<number>(null);
 
     public initForm(): void {
-        this.form = this.fb.group({
-            onehundred_percent_base: [`valid`],
-            allow_abstain: [false],
-            max_yes_amount: [1, [Validators.required, Validators.min(1)]],
-            max_options_amount: [1, [Validators.required, Validators.min(1)]],
-            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
+        effect(() => {
+            this.loadData();
+            this.onOptionAmountUpdate.bind(this);
         });
-
-        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
@@ -82,5 +77,15 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         }
         maxCtrl?.updateValueAndValidity({ emitEvent: false });
         maxYesCtrl?.updateValueAndValidity({ emitEvent: false });
+    }
+
+    private loadData(): void {
+        this.form = this.fb.group({
+            onehundred_percent_base: [this.data().onehundred_percent_base],
+            allow_abstain: [this.data().allow_abstain],
+            max_yes_amount: [1, [Validators.required, Validators.min(1)]],
+            max_options_amount: [1, [Validators.required, Validators.min(1)]],
+            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
+        });
     }
 }

@@ -47,7 +47,7 @@ export class MotionPollService extends PollService {
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually,
             allow_abstain: this.defaultAllowAbstain,
-            percent_base: this.defaultPercentBase
+            onehundred_percent_base: this.defaultPercentBase
         };
 
         let titlePrefix = this.translate.instant(`Motion`);

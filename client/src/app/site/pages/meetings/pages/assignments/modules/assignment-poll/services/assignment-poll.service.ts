@@ -20,9 +20,15 @@ export const UnknownUserLabel = _(`Deleted user`);
  */
 @Injectable({ providedIn: `root` })
 export class AssignmentPollService extends PollService {
-    public defaultPercentBase: BaseOnehundredPercentBase | undefined;
-    public defaultPollType: PollVisibility | undefined;
-    public defaultGroupIds: number[] = [];
+    private defaultPercentBase: BaseOnehundredPercentBase | undefined;
+    private defaultPollType: PollVisibility | undefined;
+    private defaultVotingType: any;
+    private defaultGroupIds: number[] = [];
+    private defaultAllowAbstain = false;
+    private defaultAllowNota = false;
+    private defaultActiveStrikeOut = false;
+    private defaultEnableLiveVote = false;
+    private defaultDisplayChart: string;
 
     private pollRepo = inject(PollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
@@ -39,9 +45,31 @@ export class AssignmentPollService extends PollService {
         this.meetingPollSettingsService
             .get(`assignment`, `sort_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));
+        this.meetingPollSettingsService
+            .get(`assignment`, `allow_abstain`)
+            .subscribe(bool => (this.defaultAllowAbstain = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `visibility`)
+            .subscribe(type => (this.defaultPollType = type));
+        this.meetingPollSettingsService
+            .get(`assignment`, `allow_nota`)
+            .subscribe(bool => (this.defaultAllowNota = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `strike_out`)
+            .subscribe(bool => (this.defaultActiveStrikeOut = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `display_chart`)
+            .subscribe(chartType => (this.defaultDisplayChart = chartType));
+
         this.meetingSettingsService
             .get(`poll_enable_max_votes_per_option`)
             .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+        this.meetingSettingsService
+            .get(`poll_default_live_voting_enabled`)
+            .subscribe(is => (this.defaultEnableLiveVote = is));
+        this.meetingSettingsService
+            .get(`assignment_poll_default_method`)
+            .subscribe(type => (this.defaultVotingType = type));
     }
 
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
@@ -50,9 +78,14 @@ export class AssignmentPollService extends PollService {
             // onehundred_percent_base: this.defaultPercentBase,
             // pollmethod: this.defaultPollMethod,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            visibility: this.isElectronicVotingEnabled
-                ? (this.defaultPollType as unknown as PollVisibility)
-                : PollVisibility.Manually
+            visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
+            onehundred_percent_base: this.defaultPercentBase,
+            allow_abstain: this.defaultAllowAbstain,
+            allow_nota: this.defaultAllowNota,
+            strike_out: this.defaultActiveStrikeOut,
+            display_chart: this.defaultDisplayChart,
+            live_voting_enabled: this.defaultEnableLiveVote,
+            voting_type: this.defaultVotingType
         };
 
         if (contentObject) {
