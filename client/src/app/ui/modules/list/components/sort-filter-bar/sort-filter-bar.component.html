@@ -55,7 +55,9 @@
                         matBadgeColor="accent"
                         matBadgeSize="small"
                         [attr.aria-hidden]="false"
-                        [attr.aria-label]="(hasSortOptionSelected ? 'active custom sort': 'default sort' | translate)"
+                        [attr.aria-label]="
+                            hasSortOptionSelected ? ('active custom sort' | translate) : ('default sort' | translate)
+                        "
                         [matBadgeHidden]="!hasSortOptionSelected"
                         [matBadgeOverlap]="false"
                     >
@@ -71,7 +73,9 @@
                         matBadgeColor="accent"
                         matBadgeSize="small"
                         [attr.aria-hidden]="false"
-                        [attr.aria-label]="(hasSortOptionSelected ? 'active custom sort' : 'default sort') | translate"
+                        [attr.aria-label]="
+                            hasSortOptionSelected ? ('active custom sort' | translate) : ('default sort' | translate)
+                        "
                         [matBadgeHidden]="!hasSortOptionSelected"
                         [matBadgeOverlap]="false"
                     >
