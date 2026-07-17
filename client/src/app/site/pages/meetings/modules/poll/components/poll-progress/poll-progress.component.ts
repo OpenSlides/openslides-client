@@ -25,7 +25,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
     public poll = input.required<ViewPoll>();
 
     public votescast = computed(() => {
-        return Object.keys(this.poll().ballot_ids ?? {}).length;
+        return Object.keys(this.poll().ballot_user_ids ?? {}).length;
     });
 
     public canSeeProgressBar = signal(false);
