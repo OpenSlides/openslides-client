@@ -66,6 +66,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
                 patch[`options`] = data.options.map(option => option.text);
             this.pollForm.patchValue(patch);
+            if (data.allow_abstain !== undefined) patch[`allow_abstain`] = !!data.allow_abstain;
         }
     }
 

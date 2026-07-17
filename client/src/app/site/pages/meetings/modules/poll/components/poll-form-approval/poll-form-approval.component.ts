@@ -34,9 +34,8 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
         this._data = data;
         if (data && this.form) {
             const patch: Record<string, any> = {};
-            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
-            if (data.config?.onehundred_percent_base !== undefined)
-                patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
+            if (data.allow_abstain !== undefined) patch[`allow_abstain`] = data.allow_abstain;
+            if (data.percent_base !== undefined) patch[`onehundred_percent_base`] = data.percent_base;
             this.form.patchValue(patch);
         }
     }

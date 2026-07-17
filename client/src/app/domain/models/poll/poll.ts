@@ -26,6 +26,8 @@ export class Poll extends BaseModel<Poll> {
     public voted_ids!: Id[];
     public entitled_group_ids!: Id[];
     public live_voting_enabled!: boolean;
+    public allow_abstain!: boolean;
+    public percent_base!: any;
 
     public constructor(input?: any) {
         super(Poll.COLLECTION, input);

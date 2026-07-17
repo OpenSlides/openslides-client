@@ -19,6 +19,7 @@ export class MotionPollService extends PollService {
     public defaultPercentBase!: BaseOnehundredPercentBase;
     public defaultPollVisibility!: PollVisibility;
     public defaultGroupIds!: number[];
+    public defaultAllowAbstain = false;
 
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
@@ -34,6 +35,9 @@ export class MotionPollService extends PollService {
             .get(`motion`, `visibility`)
             .subscribe(type => (this.defaultPollVisibility = type as any));
         this.meetingPollSettingsService.get(`motion`, `group_ids`).subscribe(ids => (this.defaultGroupIds = ids ?? []));
+        this.meetingPollSettingsService
+            .get(`motion`, `allow_abstain`)
+            .subscribe(bool => (this.defaultAllowAbstain = bool));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
@@ -41,7 +45,9 @@ export class MotionPollService extends PollService {
             // onehundred_percent_base: this.defaultPercentBase,
             // pollmethod: this.defaultPollMethod
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually
+            visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually,
+            allow_abstain: this.defaultAllowAbstain,
+            percent_base: this.defaultPercentBase
         };
 
         let titlePrefix = this.translate.instant(`Motion`);
