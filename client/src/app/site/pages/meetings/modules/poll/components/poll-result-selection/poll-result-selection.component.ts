@@ -172,7 +172,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             return null;
         }
 
-        return this.poll().ballot_ids.length;
+        return this.poll().ballot_user_ids?.length || 0;
     });
 
     public entitledUsers = computed<number | null>(() => {

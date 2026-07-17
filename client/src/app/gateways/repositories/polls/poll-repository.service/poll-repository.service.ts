@@ -3,7 +3,8 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Poll } from '@app/domain/models/poll/poll';
 import { PollState, PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollCreatePayload, PollUpdatePayload, VoteApiService } from '@app/gateways/vote-api.service';
-import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 import { map, Observable, switchMap, takeWhile } from 'rxjs';
 
@@ -99,10 +100,10 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
      * @param poll The poll that should be subscribed
      * @return the ViewPoll
      */
-    public pollBallotsByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallot[]> {
+    public pollBallotUsersByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallotUser[]> {
         return this.getViewModelObservable(pollId).pipe(
             takeWhile(poll => poll?.state === PollState.Started),
-            switchMap(poll => poll.ballots$),
+            switchMap(poll => poll.ballot_users$),
             map(ballots => ballots.filter(b => b.represented_meeting_user_id === meetingUserId))
         );
     }

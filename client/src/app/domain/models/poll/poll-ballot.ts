@@ -11,8 +11,7 @@ export class PollBallot extends BaseModel<PollBallot> {
     public value: VoteValue;
 
     public poll_id!: Id;
-    public acting_meeting_user_id: Id;
-    public represented_meeting_user_id: Id;
+    public poll_ballot_user_id: Id;
 
     public get valueVerbose(): string {
         return VoteValueVerbose[this.value];
@@ -32,8 +31,7 @@ export class PollBallot extends BaseModel<PollBallot> {
         `split`,
         `value`,
         `poll_id`,
-        `acting_meeting_user_id`,
-        `represented_meeting_user_id`
+        `poll_ballot_user_id`
     ];
 }
 

@@ -21,6 +21,7 @@ import {
     ViewStructureLevel,
     ViewStructureLevelListOfSpeakers
 } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { ViewMeetingPollDefault } from '@app/site/pages/meetings/view-models/view-meeting-poll-default';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
@@ -213,23 +214,15 @@ export const RELATIONS: Relation[] = [
         BField: `meeting`
     }),
     // ########## User
-    ...makeM2M({
-        AViewModel: ViewMeetingUser,
-        BViewModel: ViewPoll,
-        AField: `poll_voted`,
-        AIdField: `poll_voted_ids`,
-        BField: `voted`,
-        BIdField: `voted_ids`
-    }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
-        MViewModel: ViewPollBallot,
+        MViewModel: ViewPollBallotUser,
         OField: `represented_ballots`,
         MField: `represented_meeting_user`
     }),
     ...makeM2O({
         OViewModel: ViewMeetingUser,
-        MViewModel: ViewPollBallot,
+        MViewModel: ViewPollBallotUser,
         OField: `acting_ballots`,
         MField: `acting_meeting_user`
     }),
@@ -1028,6 +1021,18 @@ export const RELATIONS: Relation[] = [
         ],
         viewModelField: `config`,
         possibleViewModelsField: `poll`
+    }),
+    ...makeM2O({
+        OViewModel: ViewPoll,
+        MViewModel: ViewPollBallotUser,
+        OField: `ballot_users`,
+        MField: `poll`
+    }),
+    ...makeO2O({
+        AViewModel: ViewPollBallot,
+        BViewModel: ViewPollBallotUser,
+        AField: `poll_ballot_user`,
+        BField: `poll_ballot`
     }),
     ...makeM2O({
         MViewModel: ViewPollOption,
