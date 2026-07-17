@@ -23,7 +23,29 @@ $os-yellow: rgb(255, 193, 7);
 }
 
 .lower-margin-top {
-    margin-top: -20px;
+    margin-top: -4px;
+    padding-left: 2px;
+}
+
+.list-field-entry {
+    display: inline-flex;
+    margin-right: 10px;
+}
+
+.cell-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+    overflow: hidden;
+
+    .email-cell {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .footer {

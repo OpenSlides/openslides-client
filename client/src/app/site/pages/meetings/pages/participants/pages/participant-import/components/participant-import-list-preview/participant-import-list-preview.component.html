@@ -49,7 +49,7 @@
                             @if (getHeader(def).is_list && entry[def]) {
                                 @for (item of entry[def]; track item) {
                                     @if (getHeader(def).is_object) {
-                                        <div class="list-field-entry">
+                                        <div>
                                             @if (getHeader(def).type === 'string') {
                                                 {{ item.value }}
                                             }
@@ -93,32 +93,36 @@
                             @if (!getHeader(def).is_list && entry[def] !== undefined) {
                                 @if (getHeader(def).is_object) {
                                     @let icon = getActionIconEntry(entry[def]);
-                                    <div class="list-field-entry">
-                                        @if (getHeader(def).type === 'string') {
-                                            {{ entry[def].value }}
-                                        }
-                                        @if (getHeader(def).type === 'number') {
-                                            {{ entry[def].value }}
-                                        }
-                                        @if (getHeader(def).type === 'decimal') {
-                                            {{ this.getShortenedDecimal(entry[def].value) }}
-                                        }
-                                        @if (getHeader(def).type === 'date') {
-                                            {{ entry[def].value }}
-                                        }
-                                        @if (getHeader(def).type === 'boolean') {
-                                            <mat-checkbox disabled [checked]="entry[def].value" />
-                                        }
-                                        &nbsp;
-                                        @if (getEntryIcon(entry[def])) {
-                                            <mat-icon
-                                                inline
-                                                [class.error-icon]="icon === 'error_outline'"
-                                                [color]="icon !== 'error_outline' ? 'accent' : null"
-                                            >
-                                                {{ icon === 'merge' ? icon : checkChanges(row, column.property) }}
-                                            </mat-icon>
-                                        }
+                                    <div class="cell-wrapper">
+                                        <div [class.email-cell]="getHeader(def).property === 'email'">
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'decimal') {
+                                                {{ this.getShortenedDecimal(entry[def].value) }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entry[def].value" />
+                                            }
+                                        </div>
+                                        <div>
+                                            @if (getEntryIcon(entry[def]) || checkChanges(row, column.property)) {
+                                                <mat-icon
+                                                    class="lower-margin-top"
+                                                    inline
+                                                    [class.error-icon]="icon === 'error_outline'"
+                                                    [color]="icon !== 'error_outline' ? 'accent' : null"
+                                                >
+                                                    {{ icon }}
+                                                </mat-icon>
+                                            }
+                                        </div>
                                     </div>
                                 }
                             }

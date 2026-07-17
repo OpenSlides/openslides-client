@@ -791,7 +791,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return false;
     }
 
-    protected checkChanges(item: ViewImportedParticipant, headerName?: string): false | '' | 'autorenew' {
+    protected checkChanges(item: ViewImportedParticipant, headerName?: string): false | string {
         for (const user of this.userAccounts) {
             if (
                 (user.meeting_ids.includes(item.meeting_id) && item.username && item.username === user.username) ||
@@ -864,22 +864,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.external
                         };
                     }
-                    const structureLevels = user.structureLevels(this.activeMeetingIdService.meetingId).split(', ');
-                    const itemSLevels = item.getStructureLevels.map(level => level['value']);
-                    console.log(
-                        'LEVELS',
-                        itemSLevels,
-                        structureLevels,
-                        item.structure_levels.difference(structureLevels)
-                    );
                 }
+                console.log(changes);
                 if (Object.keys(changes).includes(headerName)) {
                     return 'autorenew';
                 }
-                /* if (Object.keys(changes).includes('structure_levels')) {
-                    console.log('autorenew');
-                    return 'autorenew';
-                } */
                 if (Object.keys(changes).length === 0) {
                     return false;
                 }

@@ -2,7 +2,7 @@
     box-sizing: border-box;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.025);
+        background-color: var(--mat-app-background-color);
     }
 
     .scrolling-table-cell {
