@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollVisibility } from '@app/domain/models/poll';
-import { Poll } from '@app/domain/models/poll/poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
@@ -10,6 +9,7 @@ import { _ } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
+import { ViewPoll } from '../../../../polls';
 
 export const UnknownUserLabel = _(`Deleted user`);
 
@@ -72,18 +72,19 @@ export class AssignmentPollService extends PollService {
             .subscribe(type => (this.defaultVotingType = type));
     }
 
-    public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
-        const poll: Partial<Poll> = {
+    public getDefaultPollData(contentObject?: Assignment): Partial<ViewPoll> {
+        const poll: Partial<ViewPoll> = {
             title: this.translate.instant(`Ballot`),
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
-            onehundred_percent_base: this.defaultPercentBase,
-            allow_abstain: this.defaultAllowAbstain,
-            allow_nota: this.defaultAllowNota,
-            strike_out: this.defaultActiveStrikeOut,
-            display_chart: this.defaultDisplayChart,
             live_voting_enabled: this.defaultEnableLiveVote,
-            voting_type: this.defaultVotingType
+            config: {
+                allow_abstain: this.defaultAllowAbstain,
+                allow_nota: this.defaultAllowNota,
+                strike_out: this.defaultActiveStrikeOut,
+                onehundred_percent_base: this.defaultPercentBase,
+                display_chart: this.defaultDisplayChart
+            }
         };
 
         if (contentObject) {

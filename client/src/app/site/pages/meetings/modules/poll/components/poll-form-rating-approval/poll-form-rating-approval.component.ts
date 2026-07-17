@@ -81,8 +81,8 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
 
     private loadData(): void {
         this.form = this.fb.group({
-            onehundred_percent_base: [this.data().onehundred_percent_base],
-            allow_abstain: [this.data().allow_abstain],
+            onehundred_percent_base: [this.data().config.onehundred_percent_base],
+            allow_abstain: [this.data().config.allow_abstain],
             max_yes_amount: [1, [Validators.required, Validators.min(1)]],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]

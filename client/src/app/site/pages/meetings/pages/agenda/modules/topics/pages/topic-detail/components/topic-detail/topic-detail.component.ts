@@ -28,7 +28,6 @@ import { TopicPollService } from '../../../../modules/topic-poll/services/topic-
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
 import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
-import { Poll } from '@app/domain/models/poll';
 
 @Component({
     selector: `os-topic-detail`,
@@ -410,7 +409,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.pollDialog.open(this.getDialogData(pollId));
     }
 
-    private getDialogData(pollId?: Id): Partial<Poll> | ViewPoll {
+    private getDialogData(pollId?: Id): Partial<ViewPoll> | ViewPoll {
         if (pollId) {
             return this.pollController.getViewModel(pollId)!;
         } else {

@@ -56,20 +56,21 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     @Input()
     public set data(data: Partial<ViewPoll>) {
+        this._data = data;
         if (data && this.pollForm) {
             const patch: Record<string, any> = {};
-            if (data.allow_abstain !== undefined) patch[`allow_abstain`] = !!data.allow_abstain;
-            if (data.allow_nota !== undefined) patch[`allow_nota`] = !!data.allow_nota;
-            if (data.display_chart !== undefined) patch[`display_chart`] = !!data.display_chart;
             if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
             if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
-            if (data.onehundred_percent_base !== undefined)
-                patch[`onehundred_percent_base`] = !!data.onehundred_percent_base;
-            if (data.strike_out !== undefined) patch[`strike_out`] = !!data.strike_out;
             if (data.title !== undefined) patch[`title`] = data.title;
             if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
             if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
                 patch[`options`] = data.options.map(option => option.text);
+            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = !!data.config.allow_abstain;
+            if (data.config?.allow_nota !== undefined) patch[`allow_nota`] = !!data.config.allow_nota;
+            if (data.config?.strike_out !== undefined) patch[`strike_out`] = !!data.config.strike_out;
+            if (data.config?.display_chart !== undefined) patch[`display_chart`] = !!data.config.display_chart;
+            if (data.config?.onehundred_percent_base !== undefined)
+                patch[`onehundred_percent_base`] = !!data.config.onehundred_percent_base;
             this.pollForm.patchValue(patch);
         }
     }

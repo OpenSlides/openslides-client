@@ -56,7 +56,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
 
     private loadData(): void {
         this.form = this.fb.group({
-            onehundred_percent_base: [this.data().onehundred_percent_base],
+            onehundred_percent_base: [this.data().config.onehundred_percent_base],
             allow_general_abstain: [false],
             max_votes_per_option: [null],
             max_options_amount: [this.optionAmount(), [Validators.required, Validators.min(1)]],

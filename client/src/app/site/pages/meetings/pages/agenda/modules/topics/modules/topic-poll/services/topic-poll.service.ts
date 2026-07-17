@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { Poll, PollVisibility } from '@app/domain/models/poll';
+import { PollVisibility } from '@app/domain/models/poll';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { Topic } from '@app/domain/models/topics/topic';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 
 import { ViewTopic } from '../../../view-models';
@@ -56,18 +57,19 @@ export class TopicPollService extends PollService {
         this.meetingSettingsService.get(`topic_poll_default_method`).subscribe(type => (this.defaultVotingType = type));
     }
 
-    public getDefaultPollData(contentObject?: Topic): Partial<Poll> {
-        const poll: Partial<Poll> = {
+    public getDefaultPollData(contentObject?: Topic): Partial<ViewPoll> {
+        const poll: Partial<ViewPoll> = {
             title: this.translate.instant(`Ballot`),
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
-            onehundred_percent_base: this.defaultPercentBase,
-            allow_abstain: this.defaultAllowAbstain,
-            allow_nota: this.defaultAllowNota,
-            strike_out: this.defaultActiveStrikeOut,
-            display_chart: this.defaultDisplayChart,
             live_voting_enabled: this.defaultEnableLiveVote,
-            voting_type: this.defaultVotingType
+            config: {
+                allow_abstain: this.defaultAllowAbstain,
+                allow_nota: this.defaultAllowNota,
+                strike_out: this.defaultActiveStrikeOut,
+                display_chart: this.defaultDisplayChart,
+                voting_type: this.defaultVotingType
+            }
         };
 
         if (contentObject) {

@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Motion } from '@app/domain/models/motions/motion';
-import { Poll } from '@app/domain/models/poll/poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -40,14 +40,14 @@ export class MotionPollService extends PollService {
             .subscribe(bool => (this.defaultAllowAbstain = bool));
     }
 
-    public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
-        const poll: Partial<Poll> = {
-            // onehundred_percent_base: this.defaultPercentBase,
-            // pollmethod: this.defaultPollMethod
+    public getDefaultPollData(contentObject?: Motion): Partial<ViewPoll> {
+        const poll: Partial<ViewPoll> = {
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually,
-            allow_abstain: this.defaultAllowAbstain,
-            onehundred_percent_base: this.defaultPercentBase
+            config: {
+                allow_abstain: this.defaultAllowAbstain,
+                onehundred_percent_base: this.defaultPercentBase
+            }
         };
 
         let titlePrefix = this.translate.instant(`Motion`);
