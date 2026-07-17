@@ -16,6 +16,7 @@ import { Identifiable } from '@app/domain/interfaces';
 import { Mapable, Mutable } from '@app/infrastructure/utils';
 import { KeyCode } from '@app/infrastructure/utils/key-code';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { BackendImportSummary } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { SCROLLING_TABLE } from '../../definitions/index';
@@ -116,6 +117,12 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     @Input()
     public addBottomSpacer = false;
+
+    /**
+     * Summary adapted to the footer. Displays only "created", "updated", "referenced" and "error" columns.
+     */
+    @Input()
+    public shortenedSummary: BackendImportSummary[];
 
     @Output()
     public selectionChanged = new EventEmitter<ScrollingTableSelectionChangeEvent<T>>();
@@ -316,5 +323,23 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         this._dataSource.next(this._source);
         this.cd.markForCheck();
         this.scrollViewport?.checkViewportSize();
+    }
+
+    /**
+     * Information to display the correct icons on footer when importing participants
+     */
+    protected getSummaryInformation(item: string): string[] {
+        console.log(item);
+        return (
+            {
+                total: ['group', 'accent'],
+                error: ['error_outline', 'red-warning-text'],
+                warning: ['warning', 'warn'],
+                created: ['add_circle_outline', 'os-green'],
+                updated: ['autorenew', 'os-yellow'],
+                referenced: ['merge', 'accent'],
+                unchanged: [``, ``]
+            }[item] ?? ['', '']
+        );
     }
 }

@@ -64,6 +64,9 @@
                         </ng-container>
                     </div>
                 </cdk-virtual-scroll-viewport>
+                @if (horizontalScroll) {
+                    <ng-container *ngTemplateOutlet="footer"></ng-container>
+                }
             </div>
         </div>
     } @else {
@@ -105,5 +108,18 @@
                 </div>
             }
         </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <footer class="footer">
+            @let cols = shortenedSummary;
+            @for (col of cols; track col; let i = $index) {
+                @let colInfo = getSummaryInformation(col.name);
+                <mat-icon inline style="margin-top: 5px; font-size: x-large" [ngClass]="colInfo[1]">
+                    {{ colInfo[0] }}
+                </mat-icon>
+                <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+            }
+        </footer>
     </ng-template>
 }

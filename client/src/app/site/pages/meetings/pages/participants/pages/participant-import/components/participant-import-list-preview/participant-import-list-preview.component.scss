@@ -48,20 +48,6 @@ $os-yellow: rgb(255, 193, 7);
     }
 }
 
-.footer {
-    padding-left: 35px;
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background-color: var(--mat-app-background-color);
-    z-index: 1;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-    display: flex;
-    align-items: center;
-}
-
 .static-sort-filter-bar {
     margin: 0;
     height: 100%;

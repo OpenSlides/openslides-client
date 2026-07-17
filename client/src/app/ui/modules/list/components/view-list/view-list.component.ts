@@ -13,6 +13,7 @@ import {
 import { Identifiable } from '@app/domain/interfaces';
 import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
 import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
+import { BackendImportSummary } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
@@ -176,6 +177,18 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this._totalCountObservable = new BehaviorSubject(value);
         }
     }
+
+    /**
+     * Summary adapted to the footer. Displays only "created", "updated", "referenced" and "error" columns.
+     */
+    @Input()
+    public shortenedSummary: BackendImportSummary[];
+
+    /**
+     * Information to display the correct icons in footer
+     */
+    @Input()
+    public GetSummaryInformation;
 
     private _totalCountObservable: Observable<number> = null;
 

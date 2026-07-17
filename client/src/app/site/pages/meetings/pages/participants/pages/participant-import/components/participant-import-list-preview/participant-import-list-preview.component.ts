@@ -865,7 +865,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         };
                     }
                 }
-                console.log(changes);
                 if (Object.keys(changes).includes(headerName)) {
                     return 'autorenew';
                 }

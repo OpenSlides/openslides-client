@@ -19,6 +19,7 @@
         [listObservable]="dataSource"
         [searchFieldInput]="searchFieldInput"
         [searchService]="searchService"
+        [shortenedSummary]="shortenSummary(summary)"
         [showFilterBar]="showFilterBar"
         [showHeader]="showHeader"
         [totalCount]="_totalCountObservable | async"
@@ -158,7 +159,7 @@
             </div>
         }
     </os-view-list>
-    <footer class="footer">
+    <!-- <footer class="footer">
         @let cols = shortenSummary(summary);
         @for (col of cols; track col; let i = $index) {
             @let colInfo = getSummaryInformation(col.name);
@@ -167,7 +168,7 @@
             </mat-icon>
             <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
         }
-    </footer>
+    </footer> -->
 </div>
 
 <ng-template #ImportDialog>
