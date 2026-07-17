@@ -7,6 +7,7 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { ViewPoll } from '..';
+import { ViewPollBallotUser } from './poll-ballot-user';
 
 export type PollApprovalBallotValue = 'yes' | 'no' | 'abstain';
 export type PollSelectionBallotValue = 'nota' | number[];
@@ -22,11 +23,11 @@ export class ViewPollBallot<V = unknown> extends BaseViewModel<PollBallot> {
     }
 
     public get user(): ViewUser {
-        return this.represented_meeting_user.user;
+        return this.poll_ballot_user?.represented_meeting_user.user;
     }
 
     public get user$(): Observable<ViewUser> {
-        return this.represented_meeting_user$.pipe(switchMap(m => m.user$));
+        return this.poll_ballot_user$.pipe(switchMap(m => m.represented_meeting_user$.pipe(switchMap(r => r.user$))));
     }
 
     public get structureLevelIds(): Id[] {
@@ -35,6 +36,22 @@ export class ViewPollBallot<V = unknown> extends BaseViewModel<PollBallot> {
 
     public get groupIds(): Id[] {
         return this.user?.group_ids() || [];
+    }
+
+    public get acting_meeting_user(): ViewMeetingUser {
+        return this.poll_ballot_user?.acting_meeting_user;
+    }
+
+    public get acting_meeting_user_id(): Id {
+        return this.poll_ballot_user?.acting_meeting_user_id;
+    }
+
+    public get represented_meeting_user(): ViewMeetingUser {
+        return this.poll_ballot_user?.represented_meeting_user;
+    }
+
+    public get represented_meeting_user_id(): Id {
+        return this.poll_ballot_user?.represented_meeting_user_id;
     }
 
     private _parsedValue: V = null;
@@ -49,8 +66,7 @@ export class ViewPollBallot<V = unknown> extends BaseViewModel<PollBallot> {
 
 interface IViewPollBallotRelations {
     poll: ViewPoll;
-    acting_meeting_user?: ViewMeetingUser;
-    represented_meeting_user?: ViewMeetingUser;
+    poll_ballot_user?: ViewPollBallotUser;
 }
 
 export interface ViewPollBallot extends HasMeeting, ViewModelRelations<IViewPollBallotRelations>, PollBallot {}

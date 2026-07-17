@@ -11,8 +11,7 @@ export class PollBallot extends BaseModel<PollBallot> {
     public value: VoteValue;
 
     public poll_id!: Id;
-    public acting_meeting_user_id: Id;
-    public represented_meeting_user_id: Id;
+    public poll_ballot_user_id: Id;
 
     public get valueVerbose(): string {
         return VoteValueVerbose[this.value];
@@ -26,7 +25,14 @@ export class PollBallot extends BaseModel<PollBallot> {
         return [`weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollBallot)[] = [`id`, `weight`, `split`, `value`, `poll_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof PollBallot)[] = [
+        `id`,
+        `weight`,
+        `split`,
+        `value`,
+        `poll_id`,
+        `poll_ballot_user_id`
+    ];
 }
 
 export interface PollBallot extends HasMeetingId {}

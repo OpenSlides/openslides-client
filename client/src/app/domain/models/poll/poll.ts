@@ -23,7 +23,7 @@ export class Poll extends BaseModel<Poll> {
     public allow_vote_split!: boolean;
     public option_ids!: Id[];
     public ballot_ids!: Id[];
-    public voted_ids!: Id[];
+    public ballot_user_ids!: Id[];
     public entitled_group_ids!: Id[];
     public live_voting_enabled!: boolean;
 
@@ -47,6 +47,7 @@ export class Poll extends BaseModel<Poll> {
         `sequential_number`,
         `content_object_id`,
         `ballot_ids`,
+        `ballot_user_ids`,
         `entitled_group_ids`,
         `projection_ids`,
         `meeting_id`

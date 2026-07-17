@@ -12,6 +12,7 @@ import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-
 import { ViewGroup } from '../pages/participants';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
 import { ViewPollBallot, ViewPollOption } from '../pages/polls';
+import { ViewPollBallotUser } from '../pages/polls/view-models/poll-ballot-user';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
@@ -43,8 +44,8 @@ interface IMeetingUserRelations {
     submitted_motions: ViewMotionSubmitter[];
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
-    acting_ballots: ViewPollBallot[];
-    represented_ballots: ViewPollBallot[];
+    acting_ballots: ViewPollBallotUser[];
+    represented_ballots: ViewPollBallotUser[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
     structure_levels: ViewStructureLevel[];
