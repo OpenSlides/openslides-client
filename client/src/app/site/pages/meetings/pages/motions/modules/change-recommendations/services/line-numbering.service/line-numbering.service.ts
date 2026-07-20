@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { djb2hash } from '@app/infrastructure/utils';
 import { DiffCompat, LineNumbering, VERSION } from '@openslides/motion-diff';
 
@@ -70,9 +70,7 @@ interface InsertLineNumbersConfig {
  * const headings = this.lineNumbering.getHeadingsWithLineNumbers(html);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class LineNumberingService {
     private ln: typeof LineNumbering;
 
@@ -84,7 +82,8 @@ export class LineNumberingService {
      */
     private lineNumberCache = new DiffCache();
 
-    public constructor(@Inject(DIFF_VERSION) diffVersion: string) {
+    public constructor() {
+        const diffVersion = inject(DIFF_VERSION);
         if (diffVersion === VERSION) {
             this.ln = LineNumbering;
         } else {

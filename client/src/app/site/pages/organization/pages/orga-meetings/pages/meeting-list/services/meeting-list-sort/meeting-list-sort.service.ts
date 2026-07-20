@@ -1,13 +1,11 @@
-import { Injectable, ProviderToken } from '@angular/core';
+import { ProviderToken, Service } from '@angular/core';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
 import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { _ } from '@ngx-translate/core';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
     protected storageKey = `MeetingList`;
 

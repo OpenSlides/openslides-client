@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { PointOfOrderCategory } from '@app/domain/models/point-of-order-category/point-of-order-category';
@@ -11,14 +11,13 @@ import { CanPerformListUpdates } from '../base-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { PointOfOrderCategoryAction } from './point-of-order-category.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PointOfOrderCategoryRepositoryService
     extends BaseMeetingRelatedRepository<ViewPointOfOrderCategory, PointOfOrderCategory>
     implements CanPerformListUpdates<PointOfOrderCategory, void | Identifiable>
 {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, PointOfOrderCategory);
     }
 

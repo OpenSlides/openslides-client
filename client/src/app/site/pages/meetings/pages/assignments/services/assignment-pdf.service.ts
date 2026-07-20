@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
 import { PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
@@ -12,13 +12,11 @@ import { ViewAssignment } from '../view-models';
 /**
  * Creates a PDF document from a single assignment
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AssignmentPdfService {
-    public constructor(
-        private translate: TranslateService,
-        private htmlToPdfService: HtmlToPdfService,
-        private assignmentPollService: AssignmentPollService
-    ) {}
+    private translate = inject(TranslateService);
+    private htmlToPdfService = inject(HtmlToPdfService);
+    private assignmentPollService = inject(AssignmentPollService);
 
     /**
      * Main function to control the pdf generation.

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
@@ -25,16 +25,12 @@ export const speakerHeadersAndVerboseNames = {
     topic: _(`Element`)
 };
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class SpeakerCsvExportService {
-    public constructor(
-        private csvExport: MeetingCsvExportForBackendService,
-        private translate: TranslateService,
-        private durationService: DurationService,
-        private dfnsConfig: DateFnsConfigurationService
-    ) {}
+    private csvExport = inject(MeetingCsvExportForBackendService);
+    private translate = inject(TranslateService);
+    private durationService = inject(DurationService);
+    private dfnsConfig = inject(DateFnsConfigurationService);
 
     private columnMappings = {
         begin_time: (speaker: ViewSpeaker): string =>

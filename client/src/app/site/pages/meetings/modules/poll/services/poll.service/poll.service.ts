@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { OptionData, PollData } from '@app/domain/models/poll/generic-poll';
 import { OptionDataKey } from '@app/domain/models/poll/generic-poll';
 import {
@@ -34,7 +34,7 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export abstract class PollService {
     protected sortByVote = false;
     protected enableMaxVotesPerOption = false;

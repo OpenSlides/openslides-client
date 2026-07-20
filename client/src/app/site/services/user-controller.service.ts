@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { OML } from '@app/domain/definitions/organization-permission';
 import { GetActiveUsersAmountPresenterService } from '@app/gateways/presenter';
@@ -35,16 +35,15 @@ export interface CreateUserNameInformation {
     title?: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UserControllerService extends BaseController<ViewUser, User> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private presenter: GetActiveUsersAmountPresenterService,
-        private operator: OperatorService
-    ) {
+    protected override repo: UserRepositoryService;
+    private presenter = inject(GetActiveUsersAmountPresenterService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(UserRepositoryService);
         super(controllerServiceCollector, User, repo);
     }
 

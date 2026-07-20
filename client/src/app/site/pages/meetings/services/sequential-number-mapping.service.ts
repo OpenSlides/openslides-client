@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Collection, Id } from '@app/domain/definitions/key-types';
 import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from '@app/domain/interfaces';
 import { Assignment } from '@app/domain/models/assignments/assignment';
@@ -40,7 +40,7 @@ interface SequentialNumberMappingConfig {
     meetingId: number;
 }
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class SequentialNumberMappingService {
     private _mutex = new Mutex();
     private get activeMeetingId(): Id {
@@ -56,7 +56,8 @@ export class SequentialNumberMappingService {
     private autoupdateService = inject(AutoupdateService);
     private modelRequestBuilder = inject(ModelRequestBuilderService);
 
-    public constructor(collectionMapperService: MeetingCollectionMapperService) {
+    public constructor() {
+        const collectionMapperService = inject(MeetingCollectionMapperService);
         collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();

@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Action } from '@app/gateways/actions';
 import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.service';
@@ -20,9 +20,7 @@ export interface MeetingUserModifiedFields {
     removedAdmins?: ViewUser[];
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
     private get pointOfOrdercategoryRepo(): PointOfOrderCategoryRepositoryService {
         if (!this._pointOfOrdercategoryRepo) {
@@ -33,11 +31,12 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
 
     private _pointOfOrdercategoryRepo: PointOfOrderCategoryRepositoryService;
 
-    public constructor(
-        repositoryServiceCollector: ControllerServiceCollectorService,
-        protected override repo: MeetingRepositoryService,
-        private injector: Injector
-    ) {
+    protected override repo: MeetingRepositoryService;
+    private injector = inject(Injector);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(MeetingRepositoryService);
         super(repositoryServiceCollector, Meeting, repo);
     }
 

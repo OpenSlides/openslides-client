@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PdfError } from '@app/gateways/export/pdf-document.service';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
@@ -11,14 +11,12 @@ import { AssignmentPdfService } from './assignment-pdf.service';
 /**
  * Controls PDF export for assignments
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AssignmentExportService {
-    public constructor(
-        private translate: TranslateService,
-        private assignmentPdfService: AssignmentPdfService,
-        private pdfDocumentService: MeetingPdfExportService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {}
+    private translate = inject(TranslateService);
+    private assignmentPdfService = inject(AssignmentPdfService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     /**
      * Generates an pdf out of a given assignment and saves it as file

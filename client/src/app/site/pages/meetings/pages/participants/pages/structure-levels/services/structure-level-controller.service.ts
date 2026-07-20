@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { StructureLevel } from '@app/domain/models/structure-levels/structure-level';
@@ -9,14 +9,13 @@ import { Observable } from 'rxjs';
 
 import { ViewStructureLevel } from '../view-models/view-structure-level';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class StructureLevelControllerService extends BaseMeetingControllerService<ViewStructureLevel, StructureLevel> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: StructureLevelRepositoryService
-    ) {
+    protected override repo: StructureLevelRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(StructureLevelRepositoryService);
         super(controllerServiceCollector, StructureLevel, repo);
     }
 

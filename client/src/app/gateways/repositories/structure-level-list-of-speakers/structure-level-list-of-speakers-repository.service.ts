@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { StructureLevelListOfSpeakers } from '@app/domain/models/structure-levels/structure-level-list-of-speakers';
 import { StructureLevelListOfSpeakersAction } from '@app/gateways/repositories/structure-level-list-of-speakers/structure-level-list-of-speakers.action';
@@ -7,14 +7,13 @@ import { ViewStructureLevelListOfSpeakers } from '@app/site/pages/meetings/pages
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class StructureLevelListOfSpeakersRepositoryService extends BaseMeetingRelatedRepository<
     ViewStructureLevelListOfSpeakers,
     StructureLevelListOfSpeakers
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, StructureLevelListOfSpeakers);
     }
 

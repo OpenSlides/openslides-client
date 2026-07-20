@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCommentSection } from '@app/domain/models/motions/motion-comment-section';
 import { MotionCommentSectionRepositoryService } from '@app/gateways/repositories/motions';
@@ -7,17 +7,16 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 
 import { ViewMotionCommentSection } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCommentSectionControllerService extends BaseMeetingControllerService<
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionCommentSectionRepositoryService
-    ) {
+    protected override repo: MotionCommentSectionRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionCommentSectionRepositoryService);
         super(controllerServiceCollector, MotionCommentSection, repo);
     }
 

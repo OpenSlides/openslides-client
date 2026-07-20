@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { BaseFilterListService, OsFilter, OsFilterOption } from '@app/site/base/base-filter.service';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 
@@ -8,16 +8,15 @@ import { ViewAssignment } from '../../../view-models';
 /**
  * Filter service for the assignment list
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AssignmentFilterListService extends BaseFilterListService<ViewAssignment> {
     /**
      * set the storage key name
      */
     protected storageKey = `AssignmentList`;
 
-    public constructor(store: ActiveFiltersService) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
     }
 

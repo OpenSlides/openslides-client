@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Action } from '@app/gateways/actions';
@@ -10,14 +10,13 @@ import { AssignmentCandidate } from '../../../../domain/models/assignments/assig
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepository<
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, AssignmentCandidate);
     }
 

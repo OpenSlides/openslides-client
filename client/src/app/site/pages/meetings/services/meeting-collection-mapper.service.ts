@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
 import { BaseViewModel } from '@app/site/base/base-view-model';
@@ -10,16 +10,18 @@ import {
 import { CollectionMapper } from '@app/site/services/collection-mapper.service/collection-mapper';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingCollectionMapperService extends CollectionMapperService implements CollectionMapper {
     private readonly _meetingRepositoriesSubject = new BehaviorSubject<BaseMeetingRelatedRepository<any, any>[]>([]);
 
-    public constructor(private collectionMapperService: CollectionMapperService) {
+    private collectionMapperService = inject(CollectionMapperService);
+
+    public constructor() {
         super();
-        collectionMapperService.getAllCollectionMaps().forEach(mapping => this.registerMeetingRepository(mapping));
-        collectionMapperService.afterRepositoryRegistered.subscribe(mapping => this.registerMeetingRepository(mapping));
+        this.collectionMapperService.getAllCollectionMaps().forEach(mapping => this.registerMeetingRepository(mapping));
+        this.collectionMapperService.afterRepositoryRegistered.subscribe(mapping =>
+            this.registerMeetingRepository(mapping)
+        );
     }
 
     public getAllRepositoriesObservable(): Observable<BaseMeetingRelatedRepository<any, any>[]> {

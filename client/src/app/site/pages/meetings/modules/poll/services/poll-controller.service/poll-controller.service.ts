@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Poll } from '@app/domain/models/poll/poll';
@@ -12,13 +12,14 @@ import { distinctUntilChanged, map, Observable } from 'rxjs';
 
 import { ViewPoll } from '../../../../pages/polls';
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PollRepositoryService,
-        protected voteRepo: VoteRepositoryService
-    ) {
+    protected override repo: PollRepositoryService;
+    protected voteRepo = inject(VoteRepositoryService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(PollRepositoryService);
         super(controllerServiceCollector, Poll, repo);
 
         this.getViewModelListObservableOfStarted()

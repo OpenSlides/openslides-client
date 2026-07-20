@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Action } from '@app/gateways/actions';
@@ -21,9 +21,7 @@ import { MotionAction } from './motion.action';
 
 type SortProperty = `sort_weight` | `number`;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotion,
     Motion
@@ -32,12 +30,11 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      * The property the incoming data is sorted by
      */
     protected sortProperty: SortProperty = `number`;
+    private treeService = inject(TreeService);
 
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService,
-        private treeService: TreeService
-    ) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
+        const agendaItemRepo = inject(AgendaItemRepositoryService);
         super(repositoryServiceCollector, Motion, agendaItemRepo);
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;

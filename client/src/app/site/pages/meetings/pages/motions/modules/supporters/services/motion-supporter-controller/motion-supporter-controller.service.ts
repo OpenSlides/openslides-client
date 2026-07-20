@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionSupporter } from '@app/domain/models/motions/motion-supporter';
 import { Action } from '@app/gateways/actions';
@@ -10,18 +10,17 @@ import { UserControllerService } from '@app/site/services/user-controller.servic
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionSupporter } from '../../view-models/view-motion-supporter';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionSupporterControllerService extends BaseMeetingControllerService<
     ViewMotionSupporter,
     MotionSupporter
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionSupporterRepositoryService,
-        private userRepo: UserControllerService
-    ) {
+    protected override repo: MotionSupporterRepositoryService;
+    private userRepo = inject(UserControllerService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionSupporterRepositoryService);
         super(controllerServiceCollector, MotionSupporter, repo);
     }
 

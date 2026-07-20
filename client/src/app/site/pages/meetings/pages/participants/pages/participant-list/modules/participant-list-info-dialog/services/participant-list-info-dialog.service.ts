@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -44,9 +44,7 @@ export interface InfoDialog {
     vote_delegated_to_id: number;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantListInfoDialogService extends BaseDialogService<
     ParticipantListInfoDialogComponent,
     Partial<InfoDialog>,
